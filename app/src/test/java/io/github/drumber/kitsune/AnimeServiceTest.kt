@@ -29,4 +29,14 @@ class AnimeServiceTest: AutoCloseKoinTest() {
         println("First: ${animeList?.first()}")
     }
 
+    @Test
+    fun fetchSingleAnime() {
+        val animeService = getKoin().get<AnimeService>()
+        val response = animeService.getAnime("1").execute()
+        assertTrue(response.isSuccessful)
+        val anime = response.body()?.get()
+        assertNotNull(anime)
+        println("Received anime: $anime")
+    }
+
 }
