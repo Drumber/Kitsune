@@ -8,6 +8,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:name="io.github.drumber.kitsune.KitsuneApplication"
         android:theme="@style/Theme.Kitsune">
         <activity
             android:name="io.github.drumber.kitsune.MainActivity"
