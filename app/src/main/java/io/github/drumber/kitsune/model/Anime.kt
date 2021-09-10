@@ -36,9 +36,9 @@ data class Anime(
 )
 
 data class Titles(
-    var en: String? = null,
-    var enJp: String? = null,
-    var jaJp: String? = null
+    @JsonProperty("en") var en: String? = null,
+    @JsonProperty("en_jp") var enJp: String? = null,
+    @JsonProperty("ja_jp") var jaJp: String? = null
 )
 
 data class Rating(

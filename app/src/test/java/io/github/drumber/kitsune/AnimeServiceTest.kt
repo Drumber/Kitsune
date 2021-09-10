@@ -26,6 +26,7 @@ class AnimeServiceTest: AutoCloseKoinTest() {
         val animeList = response.body()?.get()
         assertNotNull(animeList)
         println("Received ${animeList?.size} anime")
+        println("First: ${animeList?.first()}")
     }
 
 }
