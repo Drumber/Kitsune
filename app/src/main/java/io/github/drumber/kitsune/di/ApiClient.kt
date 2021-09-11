@@ -3,10 +3,10 @@ package io.github.drumber.kitsune.di
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
-import io.github.drumber.kitsune.model.Anime
-import io.github.drumber.kitsune.model.Episode
-import io.github.drumber.kitsune.service.AnimeService
-import io.github.drumber.kitsune.service.EpisodesService
+import io.github.drumber.kitsune.api.model.Anime
+import io.github.drumber.kitsune.api.model.Episode
+import io.github.drumber.kitsune.api.service.AnimeService
+import io.github.drumber.kitsune.api.service.EpisodesService
 import org.koin.dsl.module
 import retrofit2.Retrofit
 

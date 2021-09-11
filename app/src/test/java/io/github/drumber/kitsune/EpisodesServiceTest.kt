@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune
 
+import io.github.drumber.kitsune.api.service.EpisodesService
 import io.github.drumber.kitsune.di.serviceModule
-import io.github.drumber.kitsune.service.EpisodesService
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
