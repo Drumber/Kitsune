@@ -6,61 +6,61 @@ import com.github.jasminb.jsonapi.annotations.Type
 
 @Type("anime")
 data class Anime(
-    @Id var id: String? = null,
-    var createdAt: String? = null,
-    var updatedAt: String? = null,
-    var slug: String? = null,
-    var description: String? = null,
-    var titles: Titles? = null,
-    var canonicalTitle: String? = null,
-    var abbreviatedTitles: List<String>? = null,
-    var averageRating: String? = null,
-    var ratingFrequencies: Rating? = null,
-    var userCount: Int? = null,
-    var favoritesCount: Int? = null,
-    var startDate: String? = null,
-    var endDate: String? = null,
-    var popularityRank: Int? = null,
-    var ratingRank: Int? = null,
-    var ageRating: AgeRating? = null,
-    var ageRatingGuide: String? = null,
-    var subtype: Subtype? = null,
-    var status: Status? = null,
-    var tba: String? = null,
-    var posterImage: Image? = null,
-    var coverImage: Image? = null,
-    var episodeCount: Int? = null,
-    var episodeLength: Int? = null,
-    var youtubeVideoId: String? = null,
-    var nsfw: Boolean? = null
+    @Id val id: String?,
+    val createdAt: String?,
+    val updatedAt: String?,
+    val slug: String?,
+    val description: String?,
+    val titles: Titles?,
+    val canonicalTitle: String?,
+    val abbreviatedTitles: List<String>?,
+    val averageRating: String?,
+    val ratingFrequencies: Rating?,
+    val userCount: Int?,
+    val favoritesCount: Int?,
+    val startDate: String?,
+    val endDate: String?,
+    val popularityRank: Int?,
+    val ratingRank: Int?,
+    val ageRating: AgeRating?,
+    val ageRatingGuide: String?,
+    val subtype: Subtype?,
+    val status: Status?,
+    val tba: String?,
+    val posterImage: Image?,
+    val coverImage: Image?,
+    val episodeCount: Int?,
+    val episodeLength: Int?,
+    val youtubeVideoId: String?,
+    val nsfw: Boolean?
 )
 
 data class Titles(
-    @JsonProperty("en") var en: String? = null,
-    @JsonProperty("en_jp") var enJp: String? = null,
-    @JsonProperty("ja_jp") var jaJp: String? = null
+    @JsonProperty("en") val en: String?,
+    @JsonProperty("en_jp") val enJp: String?,
+    @JsonProperty("ja_jp") val jaJp: String?
 )
 
 data class Rating(
-    @JsonProperty("2") var r2: String? = null,
-    @JsonProperty("3") var r3: String? = null,
-    @JsonProperty("4") var r4: String? = null,
-    @JsonProperty("5") var r5: String? = null,
-    @JsonProperty("6") var r6: String? = null,
-    @JsonProperty("7") var r7: String? = null,
-    @JsonProperty("8") var r8: String? = null,
-    @JsonProperty("9") var r9: String? = null,
-    @JsonProperty("10") var r10: String? = null,
-    @JsonProperty("11") var r11: String? = null,
-    @JsonProperty("12") var r12: String? = null,
-    @JsonProperty("13") var r13: String? = null,
-    @JsonProperty("14") var r14: String? = null,
-    @JsonProperty("15") var r15: String? = null,
-    @JsonProperty("16") var r16: String? = null,
-    @JsonProperty("17") var r17: String? = null,
-    @JsonProperty("18") var r18: String? = null,
-    @JsonProperty("19") var r19: String? = null,
-    @JsonProperty("20") var r20: String? = null,
+    @JsonProperty("2") val r2: String?,
+    @JsonProperty("3") val r3: String?,
+    @JsonProperty("4") val r4: String?,
+    @JsonProperty("5") val r5: String?,
+    @JsonProperty("6") val r6: String?,
+    @JsonProperty("7") val r7: String?,
+    @JsonProperty("8") val r8: String?,
+    @JsonProperty("9") val r9: String?,
+    @JsonProperty("10") val r10: String?,
+    @JsonProperty("11") val r11: String?,
+    @JsonProperty("12") val r12: String?,
+    @JsonProperty("13") val r13: String?,
+    @JsonProperty("14") val r14: String?,
+    @JsonProperty("15") val r15: String?,
+    @JsonProperty("16") val r16: String?,
+    @JsonProperty("17") val r17: String?,
+    @JsonProperty("18") val r18: String?,
+    @JsonProperty("19") val r19: String?,
+    @JsonProperty("20") val r20: String?,
 )
 
 enum class AgeRating {
@@ -88,21 +88,21 @@ enum class Status {
 }
 
 data class Image(
-    var tiny: String? = null,
-    var small: String? = null,
-    var medium: String? = null,
-    var large: String? = null,
-    var original: String? = null,
-    var meta: Meta? = null,
+    val tiny: String?,
+    val small: String?,
+    val medium: String?,
+    val large: String?,
+    val original: String?,
+    val meta: Meta?,
 )
 
-data class Meta(var dimensions: Dimensions? = null)
+data class Meta(val dimensions: Dimensions?)
 
 data class Dimensions(
-    var tiny: Dimension? = null,
-    var small: Dimension? = null,
-    var medium: Dimension? = null,
-    var large: Dimension? = null
+    val tiny: Dimension?,
+    val small: Dimension?,
+    val medium: Dimension?,
+    val large: Dimension?
 )
 
-data class Dimension(var width: String? = null, var height: String? = null)
+data class Dimension(val width: String?, val height: String?)

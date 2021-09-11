@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.di
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.api.model.Anime
 import io.github.drumber.kitsune.api.model.Episode
@@ -22,7 +23,7 @@ val serviceModule = module {
     factory { createService<AuthService>(KITSU_OAUTH_URL) }
 }
 
-private inline fun createObjectMapper() = ObjectMapper()
+private inline fun createObjectMapper() = jacksonObjectMapper()
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
 private inline fun createConverterFactory(

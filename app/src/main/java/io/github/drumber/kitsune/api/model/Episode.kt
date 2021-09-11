@@ -5,16 +5,16 @@ import com.github.jasminb.jsonapi.annotations.Type
 
 @Type("episodes")
 data class Episode(
-    @Id var id: String? = null,
-    var createdAt: String? = null,
-    var updatedAt: String? = null,
-    var description: String? = null,
-    var titles: Titles? = null,
-    var canonicalTitle: String? = null,
-    var seasonNumber: Int? = null,
-    var number: Int? = null,
-    var relativeNumber: Int? = null,
-    var airdate: String? = null,
-    var length: String? = null,
-    var thumbnail: Image? = null
+    @Id val id: String?,
+    val createdAt: String?,
+    val updatedAt: String?,
+    val description: String?,
+    val titles: Titles?,
+    val canonicalTitle: String?,
+    val seasonNumber: Int?,
+    val number: Int?,
+    val relativeNumber: Int?,
+    val airdate: String?,
+    val length: String?,
+    val thumbnail: Image?
 )
