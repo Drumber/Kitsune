@@ -1,8 +1,10 @@
 package io.github.drumber.kitsune
 
-import io.github.drumber.kitsune.api.Filter
-import io.github.drumber.kitsune.api.service.AnimeService
+import io.github.drumber.kitsune.data.model.toPage
+import io.github.drumber.kitsune.data.service.AnimeService
+import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.di.serviceModule
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -19,57 +21,52 @@ class AnimeServiceTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun fetchAllAnime() {
+    fun fetchAllAnime() = runBlocking {
         val animeService = getKoin().get<AnimeService>()
-        val response = animeService.allAnime().execute()
-        assertTrue(response.isSuccessful)
-        val animeList = response.body()?.get()
+        val response = animeService.allAnime()
+        val animeList = response.get()
         assertNotNull(animeList)
         println("Received ${animeList?.size} anime")
         println("First: ${animeList?.first()}")
     }
 
     @Test
-    fun fetchSingleAnime() {
+    fun fetchSingleAnime() = runBlocking {
         val animeService = getKoin().get<AnimeService>()
-        val response = animeService.getAnime("1").execute()
-        assertTrue(response.isSuccessful)
-        val anime = response.body()?.get()
+        val response = animeService.getAnime("1")
+        val anime = response.get()
         assertNotNull(anime)
         println("Received anime: $anime")
     }
 
     @Test
-    fun fetchTrending() {
+    fun fetchTrending() = runBlocking {
         val animeService = getKoin().get<AnimeService>()
-        val response = animeService.trending().execute()
-        assertTrue(response.isSuccessful)
-        val animeList = response.body()?.get()
+        val response = animeService.trending()
+        val animeList = response.get()
         assertNotNull(animeList)
         println("Received ${animeList?.size} anime")
         println("First: ${animeList?.first()}")
     }
 
     @Test
-    fun filterTest() {
+    fun filterTest() = runBlocking {
         val animeService = getKoin().get<AnimeService>()
         val responseAll = animeService.allAnime(
             Filter()
                 .pageOffset(5)
                 .pageLimit(5)
                 .options
-        ).execute()
-        assertTrue(responseAll.isSuccessful)
-        assertEquals(5, responseAll.body()?.get()?.size)
+        )
+        assertEquals(5, responseAll.get()?.size)
 
         val responseSingle = animeService.allAnime(
             Filter()
                 .filter("slug", "cowboy-bebop")
                 .fields("anime", "titles")
                 .options
-        ).execute()
-        assertTrue(responseSingle.isSuccessful)
-        val singleAnime = responseSingle.body()?.get()?.first()
+        )
+        val singleAnime = responseSingle.get()?.first()
         assertNull(singleAnime?.createdAt)
         assertNotNull(singleAnime?.titles)
         assertEquals("Cowboy Bebop", singleAnime?.titles?.en)

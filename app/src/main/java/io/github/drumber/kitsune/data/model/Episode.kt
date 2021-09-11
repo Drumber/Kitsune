@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.api.model
+package io.github.drumber.kitsune.data.model
 
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Type

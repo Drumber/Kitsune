@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
-import io.github.drumber.kitsune.api.model.Anime
-import io.github.drumber.kitsune.api.model.Episode
-import io.github.drumber.kitsune.api.service.AnimeService
-import io.github.drumber.kitsune.api.service.AuthService
-import io.github.drumber.kitsune.api.service.EpisodesService
+import io.github.drumber.kitsune.data.model.Anime
+import io.github.drumber.kitsune.data.model.Episode
+import io.github.drumber.kitsune.data.service.AnimeService
+import io.github.drumber.kitsune.data.service.AuthService
+import io.github.drumber.kitsune.data.service.EpisodesService
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory

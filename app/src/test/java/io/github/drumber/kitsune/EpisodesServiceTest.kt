@@ -1,9 +1,9 @@
 package io.github.drumber.kitsune
 
-import io.github.drumber.kitsune.api.service.EpisodesService
+import io.github.drumber.kitsune.data.service.EpisodesService
 import io.github.drumber.kitsune.di.serviceModule
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.koin.core.logger.Level
@@ -19,22 +19,20 @@ class EpisodesServiceTest: AutoCloseKoinTest() {
     }
 
     @Test
-    fun fetchAllEpisodes() {
+    fun fetchAllEpisodes() = runBlocking {
         val episodesService = getKoin().get<EpisodesService>()
-        val response = episodesService.allEpisodes().execute()
-        assertTrue(response.isSuccessful)
-        val episodeList = response.body()?.get()
+        val response = episodesService.allEpisodes()
+        val episodeList = response.get()
         assertNotNull(episodeList)
         println("Received ${episodeList?.size} episodes")
         println("First: ${episodeList?.first()}")
     }
 
     @Test
-    fun fetchSingleEpisode() {
+    fun fetchSingleEpisode() = runBlocking {
         val episodesService = getKoin().get<EpisodesService>()
-        val response = episodesService.getEpisode("28").execute()
-        assertTrue(response.isSuccessful)
-        val episode = response.body()?.get()
+        val response = episodesService.getEpisode("28")
+        val episode = response.get()
         assertNotNull(episode)
         println("Received episode: $episode")
     }

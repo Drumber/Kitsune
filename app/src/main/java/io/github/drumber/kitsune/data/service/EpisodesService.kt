@@ -1,8 +1,7 @@
-package io.github.drumber.kitsune.api.service
+package io.github.drumber.kitsune.data.service
 
 import com.github.jasminb.jsonapi.JSONAPIDocument
-import io.github.drumber.kitsune.api.model.Episode
-import retrofit2.Call
+import io.github.drumber.kitsune.data.model.Episode
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
@@ -10,14 +9,14 @@ import retrofit2.http.QueryMap
 interface EpisodesService {
 
     @GET("episodes")
-    fun allEpisodes(
+    suspend fun allEpisodes(
         @QueryMap filter: Map<String, String> = emptyMap()
-    ): Call<JSONAPIDocument<List<Episode>>>
+    ): JSONAPIDocument<List<Episode>>
 
     @GET("episodes/{id}")
-    fun getEpisode(
+    suspend fun getEpisode(
         @Path("id") id: String,
         @QueryMap filter: Map<String, String> = emptyMap()
-    ): Call<JSONAPIDocument<Episode>>
+    ): JSONAPIDocument<Episode>
 
 }

@@ -1,9 +1,9 @@
 package io.github.drumber.kitsune
 
-import io.github.drumber.kitsune.api.service.AuthService
+import io.github.drumber.kitsune.data.service.AuthService
 import io.github.drumber.kitsune.di.serviceModule
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
@@ -21,12 +21,11 @@ class AuthServiceTest : AutoCloseKoinTest() {
 
     @Ignore("Requires working credentials.")
     @Test
-    fun obtainAccessToken() {
+    fun obtainAccessToken() = runBlocking {
         val authService = getKoin().get<AuthService>()
-        val response = authService.obtainAccessToken(username = "<username/email>", password = "<password>").execute()
-        assertTrue(response.isSuccessful)
-        assertNotNull(response.body())
-        println("Access token created at '${response.body()?.createdAt}'")
+        val response = authService.obtainAccessToken(username = "<username/email>", password = "<password>")
+        assertNotNull(response)
+        println("Access token created at '${response.createdAt}'")
     }
 
 }

@@ -1,14 +1,16 @@
-package io.github.drumber.kitsune.api
+package io.github.drumber.kitsune.data.service
+
+import io.github.drumber.kitsune.constants.Kitsu
 
 class Filter(queryParams: Map<String, String> = emptyMap()) {
 
     val options = queryParams.toMutableMap()
 
     /** Defines how much of a resource to receive. The maximum amount is 20. */
-    fun pageLimit(limit: Int = 10) = put("page[limit]", limit)
+    fun pageLimit(limit: Int = Kitsu.DEFAULT_PAGE_SIZE) = put("page[limit]", limit)
 
     /** The index of the first resource to receive. */
-    fun pageOffset(offset: Int = 0) = put("page[offset]", offset)
+    fun pageOffset(offset: Int = Kitsu.DEFAULT_PAGE_OFFSET) = put("page[offset]", offset)
 
     /** Return only the specified fields of a resource. */
     fun fields(type: String, vararg fields: String) = put("fields[$type]", fields.joinToString(","))
