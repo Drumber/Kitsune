@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.di
 
+import com.example.kitsune.BuildConfig
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -9,6 +10,8 @@ import io.github.drumber.kitsune.data.model.Episode
 import io.github.drumber.kitsune.data.service.AnimeService
 import io.github.drumber.kitsune.data.service.AuthService
 import io.github.drumber.kitsune.data.service.EpisodesService
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
@@ -17,10 +20,20 @@ const val KITSU_API_URL = "https://kitsu.io/api/edge/"
 const val KITSU_OAUTH_URL = "https://kitsu.io/api/oauth/"
 
 val serviceModule = module {
+    single { createHttpClient() }
     single { createObjectMapper() }
-    factory { createService<AnimeService>(get(), Anime::class.java) }
-    factory { createService<EpisodesService>(get(), Episode::class.java) }
-    factory { createService<AuthService>(KITSU_OAUTH_URL) }
+    factory { createService<AnimeService>(get(), get(), Anime::class.java) }
+    factory { createService<EpisodesService>(get(), get(), Episode::class.java) }
+    factory { createService<AuthService>(get(), KITSU_OAUTH_URL) }
+}
+
+private inline fun createHttpClient() = OkHttpClient.Builder()
+    .apply { if(BuildConfig.DEBUG) addInterceptor(createHttpLoggingInterceptor()) }
+    .build()
+
+private inline fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
+    level = HttpLoggingInterceptor.Level.BASIC
+    redactHeader("Authorization")
 }
 
 private inline fun createObjectMapper() = jacksonObjectMapper()
@@ -34,22 +47,26 @@ private inline fun createConverterFactory(
 }
 
 private inline fun <reified T> createService(
+    httpClient: OkHttpClient,
     objectMapper: ObjectMapper,
     vararg classes: Class<*>,
     baseUrl: String = KITSU_API_URL
 ): T {
     return Retrofit.Builder()
         .baseUrl(baseUrl)
+        .client(httpClient)
         .addConverterFactory(createConverterFactory(objectMapper, *classes))
         .build()
         .create(T::class.java)
 }
 
 private inline fun <reified T> createService(
+    httpClient: OkHttpClient,
     baseUrl: String = KITSU_API_URL
 ): T {
     return Retrofit.Builder()
         .baseUrl(baseUrl)
+        .client(httpClient)
         .addConverterFactory(JacksonConverterFactory.create())
         .build()
         .create(T::class.java)

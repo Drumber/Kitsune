@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.di
 
-import org.koin.dsl.module
-
-val appModule = module {
-    serviceModule
-}
+val appModule = listOf(
+    serviceModule,
+    viewModelModule,
+    repositoryModule
+)

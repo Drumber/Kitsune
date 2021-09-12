@@ -31,6 +31,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        dataBinding true
     }
 }
 
@@ -53,7 +54,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
 
     // Paging
-    implementation 'androidx.paging:paging-runtime:3.0.1'
+    implementation 'androidx.paging:paging-runtime-ktx:3.0.1'
 
     // Koin DI
     def koin_version = "3.1.2"
@@ -72,6 +73,11 @@ dependencies {
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-jackson:2.9.0'
+
+    // OkHttp
+    def okhttp_version = "4.9.1"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
 
     // Tests
     testImplementation 'junit:junit:4.+'
