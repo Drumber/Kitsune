@@ -8,6 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="translucent_black_50">#80000000</color>
-    <color name="translucent_white_50">#80FFFFFF</color>
+    <color name="translucent_overlay_50">#80FFFFFF</color>
 </resources>

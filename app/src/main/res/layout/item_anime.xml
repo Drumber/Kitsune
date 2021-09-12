@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
-                android:background="@color/translucent_white_50"
+                android:background="@color/translucent_overlay_50"
                 android:padding="10dp"
                 tools:text="Title"
                 android:text="@{anime.canonicalTitle}" />
