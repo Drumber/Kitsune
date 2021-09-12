@@ -2,7 +2,7 @@
 
     <!-- Base application theme. -->
     <style name="Theme.Kitsune" parent="Theme.Kitsune.Base">
-        <item name="colorPrimary">@color/orange_900</item>
+        <item name="colorPrimary">@color/orange_800</item>
         <item name="colorPrimaryVariant">@color/orange_700</item>
         <item name="colorSecondary">@color/yellow_900</item>
         <item name="colorSecondaryVariant">@color/yellow_700</item>
