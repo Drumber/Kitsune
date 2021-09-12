@@ -11,15 +11,34 @@
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="300dp"
         android:layout_margin="10dp"
         app:cardElevation="4dp">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_title"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{anime.canonicalTitle}" />
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                tools:src="@drawable/ic_insert_photo_48"
+                android:layout_centerHorizontal="true"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:background="@color/translucent_white_50"
+                android:padding="10dp"
+                tools:text="Title"
+                android:text="@{anime.canonicalTitle}" />
+
+        </RelativeLayout>
 
     </com.google.android.material.card.MaterialCardView>
 

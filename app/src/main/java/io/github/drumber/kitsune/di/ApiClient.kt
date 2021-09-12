@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.data.model.Anime
-import io.github.drumber.kitsune.data.model.Episode
+import io.github.drumber.kitsune.data.model.resource.Episode
 import io.github.drumber.kitsune.data.service.AnimeService
 import io.github.drumber.kitsune.data.service.AuthService
 import io.github.drumber.kitsune.data.service.EpisodesService
@@ -15,6 +15,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
+import java.util.concurrent.TimeUnit
 
 const val KITSU_API_URL = "https://kitsu.io/api/edge/"
 const val KITSU_OAUTH_URL = "https://kitsu.io/api/oauth/"
@@ -29,6 +30,9 @@ val serviceModule = module {
 
 private inline fun createHttpClient() = OkHttpClient.Builder()
     .apply { if(BuildConfig.DEBUG) addInterceptor(createHttpLoggingInterceptor()) }
+    .connectTimeout(30, TimeUnit.SECONDS)
+    .readTimeout(60, TimeUnit.SECONDS)
+    .writeTimeout(60, TimeUnit.SECONDS)
     .build()
 
 private inline fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {

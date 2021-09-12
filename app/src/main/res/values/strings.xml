@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Kitsune</string>
+    <string name="action_retry">Retry</string>
 </resources>

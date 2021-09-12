@@ -3,6 +3,8 @@ package io.github.drumber.kitsune.data.model
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Type
+import io.github.drumber.kitsune.data.model.resource.Image
+import io.github.drumber.kitsune.data.model.resource.Titles
 
 @Type("anime")
 data class Anime(
@@ -33,12 +35,6 @@ data class Anime(
     val episodeLength: Int?,
     val youtubeVideoId: String?,
     val nsfw: Boolean?
-)
-
-data class Titles(
-    @JsonProperty("en") val en: String?,
-    @JsonProperty("en_jp") val enJp: String?,
-    @JsonProperty("ja_jp") val jaJp: String?
 )
 
 data class Rating(
@@ -86,23 +82,3 @@ enum class Status {
     unreleased,
     upcoming
 }
-
-data class Image(
-    val tiny: String?,
-    val small: String?,
-    val medium: String?,
-    val large: String?,
-    val original: String?,
-    val meta: Meta?,
-)
-
-data class Meta(val dimensions: Dimensions?)
-
-data class Dimensions(
-    val tiny: Dimension?,
-    val small: Dimension?,
-    val medium: Dimension?,
-    val large: Dimension?
-)
-
-data class Dimension(val width: String?, val height: String?)

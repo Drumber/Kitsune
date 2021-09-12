@@ -5,10 +5,13 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.kitsune.R
 import com.example.kitsune.databinding.ItemAnimeBinding
+import io.github.drumber.kitsune.GlideRequests
 import io.github.drumber.kitsune.data.model.Anime
+import io.github.drumber.kitsune.util.smallOrHigher
 
-class AnimeAdapter :
+class AnimeAdapter(private val glide: GlideRequests) :
     PagingDataAdapter<Anime, AnimeAdapter.AnimeViewHolder>(AnimeComparator) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnimeViewHolder {
@@ -24,8 +27,12 @@ class AnimeAdapter :
     inner class AnimeViewHolder(private val binding: ItemAnimeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Anime) {
-            binding.anime = item
+        fun bind(anime: Anime) {
+            binding.anime = anime
+            glide.load(anime.posterImage?.smallOrHigher())
+                .centerCrop()
+                .placeholder(R.drawable.ic_insert_photo_48)
+                .into(binding.ivThumbnail)
         }
 
     }
