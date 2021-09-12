@@ -1,10 +1,10 @@
 package io.github.drumber.kitsune.di
 
-import com.example.kitsune.BuildConfig
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
+import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.data.model.Anime
 import io.github.drumber.kitsune.data.model.resource.Episode
 import io.github.drumber.kitsune.data.service.AnimeService

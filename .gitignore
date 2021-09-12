@@ -46,6 +46,7 @@ captures/
 .idea/libraries
 .idea/jarRepositories.xml
 .idea/deploymentTargetDropDown.xml
+.idea/misc.xml
 # Android Studio 3 in .gitignore file.
 .idea/caches
 .idea/modules.xml

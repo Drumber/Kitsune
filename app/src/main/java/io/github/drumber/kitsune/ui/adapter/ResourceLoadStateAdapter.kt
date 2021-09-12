@@ -8,7 +8,7 @@ import androidx.paging.LoadStateAdapter
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.kitsune.databinding.ItemNetworkStateBinding
+import io.github.drumber.kitsune.databinding.ItemNetworkStateBinding
 
 class ResourceLoadStateAdapter<T : Any, VH : RecyclerView.ViewHolder>(
     private val adapter: PagingDataAdapter<T, VH>,

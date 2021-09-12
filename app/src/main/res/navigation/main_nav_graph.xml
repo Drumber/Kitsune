@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_nav_graph">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/main_fragment">
 
+    <fragment
+        android:id="@+id/main_fragment"
+        android:name="io.github.drumber.kitsune.ui.main.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" />
+
+    <fragment
+        android:id="@+id/search_fragment"
+        android:name="io.github.drumber.kitsune.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/profile_fragment"
+        android:name="io.github.drumber.kitsune.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

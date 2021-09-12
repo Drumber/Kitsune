@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.kitsune.R
-import com.example.kitsune.databinding.ItemAnimeBinding
 import io.github.drumber.kitsune.GlideRequests
+import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.Anime
+import io.github.drumber.kitsune.databinding.ItemAnimeBinding
 import io.github.drumber.kitsune.util.smallOrHigher
 
 class AnimeAdapter(private val glide: GlideRequests) :

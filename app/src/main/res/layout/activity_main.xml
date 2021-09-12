@@ -6,37 +6,14 @@
     android:layout_height="match_parent"
     tools:context="io.github.drumber.kitsune.ui.main.MainActivity">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/main_nav_graph"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_navigation">
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:liftOnScroll="true">
-
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:menu="@menu/toolbar_menu"
-                app:title="@string/app_name"
-                app:layout_scrollFlags="scroll|enterAlways|snap"
-                style="@style/Widget.MaterialComponents.Toolbar.Surface" />
-
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_anime"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:orientation="horizontal"
-            android:clipToPadding="false"
-            tools:listitem="@layout/item_anime"/>
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:layout_above="@id/bottom_navigation" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
