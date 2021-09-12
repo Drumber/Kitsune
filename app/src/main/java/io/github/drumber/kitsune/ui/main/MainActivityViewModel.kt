@@ -6,6 +6,8 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.constants.SortFilter
+import io.github.drumber.kitsune.constants.SortFilter.desc
 import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.service.Filter
 import kotlinx.coroutines.flow.flatMapLatest
@@ -26,7 +28,7 @@ class MainActivityViewModel(
 
     private fun getLastFilter(): Filter {
         // TODO: get last used filter from storage
-        return Filter()
+        return Filter().sort(SortFilter.POPULARITY.desc())
     }
 
 }
