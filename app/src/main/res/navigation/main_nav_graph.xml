@@ -8,17 +8,18 @@
     <fragment
         android:id="@+id/main_fragment"
         android:name="io.github.drumber.kitsune.ui.main.MainFragment"
-        android:label="fragment_main"
+        android:label="@string/nav_home"
         tools:layout="@layout/fragment_main" />
 
     <fragment
         android:id="@+id/search_fragment"
-        android:name="io.github.drumber.kitsune.SearchFragment"
-        android:label="fragment_search"
+        android:name="io.github.drumber.kitsune.ui.search.SearchFragment"
+        android:label="@string/nav_search"
         tools:layout="@layout/fragment_search" />
+
     <fragment
         android:id="@+id/profile_fragment"
-        android:name="io.github.drumber.kitsune.ProfileFragment"
-        android:label="fragment_profile"
+        android:name="io.github.drumber.kitsune.ui.profile.ProfileFragment"
+        android:label="@string/nav_profile"
         tools:layout="@layout/fragment_profile" />
 </navigation>

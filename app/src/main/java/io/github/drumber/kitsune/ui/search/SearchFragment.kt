@@ -1,10 +1,11 @@
-package io.github.drumber.kitsune
+package io.github.drumber.kitsune.ui.search
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import io.github.drumber.kitsune.R
 
 class SearchFragment : Fragment() {
 

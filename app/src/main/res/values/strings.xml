@@ -1,7 +1,13 @@
 <resources>
-    <string name="app_name">Kitsune</string>
+    <string translatable="false" name="app_name">Kitsune</string>
+
     <string name="action_retry">Retry</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="error_resource_loading">Could not load data.</string>
+
+    <string name="nav_home">Home</string>
+    <string name="nav_search">Search</string>
+    <string name="nav_profile">Profile</string>
+
+    <string name="menu_filter">Filter</string>
 </resources>
