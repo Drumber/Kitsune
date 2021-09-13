@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.data.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.data.model.Anime
+import io.github.drumber.kitsune.data.model.resource.Anime
 import io.github.drumber.kitsune.data.model.toPage
 import io.github.drumber.kitsune.data.service.AnimeService
 import io.github.drumber.kitsune.data.service.Filter

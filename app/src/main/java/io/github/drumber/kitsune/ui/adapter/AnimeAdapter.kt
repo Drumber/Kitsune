@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import io.github.drumber.kitsune.GlideRequests
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.Anime
+import io.github.drumber.kitsune.data.model.resource.Anime
 import io.github.drumber.kitsune.databinding.ItemAnimeBinding
 import io.github.drumber.kitsune.util.smallOrHigher
 

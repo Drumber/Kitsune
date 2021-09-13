@@ -1,5 +1,9 @@
 package io.github.drumber.kitsune.data.model.resource
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Image(
     val tiny: String?,
     val small: String?,
@@ -7,15 +11,18 @@ data class Image(
     val large: String?,
     val original: String?,
     val meta: Meta?,
-)
+) : Parcelable
 
-data class Meta(val dimensions: Dimensions?)
+@Parcelize
+data class Meta(val dimensions: Dimensions?) : Parcelable
 
+@Parcelize
 data class Dimensions(
     val tiny: Dimension?,
     val small: Dimension?,
     val medium: Dimension?,
     val large: Dimension?
-)
+) : Parcelable
 
-data class Dimension(val width: String?, val height: String?)
+@Parcelize
+data class Dimension(val width: String?, val height: String?) : Parcelable

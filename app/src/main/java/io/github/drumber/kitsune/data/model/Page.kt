@@ -1,9 +1,12 @@
 package io.github.drumber.kitsune.data.model
 
 import android.net.Uri
+import android.os.Parcelable
 import com.github.jasminb.jsonapi.Links
+import kotlinx.parcelize.Parcelize
 
-data class Page(val first: Int, val last: Int, val next: Int?, val prev: Int?)
+@Parcelize
+data class Page(val first: Int, val last: Int, val next: Int?, val prev: Int?) : Parcelable
 
 fun Links.toPage() = Page(
     first = parseOffset(this.first.href),
