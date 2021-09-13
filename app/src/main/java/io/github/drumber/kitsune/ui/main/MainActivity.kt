@@ -1,16 +1,16 @@
 package io.github.drumber.kitsune.ui.main
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ActivityMainBinding
+import io.github.drumber.kitsune.ui.base.BaseActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity(R.layout.activity_main) {
+class MainActivity : BaseActivity(R.layout.activity_main) {
 
     private val viewModel: MainActivityViewModel by viewModel()
 
