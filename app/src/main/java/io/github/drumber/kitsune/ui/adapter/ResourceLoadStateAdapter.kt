@@ -39,11 +39,11 @@ class ResourceLoadStateAdapter<T : Any, VH : RecyclerView.ViewHolder>(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
-            binding.btnRetry.setOnClickListener { retryCallback() }
+            binding.layoutLoading.btnRetry.setOnClickListener { retryCallback() }
         }
 
         fun bind(loadState: LoadState) {
-            with(binding) {
+            with(binding.layoutLoading) {
                 progressBar.isVisible = loadState is LoadState.Loading
                 btnRetry.isVisible = loadState is LoadState.Error
                 tvError.isVisible = !(loadState as? LoadState.Error)?.error?.message.isNullOrBlank()

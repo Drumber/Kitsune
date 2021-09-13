@@ -2,8 +2,10 @@ package io.github.drumber.kitsune.ui.main
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.github.drumber.kitsune.GlideApp
@@ -44,6 +46,20 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         lifecycleScope.launchWhenCreated {
             viewModel.anime.collectLatest {
                 animeAdapter.submitData(it)
+            }
+        }
+
+        binding.layoutLoading.btnRetry.setOnClickListener { animeAdapter.retry() }
+
+        animeAdapter.addLoadStateListener { loadState ->
+            binding.apply {
+                rvAnime.isVisible = loadState.source.refresh is LoadState.NotLoading
+                layoutLoading.apply {
+                    root.isVisible = loadState.source.refresh !is LoadState.NotLoading
+                    progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                    btnRetry.isVisible = loadState.source.refresh is LoadState.Error
+                    tvError.isVisible = loadState.source.refresh is LoadState.Error
+                }
             }
         }
     }

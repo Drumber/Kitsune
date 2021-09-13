@@ -5,24 +5,8 @@
     android:orientation="vertical"
     android:padding="10dp">
 
-    <TextView
-        android:id="@+id/tv_error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:layout_gravity="center_horizontal" />
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
-
-    <Button
-        android:id="@+id/btn_retry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/action_retry" />
+    <include
+        android:id="@+id/layout_loading"
+        layout="@layout/layout_resource_loading"/>
 
 </LinearLayout>

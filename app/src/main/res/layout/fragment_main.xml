@@ -35,6 +35,15 @@
             android:clipToPadding="false"
             tools:listitem="@layout/item_anime"/>
 
+        <include
+            android:id="@+id/layout_loading"
+            layout="@layout/layout_resource_loading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </FrameLayout>
