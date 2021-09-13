@@ -11,6 +11,7 @@
         <item name="colorOnSecondary">@color/white</item>
 
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
     </style>
 
 </resources>

@@ -14,6 +14,8 @@ import io.github.drumber.kitsune.databinding.FragmentMainBinding
 import io.github.drumber.kitsune.ui.adapter.AnimeAdapter
 import io.github.drumber.kitsune.ui.adapter.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.widget.LoadStateSpanSizeLookup
+import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
+import io.github.drumber.kitsune.util.initWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -26,6 +28,9 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAdapter()
+
+        binding.toolbar.initWindowInsetsListener()
+        binding.rvAnime.initMarginWindowInsetsListener(left = true, right = true)
     }
 
     private fun initAdapter() {

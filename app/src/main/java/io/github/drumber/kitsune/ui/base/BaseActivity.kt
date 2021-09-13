@@ -8,9 +8,14 @@ import android.os.Bundle
 import android.util.TypedValue
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
 import io.github.drumber.kitsune.R
 
-abstract class BaseActivity(@LayoutRes contentLayoutId: Int) : AppCompatActivity(contentLayoutId) {
+abstract class BaseActivity(
+    @LayoutRes contentLayoutId: Int,
+    private val edgeToEdge: Boolean = true
+) : AppCompatActivity(contentLayoutId) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +25,19 @@ abstract class BaseActivity(@LayoutRes contentLayoutId: Int) : AppCompatActivity
         theme.resolveAttribute(R.attr.colorSurface, typedValue, true)
         // set app bar color in recent apps overview
         setAppTaskColor(typedValue.data)
+
+        if(edgeToEdge) {
+            initEdgeToEdge()
+        }
+    }
+
+    private fun initEdgeToEdge() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        window.statusBarColor = ContextCompat.getColor(this, R.color.translucent_overlay_50)
+        if(Build.VERSION.SDK_INT >= 27) {
+            window.navigationBarColor = ContextCompat.getColor(this, android.R.color.transparent)
+        }
     }
 
     /**
