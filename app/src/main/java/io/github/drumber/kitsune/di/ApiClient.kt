@@ -5,11 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.BuildConfig
-import io.github.drumber.kitsune.data.model.resource.Anime
-import io.github.drumber.kitsune.data.model.resource.Episode
-import io.github.drumber.kitsune.data.service.AnimeService
-import io.github.drumber.kitsune.data.service.AuthService
-import io.github.drumber.kitsune.data.service.EpisodesService
+import io.github.drumber.kitsune.data.model.resource.anime.Anime
+import io.github.drumber.kitsune.data.model.resource.anime.Episode
+import io.github.drumber.kitsune.data.model.resource.manga.Chapter
+import io.github.drumber.kitsune.data.model.resource.manga.Manga
+import io.github.drumber.kitsune.data.service.anime.AnimeService
+import io.github.drumber.kitsune.data.service.anime.EpisodesService
+import io.github.drumber.kitsune.data.service.auth.AuthService
+import io.github.drumber.kitsune.data.service.manga.ChaptersService
+import io.github.drumber.kitsune.data.service.manga.MangaService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -25,6 +29,8 @@ val serviceModule = module {
     single { createObjectMapper() }
     factory { createService<AnimeService>(get(), get(), Anime::class.java) }
     factory { createService<EpisodesService>(get(), get(), Episode::class.java) }
+    factory { createService<MangaService>(get(), get(), Manga::class.java) }
+    factory { createService<ChaptersService>(get(), get(), Chapter::class.java) }
     factory { createService<AuthService>(get(), KITSU_OAUTH_URL) }
 }
 

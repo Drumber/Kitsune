@@ -1,9 +1,11 @@
-package io.github.drumber.kitsune.data.model.resource
+package io.github.drumber.kitsune.data.model.resource.anime
 
 import android.os.Parcelable
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Type
+import io.github.drumber.kitsune.data.model.resource.Image
+import io.github.drumber.kitsune.data.model.resource.Titles
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -27,7 +29,7 @@ data class Anime(
     val ratingRank: Int?,
     val ageRating: AgeRating?,
     val ageRatingGuide: String?,
-    val subtype: Subtype?,
+    val subtype: AnimeSubtype?,
     val status: Status?,
     val tba: String?,
     val posterImage: Image?,
@@ -35,7 +37,9 @@ data class Anime(
     val episodeCount: Int?,
     val episodeLength: Int?,
     val youtubeVideoId: String?,
-    val nsfw: Boolean?
+    val nsfw: Boolean?,
+    val nextRelease: String?,
+    val totalLength: Int?
 ) : Parcelable
 
 @Parcelize
@@ -68,7 +72,7 @@ enum class AgeRating {
     R18
 }
 
-enum class Subtype {
+enum class AnimeSubtype {
     ONA,
     OVA,
     TV,

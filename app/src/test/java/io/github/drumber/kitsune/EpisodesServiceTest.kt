@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune
 
-import io.github.drumber.kitsune.data.service.EpisodesService
+import io.github.drumber.kitsune.data.service.anime.EpisodesService
 import io.github.drumber.kitsune.di.serviceModule
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertNotNull

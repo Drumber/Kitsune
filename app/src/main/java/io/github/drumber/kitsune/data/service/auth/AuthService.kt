@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.service
+package io.github.drumber.kitsune.data.service.auth
 
 import io.github.drumber.kitsune.data.model.auth.AccessToken
 import retrofit2.http.Field

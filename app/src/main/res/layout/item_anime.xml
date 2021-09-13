@@ -6,7 +6,7 @@
     <data>
         <variable
             name="anime"
-            type="io.github.drumber.kitsune.data.model.resource.Anime" />
+            type="io.github.drumber.kitsune.data.model.resource.anime.Anime" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

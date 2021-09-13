@@ -4,7 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import io.github.drumber.kitsune.constants.Repository
 import io.github.drumber.kitsune.data.paging.AnimePagingDataSource
-import io.github.drumber.kitsune.data.service.AnimeService
+import io.github.drumber.kitsune.data.service.anime.AnimeService
 import io.github.drumber.kitsune.data.service.Filter
 
 class AnimeRepository(private val service: AnimeService) {
