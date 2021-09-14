@@ -11,7 +11,7 @@ import io.github.drumber.kitsune.data.model.resource.anime.Anime
 import io.github.drumber.kitsune.databinding.ItemAnimeBinding
 import io.github.drumber.kitsune.util.smallOrHigher
 
-class AnimeAdapter(private val glide: GlideRequests) :
+class AnimeAdapter(private val glide: GlideRequests, private val listener: OnItemClickListener? = null) :
     PagingDataAdapter<Anime, AnimeAdapter.AnimeViewHolder>(AnimeComparator) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnimeViewHolder {
@@ -27,6 +27,15 @@ class AnimeAdapter(private val glide: GlideRequests) :
     inner class AnimeViewHolder(private val binding: ItemAnimeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        init {
+            binding.ivThumbnail.setOnClickListener {
+                val position = bindingAdapterPosition
+                if(position != RecyclerView.NO_POSITION) {
+                    getItem(position)?.let { item -> listener?.onItemClick(item) }
+                }
+            }
+        }
+
         fun bind(anime: Anime) {
             binding.anime = anime
             glide.load(anime.posterImage?.smallOrHigher())
@@ -35,6 +44,10 @@ class AnimeAdapter(private val glide: GlideRequests) :
                 .into(binding.ivThumbnail)
         }
 
+    }
+
+    fun interface OnItemClickListener {
+        fun onItemClick(anime: Anime)
     }
 
     object AnimeComparator: DiffUtil.ItemCallback<Anime>() {

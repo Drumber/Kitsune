@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.*
 
-inline fun Toolbar.initWindowInsetsListener() {
+inline fun Toolbar.initWindowInsetsListener(consume: Boolean = true) {
     val initialHeight = this.layoutParams.height
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
         val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -15,7 +15,7 @@ inline fun Toolbar.initWindowInsetsListener() {
             right = insets.right
         )
         view.layoutParams.height = initialHeight + insets.top
-        WindowInsetsCompat.CONSUMED
+        if(consume) WindowInsetsCompat.CONSUMED else windowInsets
     }
 }
 
@@ -23,7 +23,8 @@ inline fun View.initPaddingWindowInsetsListener(
     left: Boolean = false,
     top: Boolean = false,
     right: Boolean = false,
-    bottom: Boolean = false
+    bottom: Boolean = false,
+    consume: Boolean = true
 ) {
     val (initialLeft, initialTop, initialRight, initialBottom) = listOf(
         paddingLeft,
@@ -39,7 +40,7 @@ inline fun View.initPaddingWindowInsetsListener(
             right = if (right) insets.right + initialRight else paddingRight,
             bottom = if (bottom) insets.bottom + initialBottom else paddingBottom
         )
-        WindowInsetsCompat.CONSUMED
+        if(consume) WindowInsetsCompat.CONSUMED else windowInsets
     }
 }
 
@@ -47,7 +48,8 @@ inline fun View.initMarginWindowInsetsListener(
     left: Boolean = false,
     top: Boolean = false,
     right: Boolean = false,
-    bottom: Boolean = false
+    bottom: Boolean = false,
+    consume: Boolean = true
 ) {
     val (initialLeft, initialTop, initialRight, initialBottom) = listOf(
         marginLeft,
@@ -63,6 +65,6 @@ inline fun View.initMarginWindowInsetsListener(
             if (right) rightMargin = insets.right + initialRight
             if (bottom) bottomMargin = insets.bottom + initialBottom
         }
-        WindowInsetsCompat.CONSUMED
+        if(consume) WindowInsetsCompat.CONSUMED else windowInsets
     }
 }

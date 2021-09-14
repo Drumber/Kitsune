@@ -1,5 +1,5 @@
 <resources>
-    <string translatable="false" name="app_name">Kitsune</string>
+    <string name="app_name" translatable="false">Kitsune</string>
 
     <string name="action_retry">Retry</string>
 
@@ -10,4 +10,15 @@
     <string name="nav_profile">Profile</string>
 
     <string name="menu_filter">Filter</string>
+
+    <string name="no_information">Unknown</string>
+
+    <string name="status_current">Current</string>
+    <string name="status_finished">Finished</string>
+    <string name="status_tba">TBA</string>
+    <string name="status_unreleased">Unreleased</string>
+    <string name="status_upcoming">Upcoming</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

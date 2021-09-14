@@ -23,4 +23,6 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="translucent_overlay_50">#80FFFFFF</color>
+
+    <color name="translucent_status_bar">@color/translucent_overlay_50</color>
 </resources>

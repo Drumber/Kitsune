@@ -30,4 +30,8 @@
         <item name="colorAccent">?colorSecondary</item>
     </style>
 
+    <style name="TextAppearance.App.CollapsingToolbar.Expanded" parent="TextAppearance.Design.CollapsingToolbar.Expanded">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>

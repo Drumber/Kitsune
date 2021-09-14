@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.util.setStatusBarColor
 
 abstract class BaseActivity(
     @LayoutRes contentLayoutId: Int,
@@ -29,12 +30,16 @@ abstract class BaseActivity(
         if(edgeToEdge) {
             initEdgeToEdge()
         }
+
+        supportFragmentManager.addOnBackStackChangedListener {
+            println("#### on backstack")
+        }
     }
 
     private fun initEdgeToEdge() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        window.statusBarColor = ContextCompat.getColor(this, R.color.translucent_overlay_50)
+        setStatusBarColor(ContextCompat.getColor(this, R.color.translucent_status_bar))
         if(Build.VERSION.SDK_INT >= 27) {
             window.navigationBarColor = ContextCompat.getColor(this, android.R.color.transparent)
         }

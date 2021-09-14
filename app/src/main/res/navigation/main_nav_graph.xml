@@ -9,7 +9,11 @@
         android:id="@+id/main_fragment"
         android:name="io.github.drumber.kitsune.ui.main.MainFragment"
         android:label="@string/nav_home"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_main_fragment_to_detailsFragment"
+            app:destination="@id/details_fragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/search_fragment"
@@ -22,4 +26,12 @@
         android:name="io.github.drumber.kitsune.ui.profile.ProfileFragment"
         android:label="@string/nav_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/details_fragment"
+        android:name="io.github.drumber.kitsune.DetailsFragment"
+        android:label="DetailsFragment" >
+        <argument
+            android:name="model"
+            app:argType="io.github.drumber.kitsune.data.model.DetailsAdapter" />
+    </fragment>
 </navigation>
