@@ -30,10 +30,6 @@ abstract class BaseActivity(
         if(edgeToEdge) {
             initEdgeToEdge()
         }
-
-        supportFragmentManager.addOnBackStackChangedListener {
-            println("#### on backstack")
-        }
     }
 
     private fun initEdgeToEdge() {

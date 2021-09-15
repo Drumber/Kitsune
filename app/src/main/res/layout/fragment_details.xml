@@ -19,6 +19,7 @@
             android:layout_height="match_parent">
 
             <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/app_bar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:liftOnScroll="true">
@@ -58,9 +59,8 @@
                         android:id="@+id/toolbar"
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
+                        app:navigationIcon="@drawable/ic_arrow_back_24"
                         app:title="@{data.title}"
-                        app:subtitle="@{data.subtype}"
-                        tools:subtitle="TV"
                         tools:title="Some Title"
                         app:layout_collapseMode="pin"/>
 
