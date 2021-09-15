@@ -14,6 +14,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.appbar.AppBarLayout
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.util.getColor
+import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import io.github.drumber.kitsune.util.setStatusBarColorRes
 import kotlin.math.abs
@@ -51,7 +52,9 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
 
             // pass windowInsets down to the toolbar
             collapsingToolbar.setOnApplyWindowInsetsListener { view, windowInsets -> windowInsets }
-            toolbar.initWindowInsetsListener()
+            toolbar.initWindowInsetsListener(consume = false)
+
+            content.initPaddingWindowInsetsListener(left = true, right = true)
 
             glide.load(model.coverImage)
                 .centerCrop()
