@@ -39,6 +39,17 @@ sealed class DetailsAdapter(
             startDate.toDate("yyyy-MM-dd").get(Calendar.YEAR).toString()
         } else "?"
 
+    inline fun statusText(context: Context): String {
+        return when (status) {
+            Status.current -> context.getString(R.string.status_current)
+            Status.finished -> context.getString(R.string.status_finished)
+            Status.tba -> context.getString(R.string.status_tba)
+            Status.unreleased -> context.getString(R.string.status_unreleased)
+            Status.upcoming -> context.getString(R.string.status_upcoming)
+            null -> context.getString(R.string.no_information)
+        }
+    }
+
     @Parcelize
     class AnimeDetails(val anime: Anime) : DetailsAdapter(
         title = getTitle(anime.titles, anime.canonicalTitle),
@@ -89,14 +100,3 @@ private fun getTitle(title: Titles?, canonical: String?): String {
 }
 
 private inline fun Int?.orNull() = this ?: 0
-
-private inline fun Status?.asString(context: Context): String {
-    return when (this) {
-        Status.current -> context.getString(R.string.status_current)
-        Status.finished -> context.getString(R.string.status_finished)
-        Status.tba -> context.getString(R.string.status_tba)
-        Status.unreleased -> context.getString(R.string.status_unreleased)
-        Status.upcoming -> context.getString(R.string.status_upcoming)
-        null -> context.getString(R.string.no_information)
-    }
-}

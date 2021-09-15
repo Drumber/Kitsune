@@ -31,7 +31,7 @@
                     app:contentScrim="?attr/colorSurface"
                     app:scrimAnimationDuration="300"
                     app:scrimVisibleHeightTrigger="150dp"
-                    app:maxLines="2"
+                    app:maxLines="3"
                     app:expandedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Expanded"
                     app:expandedTitleGravity="bottom"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -76,12 +76,12 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp">
+                        android:layout_height="wrap_content">
 
                         <ImageView
                             android:id="@+id/iv_thumbnail"
@@ -92,20 +92,29 @@
                             tools:src="@drawable/ic_insert_photo_48" />
 
                         <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/iv_thumbnail"
+                            android:layout_alignParentStart="true"
+                            android:text="@{data.publishingYear + `, ` + data.subtype}" />
+
+                        <include
+                            layout="@layout/section_details_stats"
+                            app:data="@{data}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_toEndOf="@id/iv_thumbnail"
-                            android:layout_alignParentBottom="true"
-                            android:maxLines="2"
-                            android:ellipsize="end"
-                            tools:text="Some Title" />
+                            android:layout_alignParentBottom="true" />
 
                     </RelativeLayout>
 
-                    <TextView
+                    <Space
                         android:layout_width="match_parent"
-                        android:layout_height="1000dp"
-                        android:text="Test" />
+                        android:layout_height="10dp" />
+
+                    <include
+                        layout="@layout/section_details_description"
+                        app:data="@{data}" />
 
                 </LinearLayout>
 

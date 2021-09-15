@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.appbar.AppBarLayout
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
@@ -58,7 +60,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                 .into(binding.ivCover)
 
             glide.load(model.posterImage)
-                .centerCrop()
+                .transform(CenterCrop(), RoundedCorners(8))
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivThumbnail)
         }
