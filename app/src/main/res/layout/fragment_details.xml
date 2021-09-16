@@ -53,6 +53,12 @@
                             android:layout_gravity="bottom"
                             android:background="@drawable/bottom_edge_fade" />
 
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:layout_gravity="top"
+                            android:background="@drawable/top_edge_fade" />
+
                     </FrameLayout>
 
                     <com.google.android.material.appbar.MaterialToolbar
