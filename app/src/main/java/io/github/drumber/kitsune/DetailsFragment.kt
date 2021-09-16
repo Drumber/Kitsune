@@ -13,10 +13,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.appbar.AppBarLayout
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
-import io.github.drumber.kitsune.util.getColor
-import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.initWindowInsetsListener
-import io.github.drumber.kitsune.util.setStatusBarColorRes
+import io.github.drumber.kitsune.util.*
 import kotlin.math.abs
 
 class DetailsFragment : Fragment(R.layout.fragment_details) {
@@ -28,6 +25,9 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if(context?.isNightMode() == false) {
+            activity?.clearLightStatusBar()
+        }
         activity?.setStatusBarColorRes(android.R.color.transparent)
 
         val model = args.model
@@ -36,7 +36,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         binding.apply {
             data = model
 
-            // fade back arrow from white to colorOnSurface while collapsing the toolbar
             appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
                 val maxOffset = appBarLayout.totalScrollRange
                 val percent = abs(verticalOffset.toFloat() / maxOffset) // between 0.0 and 1.0
@@ -44,8 +43,19 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                 val expandedColor = ContextCompat.getColor(requireContext(), R.color.white)
                 val collapsedColor = requireActivity().theme.getColor(R.attr.colorOnSurface)
 
+                // fade back arrow from white to colorOnSurface while collapsing the toolbar
                 val iconTint = ColorUtils.blendARGB(expandedColor, collapsedColor, percent)
                 toolbar.setNavigationIconTint(iconTint)
+
+                // switch to light status bar in light mode
+                if(activity?.isNightMode() == false) {
+                    if(percent < 0.5 && activity?.isLightStatusBar() == true) {
+                        activity?.clearLightStatusBar()
+                    }
+                    if(percent >= 0.5 && activity?.isLightStatusBar() == false && context?.isNightMode() == false) {
+                        activity?.setLightStatusBar()
+                    }
+                }
             })
 
             toolbar.setNavigationOnClickListener { goBack() }
@@ -76,6 +86,9 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     override fun onDestroyView() {
         super.onDestroyView()
         activity?.setStatusBarColorRes(R.color.translucent_status_bar)
+        if(activity?.isLightStatusBar() == false && context?.isNightMode() == false) {
+            activity?.setLightStatusBar()
+        }
     }
 
 }
