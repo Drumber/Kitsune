@@ -11,6 +11,9 @@
         android:label="@string/nav_home"
         tools:layout="@layout/fragment_main" >
         <action
+            app:restoreState="true"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/action_main_fragment_to_detailsFragment"
             android:id="@+id/action_main_fragment_to_detailsFragment"
             app:destination="@id/details_fragment" />
     </fragment>

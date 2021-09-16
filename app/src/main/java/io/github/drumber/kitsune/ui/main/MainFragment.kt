@@ -5,6 +5,8 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
@@ -85,6 +87,11 @@ class MainFragment : Fragment(R.layout.fragment_main), AnimeAdapter.OnItemClickL
     override fun onItemClick(anime: Anime) {
         val model = DetailsAdapter.AnimeDetails(anime)
         val action = MainFragmentDirections.actionMainFragmentToDetailsFragment(model)
-        findNavController().navigate(action)
+        val options = NavOptions.Builder()
+            .setLaunchSingleTop(true)
+            .setPopUpTo(findNavController().graph.findStartDestination().id, inclusive = false, saveState = true)
+            .setRestoreState(true)
+            .build()
+        findNavController().navigate(action, options)
     }
 }
