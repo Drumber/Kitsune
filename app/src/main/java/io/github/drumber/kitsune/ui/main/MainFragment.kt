@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.ui.main
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -12,6 +13,7 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
@@ -25,7 +27,8 @@ import io.github.drumber.kitsune.util.initWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainFragment : Fragment(R.layout.fragment_main), AnimeAdapter.OnItemClickListener {
+class MainFragment : Fragment(R.layout.fragment_main), AnimeAdapter.OnItemClickListener,
+    NavigationBarView.OnItemReselectedListener {
 
     private val binding: FragmentMainBinding by viewBinding()
 
@@ -39,6 +42,7 @@ class MainFragment : Fragment(R.layout.fragment_main), AnimeAdapter.OnItemClickL
 
         binding.toolbar.initWindowInsetsListener(false)
         binding.rvAnime.initMarginWindowInsetsListener(left = true, right = true, consume = false)
+
     }
 
     private fun initAdapter() {
@@ -55,7 +59,7 @@ class MainFragment : Fragment(R.layout.fragment_main), AnimeAdapter.OnItemClickL
         }
         // this will make sure to display header and footer with full width
         gridLayout.spanSizeLookup = LoadStateSpanSizeLookup(animeAdapter, gridLayout.spanCount)
-        
+
         lifecycleScope.launchWhenCreated {
             viewModel.anime.collectLatest {
                 animeAdapter.submitData(it)
@@ -79,6 +83,10 @@ class MainFragment : Fragment(R.layout.fragment_main), AnimeAdapter.OnItemClickL
         }
     }
 
+    override fun onNavigationItemReselected(item: MenuItem) {
+        binding.rvAnime.smoothScrollToPosition(0)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         animeAdapter.removeLoadStateListener(loadStateListener)
@@ -89,7 +97,11 @@ class MainFragment : Fragment(R.layout.fragment_main), AnimeAdapter.OnItemClickL
         val action = MainFragmentDirections.actionMainFragmentToDetailsFragment(model)
         val options = NavOptions.Builder()
             .setLaunchSingleTop(true)
-            .setPopUpTo(findNavController().graph.findStartDestination().id, inclusive = false, saveState = true)
+            .setPopUpTo(
+                findNavController().graph.findStartDestination().id,
+                inclusive = false,
+                saveState = true
+            )
             .setRestoreState(false)
             .build()
         findNavController().navigate(action, options)
