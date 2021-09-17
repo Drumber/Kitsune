@@ -90,7 +90,7 @@ class MainFragment : Fragment(R.layout.fragment_main), AnimeAdapter.OnItemClickL
         val options = NavOptions.Builder()
             .setLaunchSingleTop(true)
             .setPopUpTo(findNavController().graph.findStartDestination().id, inclusive = false, saveState = true)
-            .setRestoreState(true)
+            .setRestoreState(false)
             .build()
         findNavController().navigate(action, options)
     }
