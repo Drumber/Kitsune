@@ -1,9 +1,8 @@
-package io.github.drumber.kitsune.data.model
+package io.github.drumber.kitsune.data.model.resource
 
 import android.content.Context
 import android.os.Parcelable
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.resource.Titles
 import io.github.drumber.kitsune.data.model.resource.anime.AgeRating
 import io.github.drumber.kitsune.data.model.resource.anime.Anime
 import io.github.drumber.kitsune.data.model.resource.anime.Status
@@ -16,7 +15,7 @@ import io.github.drumber.kitsune.util.toDate
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
-sealed class DetailsAdapter(
+sealed class ResourceAdapter(
     val title: String,
     val description: String,
     val startDate: String?,
@@ -51,7 +50,7 @@ sealed class DetailsAdapter(
     }
 
     @Parcelize
-    class AnimeDetails(val anime: Anime) : DetailsAdapter(
+    class AnimeResource(val anime: Anime) : ResourceAdapter(
         title = getTitle(anime.titles, anime.canonicalTitle),
         description = anime.description.orEmpty(),
         startDate = anime.startDate,
@@ -70,7 +69,7 @@ sealed class DetailsAdapter(
     ), Parcelable
 
     @Parcelize
-    class MangaDetails(val manga: Manga) : DetailsAdapter(
+    class MangaResource(val manga: Manga) : ResourceAdapter(
         title = getTitle(manga.titles, manga.canonicalTitle),
         description = manga.description.orEmpty(),
         startDate = manga.startDate,

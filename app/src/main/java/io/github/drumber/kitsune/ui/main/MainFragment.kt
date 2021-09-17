@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.DetailsAdapter
+import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.data.model.resource.anime.Anime
 import io.github.drumber.kitsune.databinding.FragmentMainBinding
 import io.github.drumber.kitsune.ui.adapter.AnimeAdapter
@@ -85,7 +85,7 @@ class MainFragment : Fragment(R.layout.fragment_main), AnimeAdapter.OnItemClickL
     }
 
     override fun onItemClick(anime: Anime) {
-        val model = DetailsAdapter.AnimeDetails(anime)
+        val model = ResourceAdapter.AnimeResource(anime)
         val action = MainFragmentDirections.actionMainFragmentToDetailsFragment(model)
         val options = NavOptions.Builder()
             .setLaunchSingleTop(true)

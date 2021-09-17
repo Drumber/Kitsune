@@ -7,8 +7,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import io.github.drumber.kitsune.GlideRequests
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.data.model.resource.anime.Anime
-import io.github.drumber.kitsune.databinding.ItemAnimeBinding
+import io.github.drumber.kitsune.databinding.ItemResourceBinding
 import io.github.drumber.kitsune.util.smallOrHigher
 
 class AnimeAdapter(private val glide: GlideRequests, private val listener: OnItemClickListener? = null) :
@@ -16,7 +17,7 @@ class AnimeAdapter(private val glide: GlideRequests, private val listener: OnIte
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnimeViewHolder {
         return AnimeViewHolder(
-            ItemAnimeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemResourceBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -24,7 +25,7 @@ class AnimeAdapter(private val glide: GlideRequests, private val listener: OnIte
         getItem(position)?.let { holder.bind(it) }
     }
 
-    inner class AnimeViewHolder(private val binding: ItemAnimeBinding) :
+    inner class AnimeViewHolder(private val binding: ItemResourceBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
@@ -37,7 +38,7 @@ class AnimeAdapter(private val glide: GlideRequests, private val listener: OnIte
         }
 
         fun bind(anime: Anime) {
-            binding.anime = anime
+            binding.data = ResourceAdapter.AnimeResource(anime)
             glide.load(anime.posterImage?.smallOrHigher())
                 .centerCrop()
                 .placeholder(R.drawable.ic_insert_photo_48)

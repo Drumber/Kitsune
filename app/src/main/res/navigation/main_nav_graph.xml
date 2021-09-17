@@ -35,6 +35,6 @@
         android:label="DetailsFragment" >
         <argument
             android:name="model"
-            app:argType="io.github.drumber.kitsune.data.model.DetailsAdapter" />
+            app:argType="io.github.drumber.kitsune.data.model.resource.ResourceAdapter" />
     </fragment>
 </navigation>

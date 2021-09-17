@@ -5,7 +5,7 @@
     <data>
         <variable
             name="data"
-            type="io.github.drumber.kitsune.data.model.DetailsAdapter" />
+            type="io.github.drumber.kitsune.data.model.resource.ResourceAdapter" />
     </data>
 
     <LinearLayout
