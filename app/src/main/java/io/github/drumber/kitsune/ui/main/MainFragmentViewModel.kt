@@ -1,34 +1,23 @@
 package io.github.drumber.kitsune.ui.main
 
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asFlow
-import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
-import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.constants.SortFilter
-import io.github.drumber.kitsune.constants.SortFilter.desc
-import io.github.drumber.kitsune.data.repository.AnimeRepository
+import androidx.lifecycle.liveData
+import io.github.drumber.kitsune.data.model.resource.anime.Anime
 import io.github.drumber.kitsune.data.service.Filter
-import kotlinx.coroutines.flow.flatMapLatest
+import io.github.drumber.kitsune.data.service.anime.AnimeService
 
 class MainFragmentViewModel(
-    private val repository: AnimeRepository
+    private val animeService: AnimeService
 ) : ViewModel() {
 
-    private val currentFilter = MutableLiveData(getLastFilter())
-
-    val anime = currentFilter.asFlow().flatMapLatest { filter ->
-        repository.animeCollection(Kitsu.DEFAULT_PAGE_SIZE, filter)
-    }.cachedIn(viewModelScope)
-
-    fun setFilter(filter: Filter) {
-        currentFilter.value = filter
-    }
-
-    private fun getLastFilter(): Filter {
-        // TODO: get last used filter from storage
-        return Filter().sort(SortFilter.POPULARITY.desc())
+    val trending: LiveData<List<Anime>> = liveData {
+        val anime = animeService.trending(Filter()
+            .pageLimit(5)
+            .options).get()
+        if(anime != null) {
+            emit(anime)
+        }
     }
 
 }

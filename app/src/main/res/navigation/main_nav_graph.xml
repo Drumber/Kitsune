@@ -13,7 +13,6 @@
         <action
             app:restoreState="true"
             app:launchSingleTop="true"
-            app:popUpTo="@id/action_main_fragment_to_detailsFragment"
             android:id="@+id/action_main_fragment_to_detailsFragment"
             app:destination="@id/details_fragment" />
     </fragment>
@@ -22,7 +21,11 @@
         android:id="@+id/search_fragment"
         android:name="io.github.drumber.kitsune.ui.search.SearchFragment"
         android:label="@string/nav_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_search_fragment_to_details_fragment"
+            app:destination="@id/details_fragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/profile_fragment"

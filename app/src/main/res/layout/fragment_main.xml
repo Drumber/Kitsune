@@ -26,14 +26,19 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_anime"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nsv_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:orientation="horizontal"
-            android:clipToPadding="false"
-            tools:listitem="@layout/item_resource"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <include
+                android:id="@+id/section_trending"
+                layout="@layout/section_main_explore"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </androidx.core.widget.NestedScrollView>
 
         <include
             android:id="@+id/layout_loading"
@@ -42,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="gone"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
