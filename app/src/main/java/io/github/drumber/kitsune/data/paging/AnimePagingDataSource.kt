@@ -7,11 +7,15 @@ import io.github.drumber.kitsune.data.service.anime.AnimeService
 
 class AnimePagingDataSource(
     private val service: AnimeService,
-    filter: Filter
-) : ResourcePagingDataSource<Anime>(filter) {
+    filter: Filter,
+    requestType: RequestType = RequestType.ALL
+) : ResourcePagingDataSource<Anime>(filter, requestType) {
 
-    override suspend fun requestResource(filter: Filter): JSONAPIDocument<List<Anime>> {
-        return service.allAnime(filter.options)
+    override suspend fun requestResource(filter: Filter, requestType: RequestType): JSONAPIDocument<List<Anime>> {
+        return when (requestType) {
+            RequestType.ALL -> service.allAnime(filter.options)
+            RequestType.TRENDING -> service.trending(filter.options)
+        }
     }
 
 }

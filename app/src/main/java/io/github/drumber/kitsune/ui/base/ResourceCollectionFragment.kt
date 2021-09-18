@@ -74,12 +74,14 @@ abstract class ResourceCollectionFragment(@LayoutRes contentLayoutId: Int) :
     }
 
     private val loadStateListener: (CombinedLoadStates) -> Unit = { loadState ->
-        recyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
-        resourceLoadingBinding?.apply {
-            root.isVisible = loadState.source.refresh !is LoadState.NotLoading
-            progressBar.isVisible = loadState.source.refresh is LoadState.Loading
-            btnRetry.isVisible = loadState.source.refresh is LoadState.Error
-            tvError.isVisible = loadState.source.refresh is LoadState.Error
+        if(view?.parent != null) {
+            recyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
+            resourceLoadingBinding?.apply {
+                root.isVisible = loadState.source.refresh !is LoadState.NotLoading
+                progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                btnRetry.isVisible = loadState.source.refresh is LoadState.Error
+                tvError.isVisible = loadState.source.refresh is LoadState.Error
+            }
         }
     }
 

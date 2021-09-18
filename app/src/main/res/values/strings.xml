@@ -22,6 +22,9 @@
     <string name="data_rank">Rank #%d</string>
     <string name="data_popularity">Popularity #%d</string>
 
+    <string name="section_trending">Trending This Week</string>
+    <string name="section_top_airing">Top Airing Anime</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

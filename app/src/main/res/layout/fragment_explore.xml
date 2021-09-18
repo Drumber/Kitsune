@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="io.github.drumber.kitsune.ui.main.MainFragment">
+    tools:context=".ui.main.explore.ExploreFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -19,40 +19,22 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:menu="@menu/toolbar_menu"
                 app:title="@string/app_name"
-                app:layout_scrollFlags="noScroll"
+                app:navigationIcon="@drawable/ic_arrow_back_24"
+                app:layout_scrollFlags="scroll|enterAlways|snap"
                 style="@style/Widget.MaterialComponents.Toolbar.Surface" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/nsv_content"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_resource"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:divider="@drawable/explore_section_divider"
-                android:showDividers="middle">
-
-                <include
-                    android:id="@+id/section_trending"
-                    layout="@layout/section_main_explore"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    android:id="@+id/section_top_airing"
-                    layout="@layout/section_main_explore"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-        </androidx.core.widget.NestedScrollView>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:orientation="horizontal"
+            android:clipToPadding="false"
+            tools:listitem="@layout/item_resource"/>
 
         <include
             android:id="@+id/layout_loading"
@@ -61,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="gone"
-            tools:visibility="gone"/>
+            tools:visibility="visible"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

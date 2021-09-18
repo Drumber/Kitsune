@@ -11,7 +11,11 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.model.ResourceSelector
+import io.github.drumber.kitsune.data.model.ResourceType
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
+import io.github.drumber.kitsune.data.paging.RequestType
+import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.databinding.FragmentMainBinding
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.widget.ExploreSection
@@ -31,21 +35,46 @@ class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<Resou
         initAdapter()
 
         binding.toolbar.initWindowInsetsListener(false)
-        binding.nsvContent.initMarginWindowInsetsListener(left = true, right = true, consume = false)
+        binding.nsvContent.initMarginWindowInsetsListener(
+            left = true,
+            right = true,
+            consume = false
+        )
 
     }
 
     private fun initAdapter() {
-        val glide = GlideApp.with(this)
-
-        val trending = ExploreSection(glide, "Trending This Week", null, this) {
-
-        }
-        trending.bindView(binding.sectionTrending.root)
-
+        val trending = createExploreSection(
+            getString(R.string.section_trending),
+            ResourceSelector(ResourceType.Anime, Filter().limit(30), RequestType.TRENDING),
+            binding.sectionTrending.root
+        )
         viewModel.trending.observe(viewLifecycleOwner) { data ->
             trending.setData(data.map { ResourceAdapter.AnimeResource(it) })
         }
+
+        val topAiring = createExploreSection(
+            getString(R.string.section_top_airing),
+            ResourceSelector(ResourceType.Anime, MainFragmentViewModel.FILTER_TOP_AIRING, RequestType.ALL),
+            binding.sectionTopAiring.root
+        )
+        viewModel.topAiring.observe(viewLifecycleOwner) { data ->
+            topAiring.setData(data.map { ResourceAdapter.AnimeResource(it) })
+        }
+    }
+
+    private fun createExploreSection(
+        title: String,
+        resourceSelector: ResourceSelector,
+        view: View
+    ): ExploreSection {
+        val glide = GlideApp.with(this)
+        val section = ExploreSection(glide, title, null, this) {
+            val action = MainFragmentDirections.actionMainFragmentToExploreFragment2(resourceSelector, title)
+            findNavController().navigate(action)
+        }
+        section.bindView(view)
+        return section
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {

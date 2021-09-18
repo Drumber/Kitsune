@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune
+package io.github.drumber.kitsune.ui.details
 
 import android.os.Bundle
 import android.view.View
@@ -12,6 +12,8 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.appbar.AppBarLayout
+import io.github.drumber.kitsune.GlideApp
+import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.util.*
 import kotlin.math.abs

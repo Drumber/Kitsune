@@ -15,6 +15,9 @@
             app:launchSingleTop="true"
             android:id="@+id/action_main_fragment_to_detailsFragment"
             app:destination="@id/details_fragment" />
+        <action
+            android:id="@+id/action_main_fragment_to_exploreFragment2"
+            app:destination="@id/explore_fragment" />
     </fragment>
 
     <fragment
@@ -34,10 +37,25 @@
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/details_fragment"
-        android:name="io.github.drumber.kitsune.DetailsFragment"
+        android:name="io.github.drumber.kitsune.ui.details.DetailsFragment"
         android:label="DetailsFragment" >
         <argument
             android:name="model"
             app:argType="io.github.drumber.kitsune.data.model.resource.ResourceAdapter" />
+    </fragment>
+    <fragment
+        android:id="@+id/explore_fragment"
+        android:name="io.github.drumber.kitsune.ui.main.explore.ExploreFragment"
+        android:label="fragment_explore"
+        tools:layout="@layout/fragment_explore" >
+        <action
+            android:id="@+id/action_exploreFragment_to_details_fragment2"
+            app:destination="@id/details_fragment" />
+        <argument
+            android:name="resourceSelector"
+            app:argType="io.github.drumber.kitsune.data.model.ResourceSelector" />
+        <argument
+            android:name="title"
+            app:argType="string" />
     </fragment>
 </navigation>

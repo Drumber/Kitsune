@@ -7,11 +7,15 @@ import io.github.drumber.kitsune.data.service.manga.MangaService
 
 class MangaPagingDataSource(
     private val service: MangaService,
-    filter: Filter
-) : ResourcePagingDataSource<Manga>(filter) {
+    filter: Filter,
+    requestType: RequestType = RequestType.ALL
+) : ResourcePagingDataSource<Manga>(filter, requestType) {
 
-    override suspend fun requestResource(filter: Filter): JSONAPIDocument<List<Manga>> {
-        return service.allManga(filter.options)
+    override suspend fun requestResource(filter: Filter, requestType: RequestType): JSONAPIDocument<List<Manga>> {
+        return when (requestType) {
+            RequestType.ALL -> service.allManga(filter.options)
+            RequestType.TRENDING -> service.trending(filter.options)
+        }
     }
 
 }
