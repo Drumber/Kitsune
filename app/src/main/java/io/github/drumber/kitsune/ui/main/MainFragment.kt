@@ -61,6 +61,33 @@ class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<Resou
         viewModel.topAiring.observe(viewLifecycleOwner) { data ->
             topAiring.setData(data.map { ResourceAdapter.AnimeResource(it) })
         }
+
+        val topUpcoming = createExploreSection(
+            getString(R.string.section_top_upcoming),
+            ResourceSelector(ResourceType.Anime, MainFragmentViewModel.FILTER_TOP_UPCOMING, RequestType.ALL),
+            binding.sectionTopUpcoming.root
+        )
+        viewModel.topUpcoming.observe(viewLifecycleOwner) { data ->
+            topUpcoming.setData(data.map { ResourceAdapter.AnimeResource(it) })
+        }
+
+        val highestRated = createExploreSection(
+            getString(R.string.section_highest_rated),
+            ResourceSelector(ResourceType.Anime, MainFragmentViewModel.FILTER_HIGHEST_RATED, RequestType.ALL),
+            binding.sectionHighestRated.root
+        )
+        viewModel.highestRated.observe(viewLifecycleOwner) { data ->
+            highestRated.setData(data.map { ResourceAdapter.AnimeResource(it) })
+        }
+
+        val mostPopular = createExploreSection(
+            getString(R.string.section_most_popular),
+            ResourceSelector(ResourceType.Anime, MainFragmentViewModel.FILTER_MOST_POPULAR, RequestType.ALL),
+            binding.sectionMostPopular.root
+        )
+        viewModel.mostPopular.observe(viewLifecycleOwner) { data ->
+            mostPopular.setData(data.map { ResourceAdapter.AnimeResource(it) })
+        }
     }
 
     private fun createExploreSection(

@@ -20,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:title="@string/app_name"
-                app:layout_scrollFlags="noScroll"
+                app:layout_scrollFlags="scroll|snap"
                 style="@style/Widget.MaterialComponents.Toolbar.Surface" />
 
         </com.google.android.material.appbar.AppBarLayout>
@@ -46,6 +46,24 @@
 
                 <include
                     android:id="@+id/section_top_airing"
+                    layout="@layout/section_main_explore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    android:id="@+id/section_top_upcoming"
+                    layout="@layout/section_main_explore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    android:id="@+id/section_highest_rated"
+                    layout="@layout/section_main_explore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    android:id="@+id/section_most_popular"
                     layout="@layout/section_main_explore"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
