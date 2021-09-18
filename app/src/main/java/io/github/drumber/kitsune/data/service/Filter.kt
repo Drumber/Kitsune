@@ -1,10 +1,14 @@
 package io.github.drumber.kitsune.data.service
 
+import android.os.Parcelable
 import io.github.drumber.kitsune.constants.Kitsu
+import kotlinx.parcelize.Parcelize
 
-class Filter(queryParams: Map<String, String> = emptyMap()) {
+@Parcelize
+data class Filter(val options: MutableMap<String, String> = mutableMapOf()): Parcelable {
 
-    val options = queryParams.toMutableMap()
+    /** Defines how much of data to receive. This is only used for some lists, like trending. */
+    fun limit(limit: Int) = put("limit", limit)
 
     /** Defines how much of a resource to receive. The maximum amount is 20. */
     fun pageLimit(limit: Int = Kitsu.DEFAULT_PAGE_SIZE) = put("page[limit]", limit)

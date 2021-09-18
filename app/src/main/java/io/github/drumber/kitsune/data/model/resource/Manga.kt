@@ -1,13 +1,8 @@
-package io.github.drumber.kitsune.data.model.resource.manga
+package io.github.drumber.kitsune.data.model.resource
 
 import android.os.Parcelable
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Type
-import io.github.drumber.kitsune.data.model.resource.Image
-import io.github.drumber.kitsune.data.model.resource.Titles
-import io.github.drumber.kitsune.data.model.resource.anime.AgeRating
-import io.github.drumber.kitsune.data.model.resource.anime.Rating
-import io.github.drumber.kitsune.data.model.resource.anime.Status
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -42,7 +37,7 @@ data class Manga(
     val nsfw: Boolean?,
     val nextRelease: String?,
     val totalLength: Int?
-) : Parcelable
+) : Resource(), Parcelable
 
 enum class MangaSubtype {
     doujin,

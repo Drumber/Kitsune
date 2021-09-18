@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune
 
 import android.app.Application
+import by.kirich1409.viewbindingdelegate.ViewBindingPropertyDelegate
 import com.chibatching.kotpref.Kotpref
 import io.github.drumber.kitsune.di.appModule
 import org.koin.android.ext.koin.androidContext
@@ -19,6 +20,8 @@ class KitsuneApplication: Application() {
         }
 
         Kotpref.init(this)
+
+        ViewBindingPropertyDelegate.strictMode = false
     }
 
 }

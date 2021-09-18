@@ -65,4 +65,5 @@ class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<Resou
             .build()
         findNavController().navigate(action, options)
     }
+
 }

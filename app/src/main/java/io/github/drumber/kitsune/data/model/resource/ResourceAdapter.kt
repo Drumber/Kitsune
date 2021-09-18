@@ -3,10 +3,6 @@ package io.github.drumber.kitsune.data.model.resource
 import android.content.Context
 import android.os.Parcelable
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.resource.anime.AgeRating
-import io.github.drumber.kitsune.data.model.resource.anime.Anime
-import io.github.drumber.kitsune.data.model.resource.anime.Status
-import io.github.drumber.kitsune.data.model.resource.manga.Manga
 import io.github.drumber.kitsune.preference.AppearancePref
 import io.github.drumber.kitsune.preference.TitlesPref
 import io.github.drumber.kitsune.util.originalOrDown
@@ -86,6 +82,13 @@ sealed class ResourceAdapter(
         posterImage = manga.posterImage?.smallOrHigher(),
         coverImage = manga.coverImage?.originalOrDown()
     ), Parcelable
+
+    companion object {
+        fun fromResource(resource: Resource) = when (resource) {
+            is Anime -> AnimeResource(resource)
+            is Manga -> MangaResource(resource)
+        }
+    }
 
 }
 

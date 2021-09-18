@@ -10,15 +10,22 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.databinding.FragmentSearchBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
-import io.github.drumber.kitsune.ui.resourcecollection.ResourceCollectionFragment
+import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
+import io.github.drumber.kitsune.ui.base.BaseCollectionViewModel
 import io.github.drumber.kitsune.util.initWindowInsetsListener
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchFragment : ResourceCollectionFragment(R.layout.fragment_search) {
+class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
 
     private val binding: FragmentSearchBinding by viewBinding()
 
+    private val viewModel: SearchViewModel by viewModel()
+
+    override val collectionViewModel: BaseCollectionViewModel
+        get() = viewModel
+
     override val recyclerView: RecyclerView
-        get() = binding.rvAnime
+        get() = binding.rvResource
 
     override val resourceLoadingBinding: LayoutResourceLoadingBinding?
         get() = binding.layoutLoading

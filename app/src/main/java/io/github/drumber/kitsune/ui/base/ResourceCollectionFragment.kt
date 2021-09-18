@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.resourcecollection
+package io.github.drumber.kitsune.ui.base
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -6,70 +6,71 @@ import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationBarView
-import io.github.drumber.kitsune.GlideApp
+import io.github.drumber.kitsune.data.model.resource.Resource
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
-import io.github.drumber.kitsune.data.model.resource.anime.Anime
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
-import io.github.drumber.kitsune.ui.adapter.AnimeAdapter
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.widget.LoadStateSpanSizeLookup
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
-import kotlinx.coroutines.flow.collectLatest
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 abstract class ResourceCollectionFragment(@LayoutRes contentLayoutId: Int) :
     Fragment(contentLayoutId),
-    OnItemClickListener<Anime>,
+    OnItemClickListener<Resource>,
+    View.OnClickListener,
     NavigationBarView.OnItemReselectedListener {
-
-    protected val collectionViewModel: ResourceCollectionViewModel by viewModel()
 
     abstract val recyclerView: RecyclerView
 
     abstract val resourceLoadingBinding: LayoutResourceLoadingBinding?
 
-    private lateinit var animeAdapter: AnimeAdapter
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initAdapter()
+        initView()
 
         recyclerView.initMarginWindowInsetsListener(left = true, right = true, consume = false)
     }
 
-    private fun initAdapter() {
-        val glide = GlideApp.with(this)
-        animeAdapter = AnimeAdapter(glide, this)
-        val gridLayout = GridLayoutManager(requireContext(), 2)
+    fun setRecyclerViewAdapter(adapter: RecyclerView.Adapter<*>) {
+        val oldAdapter = recyclerView.adapter
+        if(oldAdapter is PagingDataAdapter<*, *>) {
+            oldAdapter.removeLoadStateListener(loadStateListener)
+        }
 
-        recyclerView.apply {
-            layoutManager = gridLayout
-            adapter = animeAdapter.withLoadStateHeaderAndFooter(
-                header = ResourceLoadStateAdapter(animeAdapter),
-                footer = ResourceLoadStateAdapter(animeAdapter)
+        recyclerView.adapter = if(adapter is PagingDataAdapter<*, *>) {
+            adapter.addLoadStateListener(loadStateListener)
+
+            val gridLayout = recyclerView.layoutManager as GridLayoutManager
+            // this will make sure to display header and footer with full width
+            gridLayout.spanSizeLookup = LoadStateSpanSizeLookup(adapter, gridLayout.spanCount)
+
+            adapter.withLoadStateHeaderAndFooter(
+                header = ResourceLoadStateAdapter(adapter),
+                footer = ResourceLoadStateAdapter(adapter)
             )
+        } else {
+            adapter
         }
-        // this will make sure to display header and footer with full width
-        gridLayout.spanSizeLookup = LoadStateSpanSizeLookup(animeAdapter, gridLayout.spanCount)
+    }
 
-        lifecycleScope.launchWhenCreated {
-            collectionViewModel.anime.collectLatest {
-                animeAdapter.submitData(it)
-            }
-        }
+    private fun initView() {
+        val gridLayout = GridLayoutManager(requireContext(), 2)
+        recyclerView.layoutManager = gridLayout
 
-        resourceLoadingBinding?.btnRetry?.setOnClickListener { animeAdapter.retry() }
+        resourceLoadingBinding?.btnRetry?.setOnClickListener(this)
+    }
 
-        animeAdapter.addLoadStateListener(loadStateListener)
+    /** Triggered when clicking on retry button. */
+    override fun onClick(retryButton: View?) {
+        (recyclerView.adapter as? PagingDataAdapter<*, *>)?.retry()
     }
 
     private val loadStateListener: (CombinedLoadStates) -> Unit = { loadState ->
@@ -88,11 +89,11 @@ abstract class ResourceCollectionFragment(@LayoutRes contentLayoutId: Int) :
 
     override fun onDestroyView() {
         super.onDestroyView()
-        animeAdapter.removeLoadStateListener(loadStateListener)
+        (recyclerView.adapter as? PagingDataAdapter<*, *>)?.removeLoadStateListener(loadStateListener)
     }
 
-    override fun onItemClick(anime: Anime) {
-        val model = ResourceAdapter.AnimeResource(anime)
+    override fun onItemClick(resource: Resource) {
+        val model = ResourceAdapter.fromResource(resource)
         val options = NavOptions.Builder()
             .setLaunchSingleTop(true)
             .setPopUpTo(

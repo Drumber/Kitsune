@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.BuildConfig
-import io.github.drumber.kitsune.data.model.resource.anime.Anime
-import io.github.drumber.kitsune.data.model.resource.anime.Episode
-import io.github.drumber.kitsune.data.model.resource.manga.Chapter
-import io.github.drumber.kitsune.data.model.resource.manga.Manga
+import io.github.drumber.kitsune.data.model.resource.Anime
+import io.github.drumber.kitsune.data.model.resource.Episode
+import io.github.drumber.kitsune.data.model.resource.Chapter
+import io.github.drumber.kitsune.data.model.resource.Manga
 import io.github.drumber.kitsune.data.service.anime.AnimeService
 import io.github.drumber.kitsune.data.service.anime.EpisodesService
 import io.github.drumber.kitsune.data.service.auth.AuthService

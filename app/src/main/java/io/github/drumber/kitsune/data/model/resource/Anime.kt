@@ -1,11 +1,9 @@
-package io.github.drumber.kitsune.data.model.resource.anime
+package io.github.drumber.kitsune.data.model.resource
 
 import android.os.Parcelable
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Type
-import io.github.drumber.kitsune.data.model.resource.Image
-import io.github.drumber.kitsune.data.model.resource.Titles
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -40,7 +38,7 @@ data class Anime(
     val nsfw: Boolean?,
     val nextRelease: String?,
     val totalLength: Int?
-) : Parcelable
+) : Resource(), Parcelable
 
 @Parcelize
 data class Rating(
