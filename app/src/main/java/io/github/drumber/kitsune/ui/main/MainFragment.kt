@@ -3,7 +3,10 @@ package io.github.drumber.kitsune.ui.main
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
@@ -13,10 +16,12 @@ import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.ResourceSelector
 import io.github.drumber.kitsune.data.model.ResourceType
+import io.github.drumber.kitsune.data.model.resource.Anime
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.data.paging.RequestType
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.databinding.FragmentMainBinding
+import io.github.drumber.kitsune.databinding.SectionMainExploreBinding
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.widget.ExploreSection
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
@@ -32,7 +37,7 @@ class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<Resou
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initAdapter()
+        initExploreSections()
 
         binding.toolbar.initWindowInsetsListener(false)
         binding.nsvContent.initMarginWindowInsetsListener(
@@ -43,58 +48,81 @@ class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<Resou
 
     }
 
-    private fun initAdapter() {
-        val trending = createExploreSection(
-            getString(R.string.section_trending),
-            ResourceSelector(ResourceType.Anime, Filter().limit(30), RequestType.TRENDING),
-            binding.sectionTrending.root
+    private fun initExploreSections() {
+        val trending = createAnimeExploreSection(
+            R.string.section_trending,
+            Filter().limit(30),
+            RequestType.TRENDING,
+            binding.sectionTrending,
+            viewModel.trending
         )
-        viewModel.trending.observe(viewLifecycleOwner) { data ->
-            trending.setData(data.map { ResourceAdapter.AnimeResource(it) })
-        }
 
-        val topAiring = createExploreSection(
-            getString(R.string.section_top_airing),
-            ResourceSelector(ResourceType.Anime, MainFragmentViewModel.FILTER_TOP_AIRING, RequestType.ALL),
-            binding.sectionTopAiring.root
+        val topAiring = createAnimeExploreSection(
+            R.string.section_top_airing,
+            MainFragmentViewModel.FILTER_TOP_AIRING,
+            RequestType.ALL,
+            binding.sectionTopAiring,
+            viewModel.topAiring
         )
-        viewModel.topAiring.observe(viewLifecycleOwner) { data ->
-            topAiring.setData(data.map { ResourceAdapter.AnimeResource(it) })
-        }
 
-        val topUpcoming = createExploreSection(
-            getString(R.string.section_top_upcoming),
-            ResourceSelector(ResourceType.Anime, MainFragmentViewModel.FILTER_TOP_UPCOMING, RequestType.ALL),
-            binding.sectionTopUpcoming.root
+        val topUpcoming = createAnimeExploreSection(
+            R.string.section_top_upcoming,
+            MainFragmentViewModel.FILTER_TOP_UPCOMING,
+            RequestType.ALL,
+            binding.sectionTopUpcoming,
+            viewModel.topUpcoming
         )
-        viewModel.topUpcoming.observe(viewLifecycleOwner) { data ->
-            topUpcoming.setData(data.map { ResourceAdapter.AnimeResource(it) })
-        }
 
-        val highestRated = createExploreSection(
-            getString(R.string.section_highest_rated),
-            ResourceSelector(ResourceType.Anime, MainFragmentViewModel.FILTER_HIGHEST_RATED, RequestType.ALL),
-            binding.sectionHighestRated.root
+        val highestRated = createAnimeExploreSection(
+            R.string.section_highest_rated,
+            MainFragmentViewModel.FILTER_HIGHEST_RATED,
+            RequestType.ALL,
+            binding.sectionHighestRated,
+            viewModel.highestRated
         )
-        viewModel.highestRated.observe(viewLifecycleOwner) { data ->
-            highestRated.setData(data.map { ResourceAdapter.AnimeResource(it) })
-        }
 
-        val mostPopular = createExploreSection(
-            getString(R.string.section_most_popular),
-            ResourceSelector(ResourceType.Anime, MainFragmentViewModel.FILTER_MOST_POPULAR, RequestType.ALL),
-            binding.sectionMostPopular.root
+        val mostPopular = createAnimeExploreSection(
+            R.string.section_most_popular,
+            MainFragmentViewModel.FILTER_MOST_POPULAR,
+            RequestType.ALL,
+            binding.sectionMostPopular,
+            viewModel.mostPopular
         )
-        viewModel.mostPopular.observe(viewLifecycleOwner) { data ->
-            mostPopular.setData(data.map { ResourceAdapter.AnimeResource(it) })
+    }
+
+    private fun createAnimeExploreSection(
+        @StringRes titleRes: Int,
+        filter: Filter,
+        requestType: RequestType,
+        sectionBinding: SectionMainExploreBinding,
+        liveData: LiveData<List<Anime>>
+    ): ExploreSection {
+        sectionBinding.apply {
+            rvResource.isVisible = false
+            layoutLoading.apply {
+                tvError.isVisible = false
+                btnRetry.isVisible = false
+                root.isVisible = true
+            }
         }
+        val resourceSelector = ResourceSelector(ResourceType.Anime, filter, requestType)
+        val section = createExploreSection(titleRes, resourceSelector, sectionBinding.root)
+        liveData.observe(viewLifecycleOwner) { data ->
+            section.setData(data.map { ResourceAdapter.AnimeResource(it) })
+            sectionBinding.apply {
+                layoutLoading.root.isVisible = false
+                rvResource.isVisible = true
+            }
+        }
+        return section
     }
 
     private fun createExploreSection(
-        title: String,
+        @StringRes titleRes: Int,
         resourceSelector: ResourceSelector,
         view: View
     ): ExploreSection {
+        val title = getString(titleRes)
         val glide = GlideApp.with(this)
         val section = ExploreSection(glide, title, null, this) {
             val action = MainFragmentDirections.actionMainFragmentToExploreFragment2(resourceSelector, title)

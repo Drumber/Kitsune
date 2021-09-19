@@ -10,8 +10,8 @@
     </data>
 
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="176dp"
-        android:layout_height="250dp"
+        android:layout_width="@dimen/resource_item_width"
+        android:layout_height="@dimen/resource_item_height"
         android:layout_margin="10dp"
         app:cardElevation="4dp">
 

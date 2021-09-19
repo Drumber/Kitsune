@@ -35,6 +35,9 @@ abstract class ResourcePagingDataSource<Value : Any>(
 
     abstract suspend fun requestResource(filter: Filter, requestType: RequestType): JSONAPIDocument<List<Value>>
 
-    override fun getRefreshKey(state: PagingState<Int, Value>) = state.anchorPosition
+    override fun getRefreshKey(state: PagingState<Int, Value>) = state.anchorPosition?.let { anchorPosition ->
+        state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1) ?:
+        state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
+    }
 
 }
