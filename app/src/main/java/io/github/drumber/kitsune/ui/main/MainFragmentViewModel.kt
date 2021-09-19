@@ -8,45 +8,50 @@ import io.github.drumber.kitsune.constants.SortFilter.desc
 import io.github.drumber.kitsune.data.model.resource.Anime
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.anime.AnimeService
+import io.github.drumber.kitsune.exception.ReceivedDataException
+import io.github.drumber.kitsune.util.ResponseData
+import io.github.drumber.kitsune.util.logE
 
 class MainFragmentViewModel(
     private val animeService: AnimeService
 ) : ViewModel() {
 
-    val trending: LiveData<List<Anime>> = liveData {
-        val anime = animeService.trending(Filter()
-            .limit(10)
-            .options).get()
-        if(anime != null) {
-            emit(anime)
+    val trending: LiveData<ResponseData<List<Anime>>> = liveData {
+        val responseData = processCall {
+            animeService.trending(Filter()
+                .limit(10)
+                .options).get()
         }
+        emit(responseData)
     }
 
-    val topAiring: LiveData<List<Anime>> = liveData {
-        val anime = animeService.allAnime(FILTER_TOP_AIRING.options).get()
-        if(anime != null) {
-            emit(anime)
-        }
+    val topAiring: LiveData<ResponseData<List<Anime>>> = liveData {
+        val responseData = processCall { animeService.allAnime(FILTER_TOP_AIRING.options).get() }
+        emit(responseData)
     }
 
-    val topUpcoming: LiveData<List<Anime>> = liveData {
-        val anime = animeService.allAnime(FILTER_TOP_UPCOMING.options).get()
-        if(anime != null) {
-            emit(anime)
-        }
+    val topUpcoming: LiveData<ResponseData<List<Anime>>> = liveData {
+        val responseData = processCall { animeService.allAnime(FILTER_TOP_UPCOMING.options).get() }
+        emit(responseData)
     }
 
-    val highestRated: LiveData<List<Anime>> = liveData {
-        val anime = animeService.allAnime(FILTER_HIGHEST_RATED.options).get()
-        if(anime != null) {
-            emit(anime)
-        }
+    val highestRated: LiveData<ResponseData<List<Anime>>> = liveData {
+        val responseData = processCall { animeService.allAnime(FILTER_HIGHEST_RATED.options).get() }
+        emit(responseData)
     }
 
-    val mostPopular: LiveData<List<Anime>> = liveData {
-        val anime = animeService.allAnime(FILTER_MOST_POPULAR.options).get()
-        if(anime != null) {
-            emit(anime)
+    val mostPopular: LiveData<ResponseData<List<Anime>>> = liveData {
+        val responseData = processCall { animeService.allAnime(FILTER_MOST_POPULAR.options).get() }
+        emit(responseData)
+    }
+
+    private suspend fun <T> processCall(call: suspend () -> List<T>?): ResponseData<List<T>> {
+        return try {
+            val data = call() ?: throw ReceivedDataException("Received data is 'null'.")
+            ResponseData.Success(data)
+        } catch (e: Exception) {
+            logE("Failed to load data.", e)
+            ResponseData.Error(e)
         }
     }
 

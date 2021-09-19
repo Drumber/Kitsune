@@ -24,6 +24,7 @@ import io.github.drumber.kitsune.databinding.FragmentMainBinding
 import io.github.drumber.kitsune.databinding.SectionMainExploreBinding
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.widget.ExploreSection
+import io.github.drumber.kitsune.util.ResponseData
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -95,7 +96,7 @@ class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<Resou
         filter: Filter,
         requestType: RequestType,
         sectionBinding: SectionMainExploreBinding,
-        liveData: LiveData<List<Anime>>
+        liveData: LiveData<ResponseData<List<Anime>>>
     ): ExploreSection {
         sectionBinding.apply {
             rvResource.isVisible = false
@@ -107,12 +108,24 @@ class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<Resou
         }
         val resourceSelector = ResourceSelector(ResourceType.Anime, filter, requestType)
         val section = createExploreSection(titleRes, resourceSelector, sectionBinding.root)
-        liveData.observe(viewLifecycleOwner) { data ->
-            section.setData(data.map { ResourceAdapter.AnimeResource(it) })
-            sectionBinding.apply {
-                layoutLoading.root.isVisible = false
-                rvResource.isVisible = true
+        liveData.observe(viewLifecycleOwner) { response ->
+            if(response is ResponseData.Success) {
+                section.setData(response.data.map { ResourceAdapter.AnimeResource(it) })
+                sectionBinding.apply {
+                    layoutLoading.root.isVisible = false
+                    rvResource.isVisible = true
+                }
+            } else {
+                sectionBinding.apply {
+                    rvResource.isVisible = false
+                    layoutLoading.apply {
+                        root.isVisible = true
+                        tvError.isVisible = true
+                        progressBar.isVisible = false
+                    }
+                }
             }
+
         }
         return section
     }
