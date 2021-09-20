@@ -24,6 +24,25 @@
                 app:layout_scrollFlags="scroll|enterAlways|snap"
                 style="@style/Widget.MaterialComponents.Toolbar.Surface" />
 
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:clipToPadding="false"
+                app:layout_scrollFlags="scroll|enterAlways|snap"
+                app:singleLine="true"
+                android:background="?attr/colorSurface">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_resource_selector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:closeIcon="@drawable/ic_arrow_drop_down_24"
+                    app:closeIconEnabled="true"
+                    android:text="@string/anime"/>
+
+            </com.google.android.material.chip.ChipGroup>
+
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView

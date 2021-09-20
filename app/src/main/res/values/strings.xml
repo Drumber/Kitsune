@@ -2,12 +2,19 @@
     <string name="app_name" translatable="false">Kitsune</string>
 
     <string name="action_retry">Retry</string>
+    <string name="action_ok">Ok</string>
+    <string name="action_cancel">Cancel</string>
 
     <string name="error_resource_loading">Could not load data.</string>
 
     <string name="nav_home">Home</string>
     <string name="nav_search">Search</string>
     <string name="nav_profile">Profile</string>
+
+    <string name="anime">Anime</string>
+    <string name="manga">Manga</string>
+
+    <string name="title_resource_type">Resource Type</string>
 
     <string name="menu_filter">Filter</string>
 

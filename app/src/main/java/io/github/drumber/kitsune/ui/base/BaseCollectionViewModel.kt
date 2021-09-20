@@ -23,6 +23,9 @@ abstract class BaseCollectionViewModel: ViewModel() {
         _resourceSelector.value = resourceSelector
     }
 
+    val currentResourceSelector: ResourceSelector
+        get() = resourceSelector.value ?: getLastResourceSelector()
+
     val dataSource: Flow<PagingData<Resource>> = resourceSelector.asFlow().flatMapLatest { selector ->
         getData(selector)
     }.cachedIn(viewModelScope)
