@@ -1,16 +1,38 @@
 package io.github.drumber.kitsune.constants
 
-object SortFilter {
+import io.github.drumber.kitsune.R
 
-    const val POPULARITY = "user_count"
+enum class SortFilter(val queryParam: String) {
 
-    const val AVERAGE_RATING = "average_rating"
+    POPULARITY_DESC("-user_count"),
+    POPULARITY_ASC("user_count"),
 
-    const val DATE = "start_date"
+    AVERAGE_RATING_DESC("-average_rating"),
+    AVERAGE_RATING_ASC("average_rating"),
 
-    const val RECENTLY_ADDED = "created_at"
+    DATE_DESC("-start_date"),
+    DATE_ASC("start_date");
 
-    /** Get the sort string for descending order */
-    fun String.desc() = "-$this"
+    companion object {
+        fun fromQueryParam(queryParam: String?): SortFilter? {
+            if(queryParam != null) {
+                values().forEach {
+                    if(it.queryParam.startsWith(queryParam)) {
+                        return it
+                    }
+                }
+            }
+            return null
+        }
+    }
 
+}
+
+inline fun SortFilter.toStringRes() = when (this) {
+    SortFilter.POPULARITY_DESC -> R.string.sort_popularity_desc
+    SortFilter.POPULARITY_ASC -> R.string.sort_popularity_asc
+    SortFilter.AVERAGE_RATING_DESC -> R.string.sort_average_rating_desc
+    SortFilter.AVERAGE_RATING_ASC -> R.string.sort_average_rating_asc
+    SortFilter.DATE_DESC -> R.string.sort_release_date_desc
+    SortFilter.DATE_ASC -> R.string.sort_release_date_asc
 }

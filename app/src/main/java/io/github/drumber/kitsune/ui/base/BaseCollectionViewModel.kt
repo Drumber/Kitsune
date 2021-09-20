@@ -4,7 +4,6 @@ import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.SortFilter
-import io.github.drumber.kitsune.constants.SortFilter.desc
 import io.github.drumber.kitsune.data.model.ResourceSelector
 import io.github.drumber.kitsune.data.model.ResourceType
 import io.github.drumber.kitsune.data.model.resource.Resource
@@ -38,7 +37,7 @@ abstract class BaseCollectionViewModel: ViewModel() {
     }
 
     companion object {
-        val DEFAULT_FILTER = Filter().sort(SortFilter.POPULARITY.desc())
+        val DEFAULT_FILTER = Filter().sort(SortFilter.POPULARITY_DESC.queryParam)
         val DEFAULT_RESOURCE_SELECTOR = ResourceSelector(ResourceType.Anime, DEFAULT_FILTER)
     }
 

@@ -14,7 +14,15 @@
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
 
+    <string name="sort_popularity_asc">Least Popular</string>
+    <string name="sort_popularity_desc">Most Popular</string>
+    <string name="sort_average_rating_asc">Worst Rated</string>
+    <string name="sort_average_rating_desc">Best Rated</string>
+    <string name="sort_release_date_asc">Oldest</string>
+    <string name="sort_release_date_desc">Latest</string>
+
     <string name="title_resource_type">Resource Type</string>
+    <string name="title_sort">Sort by</string>
 
     <string name="menu_filter">Filter</string>
 

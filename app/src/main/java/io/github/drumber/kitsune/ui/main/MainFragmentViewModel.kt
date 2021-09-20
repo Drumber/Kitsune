@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import io.github.drumber.kitsune.constants.SortFilter
-import io.github.drumber.kitsune.constants.SortFilter.desc
 import io.github.drumber.kitsune.data.model.resource.Anime
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.anime.AnimeService
@@ -60,16 +59,16 @@ class MainFragmentViewModel(
         val FILTER_TOP_UPCOMING = createFilter("upcoming")
         val FILTER_HIGHEST_RATED = Filter()
             .pageLimit(10)
-            .sort(SortFilter.AVERAGE_RATING.desc())
+            .sort(SortFilter.AVERAGE_RATING_DESC.queryParam)
         val FILTER_MOST_POPULAR = Filter()
             .pageLimit(10)
-            .sort(SortFilter.POPULARITY.desc())
+            .sort(SortFilter.POPULARITY_DESC.queryParam)
 
 
         private inline fun createFilter(filterType: String) = Filter()
             .pageLimit(10)
             .filter("status", filterType)
-            .sort(SortFilter.POPULARITY.desc())
+            .sort(SortFilter.POPULARITY_DESC.queryParam)
     }
 
 }

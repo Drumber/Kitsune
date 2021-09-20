@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.SortFilter
+import io.github.drumber.kitsune.constants.toStringRes
 import io.github.drumber.kitsune.data.model.ResourceType
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.data.model.toStringRes
@@ -36,23 +38,25 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.toolbar.initWindowInsetsListener(false)
+        binding.apply {
+            toolbar.initWindowInsetsListener(false)
 
-        binding.chipResourceSelector.apply {
-            setOnClickListener { showResourceSelectorDialog() }
+            chipResourceSelector.setOnClickListener { showResourceSelectorDialog() }
+            chipSort.setOnClickListener { showSortDialog() }
         }
 
         viewModel.resourceSelector.observe(viewLifecycleOwner) {
-            binding.chipResourceSelector.setText(it.resourceType.toStringRes())
+            binding.apply {
+                chipResourceSelector.setText(it.resourceType.toStringRes())
+                val sortFilter = SortFilter.fromQueryParam(it.filter.options["sort"]) ?: SortFilter.POPULARITY_DESC
+                chipSort.setText(sortFilter.toStringRes())
+            }
         }
     }
 
     private fun showResourceSelectorDialog() {
         val items = ResourceType.values().map { getString(it.toStringRes()) }.toTypedArray()
-        val prevSelected = when (viewModel.currentResourceSelector.resourceType) {
-            ResourceType.Anime -> 0
-            ResourceType.Manga -> 1
-        }
+        val prevSelected = viewModel.currentResourceSelector.resourceType.ordinal
         var selectedNow = prevSelected
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.title_resource_type)
@@ -63,6 +67,31 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
                 if(prevSelected != selectedNow) {
                     val resourceType = ResourceType.values()[selectedNow]
                     val selector = viewModel.currentResourceSelector.copy(resourceType = resourceType)
+                    viewModel.setResourceSelector(selector)
+                }
+                dialog.dismiss()
+            }
+            .setSingleChoiceItems(items, prevSelected) { dialog, which ->
+                selectedNow = which
+            }
+            .show()
+    }
+
+    private fun showSortDialog() {
+        val items = SortFilter.values().map { getString(it.toStringRes()) }.toTypedArray()
+        val lastSortFilter = SortFilter.fromQueryParam(viewModel.currentResourceSelector.filter.options["sort"])
+        val prevSelected = lastSortFilter?.ordinal ?: 0
+        var selectedNow = prevSelected
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.title_sort)
+            .setNeutralButton(R.string.action_cancel) { dialog, which ->
+                dialog.cancel()
+            }
+            .setPositiveButton(R.string.action_ok) { dialog, which ->
+                if(prevSelected != selectedNow) {
+                    val sortFilter = SortFilter.values()[selectedNow]
+                    val prevFilter = viewModel.currentResourceSelector.filter
+                    val selector = viewModel.currentResourceSelector.copy(filter = prevFilter.sort(sortFilter.queryParam))
                     viewModel.setResourceSelector(selector)
                 }
                 dialog.dismiss()
