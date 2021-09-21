@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.data.model.resource
 import android.content.Context
 import android.os.Parcelable
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.preference.AppearancePref
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.preference.TitlesPref
 import io.github.drumber.kitsune.util.originalOrDown
 import io.github.drumber.kitsune.util.smallOrHigher
@@ -94,7 +94,7 @@ sealed class ResourceAdapter(
 
 private fun getTitle(title: Titles?, canonical: String?): String {
     val nf = "<No title found>"
-    return when (AppearancePref.titles) {
+    return when (KitsunePref.titles) {
         TitlesPref.Canoncial -> canonical ?: nf
         TitlesPref.Romanized -> title?.enJp ?: canonical ?: nf
         TitlesPref.English -> title?.en ?: canonical ?: nf

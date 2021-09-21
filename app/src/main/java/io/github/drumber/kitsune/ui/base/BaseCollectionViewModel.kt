@@ -3,11 +3,9 @@ package io.github.drumber.kitsune.ui.base
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.data.model.ResourceSelector
-import io.github.drumber.kitsune.data.model.ResourceType
 import io.github.drumber.kitsune.data.model.resource.Resource
-import io.github.drumber.kitsune.data.service.Filter
+import io.github.drumber.kitsune.preference.KitsunePref
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 
@@ -20,6 +18,7 @@ abstract class BaseCollectionViewModel: ViewModel() {
 
     fun setResourceSelector(resourceSelector: ResourceSelector) {
         _resourceSelector.value = resourceSelector
+        KitsunePref.searchFilter = resourceSelector
     }
 
     val currentResourceSelector: ResourceSelector
@@ -32,13 +31,7 @@ abstract class BaseCollectionViewModel: ViewModel() {
     abstract fun getData(resourceSelector: ResourceSelector): Flow<PagingData<Resource>>
 
     private fun getLastResourceSelector(): ResourceSelector {
-        // TODO: get last used selector from preferences
-        return DEFAULT_RESOURCE_SELECTOR
-    }
-
-    companion object {
-        val DEFAULT_FILTER = Filter().sort(SortFilter.POPULARITY_DESC.queryParam)
-        val DEFAULT_RESOURCE_SELECTOR = ResourceSelector(ResourceType.Anime, DEFAULT_FILTER)
+        return KitsunePref.searchFilter
     }
 
 }
