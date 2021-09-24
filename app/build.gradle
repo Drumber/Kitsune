@@ -36,6 +36,9 @@ android {
         viewBinding true
         dataBinding true
     }
+    packagingOptions {
+        exclude 'META-INF/*.kotlin_module'
+    }
 }
 
 dependencies {
@@ -94,6 +97,16 @@ dependencies {
     def okhttp_version = "4.9.1"
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+
+    // Algolia
+    def algolia_version = "1.9.2"
+    implementation "com.algolia:algoliasearch-client-kotlin:$algolia_version"
+    def algolia_instantsearch_version = "2.11.0"
+    implementation "com.algolia:instantsearch-android:$algolia_instantsearch_version"
+
+    // Ktor client
+    def ktor_version = "1.6.3"
+    implementation "io.ktor:ktor-client-okhttp:$ktor_version"
 
     // Kotpref
     implementation 'com.chibatching.kotpref:kotpref:2.13.1'

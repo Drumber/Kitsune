@@ -69,7 +69,7 @@ fun Resources.Theme.getColor(resid: Int): Int {
 }
 
 fun String.toDate(format: String): Calendar {
-    val date = SimpleDateFormat("yyyy-MM-dd").parse(this)
+    val date = SimpleDateFormat(format).parse(this)
     return Calendar.getInstance().apply {
         time = date
     }

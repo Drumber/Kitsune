@@ -22,7 +22,16 @@
                 app:menu="@menu/toolbar_menu"
                 app:title="@string/app_name"
                 app:layout_scrollFlags="scroll|enterAlways|snap"
-                style="@style/Widget.MaterialComponents.Toolbar.Surface" />
+                style="@style/Widget.MaterialComponents.Toolbar.Surface">
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:iconifiedByDefault="false"
+                    android:focusable="false" />
+
+            </com.google.android.material.appbar.MaterialToolbar>
 
             <com.google.android.material.chip.ChipGroup
                 android:layout_width="match_parent"
@@ -54,14 +63,33 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_resource"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <RelativeLayout
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:orientation="horizontal"
-            android:clipToPadding="false"
-            tools:listitem="@layout/item_resource"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_search_results"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:padding="16dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_resource"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:layout_below="@id/tv_search_results"
+                android:orientation="horizontal"
+                android:clipToPadding="false"
+                tools:listitem="@layout/item_resource"/>
+
+        </RelativeLayout>
 
         <include
             android:id="@+id/layout_loading"

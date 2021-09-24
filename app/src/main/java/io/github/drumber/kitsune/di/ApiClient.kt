@@ -6,11 +6,12 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.data.model.resource.Anime
-import io.github.drumber.kitsune.data.model.resource.Episode
 import io.github.drumber.kitsune.data.model.resource.Chapter
+import io.github.drumber.kitsune.data.model.resource.Episode
 import io.github.drumber.kitsune.data.model.resource.Manga
 import io.github.drumber.kitsune.data.service.anime.AnimeService
 import io.github.drumber.kitsune.data.service.anime.EpisodesService
+import io.github.drumber.kitsune.data.service.auth.AlgoliaKeyService
 import io.github.drumber.kitsune.data.service.auth.AuthService
 import io.github.drumber.kitsune.data.service.manga.ChaptersService
 import io.github.drumber.kitsune.data.service.manga.MangaService
@@ -32,6 +33,7 @@ val serviceModule = module {
     factory { createService<MangaService>(get(), get(), Manga::class.java) }
     factory { createService<ChaptersService>(get(), get(), Chapter::class.java) }
     factory { createService<AuthService>(get(), KITSU_OAUTH_URL) }
+    factory { createService<AlgoliaKeyService>(get()) }
 }
 
 private inline fun createHttpClient() = OkHttpClient.Builder()

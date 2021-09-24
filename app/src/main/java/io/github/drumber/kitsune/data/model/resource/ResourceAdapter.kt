@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.data.model.resource
 import android.content.Context
 import android.os.Parcelable
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.preference.TitlesPref
 import io.github.drumber.kitsune.util.originalOrDown
@@ -31,7 +32,7 @@ sealed class ResourceAdapter(
 
     val publishingYear: String
         get() = if (!startDate.isNullOrBlank()) {
-            startDate.toDate("yyyy-MM-dd").get(Calendar.YEAR).toString()
+            startDate.toDate(Kitsu.DEFAULT_DATE_FORMAT).get(Calendar.YEAR).toString()
         } else "?"
 
     inline fun statusText(context: Context): String {

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 
 abstract class BaseCollectionViewModel: ViewModel() {
 
-    private val _resourceSelector = MutableLiveData(getLastResourceSelector())
+    protected val _resourceSelector = MutableLiveData(getLastResourceSelector())
 
     val resourceSelector: LiveData<ResourceSelector>
         get() = _resourceSelector

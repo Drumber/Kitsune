@@ -10,6 +10,6 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel { MainActivityViewModel() }
     viewModel { MainFragmentViewModel(get()) }
-    viewModel { SearchViewModel(get(), get()) }
+    viewModel { SearchViewModel(get(), get(), get(), get()) }
     viewModel { ExploreViewModel(get(), get()) }
 }

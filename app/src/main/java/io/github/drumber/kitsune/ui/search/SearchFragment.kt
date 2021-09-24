@@ -6,6 +6,9 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.algolia.instantsearch.core.connection.ConnectionHandler
+import com.algolia.instantsearch.helper.android.searchbox.SearchBoxViewAppCompat
+import com.algolia.instantsearch.helper.searchbox.connectView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.SortFilter
@@ -35,6 +38,8 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
     override val resourceLoadingBinding: LayoutResourceLoadingBinding?
         get() = binding.layoutLoading
 
+    private val connection = ConnectionHandler()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -51,6 +56,21 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
                 val sortFilter = SortFilter.fromQueryParam(it.filter.options["sort"]) ?: SortFilter.POPULARITY_DESC
                 chipSort.setText(sortFilter.toStringRes())
             }
+        }
+
+        initSearch()
+    }
+
+    private fun initSearch() {
+        binding.searchView.isEnabled = false
+        viewModel.searchHandler.isInitialized.observe(viewLifecycleOwner) {
+            if(!it) return@observe
+
+            val searchBoxView = SearchBoxViewAppCompat(binding.searchView)
+            connection += viewModel.searchHandler.searchBox.connectView(searchBoxView)
+            binding.searchView.isEnabled = true
+
+            viewModel.isCurrentlySearching = true
         }
     }
 
@@ -105,6 +125,11 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
     override fun onResourceClicked(model: ResourceAdapter, options: NavOptions) {
         val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(model)
         findNavController().navigate(action, options)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        connection.clear()
     }
 
 }
