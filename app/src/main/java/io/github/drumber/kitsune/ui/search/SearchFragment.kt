@@ -1,12 +1,18 @@
 package io.github.drumber.kitsune.ui.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.addCallback
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.paulrybitskyi.persistentsearchview.adapters.model.SuggestionItem
+import com.paulrybitskyi.persistentsearchview.listeners.OnSuggestionChangeListener
+import com.paulrybitskyi.persistentsearchview.utils.SuggestionCreationUtil
+import com.paulrybitskyi.persistentsearchview.utils.VoiceRecognitionDelegate
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.constants.toStringRes
@@ -15,9 +21,10 @@ import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.data.model.toStringRes
 import io.github.drumber.kitsune.databinding.FragmentSearchBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.ui.base.BaseCollectionViewModel
-import io.github.drumber.kitsune.util.initWindowInsetsListener
+import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
@@ -39,7 +46,12 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            toolbar.initWindowInsetsListener(false)
+            root.initPaddingWindowInsetsListener(
+                left = true,
+                top = true,
+                right = true,
+                bottom = false
+            )
 
             chipResourceSelector.setOnClickListener { showResourceSelectorDialog() }
             chipSort.setOnClickListener { showSortDialog() }
@@ -52,6 +64,76 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
                 chipSort.setText(sortFilter.toStringRes())
             }
         }
+
+        initSearchView()
+    }
+
+    private fun initSearchView() {
+        binding.searchView.apply {
+            setVoiceRecognitionDelegate(VoiceRecognitionDelegate(this@SearchFragment))
+
+            setOnLeftBtnClickListener {
+                this.expand()
+            }
+
+            setOnSearchConfirmedListener { searchView, query ->
+                saveSearchQuery(query)
+                searchView.collapse()
+                performSearch(query)
+            }
+
+            setOnSearchQueryChangeListener { searchView, oldQuery, newQuery ->
+                val suggestions = if(newQuery.isBlank()) {
+                    KitsunePref.searchQueries.getSearchQueries()
+                } else {
+                    KitsunePref.searchQueries.findSuggestions(newQuery)
+                }
+                setSuggestions(suggestions)
+            }
+
+            setOnSuggestionChangeListener(object : OnSuggestionChangeListener {
+                override fun onSuggestionPicked(suggestion: SuggestionItem) {
+                    val query = suggestion.itemModel.text
+                    saveSearchQuery(query)
+                    setSuggestions(KitsunePref.searchQueries.findSuggestions(query))
+                    performSearch(query)
+                }
+                override fun onSuggestionRemoved(suggestion: SuggestionItem) {
+                    KitsunePref.searchQueries.removeQuery(suggestion.itemModel.text)
+                }
+            })
+
+            setSuggestionsDisabled(false)
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            binding.searchView.apply {
+                if(isExpanded) {
+                    collapse()
+                    return@addCallback
+                }
+            }
+            findNavController().navigateUp()
+        }
+    }
+
+
+    private fun performSearch(query: String) {
+        // TODO: search
+    }
+
+    private fun setSuggestions(queries: List<String>) {
+        val suggestions = SuggestionCreationUtil.asRecentSearchSuggestions(queries)
+        binding.searchView.setSuggestions(suggestions, true)
+    }
+
+    private fun saveSearchQuery(query: String) {
+        KitsunePref.searchQueries.addQuery(query)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        VoiceRecognitionDelegate.handleResult(binding.searchView, requestCode, resultCode, data)
     }
 
     private fun showResourceSelectorDialog() {

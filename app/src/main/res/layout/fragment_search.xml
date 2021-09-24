@@ -13,23 +13,34 @@
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:liftOnScroll="true">
+            app:liftOnScroll="true"
+            android:background="?attr/colorSurface">
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
+            <com.paulrybitskyi.persistentsearchview.PersistentSearchView
+                android:id="@+id/search_view"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:menu="@menu/toolbar_menu"
-                app:title="@string/app_name"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:paddingHorizontal="10dp"
                 app:layout_scrollFlags="scroll|enterAlways|snap"
-                style="@style/Widget.MaterialComponents.Toolbar.Surface" />
+                app:isClearInputButtonEnabled="true"
+                app:isVoiceInputButtonEnabled="true"
+                app:isDismissableOnTouchOutside="true"
+                app:areSuggestionsDisabled="false"
+                app:shouldDimBehind="false"
+                app:queryInputHint="@string/hint_search"
+                app:leftButtonDrawable="@drawable/ic_search_24"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="8dp"
+                app:cardBackgroundColor="?attr/colorSurface" />
 
             <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_filter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="10dp"
                 android:clipToPadding="false"
-                app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:singleLine="true"
                 android:background="?attr/colorSurface">
 
