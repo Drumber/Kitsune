@@ -7,6 +7,7 @@ import io.github.drumber.kitsune.data.model.ResourceType
 import io.github.drumber.kitsune.data.model.resource.Resource
 import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
+import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.ui.base.BaseCollectionViewModel
 import kotlinx.coroutines.flow.Flow
 
@@ -18,9 +19,21 @@ class SearchViewModel(
     override fun getData(resourceSelector: ResourceSelector): Flow<PagingData<Resource>> {
         val filter = resourceSelector.filter
         return when (resourceSelector.resourceType) {
-            ResourceType.Anime -> animeRepository.animeCollection(Kitsu.DEFAULT_PAGE_SIZE, filter) as Flow<PagingData<Resource>>
-            ResourceType.Manga -> mangaRepository.mangaCollection(Kitsu.DEFAULT_PAGE_SIZE, filter) as Flow<PagingData<Resource>>
+            ResourceType.Anime -> animeRepository.animeCollection(
+                Kitsu.DEFAULT_PAGE_SIZE,
+                filter
+            ) as Flow<PagingData<Resource>>
+            ResourceType.Manga -> mangaRepository.mangaCollection(
+                Kitsu.DEFAULT_PAGE_SIZE,
+                filter
+            ) as Flow<PagingData<Resource>>
         }
+    }
+
+    fun search(query: String) {
+        val resourceSelector = currentResourceSelector.copy(filter = Filter()
+            .filter("text", query))
+        setResourceSelector(resourceSelector, false)
     }
 
 }

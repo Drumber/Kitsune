@@ -16,9 +16,11 @@ abstract class BaseCollectionViewModel: ViewModel() {
     val resourceSelector: LiveData<ResourceSelector>
         get() = _resourceSelector
 
-    fun setResourceSelector(resourceSelector: ResourceSelector) {
+    fun setResourceSelector(resourceSelector: ResourceSelector, shouldSave: Boolean = true) {
         _resourceSelector.value = resourceSelector
-        KitsunePref.searchFilter = resourceSelector
+        if(shouldSave) {
+            KitsunePref.searchFilter = resourceSelector.copy()
+        }
     }
 
     val currentResourceSelector: ResourceSelector

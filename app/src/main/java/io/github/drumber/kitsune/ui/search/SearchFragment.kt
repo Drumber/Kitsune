@@ -171,7 +171,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
     }
 
     private fun performSearch(query: String) {
-        // TODO: search
+        viewModel.search(query)
     }
 
     private fun setSuggestions(queries: List<String>, expandIfNecessary: Boolean = true) {
