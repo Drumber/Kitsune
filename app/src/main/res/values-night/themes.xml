@@ -12,6 +12,8 @@
 
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+
+        <item name="colorSearchView">@color/background_15</item>
     </style>
 
 </resources>

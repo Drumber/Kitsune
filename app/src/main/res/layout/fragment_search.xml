@@ -16,24 +16,31 @@
             app:liftOnScroll="true"
             android:background="?attr/colorSurface">
 
-            <com.paulrybitskyi.persistentsearchview.PersistentSearchView
-                android:id="@+id/search_view"
-                android:layout_width="match_parent"
+            <FrameLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:paddingHorizontal="10dp"
-                app:layout_scrollFlags="scroll|enterAlways|snap"
-                app:isClearInputButtonEnabled="true"
-                app:isVoiceInputButtonEnabled="true"
-                app:isDismissableOnTouchOutside="true"
-                app:areSuggestionsDisabled="false"
-                app:shouldDimBehind="false"
-                app:queryInputHint="@string/hint_search"
-                app:leftButtonDrawable="@drawable/ic_search_24"
-                app:cardElevation="2dp"
-                app:cardCornerRadius="8dp"
-                app:cardBackgroundColor="?attr/colorSurface" />
+                android:background="?attr/colorSurface"
+                app:layout_scrollFlags="scroll|enterAlways|snap">
+
+                <com.paulrybitskyi.persistentsearchview.PersistentSearchView
+                    android:id="@+id/search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:paddingHorizontal="10dp"
+                    app:cardBackgroundColor="?attr/colorSearchView"
+                    app:isClearInputButtonEnabled="true"
+                    app:isVoiceInputButtonEnabled="true"
+                    app:isDismissableOnTouchOutside="true"
+                    app:areSuggestionsDisabled="false"
+                    app:shouldDimBehind="false"
+                    app:queryInputHint="@string/hint_search"
+                    app:leftButtonDrawable="@drawable/ic_search_24"
+                    app:cardElevation="2dp"
+                    app:cardCornerRadius="8dp" />
+
+            </FrameLayout>
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chip_group_filter"
