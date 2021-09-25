@@ -10,6 +10,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_resource"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:orientation="horizontal"
+            android:clipToPadding="false"
+            tools:listitem="@layout/item_resource"/>
+
+        <include
+            android:id="@+id/layout_loading"
+            layout="@layout/layout_resource_loading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
@@ -18,9 +36,10 @@
             android:background="?attr/colorSurface">
 
             <FrameLayout
+                android:id="@+id/search_wrapper"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorSurface"
+                android:background="@android:color/transparent"
                 app:layout_scrollFlags="scroll|enterAlways|snap">
 
                 <io.github.drumber.kitsune.ui.widget.CustomPersistentSearchView
@@ -72,24 +91,6 @@
             </com.google.android.material.chip.ChipGroup>
 
         </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_resource"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:orientation="horizontal"
-            android:clipToPadding="false"
-            tools:listitem="@layout/item_resource"/>
-
-        <include
-            android:id="@+id/layout_loading"
-            layout="@layout/layout_resource_loading"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            tools:visibility="visible"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

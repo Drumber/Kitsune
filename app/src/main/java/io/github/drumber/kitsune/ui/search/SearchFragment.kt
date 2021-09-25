@@ -1,16 +1,17 @@
 package io.github.drumber.kitsune.ui.search
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import androidx.activity.addCallback
-import androidx.cardview.widget.CardView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
@@ -18,13 +19,11 @@ import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.paulrybitskyi.persistentsearchview.PersistentSearchView
 import com.paulrybitskyi.persistentsearchview.adapters.model.SuggestionItem
 import com.paulrybitskyi.persistentsearchview.listeners.OnSearchConfirmedListener
 import com.paulrybitskyi.persistentsearchview.listeners.OnSuggestionChangeListener
 import com.paulrybitskyi.persistentsearchview.utils.SuggestionCreationUtil
 import com.paulrybitskyi.persistentsearchview.utils.VoiceRecognitionDelegate
-import com.paulrybitskyi.persistentsearchview.widgets.AdvancedEditText
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.constants.toStringRes
@@ -37,10 +36,9 @@ import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.ui.base.BaseCollectionViewModel
 import io.github.drumber.kitsune.util.getColor
-import io.github.drumber.kitsune.util.getResourceId
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.toPx
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.math.exp
 
 class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
 
@@ -87,24 +85,39 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
     private fun initSearchView() {
         binding.searchView.apply {
             setVoiceRecognitionDelegate(VoiceRecognitionDelegate(this@SearchFragment))
+            setSuggestionsDisabled(false)
+            customOnSearchConfirmedListener = searchPerformedListener
+            setAppBarLayout(binding.appBarLayout)
 
             lifecycleScope.launchWhenStarted {
                 setCardBackgroundColor(context.theme.getColor(R.attr.colorSearchView))
-                setSuggestionTextColor(context.getColor(R.color.foreground))
+                setSuggestionTextColor(ContextCompat.getColor(context, R.color.foreground))
             }
 
-            setOnLeftBtnClickListener {
-                this.expand()
-            }
-
-            customOnSearchConfirmedListener = searchPerformedListener
+            setOnLeftBtnClickListener { this.expand() }
 
             setOnExpandStateChangeListener { expanded ->
-                binding.rvResource.isVisible = !expanded
-                binding.chipGroupFilter.isVisible = !expanded
-            }
+                setAppBarBackgrounds(expanded)
 
-            setAppBarLayout(binding.appBarLayout)
+                binding.chipGroupFilter.isVisible = !expanded
+                binding.rvResource.apply {
+                    isEnabled = !expanded
+                    if(ViewCompat.isLaidOut(this)) {
+                        // toggle app bar behaviour to display recyclerview behind search overlay
+                        val params = this.layoutParams as CoordinatorLayout.LayoutParams
+                        params.behavior = if(expanded) {
+                            null
+                        } else {
+                            AppBarLayout.ScrollingViewBehavior()
+                        }
+                        // compensate padding offset
+                        val offset = 107.toPx()
+                        this.updatePadding(top = if(expanded) offset else 0)
+                        scrollBy(0, if(expanded) -offset else offset)
+                        this.requestLayout()
+                    }
+                }
+            }
 
             val initialSuggestions = if(isInputQueryEmpty) {
                 KitsunePref.searchQueries.getSearchQueries()
@@ -134,8 +147,6 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
                     KitsunePref.searchQueries.removeQuery(suggestion.itemModel.text)
                 }
             })
-
-            setSuggestionsDisabled(false)
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
@@ -172,6 +183,27 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         VoiceRecognitionDelegate.handleResult(binding.searchView, requestCode, resultCode, data)
+    }
+
+    private var appBarAnimator: ValueAnimator? = null
+    private fun setAppBarBackgrounds(isSearchExpanded: Boolean) {
+        val colorSurface = requireContext().theme.getColor(R.attr.colorSurface)
+        val colorTranslucent = Color.argb(200, Color.red(colorSurface), Color.green(colorSurface), Color.blue(colorSurface))
+
+        val colorFrom = if(isSearchExpanded) colorSurface else colorTranslucent
+        val colorTo = if(isSearchExpanded) colorTranslucent else colorSurface
+
+        val colorAnimator = ValueAnimator.ofObject(ArgbEvaluator(), colorFrom, colorTo)
+        colorAnimator.duration = if(isSearchExpanded) 400 else 0
+        colorAnimator.addUpdateListener {
+            binding.appBarLayout.setBackgroundColor(it.animatedValue as Int)
+        }
+
+        appBarAnimator?.cancel()
+        appBarAnimator = colorAnimator
+        colorAnimator.start()
+
+        binding.searchWrapper.setBackgroundColor(if(isSearchExpanded) Color.TRANSPARENT else colorSurface)
     }
 
     private fun showResourceSelectorDialog() {

@@ -80,3 +80,7 @@ fun String.toDate(format: String): Calendar {
         time = date
     }
 }
+
+fun Int.toDp() = (this / Resources.getSystem().displayMetrics.density).toInt()
+
+fun Int.toPx() = (this * Resources.getSystem().displayMetrics.density).toInt()

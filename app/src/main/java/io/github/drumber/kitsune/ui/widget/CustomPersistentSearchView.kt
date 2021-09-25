@@ -8,6 +8,7 @@ import androidx.cardview.widget.CardView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.paulrybitskyi.persistentsearchview.PersistentSearchView
 import com.paulrybitskyi.persistentsearchview.listeners.OnSearchConfirmedListener
@@ -20,6 +21,7 @@ class CustomPersistentSearchView @JvmOverloads constructor(
 
     private val inputEt: AdvancedEditText = findViewById(com.paulrybitskyi.persistentsearchview.R.id.inputEt)
     private val cardView: CardView = findViewById(com.paulrybitskyi.persistentsearchview.R.id.cardView)
+    private val suggestionsRV: RecyclerView = findViewById(com.paulrybitskyi.persistentsearchview.R.id.suggestionsRecyclerView)
 
     var customOnSearchConfirmedListener: OnSearchConfirmedListener? = null
     set(value) {
@@ -54,6 +56,8 @@ class CustomPersistentSearchView @JvmOverloads constructor(
         cardView.setOnClickListener {
             expand()
         }
+
+        suggestionsRV.isNestedScrollingEnabled = false
 
         initExpandListener()
     }
