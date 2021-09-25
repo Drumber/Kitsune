@@ -92,6 +92,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
             lifecycleScope.launchWhenStarted {
                 setCardBackgroundColor(context.theme.getColor(R.attr.colorSearchView))
                 setSuggestionTextColor(ContextCompat.getColor(context, R.color.foreground))
+                collapse(false) // make sure to collapse on view change
             }
 
             setOnLeftBtnClickListener { this.expand() }
@@ -162,10 +163,12 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
 
 
     private val searchPerformedListener = OnSearchConfirmedListener { searchView, query ->
+        searchView.collapse()
+        if(query.isNotBlank()) {
             saveSearchQuery(query)
-            searchView.collapse()
             performSearch(query)
         }
+    }
 
     private fun performSearch(query: String) {
         // TODO: search
