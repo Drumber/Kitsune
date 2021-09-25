@@ -68,6 +68,12 @@ fun Resources.Theme.getColor(resid: Int): Int {
     return typedValue.data
 }
 
+fun Resources.Theme.getResourceId(resid: Int): Int {
+    val typedValue = TypedValue()
+    this.resolveAttribute(resid, typedValue, true)
+    return typedValue.resourceId
+}
+
 fun String.toDate(format: String): Calendar {
     val date = SimpleDateFormat("yyyy-MM-dd").parse(this)
     return Calendar.getInstance().apply {

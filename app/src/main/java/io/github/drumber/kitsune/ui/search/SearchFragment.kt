@@ -2,17 +2,29 @@ package io.github.drumber.kitsune.ui.search
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import androidx.activity.addCallback
+import androidx.cardview.widget.CardView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.paulrybitskyi.persistentsearchview.PersistentSearchView
 import com.paulrybitskyi.persistentsearchview.adapters.model.SuggestionItem
+import com.paulrybitskyi.persistentsearchview.listeners.OnSearchConfirmedListener
 import com.paulrybitskyi.persistentsearchview.listeners.OnSuggestionChangeListener
 import com.paulrybitskyi.persistentsearchview.utils.SuggestionCreationUtil
 import com.paulrybitskyi.persistentsearchview.utils.VoiceRecognitionDelegate
+import com.paulrybitskyi.persistentsearchview.widgets.AdvancedEditText
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.constants.toStringRes
@@ -24,8 +36,11 @@ import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.ui.base.BaseCollectionViewModel
+import io.github.drumber.kitsune.util.getColor
+import io.github.drumber.kitsune.util.getResourceId
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.math.exp
 
 class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
 
@@ -60,7 +75,8 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
         viewModel.resourceSelector.observe(viewLifecycleOwner) {
             binding.apply {
                 chipResourceSelector.setText(it.resourceType.toStringRes())
-                val sortFilter = SortFilter.fromQueryParam(it.filter.options["sort"]) ?: SortFilter.POPULARITY_DESC
+                val sortFilter = SortFilter.fromQueryParam(it.filter.options["sort"])
+                    ?: SortFilter.POPULARITY_DESC
                 chipSort.setText(sortFilter.toStringRes())
             }
         }
@@ -72,18 +88,33 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
         binding.searchView.apply {
             setVoiceRecognitionDelegate(VoiceRecognitionDelegate(this@SearchFragment))
 
+            lifecycleScope.launchWhenStarted {
+                setCardBackgroundColor(context.theme.getColor(R.attr.colorSearchView))
+                setSuggestionTextColor(context.getColor(R.color.foreground))
+            }
+
             setOnLeftBtnClickListener {
                 this.expand()
             }
 
-            setOnSearchConfirmedListener { searchView, query ->
-                saveSearchQuery(query)
-                searchView.collapse()
-                performSearch(query)
+            customOnSearchConfirmedListener = searchPerformedListener
+
+            setOnExpandStateChangeListener { expanded ->
+                binding.rvResource.isVisible = !expanded
+                binding.chipGroupFilter.isVisible = !expanded
             }
 
+            setAppBarLayout(binding.appBarLayout)
+
+            val initialSuggestions = if(isInputQueryEmpty) {
+                KitsunePref.searchQueries.getSearchQueries()
+            } else {
+                KitsunePref.searchQueries.findSuggestions(inputQuery)
+            }
+            setSuggestions(initialSuggestions, false)
+
             setOnSearchQueryChangeListener { searchView, oldQuery, newQuery ->
-                val suggestions = if(newQuery.isBlank()) {
+                val suggestions = if (newQuery.isBlank()) {
                     KitsunePref.searchQueries.getSearchQueries()
                 } else {
                     KitsunePref.searchQueries.findSuggestions(newQuery)
@@ -98,6 +129,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
                     setSuggestions(KitsunePref.searchQueries.findSuggestions(query))
                     performSearch(query)
                 }
+
                 override fun onSuggestionRemoved(suggestion: SuggestionItem) {
                     KitsunePref.searchQueries.removeQuery(suggestion.itemModel.text)
                 }
@@ -108,7 +140,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             binding.searchView.apply {
-                if(isExpanded) {
+                if (isExpanded) {
                     collapse()
                     return@addCallback
                 }
@@ -118,13 +150,19 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
     }
 
 
+    private val searchPerformedListener = OnSearchConfirmedListener { searchView, query ->
+            saveSearchQuery(query)
+            searchView.collapse()
+            performSearch(query)
+        }
+
     private fun performSearch(query: String) {
         // TODO: search
     }
 
-    private fun setSuggestions(queries: List<String>) {
+    private fun setSuggestions(queries: List<String>, expandIfNecessary: Boolean = true) {
         val suggestions = SuggestionCreationUtil.asRecentSearchSuggestions(queries)
-        binding.searchView.setSuggestions(suggestions, true)
+        binding.searchView.setSuggestions(suggestions, expandIfNecessary)
     }
 
     private fun saveSearchQuery(query: String) {
@@ -146,9 +184,10 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
                 dialog.cancel()
             }
             .setPositiveButton(R.string.action_ok) { dialog, which ->
-                if(prevSelected != selectedNow) {
+                if (prevSelected != selectedNow) {
                     val resourceType = ResourceType.values()[selectedNow]
-                    val selector = viewModel.currentResourceSelector.copy(resourceType = resourceType)
+                    val selector =
+                        viewModel.currentResourceSelector.copy(resourceType = resourceType)
                     viewModel.setResourceSelector(selector)
                 }
                 dialog.dismiss()
@@ -161,7 +200,8 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
 
     private fun showSortDialog() {
         val items = SortFilter.values().map { getString(it.toStringRes()) }.toTypedArray()
-        val lastSortFilter = SortFilter.fromQueryParam(viewModel.currentResourceSelector.filter.options["sort"])
+        val lastSortFilter =
+            SortFilter.fromQueryParam(viewModel.currentResourceSelector.filter.options["sort"])
         val prevSelected = lastSortFilter?.ordinal ?: 0
         var selectedNow = prevSelected
         MaterialAlertDialogBuilder(requireContext())
@@ -170,10 +210,11 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
                 dialog.cancel()
             }
             .setPositiveButton(R.string.action_ok) { dialog, which ->
-                if(prevSelected != selectedNow) {
+                if (prevSelected != selectedNow) {
                     val sortFilter = SortFilter.values()[selectedNow]
                     val prevFilter = viewModel.currentResourceSelector.filter
-                    val selector = viewModel.currentResourceSelector.copy(filter = prevFilter.sort(sortFilter.queryParam))
+                    val selector =
+                        viewModel.currentResourceSelector.copy(filter = prevFilter.sort(sortFilter.queryParam))
                     viewModel.setResourceSelector(selector)
                 }
                 dialog.dismiss()

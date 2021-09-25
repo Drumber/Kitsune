@@ -15,6 +15,7 @@
         android:theme="@style/Theme.Kitsune">
         <activity
             android:name="io.github.drumber.kitsune.ui.main.MainActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
