@@ -39,7 +39,7 @@
                 android:id="@+id/search_wrapper"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
+                android:background="?attr/colorSurface"
                 app:layout_scrollFlags="scroll|enterAlways|snap">
 
                 <io.github.drumber.kitsune.ui.widget.CustomPersistentSearchView

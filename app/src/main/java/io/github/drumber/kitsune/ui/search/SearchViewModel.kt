@@ -10,6 +10,7 @@ import io.github.drumber.kitsune.data.model.resource.Resource
 import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
 import io.github.drumber.kitsune.data.service.Filter
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BaseCollectionViewModel
 import kotlinx.coroutines.flow.Flow
 
@@ -17,6 +18,13 @@ class SearchViewModel(
     private val animeRepository: AnimeRepository,
     private val mangaRepository: MangaRepository
 ) : BaseCollectionViewModel() {
+
+    override fun getStoredResourceSelector(): ResourceSelector {
+        return KitsunePref.searchFilter.apply {
+            // make sure search text is not stored
+            filter.options.remove("filter[text]")
+        }
+    }
 
     override fun getData(resourceSelector: ResourceSelector): Flow<PagingData<Resource>> {
         val filter = resourceSelector.filter
@@ -36,16 +44,23 @@ class SearchViewModel(
     val isSearching: LiveData<Boolean>
         get() = _isSearching
 
+    override fun setResourceSelector(resourceSelector: ResourceSelector) {
+        super.setResourceSelector(resourceSelector)
+        if(isSearching.value == false) {
+            KitsunePref.searchFilter = resourceSelector.copy()
+        }
+    }
+
     fun search(query: String) {
+        _isSearching.value = true
         val resourceSelector = currentResourceSelector.copy(filter = Filter()
             .filter("text", query))
-        setResourceSelector(resourceSelector, false)
-        _isSearching.value = true
+        setResourceSelector(resourceSelector)
     }
 
     fun resetSearch() {
-        setResourceSelector(getStoredResourceSelector())
         _isSearching.value = false
+        setResourceSelector(getStoredResourceSelector())
     }
 
 }

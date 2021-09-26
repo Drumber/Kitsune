@@ -74,8 +74,9 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
             binding.apply {
                 chipResourceSelector.setText(it.resourceType.toStringRes())
                 val sortFilter = SortFilter.fromQueryParam(it.filter.options["sort"])
-                    ?: SortFilter.POPULARITY_DESC
-                chipSort.setText(sortFilter.toStringRes())
+                if(sortFilter != null) {
+                    chipSort.setText(sortFilter.toStringRes())
+                }
             }
         }
 
