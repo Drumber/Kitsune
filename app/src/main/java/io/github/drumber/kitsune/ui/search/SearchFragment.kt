@@ -52,7 +52,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
     override val recyclerView: RecyclerView
         get() = binding.rvResource
 
-    override val resourceLoadingBinding: LayoutResourceLoadingBinding?
+    override val resourceLoadingBinding: LayoutResourceLoadingBinding
         get() = binding.layoutLoading
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -226,23 +226,15 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
     private fun showResourceSelectorDialog() {
         val items = ResourceType.values().map { getString(it.toStringRes()) }.toTypedArray()
         val prevSelected = viewModel.currentResourceSelector.resourceType.ordinal
-        var selectedNow = prevSelected
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.title_resource_type)
-            .setNeutralButton(R.string.action_cancel) { dialog, which ->
-                dialog.cancel()
-            }
-            .setPositiveButton(R.string.action_ok) { dialog, which ->
-                if (prevSelected != selectedNow) {
-                    val resourceType = ResourceType.values()[selectedNow]
-                    val selector =
-                        viewModel.currentResourceSelector.copy(resourceType = resourceType)
+            .setSingleChoiceItems(items, prevSelected) { dialog, which ->
+                if(which != prevSelected) {
+                    val resourceType = ResourceType.values()[which]
+                    val selector = viewModel.currentResourceSelector.copy(resourceType = resourceType)
                     viewModel.setResourceSelector(selector)
                 }
                 dialog.dismiss()
-            }
-            .setSingleChoiceItems(items, prevSelected) { dialog, which ->
-                selectedNow = which
             }
             .show()
     }
@@ -252,24 +244,17 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
         val lastSortFilter =
             SortFilter.fromQueryParam(viewModel.currentResourceSelector.filter.options["sort"])
         val prevSelected = lastSortFilter?.ordinal ?: 0
-        var selectedNow = prevSelected
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.title_sort)
-            .setNeutralButton(R.string.action_cancel) { dialog, which ->
-                dialog.cancel()
-            }
-            .setPositiveButton(R.string.action_ok) { dialog, which ->
-                if (prevSelected != selectedNow) {
-                    val sortFilter = SortFilter.values()[selectedNow]
+            .setSingleChoiceItems(items, prevSelected) { dialog, which ->
+                if(which != prevSelected) {
+                    val sortFilter = SortFilter.values()[which]
                     val prevFilter = viewModel.currentResourceSelector.filter
                     val selector =
                         viewModel.currentResourceSelector.copy(filter = prevFilter.sort(sortFilter.queryParam))
                     viewModel.setResourceSelector(selector)
                 }
                 dialog.dismiss()
-            }
-            .setSingleChoiceItems(items, prevSelected) { dialog, which ->
-                selectedNow = which
             }
             .show()
     }

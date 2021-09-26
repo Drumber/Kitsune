@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.ui.main.explore
 
 import androidx.paging.PagingData
+import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.model.ResourceSelector
 import io.github.drumber.kitsune.data.model.ResourceType
@@ -33,4 +34,7 @@ class ExploreViewModel(
         }
     }
 
+    override fun getStoredResourceSelector(): ResourceSelector {
+        return Defaults.DEFAULT_RESOURCE_SELECTOR
+    }
 }
