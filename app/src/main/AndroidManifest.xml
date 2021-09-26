@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:name="io.github.drumber.kitsune.KitsuneApplication"
-        android:theme="@style/Theme.Kitsune">
+        android:theme="@style/Theme.Kitsune.DayNight">
         <activity
             android:name="io.github.drumber.kitsune.ui.main.MainActivity"
             android:windowSoftInputMode="adjustPan"

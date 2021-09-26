@@ -1,7 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <style name="Theme.Kitsune.DayNight" parent="Theme.Kitsune.Dark"/>
+
     <!-- Base application theme. -->
-    <style name="Theme.Kitsune" parent="Theme.Kitsune.Base">
+    <style name="Theme.Kitsune.Dark" parent="Theme.Kitsune">
         <item name="colorPrimary">@color/orange_800</item>
         <item name="colorPrimaryVariant">@color/orange_700</item>
         <item name="colorSecondary">@color/yellow_900</item>

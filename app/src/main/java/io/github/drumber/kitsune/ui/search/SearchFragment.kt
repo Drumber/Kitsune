@@ -35,6 +35,7 @@ import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.ui.base.BaseCollectionViewModel
+import io.github.drumber.kitsune.ui.search.categories.CategoriesDialogFragment
 import io.github.drumber.kitsune.util.getColor
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.toPx
@@ -68,6 +69,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
 
             chipResourceSelector.setOnClickListener { showResourceSelectorDialog() }
             chipSort.setOnClickListener { showSortDialog() }
+            chipCategories.setOnClickListener { showCategoriesDialog() }
         }
 
         viewModel.resourceSelector.observe(viewLifecycleOwner) {
@@ -257,6 +259,10 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
                 dialog.dismiss()
             }
             .show()
+    }
+
+    private fun showCategoriesDialog() {
+        CategoriesDialogFragment.showDialog(parentFragmentManager)
     }
 
     override fun onResourceClicked(model: ResourceAdapter, options: NavOptions) {

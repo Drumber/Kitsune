@@ -1,10 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Kitsune" parent="Theme.Kitsune.Base">
+    <style name="Theme.Kitsune.DayNight" parent="Theme.Kitsune" />
 
-    </style>
-
-    <style name="Theme.Kitsune.Base" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.Kitsune" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/orange_400</item>
         <item name="colorPrimaryVariant">@color/orange_700</item>
         <item name="colorSecondary">@color/yellow_700</item>
@@ -32,9 +30,18 @@
         <item name="colorSearchView">@color/background</item>
     </style>
 
+    <style name="Theme.Kitsune.FullScreenDialog" parent="Theme.Kitsune.DayNight">
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
     <style name="TextAppearance.App.CollapsingToolbar.Expanded" parent="TextAppearance.Design.CollapsingToolbar.Expanded">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">28sp</item>
+    </style>
+
+    <style name="AppTheme.Slide">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
 </resources>
