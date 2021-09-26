@@ -104,6 +104,9 @@ dependencies {
     implementation 'com.chibatching.kotpref:enum-support:2.13.1'
     implementation 'com.chibatching.kotpref:livedata-support:2.13.1'
 
+    // TreeView
+    implementation 'com.github.bmelnychuk:atv:1.2.+'
+
     // Tests
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
