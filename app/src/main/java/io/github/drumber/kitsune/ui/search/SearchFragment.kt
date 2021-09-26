@@ -79,6 +79,10 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
             }
         }
 
+        viewModel.isSearching.observe(viewLifecycleOwner) { isSearching ->
+            binding.chipSort.isVisible = !isSearching
+        }
+
         initSearchView()
     }
 
@@ -96,6 +100,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
             }
 
             setOnLeftBtnClickListener { this.expand() }
+            setOnClearInputBtnClickListener { viewModel.resetSearch() }
 
             setOnExpandStateChangeListener { expanded ->
                 setAppBarBackgrounds(expanded)
@@ -117,6 +122,12 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
                         scrollBy(0, if(expanded) -offset else offset)
                         this.requestLayout()
                     }
+                }
+
+                if(expanded) {
+                    setLeftButtonDrawable(R.drawable.ic_arrow_back_24)
+                } else {
+                    setLeftButtonDrawable(R.drawable.ic_search_24)
                 }
             }
 
@@ -164,14 +175,16 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
 
     private val searchPerformedListener = OnSearchConfirmedListener { searchView, query ->
         searchView.collapse()
-        if(query.isNotBlank()) {
-            saveSearchQuery(query)
-            performSearch(query)
-        }
+        performSearch(query)
     }
 
     private fun performSearch(query: String) {
-        viewModel.search(query)
+        if(query.isNotBlank()) {
+            saveSearchQuery(query)
+            viewModel.search(query)
+        } else {
+            viewModel.resetSearch()
+        }
     }
 
     private fun setSuggestions(queries: List<String>, expandIfNecessary: Boolean = true) {

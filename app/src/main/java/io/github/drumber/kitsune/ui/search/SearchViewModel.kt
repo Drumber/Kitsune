@@ -1,5 +1,7 @@
 package io.github.drumber.kitsune.ui.search
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagingData
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.model.ResourceSelector
@@ -30,10 +32,20 @@ class SearchViewModel(
         }
     }
 
+    private val _isSearching = MutableLiveData(false)
+    val isSearching: LiveData<Boolean>
+        get() = _isSearching
+
     fun search(query: String) {
         val resourceSelector = currentResourceSelector.copy(filter = Filter()
             .filter("text", query))
         setResourceSelector(resourceSelector, false)
+        _isSearching.value = true
+    }
+
+    fun resetSearch() {
+        setResourceSelector(getStoredResourceSelector())
+        _isSearching.value = false
     }
 
 }

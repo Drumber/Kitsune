@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 
 abstract class BaseCollectionViewModel: ViewModel() {
 
-    private val _resourceSelector = MutableLiveData(getLastResourceSelector())
+    private val _resourceSelector = MutableLiveData(getStoredResourceSelector())
 
     val resourceSelector: LiveData<ResourceSelector>
         get() = _resourceSelector
@@ -24,7 +24,7 @@ abstract class BaseCollectionViewModel: ViewModel() {
     }
 
     val currentResourceSelector: ResourceSelector
-        get() = resourceSelector.value ?: getLastResourceSelector()
+        get() = resourceSelector.value ?: getStoredResourceSelector()
 
     val dataSource: Flow<PagingData<Resource>> = resourceSelector.asFlow().flatMapLatest { selector ->
         getData(selector)
@@ -32,7 +32,7 @@ abstract class BaseCollectionViewModel: ViewModel() {
 
     abstract fun getData(resourceSelector: ResourceSelector): Flow<PagingData<Resource>>
 
-    private fun getLastResourceSelector(): ResourceSelector {
+    fun getStoredResourceSelector(): ResourceSelector {
         return KitsunePref.searchFilter
     }
 
