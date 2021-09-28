@@ -59,12 +59,19 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
                 addCategoryTreeNode(root, category)
             }
 
+            val prevScrollY = binding.nestedScrollView.scrollY
+
+            treeView.setDefaultAnimation(false)
             treeView.setRoot(root)
             binding.treeViewContainer.apply {
                 removeAllViews()
                 addView(treeView.view)
             }
             viewModel.treeViewSavedState?.let { treeView.restoreState(it) }
+
+            // restore scroll position
+            binding.nestedScrollView.scrollTo(0, prevScrollY)
+            treeView.setDefaultAnimation(true)
         }
     }
 
