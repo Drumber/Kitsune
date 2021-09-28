@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 class CategoriesViewModel(private val categoryService: CategoryService) : ViewModel() {
 
     var treeViewSavedState: String? = null
+    var treeViewSavedSelected: List<CategoryNode>? = null
 
     private val _categoryNodes = MutableLiveData<List<CategoryNode>>()
 

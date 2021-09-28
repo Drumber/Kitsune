@@ -21,6 +21,7 @@ class CategoryViewHolder(
             tvName.text = value.parentCategory.title
             ivExpand.visibility = if(value.hasChildren()) View.VISIBLE else View.INVISIBLE
             divider.isVisible = !node.isFirstChild
+            checkbox.isChecked = node.isSelected
 
             root.setOnClickListener {
                 if(value.hasChildren()) {
@@ -47,6 +48,7 @@ class CategoryViewHolder(
     override fun toggleSelectionMode(editModeEnabled: Boolean) {
         binding.apply {
             checkbox.isChecked = mNode.isSelected
+            checkbox.jumpDrawablesToCurrentState() // prevent checkbox animation
         }
     }
 

@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.ui.search.categories
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
@@ -9,6 +10,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.unnamed.b.atv.model.TreeNode
 import com.unnamed.b.atv.view.AndroidTreeView
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.data.model.category.CategoryNode
 import io.github.drumber.kitsune.databinding.FragmentCategoriesBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -41,6 +43,8 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
             toolbar.setNavigationOnClickListener { dismiss() }
+            toolbar.inflateMenu(R.menu.category_dialog_menu)
+            toolbar.setOnMenuItemClickListener { onMenuItemClicked(it) }
         }
 
         initTreeView()
@@ -50,9 +54,15 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
         treeView = AndroidTreeView(requireContext(), TreeNode.root())
         treeView.setDefaultAnimation(true)
         treeView.setDefaultContainerStyle(R.style.TreeNodeStyle)
+        treeView.isSelectionModeEnabled = true
+        var isTreeViewDataSet = false
 
         viewModel.categoryNodes.observe(viewLifecycleOwner) { categories ->
-            viewModel.treeViewSavedState = treeView.saveState
+            if(isTreeViewDataSet || viewModel.treeViewSavedState.isNullOrBlank()) {
+                // restore state after recreating the view, e.g. screen rotate
+                viewModel.treeViewSavedState = treeView.saveState
+                viewModel.treeViewSavedSelected = treeView.getSelectedValues(CategoryNode::class.java)
+            }
             val root = TreeNode.root()
 
             categories.forEach { category ->
@@ -68,6 +78,12 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
                 addView(treeView.view)
             }
             viewModel.treeViewSavedState?.let { treeView.restoreState(it) }
+            viewModel.treeViewSavedSelected?.let {
+                it.forEach { categoryNode ->
+                    selectTreeNodeForCategory(root, categoryNode.parentCategory)
+                }
+            }
+            isTreeViewDataSet = true
 
             // restore scroll position
             binding.nestedScrollView.scrollTo(0, prevScrollY)
@@ -92,9 +108,37 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
         parent.addChild(node)
     }
 
+    private fun selectTreeNodeForCategory(parentNode: TreeNode, category: Category): TreeNode? {
+        val node = parentNode.children.find { childNode ->
+            category == (childNode.value as CategoryNode).parentCategory
+        }
+        return if(node != null) {
+            treeView.selectNode(node, true)
+            node
+        } else {
+            parentNode.children.forEach {
+                val found = selectTreeNodeForCategory(it, category)
+                if(found != null) {
+                    return node
+                }
+            }
+            null
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         viewModel.treeViewSavedState = treeView.saveState
+        viewModel.treeViewSavedSelected = treeView.getSelectedValues(CategoryNode::class.java)
+    }
+
+    private fun onMenuItemClicked(item: MenuItem): Boolean {
+        if(item.itemId == R.id.unselect_all) {
+            treeView.deselectAll()
+        } else {
+            return false
+        }
+        return true
     }
 
     companion object {
