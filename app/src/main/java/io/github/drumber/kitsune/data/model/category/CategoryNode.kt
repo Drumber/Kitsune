@@ -1,10 +1,10 @@
 package io.github.drumber.kitsune.data.model.category
 
 data class CategoryNode(
-    val parentCategory: Category,
+    val category: Category,
     val childCategories: MutableList<CategoryNode> = mutableListOf()
 ) {
 
-    fun hasChildren() = parentCategory.childCount?.equals(0) == false
+    fun hasChildren() = category.childCount?.equals(0) == false
 
 }

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.data.model.ResourceSelector
-import io.github.drumber.kitsune.data.model.category.Category
+import io.github.drumber.kitsune.data.model.category.CategoryPrefWrapper
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
@@ -36,11 +36,11 @@ object KitsunePref : KotprefModel(), KoinComponent {
 
     private var searchCategoriesJson by stringPref("[]")
 
-    var searchCategories: List<Category>
+    var searchCategories: List<CategoryPrefWrapper>
         set(value) {
             searchCategoriesJson = value.toJsonString()
         }
-    get() = searchCategoriesJson.fromJsonString()
+        get() = searchCategoriesJson.fromJsonString()
 
 
     private inline fun Any.toJsonString(): String {

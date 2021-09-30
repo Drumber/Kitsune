@@ -20,9 +20,10 @@ class CategoryViewHolder(
     override fun createNodeView(node: TreeNode, value: CategoryNode): View {
         binding = ItemCategoryNodeBinding.inflate(LayoutInflater.from(context), null, false)
         binding.apply {
-            tvName.text = value.parentCategory.title
+            tvName.text = value.category.title
             ivExpand.visibility = if(value.hasChildren()) View.VISIBLE else View.INVISIBLE
             divider.isVisible = !node.isFirstChild
+            checkbox.isVisible = node.level > 1
             checkbox.isChecked = node.isSelected
 
             root.setOnClickListener {
@@ -41,6 +42,17 @@ class CategoryViewHolder(
             }
         }
         return binding.root
+    }
+
+    fun onSelectionCounterUpdate(selectedChildren: Int) {
+        binding.tvCounter.apply {
+            text = if (selectedChildren < 100) {
+                selectedChildren.toString()
+            } else {
+                "99+"
+            }
+            isVisible = mNode.level == 1 && selectedChildren > 0
+        }
     }
 
     override fun toggle(active: Boolean) {

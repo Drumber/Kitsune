@@ -30,19 +30,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/iv_expand"
-            android:layout_toStartOf="@id/checkbox"
+            android:layout_toStartOf="@id/layout_control"
             android:layout_marginHorizontal="10dp"
             android:layout_centerVertical="true"
             android:maxLines="1"
             android:ellipsize="end"
             tools:text="Some Name"/>
 
-        <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/checkbox"
+        <RelativeLayout
+            android:id="@+id/layout_control"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true">
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+
+            <TextView
+                android:id="@+id/tv_counter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/badge_background"
+                android:visibility="gone"
+                tools:visibility="visible"
+                tools:text="99+" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

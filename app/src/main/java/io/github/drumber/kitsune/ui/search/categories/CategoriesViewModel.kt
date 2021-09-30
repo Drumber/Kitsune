@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.data.model.category.CategoryNode
+import io.github.drumber.kitsune.data.model.category.CategoryPrefWrapper
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.category.CategoryService
 import io.github.drumber.kitsune.preference.KitsunePref
@@ -17,28 +17,32 @@ class CategoriesViewModel(private val categoryService: CategoryService) : ViewMo
 
     var treeViewSavedState: String? = null
 
-    private val _selectedCategories: MutableSet<Category> = KitsunePref.searchCategories.toMutableSet()
-    val selectedCategories: Set<Category>
+    private val _selectedCategories: MutableSet<CategoryPrefWrapper> = KitsunePref.searchCategories.toMutableSet()
+    val selectedCategories: Set<CategoryPrefWrapper>
         get() = _selectedCategories
 
     fun storeSelectedCategories() {
         KitsunePref.searchCategories = selectedCategories.toList()
     }
 
-    fun addSelectedCategory(category: Category) {
+    fun addSelectedCategory(category: CategoryPrefWrapper) {
         _selectedCategories.add(category)
     }
 
-    fun addAllSelectedCategories(categories: Collection<Category>) {
+    fun addAllSelectedCategories(categories: Collection<CategoryPrefWrapper>) {
         _selectedCategories.addAll(categories)
     }
 
-    fun removeSelectedCategory(category: Category) {
+    fun removeSelectedCategory(category: CategoryPrefWrapper) {
         _selectedCategories.remove(category)
     }
 
     fun clearSelectedCategories() {
         _selectedCategories.clear()
+    }
+
+    fun countSelectedChildrenForParent(parentId: String): Int {
+        return selectedCategories.filter { it.parentId == parentId }.size
     }
 
     private val _categoryNodes = MutableLiveData<List<CategoryNode>>()
@@ -47,10 +51,10 @@ class CategoriesViewModel(private val categoryService: CategoryService) : ViewMo
         get() = _categoryNodes
 
     fun fetchChildCategories(parent: CategoryNode?) {
-        val parentId = if(parent == null || parent.parentCategory.id == null) {
+        val parentId = if(parent == null || parent.category.id == null) {
             "_none"
         } else {
-            parent.parentCategory.id
+            parent.category.id
         }
         val filter = Filter()
             .filter("parent_id", parentId)

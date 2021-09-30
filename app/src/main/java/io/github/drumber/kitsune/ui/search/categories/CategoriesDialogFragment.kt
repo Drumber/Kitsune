@@ -11,8 +11,8 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.unnamed.b.atv.model.TreeNode
 import com.unnamed.b.atv.view.AndroidTreeView
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.data.model.category.CategoryNode
+import io.github.drumber.kitsune.data.model.category.CategoryPrefWrapper
 import io.github.drumber.kitsune.databinding.FragmentCategoriesBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -23,6 +23,7 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
     private val viewModel: CategoriesViewModel by viewModel()
 
     private lateinit var treeView: AndroidTreeView
+    private lateinit var treeRoot: TreeNode
 
     override fun onStart() {
         super.onStart()
@@ -52,47 +53,52 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
     }
 
     private fun initTreeView() {
-        treeView = AndroidTreeView(requireContext(), TreeNode.root())
+        treeRoot = TreeNode.root()
+        treeView = AndroidTreeView(requireContext(), treeRoot)
         treeView.setDefaultAnimation(true)
         treeView.setDefaultContainerStyle(R.style.TreeNodeStyle)
         treeView.isSelectionModeEnabled = true
         var isTreeViewDataSet = false
 
         viewModel.categoryNodes.observe(viewLifecycleOwner) { categories ->
-            if(isTreeViewDataSet) {
+            if (isTreeViewDataSet) {
                 // restore state after fetching a new category
                 viewModel.treeViewSavedState = treeView.saveState
             }
-            val root = TreeNode.root()
+            treeRoot = TreeNode.root()
 
-            categories.forEach { category ->
-                addCategoryTreeNode(root, category)
-            }
+            categories
+                .sortedBy { it.category.title }
+                .forEach { category ->
+                    addCategoryTreeNode(treeRoot, category)
+                }
 
             val prevScrollY = binding.nestedScrollView.scrollY
 
             treeView.setDefaultAnimation(false)
-            treeView.setRoot(root)
+            treeView.setRoot(treeRoot)
             binding.treeViewContainer.apply {
                 removeAllViews()
                 addView(treeView.view)
             }
             viewModel.treeViewSavedState?.let { treeView.restoreState(it) }
-            viewModel.selectedCategories.forEach { category ->
-                selectTreeNodeForCategory(root, category)
+            viewModel.selectedCategories.toSet().forEach { categoryWrapper ->
+                selectTreeNodeForCategory(treeRoot, categoryWrapper.categoryId)
             }
             isTreeViewDataSet = true
 
             // restore scroll position
             binding.nestedScrollView.scrollTo(0, prevScrollY)
             treeView.setDefaultAnimation(true)
+
+            updateSelectionCounter()
         }
     }
 
     private fun addCategoryTreeNode(parent: TreeNode, categoryNode: CategoryNode) {
         val node = TreeNode(categoryNode)
         val viewHolder = CategoryViewHolder(requireContext()) {
-            if(it.childCategories.isEmpty()) {
+            if (it.childCategories.isEmpty()) {
                 viewModel.fetchChildCategories(it)
             }
         }
@@ -100,25 +106,27 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
         node.viewHolder = viewHolder
         node.isSelectable = true
 
-        if(categoryNode.childCategories.isNotEmpty()) {
-            categoryNode.childCategories.forEach { childCategory ->
-                addCategoryTreeNode(node, childCategory)
-            }
+        if (categoryNode.childCategories.isNotEmpty()) {
+            categoryNode.childCategories
+                .sortedBy { it.category.title }
+                .forEach { childCategory ->
+                    addCategoryTreeNode(node, childCategory)
+                }
         }
         parent.addChild(node)
     }
 
-    private fun selectTreeNodeForCategory(parentNode: TreeNode, category: Category): TreeNode? {
+    private fun selectTreeNodeForCategory(parentNode: TreeNode, categoryId: String?): TreeNode? {
         val node = parentNode.children.find { childNode ->
-            category == (childNode.value as CategoryNode).parentCategory
+            categoryId == (childNode.value as CategoryNode).category.id
         }
-        return if(node != null) {
+        return if (node != null) {
             treeView.selectNode(node, true)
             node
         } else {
             parentNode.children.forEach {
-                val found = selectTreeNodeForCategory(it, category)
-                if(found != null) {
+                val found = selectTreeNodeForCategory(it, categoryId)
+                if (found != null) {
                     return node
                 }
             }
@@ -127,12 +135,20 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
     }
 
     private fun onNodeSelectionChange(node: TreeNode) {
-        val category = (node.value as CategoryNode).parentCategory
-        if(node.isSelected) {
-            viewModel.addSelectedCategory(category)
+        val wrapper = getCategoryWrapper(node)
+        if (node.isSelected) {
+            viewModel.addSelectedCategory(wrapper)
         } else {
-            viewModel.removeSelectedCategory(category)
+            viewModel.removeSelectedCategory(wrapper)
         }
+        updateSelectionCounter()
+    }
+
+    private fun getCategoryWrapper(childNode: TreeNode): CategoryPrefWrapper {
+        val rootCategory = findRootCategoryNode(childNode)?.value as? CategoryNode
+        val parentId = rootCategory?.category?.id
+        val category = (childNode.value as CategoryNode).category
+        return CategoryPrefWrapper(category.id, category.slug, parentId)
     }
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -148,15 +164,37 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
     }
 
     private fun setSelectedCategoriesFromTreeView() {
-        val selectedCategories = treeView.getSelectedValues(CategoryNode::class.java).map {
-            it.parentCategory
+        val selectedCategories = treeView.selected.map {
+            getCategoryWrapper(it)
         }
         viewModel.clearSelectedCategories()
         viewModel.addAllSelectedCategories(selectedCategories)
     }
 
+    private fun updateSelectionCounter() {
+        treeRoot.children.forEach { child ->
+            (child.value as CategoryNode).category.id?.let { id ->
+                val selectedChildren = viewModel.countSelectedChildrenForParent(id)
+                val viewHolder = child.viewHolder as CategoryViewHolder
+                viewHolder.onSelectionCounterUpdate(selectedChildren)
+            }
+        }
+    }
+
+    private fun findRootCategoryNode(childNode: TreeNode, targetLevel: Int = 1): TreeNode? {
+        var node: TreeNode = childNode
+        while (node.parent != null) {
+            val parent = node.parent
+            if(parent.level == targetLevel) {
+                return parent
+            }
+            node = parent
+        }
+        return null
+    }
+
     private fun onMenuItemClicked(item: MenuItem): Boolean {
-        if(item.itemId == R.id.unselect_all) {
+        if (item.itemId == R.id.unselect_all) {
             treeView.deselectAll()
             viewModel.clearSelectedCategories()
         } else {
