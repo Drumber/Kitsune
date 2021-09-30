@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.ui.search.categories
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -58,10 +59,9 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
         var isTreeViewDataSet = false
 
         viewModel.categoryNodes.observe(viewLifecycleOwner) { categories ->
-            if(isTreeViewDataSet || viewModel.treeViewSavedState.isNullOrBlank()) {
-                // restore state after recreating the view, e.g. screen rotate
+            if(isTreeViewDataSet) {
+                // restore state after fetching a new category
                 viewModel.treeViewSavedState = treeView.saveState
-                viewModel.treeViewSavedSelected = treeView.getSelectedValues(CategoryNode::class.java)
             }
             val root = TreeNode.root()
 
@@ -78,10 +78,8 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
                 addView(treeView.view)
             }
             viewModel.treeViewSavedState?.let { treeView.restoreState(it) }
-            viewModel.treeViewSavedSelected?.let {
-                it.forEach { categoryNode ->
-                    selectTreeNodeForCategory(root, categoryNode.parentCategory)
-                }
+            viewModel.selectedCategories.forEach { category ->
+                selectTreeNodeForCategory(root, category)
             }
             isTreeViewDataSet = true
 
@@ -93,11 +91,13 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
 
     private fun addCategoryTreeNode(parent: TreeNode, categoryNode: CategoryNode) {
         val node = TreeNode(categoryNode)
-        node.viewHolder = CategoryViewHolder(requireContext()) {
+        val viewHolder = CategoryViewHolder(requireContext()) {
             if(it.childCategories.isEmpty()) {
                 viewModel.fetchChildCategories(it)
             }
         }
+        viewHolder.onSelectionChangeListener = { onNodeSelectionChange(it) }
+        node.viewHolder = viewHolder
         node.isSelectable = true
 
         if(categoryNode.childCategories.isNotEmpty()) {
@@ -126,15 +126,39 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
         }
     }
 
+    private fun onNodeSelectionChange(node: TreeNode) {
+        val category = (node.value as CategoryNode).parentCategory
+        if(node.isSelected) {
+            viewModel.addSelectedCategory(category)
+        } else {
+            viewModel.removeSelectedCategory(category)
+        }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        setSelectedCategoriesFromTreeView()
+        viewModel.storeSelectedCategories()
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         viewModel.treeViewSavedState = treeView.saveState
-        viewModel.treeViewSavedSelected = treeView.getSelectedValues(CategoryNode::class.java)
+        //setSelectedCategoriesFromTreeView() // is done in onDismiss()
+    }
+
+    private fun setSelectedCategoriesFromTreeView() {
+        val selectedCategories = treeView.getSelectedValues(CategoryNode::class.java).map {
+            it.parentCategory
+        }
+        viewModel.clearSelectedCategories()
+        viewModel.addAllSelectedCategories(selectedCategories)
     }
 
     private fun onMenuItemClicked(item: MenuItem): Boolean {
         if(item.itemId == R.id.unselect_all) {
             treeView.deselectAll()
+            viewModel.clearSelectedCategories()
         } else {
             return false
         }
@@ -142,7 +166,7 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
     }
 
     companion object {
-        const val TAG = "categories_dialog"
+        private const val TAG = "categories_dialog"
 
         fun showDialog(fragmentManager: FragmentManager): CategoriesDialogFragment {
             val fragment = CategoriesDialogFragment()

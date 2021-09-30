@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.data.model.ResourceSelector
+import io.github.drumber.kitsune.data.model.category.Category
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
@@ -14,6 +15,7 @@ object KitsunePref : KotprefModel(), KoinComponent {
     override val commitAllPropertiesByDefault = true
 
     var titles by enumValuePref(TitlesPref.Canoncial)
+
 
     private var searchFilterJson by stringPref(Defaults.DEFAULT_RESOURCE_SELECTOR.toJsonString())
 
@@ -24,11 +26,21 @@ object KitsunePref : KotprefModel(), KoinComponent {
         get() = searchFilterJson.fromJsonString()
 
 
+
     private var searchQueriesJson by stringPref("[]")
 
     val searchQueries = SearchQueryData(searchQueriesJson.fromJsonString()) {
         searchQueriesJson = it.toJsonString()
     }
+
+
+    private var searchCategoriesJson by stringPref("[]")
+
+    var searchCategories: List<Category>
+        set(value) {
+            searchCategoriesJson = value.toJsonString()
+        }
+    get() = searchCategoriesJson.fromJsonString()
 
 
     private inline fun Any.toJsonString(): String {

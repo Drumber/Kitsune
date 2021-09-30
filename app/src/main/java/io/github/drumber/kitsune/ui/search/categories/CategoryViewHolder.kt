@@ -15,6 +15,8 @@ class CategoryViewHolder(
 
     private lateinit var binding: ItemCategoryNodeBinding
 
+    var onSelectionChangeListener: ((TreeNode) -> Unit)? = null
+
     override fun createNodeView(node: TreeNode, value: CategoryNode): View {
         binding = ItemCategoryNodeBinding.inflate(LayoutInflater.from(context), null, false)
         binding.apply {
@@ -35,7 +37,7 @@ class CategoryViewHolder(
 
             checkbox.setOnCheckedChangeListener { button, isChecked ->
                 node.isSelected = isChecked
-                value.isChecked = isChecked
+                onSelectionChangeListener?.invoke(node)
             }
         }
         return binding.root
