@@ -22,6 +22,8 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
 
     private val viewModel: CategoriesViewModel by viewModel()
 
+    private var onDismissListener: DialogInterface.OnDismissListener? = null
+
     private lateinit var treeView: AndroidTreeView
     private lateinit var treeRoot: TreeNode
 
@@ -154,6 +156,7 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         viewModel.storeSelectedCategories()
+        onDismissListener?.onDismiss(dialog)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -198,6 +201,10 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
             return false
         }
         return true
+    }
+
+    fun setOnDismissListener(listener: DialogInterface.OnDismissListener) {
+        onDismissListener = listener
     }
 
     companion object {

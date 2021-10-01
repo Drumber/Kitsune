@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
@@ -87,6 +88,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
         }
 
         initSearchView()
+        updateCategoriesChip()
     }
 
     private fun initSearchView() {
@@ -225,6 +227,10 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
         binding.searchWrapper.setBackgroundColor(if(isSearchExpanded) Color.TRANSPARENT else colorSurface)
     }
 
+    private fun updateCategoriesChip() {
+        binding.chipCategories.isSelected = KitsunePref.searchCategories.isNotEmpty()
+    }
+
     private fun showResourceSelectorDialog() {
         val items = ResourceType.values().map { getString(it.toStringRes()) }.toTypedArray()
         val prevSelected = viewModel.currentResourceSelector.resourceType.ordinal
@@ -262,7 +268,16 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
     }
 
     private fun showCategoriesDialog() {
-        CategoriesDialogFragment.showDialog(parentFragmentManager)
+        parentFragmentManager.fragments.forEach { fragment ->
+            if (fragment is DialogFragment) {
+                // dismiss any open dialogs
+                fragment.dismissAllowingStateLoss()
+            }
+        }
+        val dialog = CategoriesDialogFragment.showDialog(parentFragmentManager)
+        dialog.setOnDismissListener {
+            updateCategoriesChip()
+        }
     }
 
     override fun onResourceClicked(model: ResourceAdapter, options: NavOptions) {

@@ -44,4 +44,11 @@
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
+    <style name="Widget.Kitsune.Chip.Selectable" parent="Base.Widget.MaterialComponents.Chip">
+        <item name="android:textColor">@color/mtrl_choice_chip_text_color</item>
+        <item name="chipBackgroundColor">@color/mtrl_choice_chip_background_color</item>
+        <item name="rippleColor">@color/chip_selectable_ripple_color</item>
+        <item name="closeIconTint">@color/mtrl_choice_chip_text_color</item>
+    </style>
+
 </resources>
