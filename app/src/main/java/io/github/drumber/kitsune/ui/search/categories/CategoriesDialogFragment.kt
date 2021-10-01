@@ -5,15 +5,18 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.snackbar.Snackbar
 import com.unnamed.b.atv.model.TreeNode
 import com.unnamed.b.atv.view.AndroidTreeView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.category.CategoryNode
 import io.github.drumber.kitsune.data.model.category.CategoryPrefWrapper
 import io.github.drumber.kitsune.databinding.FragmentCategoriesBinding
+import io.github.drumber.kitsune.util.ResponseData
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
@@ -49,8 +52,10 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
             toolbar.setNavigationOnClickListener { dismiss() }
             toolbar.inflateMenu(R.menu.category_dialog_menu)
             toolbar.setOnMenuItemClickListener { onMenuItemClicked(it) }
+            layoutLoading.btnRetry.setOnClickListener { viewModel.fetchChildCategories(null) }
         }
 
+        toggleLoadingLayout(true)
         initTreeView()
     }
 
@@ -62,7 +67,14 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
         treeView.isSelectionModeEnabled = true
         var isTreeViewDataSet = false
 
-        viewModel.categoryNodes.observe(viewLifecycleOwner) { categories ->
+        viewModel.categoryNodes.observe(viewLifecycleOwner) { response ->
+            toggleLoadingLayout(false)
+            if(response !is ResponseData.Success) {
+                displayLoadingError((response as ResponseData.Error).e)
+                return@observe
+            }
+            val categories = response.data
+
             if (isTreeViewDataSet) {
                 // restore state after fetching a new category
                 viewModel.treeViewSavedState = treeView.saveState
@@ -190,6 +202,29 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
             node = parent
         }
         return parentList
+    }
+
+    private fun toggleLoadingLayout(isVisible: Boolean) {
+        binding.layoutLoading.apply {
+            root.isVisible = isVisible
+            btnRetry.isVisible = false
+            tvError.isVisible = false
+        }
+    }
+
+    private fun displayLoadingError(e: Throwable) {
+        val errorMsg = "Error: ${e.message}"
+        if(treeRoot.children.isEmpty()) {
+            binding.layoutLoading.apply {
+                root.isVisible = true
+                progressBar.isVisible = false
+                tvError.isVisible = true
+                tvError.text = errorMsg
+                btnRetry.isVisible = true
+            }
+        } else {
+            Snackbar.make(binding.root, "Error: $errorMsg", Snackbar.LENGTH_LONG).show()
+        }
     }
 
     private fun onMenuItemClicked(item: MenuItem): Boolean {

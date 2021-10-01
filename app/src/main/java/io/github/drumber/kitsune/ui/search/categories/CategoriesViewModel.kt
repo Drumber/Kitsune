@@ -9,6 +9,7 @@ import io.github.drumber.kitsune.data.model.category.CategoryPrefWrapper
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.category.CategoryService
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.util.ResponseData
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,13 +42,13 @@ class CategoriesViewModel(private val categoryService: CategoryService) : ViewMo
         return selectedCategories.filter { it.parentIds?.contains(parentId) == true }.size
     }
 
-    private val _categoryNodes = MutableLiveData<List<CategoryNode>>()
+    private val _categoryNodes = MutableLiveData<ResponseData<List<CategoryNode>>>()
 
-    val categoryNodes: LiveData<List<CategoryNode>>
+    val categoryNodes: LiveData<ResponseData<List<CategoryNode>>>
         get() = _categoryNodes
 
     fun fetchChildCategories(parent: CategoryNode?) {
-        val parentId = if(parent == null || parent.category.id == null) {
+        val parentId = if (parent == null || parent.category.id == null) {
             "_none"
         } else {
             parent.category.id
@@ -64,15 +65,21 @@ class CategoriesViewModel(private val categoryService: CategoryService) : ViewMo
                         CategoryNode(it)
                     }
 
-                    if(parent == null) {
-                        _categoryNodes.postValue(nodes)
+                    if (parent == null) {
+                        _categoryNodes.postValue(ResponseData.Success(nodes))
                     } else {
                         parent.childCategories.addAll(0, nodes)
-                        _categoryNodes.postValue(_categoryNodes.value)
+                        if (_categoryNodes.value is ResponseData.Success || _categoryNodes.value?.data == null) {
+                            _categoryNodes.postValue(_categoryNodes.value)
+                        } else {
+                            val responseData = ResponseData.Success(categoryNodes.value?.data!!)
+                            _categoryNodes.postValue(responseData)
+                        }
                     }
                 }
             } catch (e: Exception) {
                 logE("Failed to fetch categories.", e)
+                _categoryNodes.postValue(ResponseData.Error(e, categoryNodes.value?.data))
             }
         }
     }
