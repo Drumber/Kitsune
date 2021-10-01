@@ -258,8 +258,8 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
                 if(which != prevSelected) {
                     val sortFilter = SortFilter.values()[which]
                     val prevFilter = viewModel.currentResourceSelector.filter
-                    val selector =
-                        viewModel.currentResourceSelector.copy(filter = prevFilter.sort(sortFilter.queryParam))
+                    val selector = viewModel.currentResourceSelector
+                        .copy(filter = prevFilter.sort(sortFilter.queryParam))
                     viewModel.setResourceSelector(selector)
                 }
                 dialog.dismiss()
@@ -277,6 +277,14 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
         val dialog = CategoriesDialogFragment.showDialog(parentFragmentManager)
         dialog.setOnDismissListener {
             updateCategoriesChip()
+            val selectedCategories = KitsunePref.searchCategories.mapNotNull { it.categorySlug }
+            val selector = viewModel.currentResourceSelector.copy()
+            if(selectedCategories.isNotEmpty()) {
+                selector.filter.filter("categories", selectedCategories.joinToString(","))
+            } else {
+                selector.filter.options.remove("filter[categories]")
+            }
+            viewModel.setResourceSelector(selector)
         }
     }
 
