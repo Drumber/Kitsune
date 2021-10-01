@@ -29,10 +29,6 @@ class CategoriesViewModel(private val categoryService: CategoryService) : ViewMo
         _selectedCategories.add(category)
     }
 
-    fun addAllSelectedCategories(categories: Collection<CategoryPrefWrapper>) {
-        _selectedCategories.addAll(categories)
-    }
-
     fun removeSelectedCategory(category: CategoryPrefWrapper) {
         _selectedCategories.remove(category)
     }
@@ -42,7 +38,7 @@ class CategoriesViewModel(private val categoryService: CategoryService) : ViewMo
     }
 
     fun countSelectedChildrenForParent(parentId: String): Int {
-        return selectedCategories.filter { it.parentId == parentId }.size
+        return selectedCategories.filter { it.parentIds?.contains(parentId) == true }.size
     }
 
     private val _categoryNodes = MutableLiveData<List<CategoryNode>>()

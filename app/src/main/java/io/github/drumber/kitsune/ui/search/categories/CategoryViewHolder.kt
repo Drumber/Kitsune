@@ -51,7 +51,7 @@ class CategoryViewHolder(
             } else {
                 "99+"
             }
-            isVisible = mNode.level == 1 && selectedChildren > 0
+            isVisible = selectedChildren > 0
         }
     }
 

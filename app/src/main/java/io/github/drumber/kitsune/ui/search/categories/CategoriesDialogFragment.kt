@@ -145,58 +145,55 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
     }
 
     private fun getCategoryWrapper(childNode: TreeNode): CategoryPrefWrapper {
-        val rootCategory = findRootCategoryNode(childNode)?.value as? CategoryNode
-        val parentId = rootCategory?.category?.id
+        val parentCategories = findRootCategoryNodes(childNode)
+        val parentIds = parentCategories.mapNotNull { (it.value as CategoryNode).category.id }
         val category = (childNode.value as CategoryNode).category
-        return CategoryPrefWrapper(category.id, category.slug, parentId)
+        return CategoryPrefWrapper(category.id, category.slug, parentIds)
     }
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        setSelectedCategoriesFromTreeView()
         viewModel.storeSelectedCategories()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         viewModel.treeViewSavedState = treeView.saveState
-        //setSelectedCategoriesFromTreeView() // is done in onDismiss()
     }
 
-    private fun setSelectedCategoriesFromTreeView() {
-        val selectedCategories = treeView.selected.map {
-            getCategoryWrapper(it)
-        }
-        viewModel.clearSelectedCategories()
-        viewModel.addAllSelectedCategories(selectedCategories)
-    }
-
-    private fun updateSelectionCounter() {
-        treeRoot.children.forEach { child ->
-            (child.value as CategoryNode).category.id?.let { id ->
-                val selectedChildren = viewModel.countSelectedChildrenForParent(id)
-                val viewHolder = child.viewHolder as CategoryViewHolder
-                viewHolder.onSelectionCounterUpdate(selectedChildren)
+    private fun updateSelectionCounter(parentNode: TreeNode = treeRoot) {
+        parentNode.children.forEach { child ->
+            val categoryNode = child.value as CategoryNode
+            if(categoryNode.hasChildren()) {
+                categoryNode.category.id?.let { id ->
+                    val selectedChildren = viewModel.countSelectedChildrenForParent(id)
+                    val viewHolder = child.viewHolder as CategoryViewHolder
+                    viewHolder.onSelectionCounterUpdate(selectedChildren)
+                }
+                updateSelectionCounter(child)
             }
         }
     }
 
-    private fun findRootCategoryNode(childNode: TreeNode, targetLevel: Int = 1): TreeNode? {
+    private fun findRootCategoryNodes(childNode: TreeNode, targetLevel: Int = 1): List<TreeNode> {
+        val parentList = mutableListOf<TreeNode>()
         var node: TreeNode = childNode
         while (node.parent != null) {
             val parent = node.parent
+            parentList.add(parent)
             if(parent.level == targetLevel) {
-                return parent
+                break
             }
             node = parent
         }
-        return null
+        return parentList
     }
 
     private fun onMenuItemClicked(item: MenuItem): Boolean {
         if (item.itemId == R.id.unselect_all) {
             treeView.deselectAll()
             viewModel.clearSelectedCategories()
+            updateSelectionCounter()
         } else {
             return false
         }
