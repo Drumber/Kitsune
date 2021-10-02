@@ -20,7 +20,7 @@
             android:drawableLeft="@drawable/ic_emoji_events_24"
             android:drawableTint="@color/color_score"
             android:drawablePadding="10dp"
-            android:gravity="center"
+            android:gravity="center_vertical"
             tools:text="Kitsu Score 83.03%"
             android:text="@{@string/data_kitsu_score(data.avgRating)}" />
 
@@ -31,7 +31,7 @@
             android:drawableLeft="@drawable/ic_star_24"
             android:drawableTint="@color/color_star"
             android:drawablePadding="10dp"
-            android:gravity="center"
+            android:gravity="center_vertical"
             tools:text="Rank #100"
             android:text="@{@string/data_rank(data.ratingRank)}" />
 
@@ -42,7 +42,7 @@
             android:drawableLeft="@drawable/ic_favorite_24"
             android:drawableTint="@color/color_heart"
             android:drawablePadding="10dp"
-            android:gravity="center"
+            android:gravity="center_vertical"
             tools:text="Popularity #100"
             android:text="@{@string/data_popularity(data.popularityRank)}" />
 
@@ -52,7 +52,7 @@
             android:layout_marginTop="10dp"
             android:drawableLeft="@drawable/ic_schedule_24"
             android:drawablePadding="10dp"
-            android:gravity="center"
+            android:gravity="center_vertical"
             tools:text="Currently Airing"
             android:text="@{data.statusText(context)}" />
 
