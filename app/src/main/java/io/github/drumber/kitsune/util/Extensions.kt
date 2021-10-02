@@ -74,8 +74,8 @@ fun Resources.Theme.getResourceId(resid: Int): Int {
     return typedValue.resourceId
 }
 
-fun String.toDate(format: String): Calendar {
-    val date = SimpleDateFormat("yyyy-MM-dd").parse(this)
+fun String.toDate(format: String = "yyyy-MM-dd"): Calendar {
+    val date = SimpleDateFormat(format).parse(this)
     return Calendar.getInstance().apply {
         time = date
     }

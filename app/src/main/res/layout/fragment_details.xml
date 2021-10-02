@@ -110,7 +110,7 @@
                             android:layout_alignParentStart="true"
                             android:layout_marginTop="10dp"
                             android:text="@{data.publishingYear + ` • ` + data.subtype}"
-                            tools:text="2002 • TV"/>
+                            tools:text="2002 • TV" />
 
                         <include
                             layout="@layout/section_details_stats"
@@ -145,15 +145,8 @@
                             android:layout_marginBottom="10dp"/>
 
                         <include
-                            layout="@layout/section_details_info_anime"
-                            app:isVisible="@{data instanceof AnimeResource}"
-                            app:data="@{ResourceAdapter.castAnime(data)}" />
-
-                        <include
-                            layout="@layout/section_details_info_manga"
-                            app:isVisible="@{data instanceof MangaResource}"
-                            app:data="@{ResourceAdapter.castManga(data)}"
-                            tools:visibility="gone" />
+                            layout="@layout/section_details_info"
+                            app:data="@{data}" />
 
                     </LinearLayout>
 

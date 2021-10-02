@@ -29,6 +29,7 @@
     <string name="no_information">Unknown</string>
 
     <string name="status_current">Currently Airing</string>
+    <string name="status_current_manga">Publishing</string>
     <string name="status_finished">Finished</string>
     <string name="status_tba">TBA</string>
     <string name="status_unreleased">Unreleased</string>
@@ -54,4 +55,15 @@
     <string name="data_title_english">English</string>
     <string name="data_title_japanese">Japanese</string>
     <string name="data_title_japanese_romaji">Japanese (Romaji)</string>
+    <string name="data_title_type">Type</string>
+    <string name="data_title_status">Status</string>
+    <string name="data_title_aired">Aired</string>
+    <string name="data_title_published">Published</string>
+    <string name="data_title_tba">Expected</string>
+    <string name="data_title_season">Season</string>
+
+    <string name="season_winter">Winter</string>
+    <string name="season_spring">Spring</string>
+    <string name="season_summer">Summer</string>
+    <string name="season_fall">Fall</string>
 </resources>

@@ -9,6 +9,7 @@ import io.github.drumber.kitsune.util.originalOrDown
 import io.github.drumber.kitsune.util.smallOrHigher
 import io.github.drumber.kitsune.util.toDate
 import kotlinx.parcelize.Parcelize
+import java.text.SimpleDateFormat
 import java.util.*
 
 sealed class ResourceAdapter(
@@ -16,6 +17,7 @@ sealed class ResourceAdapter(
     val titles: Titles,
     val description: String,
     val startDate: String?,
+    val endDate: String?,
     val avgRating: String,
     val userCount: Int,
     val favoriteCount: Int,
@@ -32,19 +34,64 @@ sealed class ResourceAdapter(
 
     val publishingYear: String
         get() = if (!startDate.isNullOrBlank()) {
-            startDate.toDate("yyyy-MM-dd").get(Calendar.YEAR).toString()
+            startDate.toDate().get(Calendar.YEAR).toString()
         } else "?"
 
-    inline fun statusText(context: Context): String {
-        return when (status) {
-            Status.current -> context.getString(R.string.status_current)
-            Status.finished -> context.getString(R.string.status_finished)
-            Status.tba -> context.getString(R.string.status_tba)
-            Status.unreleased -> context.getString(R.string.status_unreleased)
-            Status.upcoming -> context.getString(R.string.status_upcoming)
-            null -> context.getString(R.string.no_information)
+    fun season(context: Context): String {
+        val date = startDate?.toDate()
+        val stringRes = when (date?.get(Calendar.MONTH)?.plus(1)) {
+            in arrayOf(12, 1, 2) -> R.string.season_winter
+            in 3..5 -> R.string.season_spring
+            in 6..8 -> R.string.season_summer
+            in 9..11 -> R.string.season_fall
+            else -> R.string.no_information
+        }
+        return context.getString(stringRes)
+    }
+
+    val seasonYear: String get() {
+        val date = startDate?.toDate()
+        return date?.let {
+            val year = date.get(Calendar.YEAR)
+            val month = date.get(Calendar.MONTH) + 1
+            if (month == 12) {
+                year + 1
+            } else {
+                year
+            }
+        }?.toString() ?: "?"
+    }
+
+    val airedText: String get() {
+        var airedText = formatDate(startDate)
+        if(!endDate.isNullOrBlank()) {
+            airedText += " - ${formatDate(endDate)}"
+        }
+        return airedText
+    }
+
+    private fun formatDate(dateString: String?): String {
+        return if (!dateString.isNullOrBlank()) {
+            val dateFormat = SimpleDateFormat.getDateInstance(SimpleDateFormat.DEFAULT)
+            dateFormat.format(dateString.toDate().time)
+        } else {
+            "?"
         }
     }
+
+    fun statusText(context: Context): String {
+        val stringRes = when (status) {
+            Status.current -> if(isAnime()) R.string.status_current else R.string.status_current_manga
+            Status.finished -> R.string.status_finished
+            Status.tba -> R.string.status_tba
+            Status.unreleased -> R.string.status_unreleased
+            Status.upcoming -> R.string.status_upcoming
+            null -> R.string.no_information
+        }
+        return context.getString(stringRes)
+    }
+
+    fun isAnime() = this is AnimeResource
 
     @Parcelize
     class AnimeResource(val anime: Anime) : ResourceAdapter(
@@ -52,6 +99,7 @@ sealed class ResourceAdapter(
         titles = anime.titles.require(),
         description = anime.description.orEmpty(),
         startDate = anime.startDate,
+        endDate = anime.endDate,
         avgRating = anime.averageRating.orEmpty(),
         userCount = anime.userCount.orNull(),
         favoriteCount = anime.favoritesCount.orNull(),
@@ -72,6 +120,7 @@ sealed class ResourceAdapter(
         titles = manga.titles.require(),
         description = manga.description.orEmpty(),
         startDate = manga.startDate,
+        endDate = manga.endDate,
         avgRating = manga.averageRating.orEmpty(),
         userCount = manga.userCount.orNull(),
         favoriteCount = manga.favoritesCount.orNull(),
@@ -91,11 +140,6 @@ sealed class ResourceAdapter(
             is Anime -> AnimeResource(resource)
             is Manga -> MangaResource(resource)
         }
-
-        @JvmStatic
-        fun castAnime(resourceAdapter: ResourceAdapter) = resourceAdapter as? ResourceAdapter.AnimeResource
-        @JvmStatic
-        fun castManga(resourceAdapter: ResourceAdapter) = resourceAdapter as? ResourceAdapter.MangaResource
     }
 
 }
