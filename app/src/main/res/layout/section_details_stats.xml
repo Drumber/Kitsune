@@ -17,18 +17,43 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_emoji_events_24"
+            android:drawableTint="@color/color_score"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            tools:text="Kitsu Score 83.03%"
+            android:text="@{@string/data_kitsu_score(data.avgRating)}" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/ic_star_24"
+            android:drawableTint="@color/color_star"
+            android:drawablePadding="10dp"
+            android:gravity="center"
             tools:text="Rank #100"
             android:text="@{@string/data_rank(data.ratingRank)}" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/ic_favorite_24"
+            android:drawableTint="@color/color_heart"
+            android:drawablePadding="10dp"
+            android:gravity="center"
             tools:text="Popularity #100"
             android:text="@{@string/data_popularity(data.popularityRank)}" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/ic_schedule_24"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            tools:text="Currently Airing"
             android:text="@{data.statusText(context)}" />
 
     </LinearLayout>

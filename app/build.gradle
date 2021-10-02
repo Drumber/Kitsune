@@ -107,6 +107,9 @@ dependencies {
     // TreeView
     implementation 'com.github.bmelnychuk:atv:1.2.+'
 
+    // Expandable text view
+    implementation 'at.blogc:expandabletextview:1.0.5'
+
     // Tests
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

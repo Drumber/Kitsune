@@ -36,6 +36,7 @@
 
     <string name="data_rank">Rank #%d</string>
     <string name="data_popularity">Popularity #%d</string>
+    <string name="data_kitsu_score">Kitsu Score %s%%</string>
 
     <string name="section_trending">Trending This Week</string>
     <string name="section_top_airing">Top Airing Anime</string>
@@ -43,10 +44,11 @@
     <string name="section_highest_rated">Highest Rated Anime</string>
     <string name="section_most_popular">Most Popular Anime</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hint_search">Search</string>
     <string name="title_categories">Categories</string>
     <string name="menu_unselect_all">Unselect all</string>
     <string name="action_reset_filter">Reset filter</string>
+    <string name="title_description">Description</string>
+    <string name="action_read_more">Read more</string>
+    <string name="action_read_less">Read less</string>
 </resources>

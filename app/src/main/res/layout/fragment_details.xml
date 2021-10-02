@@ -84,7 +84,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:padding="10dp">
+                    android:padding="15dp"
+                    android:layout_marginTop="10dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -92,10 +93,10 @@
 
                         <ImageView
                             android:id="@+id/iv_thumbnail"
-                            android:layout_width="110dp"
-                            android:layout_height="156dp"
-                            android:layout_alignParentTop="true"
+                            android:layout_width="150dp"
+                            android:layout_height="213dp"
                             android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
                             tools:src="@drawable/ic_insert_photo_48" />
 
                         <TextView
@@ -103,7 +104,8 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/iv_thumbnail"
                             android:layout_alignParentStart="true"
-                            android:text="@{data.publishingYear + `, ` + data.subtype}" />
+                            android:layout_marginTop="10dp"
+                            android:text="@{data.publishingYear + ` • ` + data.subtype}" />
 
                         <include
                             layout="@layout/section_details_stats"
@@ -111,13 +113,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_toEndOf="@id/iv_thumbnail"
-                            android:layout_alignParentBottom="true" />
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginStart="10dp" />
 
                     </RelativeLayout>
 
                     <Space
                         android:layout_width="match_parent"
-                        android:layout_height="10dp" />
+                        android:layout_height="25dp" />
 
                     <include
                         layout="@layout/section_details_description"

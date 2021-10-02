@@ -22,6 +22,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="color_star">#F39C12</color>
+    <color name="color_heart">#E74C3C</color>
+    <color name="color_score">#1BBC9C</color>
+
     <color name="translucent_overlay_50">#80FFFFFF</color>
 
     <color name="translucent_status_bar">@color/translucent_overlay_50</color>
