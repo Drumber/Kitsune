@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="data"
+            type="io.github.drumber.kitsune.data.model.resource.ResourceAdapter.MangaResource" />
+    </data>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="0,1">
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{data.titles.en != null}"
+            app:title="@{@string/data_title_english}"
+            app:value="@{data.titles.en}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{data.titles.jaJp != null}"
+            app:title="@{@string/data_title_japanese}"
+            app:value="@{data.titles.jaJp}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{data.titles.enJp != null}"
+            app:title="@{@string/data_title_japanese_romaji}"
+            app:value="@{data.titles.enJp}" />
+
+    </TableLayout>
+</layout>

@@ -51,4 +51,7 @@
     <string name="title_description">Description</string>
     <string name="action_read_more">Read more</string>
     <string name="action_read_less">Read less</string>
+    <string name="data_title_english">English</string>
+    <string name="data_title_japanese">Japanese</string>
+    <string name="data_title_japanese_romaji">Japanese (Romaji)</string>
 </resources>

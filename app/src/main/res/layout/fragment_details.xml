@@ -4,9 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="io.github.drumber.kitsune.data.model.resource.ResourceAdapter" />
+        <import type="io.github.drumber.kitsune.data.model.resource.ResourceAdapter.AnimeResource" />
+        <import type="io.github.drumber.kitsune.data.model.resource.ResourceAdapter.MangaResource" />
         <variable
             name="data"
-            type="io.github.drumber.kitsune.data.model.resource.ResourceAdapter" />
+            type="ResourceAdapter" />
     </data>
 
     <FrameLayout
@@ -84,6 +87,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
+                    android:clipToPadding="false"
                     android:padding="15dp"
                     android:layout_marginTop="10dp">
 
@@ -126,6 +130,32 @@
                     <include
                         layout="@layout/section_details_description"
                         app:data="@{data}" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="25dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Details"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                            android:layout_marginBottom="10dp"/>
+
+                        <include
+                            layout="@layout/section_details_info_anime"
+                            app:isVisible="@{data instanceof AnimeResource}"
+                            app:data="@{ResourceAdapter.castAnime(data)}" />
+
+                        <include
+                            layout="@layout/section_details_info_manga"
+                            app:isVisible="@{data instanceof MangaResource}"
+                            app:data="@{ResourceAdapter.castManga(data)}"
+                            tools:visibility="gone" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 

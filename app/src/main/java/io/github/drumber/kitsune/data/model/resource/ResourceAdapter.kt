@@ -13,6 +13,7 @@ import java.util.*
 
 sealed class ResourceAdapter(
     val title: String,
+    val titles: Titles,
     val description: String,
     val startDate: String?,
     val avgRating: String,
@@ -48,6 +49,7 @@ sealed class ResourceAdapter(
     @Parcelize
     class AnimeResource(val anime: Anime) : ResourceAdapter(
         title = getTitle(anime.titles, anime.canonicalTitle),
+        titles = anime.titles.require(),
         description = anime.description.orEmpty(),
         startDate = anime.startDate,
         avgRating = anime.averageRating.orEmpty(),
@@ -67,6 +69,7 @@ sealed class ResourceAdapter(
     @Parcelize
     class MangaResource(val manga: Manga) : ResourceAdapter(
         title = getTitle(manga.titles, manga.canonicalTitle),
+        titles = manga.titles.require(),
         description = manga.description.orEmpty(),
         startDate = manga.startDate,
         avgRating = manga.averageRating.orEmpty(),
@@ -88,6 +91,11 @@ sealed class ResourceAdapter(
             is Anime -> AnimeResource(resource)
             is Manga -> MangaResource(resource)
         }
+
+        @JvmStatic
+        fun castAnime(resourceAdapter: ResourceAdapter) = resourceAdapter as? ResourceAdapter.AnimeResource
+        @JvmStatic
+        fun castManga(resourceAdapter: ResourceAdapter) = resourceAdapter as? ResourceAdapter.MangaResource
     }
 
 }
@@ -99,6 +107,10 @@ private fun getTitle(title: Titles?, canonical: String?): String {
         TitlesPref.Romanized -> title?.enJp ?: canonical ?: nf
         TitlesPref.English -> title?.en ?: canonical ?: nf
     }
+}
+
+private fun Titles?.require(): Titles {
+    return this ?: Titles(null, null, null)
 }
 
 private inline fun Int?.orNull() = this ?: 0

@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.util
 
+import android.view.View
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
@@ -23,6 +24,12 @@ object BindingAdapter {
             actionView.isVisible = expandableTextView.lineCount >= expandableTextView.maxLines
         }
         actionView.setOnClickListener { expandableTextView.toggle() }
+    }
+
+    @JvmStatic
+    @BindingAdapter("isVisible")
+    fun isVisible(view: View, isVisible: Boolean) {
+        view.isVisible = isVisible
     }
 
 }
