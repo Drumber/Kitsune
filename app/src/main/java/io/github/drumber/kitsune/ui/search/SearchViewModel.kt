@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.ui.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagingData
+import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.model.ResourceSelector
 import io.github.drumber.kitsune.data.model.ResourceType
@@ -61,6 +62,13 @@ class SearchViewModel(
     fun resetSearch() {
         _isSearching.value = false
         setResourceSelector(getStoredResourceSelector())
+    }
+
+    fun restoreDefaultFilter() {
+        val defaultResourceSelector = Defaults.DEFAULT_RESOURCE_SELECTOR
+        KitsunePref.searchFilter = defaultResourceSelector
+        KitsunePref.searchCategories = emptyList()
+        setResourceSelector(defaultResourceSelector)
     }
 
 }

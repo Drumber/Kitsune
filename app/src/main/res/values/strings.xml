@@ -48,4 +48,5 @@
     <string name="hint_search">Search</string>
     <string name="title_categories">Categories</string>
     <string name="menu_unselect_all">Unselect all</string>
+    <string name="action_reset_filter">Reset filter</string>
 </resources>

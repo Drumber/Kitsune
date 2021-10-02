@@ -102,6 +102,13 @@
                         app:closeIconEnabled="true"
                         android:text="@string/title_categories"/>
 
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_reset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:chipIcon="@drawable/ic_restore_24"
+                        android:text="@string/action_reset_filter"/>
+
                 </com.google.android.material.chip.ChipGroup>
 
             </HorizontalScrollView>

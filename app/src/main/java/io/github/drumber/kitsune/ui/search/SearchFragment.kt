@@ -71,6 +71,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
             chipResourceSelector.setOnClickListener { showResourceSelectorDialog() }
             chipSort.setOnClickListener { showSortDialog() }
             chipCategories.setOnClickListener { showCategoriesDialog() }
+            chipReset.setOnClickListener { resetFilter() }
         }
 
         viewModel.resourceSelector.observe(viewLifecycleOwner) {
@@ -175,6 +176,11 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
             }
             findNavController().navigateUp()
         }
+    }
+
+    private fun resetFilter() {
+        viewModel.restoreDefaultFilter()
+        updateCategoriesChip()
     }
 
 
