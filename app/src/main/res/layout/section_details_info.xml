@@ -74,6 +74,24 @@
 
         <include
             layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.chapters)}"
+            app:title="@{@string/data_title_chapters}"
+            app:value="@{data.chapters}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.volumes)}"
+            app:title="@{@string/data_title_volumes}"
+            app:value="@{data.volumes}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.episodes)}"
+            app:title="@{@string/data_title_episodes}"
+            app:value="@{data.episodes}" />
+
+        <include
+            layout="@layout/item_details_info_row"
             app:isVisible="@{!TextUtils.isEmpty(data.lengthText(context))}"
             app:title="@{@string/data_title_length}"
             app:value="@{data.lengthText(context)}" />

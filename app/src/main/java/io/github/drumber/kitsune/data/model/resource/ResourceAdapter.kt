@@ -103,6 +103,14 @@ sealed class ResourceAdapter(
 
     val serialization: String? get() = if(this is MangaResource) manga.serialization else null
 
+    val chapters: String? get() = if(this is MangaResource) manga.chapterCount?.toString() else null
+
+    val volumes: String? get() = if(this is MangaResource && manga.volumeCount?.equals(0) == false) {
+            manga.volumeCount?.toString()
+    } else { null }
+
+    val episodes: String? get() = if(this is AnimeResource) anime.episodeCount?.toString() else null
+
     fun lengthText(context: Context): String? {
         if (this is AnimeResource) {
             val count = anime.episodeCount

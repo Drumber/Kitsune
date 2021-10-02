@@ -49,6 +49,9 @@
     <string name="data_title_season">Season</string>
     <string name="data_title_age_rating">Rating</string>
     <string name="data_title_serialization">Serialization</string>
+    <string name="data_title_chapters">Chapters</string>
+    <string name="data_title_volumes">Volumes</string>
+    <string name="data_title_episodes">Episodes</string>
     <string name="data_title_length">Length</string>
 
     <string name="data_length_total">%s total</string>
