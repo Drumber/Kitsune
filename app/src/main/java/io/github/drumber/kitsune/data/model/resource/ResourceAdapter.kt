@@ -11,6 +11,7 @@ import io.github.drumber.kitsune.util.toDate
 import kotlinx.parcelize.Parcelize
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 sealed class ResourceAdapter(
     val title: String,
@@ -89,6 +90,48 @@ sealed class ResourceAdapter(
             null -> R.string.no_information
         }
         return context.getString(stringRes)
+    }
+
+    val ageRatingText: String? get() {
+        if(ageRating == null) return null
+        var ageRatingText = ageRating.name
+        if(ageRatingGuide != null) {
+            ageRatingText += " - $ageRatingGuide"
+        }
+        return ageRatingText
+    }
+
+    val serialization: String? get() = if(this is MangaResource) manga.serialization else null
+
+    fun lengthText(context: Context): String? {
+        if (this is AnimeResource) {
+            val count = anime.episodeCount
+            val length = anime.episodeLength ?: return null
+            val lengthEachText = context.getString(R.string.data_length_each, length)
+            return if (count == null) {
+                lengthEachText
+            } else {
+                val minutes = count * length.toLong()
+                val durationText = if(minutes <= 100) {
+                    "$minutes minutes"
+                } else {
+                    val hours = TimeUnit.MINUTES.toHours(minutes)
+                    val remainingMinutes = minutes - hours * 60
+                    val totalText = "$hours hours"
+                    if (remainingMinutes > 0) {
+                        "$totalText, $remainingMinutes minutes"
+                    } else {
+                        totalText
+                    }
+                }
+                if (count > 1) {
+                    context.getString(R.string.data_length_total, durationText) + " ($lengthEachText)"
+                } else {
+                    durationText
+                }
+            }
+        }
+        return null
     }
 
     fun isAnime() = this is AnimeResource

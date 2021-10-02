@@ -60,5 +60,23 @@
             app:title="@{@string/data_title_tba}"
             app:value="@{data.tba}" />
 
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.ageRatingText)}"
+            app:title="@{@string/data_title_age_rating}"
+            app:value="@{data.ageRatingText}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.serialization)}"
+            app:title="@{@string/data_title_serialization}"
+            app:value="@{data.serialization}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.lengthText(context))}"
+            app:title="@{@string/data_title_length}"
+            app:value="@{data.lengthText(context)}" />
+
     </TableLayout>
 </layout>

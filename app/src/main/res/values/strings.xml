@@ -38,20 +38,6 @@
     <string name="data_rank">Rank #%d</string>
     <string name="data_popularity">Popularity #%d</string>
     <string name="data_kitsu_score">Kitsu Score %s%%</string>
-
-    <string name="section_trending">Trending This Week</string>
-    <string name="section_top_airing">Top Airing Anime</string>
-    <string name="section_top_upcoming">Top Upcoming Anime</string>
-    <string name="section_highest_rated">Highest Rated Anime</string>
-    <string name="section_most_popular">Most Popular Anime</string>
-
-    <string name="hint_search">Search</string>
-    <string name="title_categories">Categories</string>
-    <string name="menu_unselect_all">Unselect all</string>
-    <string name="action_reset_filter">Reset filter</string>
-    <string name="title_description">Description</string>
-    <string name="action_read_more">Read more</string>
-    <string name="action_read_less">Read less</string>
     <string name="data_title_english">English</string>
     <string name="data_title_japanese">Japanese</string>
     <string name="data_title_japanese_romaji">Japanese (Romaji)</string>
@@ -61,9 +47,29 @@
     <string name="data_title_published">Published</string>
     <string name="data_title_tba">Expected</string>
     <string name="data_title_season">Season</string>
+    <string name="data_title_age_rating">Rating</string>
+    <string name="data_title_serialization">Serialization</string>
+    <string name="data_title_length">Length</string>
+
+    <string name="data_length_total">%s total</string>
+    <string name="data_length_each">%d minutes each</string>
+
+    <string name="section_trending">Trending This Week</string>
+    <string name="section_top_airing">Top Airing Anime</string>
+    <string name="section_top_upcoming">Top Upcoming Anime</string>
+    <string name="section_highest_rated">Highest Rated Anime</string>
+    <string name="section_most_popular">Most Popular Anime</string>
 
     <string name="season_winter">Winter</string>
     <string name="season_spring">Spring</string>
     <string name="season_summer">Summer</string>
     <string name="season_fall">Fall</string>
+
+    <string name="hint_search">Search</string>
+    <string name="title_categories">Categories</string>
+    <string name="menu_unselect_all">Unselect all</string>
+    <string name="action_reset_filter">Reset filter</string>
+    <string name="title_description">Description</string>
+    <string name="action_read_more">Read more</string>
+    <string name="action_read_less">Read less</string>
 </resources>
