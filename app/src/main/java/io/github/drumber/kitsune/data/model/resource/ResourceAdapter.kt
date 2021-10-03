@@ -19,11 +19,11 @@ sealed class ResourceAdapter(
     val description: String,
     val startDate: String?,
     val endDate: String?,
-    val avgRating: String,
+    val avgRating: String?,
     val userCount: Int,
     val favoriteCount: Int,
-    val popularityRank: Int,
-    val ratingRank: Int,
+    val popularityRank: Int?,
+    val ratingRank: Int?,
     val ageRating: AgeRating?,
     val ageRatingGuide: String?,
     val subtype: String,
@@ -65,7 +65,7 @@ sealed class ResourceAdapter(
 
     val airedText: String get() {
         var airedText = formatDate(startDate)
-        if(!endDate.isNullOrBlank()) {
+        if(!endDate.isNullOrBlank() && startDate != endDate) {
             airedText += " - ${formatDate(endDate)}"
         }
         return airedText
@@ -151,11 +151,11 @@ sealed class ResourceAdapter(
         description = anime.description.orEmpty(),
         startDate = anime.startDate,
         endDate = anime.endDate,
-        avgRating = anime.averageRating.orEmpty(),
+        avgRating = anime.averageRating,
         userCount = anime.userCount.orNull(),
         favoriteCount = anime.favoritesCount.orNull(),
-        popularityRank = anime.popularityRank.orNull(),
-        ratingRank = anime.ratingRank.orNull(),
+        popularityRank = anime.popularityRank,
+        ratingRank = anime.ratingRank,
         ageRating = anime.ageRating,
         ageRatingGuide = anime.ageRatingGuide,
         subtype = anime.subtype?.name.orEmpty().replaceFirstChar(Char::titlecase),
@@ -172,11 +172,11 @@ sealed class ResourceAdapter(
         description = manga.description.orEmpty(),
         startDate = manga.startDate,
         endDate = manga.endDate,
-        avgRating = manga.averageRating.orEmpty(),
+        avgRating = manga.averageRating,
         userCount = manga.userCount.orNull(),
         favoriteCount = manga.favoritesCount.orNull(),
-        popularityRank = manga.popularityRank.orNull(),
-        ratingRank = manga.ratingRank.orNull(),
+        popularityRank = manga.popularityRank,
+        ratingRank = manga.ratingRank,
         ageRating = manga.ageRating,
         ageRatingGuide = manga.ageRatingGuide,
         subtype = manga.subtype?.name.orEmpty().replaceFirstChar(Char::titlecase),

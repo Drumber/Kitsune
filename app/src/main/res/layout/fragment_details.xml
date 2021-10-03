@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.text.TextUtils"/>
         <import type="io.github.drumber.kitsune.data.model.resource.ResourceAdapter" />
         <import type="io.github.drumber.kitsune.data.model.resource.ResourceAdapter.AnimeResource" />
         <import type="io.github.drumber.kitsune.data.model.resource.ResourceAdapter.MangaResource" />
@@ -129,12 +130,15 @@
 
                     <include
                         layout="@layout/section_details_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="25dp"
+                        app:isVisible="@{!TextUtils.isEmpty(data.description)}"
                         app:data="@{data}" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="25dp"
                         android:orientation="vertical">
 
                         <TextView

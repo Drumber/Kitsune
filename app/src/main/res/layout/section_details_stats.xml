@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -22,6 +23,7 @@
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             tools:text="Kitsu Score 83.03%"
+            app:isVisible="@{data.avgRating != null}"
             android:text="@{@string/data_kitsu_score(data.avgRating)}" />
 
         <TextView
@@ -33,6 +35,7 @@
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             tools:text="Rank #100"
+            app:isVisible="@{data.ratingRank != null}"
             android:text="@{@string/data_rank(data.ratingRank)}" />
 
         <TextView
@@ -44,6 +47,7 @@
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             tools:text="Popularity #100"
+            app:isVisible="@{data.popularityRank != null}"
             android:text="@{@string/data_popularity(data.popularityRank)}" />
 
         <TextView
