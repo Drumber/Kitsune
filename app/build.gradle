@@ -46,10 +46,11 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     // Navigation
-    def nav_version = "2.4.0-alpha09"
+    def nav_version = "2.4.0-alpha10"
+    def fragment_version = "1.4.0-alpha10"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-    implementation 'androidx.fragment:fragment-ktx:1.4.0-alpha09'
+    implementation "androidx.fragment:fragment-ktx:$fragment_version"
 
     // Lifecycle
     def lifecycle_version = "2.3.1"
