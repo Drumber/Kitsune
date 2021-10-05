@@ -65,7 +65,8 @@
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="none">
+                android:scrollbars="none"
+                android:background="?attr/colorSurface">
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/chip_group_filter"
@@ -73,8 +74,7 @@
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="10dp"
                     android:clipToPadding="false"
-                    app:singleLine="true"
-                    android:background="?attr/colorSurface">
+                    app:singleLine="true">
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chip_resource_selector"

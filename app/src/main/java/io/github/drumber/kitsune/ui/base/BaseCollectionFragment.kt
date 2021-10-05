@@ -37,7 +37,7 @@ abstract class BaseCollectionFragment(
 
     private inline fun <reified T : Resource> ResourcePagingAdapter<T>.setupAdapter(): ResourcePagingAdapter<T> {
         dataFlowScope?.cancel()
-        dataFlowScope = lifecycleScope.launchWhenCreated {
+        dataFlowScope = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             collectionViewModel.dataSource.collectLatest { data ->
                 (data as? PagingData<T>)?.let { this@setupAdapter.submitData(it) }
             }

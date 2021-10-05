@@ -14,6 +14,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationBarView
+import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.resource.Resource
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
@@ -21,6 +22,8 @@ import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.widget.LoadStateSpanSizeLookup
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
+import kotlin.math.floor
+import kotlin.math.max
 
 abstract class ResourceCollectionFragment(@LayoutRes contentLayoutId: Int) :
     Fragment(contentLayoutId),
@@ -64,6 +67,16 @@ abstract class ResourceCollectionFragment(@LayoutRes contentLayoutId: Int) :
     private fun initView() {
         val gridLayout = GridLayoutManager(requireContext(), 2)
         recyclerView.layoutManager = gridLayout
+        recyclerView.post {
+            if (isAdded) {
+                // calculate span count in relation to the recycler view width
+                val width = recyclerView.width
+                val cellWidth = resources.getDimension(R.dimen.resource_item_width) +
+                        2 * resources.getDimension(R.dimen.resource_item_margin)
+                val spanCount = floor(width / cellWidth).toInt()
+                gridLayout.spanCount = max(2, spanCount) // set new span count with minimum 2 columns
+            }
+        }
 
         resourceLoadingBinding?.btnRetry?.setOnClickListener(this)
     }
