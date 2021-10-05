@@ -5,7 +5,7 @@ import com.chibatching.kotpref.enumpref.enumValuePref
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.constants.Defaults
-import io.github.drumber.kitsune.data.model.ResourceSelector
+import io.github.drumber.kitsune.data.model.SearchParams
 import io.github.drumber.kitsune.data.model.category.CategoryPrefWrapper
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -17,14 +17,13 @@ object KitsunePref : KotprefModel(), KoinComponent {
     var titles by enumValuePref(TitlesPref.Canoncial)
 
 
-    private var searchFilterJson by stringPref(Defaults.DEFAULT_RESOURCE_SELECTOR.toJsonString())
+    private var searchParamsJson by stringPref(Defaults.DEFAULT_SEARCH_PARAMS.toJsonString())
 
-    var searchFilter: ResourceSelector
+    var searchParams: SearchParams
         set(value) {
-            searchFilterJson = value.toJsonString()
+            searchParamsJson = value.toJsonString()
         }
-        get() = searchFilterJson.fromJsonString()
-
+        get() = searchParamsJson.fromJsonString()
 
 
     private var searchQueriesJson by stringPref("[]")

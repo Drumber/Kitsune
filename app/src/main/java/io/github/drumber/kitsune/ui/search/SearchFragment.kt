@@ -239,14 +239,14 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
 
     private fun showResourceSelectorDialog() {
         val items = ResourceType.values().map { getString(it.toStringRes()) }.toTypedArray()
-        val prevSelected = viewModel.currentResourceSelector.resourceType.ordinal
+        val prevSelected = viewModel.searchParams.resourceType.ordinal
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.title_resource_type)
             .setSingleChoiceItems(items, prevSelected) { dialog, which ->
                 if(which != prevSelected) {
                     val resourceType = ResourceType.values()[which]
-                    val selector = viewModel.currentResourceSelector.copy(resourceType = resourceType)
-                    viewModel.setResourceSelector(selector)
+                    val searchParams = viewModel.searchParams.copy(resourceType = resourceType)
+                    viewModel.updateSearchParams(searchParams)
                 }
                 dialog.dismiss()
             }
@@ -255,18 +255,14 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
 
     private fun showSortDialog() {
         val items = SortFilter.values().map { getString(it.toStringRes()) }.toTypedArray()
-        val lastSortFilter =
-            SortFilter.fromQueryParam(viewModel.currentResourceSelector.filter.options["sort"])
-        val prevSelected = lastSortFilter?.ordinal ?: 0
+        val prevSelected = viewModel.searchParams.sortOrder.ordinal
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.title_sort)
             .setSingleChoiceItems(items, prevSelected) { dialog, which ->
                 if(which != prevSelected) {
                     val sortFilter = SortFilter.values()[which]
-                    val prevFilter = viewModel.currentResourceSelector.filter
-                    val selector = viewModel.currentResourceSelector
-                        .copy(filter = prevFilter.sort(sortFilter.queryParam))
-                    viewModel.setResourceSelector(selector)
+                    val searchParams = viewModel.searchParams.copy(sortOrder = sortFilter)
+                    viewModel.updateSearchParams(searchParams)
                 }
                 dialog.dismiss()
             }
@@ -284,13 +280,8 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
         dialog.setOnDismissListener {
             updateCategoriesChip()
             val selectedCategories = KitsunePref.searchCategories.mapNotNull { it.categorySlug }
-            val selector = viewModel.currentResourceSelector.copy()
-            if(selectedCategories.isNotEmpty()) {
-                selector.filter.filter("categories", selectedCategories.joinToString(","))
-            } else {
-                selector.filter.options.remove("filter[categories]")
-            }
-            viewModel.setResourceSelector(selector)
+            val searchParams = viewModel.searchParams.copy(categories = selectedCategories)
+            viewModel.updateSearchParams(searchParams)
         }
     }
 
