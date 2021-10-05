@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="preference_file_key">app_preferences</string>
+    <string name="preference_key_titles">titles</string>
+</resources>

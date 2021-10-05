@@ -4,6 +4,7 @@ import com.chibatching.kotpref.KotprefModel
 import com.chibatching.kotpref.enumpref.enumValuePref
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.data.model.SearchParams
 import io.github.drumber.kitsune.data.model.category.CategoryPrefWrapper
@@ -13,8 +14,9 @@ import org.koin.core.component.get
 object KitsunePref : KotprefModel(), KoinComponent {
 
     override val commitAllPropertiesByDefault = true
+    override val kotprefName = context.getString(R.string.preference_file_key)
 
-    var titles by enumValuePref(TitlesPref.Canoncial)
+    var titles by enumValuePref(TitlesPref.Canonical, key = R.string.preference_key_titles)
 
 
     private var searchParamsJson by stringPref(Defaults.DEFAULT_SEARCH_PARAMS.toJsonString())
@@ -55,5 +57,5 @@ object KitsunePref : KotprefModel(), KoinComponent {
 }
 
 enum class TitlesPref {
-    Canoncial, Romanized, English
+    Canonical, Romanized, English
 }

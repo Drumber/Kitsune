@@ -198,7 +198,7 @@ sealed class ResourceAdapter(
 private fun getTitle(title: Titles?, canonical: String?): String {
     val nf = "<No title found>"
     return when (KitsunePref.titles) {
-        TitlesPref.Canoncial -> canonical ?: nf
+        TitlesPref.Canonical -> canonical ?: nf
         TitlesPref.Romanized -> title?.enJp ?: canonical ?: nf
         TitlesPref.English -> title?.en ?: canonical ?: nf
     }

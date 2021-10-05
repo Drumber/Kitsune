@@ -10,6 +10,7 @@
     <string name="nav_home">Home</string>
     <string name="nav_search">Search</string>
     <string name="nav_profile">Profile</string>
+    <string name="nav_settings">Settings</string>
 
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
@@ -75,4 +76,12 @@
     <string name="title_description">Description</string>
     <string name="action_read_more">Read more</string>
     <string name="action_read_less">Read less</string>
+
+    <string name="preference_titles">Titles</string>
+    <string name="preference_titles_description">Define how media titles will be displayed.</string>
+    <string-array name="preference_titles_values">
+        <item>Canonical</item>
+        <item>Romanized</item>
+        <item>English</item>
+    </string-array>
 </resources>

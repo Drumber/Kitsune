@@ -34,7 +34,11 @@
         android:id="@+id/profile_fragment"
         android:name="io.github.drumber.kitsune.ui.profile.ProfileFragment"
         android:label="@string/nav_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profile_fragment_to_settingsFragment"
+            app:destination="@id/settings_fragment" />
+    </fragment>
     <fragment
         android:id="@+id/details_fragment"
         android:name="io.github.drumber.kitsune.ui.details.DetailsFragment"
@@ -58,4 +62,8 @@
             android:name="title"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/settings_fragment"
+        android:name="io.github.drumber.kitsune.ui.settings.SettingsFragment"
+        android:label="@string/nav_settings" />
 </navigation>

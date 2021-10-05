@@ -52,6 +52,9 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 
+    // Preference
+    implementation 'androidx.preference:preference-ktx:1.1.1'
+
     // Lifecycle
     def lifecycle_version = "2.3.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
