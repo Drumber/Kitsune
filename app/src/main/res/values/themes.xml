@@ -28,6 +28,7 @@
         <item name="colorAccent">?colorSecondary</item>
 
         <item name="colorSearchView">@color/background</item>
+        <item name="preferenceTheme">@style/Theme.Kitsune.PreferenceThemeOverlay</item>
     </style>
 
     <style name="Theme.Kitsune.FullScreenDialog" parent="Theme.Kitsune.DayNight">
@@ -49,6 +50,10 @@
         <item name="chipBackgroundColor">@color/mtrl_choice_chip_background_color</item>
         <item name="rippleColor">@color/chip_selectable_ripple_color</item>
         <item name="closeIconTint">@color/mtrl_choice_chip_text_color</item>
+    </style>
+
+    <style name="Theme.Kitsune.PreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
+        <item name="android:layout">@layout/fragment_preference</item>
     </style>
 
 </resources>

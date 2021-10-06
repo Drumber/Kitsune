@@ -41,7 +41,7 @@ class ExploreFragment : BaseCollectionFragment(R.layout.fragment_explore) {
         binding.toolbar.apply {
             initWindowInsetsListener(false)
             title = args.title
-            setNavigationOnClickListener { findNavController().popBackStack() }
+            setNavigationOnClickListener { findNavController().navigateUp() }
         }
     }
 

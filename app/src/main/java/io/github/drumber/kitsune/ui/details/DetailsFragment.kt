@@ -82,7 +82,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     }
 
     private fun goBack() {
-        findNavController().popBackStack()
+        findNavController().navigateUp()
     }
 
     override fun onDestroyView() {

@@ -2,9 +2,11 @@ package io.github.drumber.kitsune.ui.settings
 
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.preference.TitlesPref
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
@@ -27,7 +29,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.initPaddingWindowInsetsListener(left = true, top = true, right = true, bottom = true)
+        view.initPaddingWindowInsetsListener(left = true, top = true, right = true, bottom = false)
+        val binding = FragmentPreferenceBinding.bind(view)
+        binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
     }
 
 }
