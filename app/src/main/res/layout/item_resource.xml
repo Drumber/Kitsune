@@ -9,48 +9,56 @@
             type="io.github.drumber.kitsune.data.model.resource.ResourceAdapter" />
     </data>
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="@dimen/resource_item_width"
-        android:layout_height="@dimen/resource_item_height"
-        android:layout_margin="@dimen/resource_item_margin"
-        app:cardElevation="4dp">
+    <FrameLayout
+        android:id="@+id/content_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="@dimen/resource_item_width"
+            android:layout_height="@dimen/resource_item_height"
+            android:layout_margin="@dimen/resource_item_margin"
+            android:layout_gravity="center"
+            app:cardElevation="4dp">
 
-            <ImageView
-                android:id="@+id/iv_thumbnail"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:clickable="true"
-                android:foreground="?attr/selectableItemBackground"
-                tools:src="@drawable/ic_insert_photo_48" />
+                android:layout_height="match_parent">
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:src="@drawable/bottom_edge_fade"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true" />
+                <ImageView
+                    android:id="@+id/iv_thumbnail"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    tools:src="@drawable/ic_insert_photo_48" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true"
-                android:textColor="@android:color/primary_text_dark"
-                android:padding="10dp"
-                android:maxLines="2"
-                android:ellipsize="end"
-                tools:text="Title"
-                android:text="@{data.title}" />
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:src="@drawable/bottom_edge_fade"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true" />
 
-        </RelativeLayout>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"
+                    android:textColor="@android:color/primary_text_dark"
+                    android:padding="10dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    tools:text="Title"
+                    android:text="@{data.title}" />
 
-    </com.google.android.material.card.MaterialCardView>
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </FrameLayout>
 
 </layout>

@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.ui.widget
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
 import io.github.drumber.kitsune.GlideRequests
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
@@ -17,8 +18,10 @@ class ExploreSectionAdapter(
 ) : RecyclerView.Adapter<ResourceViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResourceViewHolder {
+        val binding = ItemResourceBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        binding.contentWrapper.layoutParams.width = FrameLayout.LayoutParams.WRAP_CONTENT
         return ResourceViewHolder(
-            ItemResourceBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            binding,
             glide
         ) { position ->
             if(position < dataSet.size) {

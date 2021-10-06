@@ -20,6 +20,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         titlesPref?.apply {
             entryValues = TitlesPref.values().map { it.name }.toTypedArray()
             setDefaultValue(KitsunePref.titles.name)
+            value = KitsunePref.titles.name
             setOnPreferenceChangeListener { preference, newValue ->
                 KitsunePref.titles = TitlesPref.valueOf(newValue.toString())
                 true
