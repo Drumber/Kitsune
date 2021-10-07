@@ -32,6 +32,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:clickable="true"
+                    android:focusable="true"
                     android:foreground="?attr/selectableItemBackground"
                     tools:src="@drawable/ic_insert_photo_48" />
 

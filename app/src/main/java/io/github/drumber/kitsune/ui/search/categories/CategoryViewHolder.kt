@@ -45,6 +45,7 @@ class CategoryViewHolder(
     }
 
     fun onSelectionCounterUpdate(selectedChildren: Int) {
+        if(!this::binding.isInitialized) return
         binding.tvCounter.apply {
             text = if (selectedChildren < 100) {
                 selectedChildren.toString()

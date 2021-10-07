@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -31,6 +33,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
             activity?.clearLightStatusBar()
         }
         activity?.setStatusBarColorRes(android.R.color.transparent)
+        initAppBar()
 
         val model = args.model
         val glide = GlideApp.with(this)
@@ -38,6 +41,23 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         binding.apply {
             data = model
 
+            content.initPaddingWindowInsetsListener(left = true, right = true)
+
+            glide.load(model.coverImage)
+                .centerCrop()
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .placeholder(R.drawable.cover_placeholder)
+                .into(binding.ivCover)
+
+            glide.load(model.posterImage)
+                .transform(CenterCrop(), RoundedCorners(8))
+                .placeholder(R.drawable.ic_insert_photo_48)
+                .into(binding.ivThumbnail)
+        }
+    }
+
+    private fun initAppBar() {
+        binding.apply {
             appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
                 val maxOffset = appBarLayout.totalScrollRange
                 val percent = abs(verticalOffset.toFloat() / maxOffset) // between 0.0 and 1.0
@@ -62,22 +82,16 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
 
             toolbar.setNavigationOnClickListener { goBack() }
 
-            // pass windowInsets down to the toolbar
-            collapsingToolbar.setOnApplyWindowInsetsListener { view, windowInsets -> windowInsets }
+            val defaultTitleMarginStart = collapsingToolbar.expandedTitleMarginStart
+            val defaultTitleMarginEnd= collapsingToolbar.expandedTitleMarginStart
+            ViewCompat.setOnApplyWindowInsetsListener(collapsingToolbar) { view, windowInsets ->
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val isRtl = ViewCompat.getLayoutDirection(view) == ViewCompat.LAYOUT_DIRECTION_RTL
+                collapsingToolbar.expandedTitleMarginStart = defaultTitleMarginStart + if(isRtl) insets.right else insets.left
+                collapsingToolbar.expandedTitleMarginEnd = defaultTitleMarginEnd + if(isRtl) insets.left else insets.right
+                windowInsets
+            }
             toolbar.initWindowInsetsListener(consume = false)
-
-            content.initPaddingWindowInsetsListener(left = true, right = true)
-
-            glide.load(model.coverImage)
-                .centerCrop()
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .placeholder(R.drawable.cover_placeholder)
-                .into(binding.ivCover)
-
-            glide.load(model.posterImage)
-                .transform(CenterCrop(), RoundedCorners(8))
-                .placeholder(R.drawable.ic_insert_photo_48)
-                .into(binding.ivThumbnail)
         }
     }
 

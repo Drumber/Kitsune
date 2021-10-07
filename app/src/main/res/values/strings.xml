@@ -1,12 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Kitsune</string>
 
-    <string name="action_retry">Retry</string>
-    <string name="action_ok">Ok</string>
-    <string name="action_cancel">Cancel</string>
-
-    <string name="error_resource_loading">Could not load data.</string>
-
+    <!-- Navigation Titles -->
     <string name="nav_home">Home</string>
     <string name="nav_search">Search</string>
     <string name="nav_profile">Profile</string>
@@ -15,6 +10,19 @@
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
 
+    <string name="action_retry">Retry</string>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_reset_filter">Reset filter</string>
+    <string name="action_unselect_all">Unselect all</string>
+    <string name="action_read_more">Read more</string>
+    <string name="action_read_less">Read less</string>
+
+    <string name="hint_search">Search</string>
+
+    <string name="error_resource_loading">Could not load data.</string>
+
+    <string name="menu_filter">Filter</string>
     <string name="sort_popularity_asc">Least Popular</string>
     <string name="sort_popularity_desc">Most Popular</string>
     <string name="sort_average_rating_asc">Worst Rated</string>
@@ -24,8 +32,9 @@
 
     <string name="title_resource_type">Resource Type</string>
     <string name="title_sort">Sort by</string>
-
-    <string name="menu_filter">Filter</string>
+    <string name="title_categories">Categories</string>
+    <string name="title_description">Description</string>
+    <string name="title_details">Details</string>
 
     <string name="no_information">Unknown</string>
 
@@ -39,6 +48,9 @@
     <string name="data_rank">Rank #%d</string>
     <string name="data_popularity">Popularity #%d</string>
     <string name="data_kitsu_score">Kitsu Score %s%%</string>
+    <string name="data_length_total">%s total</string>
+    <string name="data_length_each">%d minutes each</string>
+
     <string name="data_title_english">English</string>
     <string name="data_title_japanese">Japanese</string>
     <string name="data_title_japanese_romaji">Japanese (Romaji)</string>
@@ -55,27 +67,16 @@
     <string name="data_title_episodes">Episodes</string>
     <string name="data_title_length">Length</string>
 
-    <string name="data_length_total">%s total</string>
-    <string name="data_length_each">%d minutes each</string>
+    <string name="season_winter">Winter</string>
+    <string name="season_spring">Spring</string>
+    <string name="season_summer">Summer</string>
+    <string name="season_fall">Fall</string>
 
     <string name="section_trending">Trending This Week</string>
     <string name="section_top_airing">Top Airing Anime</string>
     <string name="section_top_upcoming">Top Upcoming Anime</string>
     <string name="section_highest_rated">Highest Rated Anime</string>
     <string name="section_most_popular">Most Popular Anime</string>
-
-    <string name="season_winter">Winter</string>
-    <string name="season_spring">Spring</string>
-    <string name="season_summer">Summer</string>
-    <string name="season_fall">Fall</string>
-
-    <string name="hint_search">Search</string>
-    <string name="title_categories">Categories</string>
-    <string name="menu_unselect_all">Unselect all</string>
-    <string name="action_reset_filter">Reset filter</string>
-    <string name="title_description">Description</string>
-    <string name="action_read_more">Read more</string>
-    <string name="action_read_less">Read less</string>
 
     <string name="preference_titles">Titles</string>
     <string name="preference_titles_description">Define how media titles will be displayed.</string>
