@@ -7,6 +7,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.data.model.SearchParams
+import io.github.drumber.kitsune.data.model.TitlesPref
 import io.github.drumber.kitsune.data.model.category.CategoryPrefWrapper
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -54,8 +55,4 @@ object KitsunePref : KotprefModel(), KoinComponent {
         return objectMapper.readValue(this)
     }
 
-}
-
-enum class TitlesPref {
-    Canonical, Romanized, English
 }

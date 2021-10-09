@@ -1,10 +1,12 @@
 package io.github.drumber.kitsune.di
 
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.BuildConfig
+import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.data.model.resource.Anime
 import io.github.drumber.kitsune.data.model.resource.Chapter
@@ -16,6 +18,7 @@ import io.github.drumber.kitsune.data.service.auth.AuthService
 import io.github.drumber.kitsune.data.service.category.CategoryService
 import io.github.drumber.kitsune.data.service.manga.ChaptersService
 import io.github.drumber.kitsune.data.service.manga.MangaService
+import io.github.drumber.kitsune.data.service.user.UserService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -35,6 +38,7 @@ val serviceModule = module {
     factory { createService<ChaptersService>(get(), get(), Chapter::class.java) }
     factory { createService<CategoryService>(get(), get(), Category::class.java) }
     factory { createService<AuthService>(get(), KITSU_OAUTH_URL) }
+    factory { createService<UserService>(get(), get(), User::class.java) }
 }
 
 private inline fun createHttpClient() = OkHttpClient.Builder()
@@ -51,6 +55,7 @@ private inline fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().app
 
 private inline fun createObjectMapper() = jacksonObjectMapper()
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+    .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
 
 private inline fun createConverterFactory(
     objectMapper: ObjectMapper,

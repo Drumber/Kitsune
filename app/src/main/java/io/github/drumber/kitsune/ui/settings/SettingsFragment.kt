@@ -8,7 +8,7 @@ import androidx.preference.PreferenceFragmentCompat
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.preference.TitlesPref
+import io.github.drumber.kitsune.data.model.TitlesPref
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 
 class SettingsFragment : PreferenceFragmentCompat() {

@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Parcelable
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.preference.TitlesPref
+import io.github.drumber.kitsune.data.model.TitlesPref
 import io.github.drumber.kitsune.util.originalOrDown
 import io.github.drumber.kitsune.util.smallOrHigher
 import io.github.drumber.kitsune.util.toDate
