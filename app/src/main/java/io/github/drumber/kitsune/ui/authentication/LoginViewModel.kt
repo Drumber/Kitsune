@@ -1,6 +1,5 @@
 package io.github.drumber.kitsune.ui.authentication
 
-import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,7 +19,11 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
+    private val _isLoggingIn = MutableLiveData<Boolean>()
+    val isLoggingIn: LiveData<Boolean> = _isLoggingIn
+
     fun login(username: String, password: String) {
+        _isLoggingIn.value = true
         viewModelScope.launch(Dispatchers.IO) {
             val result = userRepository.login(username, password)
 
@@ -32,6 +35,7 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
                 } else {
                     _loginResult.value = LoginResult(error = R.string.login_failed)
                 }
+                _isLoggingIn.value = false
             }
         }
     }
@@ -46,17 +50,11 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
         }
     }
 
-    // A placeholder username validation check
     private fun isUserNameValid(username: String): Boolean {
-        return if (username.contains('@')) {
-            Patterns.EMAIL_ADDRESS.matcher(username).matches()
-        } else {
-            username.isNotBlank()
-        }
+        return username.isNotBlank()
     }
 
-    // A placeholder password validation check
     private fun isPasswordValid(password: String): Boolean {
-        return password.length > 5
+        return password.isNotBlank()
     }
 }

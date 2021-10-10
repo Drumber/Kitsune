@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="resource_item_width">169dp</dimen>
-    <dimen name="resource_item_height">240dp</dimen>
-    <dimen name="resource_item_margin">5dp</dimen>
-</resources>
