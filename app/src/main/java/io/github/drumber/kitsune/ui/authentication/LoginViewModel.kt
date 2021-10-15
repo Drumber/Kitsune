@@ -27,6 +27,10 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val result = userRepository.login(username, password)
 
+            if(result is Result.Error) {
+                result.exception.printStackTrace()
+            }
+
             withContext(Dispatchers.Main) {
                 if (result is Result.Success) {
                     _loginResult.value =

@@ -5,6 +5,7 @@ import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.user.UserService
 import io.github.drumber.kitsune.exception.ReceivedDataException
+import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logI
 
 class UserRepository(val service: UserService, private val authRepository: AuthRepository) {
@@ -28,10 +29,11 @@ class UserRepository(val service: UserService, private val authRepository: AuthR
     private suspend fun requestUser(): Result<User> {
         val filter = Filter().filter("self", "true")
         return try {
-            val userModel = service.allUsers(filter.options).get()?.first()
+            val userModel = service.allUsers(filter.options).get()?.firstOrNull()
                 ?: throw ReceivedDataException("Received invalid user data.")
             Result.Success(userModel)
         } catch (e: Exception) {
+            logE("Error while obtaining user model.", e)
             Result.Error(e)
         }
     }

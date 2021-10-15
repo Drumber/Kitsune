@@ -35,6 +35,8 @@
     <string name="title_categories">Categories</string>
     <string name="title_description">Description</string>
     <string name="title_details">Details</string>
+    <string name="title_authentication">Authentication</string>
+    <string name="title_login">Login to your Kitsu account</string>
 
     <string name="no_information">Unknown</string>
 
@@ -85,15 +87,16 @@
         <item>Romanized</item>
         <item>English</item>
     </string-array>
-    <string name="title_activity_authentication">Authentication</string>
+
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Invalid password</string>
     <string name="login_failed">"Login failed"</string>
     <string name="status_logging_in">Logging in…</string>
+    <string name="logged_in_success">Logged in as %s.</string>
     <string name="login_no_account">Don\'t have an account? Create one on <a href="https://kitsu.io">kitsu.io</a>.</string>
-    <string name="title_login">Login to your Kitsu account</string>
+    <string name="not_logged_in">Not logged in</string>
+
 </resources>

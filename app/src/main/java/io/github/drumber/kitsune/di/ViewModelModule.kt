@@ -4,6 +4,7 @@ import io.github.drumber.kitsune.ui.authentication.LoginViewModel
 import io.github.drumber.kitsune.ui.main.MainActivityViewModel
 import io.github.drumber.kitsune.ui.main.MainFragmentViewModel
 import io.github.drumber.kitsune.ui.main.explore.ExploreViewModel
+import io.github.drumber.kitsune.ui.profile.ProfileViewModel
 import io.github.drumber.kitsune.ui.search.SearchViewModel
 import io.github.drumber.kitsune.ui.search.categories.CategoriesViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -16,4 +17,5 @@ val viewModelModule = module {
     viewModel { ExploreViewModel(get(), get()) }
     viewModel { CategoriesViewModel(get()) }
     viewModel { LoginViewModel(get()) }
+    viewModel { ProfileViewModel(get()) }
 }

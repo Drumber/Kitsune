@@ -22,7 +22,7 @@
         <activity
             android:name=".ui.authentication.AuthenticationActivity"
             android:exported="true"
-            android:label="@string/title_activity_authentication" />
+            android:label="@string/title_authentication" />
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true"

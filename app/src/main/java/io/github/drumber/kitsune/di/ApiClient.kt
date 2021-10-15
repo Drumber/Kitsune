@@ -19,6 +19,7 @@ import io.github.drumber.kitsune.data.service.category.CategoryService
 import io.github.drumber.kitsune.data.service.manga.ChaptersService
 import io.github.drumber.kitsune.data.service.manga.MangaService
 import io.github.drumber.kitsune.data.service.user.UserService
+import io.github.drumber.kitsune.util.AuthenticationInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -30,34 +31,43 @@ const val KITSU_API_URL = "https://kitsu.io/api/edge/"
 const val KITSU_OAUTH_URL = "https://kitsu.io/api/oauth/"
 
 val serviceModule = module {
-    single { createHttpClient() }
+    single { createHttpClient(get()) }
     single { createObjectMapper() }
+    factory { createAuthService() }
+    factory { AuthenticationInterceptor(get()) }
     factory { createService<AnimeService>(get(), get(), Anime::class.java) }
     factory { createService<EpisodesService>(get(), get(), Episode::class.java) }
     factory { createService<MangaService>(get(), get(), Manga::class.java) }
     factory { createService<ChaptersService>(get(), get(), Chapter::class.java) }
     factory { createService<CategoryService>(get(), get(), Category::class.java) }
-    factory { createService<AuthService>(get(), KITSU_OAUTH_URL) }
     factory { createService<UserService>(get(), get(), User::class.java) }
 }
 
-private inline fun createHttpClient() = OkHttpClient.Builder()
+private fun createHttpClientBuilder() = OkHttpClient.Builder()
     .apply { if(BuildConfig.DEBUG) addInterceptor(createHttpLoggingInterceptor()) }
     .connectTimeout(30, TimeUnit.SECONDS)
     .readTimeout(60, TimeUnit.SECONDS)
     .writeTimeout(60, TimeUnit.SECONDS)
+
+private fun createHttpClient(authenticationInterceptor: AuthenticationInterceptor) = createHttpClientBuilder()
+    .addInterceptor(authenticationInterceptor)
     .build()
 
-private inline fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
+private fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
     level = HttpLoggingInterceptor.Level.BASIC
     redactHeader("Authorization")
 }
 
-private inline fun createObjectMapper() = jacksonObjectMapper()
+private fun createAuthService() = createService<AuthService>(
+    createHttpClientBuilder().build(),
+    KITSU_OAUTH_URL
+)
+
+private fun createObjectMapper() = jacksonObjectMapper()
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
 
-private inline fun createConverterFactory(
+private fun createConverterFactory(
     objectMapper: ObjectMapper,
     vararg classes: Class<*>
 ): JSONAPIConverterFactory {

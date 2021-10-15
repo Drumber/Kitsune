@@ -4,6 +4,7 @@ import io.github.drumber.kitsune.data.Result
 import io.github.drumber.kitsune.data.model.auth.AccessToken
 import io.github.drumber.kitsune.data.service.auth.AuthService
 import io.github.drumber.kitsune.exception.AccessTokenRefreshException
+import io.github.drumber.kitsune.util.logE
 
 class AuthRepository(val service: AuthService) {
 
@@ -33,6 +34,7 @@ class AuthRepository(val service: AuthService) {
             val token = service.obtainAccessToken(username = username, password = password)
             Result.Success(token)
         } catch (e: Exception) {
+            logE("Error while obtaining authentication token.", e)
             Result.Error(e)
         }
 

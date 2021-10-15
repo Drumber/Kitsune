@@ -28,7 +28,6 @@ class AuthenticationActivity : BaseActivity(R.layout.activity_authentication, fa
         val username = binding.fieldUsername
         val password = binding.fieldPassword
         val login = binding.btnLogin
-        val loading = binding.loading
 
         viewModel.loginFormState.observe(this) { loginFormState ->
             val loginState = loginFormState ?: return@observe
@@ -95,12 +94,10 @@ class AuthenticationActivity : BaseActivity(R.layout.activity_authentication, fa
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome)
         val displayName = model.displayName
-        // TODO : initiate successful logged in experience
         Toast.makeText(
             applicationContext,
-            "$welcome $displayName",
+            getString(R.string.logged_in_success, displayName),
             Toast.LENGTH_LONG
         ).show()
     }

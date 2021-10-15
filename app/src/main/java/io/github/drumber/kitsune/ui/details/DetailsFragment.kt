@@ -6,7 +6,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -17,10 +16,11 @@ import com.google.android.material.appbar.AppBarLayout
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
+import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.util.*
 import kotlin.math.abs
 
-class DetailsFragment : Fragment(R.layout.fragment_details) {
+class DetailsFragment : BaseFragment(R.layout.fragment_details, true) {
 
     private val args: DetailsFragmentArgs by navArgs()
 
@@ -32,7 +32,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         if(context?.isNightMode() == false) {
             activity?.clearLightStatusBar()
         }
-        activity?.setStatusBarColorRes(android.R.color.transparent)
+
         initAppBar()
 
         val model = args.model
@@ -99,9 +99,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         findNavController().navigateUp()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        activity?.setStatusBarColorRes(R.color.translucent_status_bar)
+    override fun onPause() {
+        super.onPause()
         if(activity?.isLightStatusBar() == false && context?.isNightMode() == false) {
             activity?.setLightStatusBar()
         }
