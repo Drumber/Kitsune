@@ -26,6 +26,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/colorSurface"
+                app:titleCollapseMode="scale"
+                app:expandedTitleMarginStart="@dimen/profile_text_offset_expanded"
+                app:expandedTitleGravity="center_vertical"
+                app:title="@{user.name ?? @string/not_logged_in}"
+                tools:title="Username"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <FrameLayout
@@ -39,34 +44,23 @@
                         android:layout_height="match_parent"
                         android:src="@drawable/cover_placeholder" />
 
-                    <LinearLayout
-                        android:id="@+id/layout_user"
+                    <FrameLayout
+                        android:id="@+id/cover_spacer"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:paddingTop="@dimen/profile_picture_offset_expanded"
-                        android:paddingHorizontal="@dimen/profile_picture_offset_expanded"
-                        android:paddingBottom="20dp"
-                        app:layout_collapseMode="parallax"
-                        app:layout_collapseParallaxMultiplier="0.7">
-
-                        <androidx.legacy.widget.Space
-                            android:layout_width="@dimen/profile_picture_expanded"
-                            android:layout_height="@dimen/profile_picture_expanded"/>
-
-                        <TextView
-                            android:id="@+id/tv_username"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="20dp"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                            android:text="@{user.name ?? @string/not_logged_in}"
-                            tools:text="Username" />
-
-                    </LinearLayout>
+                        android:layout_height="@dimen/profile_picture_expanded"
+                        android:visibility="invisible"
+                        android:layout_marginTop="@dimen/profile_picture_offset_expanded"
+                        android:layout_marginBottom="20dp" />
 
                 </FrameLayout>
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:titleMarginStart="@dimen/profile_text_offset_collapsed"
+                    app:layout_anchor="@id/collapsing_toolbar"
+                    app:layout_collapseMode="pin" />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -110,8 +104,8 @@
             android:layout_marginStart="@dimen/profile_picture_offset_expanded"
             android:src="@drawable/profile_picture_placeholder"
             app:finalHeight="@dimen/profile_picture_collapsed"
-            app:finalXPosition="@dimen/profile_picture_offset_collapsed"
-            app:finalYPosition="@dimen/profile_picture_offset_collapsed"
+            app:finalXPosition="@dimen/profile_picture_x_offset_collapsed"
+            app:finalYPosition="@dimen/profile_picture_y_offset_collapsed"
             app:finalToolbarHeight="?attr/actionBarSize"
             app:layout_behavior=".ui.widget.ProfilePictureBehavior" />
 

@@ -15,6 +15,7 @@ import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.widget.ProfilePictureBehavior
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
+import io.github.drumber.kitsune.util.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
@@ -53,7 +54,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
             }
 
             ViewCompat.setOnApplyWindowInsetsListener(collapsingToolbar) { _, insets -> insets }
-            layoutUser.initMarginWindowInsetsListener(left = true, top = true, right = true)
+            coverSpacer.initMarginWindowInsetsListener(left = true, top = true, right = true)
+            toolbar.initWindowInsetsListener(consume = false)
 
             ViewCompat.setOnApplyWindowInsetsListener(ivProfileImage) { _, windowInsets ->
                 val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
