@@ -2,8 +2,6 @@ package io.github.drumber.kitsune.ui.details
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.findNavController
@@ -12,13 +10,12 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.google.android.material.appbar.AppBarLayout
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.ui.base.BaseFragment
+import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.util.*
-import kotlin.math.abs
 
 class DetailsFragment : BaseFragment(R.layout.fragment_details, true) {
 
@@ -58,27 +55,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true) {
 
     private fun initAppBar() {
         binding.apply {
-            appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-                val maxOffset = appBarLayout.totalScrollRange
-                val percent = abs(verticalOffset.toFloat() / maxOffset) // between 0.0 and 1.0
-
-                val expandedColor = ContextCompat.getColor(requireContext(), R.color.white)
-                val collapsedColor = requireActivity().theme.getColor(R.attr.colorOnSurface)
-
-                // fade back arrow from white to colorOnSurface while collapsing the toolbar
-                val iconTint = ColorUtils.blendARGB(expandedColor, collapsedColor, percent)
-                toolbar.setNavigationIconTint(iconTint)
-
-                // switch to light status bar in light mode
-                if(activity?.isNightMode() == false) {
-                    if(percent < 0.5 && activity?.isLightStatusBar() == true) {
-                        activity?.clearLightStatusBar()
-                    }
-                    if(percent >= 0.5 && activity?.isLightStatusBar() == false && context?.isNightMode() == false) {
-                        activity?.setLightStatusBar()
-                    }
-                }
-            })
+            appBarLayout.addOnOffsetChangedListener(FadingToolbarOffsetListener(requireActivity(), toolbar))
 
             toolbar.setNavigationOnClickListener { goBack() }
 

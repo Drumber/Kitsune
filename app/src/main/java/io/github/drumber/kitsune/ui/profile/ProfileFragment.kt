@@ -13,9 +13,9 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
+import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.ui.widget.ProfilePictureBehavior
-import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
-import io.github.drumber.kitsune.util.initWindowInsetsListener
+import io.github.drumber.kitsune.util.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
@@ -53,8 +53,15 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                 startActivity(intent)
             }
 
-            ViewCompat.setOnApplyWindowInsetsListener(collapsingToolbar) { _, insets -> insets }
-            coverSpacer.initMarginWindowInsetsListener(left = true, top = true, right = true)
+            appBarLayout.addOnOffsetChangedListener(FadingToolbarOffsetListener(requireActivity(), toolbar))
+
+            ViewCompat.setOnApplyWindowInsetsListener(collapsingToolbar) { _, windowInsets ->
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                collapsingToolbar.expandedTitleMarginStart = insets.left +
+                        resources.getDimensionPixelSize(R.dimen.profile_text_offset_expanded)
+                windowInsets
+            }
+            coverSpacer.initMarginWindowInsetsListener(left = true, top = true, right = true, consume = false)
             toolbar.initWindowInsetsListener(consume = false)
 
             ViewCompat.setOnApplyWindowInsetsListener(ivProfileImage) { _, windowInsets ->
@@ -71,6 +78,16 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
     override fun onResume() {
         super.onResume()
         viewModel.updateUserModel()
+        if(context?.isNightMode() == false) {
+            activity?.clearLightStatusBar()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if(activity?.isLightStatusBar() == false && context?.isNightMode() == false) {
+            activity?.setLightStatusBar()
+        }
     }
 
 }

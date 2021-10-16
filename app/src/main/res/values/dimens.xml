@@ -8,8 +8,8 @@
     <dimen name="profile_picture_expanded">75dp</dimen>
     <dimen name="profile_picture_collapsed">10dp</dimen>
     <dimen name="profile_picture_offset_expanded">10dp</dimen>
-    <dimen name="profile_picture_x_offset_collapsed">8dp</dimen>
-    <dimen name="profile_picture_y_offset_collapsed">7dp</dimen>
+    <dimen name="profile_picture_x_offset_collapsed">12dp</dimen>
+    <dimen name="profile_picture_y_offset_collapsed">10dp</dimen>
     <dimen name="profile_text_offset_expanded">100dp</dimen>
     <dimen name="profile_text_offset_collapsed">45dp</dimen>
 

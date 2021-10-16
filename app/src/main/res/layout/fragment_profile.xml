@@ -17,6 +17,7 @@
         android:gravity="center">
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:liftOnScroll="true">
@@ -25,12 +26,13 @@
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorSurface"
+                app:contentScrim="?attr/colorSurface"
+                app:scrimAnimationDuration="300"
+                app:scrimVisibleHeightTrigger="120dp"
                 app:titleCollapseMode="scale"
-                app:expandedTitleMarginStart="@dimen/profile_text_offset_expanded"
+                tools:expandedTitleMarginStart="@dimen/profile_text_offset_expanded"
+                app:expandedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Expanded"
                 app:expandedTitleGravity="center_vertical"
-                app:title="@{user.name ?? @string/not_logged_in}"
-                tools:title="Username"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <FrameLayout
@@ -43,6 +45,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/cover_placeholder" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_gravity="top"
+                        android:background="@drawable/top_edge_fade" />
 
                     <FrameLayout
                         android:id="@+id/cover_spacer"
@@ -58,9 +66,10 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
                     app:titleMarginStart="@dimen/profile_text_offset_collapsed"
-                    app:layout_anchor="@id/collapsing_toolbar"
-                    app:layout_collapseMode="pin" />
+                    app:title="@{user.name ?? @string/not_logged_in}"
+                    tools:title="Username" />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
