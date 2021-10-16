@@ -5,7 +5,10 @@
     <dimen name="resource_item_height">240dp</dimen>
     <dimen name="resource_item_margin">5dp</dimen>
 
-    <dimen name="profile_picture_large">75dp</dimen>
+    <dimen name="profile_picture_expanded">75dp</dimen>
+    <dimen name="profile_picture_collapsed">40dp</dimen>
+    <dimen name="profile_picture_offset_expanded">10dp</dimen>
+    <dimen name="profile_picture_offset_collapsed">8dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>

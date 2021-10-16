@@ -3,7 +3,9 @@ package io.github.drumber.kitsune.ui.profile
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.github.drumber.kitsune.GlideApp
@@ -11,6 +13,7 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
+import io.github.drumber.kitsune.ui.widget.ProfilePictureBehavior
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -51,6 +54,15 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
 
             ViewCompat.setOnApplyWindowInsetsListener(collapsingToolbar) { _, insets -> insets }
             layoutUser.initMarginWindowInsetsListener(left = true, top = true, right = true)
+
+            ViewCompat.setOnApplyWindowInsetsListener(ivProfileImage) { _, windowInsets ->
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val params = ivProfileImage.layoutParams as CoordinatorLayout.LayoutParams
+                val behavior = params.behavior as ProfilePictureBehavior
+                behavior.offsetX = insets.left.toFloat()
+                behavior.offsetY = insets.top.toFloat()
+                windowInsets
+            }
         }
     }
 
