@@ -5,6 +5,7 @@ import android.animation.ValueAnimator
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.addCallback
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -288,6 +289,11 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
     override fun onResourceClicked(model: ResourceAdapter, options: NavOptions) {
         val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(model)
         findNavController().navigate(action, options)
+    }
+
+    override fun onNavigationItemReselected(item: MenuItem) {
+        super.onNavigationItemReselected(item)
+        binding.appBarLayout.setExpanded(true)
     }
 
 }

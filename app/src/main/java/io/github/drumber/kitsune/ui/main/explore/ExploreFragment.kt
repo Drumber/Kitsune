@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.ui.main.explore
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
@@ -48,6 +49,11 @@ class ExploreFragment : BaseCollectionFragment(R.layout.fragment_explore) {
     override fun onResourceClicked(model: ResourceAdapter, options: NavOptions) {
         val action = ExploreFragmentDirections.actionExploreFragmentToDetailsFragment2(model)
         findNavController().navigate(action, options)
+    }
+
+    override fun onNavigationItemReselected(item: MenuItem) {
+        super.onNavigationItemReselected(item)
+        binding.appBarLayout.setExpanded(true)
     }
 
 }

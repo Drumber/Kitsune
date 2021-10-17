@@ -147,6 +147,7 @@ class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<Resou
 
     override fun onNavigationItemReselected(item: MenuItem) {
         binding.nsvContent.smoothScrollTo(0, 0)
+        binding.appBarLayout.setExpanded(true)
     }
 
     override fun onItemClick(model: ResourceAdapter) {
