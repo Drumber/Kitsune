@@ -7,7 +7,6 @@ import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -154,12 +153,6 @@ class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<Resou
         val action = MainFragmentDirections.actionMainFragmentToDetailsFragment(model)
         val options = NavOptions.Builder()
             .setLaunchSingleTop(true)
-            .setPopUpTo(
-                findNavController().graph.findStartDestination().id,
-                inclusive = false,
-                saveState = true
-            )
-            .setRestoreState(false)
             .build()
         findNavController().navigate(action, options)
     }

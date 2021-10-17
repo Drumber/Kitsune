@@ -7,7 +7,6 @@ import androidx.annotation.LayoutRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
-import androidx.navigation.fragment.findNavController
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.PagingDataAdapter
@@ -111,12 +110,6 @@ abstract class ResourceCollectionFragment(@LayoutRes contentLayoutId: Int) :
         val model = ResourceAdapter.fromResource(resource)
         val options = NavOptions.Builder()
             .setLaunchSingleTop(true)
-            .setPopUpTo(
-                with(findNavController()) { currentDestination?.id ?: graph.startDestinationId },
-                inclusive = false,
-                saveState = true
-            )
-            .setRestoreState(false)
             .build()
         onResourceClicked(model, options)
     }
