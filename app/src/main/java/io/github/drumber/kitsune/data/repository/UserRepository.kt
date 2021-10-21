@@ -1,24 +1,37 @@
 package io.github.drumber.kitsune.data.repository
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import io.github.drumber.kitsune.data.Result
 import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.user.UserService
 import io.github.drumber.kitsune.exception.ReceivedDataException
+import io.github.drumber.kitsune.preference.UserPreferences
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logI
+import kotlin.properties.Delegates
 
-class UserRepository(val service: UserService, private val authRepository: AuthRepository) {
+class UserRepository(
+    private val service: UserService,
+    private val authRepository: AuthRepository,
+    private val userPreferences: UserPreferences
+) {
 
-    var user: User? = null
+    var user: User? by Delegates.observable(null) { _, _, newValue ->
+        _userLiveData.postValue(newValue)
+    }
         private set
+
+    private val _userLiveData = MutableLiveData<User?>()
+    val userLiveData: LiveData<User?>
+        get() = _userLiveData
 
     val hasUser: Boolean
         get() = user != null
 
     init {
-        // TODO: load stored user cache
-        user = null
+        user = userPreferences.getStoredUserModel()
     }
 
     fun logOut() {
@@ -71,6 +84,7 @@ class UserRepository(val service: UserService, private val authRepository: AuthR
 
     private fun setUserModel(user: User) {
         this.user = user
+        userPreferences.storeUserModel(user)
     }
 
 }

@@ -45,7 +45,7 @@ object KitsunePref : KotprefModel(), KoinComponent {
         get() = searchCategoriesJson.fromJsonString()
 
 
-    private inline fun Any.toJsonString(): String {
+    private fun Any.toJsonString(): String {
         val objectMapper: ObjectMapper = get()
         return objectMapper.writeValueAsString(this)
     }

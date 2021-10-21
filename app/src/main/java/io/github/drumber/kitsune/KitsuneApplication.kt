@@ -3,6 +3,7 @@ package io.github.drumber.kitsune
 import android.app.Application
 import by.kirich1409.viewbindingdelegate.ViewBindingPropertyDelegate
 import com.chibatching.kotpref.Kotpref
+import io.github.drumber.kitsune.data.repository.AuthRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.di.appModule
 import kotlinx.coroutines.CoroutineScope
@@ -36,7 +37,8 @@ class KitsuneApplication : Application() {
 
     private fun initLoggedInUser() {
         val userRepository: UserRepository by inject()
-        if (userRepository.hasUser) {
+        val authRepository: AuthRepository by inject()
+        if (userRepository.hasUser || authRepository.isLoggedIn) {
             applicationScope.launch(Dispatchers.IO) {
                 userRepository.updateUserCache()
             }

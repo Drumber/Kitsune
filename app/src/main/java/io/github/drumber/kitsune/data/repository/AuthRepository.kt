@@ -4,9 +4,14 @@ import io.github.drumber.kitsune.data.Result
 import io.github.drumber.kitsune.data.model.auth.AccessToken
 import io.github.drumber.kitsune.data.service.auth.AuthService
 import io.github.drumber.kitsune.exception.AccessTokenRefreshException
+import io.github.drumber.kitsune.preference.AuthPreferences
+import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
 
-class AuthRepository(val service: AuthService) {
+class AuthRepository(
+    private val service: AuthService,
+    private val authPreferences: AuthPreferences
+) {
 
     // in-memory cache of the accessToken object
     var accessToken: AccessToken? = null
@@ -16,13 +21,20 @@ class AuthRepository(val service: AuthService) {
         get() = accessToken != null
 
     val isAccessTokenExpired: Boolean
-        get() = accessToken?.expiresIn?.let {
-            System.currentTimeMillis() >= (it * 1000L)
+        get() = accessToken?.let { token ->
+            token.createdAt?.let { created ->
+                token.expiresIn?.let { expires ->
+                    // date in seconds when the token expires
+                    val expireDate = created + expires
+                    logD("Access token expires on $expireDate (in seconds)")
+                    System.currentTimeMillis() >= (expireDate * 1000L)
+                }
+            }
         } ?: false
 
     init {
-        // TODO: load stored access token
-        accessToken = null
+        accessToken = authPreferences.getStoredAccessToken()
+        logD(if (accessToken == null) "No access token stored." else "Loaded stored access token.")
     }
 
     fun logout() {
@@ -46,6 +58,7 @@ class AuthRepository(val service: AuthService) {
     }
 
     suspend fun refreshAccessToken(refreshToken: String): Result<AccessToken> {
+        logD("Refreshing access token...")
         val result = try {
             val token = service.refreshToken(refreshToken = refreshToken)
             Result.Success(token)
@@ -61,17 +74,17 @@ class AuthRepository(val service: AuthService) {
     }
 
     suspend fun refreshAccessTokenIfExpired(): Result<AccessToken> {
-        if (isAccessTokenExpired) {
+        if (isLoggedIn && isAccessTokenExpired) {
             accessToken?.refreshToken?.let {
                 return refreshAccessToken(it)
             }
         }
+        logD("Did not refresh access token since it is null or not expired.")
         return Result.Error(AccessTokenRefreshException("Access token is not expired or token is null."))
     }
 
     private fun setLoggedInToken(token: AccessToken) {
         this.accessToken = token
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
+        authPreferences.storeAccessToken(token)
     }
 }

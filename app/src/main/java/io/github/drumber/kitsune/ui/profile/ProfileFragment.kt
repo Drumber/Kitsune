@@ -77,7 +77,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
 
     override fun onResume() {
         super.onResume()
-        viewModel.updateUserModel()
         if(context?.isNightMode() == false) {
             activity?.clearLightStatusBar()
         }

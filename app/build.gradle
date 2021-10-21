@@ -42,7 +42,7 @@ dependencies {
     // Android core and support libs
     implementation 'androidx.core:core-ktx:1.6.0'
     implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     // Navigation
@@ -108,8 +108,11 @@ dependencies {
     implementation 'com.chibatching.kotpref:enum-support:2.13.1'
     implementation 'com.chibatching.kotpref:livedata-support:2.13.1'
 
+    // Security Crypto
+    implementation 'androidx.security:security-crypto:1.1.0-alpha03'
+
     // TreeView
-    implementation 'com.github.bmelnychuk:atv:1.2.+'
+    implementation 'com.github.bmelnychuk:atv:1.2.9'
 
     // Expandable text view
     implementation 'at.blogc:expandabletextview:1.0.5'
