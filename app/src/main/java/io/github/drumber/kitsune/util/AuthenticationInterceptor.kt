@@ -4,7 +4,9 @@ import io.github.drumber.kitsune.data.repository.AuthRepository
 import okhttp3.Interceptor
 import okhttp3.Response
 
-class AuthenticationInterceptor(private val authRepository: AuthRepository) : Interceptor {
+interface AuthenticationInterceptor : Interceptor
+
+class AuthenticationInterceptorImpl(private val authRepository: AuthRepository) : AuthenticationInterceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val requestBuilder = chain.request().newBuilder()
@@ -14,5 +16,14 @@ class AuthenticationInterceptor(private val authRepository: AuthRepository) : In
             }
         }
         return chain.proceed(requestBuilder.build())
+    }
+}
+
+/**
+ * Dummy implementation **only for test cases**.
+ */
+class AuthenticationInterceptorDummy : AuthenticationInterceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        return chain.proceed(chain.request())
     }
 }

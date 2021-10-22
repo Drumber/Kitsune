@@ -8,6 +8,7 @@ import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.model.category.Category
+import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.model.resource.Anime
 import io.github.drumber.kitsune.data.model.resource.Chapter
 import io.github.drumber.kitsune.data.model.resource.Episode
@@ -16,12 +17,16 @@ import io.github.drumber.kitsune.data.service.anime.AnimeService
 import io.github.drumber.kitsune.data.service.anime.EpisodesService
 import io.github.drumber.kitsune.data.service.auth.AuthService
 import io.github.drumber.kitsune.data.service.category.CategoryService
+import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.data.service.manga.ChaptersService
 import io.github.drumber.kitsune.data.service.manga.MangaService
 import io.github.drumber.kitsune.data.service.user.UserService
 import io.github.drumber.kitsune.util.AuthenticationInterceptor
+import io.github.drumber.kitsune.util.AuthenticationInterceptorDummy
+import io.github.drumber.kitsune.util.AuthenticationInterceptorImpl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.core.scope.Scope
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
@@ -34,13 +39,14 @@ val serviceModule = module {
     single { createHttpClient(get()) }
     single { createObjectMapper() }
     factory { createAuthService() }
-    factory { AuthenticationInterceptor(get()) }
+    factory { createAuthenticationInterceptor() }
     factory { createService<AnimeService>(get(), get(), Anime::class.java) }
     factory { createService<EpisodesService>(get(), get(), Episode::class.java) }
     factory { createService<MangaService>(get(), get(), Manga::class.java) }
     factory { createService<ChaptersService>(get(), get(), Chapter::class.java) }
     factory { createService<CategoryService>(get(), get(), Category::class.java) }
     factory { createService<UserService>(get(), get(), User::class.java) }
+    factory { createService<LibraryEntriesService>(get(), get(), LibraryEntry::class.java, Anime::class.java, Manga::class.java) }
 }
 
 private fun createHttpClientBuilder() = OkHttpClient.Builder()
@@ -56,6 +62,13 @@ private fun createHttpClient(authenticationInterceptor: AuthenticationIntercepto
 private fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
     level = HttpLoggingInterceptor.Level.BASIC
     redactHeader("Authorization")
+}
+
+private fun Scope.createAuthenticationInterceptor() = try {
+    AuthenticationInterceptorImpl(get())
+} catch (t: Throwable) {
+    // return dummy implementation if auth repository is not available (e.g. during unit test)
+    AuthenticationInterceptorDummy()
 }
 
 private fun createAuthService() = createService<AuthService>(
