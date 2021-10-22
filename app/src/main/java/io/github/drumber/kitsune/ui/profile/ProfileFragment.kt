@@ -6,16 +6,22 @@ import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
+import io.github.drumber.kitsune.ui.adapter.LibraryEntriesAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.ui.widget.ProfilePictureBehavior
 import io.github.drumber.kitsune.util.*
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
@@ -72,7 +78,31 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                 behavior.offsetY = insets.top.toFloat()
                 windowInsets
             }
+
+            nsvContent.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
         }
+
+        initRecyclerView()
+    }
+
+    private fun initRecyclerView() {
+        val glide = GlideApp.with(this)
+        val adapter = LibraryEntriesAdapter(glide) { onLibraryEntryClicked(it) }
+
+        binding.rvLibraryEntries.apply {
+            this.adapter = adapter
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            viewModel.dataSource.collectLatest {
+                adapter.submitData(it)
+            }
+        }
+    }
+
+    private fun onLibraryEntryClicked(entry: LibraryEntry) {
+        // TODO: show action view
     }
 
     override fun onResume() {
