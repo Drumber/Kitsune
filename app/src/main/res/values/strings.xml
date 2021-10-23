@@ -19,6 +19,8 @@
     <string name="action_read_less">Read less</string>
 
     <string name="hint_search">Search</string>
+    <string name="hint_mark_watched">Mark as watched.</string>
+    <string name="hint_mark_not_watched">Mark as not watched.</string>
 
     <string name="error_resource_loading">Could not load data.</string>
 

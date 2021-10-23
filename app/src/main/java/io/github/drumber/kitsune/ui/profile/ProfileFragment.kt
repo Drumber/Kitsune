@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.ui.profile
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -25,7 +26,8 @@ import io.github.drumber.kitsune.util.*
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
+class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
+    LibraryEntriesAdapter.LibraryEntryActionListener {
 
     private val binding: FragmentProfileBinding by viewBinding()
 
@@ -98,7 +100,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
 
     private fun initRecyclerView() {
         val glide = GlideApp.with(this)
-        val adapter = LibraryEntriesAdapter(glide) { onLibraryEntryClicked(it) }
+        val adapter = LibraryEntriesAdapter(glide, this)
 
         binding.rvLibraryEntries.apply {
             this.adapter = adapter
@@ -110,15 +112,33 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                 adapter.submitData(it)
             }
         }
+
+        viewModel.episodeWatchProgressResponseListener = { responseData ->
+            if (responseData is ResponseData.Success) {
+                // TODO: use RemoteMediator to update item in local db instead of re-fetching all over network
+                adapter.refresh()
+            } else if (responseData is ResponseData.Error) {
+                Toast.makeText(requireContext(), "Error: ${responseData.e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
-    private fun onLibraryEntryClicked(entry: LibraryEntry) {
-        val resource = entry.anime ?: entry.manga
+    override fun onItemClicked(item: LibraryEntry) {
+        val resource = item.anime ?: item.manga
         if (resource != null) {
             val resourceAdapter = ResourceAdapter.fromResource(resource)
-            val action = ProfileFragmentDirections.actionProfileFragmentToDetailsFragment(resourceAdapter)
+            val action =
+                ProfileFragmentDirections.actionProfileFragmentToDetailsFragment(resourceAdapter)
             findNavController().navigate(action)
         }
+    }
+
+    override fun onEpisodeWatchedClicked(item: LibraryEntry) {
+        viewModel.markEpisodeWatched(item)
+    }
+
+    override fun onEpisodeUnwatchedClicked(item: LibraryEntry) {
+        viewModel.markEpisodeUnwatched(item)
     }
 
     override fun onResume() {
@@ -133,6 +153,11 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         if (activity?.isLightStatusBar() == false && context?.isNightMode() == false) {
             activity?.setLightStatusBar()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.episodeWatchProgressResponseListener = null
     }
 
 }

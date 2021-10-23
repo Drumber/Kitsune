@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.di
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -77,6 +78,7 @@ private fun createAuthService() = createService<AuthService>(
 )
 
 private fun createObjectMapper() = jacksonObjectMapper()
+    .setSerializationInclusion(JsonInclude.Include.NON_NULL)
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
 

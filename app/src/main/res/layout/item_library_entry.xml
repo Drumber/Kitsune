@@ -71,14 +71,41 @@
                 android:layout_marginBottom="5dp"
                 android:layout_alignParentEnd="true"
                 android:orientation="horizontal"
-                android:gravity="end"
                 android:padding="10dp">
 
                 <TextView
+                    android:id="@+id/tv_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
                     android:text="@{entry.hasStartedWatching ? entry.progress + `/` + entry.episodes : @string/library_not_started}"
                     tools:text="12/24" />
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_watched_removed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:enabled="@{entry.hasStartedWatching}"
+                    app:icon="@drawable/ic_remove_24"
+                    android:tooltipText="@string/hint_mark_not_watched"
+                    tools:targetApi="o"
+                    style="@style/Widget.Kitsune.Button.Outlined.IconOnly" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_watched_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{entry.canWatchEpisode}"
+                    app:icon="@drawable/ic_add_24"
+                    android:tooltipText="@string/hint_mark_watched"
+                    tools:targetApi="o"
+                    style="@style/Widget.Kitsune.Button.IconOnly" />
 
             </LinearLayout>
 

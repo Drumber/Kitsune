@@ -12,24 +12,24 @@ import kotlinx.parcelize.Parcelize
 @Type("libraryEntries")
 data class LibraryEntry(
     @Id val id: String?,
-    val createdAt: String?,
-    val updatedAt: String?,
-    val status: String?,
-    val progress: Int?,
-    val volumesOwned: Int?,
-    val reconsuming: Boolean?,
-    val reconsumeCount: Int?,
-    val notes: String?,
-    val private: Boolean?,
-    val reactionSkipped: ReactionSkip?,
-    val progressedAt: String?,
-    val startedAt: String?,
-    val finishedAt: String?,
-    val ratingTwenty: Int?,
+    val createdAt: String? = null,
+    val updatedAt: String? = null,
+    val status: String? = null,
+    val progress: Int? = null,
+    val volumesOwned: Int? = null,
+    val reconsuming: Boolean? = null,
+    val reconsumeCount: Int? = null,
+    val notes: String? = null,
+    val private: Boolean? = null,
+    val reactionSkipped: ReactionSkip? = null,
+    val progressedAt: String? = null,
+    val startedAt: String? = null,
+    val finishedAt: String? = null,
+    val ratingTwenty: Int? = null,
     @Relationship("anime")
-    val anime: Anime?,
+    val anime: Anime? = null,
     @Relationship("manga")
-    val manga: Manga?
+    val manga: Manga? = null
 ): Parcelable
 
 enum class ReactionSkip {

@@ -14,7 +14,7 @@ import io.github.drumber.kitsune.databinding.ItemLibraryEntryBinding
 
 class LibraryEntriesAdapter(
     private val glide: GlideRequests,
-    private val listener: OnItemClickListener<LibraryEntry>? = null
+    private val listener: LibraryEntryActionListener? = null
 ) : PagingDataAdapter<LibraryEntry, LibraryEntriesAdapter.LibraryEntryViewHolder>(
     LibraryEntryComparator
 ) {
@@ -22,9 +22,7 @@ class LibraryEntriesAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryEntryViewHolder {
         return LibraryEntryViewHolder(
             ItemLibraryEntryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        ) { position ->
-            getItem(position)?.let { item -> listener?.onItemClick(item) }
-        }
+        )
     }
 
     override fun onBindViewHolder(holder: LibraryEntryViewHolder, position: Int) {
@@ -32,15 +30,25 @@ class LibraryEntriesAdapter(
     }
 
     inner class LibraryEntryViewHolder(
-        private val binding: ItemLibraryEntryBinding,
-        private val listener: (position: Int) -> Unit
+        private val binding: ItemLibraryEntryBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
-            binding.cardView.setOnClickListener {
-                val position = bindingAdapterPosition
-                if(position != RecyclerView.NO_POSITION) {
-                    listener(position)
+            binding.apply {
+                cardView.setOnClickListener {
+                    if(bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                        getItem(bindingAdapterPosition)?.let { listener?.onItemClicked(it) }
+                    }
+                }
+                btnWatchedAdd.setOnClickListener {
+                    if(bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                        getItem(bindingAdapterPosition)?.let { listener?.onEpisodeWatchedClicked(it) }
+                    }
+                }
+                btnWatchedRemoved.setOnClickListener {
+                    if(bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                        getItem(bindingAdapterPosition)?.let { listener?.onEpisodeUnwatchedClicked(it) }
+                    }
                 }
             }
         }
@@ -64,6 +72,12 @@ class LibraryEntriesAdapter(
 
         override fun areContentsTheSame(oldItem: LibraryEntry, newItem: LibraryEntry) =
             oldItem == newItem
+    }
+
+    interface LibraryEntryActionListener {
+        fun onItemClicked(item: LibraryEntry)
+        fun onEpisodeWatchedClicked(item: LibraryEntry)
+        fun onEpisodeUnwatchedClicked(item: LibraryEntry)
     }
 
 }
