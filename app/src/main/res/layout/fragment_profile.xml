@@ -118,6 +118,7 @@
             android:layout_gravity="top|start"
             android:layout_marginTop="@dimen/profile_picture_offset_expanded"
             android:layout_marginStart="@dimen/profile_picture_offset_expanded"
+            android:elevation="10dp"
             android:src="@drawable/profile_picture_placeholder"
             app:finalHeight="@dimen/profile_picture_collapsed"
             app:finalXPosition="@dimen/profile_picture_x_offset_collapsed"
