@@ -6,7 +6,7 @@
     <data>
         <variable
             name="entry"
-            type="io.github.drumber.kitsune.data.model.library.LibraryEntry" />
+            type="io.github.drumber.kitsune.data.model.library.LibraryEntryAdapter" />
         <variable
             name="data"
             type="io.github.drumber.kitsune.data.model.resource.ResourceAdapter" />
@@ -23,7 +23,7 @@
         
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="@dimen/library_entry_img_height">
             
             <ImageView
                 android:id="@+id/iv_thumbnail"
@@ -62,6 +62,38 @@
                     tools:text="2002 • TV" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/iv_thumbnail"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="5dp"
+                android:layout_alignParentEnd="true"
+                android:orientation="horizontal"
+                android:gravity="end"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{entry.hasStartedWatching ? entry.progress + `/` + entry.episodes : @string/library_not_started}"
+                    tools:text="12/24" />
+
+            </LinearLayout>
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/watch_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toEndOf="@id/iv_thumbnail"
+                android:layout_alignParentEnd="true"
+                app:trackCornerRadius="0dp"
+                app:isVisible="@{entry.hasEpisodesCount}"
+                android:max="@{entry.episodeCount}"
+                android:progress="@{entry.progressCount}"
+                tools:progress="50"/>
             
         </RelativeLayout>
 

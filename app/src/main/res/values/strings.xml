@@ -99,4 +99,6 @@
     <string name="login_no_account">Don\'t have an account? Create one on <a href="https://kitsu.io">kitsu.io</a>.</string>
     <string name="not_logged_in">Not logged in</string>
 
+    <string name="library_not_started">Not Started</string>
+
 </resources>

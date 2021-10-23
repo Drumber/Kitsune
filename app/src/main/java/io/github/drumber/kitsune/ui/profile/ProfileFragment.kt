@@ -14,6 +14,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
 import io.github.drumber.kitsune.ui.adapter.LibraryEntriesAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
@@ -59,7 +60,12 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                 startActivity(intent)
             }
 
-            appBarLayout.addOnOffsetChangedListener(FadingToolbarOffsetListener(requireActivity(), toolbar))
+            appBarLayout.addOnOffsetChangedListener(
+                FadingToolbarOffsetListener(
+                    requireActivity(),
+                    toolbar
+                )
+            )
 
             ViewCompat.setOnApplyWindowInsetsListener(collapsingToolbar) { _, windowInsets ->
                 val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -67,7 +73,12 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                         resources.getDimensionPixelSize(R.dimen.profile_text_offset_expanded)
                 windowInsets
             }
-            coverSpacer.initMarginWindowInsetsListener(left = true, top = true, right = true, consume = false)
+            coverSpacer.initMarginWindowInsetsListener(
+                left = true,
+                top = true,
+                right = true,
+                consume = false
+            )
             toolbar.initWindowInsetsListener(consume = false)
 
             ViewCompat.setOnApplyWindowInsetsListener(ivProfileImage) { _, windowInsets ->
@@ -102,19 +113,24 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
     }
 
     private fun onLibraryEntryClicked(entry: LibraryEntry) {
-        // TODO: show action view
+        val resource = entry.anime ?: entry.manga
+        if (resource != null) {
+            val resourceAdapter = ResourceAdapter.fromResource(resource)
+            val action = ProfileFragmentDirections.actionProfileFragmentToDetailsFragment(resourceAdapter)
+            findNavController().navigate(action)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        if(context?.isNightMode() == false) {
+        if (context?.isNightMode() == false) {
             activity?.clearLightStatusBar()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        if(activity?.isLightStatusBar() == false && context?.isNightMode() == false) {
+        if (activity?.isLightStatusBar() == false && context?.isNightMode() == false) {
             activity?.setLightStatusBar()
         }
     }

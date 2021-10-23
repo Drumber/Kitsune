@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import io.github.drumber.kitsune.GlideRequests
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.library.LibraryEntryAdapter
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.databinding.ItemLibraryEntryBinding
 
@@ -47,7 +48,7 @@ class LibraryEntriesAdapter(
         fun bind(entry: LibraryEntry) {
             val resourceAdapter = (entry.anime ?: entry.manga)?.let { ResourceAdapter.fromResource(it) }
             binding.apply {
-                this.entry = entry
+                this.entry = LibraryEntryAdapter(entry)
                 data = resourceAdapter
             }
             glide.load(resourceAdapter?.posterImage)
