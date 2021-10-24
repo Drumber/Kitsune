@@ -9,13 +9,16 @@ import io.github.drumber.kitsune.data.model.RemoteKey
 @Dao
 interface RemoteKeyDao {
 
-    @Query("SELECT * FROM remote_keys WHERE queryOptions = :queryOptions")
-    fun remoteKeyByQuery(queryOptions: String): RemoteKey
+    @Query("SELECT * FROM remote_keys WHERE resourceId = :resourceId")
+    suspend fun remoteKeyByResourceId(resourceId: String): RemoteKey
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(key: RemoteKey)
+    suspend fun insertALl(key: List<RemoteKey>)
 
-    @Query("DELETE FROM remote_keys WHERE queryOptions = :queryOptions")
-    suspend fun deleteByQuery(queryOptions: String)
+    @Query("DELETE FROM remote_keys WHERE resourceId = :resourceId")
+    suspend fun deleteByResourceId(resourceId: String)
+
+    @Query("DELETE FROM remote_keys")
+    suspend fun clearRemoteKeys()
 
 }

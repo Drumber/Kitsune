@@ -21,44 +21,69 @@ class AnimeRemoteMediator(
     private val database: ResourceDatabase,
     private val requestType: RequestType = RequestType.ALL
 ) : RemoteMediator<Int, Anime>() {
-    val animeDao = database.animeDao()
-    val remoteKeyDao = database.remoteKeys()
+    private val animeDao = database.animeDao()
+    private val remoteKeyDao = database.remoteKeys()
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, Anime>): MediatorResult {
         return try {
-            val loadKey = when (loadType) {
-                LoadType.REFRESH -> Kitsu.DEFAULT_PAGE_OFFSET
+            val pageOffset = when (loadType) {
+                LoadType.REFRESH -> {
+                    val remoteKey = getRemoteKeyClosestToCurrentPosition(state)
+                    remoteKey?.nextPageKey?.minus(1) ?: Kitsu.DEFAULT_PAGE_OFFSET
+                }
                 LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
                 LoadType.APPEND -> {
-                    val remoteKey = database.withTransaction {
-                        remoteKeyDao.remoteKeyByQuery(filter.toQueryString(true))
-                    }
+                    val remoteKey = getRemoteKeyForLastItem(state)
 
-                    if (remoteKey.nextPageKey == null) {
-                        return MediatorResult.Success(endOfPaginationReached = true)
+                    if (remoteKey == null) {
+                        state.config.pageSize
+                    } else {
+                        remoteKey.nextPageKey ?: return MediatorResult.Success(endOfPaginationReached = true)
                     }
-
-                    remoteKey.nextPageKey
                 }
             }
 
-            val response = service.allAnime(filter.pageOffset(loadKey).options)
+            val response = service.allAnime(filter.pageOffset(pageOffset).options)
             val page = response.links?.toPage()
+            val endReached = page?.next == null
 
             database.withTransaction {
                 if(loadType == LoadType.REFRESH) {
                     animeDao.clearAllAnime()
-                    remoteKeyDao.deleteByQuery(filter.toQueryString(true))
+                    remoteKeyDao.clearRemoteKeys()
                 }
 
                 val data = response.get() ?: throw ReceivedDataException("Received data is 'null'.")
-                remoteKeyDao.insert(RemoteKey(filter.toQueryString(true), page?.prev, page?.next))
+
+                val remoteKeys = data.map {
+                    RemoteKey(it.id, page?.prev, page?.next)
+                }
+
+                remoteKeyDao.insertALl(remoteKeys)
                 animeDao.insertAll(data)
             }
 
-            MediatorResult.Success(endOfPaginationReached = page?.next == null)
+            MediatorResult.Success(endOfPaginationReached = endReached)
         } catch (e: Exception) {
             MediatorResult.Error(e)
+        }
+    }
+
+    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, Anime>): RemoteKey? {
+        return state.lastItemOrNull()?.let { anime ->
+            database.withTransaction {
+                remoteKeyDao.remoteKeyByResourceId(anime.id)
+            }
+        }
+    }
+
+    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, Anime>): RemoteKey? {
+        return state.anchorPosition?.let { position ->
+            state.closestItemToPosition(position)?.id?.let { id ->
+                database.withTransaction {
+                    remoteKeyDao.remoteKeyByResourceId(id)
+                }
+            }
         }
     }
 

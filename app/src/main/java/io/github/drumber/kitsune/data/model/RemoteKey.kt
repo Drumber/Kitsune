@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class RemoteKey(
     @PrimaryKey
     @ColumnInfo(collate = ColumnInfo.NOCASE)
-    val queryOptions: String,
+    val resourceId: String,
     val prevPageKey: Int?,
     val nextPageKey: Int?
 )

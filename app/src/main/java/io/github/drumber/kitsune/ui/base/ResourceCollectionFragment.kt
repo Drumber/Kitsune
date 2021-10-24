@@ -87,12 +87,12 @@ abstract class ResourceCollectionFragment(@LayoutRes contentLayoutId: Int) :
 
     private val loadStateListener: (CombinedLoadStates) -> Unit = { loadState ->
         if(view?.parent != null) {
-            recyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
+            recyclerView.isVisible = loadState.mediator?.refresh is LoadState.NotLoading || loadState.source.refresh is LoadState.NotLoading
             resourceLoadingBinding?.apply {
-                root.isVisible = loadState.source.refresh !is LoadState.NotLoading
-                progressBar.isVisible = loadState.source.refresh is LoadState.Loading
-                btnRetry.isVisible = loadState.source.refresh is LoadState.Error
-                tvError.isVisible = loadState.source.refresh is LoadState.Error
+                root.isVisible = loadState.mediator?.refresh !is LoadState.NotLoading && loadState.source.refresh !is LoadState.NotLoading
+                progressBar.isVisible = loadState.refresh is LoadState.Loading
+                btnRetry.isVisible = loadState.refresh is LoadState.Error
+                tvError.isVisible = loadState.refresh is LoadState.Error
             }
         }
     }
@@ -106,8 +106,8 @@ abstract class ResourceCollectionFragment(@LayoutRes contentLayoutId: Int) :
         (recyclerView.adapter as? PagingDataAdapter<*, *>)?.removeLoadStateListener(loadStateListener)
     }
 
-    override fun onItemClick(resource: Resource) {
-        val model = ResourceAdapter.fromResource(resource)
+    override fun onItemClick(item: Resource) {
+        val model = ResourceAdapter.fromResource(item)
         val options = NavOptions.Builder()
             .setLaunchSingleTop(true)
             .build()

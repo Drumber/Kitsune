@@ -9,7 +9,7 @@ import io.github.drumber.kitsune.data.model.resource.Manga
 
 @Database(
     entities = [Anime::class, Manga::class, RemoteKey::class],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
