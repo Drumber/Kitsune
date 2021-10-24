@@ -15,5 +15,5 @@ fun Links.toPage() = Page(
     prev = this.previous?.href?.let { parseOffset(it) }
 )
 
-private inline fun parseOffset(href: String) =
+private fun parseOffset(href: String) =
     Uri.parse(href).getQueryParameter("page[offset]")!!.toInt()

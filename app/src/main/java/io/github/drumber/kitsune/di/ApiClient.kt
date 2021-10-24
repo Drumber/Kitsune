@@ -77,7 +77,7 @@ private fun createAuthService() = createService<AuthService>(
     KITSU_OAUTH_URL
 )
 
-private fun createObjectMapper() = jacksonObjectMapper()
+fun createObjectMapper() = jacksonObjectMapper()
     .setSerializationInclusion(JsonInclude.Include.NON_NULL)
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)

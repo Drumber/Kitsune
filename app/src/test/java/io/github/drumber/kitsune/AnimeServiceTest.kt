@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune
 
-import io.github.drumber.kitsune.data.service.anime.AnimeService
 import io.github.drumber.kitsune.data.service.Filter
+import io.github.drumber.kitsune.data.service.anime.AnimeService
 import io.github.drumber.kitsune.di.serviceModule
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
