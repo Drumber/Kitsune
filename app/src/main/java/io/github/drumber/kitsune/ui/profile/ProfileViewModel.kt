@@ -15,6 +15,7 @@ import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.ResponseData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -27,7 +28,7 @@ class ProfileViewModel(
 
     val userModel: LiveData<User?> = Transformations.map(userRepository.userLiveData) { it }
 
-    private val _filter = Transformations.map(userRepository.userLiveData) { user ->
+    val filter: LiveData<Filter?> = Transformations.map(userRepository.userLiveData) { user ->
         user?.id?.let { userId ->
             Filter()
                 .filter("user_id", userId)
@@ -35,10 +36,8 @@ class ProfileViewModel(
                 .include("anime", "manga")
         }
     }
-    val filter: LiveData<Filter>
-        get() = _filter
 
-    val dataSource: Flow<PagingData<LibraryEntry>> = filter.asFlow().flatMapLatest { filter ->
+    val dataSource: Flow<PagingData<LibraryEntry>> = filter.asFlow().filterNotNull().flatMapLatest { filter ->
         libraryEntriesRepository.libraryEntries(Kitsu.DEFAULT_PAGE_SIZE_LIBRARY, filter)
     }.cachedIn(viewModelScope)
 
