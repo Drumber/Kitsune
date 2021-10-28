@@ -9,6 +9,7 @@ import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.repository.LibraryEntriesRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.data.room.LibraryEntryDao
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.exception.ReceivedDataException
@@ -23,7 +24,8 @@ import kotlinx.coroutines.withContext
 class ProfileViewModel(
     userRepository: UserRepository,
     private val libraryEntriesRepository: LibraryEntriesRepository,
-    private val libraryEntriesService: LibraryEntriesService
+    private val libraryEntriesService: LibraryEntriesService,
+    private val libraryEntryDao: LibraryEntryDao
 ) : ViewModel() {
 
     val userModel: LiveData<User?> = Transformations.map(userRepository.userLiveData) { it }
@@ -48,7 +50,7 @@ class ProfileViewModel(
             id = libraryEntry.id,
             progress = libraryEntry.progress?.plus(1)
         )
-        updateLibraryProgress(updatedEntry)
+        updateLibraryProgress(updatedEntry, libraryEntry)
     }
 
     fun markEpisodeUnwatched(libraryEntry: LibraryEntry) {
@@ -57,19 +59,23 @@ class ProfileViewModel(
             id = libraryEntry.id,
             progress = libraryEntry.progress?.minus(1)
         )
-        updateLibraryProgress(updatedEntry)
+        updateLibraryProgress(updatedEntry, libraryEntry)
     }
 
-    private fun updateLibraryProgress(updatedEntry: LibraryEntry) {
+    private fun updateLibraryProgress(updatedEntry: LibraryEntry, oldEntry: LibraryEntry) {
         viewModelScope.launch(Dispatchers.IO) {
             val responseData = try {
-                val response = libraryEntriesService.updateLibraryEntry(updatedEntry.id!!, JSONAPIDocument(updatedEntry))
+                val response = libraryEntriesService.updateLibraryEntry(updatedEntry.id, JSONAPIDocument(updatedEntry))
 
-                if (response.get() != null) {
-                    ResponseData.Success(response.get()!!)
-                } else {
-                    throw ReceivedDataException("Received data is 'null'.")
-                }
+                response.get()?.let { libraryEntry ->
+                    // update the database, but copy anime and manga object from old library first
+                    libraryEntryDao.updateLibraryEntry(libraryEntry.copy(
+                        anime = oldEntry.anime,
+                        manga = oldEntry.manga
+                    ))
+
+                    ResponseData.Success(libraryEntry)
+                } ?: throw ReceivedDataException("Received data is 'null'.")
             } catch (e: Exception) {
                 ResponseData.Error(e)
             }

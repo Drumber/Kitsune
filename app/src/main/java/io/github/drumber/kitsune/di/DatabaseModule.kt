@@ -10,6 +10,7 @@ val databaseModule = module {
     single { createResourceDatabase(androidApplication()) }
     single { get<ResourceDatabase>().animeDao() }
     single { get<ResourceDatabase>().mangaDao() }
+    single { get<ResourceDatabase>().libraryEntryDao() }
 }
 
 private fun createResourceDatabase(application: Application): ResourceDatabase {

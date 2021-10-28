@@ -8,24 +8,23 @@ import androidx.room.withTransaction
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.model.RemoteKey
 import io.github.drumber.kitsune.data.model.RemoteKeyType
-import io.github.drumber.kitsune.data.model.resource.Anime
+import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.model.toPage
 import io.github.drumber.kitsune.data.room.ResourceDatabase
 import io.github.drumber.kitsune.data.service.Filter
-import io.github.drumber.kitsune.data.service.anime.AnimeService
+import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.exception.ReceivedDataException
 
 @OptIn(ExperimentalPagingApi::class)
-class AnimeRemoteMediator(
+class LibraryEntriesRemoteMediator(
     private val filter: Filter,
-    private val service: AnimeService,
+    private val service: LibraryEntriesService,
     private val database: ResourceDatabase,
-    private val requestType: RequestType = RequestType.ALL
-) : RemoteMediator<Int, Anime>() {
-    private val animeDao = database.animeDao()
+) : RemoteMediator<Int, LibraryEntry>() {
+    private val libraryEntryDao = database.libraryEntryDao()
     private val remoteKeyDao = database.remoteKeys()
 
-    override suspend fun load(loadType: LoadType, state: PagingState<Int, Anime>): MediatorResult {
+    override suspend fun load(loadType: LoadType, state: PagingState<Int, LibraryEntry>): MediatorResult {
         return try {
             val pageOffset = when (loadType) {
                 LoadType.REFRESH -> {
@@ -44,24 +43,24 @@ class AnimeRemoteMediator(
                 }
             }
 
-            val response = service.allAnime(filter.pageOffset(pageOffset).options)
+            val response = service.allLibraryEntries(filter.pageOffset(pageOffset).options)
             val page = response.links?.toPage()
             val endReached = page?.next == null
 
             database.withTransaction {
                 if(loadType == LoadType.REFRESH) {
-                    animeDao.clearAllAnime()
-                    remoteKeyDao.clearRemoteKeys(RemoteKeyType.Anime)
+                    libraryEntryDao.clearLibraryEntries()
+                    remoteKeyDao.clearRemoteKeys(RemoteKeyType.LibraryEntry)
                 }
 
                 val data = response.get() ?: throw ReceivedDataException("Received data is 'null'.")
 
                 val remoteKeys = data.map {
-                    RemoteKey(it.id, RemoteKeyType.Anime, page?.prev, page?.next)
+                    RemoteKey(it.id, RemoteKeyType.LibraryEntry, page?.prev, page?.next)
                 }
 
                 remoteKeyDao.insertALl(remoteKeys)
-                animeDao.insertAll(data)
+                libraryEntryDao.insertAll(data)
             }
 
             MediatorResult.Success(endOfPaginationReached = endReached)
@@ -70,19 +69,19 @@ class AnimeRemoteMediator(
         }
     }
 
-    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, Anime>): RemoteKey? {
-        return state.lastItemOrNull()?.let { anime ->
+    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, LibraryEntry>): RemoteKey? {
+        return state.lastItemOrNull()?.let { libraryEntry ->
             database.withTransaction {
-                remoteKeyDao.remoteKeyByResourceId(anime.id, RemoteKeyType.Anime)
+                remoteKeyDao.remoteKeyByResourceId(libraryEntry.id, RemoteKeyType.LibraryEntry)
             }
         }
     }
 
-    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, Anime>): RemoteKey? {
+    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, LibraryEntry>): RemoteKey? {
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.id?.let { id ->
                 database.withTransaction {
-                    remoteKeyDao.remoteKeyByResourceId(id, RemoteKeyType.Anime)
+                    remoteKeyDao.remoteKeyByResourceId(id, RemoteKeyType.LibraryEntry)
                 }
             }
         }

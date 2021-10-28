@@ -1,6 +1,9 @@
 package io.github.drumber.kitsune.data.model.library
 
 import android.os.Parcelable
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
@@ -9,27 +12,31 @@ import io.github.drumber.kitsune.data.model.resource.Manga
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
+@Entity(tableName = "library_table")
 @Type("libraryEntries")
 data class LibraryEntry(
-    @Id val id: String?,
-    val createdAt: String? = null,
-    val updatedAt: String? = null,
-    val status: String? = null,
-    val progress: Int? = null,
-    val volumesOwned: Int? = null,
-    val reconsuming: Boolean? = null,
-    val reconsumeCount: Int? = null,
-    val notes: String? = null,
-    val private: Boolean? = null,
-    val reactionSkipped: ReactionSkip? = null,
-    val progressedAt: String? = null,
-    val startedAt: String? = null,
-    val finishedAt: String? = null,
-    val ratingTwenty: Int? = null,
+    @PrimaryKey @Id
+    var id: String = "",
+    var createdAt: String? = null,
+    var updatedAt: String? = null,
+    var status: String? = null,
+    var progress: Int? = null,
+    var volumesOwned: Int? = null,
+    var reconsuming: Boolean? = null,
+    var reconsumeCount: Int? = null,
+    var notes: String? = null,
+    var private: Boolean? = null,
+    var reactionSkipped: ReactionSkip? = null,
+    var progressedAt: String? = null,
+    var startedAt: String? = null,
+    var finishedAt: String? = null,
+    var ratingTwenty: Int? = null,
+    @Embedded(prefix = "anime_")
     @Relationship("anime")
-    val anime: Anime? = null,
+    var anime: Anime? = null,
+    @Embedded(prefix = "manga_")
     @Relationship("manga")
-    val manga: Manga? = null
+    var manga: Manga? = null
 ): Parcelable
 
 enum class ReactionSkip {

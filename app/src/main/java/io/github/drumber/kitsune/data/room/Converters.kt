@@ -2,6 +2,8 @@ package io.github.drumber.kitsune.data.room
 
 import androidx.room.TypeConverter
 import com.fasterxml.jackson.module.kotlin.readValue
+import io.github.drumber.kitsune.data.model.RemoteKeyType
+import io.github.drumber.kitsune.data.model.library.ReactionSkip
 import io.github.drumber.kitsune.data.model.resource.AgeRating
 import io.github.drumber.kitsune.data.model.resource.AnimeSubtype
 import io.github.drumber.kitsune.data.model.resource.MangaSubtype
@@ -95,6 +97,42 @@ class Converters {
 
     @TypeConverter
     fun stringToStatus(json: String?): Status? {
+        return if (json != null) {
+            objectMapper.readValue(json)
+        } else {
+            null
+        }
+    }
+
+    @TypeConverter
+    fun reactionSkipToString(reactionSkip: ReactionSkip?): String? {
+        return if (reactionSkip != null) {
+            objectMapper.writeValueAsString(reactionSkip)
+        } else {
+            null
+        }
+    }
+
+    @TypeConverter
+    fun stringToReactionSkip(json: String?): ReactionSkip? {
+        return if (json != null) {
+            objectMapper.readValue(json)
+        } else {
+            null
+        }
+    }
+
+    @TypeConverter
+    fun remoteKeyTypeToString(remoteKeyType: RemoteKeyType?): String? {
+        return if (remoteKeyType != null) {
+            objectMapper.writeValueAsString(remoteKeyType)
+        } else {
+            null
+        }
+    }
+
+    @TypeConverter
+    fun stringToRemoteKeyType(json: String?): RemoteKeyType? {
         return if (json != null) {
             objectMapper.readValue(json)
         } else {

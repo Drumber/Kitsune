@@ -3,7 +3,6 @@ package io.github.drumber.kitsune.ui.profile
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -12,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
@@ -114,11 +114,11 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
         }
 
         viewModel.episodeWatchProgressResponseListener = { responseData ->
-            if (responseData is ResponseData.Success) {
-                // TODO: use RemoteMediator to update item in local db instead of re-fetching all over network
-                adapter.refresh()
-            } else if (responseData is ResponseData.Error) {
-                Toast.makeText(requireContext(), "Error: ${responseData.e.message}", Toast.LENGTH_SHORT).show()
+            if (responseData is ResponseData.Error) {
+                val snackbar = Snackbar.make(binding.rvLibraryEntries, "Error: ${responseData.e.message}", Snackbar.LENGTH_LONG)
+                // solve snackbar misplacement (remove bottom margin)
+                snackbar.view.initMarginWindowInsetsListener(left = true, right = true)
+                snackbar.show()
             }
         }
     }
