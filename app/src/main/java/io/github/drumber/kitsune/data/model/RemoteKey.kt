@@ -15,5 +15,5 @@ data class RemoteKey(
 )
 
 enum class RemoteKeyType {
-    Anime, Manga, LibraryEntry
+    LibraryEntry
 }

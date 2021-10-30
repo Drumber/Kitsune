@@ -7,7 +7,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    single { AnimeRepository(get(), get()) }
+    single { AnimeRepository(get()) }
     single { MangaRepository(get()) }
     single { LibraryEntriesRepository(get(), get()) }
     single { AuthRepository(get(), get()) }

@@ -2,7 +2,6 @@ package io.github.drumber.kitsune.data.model.resource
 
 import android.os.Parcelable
 import androidx.room.Embedded
-import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.jasminb.jsonapi.annotations.Id
@@ -10,7 +9,6 @@ import com.github.jasminb.jsonapi.annotations.Type
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity(tableName = "anime_table")
 @Type("anime")
 data class Anime(
     @PrimaryKey @Id

@@ -8,8 +8,6 @@ import org.koin.dsl.module
 
 val databaseModule = module {
     single { createResourceDatabase(androidApplication()) }
-    single { get<ResourceDatabase>().animeDao() }
-    single { get<ResourceDatabase>().mangaDao() }
     single { get<ResourceDatabase>().libraryEntryDao() }
 }
 

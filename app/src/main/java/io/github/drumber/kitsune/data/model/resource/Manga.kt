@@ -2,14 +2,12 @@ package io.github.drumber.kitsune.data.model.resource
 
 import android.os.Parcelable
 import androidx.room.Embedded
-import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Type
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity(tableName = "manga_table")
 @Type("manga")
 data class Manga(
     @PrimaryKey @Id
