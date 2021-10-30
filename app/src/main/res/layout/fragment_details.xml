@@ -154,6 +154,15 @@
 
                     </LinearLayout>
 
+                    <include
+                        layout="@layout/section_details_trailer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        app:isVisible="@{!TextUtils.isEmpty(data.trailerUrl)}"
+                        app:videoUrl="@{data.trailerUrl}"
+                        app:coverUrl="@{data.trailerCoverUrl}" />
+
                 </LinearLayout>
 
             </androidx.core.widget.NestedScrollView>

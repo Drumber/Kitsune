@@ -3,8 +3,8 @@ package io.github.drumber.kitsune.data.model.resource
 import android.content.Context
 import android.os.Parcelable
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.data.model.TitlesPref
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.originalOrDown
 import io.github.drumber.kitsune.util.smallOrHigher
 import io.github.drumber.kitsune.util.toDate
@@ -141,6 +141,16 @@ sealed class ResourceAdapter(
         }
         return null
     }
+
+    val trailerUrl: String?
+        get() = if (this is AnimeResource && !anime.youtubeVideoId.isNullOrBlank()) {
+            "https://www.youtube.com/watch?v=${anime.youtubeVideoId}"
+        } else null
+
+    val trailerCoverUrl: String?
+        get() = if (this is AnimeResource && !anime.youtubeVideoId.isNullOrBlank()) {
+            "https://img.youtube.com/vi/${anime.youtubeVideoId}/mqdefault.jpg"
+        } else null
 
     fun isAnime() = this is AnimeResource
 

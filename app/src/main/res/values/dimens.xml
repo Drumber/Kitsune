@@ -9,6 +9,10 @@
     <dimen name="library_entry_img_width">106dp</dimen>
     <dimen name="library_entry_img_height">150dp</dimen>
 
+    <!-- Details Fragment -->
+    <dimen name="details_trailer_height">150dp</dimen>
+
+    <!-- Profile Fragment -->
     <dimen name="profile_picture_expanded">75dp</dimen>
     <dimen name="profile_picture_collapsed">10dp</dimen>
     <dimen name="profile_picture_offset_expanded">10dp</dimen>

@@ -1,10 +1,14 @@
 package io.github.drumber.kitsune.util
 
+import android.content.Intent
+import android.net.Uri
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import at.blogc.android.views.ExpandableTextView
+import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 
 object BindingAdapter {
@@ -30,6 +34,26 @@ object BindingAdapter {
     @BindingAdapter("isVisible")
     fun isVisible(view: View, isVisible: Boolean) {
         view.isVisible = isVisible
+    }
+
+    @JvmStatic
+    @BindingAdapter("imageUrl")
+    fun loadGlideImage(view: ImageView, url: String?) {
+        GlideApp.with(view)
+            .load(url)
+            .centerCrop()
+            .placeholder(R.drawable.ic_insert_photo_48)
+            .into(view)
+    }
+
+    @JvmStatic
+    @BindingAdapter("openOnClick")
+    fun openUrl(view: View, url: String?) {
+        if (url.isNullOrBlank()) return
+        view.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            it.context.startActivity(intent)
+        }
     }
 
 }
