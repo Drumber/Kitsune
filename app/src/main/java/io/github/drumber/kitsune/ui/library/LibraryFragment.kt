@@ -1,0 +1,119 @@
+package io.github.drumber.kitsune.ui.library
+
+import android.os.Bundle
+import android.view.MenuItem
+import android.view.View
+import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.snackbar.Snackbar
+import io.github.drumber.kitsune.GlideApp
+import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
+import io.github.drumber.kitsune.databinding.FragmentLibraryBinding
+import io.github.drumber.kitsune.ui.adapter.LibraryEntriesAdapter
+import io.github.drumber.kitsune.ui.adapter.ResourceLoadStateAdapter
+import io.github.drumber.kitsune.ui.base.BaseFragment
+import io.github.drumber.kitsune.util.ResponseData
+import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
+import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.initWindowInsetsListener
+import kotlinx.coroutines.flow.collectLatest
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
+class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
+    LibraryEntriesAdapter.LibraryEntryActionListener,
+    NavigationBarView.OnItemReselectedListener {
+
+    private val binding: FragmentLibraryBinding by viewBinding()
+
+    private val viewModel: LibraryViewModel by viewModel()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.apply {
+            toolbar.initWindowInsetsListener(consume = false)
+            rvLibraryEntries.initPaddingWindowInsetsListener(left = true, right = true)
+        }
+
+        initRecyclerView()
+    }
+
+    private fun initRecyclerView() {
+        val glide = GlideApp.with(this)
+        val adapter = LibraryEntriesAdapter(glide, this)
+
+        adapter.addLoadStateListener { state ->
+            if(view?.parent != null) {
+                val isNotLoading = state.mediator?.refresh is LoadState.NotLoading || state.source.refresh is LoadState.NotLoading
+                binding.apply {
+                    rvLibraryEntries.isVisible = isNotLoading
+                    layoutLoading.apply {
+                        root.isVisible = !isNotLoading
+                        progressBar.isVisible = state.refresh is LoadState.Loading
+                        btnRetry.isVisible = state.refresh is LoadState.Error
+                        tvError.isVisible = state.refresh is LoadState.Error
+                    }
+                }
+            }
+        }
+
+        binding.rvLibraryEntries.apply {
+            this.adapter = adapter.withLoadStateHeaderAndFooter(
+                header = ResourceLoadStateAdapter(adapter),
+                footer = ResourceLoadStateAdapter(adapter)
+            )
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            viewModel.dataSource.collectLatest {
+                adapter.submitData(it)
+            }
+        }
+
+        viewModel.episodeWatchProgressResponseListener = { responseData ->
+            if (responseData is ResponseData.Error) {
+                val snackbar = Snackbar.make(binding.rvLibraryEntries, "Error: ${responseData.e.message}", Snackbar.LENGTH_LONG)
+                // solve snackbar misplacement (remove bottom margin)
+                snackbar.view.initMarginWindowInsetsListener(left = true, right = true)
+                snackbar.show()
+            }
+        }
+    }
+
+    override fun onItemClicked(item: LibraryEntry) {
+        val resource = item.anime ?: item.manga
+        if (resource != null) {
+            val resourceAdapter = ResourceAdapter.fromResource(resource)
+            val action = LibraryFragmentDirections.actionLibraryFragmentToDetailsFragment(resourceAdapter)
+            findNavController().navigate(action)
+        }
+    }
+
+    override fun onEpisodeWatchedClicked(item: LibraryEntry) {
+        viewModel.markEpisodeWatched(item)
+    }
+
+    override fun onEpisodeUnwatchedClicked(item: LibraryEntry) {
+        viewModel.markEpisodeUnwatched(item)
+    }
+
+    override fun onNavigationItemReselected(item: MenuItem) {
+        binding.rvLibraryEntries.smoothScrollToPosition(0)
+        binding.appBarLayout.setExpanded(true)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.episodeWatchProgressResponseListener = null
+    }
+
+}

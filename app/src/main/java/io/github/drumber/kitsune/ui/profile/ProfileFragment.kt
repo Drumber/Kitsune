@@ -6,28 +6,19 @@ import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.library.LibraryEntry
-import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
-import io.github.drumber.kitsune.ui.adapter.LibraryEntriesAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.ui.widget.ProfilePictureBehavior
 import io.github.drumber.kitsune.util.*
-import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
-    LibraryEntriesAdapter.LibraryEntryActionListener {
+class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
 
     private val binding: FragmentProfileBinding by viewBinding()
 
@@ -94,51 +85,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
 
             nsvContent.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
         }
-
-        initRecyclerView()
-    }
-
-    private fun initRecyclerView() {
-        val glide = GlideApp.with(this)
-        val adapter = LibraryEntriesAdapter(glide, this)
-
-        binding.rvLibraryEntries.apply {
-            this.adapter = adapter
-            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-        }
-
-        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-            viewModel.dataSource.collectLatest {
-                adapter.submitData(it)
-            }
-        }
-
-        viewModel.episodeWatchProgressResponseListener = { responseData ->
-            if (responseData is ResponseData.Error) {
-                val snackbar = Snackbar.make(binding.rvLibraryEntries, "Error: ${responseData.e.message}", Snackbar.LENGTH_LONG)
-                // solve snackbar misplacement (remove bottom margin)
-                snackbar.view.initMarginWindowInsetsListener(left = true, right = true)
-                snackbar.show()
-            }
-        }
-    }
-
-    override fun onItemClicked(item: LibraryEntry) {
-        val resource = item.anime ?: item.manga
-        if (resource != null) {
-            val resourceAdapter = ResourceAdapter.fromResource(resource)
-            val action =
-                ProfileFragmentDirections.actionProfileFragmentToDetailsFragment(resourceAdapter)
-            findNavController().navigate(action)
-        }
-    }
-
-    override fun onEpisodeWatchedClicked(item: LibraryEntry) {
-        viewModel.markEpisodeWatched(item)
-    }
-
-    override fun onEpisodeUnwatchedClicked(item: LibraryEntry) {
-        viewModel.markEpisodeUnwatched(item)
     }
 
     override fun onResume() {
@@ -153,11 +99,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
         if (activity?.isLightStatusBar() == false && context?.isNightMode() == false) {
             activity?.setLightStatusBar()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.episodeWatchProgressResponseListener = null
     }
 
 }

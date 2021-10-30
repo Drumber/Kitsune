@@ -45,7 +45,6 @@ class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<Resou
             right = true,
             consume = false
         )
-
     }
 
     private fun initExploreSections() {

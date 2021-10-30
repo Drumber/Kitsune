@@ -100,13 +100,6 @@
                     android:layout_gravity="center"
                     android:text="@string/title_authentication" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_library_entries"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    tools:listitem="@layout/item_library_entry" />
-
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
