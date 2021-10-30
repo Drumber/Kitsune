@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.ui.details
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -10,6 +11,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
@@ -17,7 +19,8 @@ import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.util.*
 
-class DetailsFragment : BaseFragment(R.layout.fragment_details, true) {
+class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
+    NavigationBarView.OnItemReselectedListener {
 
     private val args: DetailsFragmentArgs by navArgs()
 
@@ -74,6 +77,10 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true) {
 
     private fun goBack() {
         findNavController().navigateUp()
+    }
+
+    override fun onNavigationItemReselected(item: MenuItem) {
+        goBack()
     }
 
     override fun onPause() {

@@ -16,7 +16,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{title}"
-            android:padding="5dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="5dp"
+            android:paddingBottom="5dp"
             android:ellipsize="end"
             tools:text="Row Title" />
 
@@ -25,7 +27,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@{value}"
-            android:padding="5dp"
+            android:paddingTop="5dp"
+            android:paddingStart="5dp"
+            android:paddingBottom="5dp"
             android:ellipsize="end"
             tools:text="Row Value" />
     </TableRow>
