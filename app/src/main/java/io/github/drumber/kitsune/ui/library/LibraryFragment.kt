@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.ui.library
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.GlideApp
@@ -19,6 +21,7 @@ import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.databinding.FragmentLibraryBinding
 import io.github.drumber.kitsune.ui.adapter.LibraryEntriesAdapter
 import io.github.drumber.kitsune.ui.adapter.ResourceLoadStateAdapter
+import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.util.ResponseData
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
@@ -40,7 +43,27 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
         binding.apply {
             toolbar.initWindowInsetsListener(consume = false)
-            rvLibraryEntries.initPaddingWindowInsetsListener(left = true, right = true)
+            rvLibraryEntries.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
+            layoutNotLoggedIn.initPaddingWindowInsetsListener(left = true, top = true, right = true, consume = false)
+
+            btnLogin.setOnClickListener {
+                val intent = Intent(requireActivity(), AuthenticationActivity::class.java)
+                startActivity(intent)
+            }
+        }
+
+        viewModel.userRepository.userLiveData.observe(viewLifecycleOwner) { user ->
+            val isLoggedIn = user != null
+            binding.apply {
+                rvLibraryEntries.isVisible = isLoggedIn
+                nsvNotLoggedIn.isVisible = !isLoggedIn
+                // disable toolbar scrolling if library is not shown (not logged in)
+                (toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags = if (isLoggedIn) {
+                    AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP
+                } else {
+                    AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
+                }
+            }
         }
 
         initRecyclerView()

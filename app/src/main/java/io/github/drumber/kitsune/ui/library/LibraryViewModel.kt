@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class LibraryViewModel(
-    userRepository: UserRepository,
+    val userRepository: UserRepository,
     private val libraryEntriesRepository: LibraryEntriesRepository,
     private val libraryEntriesService: LibraryEntriesService,
     private val libraryEntryDao: LibraryEntryDao
