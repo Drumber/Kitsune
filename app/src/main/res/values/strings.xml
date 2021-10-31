@@ -102,6 +102,7 @@
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
+    <string name="action_log_in">Log in</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Invalid password</string>
     <string name="login_failed">"Login failed"</string>
@@ -114,5 +115,7 @@
     <string name="library_not_logged_in_title">Log in to access your library</string>
     <string name="library_not_logged_in_text">Log in to your Kitsu Account to manage your library and get access to all features.</string>
     <string name="library_not_logged_in_button">Log in to Kitsu</string>
+
+    <string name="info_log_in_required">Log in to access all features.</string>
 
 </resources>

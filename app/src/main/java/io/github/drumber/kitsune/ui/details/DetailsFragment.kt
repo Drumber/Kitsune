@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.ui.details
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -12,10 +13,12 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.library.getStringResId
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
+import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.util.*
@@ -90,9 +93,19 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     }
 
     private fun showManageLibraryBottomSheet() {
-        viewModel.resourceAdapter.value?.let {
-            val action = DetailsFragmentDirections.actionDetailsFragmentToManageLibraryBottomSheet(it)
-            findNavController().navigate(action)
+        if (viewModel.isLoggedIn()) {
+            viewModel.resourceAdapter.value?.let {
+                val action = DetailsFragmentDirections.actionDetailsFragmentToManageLibraryBottomSheet(it)
+                findNavController().navigate(action)
+            }
+        } else {
+            Snackbar.make(binding.btnManageLibrary, R.string.info_log_in_required, Snackbar.LENGTH_LONG).apply {
+                view.initMarginWindowInsetsListener(left = true, right = true)
+                setAction(R.string.action_log_in) {
+                    val intent = Intent(requireActivity(), AuthenticationActivity::class.java)
+                    startActivity(intent)
+                }
+            }.show()
         }
     }
 

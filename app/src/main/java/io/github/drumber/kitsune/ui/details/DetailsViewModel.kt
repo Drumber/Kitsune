@@ -20,6 +20,8 @@ class DetailsViewModel(
     private val libraryEntryDao: LibraryEntryDao
 ) : ViewModel() {
 
+    fun isLoggedIn() = userRepository.hasUser
+
     private val _resourceAdapter = MutableLiveData<ResourceAdapter>()
     val resourceAdapter: LiveData<ResourceAdapter>
         get() = _resourceAdapter
