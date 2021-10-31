@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
+import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.resource.Anime
 import io.github.drumber.kitsune.data.model.resource.Manga
 import kotlinx.parcelize.Parcelize
@@ -52,4 +53,12 @@ enum class ReactionSkip {
     Unskipped,
     Skipped,
     Ignored
+}
+
+fun Status.getStringResId() = when (this) {
+    Status.Completed -> R.string.library_status_completed
+    Status.Current -> R.string.library_status_watching
+    Status.Dropped -> R.string.library_status_dropped
+    Status.OnHold -> R.string.library_status_on_hold
+    Status.Planned -> R.string.library_status_planned
 }

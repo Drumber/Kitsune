@@ -14,6 +14,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 sealed class ResourceAdapter(
+    val id: String,
     val title: String,
     val titles: Titles,
     val description: String,
@@ -156,6 +157,7 @@ sealed class ResourceAdapter(
 
     @Parcelize
     class AnimeResource(val anime: Anime) : ResourceAdapter(
+        id = anime.id,
         title = getTitle(anime.titles, anime.canonicalTitle),
         titles = anime.titles.require(),
         description = anime.description.orEmpty(),
@@ -177,6 +179,7 @@ sealed class ResourceAdapter(
 
     @Parcelize
     class MangaResource(val manga: Manga) : ResourceAdapter(
+        id = manga.id,
         title = getTitle(manga.titles, manga.canonicalTitle),
         titles = manga.titles.require(),
         description = manga.description.orEmpty(),

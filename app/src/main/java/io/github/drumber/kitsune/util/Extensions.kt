@@ -58,7 +58,7 @@ fun Activity.isLightStatusBar(): Boolean {
     }
 }
 
-inline fun Context.isNightMode(): Boolean {
+fun Context.isNightMode(): Boolean {
     return (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 }
 

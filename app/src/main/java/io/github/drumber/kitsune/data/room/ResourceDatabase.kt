@@ -8,7 +8,7 @@ import io.github.drumber.kitsune.data.model.library.LibraryEntry
 
 @Database(
     entities = [LibraryEntry::class, RemoteKey::class],
-    version = 8,
+    version = 9,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

@@ -14,6 +14,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.model.library.getStringResId
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
@@ -57,6 +58,11 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 .into(binding.ivThumbnail)
         }
 
+        viewModel.libraryEntry.observe(viewLifecycleOwner) {
+            it.status?.let { status ->
+                binding.btnManageLibrary.setText(status.getStringResId())
+            }
+        }
 
         binding.apply {
             content.initPaddingWindowInsetsListener(left = true, right = true)
