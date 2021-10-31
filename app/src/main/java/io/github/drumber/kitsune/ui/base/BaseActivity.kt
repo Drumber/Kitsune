@@ -9,6 +9,7 @@ import android.util.TypedValue
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.util.setStatusBarColor
@@ -19,6 +20,7 @@ abstract class BaseActivity(
 ) : AppCompatActivity(contentLayoutId) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
 
         // get surface color

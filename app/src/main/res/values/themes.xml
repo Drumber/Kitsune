@@ -31,6 +31,13 @@
         <item name="preferenceTheme">@style/Theme.Kitsune.PreferenceThemeOverlay</item>
     </style>
 
+    <!-- SplashScreen theme -->
+    <style name="Theme.Kitsune.SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/background</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.Kitsune.DayNight</item>
+    </style>
+
     <style name="Theme.Kitsune.FullScreenDialog" parent="Theme.Kitsune.DayNight">
         <item name="android:windowIsFloating">false</item>
     </style>
