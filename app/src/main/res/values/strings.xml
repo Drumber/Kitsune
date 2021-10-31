@@ -51,6 +51,13 @@
     <string name="status_unreleased">Unreleased</string>
     <string name="status_upcoming">Upcoming</string>
 
+    <string name="library_status_watching">Watching</string>
+    <string name="library_status_planned">Want to Watch</string>
+    <string name="library_status_completed">Completed</string>
+    <string name="library_status_on_hold">On Hold</string>
+    <string name="library_status_dropped">Dropped</string>
+    <string name="library_action_add">Add to Library</string>
+
     <string name="data_rank">Rank #%d</string>
     <string name="data_popularity">Popularity #%d</string>
     <string name="data_kitsu_score">Kitsu Score %s%%</string>

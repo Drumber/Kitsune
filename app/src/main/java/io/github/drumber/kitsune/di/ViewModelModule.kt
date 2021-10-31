@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.di
 
 import io.github.drumber.kitsune.ui.authentication.LoginViewModel
+import io.github.drumber.kitsune.ui.details.DetailsViewModel
 import io.github.drumber.kitsune.ui.library.LibraryViewModel
 import io.github.drumber.kitsune.ui.main.MainActivityViewModel
 import io.github.drumber.kitsune.ui.main.MainFragmentViewModel
@@ -20,4 +21,5 @@ val viewModelModule = module {
     viewModel { LibraryViewModel(get(), get(), get(), get()) }
     viewModel { LoginViewModel(get()) }
     viewModel { ProfileViewModel(get()) }
+    viewModel { DetailsViewModel() }
 }

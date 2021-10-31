@@ -117,10 +117,22 @@
                             layout="@layout/section_details_stats"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
                             android:layout_marginStart="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_above="@id/btn_manage_library"
                             android:layout_toEndOf="@id/iv_thumbnail"
                             app:data="@{data}" />
+
+                        <Button
+                            android:id="@+id/btn_manage_library"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_toEndOf="@id/iv_thumbnail"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignBottom="@id/iv_thumbnail"
+                            android:text="@string/library_action_add"
+                            android:textAllCaps="false" />
 
                     </RelativeLayout>
 

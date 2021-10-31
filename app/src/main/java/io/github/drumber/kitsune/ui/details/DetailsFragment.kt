@@ -18,6 +18,7 @@ import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.util.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     NavigationBarView.OnItemReselectedListener {
@@ -25,6 +26,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     private val args: DetailsFragmentArgs by navArgs()
 
     private val binding: FragmentDetailsBinding by viewBinding()
+
+    private val viewModel: DetailsViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,13 +38,12 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
         initAppBar()
 
-        val model = args.model
-        val glide = GlideApp.with(this)
+        viewModel.initResourceAdapter(args.model)
 
-        binding.apply {
-            data = model
+        viewModel.resourceAdapter.observe(viewLifecycleOwner) { model ->
+            binding.data = model
 
-            content.initPaddingWindowInsetsListener(left = true, right = true)
+            val glide = GlideApp.with(this)
 
             glide.load(model.coverImage)
                 .centerCrop()
@@ -53,6 +55,12 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 .transform(CenterCrop(), RoundedCorners(8))
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivThumbnail)
+        }
+
+
+        binding.apply {
+            content.initPaddingWindowInsetsListener(left = true, right = true)
+            btnManageLibrary.setOnClickListener { showManageLibraryBottomSheet() }
         }
     }
 
@@ -72,6 +80,13 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 windowInsets
             }
             toolbar.initWindowInsetsListener(consume = false)
+        }
+    }
+
+    private fun showManageLibraryBottomSheet() {
+        viewModel.resourceAdapter.value?.let {
+            val action = DetailsFragmentDirections.actionDetailsFragmentToManageLibraryBottomSheet(it)
+            findNavController().navigate(action)
         }
     }
 

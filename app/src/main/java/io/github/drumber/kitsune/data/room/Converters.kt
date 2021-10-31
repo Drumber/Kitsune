@@ -105,6 +105,24 @@ class Converters {
     }
 
     @TypeConverter
+    fun libraryStatusToString(status: io.github.drumber.kitsune.data.model.library.Status?): String? {
+        return if (status != null) {
+            objectMapper.writeValueAsString(status)
+        } else {
+            null
+        }
+    }
+
+    @TypeConverter
+    fun stringToLibraryStatus(json: String?): io.github.drumber.kitsune.data.model.library.Status? {
+        return if (json != null) {
+            objectMapper.readValue(json)
+        } else {
+            null
+        }
+    }
+
+    @TypeConverter
     fun reactionSkipToString(reactionSkip: ReactionSkip?): String? {
         return if (reactionSkip != null) {
             objectMapper.writeValueAsString(reactionSkip)

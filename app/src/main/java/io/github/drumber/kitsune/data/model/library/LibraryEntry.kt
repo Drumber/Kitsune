@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
@@ -19,7 +20,7 @@ data class LibraryEntry(
     var id: String = "",
     var createdAt: String? = null,
     var updatedAt: String? = null,
-    var status: String? = null,
+    var status: Status? = null,
     var progress: Int? = null,
     var volumesOwned: Int? = null,
     var reconsuming: Boolean? = null,
@@ -38,6 +39,14 @@ data class LibraryEntry(
     @Relationship("manga")
     var manga: Manga? = null
 ): Parcelable
+
+enum class Status {
+    Completed,
+    Current,
+    Dropped,
+    @JsonProperty("on_hold") OnHold,
+    Planned
+}
 
 enum class ReactionSkip {
     Unskipped,
