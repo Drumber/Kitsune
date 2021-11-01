@@ -23,4 +23,9 @@ interface LibraryEntriesService {
         @Body libraryEntry: JSONAPIDocument<LibraryEntry>
     ): JSONAPIDocument<LibraryEntry>
 
+    @POST("library-entries")
+    suspend fun postLibraryEntry(
+        @Body libraryEntry: JSONAPIDocument<LibraryEntry>
+    ): JSONAPIDocument<LibraryEntry>
+
 }

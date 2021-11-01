@@ -4,9 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="io.github.drumber.kitsune.data.model.library.Status" />
         <variable
             name="title"
             type="String" />
+        <variable
+            name="instance"
+            type="io.github.drumber.kitsune.ui.details.ManageLibraryBottomSheet" />
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -29,26 +33,31 @@
 
             <include
                 layout="@layout/item_list_option"
+                app:listener="@{() -> instance.onStatusClicked(Status.Current)}"
                 app:title="@{@string/library_status_watching}"
                 app:icon="@{@drawable/ic_incomplete_circle_24}" />
 
             <include
                 layout="@layout/item_list_option"
+                app:listener="@{() -> instance.onStatusClicked(Status.Planned)}"
                 app:title="@{@string/library_status_planned}"
                 app:icon="@{@drawable/ic_bookmark_added_24}" />
 
             <include
                 layout="@layout/item_list_option"
+                app:listener="@{() -> instance.onStatusClicked(Status.Completed)}"
                 app:title="@{@string/library_status_completed}"
                 app:icon="@{@drawable/ic_done_24}" />
 
             <include
                 layout="@layout/item_list_option"
+                app:listener="@{() -> instance.onStatusClicked(Status.OnHold)}"
                 app:title="@{@string/library_status_on_hold}"
                 app:icon="@{@drawable/ic_watch_later_24}" />
 
             <include
                 layout="@layout/item_list_option"
+                app:listener="@{() -> instance.onStatusClicked(Status.Dropped)}"
                 app:title="@{@string/library_status_dropped}"
                 app:icon="@{@drawable/ic_cancel_presentation_24}"/>
 

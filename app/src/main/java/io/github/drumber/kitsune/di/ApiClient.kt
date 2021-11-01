@@ -61,7 +61,7 @@ private fun createHttpClient(authenticationInterceptor: AuthenticationIntercepto
     .build()
 
 private fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
-    level = HttpLoggingInterceptor.Level.BASIC
+    level = HttpLoggingInterceptor.Level.BODY
     redactHeader("Authorization")
 }
 

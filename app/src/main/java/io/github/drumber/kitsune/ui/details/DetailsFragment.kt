@@ -2,13 +2,16 @@ package io.github.drumber.kitsune.ui.details
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -16,6 +19,7 @@ import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.model.library.Status
 import io.github.drumber.kitsune.data.model.library.getStringResId
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
@@ -29,14 +33,24 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
     private val args: DetailsFragmentArgs by navArgs()
 
-    private val binding: FragmentDetailsBinding by viewBinding()
+    private var _binding: FragmentDetailsBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: DetailsViewModel by viewModel()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentDetailsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if(context?.isNightMode() == false) {
+        if (context?.isNightMode() == false) {
             activity?.clearLightStatusBar()
         }
 
@@ -71,21 +85,33 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             content.initPaddingWindowInsetsListener(left = true, right = true)
             btnManageLibrary.setOnClickListener { showManageLibraryBottomSheet() }
         }
+
+        setFragmentResultListener(ManageLibraryBottomSheet.REQUEST_KEY) { requestKey, bundle ->
+            val libraryEntryStatus = bundle.get(ManageLibraryBottomSheet.BUNDLE_STATUS) as? Status
+            libraryEntryStatus?.let { viewModel.updateLibraryEntryStatus(it) }
+        }
     }
 
     private fun initAppBar() {
         binding.apply {
-            appBarLayout.addOnOffsetChangedListener(FadingToolbarOffsetListener(requireActivity(), toolbar))
+            appBarLayout.addOnOffsetChangedListener(
+                FadingToolbarOffsetListener(
+                    requireActivity(),
+                    toolbar
+                )
+            )
 
             toolbar.setNavigationOnClickListener { goBack() }
 
             val defaultTitleMarginStart = collapsingToolbar.expandedTitleMarginStart
-            val defaultTitleMarginEnd= collapsingToolbar.expandedTitleMarginStart
+            val defaultTitleMarginEnd = collapsingToolbar.expandedTitleMarginStart
             ViewCompat.setOnApplyWindowInsetsListener(collapsingToolbar) { view, windowInsets ->
                 val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
                 val isRtl = ViewCompat.getLayoutDirection(view) == ViewCompat.LAYOUT_DIRECTION_RTL
-                collapsingToolbar.expandedTitleMarginStart = defaultTitleMarginStart + if(isRtl) insets.right else insets.left
-                collapsingToolbar.expandedTitleMarginEnd = defaultTitleMarginEnd + if(isRtl) insets.left else insets.right
+                collapsingToolbar.expandedTitleMarginStart =
+                    defaultTitleMarginStart + if (isRtl) insets.right else insets.left
+                collapsingToolbar.expandedTitleMarginEnd =
+                    defaultTitleMarginEnd + if (isRtl) insets.left else insets.right
                 windowInsets
             }
             toolbar.initWindowInsetsListener(consume = false)
@@ -94,12 +120,18 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
     private fun showManageLibraryBottomSheet() {
         if (viewModel.isLoggedIn()) {
-            viewModel.resourceAdapter.value?.let {
-                val action = DetailsFragmentDirections.actionDetailsFragmentToManageLibraryBottomSheet(it)
-                findNavController().navigate(action)
+            viewModel.resourceAdapter.value?.let { resourceAdapter ->
+                val sheetManageLibrary = ManageLibraryBottomSheet()
+                val bundle = bundleOf(ManageLibraryBottomSheet.BUNDLE_TITLE to resourceAdapter.title)
+                sheetManageLibrary.arguments = bundle
+                sheetManageLibrary.show(parentFragmentManager, ManageLibraryBottomSheet.TAG)
             }
         } else {
-            Snackbar.make(binding.btnManageLibrary, R.string.info_log_in_required, Snackbar.LENGTH_LONG).apply {
+            Snackbar.make(
+                binding.btnManageLibrary,
+                R.string.info_log_in_required,
+                Snackbar.LENGTH_LONG
+            ).apply {
                 view.initMarginWindowInsetsListener(left = true, right = true)
                 setAction(R.string.action_log_in) {
                     val intent = Intent(requireActivity(), AuthenticationActivity::class.java)
@@ -119,9 +151,14 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
     override fun onPause() {
         super.onPause()
-        if(activity?.isLightStatusBar() == false && context?.isNightMode() == false) {
+        if (activity?.isLightStatusBar() == false && context?.isNightMode() == false) {
             activity?.setLightStatusBar()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }

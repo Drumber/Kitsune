@@ -46,9 +46,6 @@
         <argument
             android:name="model"
             app:argType="io.github.drumber.kitsune.data.model.resource.ResourceAdapter" />
-        <action
-            android:id="@+id/action_details_fragment_to_manageLibraryBottomSheet"
-            app:destination="@id/manage_library_sheet" />
     </fragment>
     <fragment
         android:id="@+id/explore_fragment"
@@ -78,12 +75,4 @@
             android:id="@+id/action_library_fragment_to_details_fragment"
             app:destination="@id/details_fragment" />
     </fragment>
-    <dialog
-        android:id="@+id/manage_library_sheet"
-        android:name="io.github.drumber.kitsune.ui.details.ManageLibraryBottomSheet"
-        android:label="ManageLibraryBottomSheet" >
-        <argument
-            android:name="model"
-            app:argType="io.github.drumber.kitsune.data.model.resource.ResourceAdapter" />
-    </dialog>
 </navigation>

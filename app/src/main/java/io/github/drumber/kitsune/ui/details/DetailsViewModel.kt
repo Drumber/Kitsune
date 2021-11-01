@@ -4,7 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.jasminb.jsonapi.JSONAPIDocument
+import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.library.Status
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.room.LibraryEntryDao
@@ -13,6 +16,8 @@ import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.reflect.KMutableProperty
+import kotlin.reflect.full.memberProperties
 
 class DetailsViewModel(
     private val userRepository: UserRepository,
@@ -64,6 +69,48 @@ class DetailsViewModel(
                 }
             } catch (e: Exception) {
                 logE("Failed to load library entry.", e)
+            }
+        }
+    }
+
+    fun updateLibraryEntryStatus(status: Status) {
+        val userId = userRepository.user?.id ?: return
+        val resourceAdapter = resourceAdapter.value ?: return
+        val libraryEntryId = libraryEntry.value?.id
+
+        val libraryEntry = LibraryEntry(status = status)
+        libraryEntry.user = User(id = userId)
+
+        if (resourceAdapter.isAnime()) {
+            libraryEntry.anime = (resourceAdapter as ResourceAdapter.AnimeResource).anime
+        } else {
+            libraryEntry.manga = (resourceAdapter as ResourceAdapter.MangaResource).manga
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = if (libraryEntryId.isNullOrBlank()) { // post new library entry
+                val prop = libraryEntry::class.memberProperties.find { it.name == "id" }
+                if (prop is KMutableProperty<*>) {
+                    prop.setter.call(libraryEntry, null)
+                }
+                try {
+                    libraryEntriesService.postLibraryEntry(JSONAPIDocument(libraryEntry))
+                } catch (e: Exception) {
+                    logE("Failed to post new library entry.", e)
+                    null
+                }
+            } else { // update existing library entry
+                libraryEntry.id = libraryEntryId
+                try {
+                    libraryEntriesService.updateLibraryEntry(libraryEntryId, JSONAPIDocument(libraryEntry))
+                } catch (e: Exception) {
+                    logE("Failed to update library entry.", e)
+                    null
+                }
+            }
+
+            response?.get()?.let {
+                _libraryEntry.postValue(it)
             }
         }
     }

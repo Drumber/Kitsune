@@ -13,6 +13,9 @@
         <variable
             name="subtitle"
             type="String" />
+        <variable
+            name="listener"
+            type="io.github.drumber.kitsune.util.ItemClickListener" />
     </data>
 
     <RelativeLayout
@@ -20,6 +23,7 @@
         android:layout_height="wrap_content"
         android:minHeight="56dp"
         android:layout_marginVertical="4dp"
+        android:onClick="@{() -> listener.onItemClicked()}"
         android:clickable="true"
         android:focusable="true"
         android:background="@drawable/selectable_item_background">

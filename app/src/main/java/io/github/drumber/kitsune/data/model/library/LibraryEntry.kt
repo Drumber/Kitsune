@@ -3,12 +3,14 @@ package io.github.drumber.kitsune.data.model.library
 import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.model.resource.Anime
 import io.github.drumber.kitsune.data.model.resource.Manga
 import kotlinx.parcelize.Parcelize
@@ -38,15 +40,18 @@ data class LibraryEntry(
     var anime: Anime? = null,
     @Embedded(prefix = "manga_")
     @Relationship("manga")
-    var manga: Manga? = null
+    var manga: Manga? = null,
+    @Ignore
+    @Relationship("user")
+    var user: User? = null
 ): Parcelable
 
 enum class Status {
-    Completed,
-    Current,
-    Dropped,
+    @JsonProperty("completed") Completed,
+    @JsonProperty("current") Current,
+    @JsonProperty("dropped") Dropped,
     @JsonProperty("on_hold") OnHold,
-    Planned
+    @JsonProperty("planned") Planned
 }
 
 enum class ReactionSkip {
