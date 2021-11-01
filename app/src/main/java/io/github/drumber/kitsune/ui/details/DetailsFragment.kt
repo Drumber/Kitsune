@@ -42,7 +42,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -76,9 +76,9 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
 
         viewModel.libraryEntry.observe(viewLifecycleOwner) {
-            it.status?.let { status ->
+            it?.status?.let { status ->
                 binding.btnManageLibrary.setText(status.getStringResId())
-            }
+            } ?: binding.btnManageLibrary.setText(R.string.library_action_add)
         }
 
         binding.apply {
@@ -86,9 +86,16 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             btnManageLibrary.setOnClickListener { showManageLibraryBottomSheet() }
         }
 
-        setFragmentResultListener(ManageLibraryBottomSheet.REQUEST_KEY) { requestKey, bundle ->
+        setFragmentResultListener(ManageLibraryBottomSheet.STATUS_REQUEST_KEY) { _, bundle ->
             val libraryEntryStatus = bundle.get(ManageLibraryBottomSheet.BUNDLE_STATUS) as? Status
             libraryEntryStatus?.let { viewModel.updateLibraryEntryStatus(it) }
+        }
+
+        setFragmentResultListener(ManageLibraryBottomSheet.REMOVE_REQUEST_KEY) { _, bundle ->
+            val shouldRemove = !bundle.getBoolean(ManageLibraryBottomSheet.BUNDLE_EXISTS)
+            if (shouldRemove) {
+                viewModel.removeLibraryEntry()
+            }
         }
     }
 
@@ -122,7 +129,10 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         if (viewModel.isLoggedIn()) {
             viewModel.resourceAdapter.value?.let { resourceAdapter ->
                 val sheetManageLibrary = ManageLibraryBottomSheet()
-                val bundle = bundleOf(ManageLibraryBottomSheet.BUNDLE_TITLE to resourceAdapter.title)
+                val bundle = bundleOf(
+                    ManageLibraryBottomSheet.BUNDLE_TITLE to resourceAdapter.title,
+                    ManageLibraryBottomSheet.BUNDLE_EXISTS to (viewModel.libraryEntry.value != null)
+                )
                 sheetManageLibrary.arguments = bundle
                 sheetManageLibrary.show(parentFragmentManager, ManageLibraryBottomSheet.TAG)
             }

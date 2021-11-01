@@ -56,6 +56,7 @@
     <string name="library_status_completed">Completed</string>
     <string name="library_status_on_hold">On Hold</string>
     <string name="library_status_dropped">Dropped</string>
+    <string name="library_action_remove">Remove from Library</string>
     <string name="library_action_add">Add to Library</string>
 
     <string name="data_rank">Rank #%d</string>

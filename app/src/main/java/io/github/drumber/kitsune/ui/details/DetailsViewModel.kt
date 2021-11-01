@@ -16,6 +16,7 @@ import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class DetailsViewModel(
     private val userRepository: UserRepository,
@@ -29,8 +30,8 @@ class DetailsViewModel(
     val resourceAdapter: LiveData<ResourceAdapter>
         get() = _resourceAdapter
 
-    private val _libraryEntry = MutableLiveData<LibraryEntry>()
-    val libraryEntry: LiveData<LibraryEntry>
+    private val _libraryEntry = MutableLiveData<LibraryEntry?>()
+    val libraryEntry: LiveData<LibraryEntry?>
         get() = _libraryEntry
 
     fun initResourceAdapter(resourceAdapter: ResourceAdapter) {
@@ -64,6 +65,10 @@ class DetailsViewModel(
                 val libraryEntries = libraryEntriesService.allLibraryEntries(filter.options).get()
                 if (!libraryEntries.isNullOrEmpty()) {
                     _libraryEntry.postValue(libraryEntries[0])
+                } else if (libraryEntry != null) {
+                    _libraryEntry.postValue(null)
+                    // local database cache is out of sync, remove entry from database
+                    libraryEntryDao.delete(libraryEntry)
                 }
             } catch (e: Exception) {
                 logE("Failed to load library entry.", e)
@@ -105,6 +110,23 @@ class DetailsViewModel(
 
             response?.get()?.let {
                 _libraryEntry.postValue(it)
+            }
+        }
+    }
+
+    fun removeLibraryEntry() {
+        val libraryEntry = libraryEntry.value ?: return
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = libraryEntriesService.deleteLibraryEntry(libraryEntry.id).execute()
+                if (response.isSuccessful) {
+                    _libraryEntry.postValue(null)
+                    libraryEntryDao.delete(libraryEntry)
+                } else {
+                    throw HttpException(response)
+                }
+            } catch (e: Exception) {
+                logE("Failed to remove library entry.", e)
             }
         }
     }

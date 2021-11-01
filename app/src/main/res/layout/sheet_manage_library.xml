@@ -61,6 +61,13 @@
                 app:title="@{@string/library_status_dropped}"
                 app:icon="@{@drawable/ic_cancel_presentation_24}"/>
 
+            <include
+                layout="@layout/item_list_option"
+                app:isVisible="@{instance.existsInLibrary()}"
+                app:listener="@{() -> instance.onRemoveClicked()}"
+                app:title="@{@string/library_action_remove}"
+                app:icon="@{@drawable/ic_delete_24}"/>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

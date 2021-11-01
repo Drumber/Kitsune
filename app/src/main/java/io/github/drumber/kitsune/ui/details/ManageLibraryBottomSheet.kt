@@ -26,15 +26,26 @@ class ManageLibraryBottomSheet : BottomSheetDialogFragment() {
     }
 
     fun onStatusClicked(status: Status) {
-        setFragmentResult(REQUEST_KEY, bundleOf(BUNDLE_STATUS to status))
+        setFragmentResult(STATUS_REQUEST_KEY, bundleOf(BUNDLE_STATUS to status))
         dismiss()
+    }
+
+    fun onRemoveClicked() {
+        setFragmentResult(REMOVE_REQUEST_KEY, bundleOf(BUNDLE_EXISTS to false))
+        dismiss()
+    }
+
+    fun existsInLibrary(): Boolean {
+        return arguments?.getBoolean(BUNDLE_EXISTS) ?: false
     }
 
     companion object {
         const val TAG = "manage_library_bottom_sheet"
         const val BUNDLE_TITLE = "title_bundle_key"
         const val BUNDLE_STATUS = "status_bundle_key"
-        const val REQUEST_KEY = "status_request_key"
+        const val BUNDLE_EXISTS = "status_exists_in_library"
+        const val STATUS_REQUEST_KEY = "status_request_key"
+        const val REMOVE_REQUEST_KEY = "remove_request_key"
     }
 
 }
