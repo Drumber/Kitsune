@@ -13,13 +13,14 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.model.resource.Anime
 import io.github.drumber.kitsune.data.model.resource.Manga
+import io.github.drumber.kitsune.util.EmptyStringIdHandler
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Entity(tableName = "library_table")
 @Type("libraryEntries")
 data class LibraryEntry(
-    @PrimaryKey @Id
+    @PrimaryKey @Id(EmptyStringIdHandler::class)
     var id: String = "",
     var createdAt: String? = null,
     var updatedAt: String? = null,

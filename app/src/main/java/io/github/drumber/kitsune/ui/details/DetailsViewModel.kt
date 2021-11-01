@@ -16,8 +16,6 @@ import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.reflect.KMutableProperty
-import kotlin.reflect.full.memberProperties
 
 class DetailsViewModel(
     private val userRepository: UserRepository,
@@ -89,10 +87,6 @@ class DetailsViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             val response = if (libraryEntryId.isNullOrBlank()) { // post new library entry
-                val prop = libraryEntry::class.memberProperties.find { it.name == "id" }
-                if (prop is KMutableProperty<*>) {
-                    prop.setter.call(libraryEntry, null)
-                }
                 try {
                     libraryEntriesService.postLibraryEntry(JSONAPIDocument(libraryEntry))
                 } catch (e: Exception) {

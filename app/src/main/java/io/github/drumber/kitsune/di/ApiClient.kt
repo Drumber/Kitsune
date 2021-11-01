@@ -61,7 +61,7 @@ private fun createHttpClient(authenticationInterceptor: AuthenticationIntercepto
     .build()
 
 private fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
-    level = HttpLoggingInterceptor.Level.BODY
+    level = HttpLoggingInterceptor.Level.BASIC
     redactHeader("Authorization")
 }
 
@@ -77,7 +77,7 @@ private fun createAuthService() = createService<AuthService>(
     KITSU_OAUTH_URL
 )
 
-fun createObjectMapper() = jacksonObjectMapper()
+fun createObjectMapper(): ObjectMapper = jacksonObjectMapper()
     .setSerializationInclusion(JsonInclude.Include.NON_NULL)
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
