@@ -29,6 +29,7 @@
 
         <item name="colorSearchView">@color/background</item>
         <item name="preferenceTheme">@style/Theme.Kitsune.PreferenceThemeOverlay</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.Kitsune.BottomSheetDialog</item>
     </style>
 
     <!-- SplashScreen theme -->
@@ -40,6 +41,14 @@
 
     <style name="Theme.Kitsune.FullScreenDialog" parent="Theme.Kitsune.DayNight">
         <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <style name="Theme.Kitsune.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="paddingLeftSystemWindowInsets">false</item>
+        <item name="paddingRightSystemWindowInsets">false</item>
     </style>
 
     <style name="TextAppearance.App.CollapsingToolbar.Expanded" parent="TextAppearance.Design.CollapsingToolbar.Expanded">
