@@ -30,7 +30,8 @@ data class LibraryEntry(
     var reconsuming: Boolean? = null,
     var reconsumeCount: Int? = null,
     var notes: String? = null,
-    var private: Boolean? = null,
+    @JsonProperty("private")
+    var isPrivate: Boolean? = null,
     var reactionSkipped: ReactionSkip? = null,
     var progressedAt: String? = null,
     var startedAt: String? = null,
