@@ -40,6 +40,7 @@ import io.github.drumber.kitsune.ui.base.BaseCollectionViewModel
 import io.github.drumber.kitsune.ui.search.categories.CategoriesDialogFragment
 import io.github.drumber.kitsune.util.getColor
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.navigateSafe
 import io.github.drumber.kitsune.util.toPx
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -288,7 +289,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
 
     override fun onResourceClicked(model: ResourceAdapter, options: NavOptions) {
         val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(model)
-        findNavController().navigate(action, options)
+        findNavController().navigateSafe(R.id.search_fragment, action, options)
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {

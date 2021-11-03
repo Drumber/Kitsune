@@ -124,7 +124,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         if (resource != null) {
             val resourceAdapter = ResourceAdapter.fromResource(resource)
             val action = LibraryFragmentDirections.actionLibraryFragmentToDetailsFragment(resourceAdapter)
-            findNavController().navigate(action)
+            findNavController().navigateSafe(R.id.library_fragment, action)
         }
     }
 

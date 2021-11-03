@@ -26,6 +26,7 @@ import io.github.drumber.kitsune.ui.widget.ExploreSection
 import io.github.drumber.kitsune.util.ResponseData
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
+import io.github.drumber.kitsune.util.navigateSafe
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<ResourceAdapter>,
@@ -137,7 +138,7 @@ class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<Resou
         val glide = GlideApp.with(this)
         val section = ExploreSection(glide, title, null, this) {
             val action = MainFragmentDirections.actionMainFragmentToExploreFragment2(resourceSelector, title)
-            findNavController().navigate(action)
+            findNavController().navigateSafe(R.id.main_fragment, action)
         }
         section.bindView(view)
         return section
@@ -153,7 +154,7 @@ class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<Resou
         val options = NavOptions.Builder()
             .setLaunchSingleTop(true)
             .build()
-        findNavController().navigate(action, options)
+        findNavController().navigateSafe(R.id.main_fragment, action, options)
     }
 
 }

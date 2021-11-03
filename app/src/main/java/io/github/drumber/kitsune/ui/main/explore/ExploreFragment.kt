@@ -15,6 +15,7 @@ import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.ui.base.BaseCollectionViewModel
 import io.github.drumber.kitsune.util.initWindowInsetsListener
+import io.github.drumber.kitsune.util.navigateSafe
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ExploreFragment : BaseCollectionFragment(R.layout.fragment_explore) {
@@ -48,7 +49,7 @@ class ExploreFragment : BaseCollectionFragment(R.layout.fragment_explore) {
 
     override fun onResourceClicked(model: ResourceAdapter, options: NavOptions) {
         val action = ExploreFragmentDirections.actionExploreFragmentToDetailsFragment2(model)
-        findNavController().navigate(action, options)
+        findNavController().navigateSafe(R.id.explore_fragment, action, options)
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {

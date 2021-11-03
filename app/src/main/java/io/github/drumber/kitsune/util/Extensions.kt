@@ -9,7 +9,11 @@ import android.util.TypedValue
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
+import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
+import androidx.navigation.NavDirections
+import androidx.navigation.NavOptions
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -55,6 +59,16 @@ fun Activity.isLightStatusBar(): Boolean {
         else -> {
             false
         }
+    }
+}
+
+/**
+ * Checks if the current destination of the back stack is equal to the specified destination id.
+ * This avoids simultaneous navigation calls, e.g. when the user clicks on two list items at the same time.
+ */
+fun NavController.navigateSafe(@IdRes currentNavId: Int, directions: NavDirections, navOptions: NavOptions? = null) {
+    if (this.currentDestination?.id == currentNavId) {
+        this.navigate(directions, navOptions)
     }
 }
 
