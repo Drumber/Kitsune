@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="title"
+            type="String" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{title}"
+                tools:text="Some Title"
+                style="@style/Widget.Kitsune.TextView.BottomSheetTitle" />
+
+            <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                android:id="@+id/rating_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:progress="50"
+                style="@style/Widget.MaterialRatingBar.RatingBar" />
+
+            <TextView
+                android:id="@+id/tv_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+                tools:text="2.5 / 5.0" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:weightSum="2"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_cancel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="5dp"
+                    android:text="@android:string/cancel"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Dialog" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_rate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/action_rate"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Dialog" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+</layout>

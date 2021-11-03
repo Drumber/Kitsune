@@ -31,7 +31,7 @@
                 app:scrimVisibleHeightTrigger="120dp"
                 app:titleCollapseMode="scale"
                 tools:expandedTitleMarginStart="@dimen/profile_text_offset_expanded"
-                app:expandedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Expanded"
+                app:expandedTitleTextAppearance="@style/TextAppearance.Kitsune.CollapsingToolbar.Expanded"
                 app:expandedTitleGravity="center_vertical"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 

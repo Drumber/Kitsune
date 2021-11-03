@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.util
 import android.content.Intent
 import android.net.Uri
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -54,6 +55,12 @@ object BindingAdapter {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             it.context.startActivity(intent)
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter("activated")
+    fun isActivated(button: Button, isActivated: Boolean) {
+        button.isActivated = isActivated
     }
 
 }

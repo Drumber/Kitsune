@@ -21,6 +21,10 @@
     <dimen name="profile_text_offset_expanded">100dp</dimen>
     <dimen name="profile_text_offset_collapsed">45dp</dimen>
 
+    <!-- Icon Button -->
+    <dimen name="icon_button_size">38dp</dimen>
+    <dimen name="icon_button_padding">6dp</dimen>
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>

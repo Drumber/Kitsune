@@ -27,9 +27,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:text="@{title}"
-                tools:text="Some Title" />
+                tools:text="Some Title"
+                style="@style/Widget.Kitsune.TextView.BottomSheetTitle" />
 
             <include
                 layout="@layout/item_list_option"

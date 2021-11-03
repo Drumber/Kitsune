@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="androidx.core.content.ContextCompat" />
         <variable
             name="entry"
             type="io.github.drumber.kitsune.data.model.library.LibraryEntryAdapter" />
@@ -85,6 +86,20 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_weight="1" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    app:icon="@{entry.hasRating ? @drawable/ic_star_24 : @drawable/ic_star_outline_24}"
+                    android:text="@{entry.hasRating ? entry.rating : `-`}"
+                    tools:icon="@drawable/ic_star_24"
+                    tools:text="5"
+                    android:tooltipText="@string/hint_rating"
+                    tools:targetApi="o"
+                    app:activated="@{entry.hasRating}"
+                    style="@style/Widget.Kitsune.Button.IconText" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_watched_removed"

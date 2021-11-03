@@ -23,7 +23,10 @@ class LibraryEntryAdapter(val libraryEntry: LibraryEntry) {
     val canWatchEpisode: Boolean
         get() = progressCount != episodeCount
 
-    val canUnwatchEpisode: Boolean
-        get() = hasStartedWatching
+    val rating: String?
+        get() = libraryEntry.ratingTwenty?.div(4.0f)?.toString()
+
+    val hasRating: Boolean
+        get() = libraryEntry.ratingTwenty != null
 
 }

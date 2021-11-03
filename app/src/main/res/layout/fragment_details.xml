@@ -36,7 +36,7 @@
                     app:scrimAnimationDuration="300"
                     app:scrimVisibleHeightTrigger="150dp"
                     app:maxLines="3"
-                    app:expandedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Expanded"
+                    app:expandedTitleTextAppearance="@style/TextAppearance.Kitsune.CollapsingToolbar.Expanded"
                     app:expandedTitleGravity="bottom"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed">
 

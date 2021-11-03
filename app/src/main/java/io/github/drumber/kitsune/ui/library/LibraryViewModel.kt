@@ -12,7 +12,7 @@ import io.github.drumber.kitsune.data.room.LibraryEntryDao
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.exception.ReceivedDataException
-import io.github.drumber.kitsune.util.ResponseData
+import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
@@ -40,29 +40,31 @@ class LibraryViewModel(
         libraryEntriesRepository.libraryEntries(Kitsu.DEFAULT_PAGE_SIZE_LIBRARY, filter)
     }.cachedIn(viewModelScope)
 
-    var episodeWatchProgressResponseListener: ((ResponseData<LibraryEntry>) -> Unit)? = null
+    var responseErrorListener: ((Throwable) -> Unit)? = null
 
     fun markEpisodeWatched(libraryEntry: LibraryEntry) {
-        val updatedEntry = LibraryEntry(
-            id = libraryEntry.id,
-            progress = libraryEntry.progress?.plus(1)
-        )
-        updateLibraryProgress(updatedEntry, libraryEntry)
+        val newProgress = libraryEntry.progress?.plus(1)
+        updateLibraryProgress(libraryEntry, newProgress)
     }
 
     fun markEpisodeUnwatched(libraryEntry: LibraryEntry) {
         if(libraryEntry.progress == 0) return
-        val updatedEntry = LibraryEntry(
-            id = libraryEntry.id,
-            progress = libraryEntry.progress?.minus(1)
-        )
-        updateLibraryProgress(updatedEntry, libraryEntry)
+        val newProgress = libraryEntry.progress?.minus(1)
+        updateLibraryProgress(libraryEntry, newProgress)
     }
 
-    private fun updateLibraryProgress(updatedEntry: LibraryEntry, oldEntry: LibraryEntry) {
+    private fun updateLibraryProgress(oldEntry: LibraryEntry, newProgress: Int?) {
+        val updatedEntry = LibraryEntry(
+            id = oldEntry.id,
+            progress = newProgress
+        )
+
         viewModelScope.launch(Dispatchers.IO) {
-            val responseData = try {
-                val response = libraryEntriesService.updateLibraryEntry(updatedEntry.id, JSONAPIDocument(updatedEntry))
+            try {
+                val response = libraryEntriesService.updateLibraryEntry(
+                    updatedEntry.id,
+                    JSONAPIDocument(updatedEntry)
+                )
 
                 response.get()?.let { libraryEntry ->
                     // update the database, but copy anime and manga object from old library first
@@ -70,15 +72,53 @@ class LibraryViewModel(
                         anime = oldEntry.anime,
                         manga = oldEntry.manga
                     ))
-
-                    ResponseData.Success(libraryEntry)
                 } ?: throw ReceivedDataException("Received data is 'null'.")
             } catch (e: Exception) {
-                ResponseData.Error(e)
+                logE("Failed to update library entry progress.", e)
+                withContext(Dispatchers.Main) {
+                    responseErrorListener?.invoke(e)
+                }
             }
+        }
+    }
 
-            withContext(Dispatchers.Main) {
-                episodeWatchProgressResponseListener?.invoke(responseData)
+    /** Set to the library entry which rating should be updated. */
+    var lastRatedLibraryEntry: LibraryEntry? = null
+
+    fun updateRating(rating: Int) {
+        if (rating !in 2..20) {
+            responseErrorListener?.invoke(IllegalArgumentException("Rating must be in range 2..20."))
+            return
+        }
+        val user = userRepository.user ?: return
+        val libraryEntry = lastRatedLibraryEntry ?: return
+
+        val updatedEntry = LibraryEntry(
+            id = libraryEntry.id,
+            ratingTwenty = rating,
+            anime = libraryEntry.anime,
+            manga = libraryEntry.manga,
+            user = user
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = libraryEntriesService.updateLibraryEntry(
+                    libraryEntry.id,
+                    JSONAPIDocument(updatedEntry)
+                )
+
+                response.get()?.let { newEntry ->
+                    libraryEntryDao.updateLibraryEntry(newEntry.copy(
+                        anime = libraryEntry.anime,
+                        manga = libraryEntry.manga
+                    ))
+                }
+            } catch (e: Exception) {
+                logE("Failed to update rating.", e)
+                withContext(Dispatchers.Main) {
+                    responseErrorListener?.invoke(e)
+                }
             }
         }
     }

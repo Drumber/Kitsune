@@ -135,6 +135,9 @@ dependencies {
     // CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    // Material Rating Bar
+    implementation 'me.zhanghai.android.materialratingbar:library:1.4.0'
+
     // Tests
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

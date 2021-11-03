@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -23,10 +25,10 @@ import io.github.drumber.kitsune.ui.adapter.LibraryEntriesAdapter
 import io.github.drumber.kitsune.ui.adapter.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
-import io.github.drumber.kitsune.util.ResponseData
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
+import io.github.drumber.kitsune.util.navigateSafe
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -66,6 +68,20 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             }
         }
 
+        viewModel.responseErrorListener = { error ->
+            val snackbar = Snackbar.make(binding.rvLibraryEntries, "Error: ${error.message}", Snackbar.LENGTH_LONG)
+            // solve snackbar misplacement (remove bottom margin)
+            snackbar.view.initMarginWindowInsetsListener(left = true, right = true)
+            snackbar.show()
+        }
+
+        setFragmentResultListener(RatingBottomSheet.RATING_REQUEST_KEY) { _, bundle ->
+            val rating = bundle.getInt(RatingBottomSheet.BUNDLE_RATING, -1)
+            if (rating != -1) {
+                viewModel.updateRating(rating)
+            }
+        }
+
         initRecyclerView()
     }
 
@@ -101,15 +117,6 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
                 adapter.submitData(it)
             }
         }
-
-        viewModel.episodeWatchProgressResponseListener = { responseData ->
-            if (responseData is ResponseData.Error) {
-                val snackbar = Snackbar.make(binding.rvLibraryEntries, "Error: ${responseData.e.message}", Snackbar.LENGTH_LONG)
-                // solve snackbar misplacement (remove bottom margin)
-                snackbar.view.initMarginWindowInsetsListener(left = true, right = true)
-                snackbar.show()
-            }
-        }
     }
 
     override fun onItemClicked(item: LibraryEntry) {
@@ -129,6 +136,18 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         viewModel.markEpisodeUnwatched(item)
     }
 
+    override fun onRatingClicked(item: LibraryEntry) {
+        viewModel.lastRatedLibraryEntry = item
+        val resourceAdapter = (item.anime ?: item.manga)?.let { ResourceAdapter.fromResource(it) }
+        val sheetLibraryRating = RatingBottomSheet()
+        val bundle = bundleOf(
+            RatingBottomSheet.BUNDLE_TITLE to resourceAdapter?.title,
+            RatingBottomSheet.BUNDLE_RATING to item.ratingTwenty
+        )
+        sheetLibraryRating.arguments = bundle
+        sheetLibraryRating.show(parentFragmentManager, RatingBottomSheet.TAG)
+    }
+
     override fun onNavigationItemReselected(item: MenuItem) {
         binding.rvLibraryEntries.smoothScrollToPosition(0)
         binding.appBarLayout.setExpanded(true)
@@ -136,7 +155,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.episodeWatchProgressResponseListener = null
+        viewModel.responseErrorListener = null
     }
 
 }

@@ -36,18 +36,27 @@ class LibraryEntriesAdapter(
         init {
             binding.apply {
                 cardView.setOnClickListener {
-                    if(bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                    if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
                         getItem(bindingAdapterPosition)?.let { listener?.onItemClicked(it) }
                     }
                 }
                 btnWatchedAdd.setOnClickListener {
-                    if(bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                    if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
                         getItem(bindingAdapterPosition)?.let { listener?.onEpisodeWatchedClicked(it) }
                     }
                 }
                 btnWatchedRemoved.setOnClickListener {
-                    if(bindingAdapterPosition != RecyclerView.NO_POSITION) {
-                        getItem(bindingAdapterPosition)?.let { listener?.onEpisodeUnwatchedClicked(it) }
+                    if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                        getItem(bindingAdapterPosition)?.let {
+                            listener?.onEpisodeUnwatchedClicked(it)
+                        }
+                    }
+                }
+                btnRating.setOnClickListener {
+                    if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                        getItem(bindingAdapterPosition)?.let {
+                            listener?.onRatingClicked(it)
+                        }
                     }
                 }
             }
@@ -78,6 +87,7 @@ class LibraryEntriesAdapter(
         fun onItemClicked(item: LibraryEntry)
         fun onEpisodeWatchedClicked(item: LibraryEntry)
         fun onEpisodeUnwatchedClicked(item: LibraryEntry)
+        fun onRatingClicked(item: LibraryEntry)
     }
 
 }
