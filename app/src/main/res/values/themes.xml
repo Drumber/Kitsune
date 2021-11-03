@@ -29,7 +29,7 @@
 
         <item name="colorSearchView">@color/background</item>
         <item name="preferenceTheme">@style/Theme.Kitsune.PreferenceThemeOverlay</item>
-        <item name="bottomSheetDialogTheme">@style/Theme.Kitsune.BottomSheetDialog</item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Kitsune.BottomSheetDialog</item>
     </style>
 
     <!-- SplashScreen theme -->
@@ -43,12 +43,22 @@
         <item name="android:windowIsFloating">false</item>
     </style>
 
-    <style name="Theme.Kitsune.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+    <style name="ThemeOverlay.Kitsune.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
+        <item name="bottomSheetStyle">@style/ModalBottomSheet</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="paddingLeftSystemWindowInsets">false</item>
         <item name="paddingRightSystemWindowInsets">false</item>
+    </style>
+
+    <style name="ModalBottomSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="shapeAppearance">@style/ShapeAppearance.Kitsune.LargeComponent</item>
+    </style>
+
+    <style name="ShapeAppearance.Kitsune.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
     </style>
 
     <style name="TextAppearance.App.CollapsingToolbar.Expanded" parent="TextAppearance.Design.CollapsingToolbar.Expanded">
