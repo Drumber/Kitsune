@@ -122,5 +122,6 @@
     <string name="hint_rating">Rating</string>
     <string name="action_rate">Rate</string>
     <string name="action_update_rating">Update Rating</string>
+    <string name="action_remove_rating">Remove Rating</string>
 
 </resources>

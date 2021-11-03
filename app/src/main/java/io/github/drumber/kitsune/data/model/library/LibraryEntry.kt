@@ -5,6 +5,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
@@ -36,6 +37,7 @@ data class LibraryEntry(
     var progressedAt: String? = null,
     var startedAt: String? = null,
     var finishedAt: String? = null,
+    @JsonInclude(JsonInclude.Include.ALWAYS)
     var ratingTwenty: Int? = null,
     @Embedded(prefix = "anime_")
     @Relationship("anime")

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.R
@@ -50,6 +51,8 @@ class RatingBottomSheet : BottomSheetDialogFragment() {
             btnRate.setOnClickListener { onRateClicked() }
             btnRate.isEnabled = !hasNoRating
             btnRate.setText(if (hasNoRating) R.string.action_rate else R.string.action_update_rating)
+            btnRemoveRating.setOnClickListener { onRemoveRatingClicked() }
+            btnRemoveRating.isVisible = !hasNoRating
         }
 
         updateRatingTextView()
@@ -73,6 +76,11 @@ class RatingBottomSheet : BottomSheetDialogFragment() {
         dismiss()
     }
 
+    private fun onRemoveRatingClicked() {
+        setFragmentResult(REMOVE_RATING_REQUEST_KEY, bundleOf(BUNDLE_RATING to null))
+        dismiss()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
@@ -83,6 +91,7 @@ class RatingBottomSheet : BottomSheetDialogFragment() {
         const val BUNDLE_TITLE = "title_bundle_key"
         const val BUNDLE_RATING = "rating_bundle_key"
         const val RATING_REQUEST_KEY = "rating_request_key"
+        const val REMOVE_RATING_REQUEST_KEY = "remove_rating_request_key"
     }
 
 }

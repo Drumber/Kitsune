@@ -85,8 +85,8 @@ class LibraryViewModel(
     /** Set to the library entry which rating should be updated. */
     var lastRatedLibraryEntry: LibraryEntry? = null
 
-    fun updateRating(rating: Int) {
-        if (rating !in 2..20) {
+    fun updateRating(rating: Int?) {
+        if (rating != null && rating !in 2..20) {
             responseErrorListener?.invoke(IllegalArgumentException("Rating must be in range 2..20."))
             return
         }

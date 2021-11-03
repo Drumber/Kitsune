@@ -56,11 +56,6 @@
         <item name="shapeAppearance">@style/ShapeAppearance.Kitsune.LargeComponent</item>
     </style>
 
-    <style name="ShapeAppearance.Kitsune.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">12dp</item>
-    </style>
-
     <style name="TextAppearance.Kitsune.CollapsingToolbar.Expanded" parent="TextAppearance.Design.CollapsingToolbar.Expanded">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">28sp</item>
@@ -106,6 +101,13 @@
         <item name="android:minHeight">@dimen/icon_button_size</item>
     </style>
 
+    <style name="Widget.Kitsune.Button.IconRound" parent="@style/Widget.Kitsune.Button.Outlined.IconOnly">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Kitsune.Button.Circle</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="strokeColor">@android:color/transparent</item>
+        <item name="iconTint">?attr/colorControlNormal</item>
+    </style>
+
     <style name="Widget.Kitsune.Button.IconText" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="iconPadding">4dp</item>
         <item name="android:insetTop">0dp</item>
@@ -124,6 +126,16 @@
 
     <style name="Theme.Kitsune.PreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
         <item name="android:layout">@layout/fragment_preference</item>
+    </style>
+
+    <style name="ShapeAppearance.Kitsune.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.Kitsune.Button.Circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
     </style>
 
 </resources>

@@ -82,6 +82,10 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             }
         }
 
+        setFragmentResultListener(RatingBottomSheet.REMOVE_RATING_REQUEST_KEY) { _, _ ->
+            viewModel.updateRating(null)
+        }
+
         initRecyclerView()
     }
 
