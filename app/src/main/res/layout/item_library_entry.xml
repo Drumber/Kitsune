@@ -43,16 +43,39 @@
                 android:layout_toEndOf="@id/iv_thumbnail"
                 android:padding="10dp">
 
-                <TextView
-                    android:id="@+id/tv_title"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:layout_marginBottom="8dp"
-                    android:text="@{data.title}"
-                    tools:text="Some Title" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="3"
+                        android:layout_marginBottom="8dp"
+                        android:text="@{data.title}"
+                        tools:text="Some Title" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        app:icon="@{entry.hasRating ? @drawable/ic_star_24 : @drawable/ic_star_outline_24}"
+                        app:iconGravity="end"
+                        android:text="@{entry.rating}"
+                        tools:icon="@drawable/ic_star_24"
+                        tools:text="5"
+                        android:tooltipText="@string/hint_rating"
+                        tools:targetApi="o"
+                        app:activated="@{entry.hasRating}"
+                        style="@style/Widget.Kitsune.Button.IconText" />
+
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -86,20 +109,6 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_weight="1" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_rating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    app:icon="@{entry.hasRating ? @drawable/ic_star_24 : @drawable/ic_star_outline_24}"
-                    android:text="@{entry.hasRating ? entry.rating : `-`}"
-                    tools:icon="@drawable/ic_star_24"
-                    tools:text="5"
-                    android:tooltipText="@string/hint_rating"
-                    tools:targetApi="o"
-                    app:activated="@{entry.hasRating}"
-                    style="@style/Widget.Kitsune.Button.IconText" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_watched_removed"
