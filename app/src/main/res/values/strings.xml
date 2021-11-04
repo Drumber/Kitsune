@@ -124,4 +124,6 @@
     <string name="action_update_rating">Update Rating</string>
     <string name="action_remove_rating">Remove Rating</string>
 
+    <string name="profile_anime_stats">Anime Stats</string>
+
 </resources>

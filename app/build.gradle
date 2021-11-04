@@ -138,6 +138,9 @@ dependencies {
     // Material Rating Bar
     implementation 'me.zhanghai.android.materialratingbar:library:1.4.0'
 
+    // MPAndroidCharts
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
     // Tests
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

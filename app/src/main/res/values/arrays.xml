@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="stats_chart_colors">
+        <item>#FEB700</item>
+        <item>#FF9300</item>
+        <item>#FF3281</item>
+        <item>#BC6EDA</item>
+        <item>#00BBED</item>
+        <item>#545C97</item>
+        <item>#EA6200</item>
+    </array>
+</resources>
