@@ -22,9 +22,9 @@ import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.data.service.manga.ChaptersService
 import io.github.drumber.kitsune.data.service.manga.MangaService
 import io.github.drumber.kitsune.data.service.user.UserService
-import io.github.drumber.kitsune.util.AuthenticationInterceptor
-import io.github.drumber.kitsune.util.AuthenticationInterceptorDummy
-import io.github.drumber.kitsune.util.AuthenticationInterceptorImpl
+import io.github.drumber.kitsune.util.network.AuthenticationInterceptor
+import io.github.drumber.kitsune.util.network.AuthenticationInterceptorDummy
+import io.github.drumber.kitsune.util.network.AuthenticationInterceptorImpl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.scope.Scope

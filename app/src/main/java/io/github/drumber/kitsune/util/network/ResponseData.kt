@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.util
+package io.github.drumber.kitsune.util.network
 
 sealed class ResponseData<T>(open val data: T?) {
 

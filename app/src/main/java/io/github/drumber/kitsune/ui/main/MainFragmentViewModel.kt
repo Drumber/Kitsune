@@ -8,7 +8,7 @@ import io.github.drumber.kitsune.data.model.resource.Anime
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.anime.AnimeService
 import io.github.drumber.kitsune.exception.ReceivedDataException
-import io.github.drumber.kitsune.util.ResponseData
+import io.github.drumber.kitsune.util.network.ResponseData
 import io.github.drumber.kitsune.util.logE
 
 class MainFragmentViewModel(

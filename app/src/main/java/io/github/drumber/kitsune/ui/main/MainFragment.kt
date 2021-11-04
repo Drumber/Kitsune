@@ -23,7 +23,7 @@ import io.github.drumber.kitsune.databinding.FragmentMainBinding
 import io.github.drumber.kitsune.databinding.SectionMainExploreBinding
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.widget.ExploreSection
-import io.github.drumber.kitsune.util.ResponseData
+import io.github.drumber.kitsune.util.network.ResponseData
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import io.github.drumber.kitsune.util.navigateSafe

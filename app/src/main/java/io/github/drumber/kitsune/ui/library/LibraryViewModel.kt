@@ -95,7 +95,7 @@ class LibraryViewModel(
 
         val updatedEntry = LibraryEntry(
             id = libraryEntry.id,
-            ratingTwenty = rating,
+            ratingTwenty = rating ?: -1, // '-1' will be mapped to 'null' by the json serializer
             anime = libraryEntry.anime,
             manga = libraryEntry.manga,
             user = user

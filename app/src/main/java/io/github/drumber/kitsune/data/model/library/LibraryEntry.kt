@@ -5,8 +5,8 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
@@ -14,7 +14,8 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.model.resource.Anime
 import io.github.drumber.kitsune.data.model.resource.Manga
-import io.github.drumber.kitsune.util.EmptyStringIdHandler
+import io.github.drumber.kitsune.util.network.EmptyStringIdHandler
+import io.github.drumber.kitsune.util.network.NullableIntSerializer
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -37,8 +38,8 @@ data class LibraryEntry(
     var progressedAt: String? = null,
     var startedAt: String? = null,
     var finishedAt: String? = null,
-    @JsonInclude(JsonInclude.Include.ALWAYS)
-    var ratingTwenty: Int? = null,
+    @JsonSerialize(using = NullableIntSerializer::class)
+    var ratingTwenty: Int? = null, // set to '-1' to serialize to 'null'
     @Embedded(prefix = "anime_")
     @Relationship("anime")
     var anime: Anime? = null,
