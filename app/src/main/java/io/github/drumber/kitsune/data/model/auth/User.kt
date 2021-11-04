@@ -2,9 +2,11 @@ package io.github.drumber.kitsune.data.model.auth
 
 import android.os.Parcelable
 import com.github.jasminb.jsonapi.annotations.Id
+import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
 import io.github.drumber.kitsune.data.model.TitlesPref
 import io.github.drumber.kitsune.data.model.resource.Image
+import io.github.drumber.kitsune.data.model.stats.Stats
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -51,7 +53,9 @@ data class User(
     val hasPassword: Boolean? = null,
     val status: String? = null,
     val subscribedToNewsletter: Boolean? = null,
-    val aoPro: String? = null
+    val aoPro: String? = null,
+    @Relationship("stats")
+    val stats: List<Stats>? = null
 ) : Parcelable
 
 enum class RatingSystem {

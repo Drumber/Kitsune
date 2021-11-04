@@ -14,6 +14,7 @@ import io.github.drumber.kitsune.data.model.resource.Anime
 import io.github.drumber.kitsune.data.model.resource.Chapter
 import io.github.drumber.kitsune.data.model.resource.Episode
 import io.github.drumber.kitsune.data.model.resource.Manga
+import io.github.drumber.kitsune.data.model.stats.Stats
 import io.github.drumber.kitsune.data.service.anime.AnimeService
 import io.github.drumber.kitsune.data.service.anime.EpisodesService
 import io.github.drumber.kitsune.data.service.auth.AuthService
@@ -46,7 +47,7 @@ val serviceModule = module {
     factory { createService<MangaService>(get(), get(), Manga::class.java) }
     factory { createService<ChaptersService>(get(), get(), Chapter::class.java) }
     factory { createService<CategoryService>(get(), get(), Category::class.java) }
-    factory { createService<UserService>(get(), get(), User::class.java) }
+    factory { createService<UserService>(get(), get(), User::class.java, Stats::class.java) }
     factory { createService<LibraryEntriesService>(get(), get(), LibraryEntry::class.java, Anime::class.java, Manga::class.java) }
 }
 
@@ -81,6 +82,7 @@ fun createObjectMapper(): ObjectMapper = jacksonObjectMapper()
     .setSerializationInclusion(JsonInclude.Include.NON_NULL)
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
+    .configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, false)
 
 private fun createConverterFactory(
     objectMapper: ObjectMapper,
