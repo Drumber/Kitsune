@@ -5,13 +5,13 @@ import android.os.Parcelable
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.TitlesPref
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.util.DataDisplayUtil
 import io.github.drumber.kitsune.util.originalOrDown
 import io.github.drumber.kitsune.util.smallOrHigher
 import io.github.drumber.kitsune.util.toDate
 import kotlinx.parcelize.Parcelize
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 sealed class ResourceAdapter(
     val id: String,
@@ -121,18 +121,7 @@ sealed class ResourceAdapter(
                 lengthEachText
             } else {
                 val minutes = count * length.toLong()
-                val durationText = if(minutes <= 100) {
-                    "$minutes minutes"
-                } else {
-                    val hours = TimeUnit.MINUTES.toHours(minutes)
-                    val remainingMinutes = minutes - hours * 60
-                    val totalText = "$hours hours"
-                    if (remainingMinutes > 0) {
-                        "$totalText, $remainingMinutes minutes"
-                    } else {
-                        totalText
-                    }
-                }
+                val durationText = DataDisplayUtil.timeToHumanReadableFormat(minutes * 60, context)
                 if (count > 1) {
                     context.getString(R.string.data_length_total, durationText) + " ($lengthEachText)"
                 } else {

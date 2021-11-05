@@ -15,6 +15,7 @@ import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.model.stats.Stats
 import io.github.drumber.kitsune.data.model.stats.StatsData
 import io.github.drumber.kitsune.data.model.stats.StatsKind
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
@@ -110,32 +111,43 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
 
     private fun initStatsViewPager() {
         val dataSet = listOf(
-            PieChartAdapter.PieChartData(getString(R.string.profile_anime_stats)),
-            PieChartAdapter.PieChartData(getString(R.string.profile_manga_stats))
+            ProfileStatsAdapter.ProfileStatsData(getString(R.string.profile_anime_stats)),
+            ProfileStatsAdapter.ProfileStatsData(getString(R.string.profile_manga_stats))
         )
+        val adapter = ProfileStatsAdapter(dataSet)
+
         binding.viewPagerStats.apply {
-            adapter = PieChartAdapter(dataSet)
+            this.adapter = adapter
             recyclerView.isNestedScrollingEnabled = false
         }
 
         TabLayoutMediator(binding.tabLayoutStats, binding.viewPagerStats) { tab, position ->
             when (position) {
-                0 -> tab.setText(R.string.profile_anime_stats)
-                1 -> tab.setText(R.string.profile_manga_stats)
+                ProfileStatsAdapter.POS_ANIME -> tab.setText(R.string.profile_anime_stats)
+                ProfileStatsAdapter.POS_MANGA -> tab.setText(R.string.profile_manga_stats)
             }
         }.attach()
 
         viewModel.fullUserModel.observe(viewLifecycleOwner) { user ->
-            val animeCategoryStats = user.stats?.find {
-                it.kind == StatsKind.AnimeCategoryBreakdown
-            }?.statsData as? StatsData.CategoryBreakdownData
-            updateStatsChart(0, R.string.profile_anime_stats, animeCategoryStats)
+            val animeCategoryStats: StatsData.CategoryBreakdownData? = user.stats.findStatsData(StatsKind.AnimeCategoryBreakdown)
+            updateStatsChart(ProfileStatsAdapter.POS_ANIME, R.string.profile_anime_stats, animeCategoryStats)
 
-            val mangaCategoryStats = user.stats?.find {
-                it.kind == StatsKind.MangaCategoryBreakdown
-            }?.statsData as? StatsData.CategoryBreakdownData
-            updateStatsChart(1, R.string.profile_manga_stats, mangaCategoryStats)
+            val mangaCategoryStats: StatsData.CategoryBreakdownData? = user.stats.findStatsData(StatsKind.MangaCategoryBreakdown)
+            updateStatsChart(ProfileStatsAdapter.POS_MANGA, R.string.profile_manga_stats, mangaCategoryStats)
+
+            val animeAmountConsumed: StatsData.AmountConsumedData? = user.stats.findStatsData(StatsKind.AnimeAmountConsumed)
+            adapter.updateAmountConsumedData(ProfileStatsAdapter.POS_ANIME, animeAmountConsumed)
+
+            val mangaAmountConsumed: StatsData.AmountConsumedData? = user.stats.findStatsData(StatsKind.MangaAmountConsumed)
+            adapter.updateAmountConsumedData(ProfileStatsAdapter.POS_MANGA, mangaAmountConsumed)
+
+            adapter.setLoading(ProfileStatsAdapter.POS_ANIME, false)
+            adapter.setLoading(ProfileStatsAdapter.POS_MANGA, false)
         }
+    }
+
+    private inline fun <reified T> List<Stats>?.findStatsData(kind: StatsKind): T? {
+        return this?.find { it.kind == kind }?.statsData as? T
     }
 
     private fun updateStatsChart(
@@ -155,9 +167,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
 
         val set = PieDataSet(categoryEntries, getString(titleRes))
 
-        val adapter = binding.viewPagerStats.adapter as PieChartAdapter
-        adapter.updateData(position, set)
-        adapter.setLoading(position, false)
+        val adapter = binding.viewPagerStats.adapter as ProfileStatsAdapter
+        adapter.updateCategoryData(position, set)
     }
 
     override fun onResume() {
