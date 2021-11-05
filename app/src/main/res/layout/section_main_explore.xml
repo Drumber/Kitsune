@@ -49,6 +49,7 @@
             android:paddingHorizontal="10dp"
             android:clipToPadding="false"
             android:orientation="horizontal"
+            android:nestedScrollingEnabled="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_resource" />
 

@@ -11,9 +11,12 @@ import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -61,6 +64,12 @@ fun Activity.isLightStatusBar(): Boolean {
         }
     }
 }
+
+/**
+ * Make the internal RecyclerView of ViewPager2 accessible.
+ */
+val ViewPager2.recyclerView: RecyclerView
+    get() = this[0] as RecyclerView
 
 /**
  * Checks if the current destination of the back stack is equal to the specified destination id.

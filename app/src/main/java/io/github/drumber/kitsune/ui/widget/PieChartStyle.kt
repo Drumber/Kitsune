@@ -18,7 +18,7 @@ object PieChartStyle {
 
     fun PieChart.applyStyle(
         c: Context,
-        @StringRes centerTextResId: Int,
+        @StringRes centerTextResId: Int? = null,
         showLegend: Boolean = false
     ) {
         val theme = c.theme
@@ -36,7 +36,9 @@ object PieChartStyle {
         setTransparentCircleAlpha(50)
 
         setCenterTextColor(theme.getColor(R.attr.colorOnSurface))
-        centerText = c.getString(centerTextResId)
+        if (centerTextResId != null) {
+            centerText = c.getString(centerTextResId)
+        }
 
         isHighlightPerTapEnabled = true
 

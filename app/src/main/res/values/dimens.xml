@@ -20,6 +20,7 @@
     <dimen name="profile_picture_y_offset_collapsed">10dp</dimen>
     <dimen name="profile_text_offset_expanded">100dp</dimen>
     <dimen name="profile_text_offset_collapsed">45dp</dimen>
+    <dimen name="profile_stats_height">300dp</dimen>
 
     <!-- Icon Button -->
     <dimen name="icon_button_size">38dp</dimen>

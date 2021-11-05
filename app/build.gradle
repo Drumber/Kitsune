@@ -54,8 +54,8 @@ dependencies {
     implementation 'androidx.core:core-splashscreen:1.0.0-alpha02'
 
     // Navigation
-    def nav_version = "2.4.0-beta01"
-    def fragment_version = "1.4.0-beta01"
+    def nav_version = "2.4.0-beta02"
+    def fragment_version = "1.4.0-rc01"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
@@ -80,7 +80,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
 
     // Paging
-    implementation 'androidx.paging:paging-runtime-ktx:3.1.0-beta01'
+    implementation 'androidx.paging:paging-runtime-ktx:3.1.0-rc01'
 
     // Room
     def room_version = "2.4.0-beta01"
@@ -88,6 +88,9 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-paging:$room_version"
+
+    // ViewPager
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
     // Glide
     def glide_version = "4.12.0"

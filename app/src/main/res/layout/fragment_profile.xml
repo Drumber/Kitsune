@@ -100,11 +100,16 @@
                     android:layout_gravity="center"
                     android:text="@string/title_authentication" />
 
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/chart_anime_stats"
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tab_layout_stats"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:padding="10dp" />
+                    android:layout_height="wrap_content"
+                    app:tabTextAppearance="@style/TextAppearance.Kitsune.TabLayout" />
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/view_pager_stats"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/profile_stats_height" />
 
             </LinearLayout>
 

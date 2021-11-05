@@ -43,6 +43,7 @@
     <string name="title_play_trailer">Play Trailer</string>
 
     <string name="no_information">Unknown</string>
+    <string name="no_data_available">No Data available</string>
 
     <string name="status_current">Currently Airing</string>
     <string name="status_current_manga">Publishing</string>
@@ -125,5 +126,6 @@
     <string name="action_remove_rating">Remove Rating</string>
 
     <string name="profile_anime_stats">Anime Stats</string>
+    <string name="profile_manga_stats">Manga Stats</string>
 
 </resources>
