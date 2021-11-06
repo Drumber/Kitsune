@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="io.github.drumber.kitsune.util.BindingAdapter" />
+        <import type="io.github.drumber.kitsune.util.DataUtil" />
         <variable
             name="user"
             type="io.github.drumber.kitsune.data.model.auth.User" />
@@ -131,7 +131,7 @@
                                 layout="@layout/item_details_info_row"
                                 app:icon="@{@drawable/ic_person_24}"
                                 app:title="@{@string/profile_data_gender}"
-                                app:value="@{user.gender ?? @string/profile_data_private}" />
+                                app:value="@{DataUtil.getGenderString(user.gender, context) ?? @string/profile_data_private}" />
 
                             <include
                                 layout="@layout/item_details_info_row"
@@ -143,13 +143,13 @@
                                 layout="@layout/item_details_info_row"
                                 app:icon="@{@drawable/ic_cake_24}"
                                 app:title="@{@string/profile_data_birthday}"
-                                app:value="@{BindingAdapter.formatDate(user.birthday) ?? @string/profile_data_private}" />
+                                app:value="@{DataUtil.formatDate(user.birthday) ?? @string/profile_data_private}" />
 
                             <include
                                 layout="@layout/item_details_info_row"
                                 app:icon="@{@drawable/ic_calendar_24}"
                                 app:title="@{@string/profile_data_join_date}"
-                                app:value="@{BindingAdapter.formatDate(user.createdAt) ?? @string/profile_data_private}" />
+                                app:value="@{DataUtil.formatDate(user.createdAt) ?? @string/profile_data_private}" />
 
                         </TableLayout>
 

@@ -15,6 +15,7 @@ import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.model.stats.Stats
 import io.github.drumber.kitsune.data.model.stats.StatsData
 import io.github.drumber.kitsune.data.model.stats.StatsKind
@@ -25,6 +26,7 @@ import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.ui.widget.PieChartStyle
 import io.github.drumber.kitsune.ui.widget.ProfilePictureBehavior
 import io.github.drumber.kitsune.util.*
+import io.github.drumber.kitsune.util.network.ResponseData
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.round
 
@@ -48,19 +50,12 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.userModel.observe(viewLifecycleOwner) { user ->
-            binding.user = user
-
-            val glide = GlideApp.with(this)
-
-            glide.load(user?.avatar)
-                .dontAnimate()
-                .placeholder(R.drawable.profile_picture_placeholder)
-                .into(binding.ivProfileImage)
-
-            glide.load(user?.coverImage)
-                .centerCrop()
-                .placeholder(R.drawable.cover_placeholder)
-                .into(binding.ivCover)
+            updateUser(user)
+        }
+        viewModel.fullUserModel.observe(viewLifecycleOwner) { fullUser ->
+            if (fullUser is ResponseData.Success) {
+                updateUser(fullUser.data)
+            }
         }
 
         binding.apply {
@@ -109,6 +104,24 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         initStatsViewPager()
     }
 
+    private fun updateUser(user: User?) {
+        if (user != null) {
+            binding.user = user
+        }
+
+        val glide = GlideApp.with(this)
+
+        glide.load(user?.avatar)
+            .dontAnimate()
+            .placeholder(R.drawable.profile_picture_placeholder)
+            .into(binding.ivProfileImage)
+
+        glide.load(user?.coverImage)
+            .centerCrop()
+            .placeholder(R.drawable.cover_placeholder)
+            .into(binding.ivCover)
+    }
+
     private fun initStatsViewPager() {
         val dataSet = listOf(
             ProfileStatsAdapter.ProfileStatsData(getString(R.string.profile_anime_stats)),
@@ -128,17 +141,19 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
             }
         }.attach()
 
-        viewModel.fullUserModel.observe(viewLifecycleOwner) { user ->
-            val animeCategoryStats: StatsData.CategoryBreakdownData? = user.stats.findStatsData(StatsKind.AnimeCategoryBreakdown)
+        viewModel.fullUserModel.observe(viewLifecycleOwner) { response ->
+            val user = response.data
+
+            val animeCategoryStats: StatsData.CategoryBreakdownData? = user?.stats.findStatsData(StatsKind.AnimeCategoryBreakdown)
             updateStatsChart(ProfileStatsAdapter.POS_ANIME, R.string.profile_anime_stats, animeCategoryStats)
 
-            val mangaCategoryStats: StatsData.CategoryBreakdownData? = user.stats.findStatsData(StatsKind.MangaCategoryBreakdown)
+            val mangaCategoryStats: StatsData.CategoryBreakdownData? = user?.stats.findStatsData(StatsKind.MangaCategoryBreakdown)
             updateStatsChart(ProfileStatsAdapter.POS_MANGA, R.string.profile_manga_stats, mangaCategoryStats)
 
-            val animeAmountConsumed: StatsData.AmountConsumedData? = user.stats.findStatsData(StatsKind.AnimeAmountConsumed)
+            val animeAmountConsumed: StatsData.AmountConsumedData? = user?.stats.findStatsData(StatsKind.AnimeAmountConsumed)
             adapter.updateAmountConsumedData(ProfileStatsAdapter.POS_ANIME, animeAmountConsumed)
 
-            val mangaAmountConsumed: StatsData.AmountConsumedData? = user.stats.findStatsData(StatsKind.MangaAmountConsumed)
+            val mangaAmountConsumed: StatsData.AmountConsumedData? = user?.stats.findStatsData(StatsKind.MangaAmountConsumed)
             adapter.updateAmountConsumedData(ProfileStatsAdapter.POS_MANGA, mangaAmountConsumed)
 
             adapter.setLoading(ProfileStatsAdapter.POS_ANIME, false)

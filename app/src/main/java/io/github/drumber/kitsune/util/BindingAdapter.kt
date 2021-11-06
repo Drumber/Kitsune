@@ -11,7 +11,6 @@ import androidx.databinding.BindingAdapter
 import at.blogc.android.views.ExpandableTextView
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
-import java.text.SimpleDateFormat
 
 object BindingAdapter {
 
@@ -63,8 +62,5 @@ object BindingAdapter {
     fun isActivated(button: Button, isActivated: Boolean) {
         button.isActivated = isActivated
     }
-
-    @JvmStatic
-    fun formatDate(dateString: String?) = dateString?.toDate()?.formatDate(SimpleDateFormat.LONG)
 
 }
