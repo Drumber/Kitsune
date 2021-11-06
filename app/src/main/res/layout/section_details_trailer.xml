@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/card_inner_padding"
                 android:orientation="horizontal">
 
                 <ImageView

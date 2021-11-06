@@ -104,6 +104,13 @@ fun String.toDate(format: String = "yyyy-MM-dd"): Calendar {
     }
 }
 
+fun Date.formatDate(dateFormat: Int = SimpleDateFormat.DEFAULT): String {
+    val dateFormat = SimpleDateFormat.getDateInstance(dateFormat)
+    return dateFormat.format(this)
+}
+
+fun Calendar.formatDate(dateFormat: Int = SimpleDateFormat.DEFAULT) = this.time.formatDate(dateFormat)
+
 fun Int.toDp() = (this / Resources.getSystem().displayMetrics.density).toInt()
 
 fun Int.toPx() = (this * Resources.getSystem().displayMetrics.density).toInt()

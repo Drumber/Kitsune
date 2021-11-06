@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.ui.profile
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.data.PieData
@@ -10,7 +11,8 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.stats.StatsData
 import io.github.drumber.kitsune.databinding.ItemProfileStatsBinding
 import io.github.drumber.kitsune.ui.widget.PieChartStyle.applyStyle
-import io.github.drumber.kitsune.util.DataDisplayUtil
+import io.github.drumber.kitsune.util.TimeUtil
+import kotlin.math.roundToInt
 
 class ProfileStatsAdapter(dataSet: List<ProfileStatsData>) :
     RecyclerView.Adapter<ProfileStatsAdapter.ProfileStatsViewHolder>() {
@@ -76,18 +78,41 @@ class ProfileStatsAdapter(dataSet: List<ProfileStatsData>) :
             binding.apply {
                 progressBar.isVisible = dataModel.isLoading
 
-                tvTimeSpent.text = dataModel.amountConsumedData?.time?.let { time ->
-                    when {
-                        isAnime -> {
+                dataModel.amountConsumedData?.let { stats ->
+                    stats.time?.let { time ->
+                        tvTimeSpent.text = when {
+                            isAnime -> {
+                                context.getString(
+                                    R.string.profile_stats_anime_watch_time,
+                                    TimeUtil.roundTime(time, context, 1)
+                                )
+                            }
+                            isManga -> {
+                                context.getString(R.string.profile_stats_manga_chapters_read, time)
+                            }
+                            else -> null
+                        }
+
+                        tvTimeSpentTotal.text = if (time > 0) {
                             context.getString(
-                                R.string.profile_stats_anime_watch_time,
-                                DataDisplayUtil.timeToHumanReadableFormat(time, context)
+                                R.string.profile_stats_time_spent_total,
+                                TimeUtil.timeToHumanReadableFormat(time, context)
                             )
+                        } else {
+                            null
                         }
-                        isManga -> {
-                            context.getString(R.string.profile_stats_manga_chapters_read, time)
-                        }
-                        else -> null
+                    }
+
+                    val (completed, percentiles) = Pair(stats.completed, stats.percentiles?.time)
+                    tvCompleted.text = if (completed != null && percentiles != null) {
+                        val text = context.getString(
+                            R.string.profile_stats_completed,
+                            completed,
+                            percentiles.times(100).roundToInt()
+                        )
+                        HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                    } else {
+                        null
                     }
                 }
             }

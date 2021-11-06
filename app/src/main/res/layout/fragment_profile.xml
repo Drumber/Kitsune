@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="io.github.drumber.kitsune.util.BindingAdapter" />
         <variable
             name="user"
             type="io.github.drumber.kitsune.data.model.auth.User" />
@@ -99,6 +100,62 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/title_authentication" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/card_stroke_color"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/card_inner_padding"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                            android:text="@string/title_about_me" />
+
+                        <TableLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:stretchColumns="0,1">
+
+                            <include
+                                layout="@layout/item_details_info_row"
+                                app:icon="@{@drawable/ic_person_24}"
+                                app:title="@{@string/profile_data_gender}"
+                                app:value="@{user.gender ?? @string/profile_data_private}" />
+
+                            <include
+                                layout="@layout/item_details_info_row"
+                                app:icon="@{@drawable/ic_location_24}"
+                                app:title="@{@string/profile_data_location}"
+                                app:value="@{user.location ?? @string/profile_data_private}" />
+
+                            <include
+                                layout="@layout/item_details_info_row"
+                                app:icon="@{@drawable/ic_cake_24}"
+                                app:title="@{@string/profile_data_birthday}"
+                                app:value="@{BindingAdapter.formatDate(user.birthday) ?? @string/profile_data_private}" />
+
+                            <include
+                                layout="@layout/item_details_info_row"
+                                app:icon="@{@drawable/ic_calendar_24}"
+                                app:title="@{@string/profile_data_join_date}"
+                                app:value="@{BindingAdapter.formatDate(user.createdAt) ?? @string/profile_data_private}" />
+
+                        </TableLayout>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tab_layout_stats"
