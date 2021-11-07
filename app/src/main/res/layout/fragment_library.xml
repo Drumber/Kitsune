@@ -77,7 +77,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:textAllCaps="false"
-                android:text="@string/library_not_logged_in_button" />
+                android:text="@string/action_log_in_to_kitsu" />
 
         </LinearLayout>
 

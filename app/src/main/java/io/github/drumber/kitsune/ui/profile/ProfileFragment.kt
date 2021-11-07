@@ -59,13 +59,19 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         }
 
         binding.apply {
-            btnSettings.setOnClickListener {
-                val action = ProfileFragmentDirections.actionProfileFragmentToSettingsFragment()
-                findNavController().navigate(action)
-            }
             btnLogin.setOnClickListener {
                 val intent = Intent(requireActivity(), AuthenticationActivity::class.java)
                 startActivity(intent)
+            }
+
+            toolbar.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.menu_settings -> {
+                        val action = ProfileFragmentDirections.actionProfileFragmentToSettingsFragment()
+                        findNavController().navigate(action)
+                    }
+                }
+                true
             }
 
             appBarLayout.addOnOffsetChangedListener(
