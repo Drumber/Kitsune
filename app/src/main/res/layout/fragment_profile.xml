@@ -5,6 +5,7 @@
 
     <data>
         <import type="io.github.drumber.kitsune.util.DataUtil" />
+        <import type="android.text.TextUtils" />
         <variable
             name="user"
             type="io.github.drumber.kitsune.data.model.auth.User" />
@@ -115,6 +116,14 @@
                                 android:layout_marginBottom="10dp"
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                                 android:text="@string/title_about_me" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                app:isVisible="@{!TextUtils.isEmpty(user.about)}"
+                                android:text="@{user.about}"
+                                tools:text="Personal about me text." />
 
                             <TableLayout
                                 android:layout_width="match_parent"
