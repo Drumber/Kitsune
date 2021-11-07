@@ -31,6 +31,8 @@
                 app:scrimAnimationDuration="300"
                 app:scrimVisibleHeightTrigger="120dp"
                 app:titleCollapseMode="scale"
+                app:titleEnabled="true"
+                app:title="@{user.name ?? @string/not_logged_in}"
                 tools:expandedTitleMarginStart="@dimen/profile_text_offset_expanded"
                 app:expandedTitleTextAppearance="@style/TextAppearance.Kitsune.CollapsingToolbar.Expanded"
                 app:expandedTitleGravity="center_vertical"
@@ -69,9 +71,7 @@
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin"
                     app:menu="@menu/profile_menu"
-                    app:titleMarginStart="@dimen/profile_text_offset_collapsed"
-                    app:title="@{user.name ?? @string/not_logged_in}"
-                    tools:title="Username" />
+                    app:titleMarginStart="@dimen/profile_text_offset_collapsed" />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 

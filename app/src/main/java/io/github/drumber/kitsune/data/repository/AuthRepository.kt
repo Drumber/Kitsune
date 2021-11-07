@@ -39,6 +39,7 @@ class AuthRepository(
 
     fun logout() {
         accessToken = null
+        authPreferences.clearAccessToken()
     }
 
     suspend fun login(username: String, password: String): Result<AccessToken> {

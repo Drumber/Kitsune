@@ -1,9 +1,6 @@
 package io.github.drumber.kitsune.ui.profile
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
+import androidx.lifecycle.*
 import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.service.Filter
@@ -14,7 +11,7 @@ import io.github.drumber.kitsune.util.network.ResponseData
 import kotlinx.coroutines.Dispatchers
 
 class ProfileViewModel(
-    userRepository: UserRepository,
+    private val userRepository: UserRepository,
     userService: UserService
 ) : ViewModel() {
 
@@ -36,7 +33,11 @@ class ProfileViewModel(
                 }
                 emit(response)
             }
-        }
+        } ?: MutableLiveData(ResponseData.Error(ReceivedDataException("User is null.")))
+    }
+
+    fun logOut() {
+        userRepository.logOut()
     }
 
     companion object {

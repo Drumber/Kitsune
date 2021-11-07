@@ -7,16 +7,19 @@ import android.content.res.Resources
 import android.os.Build
 import android.util.TypedValue
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import io.github.drumber.kitsune.R
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -91,6 +94,10 @@ fun NavController.navigateSafe(@IdRes currentNavId: Int, directions: NavDirectio
 
 fun Context.isNightMode(): Boolean {
     return (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+}
+
+fun Fragment.showSomethingWrongToast() {
+    Toast.makeText(context, R.string.error_something_wrong, Toast.LENGTH_SHORT).show()
 }
 
 fun Resources.Theme.getColor(resid: Int): Int {

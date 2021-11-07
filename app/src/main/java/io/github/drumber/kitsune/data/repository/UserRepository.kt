@@ -37,6 +37,7 @@ class UserRepository(
     fun logOut() {
         authRepository.logout()
         user = null
+        userPreferences.clearUserModel()
     }
 
     private suspend fun requestUser(): Result<User> {

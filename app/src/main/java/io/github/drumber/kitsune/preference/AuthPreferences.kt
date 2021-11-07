@@ -33,6 +33,13 @@ class AuthPreferences(context: Context, private val objectMapper: ObjectMapper) 
         }
     }
 
+    fun clearAccessToken() {
+        logD("Deleting access token from encrypted shared preferences.")
+        sharedPreferences.edit {
+            remove(KEY_ACCESS_TOKEN)
+        }
+    }
+
     fun getStoredAccessToken(): AccessToken? {
         val jsonString = sharedPreferences.getString(KEY_ACCESS_TOKEN, null)
         return if (!jsonString.isNullOrBlank()) {

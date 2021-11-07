@@ -23,6 +23,13 @@ class UserPreferences(context: Context, private val objectMapper: ObjectMapper) 
         }
     }
 
+    fun clearUserModel() {
+        logD("Deleting user model from shared preferences.")
+        sharedPreferences.edit {
+            remove(KEY_USER_MODEL)
+        }
+    }
+
     fun getStoredUserModel(): User? {
         val jsonString = sharedPreferences.getString(KEY_USER_MODEL, null)
         return if (!jsonString.isNullOrBlank()) {

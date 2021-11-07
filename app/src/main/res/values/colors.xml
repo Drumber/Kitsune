@@ -27,6 +27,7 @@
     <color name="color_score">#1BBC9C</color>
 
     <color name="translucent_overlay_50">#80FFFFFF</color>
+    <color name="translucent_overlay_70">#B3FFFFFF</color>
 
     <color name="translucent_status_bar">@color/translucent_overlay_50</color>
     <color name="edge_fade_color">#BF000000</color>

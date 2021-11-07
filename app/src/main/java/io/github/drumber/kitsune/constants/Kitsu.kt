@@ -7,4 +7,6 @@ object Kitsu {
     const val DEFAULT_PAGE_SIZE_LIBRARY = 30
     const val MAX_PAGE_SIZE = 20
 
+    const val USER_URL_PREFIX = "https://kitsu.io/users/"
+
 }

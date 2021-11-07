@@ -6,6 +6,16 @@
         android:id="@+id/menu_settings"
         android:title="@string/nav_settings"
         android:icon="@drawable/ic_settings_24"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_share_profile_url"
+        android:title="@string/action_share_profile_url"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_log_out"
+        android:title="@string/action_log_out"
+        app:showAsAction="never" />
 
 </menu>

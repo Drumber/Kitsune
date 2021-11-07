@@ -19,12 +19,15 @@
     <string name="action_read_more">Read more</string>
     <string name="action_read_less">Read less</string>
     <string name="action_back">Back</string>
+    <string name="action_log_out">Log out</string>
+    <string name="action_share_profile_url">Share Profile</string>
 
     <string name="hint_search">Search</string>
     <string name="hint_mark_watched">Mark as watched.</string>
     <string name="hint_mark_not_watched">Mark as not watched.</string>
 
     <string name="error_resource_loading">Could not load data.</string>
+    <string name="error_something_wrong">Oops, something went wrong!</string>
 
     <string name="menu_filter">Filter</string>
     <string name="sort_popularity_asc">Least Popular</string>

@@ -2,9 +2,7 @@ package io.github.drumber.kitsune.ui.profile
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.annotation.StringRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
@@ -15,6 +13,7 @@ import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.model.stats.Stats
 import io.github.drumber.kitsune.data.model.stats.StatsData
@@ -41,16 +40,18 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        updateOptionsMenu()
 
         viewModel.userModel.observe(viewLifecycleOwner) { user ->
             updateUser(user)
+            updateOptionsMenu()
         }
         viewModel.fullUserModel.observe(viewLifecycleOwner) { fullUser ->
             if (fullUser is ResponseData.Success) {
@@ -69,6 +70,24 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                     R.id.menu_settings -> {
                         val action = ProfileFragmentDirections.actionProfileFragmentToSettingsFragment()
                         findNavController().navigate(action)
+                    }
+                    R.id.menu_share_profile_url -> {
+                        val user = viewModel.userModel.value
+                        val profileId = user?.slug ?: user?.id
+                        if (profileId != null) {
+                            val url = Kitsu.USER_URL_PREFIX + profileId
+                            val shareIntent = Intent.createChooser(Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(Intent.EXTRA_TEXT, url)
+                                type = "text/plain"
+                            }, null)
+                            startActivity(shareIntent)
+                        } else {
+                            showSomethingWrongToast()
+                        }
+                    }
+                    R.id.menu_log_out -> {
+                        viewModel.logOut()
                     }
                 }
                 true
@@ -111,9 +130,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
     }
 
     private fun updateUser(user: User?) {
-        if (user != null) {
-            binding.user = user
-        }
+        binding.user = user
+        binding.invalidateAll()
 
         val glide = GlideApp.with(this)
 
@@ -190,6 +208,14 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
 
         val adapter = binding.viewPagerStats.adapter as ProfileStatsAdapter
         adapter.updateCategoryData(position, set)
+    }
+
+    private fun updateOptionsMenu() {
+        val isLoggedIn = viewModel.userModel.value != null
+        binding.toolbar.menu.apply {
+            findItem(R.id.menu_log_out).isVisible = isLoggedIn
+            findItem(R.id.menu_share_profile_url).isVisible = isLoggedIn
+        }
     }
 
     override fun onResume() {
