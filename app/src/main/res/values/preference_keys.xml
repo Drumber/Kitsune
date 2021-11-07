@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Preference Files -->
     <string name="preference_file_key">app_preferences</string>
     <string name="auth_preference_file_key">auth_preferences</string>
     <string name="user_preference_file_key">user_preferences</string>
+
+    <!-- Preference Keys -->
     <string name="preference_key_titles">titles</string>
+    <string name="preference_key_app_version">app_version</string>
 </resources>

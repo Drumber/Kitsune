@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">Kitsune</string>
+    <string name="github_repo_url" translatable="false">https://github.com/Drumber/Kitsune</string>
 
     <!-- Navigation Titles -->
     <string name="nav_home">Home</string>
@@ -105,6 +106,9 @@
         <item>Romanized</item>
         <item>English</item>
     </string-array>
+    <string name="preference_category_about">About</string>
+    <string name="preference_app_version">Version Info</string>
+    <string name="preference_github_repo">GitHub Repository</string>
 
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -147,6 +151,7 @@
     <string name="gender_male">Male</string>
     <string name="gender_female">Female</string>
 
+    <!-- Duration Plurals -->
     <plurals name="duration_seconds">
         <item quantity="one">%s second</item>
         <item quantity="other">%s seconds</item>
