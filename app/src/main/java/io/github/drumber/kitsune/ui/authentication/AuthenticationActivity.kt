@@ -90,7 +90,14 @@ class AuthenticationActivity : BaseActivity(R.layout.activity_authentication, fa
             }
         }
 
-        binding.tvCreateAccount.movementMethod = LinkMovementMethod.getInstance()
+        binding.apply {
+            tvCreateAccount.movementMethod = LinkMovementMethod.getInstance()
+
+            btnBack.setOnClickListener {
+                setResult(Activity.RESULT_CANCELED)
+                finish()
+            }
+        }
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {

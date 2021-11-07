@@ -18,6 +18,7 @@
     <string name="action_unselect_all">Unselect all</string>
     <string name="action_read_more">Read more</string>
     <string name="action_read_less">Read less</string>
+    <string name="action_back">Back</string>
 
     <string name="hint_search">Search</string>
     <string name="hint_mark_watched">Mark as watched.</string>

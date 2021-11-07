@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.util.clearLightNavigationBar
 import io.github.drumber.kitsune.util.setStatusBarColor
 
 abstract class BaseActivity(
@@ -31,6 +32,8 @@ abstract class BaseActivity(
 
         if(edgeToEdge) {
             initEdgeToEdge()
+        } else {
+            clearLightNavigationBar()
         }
     }
 

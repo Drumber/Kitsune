@@ -65,6 +65,14 @@ fun Activity.isLightStatusBar(): Boolean {
     }
 }
 
+fun Activity.clearLightNavigationBar() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        window.decorView.apply {
+            systemUiVisibility = systemUiVisibility xor View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+        }
+    }
+}
+
 /**
  * Make the internal RecyclerView of ViewPager2 accessible.
  */
