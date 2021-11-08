@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.ui.settings
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.preference.*
 import com.google.android.material.snackbar.Snackbar
@@ -62,6 +63,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
             Snackbar.make(view, "Error: ${it.getMessage(requireContext())}", Snackbar.LENGTH_LONG)
                 .setAction(R.string.action_dismiss) { /* dismiss */ }
                 .show()
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.loadingOverlay.isVisible = isLoading
         }
     }
 

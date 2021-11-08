@@ -2,10 +2,7 @@ package io.github.drumber.kitsune.ui.settings
 
 import android.content.Context
 import androidx.annotation.StringRes
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.auth.User
@@ -23,6 +20,10 @@ class SettingsViewModel(
 
     val userModel = Transformations.map(userRepository.userLiveData) { it }
 
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
+
     var errorMessageListener: ((ErrorMessage) -> Unit)? = null
 
     fun updateUser(user: User) {
@@ -30,6 +31,7 @@ class SettingsViewModel(
             errorMessageListener?.invoke(ErrorMessage(R.string.error_invalid_user))
             return
         }
+        _isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = userService.updateUser(user.id, JSONAPIDocument(user))
@@ -41,6 +43,8 @@ class SettingsViewModel(
                 errorMessageListener?.invoke(ErrorMessage(R.string.error_user_update_failed))
                 // trigger to reset preference values from the user model
                 (userModel as MutableLiveData).postValue(userModel.value)
+            } finally {
+                _isLoading.postValue(false)
             }
         }
     }
