@@ -109,6 +109,8 @@
     <string name="preference_category_about">About</string>
     <string name="preference_app_version">Version Info</string>
     <string name="preference_github_repo">GitHub Repository</string>
+    <string name="preference_open_source_libraries">Open Source Libraries</string>
+    <string name="preference_open_source_libraries_description">A list of all used open source libraries.</string>
 
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>

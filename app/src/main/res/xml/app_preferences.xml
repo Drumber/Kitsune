@@ -28,6 +28,12 @@
 
         </Preference>
 
+        <Preference
+            android:key="@string/preference_key_open_source_libraries"
+            android:title="@string/preference_open_source_libraries"
+            android:summary="@string/preference_open_source_libraries_description"
+            app:icon="@drawable/ic_code_24" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

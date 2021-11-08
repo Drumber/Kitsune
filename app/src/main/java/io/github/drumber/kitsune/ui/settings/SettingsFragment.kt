@@ -6,6 +6,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.mikepenz.aboutlibraries.LibsBuilder
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.TitlesPref
@@ -30,6 +31,17 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         val appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
         findPreference<Preference>(getString(R.string.preference_key_app_version))?.summary = appVersion
+
+        findPreference<Preference>(getString(R.string.preference_key_open_source_libraries))?.setOnPreferenceClickListener {
+            val libsBuilder = LibsBuilder()
+                .withLicenseShown(true)
+
+            val bundle = Bundle()
+            bundle.putSerializable("data", libsBuilder)
+
+            findNavController().navigate(R.id.action_settings_fragment_to_librariesFragment, bundle)
+            true
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

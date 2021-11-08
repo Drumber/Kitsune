@@ -8,4 +8,5 @@
     <!-- Preference Keys -->
     <string name="preference_key_titles">titles</string>
     <string name="preference_key_app_version">app_version</string>
+    <string name="preference_key_open_source_libraries">open_source_libraries</string>
 </resources>

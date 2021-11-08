@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs.kotlin'
     id 'kotlin-parcelize'
+    id 'com.mikepenz.aboutlibraries.plugin'
 }
 
 android {
@@ -52,6 +53,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.core:core-splashscreen:1.0.0-alpha02'
+    implementation "androidx.cardview:cardview:1.0.0"
 
     // Navigation
     def nav_version = "2.4.0-beta02"
@@ -143,6 +145,11 @@ dependencies {
 
     // MPAndroidCharts
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    // AboutLibraries
+    def aboutLibraries_version = "8.9.4"
+    implementation "com.mikepenz:aboutlibraries-core:$aboutLibraries_version"
+    implementation "com.mikepenz:aboutlibraries:$aboutLibraries_version"
 
     // Tests
     testImplementation 'junit:junit:4.+'
