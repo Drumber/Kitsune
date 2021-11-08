@@ -25,7 +25,7 @@
         <SwitchPreferenceCompat
             android:key="@string/preference_key_adult_content"
             android:title="@string/preference_adult_content"
-            android:summary="@string/preference_adult_content_description" />
+            android:summary="@string/preference_adult_content_description_off" />
 
     </PreferenceCategory>
 

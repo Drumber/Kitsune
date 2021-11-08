@@ -110,6 +110,7 @@
     <string name="preference_display_name">Display Name</string>
     <string name="preference_profile_url">Profile URL</string>
     <string name="preference_country">Country</string>
+    <string name="preference_country_summary">Country is set to %s</string>
     <string name="preference_titles">Titles</string>
     <string name="preference_titles_description">Define how media titles will be displayed.</string>
     <string-array name="preference_titles_values">
@@ -118,7 +119,8 @@
         <item>English</item>
     </string-array>
     <string name="preference_adult_content">Adult Content</string>
-    <string name="preference_adult_content_description">If disabled, R18+ media will be hidden.</string>
+    <string name="preference_adult_content_description_off">Media with R18+ age rating will be hidden.</string>
+    <string name="preference_adult_content_description_on">Media with R18+ age rating will be visible.</string>
     <string name="preference_app_version">Version Info</string>
     <string name="preference_github_repo">GitHub Repository</string>
     <string name="preference_open_source_libraries">Open Source Libraries</string>

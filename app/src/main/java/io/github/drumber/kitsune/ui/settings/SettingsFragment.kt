@@ -9,6 +9,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.aboutlibraries.LibsBuilder
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.model.TitlesPref
 import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
@@ -71,41 +72,50 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 entryValues = Locale.getISOCountries()
                 entries = Locale.getISOCountries().map { Locale("", it).displayCountry }.toTypedArray()
                 value = user?.country
-                requireUserLoggedIn(user)
                 setOnPreferenceChangeListener { _, newValue ->
                     updateUserIfChanged(value, newValue, User(user?.id, country = newValue as String))
                     true
+                }
+                requireUserLoggedIn(user) {
+                    val countryName = Locale("", it.value).displayName
+                    getString(R.string.preference_country_summary, countryName)
                 }
             }
 
             //---- Adult Content
             findPreference<SwitchPreferenceCompat>(R.string.preference_key_adult_content)?.apply {
                 isChecked = user?.sfwFilter?.not() ?: false
-                requireUserLoggedIn(user)
                 setOnPreferenceChangeListener { _, newValue ->
                     updateUserIfChanged(isChecked, newValue, User(user?.id, sfwFilter = !(newValue as Boolean)))
                     true
+                }
+                requireUserLoggedIn(user) {
+                    getString(if (it.isChecked) {
+                        R.string.preference_adult_content_description_on
+                    } else {
+                        R.string.preference_adult_content_description_off
+                    })
                 }
             }
 
             //---- Display Name
             findPreference<EditTextPreference>(R.string.preference_key_display_name)?.apply {
                 text = user?.name
-                requireUserLoggedIn(user)
                 setOnPreferenceChangeListener { _, newValue ->
                     updateUserIfChanged(text, newValue, User(user?.id, name = newValue as String))
                     true
                 }
+                requireUserLoggedIn(user) { it.text }
             }
 
             //---- Profile URL
             findPreference<EditTextPreference>(R.string.preference_key_profile_url)?.apply {
                 text = user?.slug
-                requireUserLoggedIn(user)
                 setOnPreferenceChangeListener { _, newValue ->
                     updateUserIfChanged(text, newValue, User(user?.id, slug = newValue as String))
                     true
                 }
+                requireUserLoggedIn(user) { Kitsu.USER_URL_PREFIX + it.text }
             }
         }
     }
@@ -116,13 +126,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun Preference.requireUserLoggedIn(
+    private inline fun <reified T : Preference> T.requireUserLoggedIn(
         user: User?,
-        @StringRes messageRes: Int = R.string.preference_not_logged_in
+        @StringRes messageRes: Int = R.string.preference_not_logged_in,
+        summaryProvider: Preference.SummaryProvider<T>? = null
     ) {
         isEnabled = user != null
         if (user == null) {
             summary = getString(messageRes)
+        }
+        this.summaryProvider = if (user != null) {
+            summaryProvider
+        } else {
+            null
         }
     }
 
