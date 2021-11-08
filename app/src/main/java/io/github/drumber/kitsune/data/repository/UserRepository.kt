@@ -83,6 +83,16 @@ class UserRepository(
         }
     }
 
+    fun updateUserModel(updatedUser: User) {
+        if (updatedUser.id.isNullOrBlank()) {
+            throw IllegalArgumentException("User ID must not be null.")
+        } else if (updatedUser.id != user?.id) {
+            throw IllegalArgumentException("User ID is not equal to the cached user ID or the user is not logged in.")
+        }
+        setUserModel(updatedUser)
+        logI("Updated cached user model.")
+    }
+
     private fun setUserModel(user: User) {
         this.user = user
         userPreferences.storeUserModel(user)

@@ -22,12 +22,15 @@
     <string name="action_back">Back</string>
     <string name="action_log_out">Log out</string>
     <string name="action_share_profile_url">Share Profile</string>
+    <string name="action_dismiss">Dismiss</string>
 
     <string name="hint_search">Search</string>
     <string name="hint_mark_watched">Mark as watched.</string>
     <string name="hint_mark_not_watched">Mark as not watched.</string>
 
     <string name="error_resource_loading">Could not load data.</string>
+    <string name="error_invalid_user">Invalid User. Are you logged in?</string>
+    <string name="error_user_update_failed">Failed to update user data.</string>
     <string name="error_something_wrong">Oops, something went wrong!</string>
 
     <string name="menu_filter">Filter</string>
@@ -99,6 +102,14 @@
     <string name="section_highest_rated">Highest Rated Anime</string>
     <string name="section_most_popular">Most Popular Anime</string>
 
+    <string name="preference_category_ui">User Interface</string>
+    <string name="preference_category_account">Account</string>
+    <string name="preference_category_about">About</string>
+
+    <string name="preference_language">Language</string>
+    <string name="preference_display_name">Display Name</string>
+    <string name="preference_profile_url">Profile URL</string>
+    <string name="preference_country">Country</string>
     <string name="preference_titles">Titles</string>
     <string name="preference_titles_description">Define how media titles will be displayed.</string>
     <string-array name="preference_titles_values">
@@ -106,11 +117,14 @@
         <item>Romanized</item>
         <item>English</item>
     </string-array>
-    <string name="preference_category_about">About</string>
+    <string name="preference_adult_content">Adult Content</string>
+    <string name="preference_adult_content_description">If disabled, R18+ media will be hidden.</string>
     <string name="preference_app_version">Version Info</string>
     <string name="preference_github_repo">GitHub Repository</string>
     <string name="preference_open_source_libraries">Open Source Libraries</string>
     <string name="preference_open_source_libraries_description">A list of all used open source libraries.</string>
+
+    <string name="preference_not_logged_in">You must be logged in to edit this setting.</string>
 
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>

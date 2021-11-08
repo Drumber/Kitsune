@@ -9,6 +9,7 @@ import io.github.drumber.kitsune.ui.main.explore.ExploreViewModel
 import io.github.drumber.kitsune.ui.profile.ProfileViewModel
 import io.github.drumber.kitsune.ui.search.SearchViewModel
 import io.github.drumber.kitsune.ui.search.categories.CategoriesViewModel
+import io.github.drumber.kitsune.ui.settings.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -22,4 +23,5 @@ val viewModelModule = module {
     viewModel { LoginViewModel(get()) }
     viewModel { ProfileViewModel(get(), get()) }
     viewModel { DetailsViewModel(get(), get(), get()) }
+    viewModel { SettingsViewModel(get(), get()) }
 }

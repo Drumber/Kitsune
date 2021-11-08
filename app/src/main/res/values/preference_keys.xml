@@ -6,7 +6,14 @@
     <string name="user_preference_file_key">user_preferences</string>
 
     <!-- Preference Keys -->
-    <string name="preference_key_titles">titles</string>
+    <string name="preference_key_language">language</string>
     <string name="preference_key_app_version">app_version</string>
     <string name="preference_key_open_source_libraries">open_source_libraries</string>
+
+    <!-- Kitsune Preference Keys -->
+    <string name="preference_key_display_name">display_name</string>
+    <string name="preference_key_profile_url">profile_url</string>
+    <string name="preference_key_country">country</string>
+    <string name="preference_key_titles">titles</string>
+    <string name="preference_key_adult_content">adult_content</string>
 </resources>
