@@ -1,11 +1,14 @@
 package io.github.drumber.kitsune
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatDelegate
 import by.kirich1409.viewbindingdelegate.ViewBindingPropertyDelegate
 import com.chibatching.kotpref.Kotpref
+import com.chibatching.kotpref.livedata.asLiveData
 import io.github.drumber.kitsune.data.repository.AuthRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.di.appModule
+import io.github.drumber.kitsune.preference.KitsunePref
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -31,6 +34,10 @@ class KitsuneApplication : Application() {
         Kotpref.init(this)
 
         ViewBindingPropertyDelegate.strictMode = false
+
+        KitsunePref.asLiveData(KitsunePref::darkMode).observeForever {
+            AppCompatDelegate.setDefaultNightMode(it.toInt())
+        }
 
         initLoggedInUser()
     }

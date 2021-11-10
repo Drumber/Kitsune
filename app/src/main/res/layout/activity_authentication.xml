@@ -116,7 +116,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
-            android:background="@color/translucent_overlay_70"
+            android:background="@color/translucent_overlay"
             android:clickable="true"
             android:focusable="true"
             android:visibility="gone"

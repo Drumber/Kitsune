@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="colorSearchView" format="color" />
+    <attr name="fullScreenDialogTheme" format="reference" />
+
+    <attr name="colorPlaceholderGradientStart" format="color" />
+    <attr name="colorPlaceholderGradientEnd" format="color" />
 
     <declare-styleable name="ProfilePictureBehavior">
         <attr name="finalXPosition" format="dimension"/>

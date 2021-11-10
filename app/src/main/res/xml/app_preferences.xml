@@ -7,6 +7,14 @@
         android:title="@string/preference_category_ui">
 
         <ListPreference
+            android:key="@string/preference_key_dark_mode"
+            android:title="@string/preference_dark_mode"
+            android:entryValues="@array/preference_dark_mode_values"
+            android:entries="@array/preference_dark_mode_entries"
+            android:defaultValue="-1"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
             android:key="@string/preference_key_language"
             android:title="@string/preference_language"
             android:enabled="false"

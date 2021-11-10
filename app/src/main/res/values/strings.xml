@@ -106,6 +106,13 @@
     <string name="preference_category_account">Account</string>
     <string name="preference_category_about">About</string>
 
+    <string name="preference_dark_mode">Dark Mode</string>
+    <string-array name="preference_dark_mode_entries">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>Follow System</item>
+        <item>Battery Saver</item>
+    </string-array>
     <string name="preference_language">Language</string>
     <string name="preference_display_name">Display Name</string>
     <string name="preference_profile_url">Profile URL</string>

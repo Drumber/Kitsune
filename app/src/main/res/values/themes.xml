@@ -11,8 +11,8 @@
         <item name="colorOnPrimary">@color/black</item>
         <item name="colorOnSecondary">@color/black</item>
 
-        <item name="android:colorBackground">@color/background</item>
         <item name="colorSurface">@color/background</item>
+        <item name="android:colorBackground">?colorSurface</item>
         <item name="colorOnBackground">@color/foreground</item>
         <item name="colorOnSurface">@color/foreground</item>
 
@@ -27,9 +27,26 @@
         <item name="colorPrimaryDark">?colorPrimaryVariant</item>
         <item name="colorAccent">?colorSecondary</item>
 
-        <item name="colorSearchView">@color/background</item>
+        <item name="colorPlaceholderGradientStart">?colorPrimary</item>
+        <item name="colorPlaceholderGradientEnd">?colorPrimaryDark</item>
+
+        <item name="colorSearchView">?colorSurface</item>
         <item name="preferenceTheme">@style/Theme.Kitsune.PreferenceThemeOverlay</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Kitsune.BottomSheetDialog</item>
+        <item name="fullScreenDialogTheme">@style/Theme.Kitsune.FullScreenDialog</item>
+    </style>
+    
+    <style name="Theme.Kitsune.DayNight.Purple" parent="Theme.Kitsune.DayNight">
+        <item name="colorSurface">@color/purple_100</item>
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_400</item>
+        <item name="colorSecondary">@color/orange_400</item>
+        <item name="colorSecondaryVariant">@color/orange_700</item>
+
+        <item name="colorPlaceholderGradientStart">?colorPrimary</item>
+        <item name="colorPlaceholderGradientEnd">?colorPrimaryVariant</item>
+
+        <item name="fullScreenDialogTheme">@style/Theme.Kitsune.FullScreenDialog.Purple</item>
     </style>
 
     <!-- SplashScreen theme -->
@@ -38,12 +55,16 @@
     <style name="Theme.Kitsune.SplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/background</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splashscreen</item>
-        <item name="postSplashScreenTheme">@style/Theme.Kitsune.DayNight</item>
+        <item name="postSplashScreenTheme">@style/Theme.Kitsune.DayNight.Purple</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
     </style>
 
     <style name="Theme.Kitsune.FullScreenDialog" parent="Theme.Kitsune.DayNight">
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <style name="Theme.Kitsune.FullScreenDialog.Purple" parent="Theme.Kitsune.DayNight.Purple">
         <item name="android:windowIsFloating">false</item>
     </style>
 

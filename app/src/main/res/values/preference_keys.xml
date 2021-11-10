@@ -6,6 +6,8 @@
     <string name="user_preference_file_key">user_preferences</string>
 
     <!-- Preference Keys -->
+    <string name="preference_key_app_theme">app_theme</string>
+    <string name="preference_key_dark_mode">dark_mode</string>
     <string name="preference_key_language">language</string>
     <string name="preference_key_app_version">app_version</string>
     <string name="preference_key_open_source_libraries">open_source_libraries</string>

@@ -1,9 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.Kitsune.DayNight" parent="Theme.Kitsune.Dark" />
-
     <!-- Base application theme. -->
-    <style name="Theme.Kitsune.Dark" parent="Theme.Kitsune">
+    <style name="Theme.Kitsune.DayNight" parent="Theme.Kitsune">
         <item name="colorPrimary">@color/orange_800</item>
         <item name="colorPrimaryVariant">@color/orange_700</item>
         <item name="colorSecondary">@color/yellow_900</item>
@@ -18,10 +16,21 @@
         <item name="colorSearchView">@color/background_15</item>
     </style>
 
-    <!-- SplashScreen theme -->
-    <style name="Theme.Kitsune.SplashScreen.DayNight" parent="Theme.Kitsune.SplashScreen.Night" />
+    <style name="Theme.Kitsune.DayNight.Purple" parent="Theme.Kitsune.DayNight">
+        <item name="colorSurface">@color/dark_purple_lighter</item>
+        <item name="colorPrimary">@color/orange_800</item>
+        <item name="colorPrimaryVariant">@color/orange_700</item>
+        <item name="colorSecondary">@color/purple_400</item>
+        <item name="colorSecondaryVariant">@color/purple_700</item>
 
-    <style name="Theme.Kitsune.SplashScreen.Night" parent="Theme.Kitsune.SplashScreen">
+        <item name="colorPlaceholderGradientStart">@color/purple_500</item>
+        <item name="colorPlaceholderGradientEnd">@color/purple_600</item>
+
+        <item name="fullScreenDialogTheme">@style/Theme.Kitsune.FullScreenDialog.Purple</item>
+    </style>
+
+    <!-- SplashScreen theme -->
+    <style name="Theme.Kitsune.SplashScreen.DayNight" parent="Theme.Kitsune.SplashScreen">
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
     </style>

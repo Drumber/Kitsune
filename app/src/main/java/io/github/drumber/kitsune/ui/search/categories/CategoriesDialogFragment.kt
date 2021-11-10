@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.ui.search.categories
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -43,7 +44,9 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
     }
 
     override fun getTheme(): Int {
-        return R.style.Theme_Kitsune_FullScreenDialog
+        val typedValue = TypedValue()
+        requireActivity().theme.resolveAttribute(R.attr.fullScreenDialogTheme, typedValue, true)
+        return typedValue.data
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

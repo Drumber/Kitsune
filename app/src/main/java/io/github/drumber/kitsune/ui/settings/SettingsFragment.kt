@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.ui.settings
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.preference.*
@@ -25,6 +26,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.app_preferences, rootKey)
+
+        findPreference<ListPreference>(R.string.preference_key_dark_mode)?.setOnPreferenceChangeListener { _, newValue ->
+            (newValue as? String)?.toIntOrNull()?.let {
+                AppCompatDelegate.setDefaultNightMode(it)
+            }
+            true
+        }
 
         findPreference<ListPreference>(R.string.preference_key_titles)?.apply {
             entryValues = TitlesPref.values().map { it.name }.toTypedArray()
