@@ -33,10 +33,14 @@
     </style>
 
     <!-- SplashScreen theme -->
+    <style name="Theme.Kitsune.SplashScreen.DayNight" parent="Theme.Kitsune.SplashScreen" />
+
     <style name="Theme.Kitsune.SplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/background</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splashscreen</item>
         <item name="postSplashScreenTheme">@style/Theme.Kitsune.DayNight</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
     </style>
 
     <style name="Theme.Kitsune.FullScreenDialog" parent="Theme.Kitsune.DayNight">

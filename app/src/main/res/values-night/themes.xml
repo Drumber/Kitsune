@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.Kitsune.DayNight" parent="Theme.Kitsune.Dark"/>
+    <style name="Theme.Kitsune.DayNight" parent="Theme.Kitsune.Dark" />
 
     <!-- Base application theme. -->
     <style name="Theme.Kitsune.Dark" parent="Theme.Kitsune">
@@ -16,6 +16,14 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
 
         <item name="colorSearchView">@color/background_15</item>
+    </style>
+
+    <!-- SplashScreen theme -->
+    <style name="Theme.Kitsune.SplashScreen.DayNight" parent="Theme.Kitsune.SplashScreen.Night" />
+
+    <style name="Theme.Kitsune.SplashScreen.Night" parent="Theme.Kitsune.SplashScreen">
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
     </style>
 
 </resources>

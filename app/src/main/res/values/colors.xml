@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="ic_launcher_background">#312631</color>
+
     <color name="orange_900">#bc3d2c</color>
     <color name="orange_800">#d64a35</color>
     <color name="orange_700">#e4503a</color>

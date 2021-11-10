@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Kitsune.SplashScreen">
+        android:theme="@style/Theme.Kitsune.SplashScreen.DayNight">
         <activity
             android:name=".ui.authentication.AuthenticationActivity"
             android:exported="true"
