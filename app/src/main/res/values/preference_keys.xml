@@ -6,6 +6,7 @@
     <string name="user_preference_file_key">user_preferences</string>
 
     <!-- Preference Keys -->
+    <string name="preference_key_fragment_appearance">fragment_appearance</string>
     <string name="preference_key_app_theme">app_theme</string>
     <string name="preference_key_dark_mode">dark_mode</string>
     <string name="preference_key_language">language</string>

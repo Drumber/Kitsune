@@ -7,7 +7,8 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:liftOnScroll="true">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -33,7 +34,8 @@
         android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
-        android:background="@color/translucent_overlay">
+        android:alpha="0.7"
+        android:background="?attr/colorSurface">
 
         <ProgressBar
             android:layout_width="wrap_content"

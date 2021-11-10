@@ -11,7 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import com.chibatching.kotpref.livedata.asLiveData
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.AppTheme
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.clearLightNavigationBar
 import io.github.drumber.kitsune.util.setStatusBarColor
 
@@ -20,9 +23,20 @@ abstract class BaseActivity(
     private val edgeToEdge: Boolean = true
 ) : AppCompatActivity(contentLayoutId) {
 
+    private lateinit var appliedTheme: AppTheme
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
+
+        // apply app theme
+        appliedTheme = KitsunePref.appTheme
+        setTheme(appliedTheme.themeRes)
+
         super.onCreate(savedInstanceState)
+
+        KitsunePref.asLiveData(KitsunePref::appTheme).observe(this) {
+            checkAppTheme()
+        }
 
         // get surface color
         val typedValue = TypedValue()
@@ -34,6 +48,17 @@ abstract class BaseActivity(
             initEdgeToEdge()
         } else {
             clearLightNavigationBar()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkAppTheme()
+    }
+
+    private fun checkAppTheme() {
+        if (appliedTheme != KitsunePref.appTheme) {
+            recreate()
         }
     }
 

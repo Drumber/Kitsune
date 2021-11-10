@@ -27,6 +27,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.app_preferences, rootKey)
 
+        findPreference<Preference>(R.string.preference_key_fragment_appearance)?.setOnPreferenceClickListener {
+            val action = SettingsFragmentDirections.actionSettingsFragmentToThemePreferenceFragment()
+            findNavController().navigate(action)
+            true
+        }
+
         findPreference<ListPreference>(R.string.preference_key_dark_mode)?.setOnPreferenceChangeListener { _, newValue ->
             (newValue as? String)?.toIntOrNull()?.let {
                 AppCompatDelegate.setDefaultNightMode(it)

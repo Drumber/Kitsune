@@ -41,5 +41,11 @@
     <color name="color_heart">#E74C3C</color>
     <color name="color_score">#1BBC9C</color>
 
+    <!-- Preview colors for theme selector cards -->
+    <color name="theme_preview_default_light">@color/white</color>
+    <color name="theme_preview_default_dark">@color/black</color>
+    <color name="theme_preview_purple_light">@color/purple_100</color>
+    <color name="theme_preview_purple_dark">@color/dark_purple_lighter</color>
+
     <color name="edge_fade_color">#BF000000</color>
 </resources>
