@@ -32,7 +32,7 @@ class ThemePreferenceFragment : Fragment(R.layout.fragment_theme_preference) {
         binding.apply {
             toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
             toolbar.initWindowInsetsListener(consume = false)
-            nsvContent.initPaddingWindowInsetsListener(left = true, right = true)
+            nsvContent.initPaddingWindowInsetsListener(left = true, right = true, bottom = true)
 
             cardThemeDefault.setOnClickListener {
                 KitsunePref.appTheme = AppTheme.DEFAULT

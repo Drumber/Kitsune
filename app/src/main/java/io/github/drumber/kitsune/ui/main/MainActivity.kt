@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.ui.main
 
 import android.os.Bundle
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
@@ -45,10 +46,42 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 NavigationUI.onNavDestinationSelected(item, navController)
             }
         }
+
+        navController.addOnDestinationChangedListener { navController, navDestination, bundle ->
+            // hide bottom navigation if settings fragment or one of its subordinate fragments is displayed
+            val settingsDestination = navController.backQueue.lastOrNull { entry ->
+                entry.destination.id == R.id.settings_fragment
+            }
+            if (settingsDestination != null) {
+                hideBottomNavigation()
+            } else {
+                showBottomNavigation()
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    private fun hideBottomNavigation() {
+        binding.bottomNavigation.apply {
+            if (this.isVisible) {
+                animate().translationY(this.height.toFloat())
+                    .withEndAction { this.isVisible = false }
+                    .duration = resources.getInteger(R.integer.bottom_navigation_animation_duration).toLong()
+            }
+        }
+    }
+
+    private fun showBottomNavigation() {
+        binding.bottomNavigation.apply {
+            if (!this.isVisible) {
+                animate().translationY(0f)
+                    .withStartAction { this.isVisible = true }
+                    .duration = resources.getInteger(R.integer.bottom_navigation_animation_duration).toLong()
+            }
+        }
     }
 
 }

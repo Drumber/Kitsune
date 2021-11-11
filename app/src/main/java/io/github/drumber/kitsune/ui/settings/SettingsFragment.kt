@@ -1,12 +1,15 @@
 package io.github.drumber.kitsune.ui.settings
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.preference.*
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.aboutlibraries.LibsBuilder
 import io.github.drumber.kitsune.BuildConfig
@@ -69,7 +72,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.initPaddingWindowInsetsListener(left = true, top = true, right = true, bottom = false)
+        view.initPaddingWindowInsetsListener(left = true, top = true, right = true, consume = false)
         val binding = FragmentPreferenceBinding.bind(view)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
@@ -82,6 +85,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.loadingOverlay.isVisible = isLoading
         }
+    }
+
+    override fun onCreateRecyclerView(
+        inflater: LayoutInflater?,
+        parent: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): RecyclerView {
+        val recyclerView = super.onCreateRecyclerView(inflater, parent, savedInstanceState)
+        recyclerView.initPaddingWindowInsetsListener(bottom = true)
+        return recyclerView
     }
 
     private fun observeUserModel() {

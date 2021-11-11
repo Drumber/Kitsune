@@ -15,7 +15,7 @@ class LibrariesFragment : LibsSupportFragment(), NavigationBarView.OnItemReselec
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById(com.mikepenz.aboutlibraries.R.id.cardListView)
-        recyclerView?.initPaddingWindowInsetsListener(left = true, top = true, right = true)
+        recyclerView?.initPaddingWindowInsetsListener(left = true, top = true, right = true, bottom = true)
         recyclerView?.clipToPadding = false
     }
 
