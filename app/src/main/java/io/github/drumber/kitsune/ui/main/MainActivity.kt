@@ -47,16 +47,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
         }
 
-        navController.addOnDestinationChangedListener { navController, navDestination, bundle ->
-            // hide bottom navigation if settings fragment or one of its subordinate fragments is displayed
-            val settingsDestination = navController.backQueue.lastOrNull { entry ->
-                entry.destination.id == R.id.settings_fragment
-            }
-            if (settingsDestination != null) {
-                hideBottomNavigation()
-            } else {
-                showBottomNavigation()
-            }
+        // hide bottom navigation if settings fragment or one of its subordinate fragments is displayed
+        toggleBottomNavigation(isSettingsFragmentInBackStack(), false)
+        navController.addOnDestinationChangedListener { _, _, _ ->
+            toggleBottomNavigation(isSettingsFragmentInBackStack())
         }
     }
 
@@ -64,22 +58,30 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    private fun hideBottomNavigation() {
-        binding.bottomNavigation.apply {
-            if (this.isVisible) {
-                animate().translationY(this.height.toFloat())
-                    .withEndAction { this.isVisible = false }
-                    .duration = resources.getInteger(R.integer.bottom_navigation_animation_duration).toLong()
-            }
-        }
+    private fun isSettingsFragmentInBackStack(): Boolean {
+        return navController.backQueue.lastOrNull { entry ->
+            entry.destination.id == R.id.settings_fragment
+        } != null
     }
 
-    private fun showBottomNavigation() {
+    private fun toggleBottomNavigation(hideBottomNav: Boolean, animate: Boolean = true) {
         binding.bottomNavigation.apply {
-            if (!this.isVisible) {
-                animate().translationY(0f)
-                    .withStartAction { this.isVisible = true }
-                    .duration = resources.getInteger(R.integer.bottom_navigation_animation_duration).toLong()
+            if (hideBottomNav && this.isVisible) {
+                if (animate) {
+                    animate().translationY(this.height.toFloat())
+                        .withEndAction { this.isVisible = false }
+                        .duration = resources.getInteger(R.integer.bottom_navigation_animation_duration).toLong()
+                } else {
+                    this.isVisible = false
+                }
+            } else if (!hideBottomNav && !this.isVisible) {
+                if (animate) {
+                    animate().translationY(0f)
+                        .withStartAction { this.isVisible = true }
+                        .duration = resources.getInteger(R.integer.bottom_navigation_animation_duration).toLong()
+                } else {
+                    this.isVisible = true
+                }
             }
         }
     }
