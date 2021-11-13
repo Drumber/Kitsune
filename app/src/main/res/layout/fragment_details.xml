@@ -198,6 +198,30 @@
                         app:videoUrl="@{data.trailerUrl}"
                         app:coverUrl="@{data.trailerCoverUrl}" />
 
+                    <LinearLayout
+                        android:id="@+id/layout_streamer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        app:isVisible="@{data.hasStreamingLinks()}"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/title_streamer"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                            android:layout_marginBottom="10dp" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_streamer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
 
             </androidx.core.widget.NestedScrollView>

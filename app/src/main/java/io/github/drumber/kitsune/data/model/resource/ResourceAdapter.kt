@@ -151,6 +151,8 @@ sealed class ResourceAdapter(
         }
     }
 
+    fun hasStreamingLinks() = this is AnimeResource && !anime.streamingLinks.isNullOrEmpty()
+
     fun isAnime() = this is AnimeResource
 
     @Parcelize

@@ -66,7 +66,7 @@ class DetailsViewModel(
 
         try {
             val resourceModel = if (resourceAdapter.isAnime()) {
-                filter.include("categories", "animeProductions.producer")
+                filter.include("categories", "animeProductions.producer", "streamingLinks")
                 animeService.getAnime(id, filter.options).get()
             } else {
                 filter.include("categories")

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.github.jasminb.jsonapi.ResourceConverter
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.data.model.auth.User
@@ -17,6 +18,8 @@ import io.github.drumber.kitsune.data.model.resource.Chapter
 import io.github.drumber.kitsune.data.model.resource.Episode
 import io.github.drumber.kitsune.data.model.resource.Manga
 import io.github.drumber.kitsune.data.model.stats.Stats
+import io.github.drumber.kitsune.data.model.streamer.Streamer
+import io.github.drumber.kitsune.data.model.streamer.StreamingLink
 import io.github.drumber.kitsune.data.service.anime.AnimeService
 import io.github.drumber.kitsune.data.service.anime.EpisodesService
 import io.github.drumber.kitsune.data.service.auth.AuthService
@@ -29,6 +32,7 @@ import io.github.drumber.kitsune.util.network.AuthenticationInterceptor
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptorDummy
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptorImpl
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.scope.Scope
 import org.koin.dsl.module
@@ -49,7 +53,9 @@ val serviceModule = module {
             Anime::class.java,
             Category::class.java,
             AnimeProduction::class.java,
-            Producer::class.java
+            Producer::class.java,
+            StreamingLink::class.java,
+            Streamer::class.java
         )
     }
     factory { createService<EpisodesService>(get(), get(), Episode::class.java) }
@@ -100,10 +106,16 @@ fun createObjectMapper(): ObjectMapper = jacksonObjectMapper()
     .configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, false)
 
 private fun createConverterFactory(
+    httpClient: OkHttpClient,
     objectMapper: ObjectMapper,
     vararg classes: Class<*>
 ): JSONAPIConverterFactory {
-    return JSONAPIConverterFactory(objectMapper, *classes)
+    val resourceConverter = ResourceConverter(objectMapper, *classes)
+    resourceConverter.setGlobalResolver { url ->
+        val request = httpClient.newCall(Request.Builder().url(url).build())
+        request.execute().body?.bytes()
+    }
+    return JSONAPIConverterFactory(resourceConverter)
 }
 
 private inline fun <reified T> createService(
@@ -115,7 +127,7 @@ private inline fun <reified T> createService(
     return Retrofit.Builder()
         .baseUrl(baseUrl)
         .client(httpClient)
-        .addConverterFactory(createConverterFactory(objectMapper, *classes))
+        .addConverterFactory(createConverterFactory(httpClient, objectMapper, *classes))
         .build()
         .create(T::class.java)
 }

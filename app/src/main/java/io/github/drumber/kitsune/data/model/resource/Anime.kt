@@ -10,6 +10,7 @@ import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
 import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.data.model.production.AnimeProduction
+import io.github.drumber.kitsune.data.model.streamer.StreamingLink
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -50,7 +51,10 @@ data class Anime @Ignore constructor(
     val categories: List<Category>? = null,
     @Ignore
     @Relationship("animeProductions")
-    val animeProduction: List<AnimeProduction>? = null
+    val animeProduction: List<AnimeProduction>? = null,
+    @Ignore
+    @Relationship("streamingLinks")
+    val streamingLinks: List<StreamingLink>?
 ) : Resource(), Parcelable {
 
     /**
@@ -116,6 +120,7 @@ data class Anime @Ignore constructor(
         nsfw,
         nextRelease,
         totalLength,
+        null,
         null,
         null
     )

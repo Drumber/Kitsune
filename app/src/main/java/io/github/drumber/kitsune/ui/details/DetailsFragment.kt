@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.ui.details
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -30,11 +31,13 @@ import io.github.drumber.kitsune.data.model.library.getStringResId
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
+import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.util.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.concurrent.CopyOnWriteArrayList
 
 class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     NavigationBarView.OnItemReselectedListener {
@@ -69,6 +72,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         viewModel.resourceAdapter.observe(viewLifecycleOwner) { model ->
             binding.data = model
             showCategoryChips(model)
+            showStreamingLinks(model)
 
             val glide = GlideApp.with(this)
 
@@ -168,6 +172,29 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
         val action = DetailsFragmentDirections.actionDetailsFragmentToResourceListFragment(resourceSelector, title)
         findNavController().navigate(action)
+    }
+
+    private fun showStreamingLinks(resourceAdapter: ResourceAdapter) {
+        val data = if (resourceAdapter is ResourceAdapter.AnimeResource) {
+            resourceAdapter.anime.streamingLinks
+        } else {
+            null
+        } ?: emptyList()
+
+        if (binding.rvStreamer.adapter !is StreamingLinkAdapter) {
+            val glide = GlideApp.with(this)
+            val adapter = StreamingLinkAdapter(CopyOnWriteArrayList(data), glide) { streamingLink ->
+                streamingLink.url?.let { url ->
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    startActivity(intent)
+                }
+            }
+            binding.rvStreamer.adapter = adapter
+        } else {
+            val adapter = binding.rvStreamer.adapter as StreamingLinkAdapter
+            adapter.dataSet.addAll(0, data)
+            adapter.notifyDataSetChanged()
+        }
     }
 
     private fun showManageLibraryBottomSheet() {
