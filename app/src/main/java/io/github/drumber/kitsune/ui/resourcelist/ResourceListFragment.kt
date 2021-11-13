@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.main.explore
+package io.github.drumber.kitsune.ui.resourcelist
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
-import io.github.drumber.kitsune.databinding.FragmentExploreBinding
+import io.github.drumber.kitsune.databinding.FragmentResourceListBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.ui.base.BaseCollectionViewModel
@@ -18,13 +18,13 @@ import io.github.drumber.kitsune.util.initWindowInsetsListener
 import io.github.drumber.kitsune.util.navigateSafe
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ExploreFragment : BaseCollectionFragment(R.layout.fragment_explore) {
+class ResourceListFragment : BaseCollectionFragment(R.layout.fragment_resource_list) {
 
-    private val args: ExploreFragmentArgs by navArgs()
+    private val args: ResourceListFragmentArgs by navArgs()
 
-    private val binding: FragmentExploreBinding by viewBinding()
+    private val binding: FragmentResourceListBinding by viewBinding()
 
-    private val viewModel: ExploreViewModel by viewModel()
+    private val viewModel: ResourceListViewModel by viewModel()
 
     override val collectionViewModel: BaseCollectionViewModel
         get() = viewModel
@@ -48,8 +48,8 @@ class ExploreFragment : BaseCollectionFragment(R.layout.fragment_explore) {
     }
 
     override fun onResourceClicked(model: ResourceAdapter, options: NavOptions) {
-        val action = ExploreFragmentDirections.actionExploreFragmentToDetailsFragment2(model)
-        findNavController().navigateSafe(R.id.explore_fragment, action, options)
+        val action = ResourceListFragmentDirections.actionResourceListFragmentToDetailsFragment(model)
+        findNavController().navigateSafe(R.id.resource_list_fragment, action, options)
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {

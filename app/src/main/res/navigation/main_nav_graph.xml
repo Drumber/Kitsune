@@ -16,8 +16,8 @@
             android:id="@+id/action_main_fragment_to_detailsFragment"
             app:destination="@id/details_fragment" />
         <action
-            android:id="@+id/action_main_fragment_to_exploreFragment2"
-            app:destination="@id/explore_fragment" />
+            android:id="@+id/action_main_fragment_to_resourceListFragment"
+            app:destination="@id/resource_list_fragment" />
     </fragment>
 
     <fragment
@@ -46,14 +46,17 @@
         <argument
             android:name="model"
             app:argType="io.github.drumber.kitsune.data.model.resource.ResourceAdapter" />
+        <action
+            android:id="@+id/action_details_fragment_to_resource_list_fragment"
+            app:destination="@id/resource_list_fragment" />
     </fragment>
     <fragment
-        android:id="@+id/explore_fragment"
-        android:name="io.github.drumber.kitsune.ui.main.explore.ExploreFragment"
-        android:label="fragment_explore"
-        tools:layout="@layout/fragment_explore" >
+        android:id="@+id/resource_list_fragment"
+        android:name="io.github.drumber.kitsune.ui.resourcelist.ResourceListFragment"
+        android:label="fragment_resource_list"
+        tools:layout="@layout/fragment_resource_list">
         <action
-            android:id="@+id/action_exploreFragment_to_details_fragment2"
+            android:id="@+id/action_resourceListFragment_to_details_fragment"
             app:destination="@id/details_fragment" />
         <argument
             android:name="resourceSelector"

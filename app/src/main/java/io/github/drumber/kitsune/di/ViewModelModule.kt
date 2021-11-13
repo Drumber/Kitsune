@@ -5,7 +5,7 @@ import io.github.drumber.kitsune.ui.details.DetailsViewModel
 import io.github.drumber.kitsune.ui.library.LibraryViewModel
 import io.github.drumber.kitsune.ui.main.MainActivityViewModel
 import io.github.drumber.kitsune.ui.main.MainFragmentViewModel
-import io.github.drumber.kitsune.ui.main.explore.ExploreViewModel
+import io.github.drumber.kitsune.ui.resourcelist.ResourceListViewModel
 import io.github.drumber.kitsune.ui.profile.ProfileViewModel
 import io.github.drumber.kitsune.ui.search.SearchViewModel
 import io.github.drumber.kitsune.ui.search.categories.CategoriesViewModel
@@ -17,7 +17,7 @@ val viewModelModule = module {
     viewModel { MainActivityViewModel() }
     viewModel { MainFragmentViewModel(get()) }
     viewModel { SearchViewModel(get(), get()) }
-    viewModel { ExploreViewModel(get(), get()) }
+    viewModel { ResourceListViewModel(get(), get()) }
     viewModel { CategoriesViewModel(get()) }
     viewModel { LibraryViewModel(get(), get(), get(), get()) }
     viewModel { LoginViewModel(get()) }

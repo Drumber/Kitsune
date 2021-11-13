@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.main.explore
+package io.github.drumber.kitsune.ui.resourcelist
 
 import androidx.paging.PagingData
 import io.github.drumber.kitsune.constants.Defaults
@@ -11,7 +11,7 @@ import io.github.drumber.kitsune.data.repository.MangaRepository
 import io.github.drumber.kitsune.ui.base.BaseCollectionViewModel
 import kotlinx.coroutines.flow.Flow
 
-class ExploreViewModel(
+class ResourceListViewModel(
     private val animeRepository: AnimeRepository,
     private val mangaRepository: MangaRepository
 ) : BaseCollectionViewModel() {

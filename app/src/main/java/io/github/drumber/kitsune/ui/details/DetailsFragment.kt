@@ -21,9 +21,14 @@ import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.SortFilter
+import io.github.drumber.kitsune.data.model.ResourceSelector
+import io.github.drumber.kitsune.data.model.ResourceType
+import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.data.model.library.Status
 import io.github.drumber.kitsune.data.model.library.getStringResId
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
+import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
@@ -137,12 +142,32 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         if (!resourceAdapter.categories.isNullOrEmpty()) {
             binding.chipGroupCategories.removeAllViews()
 
-            resourceAdapter.categories.forEach { category ->
-                val chip = Chip(requireContext())
-                chip.text = category.title
-                binding.chipGroupCategories.addView(chip)
+            resourceAdapter.categories
+                .sortedBy { it.title }
+                .forEach { category ->
+                    val chip = Chip(requireContext())
+                    chip.text = category.title
+                    chip.setOnClickListener {
+                        onCategoryChipClicked(category, resourceAdapter)
+                    }
+                    binding.chipGroupCategories.addView(chip)
             }
         }
+    }
+
+    private fun onCategoryChipClicked(category: Category, resourceAdapter: ResourceAdapter) {
+        val categorySlug = category.slug ?: return
+        val title = category.title ?: getString(R.string.no_information)
+
+        val resourceSelector = ResourceSelector(
+            if (resourceAdapter.isAnime()) ResourceType.Anime else ResourceType.Manga,
+            Filter()
+                .filter("categories", categorySlug)
+                .sort(SortFilter.POPULARITY_DESC.queryParam)
+        )
+
+        val action = DetailsFragmentDirections.actionDetailsFragmentToResourceListFragment(resourceSelector, title)
+        findNavController().navigate(action)
     }
 
     private fun showManageLibraryBottomSheet() {
