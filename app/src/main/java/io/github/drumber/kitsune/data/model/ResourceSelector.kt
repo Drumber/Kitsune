@@ -13,11 +13,11 @@ data class ResourceSelector(
     val requestType: RequestType = RequestType.ALL
 ): Parcelable
 
-enum class ResourceType {
-    Anime, Manga
+enum class ResourceType(val type: String) {
+    Anime("anime"), Manga("manga")
 }
 
-inline fun ResourceType.toStringRes() = when (this) {
+fun ResourceType.toStringRes() = when (this) {
     ResourceType.Anime -> R.string.anime
     ResourceType.Manga -> R.string.manga
 }

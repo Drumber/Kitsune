@@ -42,9 +42,9 @@ val serviceModule = module {
     single { createObjectMapper() }
     factory { createAuthService() }
     factory { createAuthenticationInterceptor() }
-    factory { createService<AnimeService>(get(), get(), Anime::class.java) }
+    factory { createService<AnimeService>(get(), get(), Anime::class.java, Category::class.java) }
     factory { createService<EpisodesService>(get(), get(), Episode::class.java) }
-    factory { createService<MangaService>(get(), get(), Manga::class.java) }
+    factory { createService<MangaService>(get(), get(), Manga::class.java, Category::class.java) }
     factory { createService<ChaptersService>(get(), get(), Chapter::class.java) }
     factory { createService<CategoryService>(get(), get(), Category::class.java) }
     factory { createService<UserService>(get(), get(), User::class.java, Stats::class.java) }

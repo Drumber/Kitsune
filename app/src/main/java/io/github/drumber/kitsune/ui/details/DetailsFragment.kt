@@ -15,12 +15,14 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.google.android.material.chip.Chip
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.library.Status
 import io.github.drumber.kitsune.data.model.library.getStringResId
+import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
@@ -60,6 +62,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
         viewModel.resourceAdapter.observe(viewLifecycleOwner) { model ->
             binding.data = model
+            showCategoryChips(model)
 
             val glide = GlideApp.with(this)
 
@@ -122,6 +125,18 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 windowInsets
             }
             toolbar.initWindowInsetsListener(consume = false)
+        }
+    }
+
+    private fun showCategoryChips(resourceAdapter: ResourceAdapter) {
+        if (!resourceAdapter.categories.isNullOrEmpty()) {
+            binding.chipGroupCategories.removeAllViews()
+
+            resourceAdapter.categories.forEach { category ->
+                val chip = Chip(requireContext())
+                chip.text = category.title
+                binding.chipGroupCategories.addView(chip)
+            }
         }
     }
 

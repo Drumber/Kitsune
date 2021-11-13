@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Parcelable
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.TitlesPref
+import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.*
 import kotlinx.parcelize.Parcelize
@@ -27,7 +28,8 @@ sealed class ResourceAdapter(
     val status: Status?,
     val tba: String?,
     val posterImage: String?,
-    val coverImage: String?
+    val coverImage: String?,
+    val categories: List<Category>?
 ) : Parcelable {
 
     val publishingYear: String
@@ -158,7 +160,8 @@ sealed class ResourceAdapter(
         status = anime.status,
         tba = anime.tba,
         posterImage = anime.posterImage?.smallOrHigher(),
-        coverImage = anime.coverImage?.originalOrDown()
+        coverImage = anime.coverImage?.originalOrDown(),
+        categories = anime.categories
     ), Parcelable
 
     @Parcelize
@@ -180,7 +183,8 @@ sealed class ResourceAdapter(
         status = manga.status,
         tba = manga.tba,
         posterImage = manga.posterImage?.smallOrHigher(),
-        coverImage = manga.coverImage?.originalOrDown()
+        coverImage = manga.coverImage?.originalOrDown(),
+        categories = manga.categories
     ), Parcelable
 
     companion object {

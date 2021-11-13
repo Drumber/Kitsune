@@ -3,13 +3,15 @@ package io.github.drumber.kitsune.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
+import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.SortFilter
+import io.github.drumber.kitsune.data.model.ResourceType
 import io.github.drumber.kitsune.data.model.resource.Anime
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.anime.AnimeService
 import io.github.drumber.kitsune.exception.ReceivedDataException
-import io.github.drumber.kitsune.util.network.ResponseData
 import io.github.drumber.kitsune.util.logE
+import io.github.drumber.kitsune.util.network.ResponseData
 
 class MainFragmentViewModel(
     private val animeService: AnimeService
@@ -57,18 +59,19 @@ class MainFragmentViewModel(
     companion object {
         val FILTER_TOP_AIRING = createFilter("current")
         val FILTER_TOP_UPCOMING = createFilter("upcoming")
-        val FILTER_HIGHEST_RATED = Filter()
-            .pageLimit(10)
-            .sort(SortFilter.AVERAGE_RATING_DESC.queryParam)
-        val FILTER_MOST_POPULAR = Filter()
-            .pageLimit(10)
-            .sort(SortFilter.POPULARITY_DESC.queryParam)
+        val FILTER_HIGHEST_RATED = createFilter(sortBy = SortFilter.AVERAGE_RATING_DESC)
+        val FILTER_MOST_POPULAR = createFilter(sortBy = SortFilter.POPULARITY_DESC)
 
-
-        private inline fun createFilter(filterType: String) = Filter()
-            .pageLimit(10)
-            .filter("status", filterType)
-            .sort(SortFilter.POPULARITY_DESC.queryParam)
+        private fun createFilter(
+            filterType: String? = null,
+            sortBy: SortFilter = SortFilter.POPULARITY_DESC,
+            type: ResourceType = ResourceType.Anime
+        ) = Filter().apply {
+            pageLimit(10)
+            filterType?.let { filter("status", it) }
+            sort(sortBy.queryParam)
+            fields(type.type, *Defaults.MINIMUM_COLLECTION_FIELDS)
+        }
     }
 
 }

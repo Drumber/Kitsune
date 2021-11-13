@@ -2,15 +2,18 @@ package io.github.drumber.kitsune.data.model.resource
 
 import android.os.Parcelable
 import androidx.room.Embedded
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.jasminb.jsonapi.annotations.Id
+import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
+import io.github.drumber.kitsune.data.model.category.Category
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Type("anime")
-data class Anime(
+data class Anime @Ignore constructor(
     @PrimaryKey @Id
     val id: String = "",
     val createdAt: String?,
@@ -40,8 +43,79 @@ data class Anime(
     val youtubeVideoId: String?,
     val nsfw: Boolean?,
     val nextRelease: String?,
-    val totalLength: Int?
-) : Resource(), Parcelable
+    val totalLength: Int?,
+    @Ignore
+    @Relationship("categories")
+    val categories: List<Category>? = null
+) : Resource(), Parcelable {
+
+    /**
+     * Secondary constructor for Room
+     */
+    constructor(
+        id: String,
+        createdAt: String?,
+        updatedAt: String?,
+        slug: String?,
+        description: String?,
+        titles: Titles?,
+        canonicalTitle: String?,
+        abbreviatedTitles: List<String>?,
+        averageRating: String?,
+        ratingFrequencies: Rating?,
+        userCount: Int?,
+        favoritesCount: Int?,
+        startDate: String?,
+        endDate: String?,
+        popularityRank: Int?,
+        ratingRank: Int?,
+        ageRating: AgeRating?,
+        ageRatingGuide: String?,
+        subtype: AnimeSubtype?,
+        status: Status?,
+        tba: String?,
+        posterImage: Image?,
+        coverImage: Image?,
+        episodeCount: Int?,
+        episodeLength: Int?,
+        youtubeVideoId: String?,
+        nsfw: Boolean?,
+        nextRelease: String?,
+        totalLength: Int?,
+    ) : this(
+        id,
+        createdAt,
+        updatedAt,
+        slug,
+        description,
+        titles,
+        canonicalTitle,
+        abbreviatedTitles,
+        averageRating,
+        ratingFrequencies,
+        userCount,
+        favoritesCount,
+        startDate,
+        endDate,
+        popularityRank,
+        ratingRank,
+        ageRating,
+        ageRatingGuide,
+        subtype,
+        status,
+        tba,
+        posterImage,
+        coverImage,
+        episodeCount,
+        episodeLength,
+        youtubeVideoId,
+        nsfw,
+        nextRelease,
+        totalLength,
+        null
+    )
+
+}
 
 @Parcelize
 data class Rating(

@@ -71,4 +71,21 @@ class MangaServiceTest : AutoCloseKoinTest() {
         assertEquals("Monster", singleManga?.titles?.en)
     }
 
+    @Test
+    fun filterIncludeTest() = runBlocking {
+        val mangaService = getKoin().get<MangaService>()
+
+        val response = mangaService.allManga(
+            Filter()
+                .filter("slug", "monster")
+                .include("categories")
+                .options
+        )
+        val manga = response.get()?.first()
+        println("Manga including categories: $manga")
+        assertNotNull(manga)
+        assertNotNull(manga?.categories)
+        assertTrue(manga?.categories?.isNotEmpty() == true)
+    }
+
 }

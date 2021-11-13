@@ -3,7 +3,6 @@ package io.github.drumber.kitsune.data.service
 import android.os.Parcelable
 import io.github.drumber.kitsune.constants.Kitsu
 import kotlinx.parcelize.Parcelize
-import okhttp3.HttpUrl
 
 @Parcelize
 data class Filter(val options: MutableMap<String, String> = mutableMapOf()): Parcelable {
@@ -31,17 +30,6 @@ data class Filter(val options: MutableMap<String, String> = mutableMapOf()): Par
     private fun put(key: String, value: Any): Filter {
         options[key] = value.toString()
         return this
-    }
-
-    fun toQueryString(ignorePage: Boolean = true): String {
-        val query = options.toMutableMap()
-        if (ignorePage) {
-            query.remove("page[limit]")
-            query.remove("page[offset]")
-        }
-        val builder = HttpUrl.Builder()
-        query.forEach { builder.addQueryParameter(it.key, it.value) }
-        return builder.toString().removePrefix("///?")
     }
 
 }

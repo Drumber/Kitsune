@@ -12,7 +12,10 @@ import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.room.LibraryEntryDao
 import io.github.drumber.kitsune.data.service.Filter
+import io.github.drumber.kitsune.data.service.anime.AnimeService
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
+import io.github.drumber.kitsune.data.service.manga.MangaService
+import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +24,9 @@ import retrofit2.HttpException
 class DetailsViewModel(
     private val userRepository: UserRepository,
     private val libraryEntriesService: LibraryEntriesService,
-    private val libraryEntryDao: LibraryEntryDao
+    private val libraryEntryDao: LibraryEntryDao,
+    private val animeService: AnimeService,
+    private val mangaService: MangaService
 ) : ViewModel() {
 
     fun isLoggedIn() = userRepository.hasUser
@@ -37,7 +42,30 @@ class DetailsViewModel(
     fun initResourceAdapter(resourceAdapter: ResourceAdapter) {
         if (_resourceAdapter.value == null) {
             _resourceAdapter.value = resourceAdapter
+            loadFullResource(resourceAdapter)
             loadLibraryEntry(resourceAdapter)
+        }
+    }
+
+    private fun loadFullResource(resourceAdapter: ResourceAdapter) {
+        val id = resourceAdapter.id
+        val filter = Filter()
+            .fields("categories", "slug", "title")
+            .include("categories")
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val resourceModel = if (resourceAdapter.isAnime()) {
+                    animeService.getAnime(id, filter.options).get()
+                } else {
+                    mangaService.getManga(id, filter.options).get()
+                } ?: throw ReceivedDataException("Received data is null.")
+
+                val fullResourceAdapter = ResourceAdapter.fromResource(resourceModel)
+                _resourceAdapter.postValue(fullResourceAdapter)
+            } catch (e: Exception) {
+                logE("Failed to load full resource model.", e)
+            }
         }
     }
 
