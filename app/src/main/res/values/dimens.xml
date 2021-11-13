@@ -11,7 +11,7 @@
 
     <!-- Streamer card -->
     <dimen name="streamer_card_width">100dp</dimen>
-    <dimen name="streamer_card_height">150dp</dimen>
+    <dimen name="streamer_card_height">100dp</dimen>
 
     <!-- Details Fragment -->
     <dimen name="details_trailer_height">150dp</dimen>

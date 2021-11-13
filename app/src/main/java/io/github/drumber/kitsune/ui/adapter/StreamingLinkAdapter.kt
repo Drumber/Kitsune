@@ -2,9 +2,11 @@ package io.github.drumber.kitsune.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.widget.TooltipCompat
 import androidx.recyclerview.widget.RecyclerView
 import io.github.drumber.kitsune.GlideRequests
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.StreamingLogo
 import io.github.drumber.kitsune.data.model.streamer.StreamingLink
 import io.github.drumber.kitsune.databinding.ItemStreamerBinding
 import java.util.concurrent.CopyOnWriteArrayList
@@ -45,11 +47,15 @@ class StreamingLinkAdapter(
         }
 
         fun bind(streamingLink: StreamingLink) {
-            // TODO: get streamer logo
-            glide.load("")
-                .centerCrop()
+            val logo = streamingLink.streamer?.siteName?.let { siteName ->
+                StreamingLogo.values().find { it.name.equals(siteName, true) }?.drawable
+            }
+            glide.load(logo)
+                .centerInside()
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivLogo)
+
+            TooltipCompat.setTooltipText(binding.root, streamingLink.streamer?.siteName)
         }
 
     }
