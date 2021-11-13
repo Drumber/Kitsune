@@ -18,6 +18,8 @@ import io.github.drumber.kitsune.data.service.manga.MangaService
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -39,37 +41,45 @@ class DetailsViewModel(
     val libraryEntry: LiveData<LibraryEntry?>
         get() = _libraryEntry
 
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
+
     fun initResourceAdapter(resourceAdapter: ResourceAdapter) {
         if (_resourceAdapter.value == null) {
             _resourceAdapter.value = resourceAdapter
-            loadFullResource(resourceAdapter)
-            loadLibraryEntry(resourceAdapter)
+            _isLoading.value = true
+            viewModelScope.launch(Dispatchers.IO) {
+                awaitAll(
+                    async { loadFullResource(resourceAdapter) },
+                    async { loadLibraryEntry(resourceAdapter) }
+                )
+                _isLoading.postValue(false)
+            }
         }
     }
 
-    private fun loadFullResource(resourceAdapter: ResourceAdapter) {
+    private suspend fun loadFullResource(resourceAdapter: ResourceAdapter) {
         val id = resourceAdapter.id
         val filter = Filter()
             .fields("categories", "slug", "title")
             .include("categories")
 
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val resourceModel = if (resourceAdapter.isAnime()) {
-                    animeService.getAnime(id, filter.options).get()
-                } else {
-                    mangaService.getManga(id, filter.options).get()
-                } ?: throw ReceivedDataException("Received data is null.")
+        try {
+            val resourceModel = if (resourceAdapter.isAnime()) {
+                animeService.getAnime(id, filter.options).get()
+            } else {
+                mangaService.getManga(id, filter.options).get()
+            } ?: throw ReceivedDataException("Received data is null.")
 
-                val fullResourceAdapter = ResourceAdapter.fromResource(resourceModel)
-                _resourceAdapter.postValue(fullResourceAdapter)
-            } catch (e: Exception) {
-                logE("Failed to load full resource model.", e)
-            }
+            val fullResourceAdapter = ResourceAdapter.fromResource(resourceModel)
+            _resourceAdapter.postValue(fullResourceAdapter)
+        } catch (e: Exception) {
+            logE("Failed to load full resource model.", e)
         }
     }
 
-    private fun loadLibraryEntry(resourceAdapter: ResourceAdapter) {
+    private suspend fun loadLibraryEntry(resourceAdapter: ResourceAdapter) {
         val userId = userRepository.user?.id ?: return
 
         val filter = Filter()
@@ -83,24 +93,22 @@ class DetailsViewModel(
             filter.filter("manga_id", resourceAdapter.id)
         }
 
-        viewModelScope.launch(Dispatchers.IO) {
-            // check if library entry is cached in local database first
-            val libraryEntry = libraryEntryDao.getLibraryEntryFromResource(resourceAdapter.id)
-            libraryEntry?.let { _libraryEntry.postValue(it) }
+        // check if library entry is cached in local database first
+        val libraryEntry = libraryEntryDao.getLibraryEntryFromResource(resourceAdapter.id)
+        libraryEntry?.let { _libraryEntry.postValue(it) }
 
-            try {
-                // fetch library entry from the server
-                val libraryEntries = libraryEntriesService.allLibraryEntries(filter.options).get()
-                if (!libraryEntries.isNullOrEmpty()) {
-                    _libraryEntry.postValue(libraryEntries[0])
-                } else if (libraryEntry != null) {
-                    _libraryEntry.postValue(null)
-                    // local database cache is out of sync, remove entry from database
-                    libraryEntryDao.delete(libraryEntry)
-                }
-            } catch (e: Exception) {
-                logE("Failed to load library entry.", e)
+        try {
+            // fetch library entry from the server
+            val libraryEntries = libraryEntriesService.allLibraryEntries(filter.options).get()
+            if (!libraryEntries.isNullOrEmpty()) {
+                _libraryEntry.postValue(libraryEntries[0])
+            } else if (libraryEntry != null) {
+                _libraryEntry.postValue(null)
+                // local database cache is out of sync, remove entry from database
+                libraryEntryDao.delete(libraryEntry)
             }
+        } catch (e: Exception) {
+            logE("Failed to load library entry.", e)
         }
     }
 

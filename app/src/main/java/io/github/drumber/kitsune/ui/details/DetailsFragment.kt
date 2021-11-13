@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -82,6 +83,10 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             it?.status?.let { status ->
                 binding.btnManageLibrary.setText(status.getStringResId())
             } ?: binding.btnManageLibrary.setText(R.string.library_action_add)
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressIndicator.isVisible = isLoading
         }
 
         binding.apply {
