@@ -10,6 +10,8 @@ import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.production.AnimeProduction
+import io.github.drumber.kitsune.data.model.production.Producer
 import io.github.drumber.kitsune.data.model.resource.Anime
 import io.github.drumber.kitsune.data.model.resource.Chapter
 import io.github.drumber.kitsune.data.model.resource.Episode
@@ -42,13 +44,26 @@ val serviceModule = module {
     single { createObjectMapper() }
     factory { createAuthService() }
     factory { createAuthenticationInterceptor() }
-    factory { createService<AnimeService>(get(), get(), Anime::class.java, Category::class.java) }
+    factory {
+        createService<AnimeService>(get(), get(),
+            Anime::class.java,
+            Category::class.java,
+            AnimeProduction::class.java,
+            Producer::class.java
+        )
+    }
     factory { createService<EpisodesService>(get(), get(), Episode::class.java) }
     factory { createService<MangaService>(get(), get(), Manga::class.java, Category::class.java) }
     factory { createService<ChaptersService>(get(), get(), Chapter::class.java) }
     factory { createService<CategoryService>(get(), get(), Category::class.java) }
     factory { createService<UserService>(get(), get(), User::class.java, Stats::class.java) }
-    factory { createService<LibraryEntriesService>(get(), get(), LibraryEntry::class.java, Anime::class.java, Manga::class.java) }
+    factory {
+        createService<LibraryEntriesService>(get(), get(),
+            LibraryEntry::class.java,
+            Anime::class.java,
+            Manga::class.java
+        )
+    }
 }
 
 private fun createHttpClientBuilder() = OkHttpClient.Builder()

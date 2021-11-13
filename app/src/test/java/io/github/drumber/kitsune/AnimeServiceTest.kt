@@ -78,15 +78,17 @@ class AnimeServiceTest : AutoCloseKoinTest() {
 
         val response = animeService.allAnime(
             Filter()
-                .filter("slug", "cowboy-bebop")
-                .include("categories")
+                .filter("slug", "one-piece")
+                .include("categories", "animeProductions.producer")
                 .options
         )
         val anime = response.get()?.first()
-        println("Anime including categories: $anime")
+        println("Anime with included relationships: $anime")
         assertNotNull(anime)
         assertNotNull(anime?.categories)
-        assertTrue(anime?.categories?.isNotEmpty() == true)
+        assertFalse(anime?.categories.isNullOrEmpty())
+        assertNotNull(anime?.animeProduction)
+        assertFalse(anime?.animeProduction.isNullOrEmpty())
     }
 
 }

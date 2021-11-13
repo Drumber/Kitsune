@@ -12,6 +12,6 @@ object Defaults {
     val DEFAULT_SEARCH_PARAMS get() = SearchParams(ResourceType.Anime, emptyList(), SortFilter.POPULARITY_DESC)
 
     /** The minimum of required fields to display resources in a collection, e.g. in RecyclerView. */
-    val MINIMUM_COLLECTION_FIELDS get() = arrayOf("slug", "titles", "canonicalTitle", "posterImage")
+    val MINIMUM_COLLECTION_FIELDS get() = arrayOf("slug", "titles", "canonicalTitle", "posterImage", "coverImage")
 
 }

@@ -91,6 +91,9 @@
     <string name="data_title_volumes">Volumes</string>
     <string name="data_title_episodes">Episodes</string>
     <string name="data_title_length">Length</string>
+    <string name="data_title_producers">Producers</string>
+    <string name="data_title_licensors">Licensors</string>
+    <string name="data_title_studios">Studios</string>
 
     <string name="season_winter">Winter</string>
     <string name="season_spring">Spring</string>

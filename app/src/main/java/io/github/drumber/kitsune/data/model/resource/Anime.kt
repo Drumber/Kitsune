@@ -9,6 +9,7 @@ import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
 import io.github.drumber.kitsune.data.model.category.Category
+import io.github.drumber.kitsune.data.model.production.AnimeProduction
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -46,7 +47,10 @@ data class Anime @Ignore constructor(
     val totalLength: Int?,
     @Ignore
     @Relationship("categories")
-    val categories: List<Category>? = null
+    val categories: List<Category>? = null,
+    @Ignore
+    @Relationship("animeProductions")
+    val animeProduction: List<AnimeProduction>? = null
 ) : Resource(), Parcelable {
 
     /**
@@ -112,6 +116,7 @@ data class Anime @Ignore constructor(
         nsfw,
         nextRelease,
         totalLength,
+        null,
         null
     )
 

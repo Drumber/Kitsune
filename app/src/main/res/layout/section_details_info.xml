@@ -4,6 +4,7 @@
 
     <data>
         <import type="android.text.TextUtils"/>
+        <import type="io.github.drumber.kitsune.data.model.production.AnimeProductionRole" />
         <variable
             name="data"
             type="io.github.drumber.kitsune.data.model.resource.ResourceAdapter" />
@@ -92,9 +93,21 @@
 
         <include
             layout="@layout/item_details_info_row"
-            app:isVisible="@{!TextUtils.isEmpty(data.lengthText(context))}"
-            app:title="@{@string/data_title_length}"
-            app:value="@{data.lengthText(context)}" />
+            app:isVisible="@{!TextUtils.isEmpty(data.getProducer(AnimeProductionRole.Producer))}"
+            app:title="@{@string/data_title_producers}"
+            app:value="@{data.getProducer(AnimeProductionRole.Producer)}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.getProducer(AnimeProductionRole.Licensor))}"
+            app:title="@{@string/data_title_licensors}"
+            app:value="@{data.getProducer(AnimeProductionRole.Licensor)}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.getProducer(AnimeProductionRole.Studio))}"
+            app:title="@{@string/data_title_studios}"
+            app:value="@{data.getProducer(AnimeProductionRole.Studio)}" />
 
     </TableLayout>
 </layout>

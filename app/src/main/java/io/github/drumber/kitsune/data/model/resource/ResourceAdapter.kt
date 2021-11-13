@@ -5,6 +5,7 @@ import android.os.Parcelable
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.TitlesPref
 import io.github.drumber.kitsune.data.model.category.Category
+import io.github.drumber.kitsune.data.model.production.AnimeProductionRole
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.*
 import kotlinx.parcelize.Parcelize
@@ -138,6 +139,17 @@ sealed class ResourceAdapter(
         get() = if (this is AnimeResource && !anime.youtubeVideoId.isNullOrBlank()) {
             "https://img.youtube.com/vi/${anime.youtubeVideoId}/mqdefault.jpg"
         } else null
+
+    fun getProducer(role: AnimeProductionRole): String? {
+        return if (this is AnimeResource) {
+            anime.animeProduction?.filter { it.role == role }
+                ?.mapNotNull { it.producer?.name }
+                ?.distinct()
+                ?.joinToString(", ")
+        } else {
+            null
+        }
+    }
 
     fun isAnime() = this is AnimeResource
 

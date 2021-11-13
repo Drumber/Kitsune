@@ -63,12 +63,13 @@ class DetailsViewModel(
         val id = resourceAdapter.id
         val filter = Filter()
             .fields("categories", "slug", "title")
-            .include("categories")
 
         try {
             val resourceModel = if (resourceAdapter.isAnime()) {
+                filter.include("categories", "animeProductions.producer")
                 animeService.getAnime(id, filter.options).get()
             } else {
+                filter.include("categories")
                 mangaService.getManga(id, filter.options).get()
             } ?: throw ReceivedDataException("Received data is null.")
 
