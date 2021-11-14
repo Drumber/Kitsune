@@ -17,6 +17,7 @@
             android:layout_height="?attr/actionBarSize"
             app:title="@string/nav_appearance"
             app:navigationIcon="@drawable/ic_arrow_back_24"
+            app:navigationContentDescription="@string/action_back"
             style="@style/Widget.MaterialComponents.Toolbar.Surface" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -69,7 +70,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:scaleType="fitXY"
-                            android:src="@drawable/ic_theme_card_default"/>
+                            android:src="@drawable/ic_theme_card_default"
+                            android:contentDescription="@null" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -99,7 +101,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:scaleType="fitXY"
-                            android:src="@drawable/ic_theme_card_purple" />
+                            android:src="@drawable/ic_theme_card_purple"
+                            android:contentDescription="@null" />
 
                         <TextView
                             android:layout_width="wrap_content"

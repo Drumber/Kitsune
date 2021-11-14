@@ -37,7 +37,8 @@
             android:layout_centerVertical="true"
             android:src="@{icon}"
             app:isVisible="@{icon != null}"
-            tools:src="@drawable/ic_favorite_24" />
+            tools:src="@drawable/ic_favorite_24"
+            android:contentDescription="@null" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -28,7 +28,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/details_trailer_height"
                 android:src="@drawable/ic_insert_photo_48"
-                app:imageUrl="@{coverUrl}" />
+                app:imageUrl="@{coverUrl}"
+                android:contentDescription="@null" />
 
             <View
                 android:layout_width="match_parent"
@@ -51,7 +52,8 @@
                     android:layout_marginEnd="20dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_youtube"
-                    app:tint="@color/white" />
+                    app:tint="@color/white"
+                    android:contentDescription="@null" />
 
                 <TextView
                     android:layout_width="match_parent"

@@ -13,7 +13,7 @@ class ResourceViewHolder(
 ): RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.ivThumbnail.setOnClickListener {
+        binding.cardResource.setOnClickListener {
             val position = bindingAdapterPosition
             if(position != RecyclerView.NO_POSITION) {
                 listener(position)

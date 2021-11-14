@@ -22,6 +22,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:title="@string/app_name"
                 app:navigationIcon="@drawable/ic_arrow_back_24"
+                app:navigationContentDescription="@string/action_back"
                 app:layout_scrollFlags="scroll|enterAlways|snap"
                 style="@style/Widget.MaterialComponents.Toolbar.Surface" />
 

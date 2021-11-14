@@ -49,7 +49,8 @@
                         <ImageView
                             android:id="@+id/iv_cover"
                             android:layout_width="match_parent"
-                            android:layout_height="200dp" />
+                            android:layout_height="200dp"
+                            android:contentDescription="@null" />
 
                         <View
                             android:layout_width="match_parent"
@@ -70,6 +71,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
                         app:navigationIcon="@drawable/ic_arrow_back_24"
+                        app:navigationContentDescription="@string/action_back"
                         app:title="@{data.title}"
                         tools:title="Some Title"
                         app:layout_collapseMode="pin"/>
@@ -112,7 +114,8 @@
                             android:layout_height="213dp"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
-                            tools:src="@drawable/ic_insert_photo_48" />
+                            tools:src="@drawable/ic_insert_photo_48"
+                            android:contentDescription="@null" />
 
                         <TextView
                             android:layout_width="wrap_content"

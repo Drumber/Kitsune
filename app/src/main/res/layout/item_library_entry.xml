@@ -32,7 +32,8 @@
                 android:layout_height="@dimen/library_entry_img_height"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                tools:src="@drawable/ic_insert_photo_48" />
+                tools:src="@drawable/ic_insert_photo_48"
+                android:contentDescription="@null" />
 
             <LinearLayout
                 android:layout_width="match_parent"
