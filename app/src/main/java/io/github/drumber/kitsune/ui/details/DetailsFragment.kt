@@ -109,7 +109,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
 
         setFragmentResultListener(ManageLibraryBottomSheet.REMOVE_REQUEST_KEY) { _, bundle ->
-            val shouldRemove = !bundle.getBoolean(ManageLibraryBottomSheet.BUNDLE_EXISTS)
+            val shouldRemove = !bundle.getBoolean(ManageLibraryBottomSheet.BUNDLE_EXISTS_IN_LIBRARY)
             if (shouldRemove) {
                 viewModel.removeLibraryEntry()
             }
@@ -203,7 +203,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 val sheetManageLibrary = ManageLibraryBottomSheet()
                 val bundle = bundleOf(
                     ManageLibraryBottomSheet.BUNDLE_TITLE to resourceAdapter.title,
-                    ManageLibraryBottomSheet.BUNDLE_EXISTS to (viewModel.libraryEntry.value != null)
+                    ManageLibraryBottomSheet.BUNDLE_IS_ANIME to resourceAdapter.isAnime(),
+                    ManageLibraryBottomSheet.BUNDLE_EXISTS_IN_LIBRARY to (viewModel.libraryEntry.value != null)
                 )
                 sheetManageLibrary.arguments = bundle
                 sheetManageLibrary.show(parentFragmentManager, ManageLibraryBottomSheet.TAG)

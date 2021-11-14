@@ -34,13 +34,13 @@
             <include
                 layout="@layout/item_list_option"
                 app:listener="@{() -> instance.onStatusClicked(Status.Current)}"
-                app:title="@{@string/library_status_watching}"
+                app:title="@{instance.isAnime() ? @string/library_status_watching : @string/library_status_reading}"
                 app:icon="@{@drawable/ic_incomplete_circle_24}" />
 
             <include
                 layout="@layout/item_list_option"
                 app:listener="@{() -> instance.onStatusClicked(Status.Planned)}"
-                app:title="@{@string/library_status_planned}"
+                app:title="@{instance.isAnime() ? @string/library_status_planned : @string/library_status_planned_manga}"
                 app:icon="@{@drawable/ic_bookmark_added_24}" />
 
             <include

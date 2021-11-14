@@ -31,19 +31,22 @@ class ManageLibraryBottomSheet : BottomSheetDialogFragment() {
     }
 
     fun onRemoveClicked() {
-        setFragmentResult(REMOVE_REQUEST_KEY, bundleOf(BUNDLE_EXISTS to false))
+        setFragmentResult(REMOVE_REQUEST_KEY, bundleOf(BUNDLE_EXISTS_IN_LIBRARY to false))
         dismiss()
     }
 
     fun existsInLibrary(): Boolean {
-        return arguments?.getBoolean(BUNDLE_EXISTS) ?: false
+        return arguments?.getBoolean(BUNDLE_EXISTS_IN_LIBRARY) ?: false
     }
+
+    fun isAnime() = arguments?.getBoolean(BUNDLE_IS_ANIME) == true
 
     companion object {
         const val TAG = "manage_library_bottom_sheet"
         const val BUNDLE_TITLE = "title_bundle_key"
         const val BUNDLE_STATUS = "status_bundle_key"
-        const val BUNDLE_EXISTS = "status_exists_in_library"
+        const val BUNDLE_EXISTS_IN_LIBRARY = "status_exists_in_library"
+        const val BUNDLE_IS_ANIME = "is_anime_key"
         const val STATUS_REQUEST_KEY = "status_request_key"
         const val REMOVE_REQUEST_KEY = "remove_request_key"
     }
