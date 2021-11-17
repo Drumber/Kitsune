@@ -14,13 +14,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.chip.Chip
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.model.library.Status
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.databinding.FragmentLibraryBinding
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.LibraryEntriesAdapter
 import io.github.drumber.kitsune.ui.adapter.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
@@ -45,6 +50,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
         binding.apply {
             toolbar.initWindowInsetsListener(consume = false)
+            //scrollViewFilter.initPaddingWindowInsetsListener(left = true, top = true, right = true, consume = false)
             rvLibraryEntries.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
             layoutNotLoggedIn.initPaddingWindowInsetsListener(left = true, top = true, right = true, consume = false)
 
@@ -53,6 +59,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
                 startActivity(intent)
             }
         }
+        val initialToolbarScrollFlags = (binding.toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags
 
         viewModel.userRepository.userLiveData.observe(viewLifecycleOwner) { user ->
             val isLoggedIn = user != null
@@ -61,7 +68,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
                 nsvNotLoggedIn.isVisible = !isLoggedIn
                 // disable toolbar scrolling if library is not shown (not logged in)
                 (toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags = if (isLoggedIn) {
-                    AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP
+                    initialToolbarScrollFlags
                 } else {
                     AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
                 }
@@ -86,7 +93,65 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             viewModel.updateRating(null)
         }
 
+        initFilterChips()
         initRecyclerView()
+    }
+
+    private fun initFilterChips() {
+        viewModel.filter.observe(viewLifecycleOwner) { filter ->
+            binding.chipResourceKind.setText(when (filter.kind) {
+                LibraryEntryKind.Anime -> R.string.anime
+                LibraryEntryKind.Manga -> R.string.manga
+                else -> R.string.library_kind_all
+            })
+
+            filter.libraryStatus.apply {
+                binding.apply {
+                    chipCurrent.isChecked = contains(Status.Current)
+                    chipPlanned.isChecked = contains(Status.Planned)
+                    chipCompleted.isChecked = contains(Status.Completed)
+                    chipOnHold.isChecked = contains(Status.OnHold)
+                    chipDropped.isChecked = contains(Status.Dropped)
+                }
+            }
+        }
+
+        binding.apply {
+            chipResourceKind.setOnClickListener { showResourceSelectorDialog() }
+            chipCurrent.initStatusClickListener(Status.Current)
+            chipPlanned.initStatusClickListener(Status.Planned)
+            chipCompleted.initStatusClickListener(Status.Completed)
+            chipOnHold.initStatusClickListener(Status.OnHold)
+            chipDropped.initStatusClickListener(Status.Dropped)
+        }
+    }
+
+    private fun Chip.initStatusClickListener(status: Status) {
+        setOnClickListener {
+            val statusList = KitsunePref.libraryEntryStatus.toMutableList()
+            if (statusList.contains(status)) {
+                statusList.remove(status)
+            } else {
+                statusList.add(status)
+            }
+            viewModel.setLibraryEntryStatus(statusList)
+        }
+    }
+
+    private fun showResourceSelectorDialog() {
+        val items = listOf(R.string.library_kind_all, R.string.anime, R.string.manga)
+            .map { getString(it) }.toTypedArray()
+        val prevSelected = KitsunePref.libraryEntryKind.ordinal
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.title_resource_type)
+            .setSingleChoiceItems(items, prevSelected) { dialog, which ->
+                if(which != prevSelected) {
+                    val kind = LibraryEntryKind.values()[which]
+                    viewModel.setLibraryEntryKind(kind)
+                }
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun initRecyclerView() {

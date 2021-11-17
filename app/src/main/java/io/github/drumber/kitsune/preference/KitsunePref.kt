@@ -11,6 +11,8 @@ import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.data.model.SearchParams
 import io.github.drumber.kitsune.data.model.TitlesPref
 import io.github.drumber.kitsune.data.model.category.CategoryPrefWrapper
+import io.github.drumber.kitsune.data.model.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.model.library.Status
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
@@ -49,6 +51,17 @@ object KitsunePref : KotprefModel(), KoinComponent {
             searchCategoriesJson = value.toJsonString()
         }
         get() = searchCategoriesJson.fromJsonString()
+
+
+    var libraryEntryKind by enumValuePref(LibraryEntryKind.All)
+
+    private var libraryEntryStatusJson by stringPref("[]")
+
+    var libraryEntryStatus: List<Status>
+        set(value) {
+            libraryEntryStatusJson = value.toJsonString()
+        }
+        get() = libraryEntryStatusJson.fromJsonString()
 
 
     private fun Any.toJsonString(): String {

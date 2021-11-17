@@ -164,6 +164,7 @@
     <string name="library_not_rated">Not Rated</string>
     <string name="library_not_logged_in_title">Log in to access your library</string>
     <string name="library_not_logged_in_text">Log in to your Kitsu Account to manage your library and get access to all features.</string>
+    <string name="library_kind_all">All</string>
 
     <string name="info_log_in_required">Log in to access all features.</string>
     <string name="hint_rating">Rating</string>

@@ -9,15 +9,15 @@ import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.model.RemoteKey
 import io.github.drumber.kitsune.data.model.RemoteKeyType
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.library.LibraryEntryFilter
 import io.github.drumber.kitsune.data.model.toPage
 import io.github.drumber.kitsune.data.room.ResourceDatabase
-import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.exception.ReceivedDataException
 
 @OptIn(ExperimentalPagingApi::class)
 class LibraryEntriesRemoteMediator(
-    private val filter: Filter,
+    private val filter: LibraryEntryFilter,
     private val service: LibraryEntriesService,
     private val database: ResourceDatabase,
 ) : RemoteMediator<Int, LibraryEntry>() {
@@ -43,7 +43,7 @@ class LibraryEntriesRemoteMediator(
                 }
             }
 
-            val response = service.allLibraryEntries(filter.pageOffset(pageOffset).options)
+            val response = service.allLibraryEntries(filter.buildFilter().pageOffset(pageOffset).options)
             val page = response.links?.toPage()
             val endReached = page?.next == null
 

@@ -6,12 +6,16 @@ import androidx.paging.cachedIn
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.library.LibraryEntryFilter
+import io.github.drumber.kitsune.data.model.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.model.library.Status
 import io.github.drumber.kitsune.data.repository.LibraryEntriesRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.room.LibraryEntryDao
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.exception.ReceivedDataException
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -27,18 +31,48 @@ class LibraryViewModel(
     private val libraryEntryDao: LibraryEntryDao
 ) : ViewModel() {
 
-    val filter: LiveData<Filter?> = Transformations.map(userRepository.userLiveData) { user ->
-        user?.id?.let { userId ->
-            Filter()
+    val filter = MutableLiveData(
+        LibraryEntryFilter(
+            KitsunePref.libraryEntryKind,
+            KitsunePref.libraryEntryStatus,
+        )
+    )
+
+    private val filterMediator = MediatorLiveData<LibraryEntryFilter?>().apply {
+        addSource(userRepository.userLiveData) { this.value = buildLibraryEntryFilter() }
+        addSource(filter) { this.value = buildLibraryEntryFilter() }
+    }
+
+    val dataSource: Flow<PagingData<LibraryEntry>> = filterMediator.asFlow().filterNotNull()
+        .flatMapLatest { filter ->
+            libraryEntriesRepository.libraryEntries(Kitsu.DEFAULT_PAGE_SIZE_LIBRARY, filter)
+        }.cachedIn(viewModelScope)
+
+    private fun buildLibraryEntryFilter(): LibraryEntryFilter? {
+        return userRepository.user?.id?.let { userId ->
+            val reqFilter = Filter()
                 .filter("user_id", userId)
                 .sort("status", "-progressed_at")
                 .include("anime", "manga")
-        }
+
+            filter.value?.copy(initialFilter = reqFilter)
+                ?: LibraryEntryFilter(
+                    KitsunePref.libraryEntryKind,
+                    KitsunePref.libraryEntryStatus,
+                    reqFilter
+                )
+        }.also { println("return $it") }
     }
 
-    val dataSource: Flow<PagingData<LibraryEntry>> = filter.asFlow().filterNotNull().flatMapLatest { filter ->
-        libraryEntriesRepository.libraryEntries(Kitsu.DEFAULT_PAGE_SIZE_LIBRARY, filter)
-    }.cachedIn(viewModelScope)
+    fun setLibraryEntryKind(kind: LibraryEntryKind) {
+        KitsunePref.libraryEntryKind = kind
+        filter.value = LibraryEntryFilter(kind, KitsunePref.libraryEntryStatus)
+    }
+
+    fun setLibraryEntryStatus(status: List<Status>) {
+        KitsunePref.libraryEntryStatus = status
+        filter.value = LibraryEntryFilter(KitsunePref.libraryEntryKind, status)
+    }
 
     var responseErrorListener: ((Throwable) -> Unit)? = null
 
@@ -48,7 +82,7 @@ class LibraryViewModel(
     }
 
     fun markEpisodeUnwatched(libraryEntry: LibraryEntry) {
-        if(libraryEntry.progress == 0) return
+        if (libraryEntry.progress == 0) return
         val newProgress = libraryEntry.progress?.minus(1)
         updateLibraryProgress(libraryEntry, newProgress)
     }
@@ -68,10 +102,12 @@ class LibraryViewModel(
 
                 response.get()?.let { libraryEntry ->
                     // update the database, but copy anime and manga object from old library first
-                    libraryEntryDao.updateLibraryEntry(libraryEntry.copy(
-                        anime = oldEntry.anime,
-                        manga = oldEntry.manga
-                    ))
+                    libraryEntryDao.updateLibraryEntry(
+                        libraryEntry.copy(
+                            anime = oldEntry.anime,
+                            manga = oldEntry.manga
+                        )
+                    )
                 } ?: throw ReceivedDataException("Received data is 'null'.")
             } catch (e: Exception) {
                 logE("Failed to update library entry progress.", e)
@@ -109,10 +145,12 @@ class LibraryViewModel(
                 )
 
                 response.get()?.let { newEntry ->
-                    libraryEntryDao.updateLibraryEntry(newEntry.copy(
-                        anime = libraryEntry.anime,
-                        manga = libraryEntry.manga
-                    ))
+                    libraryEntryDao.updateLibraryEntry(
+                        newEntry.copy(
+                            anime = libraryEntry.anime,
+                            manga = libraryEntry.manga
+                        )
+                    )
                 }
             } catch (e: Exception) {
                 logE("Failed to update rating.", e)

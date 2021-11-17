@@ -5,9 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.library.LibraryFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -20,15 +18,78 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="@string/nav_library"
-            app:layout_scrollFlags="scroll|snap"
+            app:layout_scrollFlags="scroll|snap|enterAlways"
             style="@style/Widget.MaterialComponents.Toolbar.Surface" />
+
+        <HorizontalScrollView
+            android:id="@+id/scroll_view_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            app:layout_scrollFlags="scroll|snap|enterAlways"
+            android:background="?attr/colorSurface">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:clipToPadding="false"
+                app:singleLine="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_resource_kind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:closeIcon="@drawable/ic_arrow_drop_down_24"
+                    app:closeIconEnabled="true"
+                    android:text="@string/library_kind_all"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_current"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/library_status_watching"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_planned"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/library_status_planned"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_completed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/library_status_completed"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_on_hold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/library_status_on_hold"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_dropped"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/library_status_dropped"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+            </com.google.android.material.chip.ChipGroup>
+
+        </HorizontalScrollView>
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_library_entries"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/item_library_entry" />
