@@ -5,6 +5,10 @@ import io.github.drumber.kitsune.R
 import java.math.RoundingMode
 import kotlin.math.roundToInt
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 
@@ -19,7 +23,7 @@ object TimeUtil {
         val res = context.resources
         val parts = mutableListOf<String>()
 
-        var remaining = Duration.seconds(timeSeconds)
+        var remaining = timeSeconds.seconds
 
         val years = remaining.inWholeYears
         if (years > 0) {
@@ -34,17 +38,17 @@ object TimeUtil {
         val days = remaining.inWholeDays
         if (days > 0) {
             parts += res.getQuantityString(R.plurals.duration_days, days.toInt(), days)
-            remaining -= Duration.days(days)
+            remaining -= days.days
         }
         val hours = remaining.inWholeHours
         if (hours > 0) {
             parts += res.getQuantityString(R.plurals.duration_hours, hours.toInt(), hours)
-            remaining -= Duration.hours(hours)
+            remaining -= hours.hours
         }
         val minutes = remaining.inWholeMinutes
         if (minutes > 0) {
             parts += res.getQuantityString(R.plurals.duration_minutes, minutes.toInt(), minutes)
-            remaining -= Duration.minutes(minutes)
+            remaining -= minutes.minutes
         }
         val seconds = remaining.inWholeSeconds
         if (includeSeconds && seconds > 0) {
@@ -57,7 +61,7 @@ object TimeUtil {
     @OptIn(ExperimentalTime::class)
     fun roundTime(timeSeconds: Long, context: Context, decimalPlaces: Int = 1): String {
         val res = context.resources
-        val time = Duration.seconds(timeSeconds)
+        val time = timeSeconds.seconds
 
         return when {
             time.inWholeYears > 0 -> {
@@ -95,10 +99,10 @@ object TimeUtil {
         get() = inWholeDays / 365
 
     @ExperimentalTime
-    private fun monthsToDuration(value: Long) = Duration.days(value * 30)
+    private fun monthsToDuration(value: Long) = (value * 30).days
 
     @ExperimentalTime
-    private fun yearsToDuration(value: Long) = Duration.days(value * 365)
+    private fun yearsToDuration(value: Long) = (value * 365).days
 
     @ExperimentalTime
     private fun Duration.toMonthsDouble() = this.toDouble(DurationUnit.DAYS) / 30.0
