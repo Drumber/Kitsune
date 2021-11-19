@@ -1,7 +1,6 @@
 package io.github.drumber.kitsune.data.model.streamer
 
 import android.os.Parcelable
-import com.github.jasminb.jsonapi.RelType
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
@@ -14,6 +13,6 @@ data class StreamingLink(
     val url: String?,
     val subs: List<String>?,
     val dubs: List<String>?,
-    @Relationship("streamer", resolve = true, relType = RelType.RELATED)
+    @Relationship("streamer")
     val streamer: Streamer?
 ) : Parcelable

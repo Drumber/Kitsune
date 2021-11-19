@@ -66,7 +66,12 @@ class DetailsViewModel(
 
         try {
             val resourceModel = if (resourceAdapter.isAnime()) {
-                filter.include("categories", "animeProductions.producer", "streamingLinks")
+                filter.include(
+                    "categories",
+                    "animeProductions.producer",
+                    "streamingLinks",
+                    "streamingLinks.streamer"
+                )
                 animeService.getAnime(id, filter.options).get()
             } else {
                 filter.include("categories")
@@ -138,7 +143,10 @@ class DetailsViewModel(
             } else { // update existing library entry
                 libraryEntry.id = libraryEntryId
                 try {
-                    libraryEntriesService.updateLibraryEntry(libraryEntryId, JSONAPIDocument(libraryEntry))
+                    libraryEntriesService.updateLibraryEntry(
+                        libraryEntryId,
+                        JSONAPIDocument(libraryEntry)
+                    )
                 } catch (e: Exception) {
                     logE("Failed to update library entry.", e)
                     null
