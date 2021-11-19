@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
@@ -87,7 +88,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                         }
                     }
                     R.id.menu_log_out -> {
-                        viewModel.logOut()
+                        showLogOutConfirmationDialog()
                     }
                 }
                 true
@@ -216,6 +217,20 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
             findItem(R.id.menu_log_out).isVisible = isLoggedIn
             findItem(R.id.menu_share_profile_url).isVisible = isLoggedIn
         }
+    }
+
+    private fun showLogOutConfirmationDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.action_log_out)
+            .setMessage(R.string.dialog_log_out_confirmation)
+            .setNegativeButton(android.R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(R.string.action_log_out) { dialog, _ ->
+                viewModel.logOut()
+                dialog.dismiss()
+            }
+            .show()
     }
 
     override fun onResume() {

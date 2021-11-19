@@ -30,6 +30,8 @@
     <string name="hint_mark_watched">Mark as watched.</string>
     <string name="hint_mark_not_watched">Mark as not watched.</string>
 
+    <string name="dialog_log_out_confirmation">Are you sure you want to log out?</string>
+
     <string name="error_resource_loading">Could not load data.</string>
     <string name="error_invalid_user">Invalid User. Are you logged in?</string>
     <string name="error_user_update_failed">Failed to update user data.</string>

@@ -50,7 +50,6 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
         binding.apply {
             toolbar.initWindowInsetsListener(consume = false)
-            //scrollViewFilter.initPaddingWindowInsetsListener(left = true, top = true, right = true, consume = false)
             rvLibraryEntries.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
             layoutNotLoggedIn.initPaddingWindowInsetsListener(left = true, top = true, right = true, consume = false)
 
@@ -66,6 +65,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             binding.apply {
                 rvLibraryEntries.isVisible = isLoggedIn
                 nsvNotLoggedIn.isVisible = !isLoggedIn
+                scrollViewFilter.isVisible = isLoggedIn
                 // disable toolbar scrolling if library is not shown (not logged in)
                 (toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags = if (isLoggedIn) {
                     initialToolbarScrollFlags
