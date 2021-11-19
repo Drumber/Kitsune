@@ -38,10 +38,10 @@ import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.ui.base.BaseCollectionViewModel
 import io.github.drumber.kitsune.ui.search.categories.CategoriesDialogFragment
-import io.github.drumber.kitsune.util.getColor
+import io.github.drumber.kitsune.util.extensions.getColor
+import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.navigateSafe
-import io.github.drumber.kitsune.util.toPx
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {

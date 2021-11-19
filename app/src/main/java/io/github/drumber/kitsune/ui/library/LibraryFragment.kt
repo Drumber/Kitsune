@@ -30,10 +30,10 @@ import io.github.drumber.kitsune.ui.adapter.LibraryEntriesAdapter
 import io.github.drumber.kitsune.ui.adapter.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
+import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
-import io.github.drumber.kitsune.util.navigateSafe
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -222,9 +222,9 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         binding.appBarLayout.setExpanded(true)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
         viewModel.responseErrorListener = null
+        super.onDestroyView()
     }
 
 }

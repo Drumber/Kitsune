@@ -13,7 +13,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.paulrybitskyi.persistentsearchview.PersistentSearchView
 import com.paulrybitskyi.persistentsearchview.listeners.OnSearchConfirmedListener
 import com.paulrybitskyi.persistentsearchview.widgets.AdvancedEditText
-import io.github.drumber.kitsune.util.getResourceId
+import io.github.drumber.kitsune.util.extensions.getResourceId
 
 class CustomPersistentSearchView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null

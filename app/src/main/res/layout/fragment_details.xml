@@ -74,6 +74,7 @@
                         app:navigationContentDescription="@string/action_back"
                         app:title="@{data.title}"
                         tools:title="Some Title"
+                        app:menu="@menu/details_menu"
                         app:layout_collapseMode="pin"/>
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -220,7 +221,9 @@
                             android:id="@+id/rv_streamer"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:paddingVertical="5dp"
                             android:requiresFadingEdge="horizontal"
+                            android:clipToPadding="false"
                             android:orientation="horizontal"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 

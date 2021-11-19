@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.util
+package io.github.drumber.kitsune.util.extensions
 
 import android.app.Activity
 import android.content.Context
@@ -7,21 +7,9 @@ import android.content.res.Resources
 import android.os.Build
 import android.util.TypedValue
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
-import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
-import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.NavDirections
-import androidx.navigation.NavOptions
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
-import io.github.drumber.kitsune.R
-import java.text.SimpleDateFormat
-import java.util.*
 
 fun Activity.setStatusBarColor(@ColorInt color: Int) {
     window.statusBarColor = color
@@ -76,28 +64,8 @@ fun Activity.clearLightNavigationBar() {
     }
 }
 
-/**
- * Make the internal RecyclerView of ViewPager2 accessible.
- */
-val ViewPager2.recyclerView: RecyclerView
-    get() = this[0] as RecyclerView
-
-/**
- * Checks if the current destination of the back stack is equal to the specified destination id.
- * This avoids simultaneous navigation calls, e.g. when the user clicks on two list items at the same time.
- */
-fun NavController.navigateSafe(@IdRes currentNavId: Int, directions: NavDirections, navOptions: NavOptions? = null) {
-    if (this.currentDestination?.id == currentNavId) {
-        this.navigate(directions, navOptions)
-    }
-}
-
 fun Context.isNightMode(): Boolean {
     return (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-}
-
-fun Fragment.showSomethingWrongToast() {
-    Toast.makeText(context, R.string.error_something_wrong, Toast.LENGTH_SHORT).show()
 }
 
 fun Resources.Theme.getColor(resid: Int): Int {
@@ -111,21 +79,3 @@ fun Resources.Theme.getResourceId(resid: Int): Int {
     this.resolveAttribute(resid, typedValue, true)
     return typedValue.resourceId
 }
-
-fun String.toDate(format: String = "yyyy-MM-dd"): Calendar {
-    val date = SimpleDateFormat(format).parse(this)
-    return Calendar.getInstance().apply {
-        time = date
-    }
-}
-
-fun Date.formatDate(dateFormat: Int = SimpleDateFormat.DEFAULT): String {
-    val dateFormat = SimpleDateFormat.getDateInstance(dateFormat)
-    return dateFormat.format(this)
-}
-
-fun Calendar.formatDate(dateFormat: Int = SimpleDateFormat.DEFAULT) = this.time.formatDate(dateFormat)
-
-fun Int.toDp() = (this / Resources.getSystem().displayMetrics.density).toInt()
-
-fun Int.toPx() = (this * Resources.getSystem().displayMetrics.density).toInt()

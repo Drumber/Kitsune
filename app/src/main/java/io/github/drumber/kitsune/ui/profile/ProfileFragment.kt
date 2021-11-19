@@ -26,6 +26,7 @@ import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.ui.widget.PieChartStyle
 import io.github.drumber.kitsune.ui.widget.ProfilePictureBehavior
 import io.github.drumber.kitsune.util.*
+import io.github.drumber.kitsune.util.extensions.*
 import io.github.drumber.kitsune.util.network.ResponseData
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.round
@@ -77,12 +78,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                         val profileId = user?.slug ?: user?.id
                         if (profileId != null) {
                             val url = Kitsu.USER_URL_PREFIX + profileId
-                            val shareIntent = Intent.createChooser(Intent().apply {
-                                action = Intent.ACTION_SEND
-                                putExtra(Intent.EXTRA_TEXT, url)
-                                type = "text/plain"
-                            }, null)
-                            startActivity(shareIntent)
+                            startUrlShareIntent(url)
                         } else {
                             showSomethingWrongToast()
                         }

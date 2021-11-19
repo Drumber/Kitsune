@@ -2,6 +2,8 @@ package io.github.drumber.kitsune.util
 
 import android.content.Context
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.util.extensions.formatDate
+import io.github.drumber.kitsune.util.extensions.toDate
 import java.text.SimpleDateFormat
 
 object DataUtil {

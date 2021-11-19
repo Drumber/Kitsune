@@ -24,6 +24,7 @@
     <string name="action_close">Close</string>
     <string name="action_log_out">Log out</string>
     <string name="action_share_profile_url">Share Profile</string>
+    <string name="action_share">Share</string>
     <string name="action_dismiss">Dismiss</string>
 
     <string name="hint_search">Search</string>

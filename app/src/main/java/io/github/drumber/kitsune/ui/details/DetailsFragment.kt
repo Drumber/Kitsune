@@ -22,6 +22,7 @@ import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.data.model.ResourceSelector
 import io.github.drumber.kitsune.data.model.ResourceType
@@ -35,7 +36,10 @@ import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
-import io.github.drumber.kitsune.util.*
+import io.github.drumber.kitsune.util.extensions.*
+import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
+import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -126,6 +130,28 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             )
 
             toolbar.setNavigationOnClickListener { goBack() }
+            toolbar.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.menu_share_resource -> {
+                        val url = viewModel.resourceAdapter.value?.let {
+                            when (it) {
+                                is ResourceAdapter.AnimeResource -> {
+                                    Kitsu.ANIME_URL_PREFIX + it.anime.slug
+                                }
+                                is ResourceAdapter.MangaResource -> {
+                                    Kitsu.MANGA_URL_PREFIX + it.manga.slug
+                                }
+                            }
+                        }
+                        if (url != null) {
+                            startUrlShareIntent(url)
+                        } else {
+                            showSomethingWrongToast()
+                        }
+                    }
+                }
+                true
+            }
 
             val defaultTitleMarginStart = collapsingToolbar.expandedTitleMarginStart
             val defaultTitleMarginEnd = collapsingToolbar.expandedTitleMarginStart

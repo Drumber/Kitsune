@@ -9,7 +9,7 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.formatter.PercentFormatter
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.util.getColor
+import io.github.drumber.kitsune.util.extensions.getColor
 
 object PieChartStyle {
 

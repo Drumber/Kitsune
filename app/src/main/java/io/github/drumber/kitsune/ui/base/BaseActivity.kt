@@ -15,8 +15,8 @@ import com.chibatching.kotpref.livedata.asLiveData
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.util.clearLightNavigationBar
-import io.github.drumber.kitsune.util.setStatusBarColor
+import io.github.drumber.kitsune.util.extensions.clearLightNavigationBar
+import io.github.drumber.kitsune.util.extensions.setStatusBarColor
 
 abstract class BaseActivity(
     @LayoutRes contentLayoutId: Int,

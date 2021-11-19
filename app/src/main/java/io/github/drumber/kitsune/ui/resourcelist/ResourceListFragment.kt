@@ -14,8 +14,8 @@ import io.github.drumber.kitsune.databinding.FragmentResourceListBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.ui.base.BaseCollectionViewModel
+import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.initWindowInsetsListener
-import io.github.drumber.kitsune.util.navigateSafe
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ResourceListFragment : BaseCollectionFragment(R.layout.fragment_resource_list) {

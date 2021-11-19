@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.ui.base
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.util.setStatusBarColorRes
+import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
 
 abstract class BaseFragment(
     @LayoutRes contentLayoutId: Int,
