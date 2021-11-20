@@ -64,21 +64,27 @@ class DetailsViewModel(
         val filter = Filter()
             .fields("categories", "slug", "title")
 
+        val commonIncludes = arrayOf(
+            "categories",
+            "mediaRelationships",
+            "mediaRelationships.destination"
+        )
+
         try {
             val resourceModel = if (resourceAdapter.isAnime()) {
                 filter.include(
-                    "categories",
+                    *commonIncludes,
                     "animeProductions.producer",
                     "streamingLinks",
                     "streamingLinks.streamer"
                 )
                 animeService.getAnime(id, filter.options).get()
             } else {
-                filter.include("categories")
+                filter.include(*commonIncludes)
                 mangaService.getManga(id, filter.options).get()
             } ?: throw ReceivedDataException("Received data is null.")
 
-            val fullResourceAdapter = ResourceAdapter.fromResource(resourceModel)
+            val fullResourceAdapter = ResourceAdapter.fromMedia(resourceModel)
             _resourceAdapter.postValue(fullResourceAdapter)
         } catch (e: Exception) {
             logE("Failed to load full resource model.", e)

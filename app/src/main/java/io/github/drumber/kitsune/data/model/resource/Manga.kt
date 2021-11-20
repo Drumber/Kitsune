@@ -50,7 +50,7 @@ data class Manga @Ignore constructor(
     @Ignore
     @Relationship("mediaRelationships")
     val mediaRelationships: List<MediaRelationship>? = null
-) : Resource(), Media {
+) : Resource() {
 
     /**
      * Secondary constructor for Room

@@ -32,6 +32,7 @@ import io.github.drumber.kitsune.data.model.library.getStringResId
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
+import io.github.drumber.kitsune.ui.adapter.ResourceRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
@@ -76,6 +77,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         viewModel.resourceAdapter.observe(viewLifecycleOwner) { model ->
             binding.data = model
             showCategoryChips(model)
+            showFranchise(model)
             showStreamingLinks(model)
 
             val glide = GlideApp.with(this)
@@ -198,6 +200,29 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
         val action = DetailsFragmentDirections.actionDetailsFragmentToResourceListFragment(resourceSelector, title)
         findNavController().navigate(action)
+    }
+
+    private fun showFranchise(resourceAdapter: ResourceAdapter) {
+        val data = resourceAdapter.mediaRelationships?.mapNotNull {
+            it.resource?.let { media -> ResourceAdapter.fromMedia(media) }
+        } ?: emptyList()
+
+        if (binding.rvFranchise.adapter !is ResourceRecyclerViewAdapter) {
+            val glide = GlideApp.with(this)
+            val adapter = ResourceRecyclerViewAdapter(CopyOnWriteArrayList(data), glide) { resource ->
+                onFranchiseItemClicked(resource)
+            }
+            binding.rvFranchise.adapter = adapter
+        } else {
+            val adapter = binding.rvFranchise.adapter as ResourceRecyclerViewAdapter
+            adapter.dataSet.addAll(0, data)
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun onFranchiseItemClicked(resourceAdapter: ResourceAdapter) {
+        val action = DetailsFragmentDirections.actionDetailsFragmentSelf(resourceAdapter)
+        findNavController().navigateSafe(R.id.details_fragment, action)
     }
 
     private fun showStreamingLinks(resourceAdapter: ResourceAdapter) {

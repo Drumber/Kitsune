@@ -25,7 +25,7 @@ sealed class ResourcePagingAdapter<T : Resource>(
     }
 
     override fun onBindViewHolder(holder: ResourceViewHolder, position: Int) {
-        getItem(position)?.let { holder.bind(ResourceAdapter.fromResource(it)) }
+        getItem(position)?.let { holder.bind(ResourceAdapter.fromMedia(it)) }
     }
 
 }

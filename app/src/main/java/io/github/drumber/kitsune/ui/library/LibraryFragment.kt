@@ -191,7 +191,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
     override fun onItemClicked(item: LibraryEntry) {
         val resource = item.anime ?: item.manga
         if (resource != null) {
-            val resourceAdapter = ResourceAdapter.fromResource(resource)
+            val resourceAdapter = ResourceAdapter.fromMedia(resource)
             val action = LibraryFragmentDirections.actionLibraryFragmentToDetailsFragment(resourceAdapter)
             findNavController().navigateSafe(R.id.library_fragment, action)
         }
@@ -207,7 +207,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
     override fun onRatingClicked(item: LibraryEntry) {
         viewModel.lastRatedLibraryEntry = item
-        val resourceAdapter = (item.anime ?: item.manga)?.let { ResourceAdapter.fromResource(it) }
+        val resourceAdapter = (item.anime ?: item.manga)?.let { ResourceAdapter.fromMedia(it) }
         val sheetLibraryRating = RatingBottomSheet()
         val bundle = bundleOf(
             RatingBottomSheet.BUNDLE_TITLE to resourceAdapter?.title,

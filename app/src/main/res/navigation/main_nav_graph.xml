@@ -49,6 +49,9 @@
         <action
             android:id="@+id/action_details_fragment_to_resource_list_fragment"
             app:destination="@id/resource_list_fragment" />
+        <action
+            android:id="@+id/action_details_fragment_self"
+            app:destination="@id/details_fragment" />
     </fragment>
     <fragment
         android:id="@+id/resource_list_fragment"

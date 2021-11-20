@@ -5,6 +5,7 @@ import android.os.Parcelable
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.TitlesPref
 import io.github.drumber.kitsune.data.model.category.Category
+import io.github.drumber.kitsune.data.model.mediarelationship.MediaRelationship
 import io.github.drumber.kitsune.data.model.production.AnimeProductionRole
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.TimeUtil
@@ -34,7 +35,8 @@ sealed class ResourceAdapter(
     val tba: String?,
     val posterImage: String?,
     val coverImage: String?,
-    val categories: List<Category>?
+    val categories: List<Category>?,
+    val mediaRelationships: List<MediaRelationship>?
 ) : Parcelable {
 
     val publishingYear: String
@@ -157,6 +159,8 @@ sealed class ResourceAdapter(
 
     fun hasStreamingLinks() = this is AnimeResource && !anime.streamingLinks.isNullOrEmpty()
 
+    fun hasMediaRelationships() = !mediaRelationships.isNullOrEmpty()
+
     fun isAnime() = this is AnimeResource
 
     @Parcelize
@@ -179,7 +183,8 @@ sealed class ResourceAdapter(
         tba = anime.tba,
         posterImage = anime.posterImage?.smallOrHigher(),
         coverImage = anime.coverImage?.originalOrDown(),
-        categories = anime.categories
+        categories = anime.categories,
+        mediaRelationships = anime.mediaRelationships
     ), Parcelable
 
     @Parcelize
@@ -202,14 +207,15 @@ sealed class ResourceAdapter(
         tba = manga.tba,
         posterImage = manga.posterImage?.smallOrHigher(),
         coverImage = manga.coverImage?.originalOrDown(),
-        categories = manga.categories
+        categories = manga.categories,
+        mediaRelationships = manga.mediaRelationships
     ), Parcelable
 
     companion object {
-        fun fromResource(resource: Resource) = when (resource) {
-            is Anime -> AnimeResource(resource)
-            is Manga -> MangaResource(resource)
-            else -> throw IllegalStateException("Unknown resource subclass: ${resource::class.java}")
+        fun fromMedia(media: Media) = when (media) {
+            is Anime -> AnimeResource(media)
+            is Manga -> MangaResource(media)
+            else -> throw IllegalStateException("Unknown media subclass: ${media::class.java}")
         }
     }
 

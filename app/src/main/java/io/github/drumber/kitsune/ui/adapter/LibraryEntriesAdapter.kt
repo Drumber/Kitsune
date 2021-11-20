@@ -63,7 +63,7 @@ class LibraryEntriesAdapter(
         }
 
         fun bind(entry: LibraryEntry) {
-            val resourceAdapter = (entry.anime ?: entry.manga)?.let { ResourceAdapter.fromResource(it) }
+            val resourceAdapter = (entry.anime ?: entry.manga)?.let { ResourceAdapter.fromMedia(it) }
             binding.apply {
                 this.entry = LibraryEntryAdapter(entry)
                 data = resourceAdapter

@@ -107,7 +107,7 @@ abstract class ResourceCollectionFragment(@LayoutRes contentLayoutId: Int) :
     }
 
     override fun onItemClick(item: Resource) {
-        val model = ResourceAdapter.fromResource(item)
+        val model = ResourceAdapter.fromMedia(item)
         val options = NavOptions.Builder()
             .setLaunchSingleTop(true)
             .build()

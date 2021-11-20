@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import io.github.drumber.kitsune.GlideRequests
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.databinding.SectionMainExploreBinding
+import io.github.drumber.kitsune.ui.adapter.ResourceRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -18,7 +19,7 @@ class ExploreSection(
     private val headerListener: OnHeaderClickListener? = null
 ) {
 
-    private lateinit var exploreAdapter: ExploreSectionAdapter
+    private lateinit var exploreAdapter: ResourceRecyclerViewAdapter
 
     fun bindView(view: View) {
         val binding = SectionMainExploreBinding.bind(view)
@@ -26,7 +27,7 @@ class ExploreSection(
     }
 
     private fun initView(context: Context, binding: SectionMainExploreBinding) {
-        exploreAdapter = ExploreSectionAdapter(
+        exploreAdapter = ResourceRecyclerViewAdapter(
             if(initialData != null) CopyOnWriteArrayList(initialData) else CopyOnWriteArrayList(),
             glide,
             itemListener
