@@ -203,7 +203,9 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     }
 
     private fun showFranchise(resourceAdapter: ResourceAdapter) {
-        val data = resourceAdapter.mediaRelationships?.mapNotNull {
+        val data = resourceAdapter.mediaRelationships?.sortedBy {
+            it.role?.ordinal
+        }?.mapNotNull {
             it.resource?.let { media -> ResourceAdapter.fromMedia(media) }
         } ?: emptyList()
 
@@ -212,6 +214,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             val adapter = ResourceRecyclerViewAdapter(CopyOnWriteArrayList(data), glide) { resource ->
                 onFranchiseItemClicked(resource)
             }
+            adapter.overrideWidth = resources.getDimensionPixelSize(R.dimen.resource_item_width_small)
+            adapter.overrideHeight = resources.getDimensionPixelSize(R.dimen.resource_item_height_small)
             binding.rvFranchise.adapter = adapter
         } else {
             val adapter = binding.rvFranchise.adapter as ResourceRecyclerViewAdapter

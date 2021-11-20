@@ -15,13 +15,22 @@ class ResourceRecyclerViewAdapter(
     private val listener: OnItemClickListener<ResourceAdapter>? = null
 ) : RecyclerView.Adapter<ResourceViewHolder>() {
 
+    var overrideWidth: Int? = null
+    var overrideHeight: Int? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResourceViewHolder {
         val binding = ItemResourceBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
         )
-        binding.contentWrapper.layoutParams.width = FrameLayout.LayoutParams.WRAP_CONTENT
+        binding.apply {
+            contentWrapper.layoutParams.width = FrameLayout.LayoutParams.WRAP_CONTENT
+            cardResource.layoutParams.apply {
+                overrideWidth?.let { width = it }
+                overrideHeight?.let { height = it }
+            }
+        }
         return ResourceViewHolder(
             binding,
             glide

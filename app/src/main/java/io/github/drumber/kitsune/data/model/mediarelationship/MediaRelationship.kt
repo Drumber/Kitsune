@@ -17,29 +17,33 @@ data class MediaRelationship(
     val resource: Media?
 ) : Parcelable
 
+/**
+ * Media relationship roles, sort order from
+ * https://github.com/hummingbird-me/kitsu-server/blob/the-future/app/models/media_relationship.rb
+ */
 enum class RelationshipRole {
-    @JsonProperty("adaptation")
-    Adaptation,
+    @JsonProperty("sequel")
+    Sequel,
+    @JsonProperty("prequel")
+    Prequel,
     @JsonProperty("alternative_setting")
     AlternativeSetting,
     @JsonProperty("alternative_version")
     AlternativeVersion,
-    @JsonProperty("character")
-    Character,
-    @JsonProperty("full_story")
-    FullStory,
-    @JsonProperty("other")
-    Other,
-    @JsonProperty("parent_story")
-    ParentStory,
-    @JsonProperty("prequel")
-    Prequel,
-    @JsonProperty("sequel")
-    Sequel,
     @JsonProperty("side_story")
     SideStory,
+    @JsonProperty("parent_story")
+    ParentStory,
+    @JsonProperty("summary")
+    Summary,
+    @JsonProperty("full_story")
+    FullStory,
     @JsonProperty("spinoff")
     Spinoff,
-    @JsonProperty("summary")
-    Summary
+    @JsonProperty("adaptation")
+    Adaptation,
+    @JsonProperty("character")
+    Character,
+    @JsonProperty("other")
+    Other
 }

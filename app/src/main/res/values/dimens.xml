@@ -3,6 +3,8 @@
     <!-- Resource item card -->
     <dimen name="resource_item_width">169dp</dimen>
     <dimen name="resource_item_height">240dp</dimen>
+    <dimen name="resource_item_width_small">106dp</dimen>
+    <dimen name="resource_item_height_small">150dp</dimen>
     <dimen name="resource_item_margin">5dp</dimen>
 
     <!-- Library entry card -->
