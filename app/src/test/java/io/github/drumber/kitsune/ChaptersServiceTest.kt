@@ -4,19 +4,11 @@ import io.github.drumber.kitsune.data.service.manga.ChaptersService
 import io.github.drumber.kitsune.di.serviceModule
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertNotNull
-import org.junit.Rule
 import org.junit.Test
-import org.koin.core.logger.Level
-import org.koin.test.AutoCloseKoinTest
-import org.koin.test.KoinTestRule
 
-class ChaptersServiceTest: AutoCloseKoinTest() {
+class ChaptersServiceTest: BaseTest() {
 
-    @get:Rule
-    val koinTestRule = KoinTestRule.create {
-        printLogger(Level.DEBUG)
-        modules(serviceModule)
-    }
+    override val koinModules = listOf(serviceModule)
 
     @Test
     fun fetchAllChapters() = runBlocking {

@@ -5,19 +5,11 @@ import io.github.drumber.kitsune.data.service.manga.MangaService
 import io.github.drumber.kitsune.di.serviceModule
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
-import org.junit.Rule
 import org.junit.Test
-import org.koin.core.logger.Level
-import org.koin.test.AutoCloseKoinTest
-import org.koin.test.KoinTestRule
 
-class MangaServiceTest : AutoCloseKoinTest() {
+class MangaServiceTest : BaseTest() {
 
-    @get:Rule
-    val koinTestRule = KoinTestRule.create {
-        printLogger(Level.DEBUG)
-        modules(serviceModule)
-    }
+    override val koinModules = listOf(serviceModule)
 
     @Test
     fun fetchAllManga() = runBlocking {
@@ -77,15 +69,23 @@ class MangaServiceTest : AutoCloseKoinTest() {
 
         val response = mangaService.allManga(
             Filter()
-                .filter("slug", "monster")
-                .include("categories")
+                .filter("slug", "one-piece")
+                .include(
+                    "categories",
+                    "mediaRelationships",
+                    "mediaRelationships.destination"
+                )
                 .options
         )
+
         val manga = response.get()?.first()
-        println("Manga including categories: $manga")
         assertNotNull(manga)
-        assertNotNull(manga?.categories)
-        assertTrue(manga?.categories?.isNotEmpty() == true)
+        println("Manga including categories: $manga")
+        println("\nGot ${manga?.mediaRelationships?.size} related media objects.")
+
+        assertFalse(manga?.categories.isNullOrEmpty())
+        assertFalse(manga?.mediaRelationships.isNullOrEmpty())
+        assertNotNull(manga?.mediaRelationships?.firstOrNull())
     }
 
 }

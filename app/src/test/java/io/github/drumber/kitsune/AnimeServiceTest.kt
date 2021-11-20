@@ -5,19 +5,11 @@ import io.github.drumber.kitsune.data.service.anime.AnimeService
 import io.github.drumber.kitsune.di.serviceModule
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
-import org.junit.Rule
 import org.junit.Test
-import org.koin.core.logger.Level
-import org.koin.test.AutoCloseKoinTest
-import org.koin.test.KoinTestRule
 
-class AnimeServiceTest : AutoCloseKoinTest() {
+class AnimeServiceTest : BaseTest() {
 
-    @get:Rule
-    val koinTestRule = KoinTestRule.create {
-        printLogger(Level.DEBUG)
-        modules(serviceModule)
-    }
+    override val koinModules = listOf(serviceModule)
 
     @Test
     fun fetchAllAnime() = runBlocking {
@@ -79,16 +71,25 @@ class AnimeServiceTest : AutoCloseKoinTest() {
         val response = animeService.allAnime(
             Filter()
                 .filter("slug", "one-piece")
-                .include("categories", "animeProductions.producer", "streamingLinks")
+                .include(
+                    "categories",
+                    "animeProductions.producer",
+                    "streamingLinks",
+                    "mediaRelationships",
+                    "mediaRelationships.destination"
+                )
                 .options
         )
         val anime = response.get()?.first()
         assertNotNull(anime)
         println("Anime with included relationships: $anime")
+        println("\nGot ${anime?.mediaRelationships?.size} related media objects.")
 
         assertFalse(anime?.categories.isNullOrEmpty())
         assertFalse(anime?.animeProduction.isNullOrEmpty())
         assertFalse(anime?.streamingLinks.isNullOrEmpty())
+        assertFalse(anime?.mediaRelationships.isNullOrEmpty())
+        assertNotNull(anime?.mediaRelationships?.firstOrNull())
     }
 
 }

@@ -5,19 +5,11 @@ import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.di.serviceModule
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertNotNull
-import org.junit.Rule
 import org.junit.Test
-import org.koin.core.logger.Level
-import org.koin.test.AutoCloseKoinTest
-import org.koin.test.KoinTestRule
 
-class LibraryEntriesServiceTest : AutoCloseKoinTest() {
+class LibraryEntriesServiceTest : BaseTest() {
 
-    @get:Rule
-    val koinTestRule = KoinTestRule.create {
-        printLogger(Level.DEBUG)
-        modules(serviceModule)
-    }
+    override val koinModules = listOf(serviceModule)
 
     private val defaultFilter = Filter()
         .filter("user_id", "1")

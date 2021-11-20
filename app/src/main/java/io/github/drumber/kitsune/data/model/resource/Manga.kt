@@ -1,20 +1,21 @@
 package io.github.drumber.kitsune.data.model.resource
 
-import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
 import io.github.drumber.kitsune.data.model.category.Category
+import io.github.drumber.kitsune.data.model.mediarelationship.MediaRelationship
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Type("manga")
 data class Manga @Ignore constructor(
     @PrimaryKey @Id
-    val id: String = "",
+    override val id: String = "",
     val createdAt: String?,
     val updatedAt: String?,
     val slug: String?,
@@ -45,8 +46,11 @@ data class Manga @Ignore constructor(
     val totalLength: Int?,
     @Ignore
     @Relationship("categories")
-    val categories: List<Category>?
-) : Resource(), Parcelable {
+    val categories: List<Category>? = null,
+    @Ignore
+    @Relationship("mediaRelationships")
+    val mediaRelationships: List<MediaRelationship>? = null
+) : Resource(), Media {
 
     /**
      * Secondary constructor for Room
@@ -111,17 +115,25 @@ data class Manga @Ignore constructor(
         nsfw,
         nextRelease,
         totalLength,
+        null,
         null
     )
 
 }
 
 enum class MangaSubtype {
-    doujin,
-    manga,
-    manhua,
-    manhwa,
-    novel,
-    oel,
-    oneshot
+    @JsonProperty("doujin")
+    Doujin,
+    @JsonProperty("manga")
+    Manga,
+    @JsonProperty("manhua")
+    Manhua,
+    @JsonProperty("manhwa")
+    Manhwa,
+    @JsonProperty("novel")
+    Novel,
+    @JsonProperty("oel")
+    Oel,
+    @JsonProperty("oneshot")
+    Oneshot
 }

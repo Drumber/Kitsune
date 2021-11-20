@@ -7,9 +7,11 @@ import io.github.drumber.kitsune.data.model.TitlesPref
 import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.data.model.production.AnimeProductionRole
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.util.*
+import io.github.drumber.kitsune.util.TimeUtil
 import io.github.drumber.kitsune.util.extensions.formatDate
 import io.github.drumber.kitsune.util.extensions.toDate
+import io.github.drumber.kitsune.util.originalOrDown
+import io.github.drumber.kitsune.util.smallOrHigher
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
@@ -83,11 +85,11 @@ sealed class ResourceAdapter(
 
     fun statusText(context: Context): String {
         val stringRes = when (status) {
-            Status.current -> if(isAnime()) R.string.status_current else R.string.status_current_manga
-            Status.finished -> R.string.status_finished
-            Status.tba -> R.string.status_tba
-            Status.unreleased -> R.string.status_unreleased
-            Status.upcoming -> R.string.status_upcoming
+            Status.Current -> if(isAnime()) R.string.status_current else R.string.status_current_manga
+            Status.Finished -> R.string.status_finished
+            Status.TBA -> R.string.status_tba
+            Status.Unreleased -> R.string.status_unreleased
+            Status.Upcoming -> R.string.status_upcoming
             null -> R.string.no_information
         }
         return context.getString(stringRes)
@@ -207,6 +209,7 @@ sealed class ResourceAdapter(
         fun fromResource(resource: Resource) = when (resource) {
             is Anime -> AnimeResource(resource)
             is Manga -> MangaResource(resource)
+            else -> throw IllegalStateException("Unknown resource subclass: ${resource::class.java}")
         }
     }
 
@@ -225,4 +228,4 @@ private fun Titles?.require(): Titles {
     return this ?: Titles(null, null, null)
 }
 
-private inline fun Int?.orNull() = this ?: 0
+private fun Int?.orNull() = this ?: 0

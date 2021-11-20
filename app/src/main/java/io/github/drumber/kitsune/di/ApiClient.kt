@@ -11,6 +11,7 @@ import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.mediarelationship.MediaRelationship
 import io.github.drumber.kitsune.data.model.production.AnimeProduction
 import io.github.drumber.kitsune.data.model.production.Producer
 import io.github.drumber.kitsune.data.model.resource.Anime
@@ -51,15 +52,24 @@ val serviceModule = module {
     factory {
         createService<AnimeService>(get(), get(),
             Anime::class.java,
+            Manga::class.java,
             Category::class.java,
             AnimeProduction::class.java,
             Producer::class.java,
             StreamingLink::class.java,
-            Streamer::class.java
+            Streamer::class.java,
+            MediaRelationship::class.java
         )
     }
     factory { createService<EpisodesService>(get(), get(), Episode::class.java) }
-    factory { createService<MangaService>(get(), get(), Manga::class.java, Category::class.java) }
+    factory {
+        createService<MangaService>(get(), get(),
+            Manga::class.java,
+            Anime::class.java,
+            Category::class.java,
+            MediaRelationship::class.java
+        )
+    }
     factory { createService<ChaptersService>(get(), get(), Chapter::class.java) }
     factory { createService<CategoryService>(get(), get(), Category::class.java) }
     factory { createService<UserService>(get(), get(), User::class.java, Stats::class.java) }

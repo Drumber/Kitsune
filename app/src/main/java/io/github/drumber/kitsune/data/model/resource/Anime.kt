@@ -9,6 +9,7 @@ import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
 import io.github.drumber.kitsune.data.model.category.Category
+import io.github.drumber.kitsune.data.model.mediarelationship.MediaRelationship
 import io.github.drumber.kitsune.data.model.production.AnimeProduction
 import io.github.drumber.kitsune.data.model.streamer.StreamingLink
 import kotlinx.parcelize.Parcelize
@@ -17,7 +18,7 @@ import kotlinx.parcelize.Parcelize
 @Type("anime")
 data class Anime @Ignore constructor(
     @PrimaryKey @Id
-    val id: String = "",
+    override val id: String = "",
     val createdAt: String?,
     val updatedAt: String?,
     val slug: String?,
@@ -54,8 +55,11 @@ data class Anime @Ignore constructor(
     val animeProduction: List<AnimeProduction>? = null,
     @Ignore
     @Relationship("streamingLinks")
-    val streamingLinks: List<StreamingLink>?
-) : Resource(), Parcelable {
+    val streamingLinks: List<StreamingLink>? = null,
+    @Ignore
+    @Relationship("mediaRelationships")
+    val mediaRelationships: List<MediaRelationship>? = null
+) : Resource(), Media {
 
     /**
      * Secondary constructor for Room
@@ -122,6 +126,7 @@ data class Anime @Ignore constructor(
         totalLength,
         null,
         null,
+        null,
         null
     )
 
@@ -161,15 +166,23 @@ enum class AnimeSubtype {
     ONA,
     OVA,
     TV,
-    movie,
-    music,
-    special
+    @JsonProperty("movie")
+    Movie,
+    @JsonProperty("music")
+    Music,
+    @JsonProperty("special")
+    Special
 }
 
 enum class Status {
-    current,
-    finished,
-    tba,
-    unreleased,
-    upcoming
+    @JsonProperty("current")
+    Current,
+    @JsonProperty("finished")
+    Finished,
+    @JsonProperty("tba")
+    TBA,
+    @JsonProperty("unreleased")
+    Unreleased,
+    @JsonProperty("upcoming")
+    Upcoming
 }
