@@ -93,6 +93,17 @@ abstract class ResourceCollectionFragment(@LayoutRes contentLayoutId: Int) :
                 progressBar.isVisible = loadState.source.refresh is LoadState.Loading
                 btnRetry.isVisible = loadState.source.refresh is LoadState.Error
                 tvError.isVisible = loadState.source.refresh is LoadState.Error
+
+                if (loadState.refresh is LoadState.NotLoading
+                    && loadState.append.endOfPaginationReached
+                    && recyclerView.adapter?.itemCount ?: 0 < 1
+                ) {
+                    root.isVisible = true
+                    tvNoData.isVisible = true
+                    recyclerView.isVisible = false
+                } else {
+                    tvNoData.isVisible = false
+                }
             }
         }
     }

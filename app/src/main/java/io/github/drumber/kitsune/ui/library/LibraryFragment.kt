@@ -168,6 +168,17 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
                         progressBar.isVisible = state.refresh is LoadState.Loading
                         btnRetry.isVisible = state.refresh is LoadState.Error
                         tvError.isVisible = state.refresh is LoadState.Error
+
+                        if (state.refresh is LoadState.NotLoading
+                            && state.append.endOfPaginationReached
+                            && adapter.itemCount < 1
+                        ) {
+                            root.isVisible = true
+                            tvNoData.isVisible = true
+                            rvLibraryEntries.isVisible = false
+                        } else {
+                            tvNoData.isVisible = false
+                        }
                     }
                 }
             }
