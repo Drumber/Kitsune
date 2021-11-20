@@ -25,9 +25,14 @@ class FadingToolbarOffsetListener(
         // fade toolbar icons from white to colorOnSurface while collapsing the toolbar
         val iconTint = ColorUtils.blendARGB(expandedColor, collapsedColor, percent)
         toolbar.setNavigationIconTint(iconTint)
+        toolbar.overflowIcon?.let { overFlowIcon ->
+            DrawableCompat.setTint(overFlowIcon, iconTint)
+        }
         toolbar.menu.forEach { menuItem ->
-            val drawable = menuItem.icon.mutate()
-            DrawableCompat.setTint(drawable, iconTint)
+            if (menuItem.icon != null) {
+                val drawable = menuItem.icon.mutate()
+                DrawableCompat.setTint(drawable, iconTint)
+            }
         }
 
         // switch to light status bar in light mode
