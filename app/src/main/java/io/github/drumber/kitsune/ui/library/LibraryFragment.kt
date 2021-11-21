@@ -26,8 +26,8 @@ import io.github.drumber.kitsune.data.model.library.Status
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.databinding.FragmentLibraryBinding
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.adapter.LibraryEntriesAdapter
-import io.github.drumber.kitsune.ui.adapter.ResourceLoadStateAdapter
+import io.github.drumber.kitsune.ui.adapter.paging.LibraryEntriesAdapter
+import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.util.extensions.navigateSafe

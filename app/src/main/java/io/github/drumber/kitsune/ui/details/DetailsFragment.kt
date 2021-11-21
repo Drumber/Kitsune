@@ -107,6 +107,12 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         binding.apply {
             content.initPaddingWindowInsetsListener(left = true, right = true)
             btnManageLibrary.setOnClickListener { showManageLibraryBottomSheet() }
+            btnMediaUnits.setOnClickListener {
+                val resource = args.model.getResource()
+                val libraryEntry = viewModel.libraryEntry.value
+                val action = DetailsFragmentDirections.actionDetailsFragmentToEpisodesFragment(resource, libraryEntry)
+                findNavController().navigate(action)
+            }
         }
 
         setFragmentResultListener(ManageLibraryBottomSheet.STATUS_REQUEST_KEY) { _, bundle ->

@@ -52,6 +52,9 @@
         <action
             android:id="@+id/action_details_fragment_self"
             app:destination="@id/details_fragment" />
+        <action
+            android:id="@+id/action_details_fragment_to_episodes_fragment"
+            app:destination="@id/episodes_fragment" />
     </fragment>
     <fragment
         android:id="@+id/resource_list_fragment"
@@ -96,4 +99,16 @@
         android:id="@+id/theme_fragment"
         android:name="io.github.drumber.kitsune.ui.settings.ThemePreferenceFragment"
         android:label="@string/nav_appearance" />
+    <fragment
+        android:id="@+id/episodes_fragment"
+        android:name="io.github.drumber.kitsune.ui.details.episodes.EpisodesFragment"
+        android:label="EpisodesFragment" >
+        <argument
+            android:name="resource"
+            app:argType="io.github.drumber.kitsune.data.model.resource.Resource" />
+        <argument
+            android:name="libraryEntry"
+            app:argType="io.github.drumber.kitsune.data.model.library.LibraryEntry"
+            app:nullable="true" />
+    </fragment>
 </navigation>

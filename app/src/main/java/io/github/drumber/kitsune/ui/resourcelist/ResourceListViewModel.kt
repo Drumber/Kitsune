@@ -8,13 +8,13 @@ import io.github.drumber.kitsune.data.model.ResourceType
 import io.github.drumber.kitsune.data.model.resource.Resource
 import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
-import io.github.drumber.kitsune.ui.base.BaseCollectionViewModel
+import io.github.drumber.kitsune.ui.base.ResourceCollectionViewModel
 import kotlinx.coroutines.flow.Flow
 
 class ResourceListViewModel(
     private val animeRepository: AnimeRepository,
     private val mangaRepository: MangaRepository
-) : BaseCollectionViewModel() {
+) : ResourceCollectionViewModel() {
 
     override fun getData(resourceSelector: ResourceSelector): Flow<PagingData<Resource>> {
         val filter = resourceSelector.filter

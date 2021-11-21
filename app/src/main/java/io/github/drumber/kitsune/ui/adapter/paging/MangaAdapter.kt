@@ -1,8 +1,9 @@
-package io.github.drumber.kitsune.ui.adapter
+package io.github.drumber.kitsune.ui.adapter.paging
 
 import androidx.recyclerview.widget.DiffUtil
 import io.github.drumber.kitsune.GlideRequests
 import io.github.drumber.kitsune.data.model.resource.Manga
+import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 
 class MangaAdapter(glide: GlideRequests, listener: OnItemClickListener<Manga>? = null) :
     ResourcePagingAdapter<Manga>(MangaComparator, glide, listener) {

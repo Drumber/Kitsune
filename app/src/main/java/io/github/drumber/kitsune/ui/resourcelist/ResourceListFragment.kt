@@ -12,13 +12,13 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.databinding.FragmentResourceListBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
-import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
-import io.github.drumber.kitsune.ui.base.BaseCollectionViewModel
+import io.github.drumber.kitsune.ui.base.ResourceCollectionFragment
+import io.github.drumber.kitsune.ui.base.ResourceCollectionViewModel
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ResourceListFragment : BaseCollectionFragment(R.layout.fragment_resource_list) {
+class ResourceListFragment : ResourceCollectionFragment(R.layout.fragment_resource_list) {
 
     private val args: ResourceListFragmentArgs by navArgs()
 
@@ -26,7 +26,7 @@ class ResourceListFragment : BaseCollectionFragment(R.layout.fragment_resource_l
 
     private val viewModel: ResourceListViewModel by viewModel()
 
-    override val collectionViewModel: BaseCollectionViewModel
+    override val collectionViewModel: ResourceCollectionViewModel
         get() = viewModel
 
     override val recyclerView: RecyclerView

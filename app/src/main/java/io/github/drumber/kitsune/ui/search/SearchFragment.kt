@@ -35,8 +35,8 @@ import io.github.drumber.kitsune.data.model.toStringRes
 import io.github.drumber.kitsune.databinding.FragmentSearchBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
-import io.github.drumber.kitsune.ui.base.BaseCollectionViewModel
+import io.github.drumber.kitsune.ui.base.ResourceCollectionFragment
+import io.github.drumber.kitsune.ui.base.ResourceCollectionViewModel
 import io.github.drumber.kitsune.ui.search.categories.CategoriesDialogFragment
 import io.github.drumber.kitsune.util.extensions.getColor
 import io.github.drumber.kitsune.util.extensions.navigateSafe
@@ -44,13 +44,13 @@ import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchFragment : BaseCollectionFragment(R.layout.fragment_search) {
+class SearchFragment : ResourceCollectionFragment(R.layout.fragment_search) {
 
     private val binding: FragmentSearchBinding by viewBinding()
 
     private val viewModel: SearchViewModel by viewModel()
 
-    override val collectionViewModel: BaseCollectionViewModel
+    override val collectionViewModel: ResourceCollectionViewModel
         get() = viewModel
 
     override val recyclerView: RecyclerView

@@ -10,7 +10,7 @@ import io.github.drumber.kitsune.data.service.Filter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 
-abstract class BaseCollectionViewModel : ViewModel() {
+abstract class ResourceCollectionViewModel : ViewModel() {
 
     private val _resourceSelector = MutableLiveData(getStoredResourceSelector())
 

@@ -15,6 +15,10 @@
     <dimen name="streamer_card_width">100dp</dimen>
     <dimen name="streamer_card_height">100dp</dimen>
 
+    <!-- Episode card -->
+    <dimen name="episode_card_img_height">110dp</dimen>
+    <dimen name="episode_card_img_width">100dp</dimen>
+
     <!-- Details Fragment -->
     <dimen name="details_trailer_height">150dp</dimen>
 

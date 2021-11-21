@@ -195,6 +195,14 @@
 
                     </LinearLayout>
 
+                    <Button
+                        android:id="@+id/btn_media_units"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAllCaps="false"
+                        android:text="@{data.isAnime() ? @string/title_episodes : @string/title_chapters}"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
                     <include
                         layout="@layout/section_details_trailer"
                         android:layout_width="match_parent"

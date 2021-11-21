@@ -14,13 +14,13 @@ import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.base.BaseCollectionViewModel
+import io.github.drumber.kitsune.ui.base.ResourceCollectionViewModel
 import kotlinx.coroutines.flow.Flow
 
 class SearchViewModel(
     private val animeRepository: AnimeRepository,
     private val mangaRepository: MangaRepository
-) : BaseCollectionViewModel() {
+) : ResourceCollectionViewModel() {
 
     override fun getStoredResourceSelector(): ResourceSelector {
         return KitsunePref.searchParams.toResourceSelector(

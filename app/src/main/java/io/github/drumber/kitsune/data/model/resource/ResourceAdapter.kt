@@ -3,11 +3,10 @@ package io.github.drumber.kitsune.data.model.resource
 import android.content.Context
 import android.os.Parcelable
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.TitlesPref
 import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.data.model.mediarelationship.MediaRelationship
 import io.github.drumber.kitsune.data.model.production.AnimeProductionRole
-import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.util.TimeUtil
 import io.github.drumber.kitsune.util.extensions.formatDate
 import io.github.drumber.kitsune.util.extensions.toDate
@@ -163,6 +162,11 @@ sealed class ResourceAdapter(
 
     fun isAnime() = this is AnimeResource
 
+    fun getResource() = when (this) {
+        is AnimeResource -> anime
+        is MangaResource -> manga
+    }
+
     @Parcelize
     class AnimeResource(val anime: Anime) : ResourceAdapter(
         id = anime.id,
@@ -222,12 +226,7 @@ sealed class ResourceAdapter(
 }
 
 private fun getTitle(title: Titles?, canonical: String?): String {
-    val nf = "<No title found>"
-    return when (KitsunePref.titles) {
-        TitlesPref.Canonical -> canonical ?: nf
-        TitlesPref.Romanized -> title?.enJp ?: canonical ?: nf
-        TitlesPref.English -> title?.en ?: canonical ?: nf
-    }
+    return DataUtil.getTitle(title, canonical) ?: "<No title found>"
 }
 
 private fun Titles?.require(): Titles {

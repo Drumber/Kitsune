@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.adapter
+package io.github.drumber.kitsune.ui.adapter.paging
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,6 +8,8 @@ import io.github.drumber.kitsune.GlideRequests
 import io.github.drumber.kitsune.data.model.resource.Resource
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.databinding.ItemResourceBinding
+import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
+import io.github.drumber.kitsune.ui.adapter.ResourceViewHolder
 
 sealed class ResourcePagingAdapter<T : Resource>(
     diffCallback: DiffUtil.ItemCallback<T>,

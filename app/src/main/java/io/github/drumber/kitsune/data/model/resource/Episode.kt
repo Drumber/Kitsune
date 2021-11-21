@@ -1,6 +1,5 @@
 package io.github.drumber.kitsune.data.model.resource
 
-import android.os.Parcelable
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Type
 import kotlinx.parcelize.Parcelize
@@ -8,16 +7,16 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Type("episodes")
 data class Episode(
-    @Id val id: String?,
+    @Id override val id: String?,
     val createdAt: String?,
     val updatedAt: String?,
-    val description: String?,
-    val titles: Titles?,
-    val canonicalTitle: String?,
+    override val description: String?,
+    override val titles: Titles?,
+    override val canonicalTitle: String?,
     val seasonNumber: Int?,
-    val number: Int?,
+    override val number: Int?,
     val relativeNumber: Int?,
     val airdate: String?,
-    val length: String?,
-    val thumbnail: Image?
-) : Parcelable
+    override val length: String?,
+    override val thumbnail: Image?
+) : MediaUnit

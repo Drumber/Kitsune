@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.adapter
+package io.github.drumber.kitsune.ui.adapter.paging
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

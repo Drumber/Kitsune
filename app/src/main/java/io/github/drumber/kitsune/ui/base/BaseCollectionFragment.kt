@@ -1,48 +1,116 @@
 package io.github.drumber.kitsune.ui.base
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.annotation.LayoutRes
-import androidx.lifecycle.lifecycleScope
-import androidx.paging.PagingData
-import io.github.drumber.kitsune.GlideApp
-import io.github.drumber.kitsune.data.model.ResourceType
-import io.github.drumber.kitsune.data.model.resource.Resource
-import io.github.drumber.kitsune.ui.adapter.AnimeAdapter
-import io.github.drumber.kitsune.ui.adapter.MangaAdapter
-import io.github.drumber.kitsune.ui.adapter.ResourcePagingAdapter
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collectLatest
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.navigation.NavigationBarView
+import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
+import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
+import io.github.drumber.kitsune.ui.widget.LoadStateSpanSizeLookup
+import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
+import kotlin.math.floor
+import kotlin.math.max
 
-abstract class BaseCollectionFragment(
-    @LayoutRes contentLayoutId: Int
-): ResourceCollectionFragment(contentLayoutId) {
+abstract class BaseCollectionFragment(@LayoutRes contentLayoutId: Int) :
+    Fragment(contentLayoutId),
+    View.OnClickListener,
+    NavigationBarView.OnItemReselectedListener {
 
-    private var dataFlowScope: Job? = null
+    abstract val recyclerView: RecyclerView
 
-    abstract val collectionViewModel: BaseCollectionViewModel
+    abstract val resourceLoadingBinding: LayoutResourceLoadingBinding?
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val glide = GlideApp.with(this)
-        collectionViewModel.resourceSelector.observe(viewLifecycleOwner) { selector ->
-            val adapter = when(selector.resourceType) {
-                ResourceType.Anime -> AnimeAdapter(glide) { onItemClick(it) }.setupAdapter()
-                ResourceType.Manga -> MangaAdapter(glide) { onItemClick(it) }.setupAdapter()
+        initRecyclerView(recyclerView)
+        resourceLoadingBinding?.btnRetry?.setOnClickListener(this)
+
+        recyclerView.initMarginWindowInsetsListener(left = true, right = true, consume = false)
+    }
+
+    protected open fun initRecyclerView(recyclerView: RecyclerView) {
+        val gridLayout = GridLayoutManager(requireContext(), 2)
+        recyclerView.layoutManager = gridLayout
+        recyclerView.post {
+            if (isAdded) {
+                // calculate span count in relation to the recycler view width
+                val width = recyclerView.width
+                val cellWidth = resources.getDimension(R.dimen.resource_item_width) +
+                        2 * resources.getDimension(R.dimen.resource_item_margin)
+                val spanCount = floor(width / cellWidth).toInt()
+                gridLayout.spanCount = max(2, spanCount) // set new span count with minimum 2 columns
             }
-            setRecyclerViewAdapter(adapter)
         }
     }
 
-    private inline fun <reified T : Resource> ResourcePagingAdapter<T>.setupAdapter(): ResourcePagingAdapter<T> {
-        dataFlowScope?.cancel()
-        dataFlowScope = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-            collectionViewModel.dataSource.collectLatest { data ->
-                (data as? PagingData<T>)?.let { this@setupAdapter.submitData(it) }
+    fun setRecyclerViewAdapter(adapter: RecyclerView.Adapter<*>) {
+        val oldAdapter = recyclerView.adapter
+        if(oldAdapter is PagingDataAdapter<*, *>) {
+            oldAdapter.removeLoadStateListener(loadStateListener)
+        }
+
+        recyclerView.adapter = if(adapter is PagingDataAdapter<*, *>) {
+            adapter.addLoadStateListener(loadStateListener)
+
+            (recyclerView.layoutManager as? GridLayoutManager)?.let { gridLayout ->
+                // this will make sure to display header and footer with full width
+                gridLayout.spanSizeLookup = LoadStateSpanSizeLookup(adapter, gridLayout.spanCount)
+            }
+
+            adapter.withLoadStateHeaderAndFooter(
+                header = ResourceLoadStateAdapter(adapter),
+                footer = ResourceLoadStateAdapter(adapter)
+            )
+        } else {
+            adapter
+        }
+    }
+
+    /** Triggered when clicking on retry button. */
+    override fun onClick(retryButton: View?) {
+        (recyclerView.adapter as? PagingDataAdapter<*, *>)?.retry()
+    }
+
+    private val loadStateListener: (CombinedLoadStates) -> Unit = { loadState ->
+        if(view?.parent != null) {
+            recyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
+            resourceLoadingBinding?.apply {
+                root.isVisible = loadState.source.refresh !is LoadState.NotLoading
+                progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                btnRetry.isVisible = loadState.source.refresh is LoadState.Error
+                tvError.isVisible = loadState.source.refresh is LoadState.Error
+
+                if (loadState.refresh is LoadState.NotLoading
+                    && loadState.append.endOfPaginationReached
+                    && recyclerView.adapter?.itemCount ?: 0 < 1
+                ) {
+                    root.isVisible = true
+                    tvNoData.isVisible = true
+                    recyclerView.isVisible = false
+                } else {
+                    tvNoData.isVisible = false
+                }
             }
         }
-        return this
+    }
+
+    override fun onNavigationItemReselected(item: MenuItem) {
+        recyclerView.smoothScrollToPosition(0)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (recyclerView.adapter as? PagingDataAdapter<*, *>)?.removeLoadStateListener(loadStateListener)
     }
 
 }
