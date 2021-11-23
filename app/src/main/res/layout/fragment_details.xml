@@ -113,12 +113,12 @@
 
                         <ImageView
                             android:id="@+id/iv_thumbnail"
-                            android:layout_width="150dp"
-                            android:layout_height="213dp"
+                            android:layout_width="@dimen/details_thumbnail_width"
+                            android:layout_height="@dimen/details_thumbnail_height"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
-                            tools:src="@drawable/ic_insert_photo_48"
-                            android:contentDescription="@null" />
+                            android:contentDescription="@null"
+                            tools:src="@drawable/ic_insert_photo_48" />
 
                         <TextView
                             android:layout_width="wrap_content"

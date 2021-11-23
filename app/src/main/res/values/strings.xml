@@ -117,9 +117,6 @@
     <string name="section_highest_rated">Highest Rated Anime</string>
     <string name="section_most_popular">Most Popular Anime</string>
 
-    <string name="unit_episode">Episode %d</string>
-    <string name="unit_chapter">Chapter %d</string>
-
     <string name="preference_category_ui">User Interface</string>
     <string name="preference_category_account">Account</string>
     <string name="preference_category_about">About</string>
@@ -198,6 +195,15 @@
     <string name="profile_data_private">It\'s a secret.</string>
     <string name="gender_male">Male</string>
     <string name="gender_female">Female</string>
+
+    <string name="unit_episode">Episode %d</string>
+    <string name="unit_chapter">Chapter %d</string>
+
+    <!-- Unit Plurals -->
+    <plurals name="unit_pages">
+        <item quantity="one">%s Page</item>
+        <item quantity="other">%s Pages</item>
+    </plurals>
 
     <!-- Duration Plurals -->
     <plurals name="duration_seconds">

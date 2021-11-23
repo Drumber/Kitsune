@@ -15,8 +15,8 @@ import io.github.drumber.kitsune.data.model.mediarelationship.MediaRelationship
 import io.github.drumber.kitsune.data.model.production.AnimeProduction
 import io.github.drumber.kitsune.data.model.production.Producer
 import io.github.drumber.kitsune.data.model.resource.Anime
-import io.github.drumber.kitsune.data.model.resource.Chapter
-import io.github.drumber.kitsune.data.model.resource.Episode
+import io.github.drumber.kitsune.data.model.unit.Chapter
+import io.github.drumber.kitsune.data.model.unit.Episode
 import io.github.drumber.kitsune.data.model.resource.Manga
 import io.github.drumber.kitsune.data.model.stats.Stats
 import io.github.drumber.kitsune.data.model.streamer.Streamer

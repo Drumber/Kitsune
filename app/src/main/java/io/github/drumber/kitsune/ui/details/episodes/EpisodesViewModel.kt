@@ -9,7 +9,7 @@ import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.model.resource.Anime
 import io.github.drumber.kitsune.data.model.resource.Manga
-import io.github.drumber.kitsune.data.model.resource.MediaUnit
+import io.github.drumber.kitsune.data.model.unit.MediaUnit
 import io.github.drumber.kitsune.data.model.resource.Resource
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository
 import io.github.drumber.kitsune.data.service.Filter

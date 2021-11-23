@@ -4,7 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import io.github.drumber.kitsune.constants.Repository
-import io.github.drumber.kitsune.data.model.resource.MediaUnit
+import io.github.drumber.kitsune.data.model.unit.MediaUnit
 import io.github.drumber.kitsune.data.paging.ChaptersPagingDataSource
 import io.github.drumber.kitsune.data.paging.EpisodesPagingDataSource
 import io.github.drumber.kitsune.data.service.Filter

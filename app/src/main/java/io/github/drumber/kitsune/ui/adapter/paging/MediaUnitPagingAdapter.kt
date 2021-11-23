@@ -7,17 +7,19 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import io.github.drumber.kitsune.GlideRequests
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.resource.Chapter
-import io.github.drumber.kitsune.data.model.resource.Episode
-import io.github.drumber.kitsune.data.model.resource.MediaUnit
+import io.github.drumber.kitsune.data.model.unit.Chapter
+import io.github.drumber.kitsune.data.model.unit.Episode
+import io.github.drumber.kitsune.data.model.unit.MediaUnit
+import io.github.drumber.kitsune.data.model.unit.MediaUnitAdapter
 import io.github.drumber.kitsune.databinding.ItemEpisodeBinding
-import io.github.drumber.kitsune.util.DataUtil
+import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.util.originalOrDown
 
-class MediaUnitAdapter(
+class MediaUnitPagingAdapter(
     private val glide: GlideRequests,
-    private val posterUrl: String?
-) : PagingDataAdapter<MediaUnit, MediaUnitAdapter.MediaUnitViewHolder>(MediaUnitComparator) {
+    private val posterUrl: String?,
+    private val listener: OnItemClickListener<MediaUnit>
+) : PagingDataAdapter<MediaUnit, MediaUnitPagingAdapter.MediaUnitViewHolder>(MediaUnitComparator) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaUnitViewHolder {
         return MediaUnitViewHolder(
@@ -32,31 +34,26 @@ class MediaUnitAdapter(
     inner class MediaUnitViewHolder(private val binding: ItemEpisodeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        init {
+            binding.root.setOnClickListener {
+                if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                    getItem(bindingAdapterPosition)?.let { listener.onItemClick(it) }
+                }
+            }
+        }
+
         fun bind(unit: MediaUnit) {
             glide.load(unit.thumbnail?.originalOrDown() ?: posterUrl)
                 .centerCrop()
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivThumbnail)
 
-            val title = DataUtil.getTitle(unit.titles, unit.canonicalTitle)
-            // check if title is not 'Episode %d' or 'Chapter %d'
-            val hasValidTitle = title != null && !"""(Chapter|Episode)\s*\d+""".toRegex()
-                .matches(unit.canonicalTitle ?: "")
-            val episodeNumberText = binding.root.context.getString(
-                when (unit) {
-                    is Chapter -> R.string.unit_chapter
-                    else -> R.string.unit_episode
-                }, unit.number
-            )
+            val adapter = MediaUnitAdapter.fromMediaUnit(unit)
 
             binding.apply {
-                tvEpisodeTitle.text = if (hasValidTitle) {
-                    title
-                } else {
-                    episodeNumberText
-                }
-                tvEpisodeNumber.text = if (hasValidTitle) {
-                    episodeNumberText
+                tvEpisodeTitle.text = adapter.title(root.context)
+                tvEpisodeNumber.text = if (adapter.hasValidTitle) {
+                    adapter.numberText(root.context)
                 } else {
                     null
                 }

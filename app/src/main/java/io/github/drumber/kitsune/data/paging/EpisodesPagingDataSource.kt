@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.paging
 
 import com.github.jasminb.jsonapi.JSONAPIDocument
-import io.github.drumber.kitsune.data.model.resource.Episode
+import io.github.drumber.kitsune.data.model.unit.Episode
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.anime.EpisodesService
 
