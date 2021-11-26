@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.data.room
 
+import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
 import androidx.room.*
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
@@ -29,8 +30,14 @@ interface LibraryEntryDao {
     @Query("SELECT * FROM library_table WHERE anime_id = :resourceId OR manga_id = :resourceId")
     suspend fun getLibraryEntryFromResource(resourceId: String): LibraryEntry?
 
+    @Query("SELECT * FROM library_table WHERE id = :id")
+    fun getLibraryEntryAsLiveData(id: String): LiveData<LibraryEntry?>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(libraryEntry: List<LibraryEntry>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSingle(libraryEntry: LibraryEntry)
 
     @Update
     suspend fun updateLibraryEntry(libraryEntry: LibraryEntry)

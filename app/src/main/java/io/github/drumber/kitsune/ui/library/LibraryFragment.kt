@@ -17,7 +17,6 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
-import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
@@ -31,7 +30,7 @@ import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.util.extensions.navigateSafe
-import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
+import io.github.drumber.kitsune.util.extensions.showErrorSnackback
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
@@ -76,10 +75,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         }
 
         viewModel.responseErrorListener = { error ->
-            val snackbar = Snackbar.make(binding.rvLibraryEntries, "Error: ${error.message}", Snackbar.LENGTH_LONG)
-            // solve snackbar misplacement (remove bottom margin)
-            snackbar.view.initMarginWindowInsetsListener(left = true, right = true)
-            snackbar.show()
+            error.showErrorSnackback(binding.rvLibraryEntries)
         }
 
         setFragmentResultListener(RatingBottomSheet.RATING_REQUEST_KEY) { _, bundle ->

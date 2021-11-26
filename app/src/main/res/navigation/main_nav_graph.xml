@@ -107,8 +107,8 @@
             android:name="resource"
             app:argType="io.github.drumber.kitsune.data.model.resource.Resource" />
         <argument
-            android:name="libraryEntry"
-            app:argType="io.github.drumber.kitsune.data.model.library.LibraryEntry"
+            android:name="libraryEntryId"
+            app:argType="string"
             app:nullable="true" />
     </fragment>
 </navigation>

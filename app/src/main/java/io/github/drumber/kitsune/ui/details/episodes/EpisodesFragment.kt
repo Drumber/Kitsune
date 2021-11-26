@@ -21,11 +21,13 @@ import io.github.drumber.kitsune.databinding.FragmentResourceListBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
+import io.github.drumber.kitsune.util.extensions.showErrorSnackback
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_resource_list) {
+class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_resource_list),
+    MediaUnitPagingAdapter.MediaUnitActionListener {
 
     private val args: EpisodesFragmentArgs by navArgs()
 
@@ -42,6 +44,7 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_resource_list)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setResource(args.resource)
+        args.libraryEntryId?.let { viewModel.setLibraryEntryId(it) }
 
         binding.toolbar.apply {
             initWindowInsetsListener(false)
@@ -54,11 +57,19 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_resource_list)
             setNavigationOnClickListener { findNavController().navigateUp() }
         }
 
-        val resourceAdapter = ResourceAdapter.fromMedia(args.resource)
-        val adapter = MediaUnitPagingAdapter(GlideApp.with(this), resourceAdapter.posterImage) {
-            showDetailsBottomSheet(it)
+        viewModel.errorListener = { e ->
+            e.showErrorSnackback(binding.rvResource)
         }
+
+        val resourceAdapter = ResourceAdapter.fromMedia(args.resource)
+        val adapter = MediaUnitPagingAdapter(GlideApp.with(this), resourceAdapter.posterImage, args.libraryEntryId != null, this)
         setRecyclerViewAdapter(adapter)
+
+        viewModel.libraryEntry.observe(viewLifecycleOwner) {
+            it?.progress?.let { progress ->
+                adapter.updateLibraryWatchCount(progress)
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.dataSource.collectLatest { data ->
@@ -79,6 +90,14 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_resource_list)
             MediaUnitDetailsBottomSheet.BUNDLE_THUMBNAIL to ResourceAdapter.fromMedia(args.resource).posterImage
         )
         sheetMediaUnit.show(parentFragmentManager, MediaUnitDetailsBottomSheet.TAG)
+    }
+
+    override fun onMediaUnitClicked(mediaUnit: MediaUnit) {
+        showDetailsBottomSheet(mediaUnit)
+    }
+
+    override fun onWatchStateChanged(mediaUnit: MediaUnit, isWatched: Boolean) {
+        viewModel.setMediaUnitWatched(mediaUnit, isWatched)
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {

@@ -1,6 +1,9 @@
 package io.github.drumber.kitsune.ui.library
 
-import androidx.lifecycle.*
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.github.jasminb.jsonapi.JSONAPIDocument
@@ -14,8 +17,8 @@ import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.room.LibraryEntryDao
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
-import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.ui.base.BaseLibraryViewModel
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -27,9 +30,9 @@ import kotlinx.coroutines.withContext
 class LibraryViewModel(
     val userRepository: UserRepository,
     private val libraryEntriesRepository: LibraryEntriesRepository,
-    private val libraryEntriesService: LibraryEntriesService,
-    private val libraryEntryDao: LibraryEntryDao
-) : ViewModel() {
+    libraryEntriesService: LibraryEntriesService,
+    libraryEntryDao: LibraryEntryDao
+) : BaseLibraryViewModel(libraryEntriesService, libraryEntryDao) {
 
     val filter = MutableLiveData(
         LibraryEntryFilter(
@@ -88,33 +91,8 @@ class LibraryViewModel(
     }
 
     private fun updateLibraryProgress(oldEntry: LibraryEntry, newProgress: Int?) {
-        val updatedEntry = LibraryEntry(
-            id = oldEntry.id,
-            progress = newProgress
-        )
-
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val response = libraryEntriesService.updateLibraryEntry(
-                    updatedEntry.id,
-                    JSONAPIDocument(updatedEntry)
-                )
-
-                response.get()?.let { libraryEntry ->
-                    // update the database, but copy anime and manga object from old library first
-                    libraryEntryDao.updateLibraryEntry(
-                        libraryEntry.copy(
-                            anime = oldEntry.anime,
-                            manga = oldEntry.manga
-                        )
-                    )
-                } ?: throw ReceivedDataException("Received data is 'null'.")
-            } catch (e: Exception) {
-                logE("Failed to update library entry progress.", e)
-                withContext(Dispatchers.Main) {
-                    responseErrorListener?.invoke(e)
-                }
-            }
+        super.updateLibraryProgress(oldEntry, newProgress) { e: Exception ->
+            responseErrorListener?.invoke(e)
         }
     }
 

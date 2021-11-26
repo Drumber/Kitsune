@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.ui.adapter.paging
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -12,14 +13,23 @@ import io.github.drumber.kitsune.data.model.unit.Episode
 import io.github.drumber.kitsune.data.model.unit.MediaUnit
 import io.github.drumber.kitsune.data.model.unit.MediaUnitAdapter
 import io.github.drumber.kitsune.databinding.ItemEpisodeBinding
-import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.util.originalOrDown
+import kotlin.math.max
 
 class MediaUnitPagingAdapter(
     private val glide: GlideRequests,
     private val posterUrl: String?,
-    private val listener: OnItemClickListener<MediaUnit>
+    private val enableWatchedCheckbox: Boolean,
+    private val listener: MediaUnitActionListener
 ) : PagingDataAdapter<MediaUnit, MediaUnitPagingAdapter.MediaUnitViewHolder>(MediaUnitComparator) {
+
+    private var numberWatched = 0
+
+    fun updateLibraryWatchCount(numberWatched: Int) {
+        val oldValue = this.numberWatched
+        this.numberWatched = numberWatched
+        notifyItemRangeChanged(0, max(oldValue, numberWatched))
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaUnitViewHolder {
         return MediaUnitViewHolder(
@@ -37,8 +47,12 @@ class MediaUnitPagingAdapter(
         init {
             binding.root.setOnClickListener {
                 if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
-                    getItem(bindingAdapterPosition)?.let { listener.onItemClick(it) }
+                    getItem(bindingAdapterPosition)?.let { listener.onMediaUnitClicked(it) }
                 }
+            }
+            binding.checkboxWatched.setOnClickListener {
+                val isChecked = binding.checkboxWatched.isChecked
+                getItem(bindingAdapterPosition)?.let { listener.onWatchStateChanged(it, isChecked) }
             }
         }
 
@@ -57,9 +71,16 @@ class MediaUnitPagingAdapter(
                 } else {
                     null
                 }
+                checkboxWatched.isVisible = enableWatchedCheckbox
+                unit.number?.let { checkboxWatched.isChecked = it <= numberWatched }
             }
         }
 
+    }
+
+    interface MediaUnitActionListener {
+        fun onMediaUnitClicked(mediaUnit: MediaUnit)
+        fun onWatchStateChanged(mediaUnit: MediaUnit, isWatched: Boolean)
     }
 
     object MediaUnitComparator : DiffUtil.ItemCallback<MediaUnit>() {

@@ -110,7 +110,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             btnMediaUnits.setOnClickListener {
                 val resource = args.model.getResource()
                 val libraryEntry = viewModel.libraryEntry.value
-                val action = DetailsFragmentDirections.actionDetailsFragmentToEpisodesFragment(resource, libraryEntry)
+                val action = DetailsFragmentDirections.actionDetailsFragmentToEpisodesFragment(resource, libraryEntry?.id)
                 findNavController().navigate(action)
             }
         }
