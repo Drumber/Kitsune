@@ -13,14 +13,16 @@ import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.model.mediarelationship.MediaRelationship
 import io.github.drumber.kitsune.data.model.production.AnimeProduction
+import io.github.drumber.kitsune.data.model.production.Casting
+import io.github.drumber.kitsune.data.model.production.Character
 import io.github.drumber.kitsune.data.model.production.Producer
 import io.github.drumber.kitsune.data.model.resource.Anime
-import io.github.drumber.kitsune.data.model.unit.Chapter
-import io.github.drumber.kitsune.data.model.unit.Episode
 import io.github.drumber.kitsune.data.model.resource.Manga
 import io.github.drumber.kitsune.data.model.stats.Stats
 import io.github.drumber.kitsune.data.model.streamer.Streamer
 import io.github.drumber.kitsune.data.model.streamer.StreamingLink
+import io.github.drumber.kitsune.data.model.unit.Chapter
+import io.github.drumber.kitsune.data.model.unit.Episode
 import io.github.drumber.kitsune.data.service.anime.AnimeService
 import io.github.drumber.kitsune.data.service.anime.EpisodesService
 import io.github.drumber.kitsune.data.service.auth.AuthService
@@ -28,6 +30,7 @@ import io.github.drumber.kitsune.data.service.category.CategoryService
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.data.service.manga.ChaptersService
 import io.github.drumber.kitsune.data.service.manga.MangaService
+import io.github.drumber.kitsune.data.service.production.CastingService
 import io.github.drumber.kitsune.data.service.user.UserService
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptor
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptorDummy
@@ -80,6 +83,7 @@ val serviceModule = module {
             Manga::class.java
         )
     }
+    factory { createService<CastingService>(get(), get(), Casting::class.java, Character::class.java) }
 }
 
 private fun createHttpClientBuilder() = OkHttpClient.Builder()
