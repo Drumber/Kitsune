@@ -37,9 +37,9 @@
     </style>
     
     <style name="Theme.Kitsune.DayNight.Purple" parent="Theme.Kitsune.DayNight">
-        <item name="colorSurface">@color/purple_100</item>
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_400</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorPrimary">@color/purple_400</item>
+        <item name="colorPrimaryVariant">@color/purple_500</item>
         <item name="colorSecondary">@color/orange_400</item>
         <item name="colorSecondaryVariant">@color/orange_700</item>
 
