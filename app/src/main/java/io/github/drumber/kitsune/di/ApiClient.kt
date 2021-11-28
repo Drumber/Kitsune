@@ -142,6 +142,7 @@ private inline fun <reified T> createService(
         .baseUrl(baseUrl)
         .client(httpClient)
         .addConverterFactory(createConverterFactory(httpClient, objectMapper, *classes))
+        .addConverterFactory(JacksonConverterFactory.create(objectMapper))
         .build()
         .create(T::class.java)
 }

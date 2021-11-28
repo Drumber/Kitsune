@@ -203,6 +203,15 @@
                         android:text="@{data.isAnime() ? @string/title_episodes : @string/title_chapters}"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
+                    <Button
+                        android:id="@+id/btn_characters"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:textAllCaps="false"
+                        android:text="@string/title_characters"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
                     <include
                         layout="@layout/section_details_trailer"
                         android:layout_width="match_parent"

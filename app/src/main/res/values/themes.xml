@@ -151,6 +151,19 @@
     <style name="Widget.Kitsune.Button.IconText.Inactive" parent="Widget.Kitsune.Button.IconText">
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
+    
+    <style name="Widget.Kitsune.TextInputLayout.Dense.ExposedDropdownMenu" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Kitsune.AutoCompleteTextView.Dense</item>
+    </style>
+
+    <style name="ThemeOverlay.Kitsune.AutoCompleteTextView.Dense" parent="@style/ThemeOverlay.MaterialComponents.AutoCompleteTextView.OutlinedBox.Dense">
+        <item name="autoCompleteTextViewStyle">@style/Widget.Kitsune.AutoCompleteTextView.Dense</item>
+    </style>
+
+    <style name="Widget.Kitsune.AutoCompleteTextView.Dense" parent="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox.Dense">
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+    </style>
 
     <style name="Theme.Kitsune.PreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
         <item name="android:layout">@layout/fragment_preference</item>

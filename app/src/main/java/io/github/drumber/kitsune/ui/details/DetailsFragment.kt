@@ -29,6 +29,7 @@ import io.github.drumber.kitsune.data.model.ResourceType
 import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.data.model.library.Status
 import io.github.drumber.kitsune.data.model.library.getStringResId
+import io.github.drumber.kitsune.data.model.resource.Anime
 import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
@@ -111,6 +112,11 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 val resource = args.model.getResource()
                 val libraryEntry = viewModel.libraryEntry.value
                 val action = DetailsFragmentDirections.actionDetailsFragmentToEpisodesFragment(resource, libraryEntry?.id)
+                findNavController().navigate(action)
+            }
+            btnCharacters.setOnClickListener {
+                val resource = args.model.getResource()
+                val action = DetailsFragmentDirections.actionDetailsFragmentToCharactersFragment(resource.id, resource is Anime)
                 findNavController().navigate(action)
             }
         }

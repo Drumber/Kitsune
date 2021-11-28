@@ -60,6 +60,7 @@
     <string name="title_about_me">About Me</string>
     <string name="title_episodes">Episodes</string>
     <string name="title_chapters">Chapters</string>
+    <string name="title_characters">Characters</string>
 
     <string name="no_information">Unknown</string>
     <string name="no_data_available">No Data available</string>

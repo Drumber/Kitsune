@@ -7,12 +7,10 @@ import io.github.drumber.kitsune.data.model.resource.Image
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Type("characters")
-data class Character(
+@Type("people")
+data class Person(
     @Id val id: String?,
-    val slug: String?,
     val name: String?,
-    val malId: Int?,
     val description: String?,
     val image: Image?
 ) : Parcelable

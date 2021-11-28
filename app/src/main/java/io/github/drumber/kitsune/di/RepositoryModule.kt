@@ -10,6 +10,7 @@ val repositoryModule = module {
     single { AnimeRepository(get()) }
     single { MangaRepository(get()) }
     single { MediaUnitRepository(get(), get()) }
+    single { CastingRepository(get()) }
     single { LibraryEntriesRepository(get(), get()) }
     single { AuthRepository(get(), get()) }
     single { AuthPreferences(androidContext(), get()) }

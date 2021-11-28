@@ -55,6 +55,9 @@
         <action
             android:id="@+id/action_details_fragment_to_episodes_fragment"
             app:destination="@id/episodes_fragment" />
+        <action
+            android:id="@+id/action_details_fragment_to_characters_fragment"
+            app:destination="@id/characters_fragment" />
     </fragment>
     <fragment
         android:id="@+id/resource_list_fragment"
@@ -110,5 +113,16 @@
             android:name="libraryEntryId"
             app:argType="string"
             app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/characters_fragment"
+        android:name="io.github.drumber.kitsune.ui.details.characters.CharactersFragment"
+        android:label="CharactersFragment" >
+        <argument
+            android:name="mediaId"
+            app:argType="string" />
+        <argument
+            android:name="isAnime"
+            app:argType="boolean" />
     </fragment>
 </navigation>

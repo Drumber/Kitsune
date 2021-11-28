@@ -15,5 +15,7 @@ data class Casting(
     val featured: Boolean?,
     val language: String?,
     @Relationship("character")
-    val character: Character?
+    val character: Character?,
+    @Relationship("person")
+    val person: Person?
 ) : Parcelable
