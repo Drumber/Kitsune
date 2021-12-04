@@ -19,37 +19,39 @@ import kotlinx.parcelize.Parcelize
 data class Anime @Ignore constructor(
     @PrimaryKey @Id
     override val id: String = "",
-    val createdAt: String?,
-    val updatedAt: String?,
-    val slug: String?,
-    val description: String?,
-    @Embedded(prefix = "titles_") val titles: Titles?,
-    val canonicalTitle: String?,
-    val abbreviatedTitles: List<String>?,
-    val averageRating: String?,
-    @Embedded(prefix = "rating_") val ratingFrequencies: Rating?,
-    val userCount: Int?,
-    val favoritesCount: Int?,
-    val startDate: String?,
-    val endDate: String?,
-    val popularityRank: Int?,
-    val ratingRank: Int?,
-    val ageRating: AgeRating?,
-    val ageRatingGuide: String?,
+    override val slug: String?,
+    override val description: String?,
+    @Embedded(prefix = "titles_")
+    override val titles: Titles?,
+    override val canonicalTitle: String?,
+    override val abbreviatedTitles: List<String>?,
+    override val averageRating: String?,
+    @Embedded(prefix = "rating_")
+    override val ratingFrequencies: Rating?,
+    override val userCount: Int?,
+    override val favoritesCount: Int?,
+    override val startDate: String?,
+    override val endDate: String?,
+    override val popularityRank: Int?,
+    override val ratingRank: Int?,
+    override val ageRating: AgeRating?,
+    override val ageRatingGuide: String?,
     val subtype: AnimeSubtype?,
-    val status: Status?,
-    val tba: String?,
-    @Embedded(prefix = "poster_") val posterImage: Image?,
-    @Embedded(prefix = "cover_") val coverImage: Image?,
+    override val status: Status?,
+    override val tba: String?,
+    @Embedded(prefix = "poster_")
+    override val posterImage: Image?,
+    @Embedded(prefix = "cover_")
+    override val coverImage: Image?,
     val episodeCount: Int?,
     val episodeLength: Int?,
     val youtubeVideoId: String?,
-    val nsfw: Boolean?,
-    val nextRelease: String?,
-    val totalLength: Int?,
+    override val nsfw: Boolean?,
+    override val nextRelease: String?,
+    override val totalLength: Int?,
     @Ignore
     @Relationship("categories")
-    val categories: List<Category>? = null,
+    override val categories: List<Category>? = null,
     @Ignore
     @Relationship("animeProductions")
     val animeProduction: List<AnimeProduction>? = null,
@@ -58,7 +60,7 @@ data class Anime @Ignore constructor(
     val streamingLinks: List<StreamingLink>? = null,
     @Ignore
     @Relationship("mediaRelationships")
-    val mediaRelationships: List<MediaRelationship>? = null
+    override val mediaRelationships: List<MediaRelationship>? = null
 ) : BaseMedia() {
 
     /**
@@ -66,8 +68,6 @@ data class Anime @Ignore constructor(
      */
     constructor(
         id: String,
-        createdAt: String?,
-        updatedAt: String?,
         slug: String?,
         description: String?,
         titles: Titles?,
@@ -96,8 +96,6 @@ data class Anime @Ignore constructor(
         totalLength: Int?,
     ) : this(
         id,
-        createdAt,
-        updatedAt,
         slug,
         description,
         titles,

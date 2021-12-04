@@ -109,13 +109,13 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             content.initPaddingWindowInsetsListener(left = true, right = true)
             btnManageLibrary.setOnClickListener { showManageLibraryBottomSheet() }
             btnMediaUnits.setOnClickListener {
-                val media = args.model.getMedia()
+                val media = args.model.media
                 val libraryEntry = viewModel.libraryEntry.value
                 val action = DetailsFragmentDirections.actionDetailsFragmentToEpisodesFragment(media, libraryEntry?.id)
                 findNavController().navigate(action)
             }
             btnCharacters.setOnClickListener {
-                val media = args.model.getMedia()
+                val media = args.model.media
                 val action = DetailsFragmentDirections.actionDetailsFragmentToCharactersFragment(media.id, media is Anime)
                 findNavController().navigate(action)
             }
@@ -148,14 +148,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 when (item.itemId) {
                     R.id.menu_share_media -> {
                         val url = viewModel.mediaAdapter.value?.let {
-                            when (it) {
-                                is MediaAdapter.AnimeMedia -> {
-                                    Kitsu.ANIME_URL_PREFIX + it.anime.slug
-                                }
-                                is MediaAdapter.MangaMedia -> {
-                                    Kitsu.MANGA_URL_PREFIX + it.manga.slug
-                                }
-                            }
+                            val prefix = if (it.isAnime()) Kitsu.ANIME_URL_PREFIX else Kitsu.MANGA_URL_PREFIX
+                            prefix + it.media.slug
                         }
                         if (url != null) {
                             startUrlShareIntent(url)
@@ -186,7 +180,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         if (!mediaAdapter.categories.isNullOrEmpty()) {
             binding.chipGroupCategories.removeAllViews()
 
-            mediaAdapter.categories
+            mediaAdapter.categories.orEmpty()
                 .sortedBy { it.title }
                 .forEach { category ->
                     val chip = Chip(requireContext())
@@ -215,7 +209,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     }
 
     private fun showFranchise(mediaAdapter: MediaAdapter) {
-        val data = mediaAdapter.mediaRelationships?.sortedBy {
+        val data = mediaAdapter.media.mediaRelationships?.sortedBy {
             it.role?.ordinal
         }?.mapNotNull {
             it.media?.let { media -> MediaAdapter.fromMedia(media) }
@@ -242,11 +236,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     }
 
     private fun showStreamingLinks(mediaAdapter: MediaAdapter) {
-        val data = if (mediaAdapter is MediaAdapter.AnimeMedia) {
-            mediaAdapter.anime.streamingLinks
-        } else {
-            null
-        } ?: emptyList()
+        val data = (mediaAdapter.media as? Anime)?.streamingLinks ?: emptyList()
 
         if (binding.rvStreamer.adapter !is StreamingLinkAdapter) {
             val glide = GlideApp.with(this)

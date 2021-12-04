@@ -109,7 +109,7 @@ class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<Media
         val section = createExploreSection(titleRes, mediaSelector, sectionBinding.root)
         liveData.observe(viewLifecycleOwner) { response ->
             if(response is ResponseData.Success) {
-                section.setData(response.data.map { MediaAdapter.AnimeMedia(it) })
+                section.setData(response.data.map { MediaAdapter(it) })
                 sectionBinding.apply {
                     layoutLoading.root.isVisible = false
                     rvMedia.isVisible = true

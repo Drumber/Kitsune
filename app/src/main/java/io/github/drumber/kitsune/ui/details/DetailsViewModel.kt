@@ -8,6 +8,8 @@ import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.model.library.Status
+import io.github.drumber.kitsune.data.model.media.Anime
+import io.github.drumber.kitsune.data.model.media.Manga
 import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.room.LibraryEntryDao
@@ -133,9 +135,9 @@ class DetailsViewModel(
         libraryEntry.user = User(id = userId)
 
         if (mediaAdapter.isAnime()) {
-            libraryEntry.anime = (mediaAdapter as MediaAdapter.AnimeMedia).anime
+            libraryEntry.anime = mediaAdapter.media as Anime
         } else {
-            libraryEntry.manga = (mediaAdapter as MediaAdapter.MangaMedia).manga
+            libraryEntry.manga = mediaAdapter.media as Manga
         }
 
         viewModelScope.launch(Dispatchers.IO) {

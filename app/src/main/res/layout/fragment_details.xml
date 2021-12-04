@@ -6,8 +6,6 @@
     <data>
         <import type="android.text.TextUtils"/>
         <import type="io.github.drumber.kitsune.data.model.media.MediaAdapter" />
-        <import type="io.github.drumber.kitsune.data.model.media.MediaAdapter.AnimeMedia" />
-        <import type="io.github.drumber.kitsune.data.model.media.MediaAdapter.MangaMedia" />
         <variable
             name="data"
             type="MediaAdapter" />
