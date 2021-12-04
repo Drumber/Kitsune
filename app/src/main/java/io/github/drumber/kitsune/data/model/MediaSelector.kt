@@ -7,17 +7,17 @@ import io.github.drumber.kitsune.data.service.Filter
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class ResourceSelector(
-    val resourceType: ResourceType,
+data class MediaSelector(
+    val mediaType: MediaType,
     val filter: Filter,
     val requestType: RequestType = RequestType.ALL
 ): Parcelable
 
-enum class ResourceType(val type: String) {
+enum class MediaType(val type: String) {
     Anime("anime"), Manga("manga")
 }
 
-fun ResourceType.toStringRes() = when (this) {
-    ResourceType.Anime -> R.string.anime
-    ResourceType.Manga -> R.string.manga
+fun MediaType.toStringRes() = when (this) {
+    MediaType.Anime -> R.string.anime
+    MediaType.Manga -> R.string.manga
 }

@@ -3,17 +3,17 @@ package io.github.drumber.kitsune.ui.adapter
 import androidx.recyclerview.widget.RecyclerView
 import io.github.drumber.kitsune.GlideRequests
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
-import io.github.drumber.kitsune.databinding.ItemResourceBinding
+import io.github.drumber.kitsune.data.model.media.MediaAdapter
+import io.github.drumber.kitsune.databinding.ItemMediaBinding
 
-class ResourceViewHolder(
-    private val binding: ItemResourceBinding,
+class MediaViewHolder(
+    private val binding: ItemMediaBinding,
     private val glide: GlideRequests,
     private val listener: (position: Int) -> Unit
 ): RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.cardResource.setOnClickListener {
+        binding.cardMedia.setOnClickListener {
             val position = bindingAdapterPosition
             if(position != RecyclerView.NO_POSITION) {
                 listener(position)
@@ -21,7 +21,7 @@ class ResourceViewHolder(
         }
     }
 
-    fun bind(data: ResourceAdapter) {
+    fun bind(data: MediaAdapter) {
         binding.data = data
         glide.load(data.posterImage)
             .centerCrop()

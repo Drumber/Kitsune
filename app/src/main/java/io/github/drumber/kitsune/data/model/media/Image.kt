@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.model.resource
+package io.github.drumber.kitsune.data.model.media
 
 import android.os.Parcelable
 import androidx.room.Embedded

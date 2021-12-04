@@ -29,14 +29,14 @@ import com.paulrybitskyi.persistentsearchview.utils.VoiceRecognitionDelegate
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.constants.toStringRes
-import io.github.drumber.kitsune.data.model.ResourceType
-import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
+import io.github.drumber.kitsune.data.model.MediaType
+import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.data.model.toStringRes
 import io.github.drumber.kitsune.databinding.FragmentSearchBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.base.ResourceCollectionFragment
-import io.github.drumber.kitsune.ui.base.ResourceCollectionViewModel
+import io.github.drumber.kitsune.ui.base.MediaCollectionFragment
+import io.github.drumber.kitsune.ui.base.MediaCollectionViewModel
 import io.github.drumber.kitsune.ui.search.categories.CategoriesDialogFragment
 import io.github.drumber.kitsune.util.extensions.getColor
 import io.github.drumber.kitsune.util.extensions.navigateSafe
@@ -44,17 +44,17 @@ import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchFragment : ResourceCollectionFragment(R.layout.fragment_search) {
+class SearchFragment : MediaCollectionFragment(R.layout.fragment_search) {
 
     private val binding: FragmentSearchBinding by viewBinding()
 
     private val viewModel: SearchViewModel by viewModel()
 
-    override val collectionViewModel: ResourceCollectionViewModel
+    override val collectionViewModel: MediaCollectionViewModel
         get() = viewModel
 
     override val recyclerView: RecyclerView
-        get() = binding.rvResource
+        get() = binding.rvMedia
 
     override val resourceLoadingBinding: LayoutResourceLoadingBinding
         get() = binding.layoutLoading
@@ -70,15 +70,15 @@ class SearchFragment : ResourceCollectionFragment(R.layout.fragment_search) {
                 bottom = false
             )
 
-            chipResourceSelector.setOnClickListener { showResourceSelectorDialog() }
+            chipMediaSelector.setOnClickListener { showMediaSelectorDialog() }
             chipSort.setOnClickListener { showSortDialog() }
             chipCategories.setOnClickListener { showCategoriesDialog() }
             chipReset.setOnClickListener { resetFilter() }
         }
 
-        viewModel.resourceSelector.observe(viewLifecycleOwner) {
+        viewModel.mediaSelector.observe(viewLifecycleOwner) {
             binding.apply {
-                chipResourceSelector.setText(it.resourceType.toStringRes())
+                chipMediaSelector.setText(it.mediaType.toStringRes())
                 val sortFilter = SortFilter.fromQueryParam(it.filter.options["sort"])
                 if(sortFilter != null) {
                     chipSort.setText(sortFilter.toStringRes())
@@ -114,7 +114,7 @@ class SearchFragment : ResourceCollectionFragment(R.layout.fragment_search) {
                 setAppBarBackgrounds(expanded)
 
                 binding.chipGroupFilter.isVisible = !expanded
-                binding.rvResource.apply {
+                binding.rvMedia.apply {
                     isEnabled = !expanded
                     if(ViewCompat.isLaidOut(this)) {
                         // toggle app bar behaviour to display recyclerview behind search overlay
@@ -239,15 +239,15 @@ class SearchFragment : ResourceCollectionFragment(R.layout.fragment_search) {
         binding.chipCategories.isSelected = KitsunePref.searchCategories.isNotEmpty()
     }
 
-    private fun showResourceSelectorDialog() {
-        val items = ResourceType.values().map { getString(it.toStringRes()) }.toTypedArray()
-        val prevSelected = viewModel.searchParams.resourceType.ordinal
+    private fun showMediaSelectorDialog() {
+        val items = MediaType.values().map { getString(it.toStringRes()) }.toTypedArray()
+        val prevSelected = viewModel.searchParams.mediaType.ordinal
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.title_resource_type)
+            .setTitle(R.string.title_media_type)
             .setSingleChoiceItems(items, prevSelected) { dialog, which ->
                 if(which != prevSelected) {
-                    val resourceType = ResourceType.values()[which]
-                    val searchParams = viewModel.searchParams.copy(resourceType = resourceType)
+                    val mediaType = MediaType.values()[which]
+                    val searchParams = viewModel.searchParams.copy(mediaType = mediaType)
                     viewModel.updateSearchParams(searchParams)
                 }
                 dialog.dismiss()
@@ -287,7 +287,7 @@ class SearchFragment : ResourceCollectionFragment(R.layout.fragment_search) {
         }
     }
 
-    override fun onResourceClicked(model: ResourceAdapter, options: NavOptions) {
+    override fun onMediaClicked(model: MediaAdapter, options: NavOptions) {
         val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(model)
         findNavController().navigateSafe(R.id.search_fragment, action, options)
     }

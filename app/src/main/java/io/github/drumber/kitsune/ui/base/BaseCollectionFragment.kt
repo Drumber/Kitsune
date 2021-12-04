@@ -45,8 +45,8 @@ abstract class BaseCollectionFragment(@LayoutRes contentLayoutId: Int) :
             if (isAdded) {
                 // calculate span count in relation to the recycler view width
                 val width = recyclerView.width
-                val cellWidth = resources.getDimension(R.dimen.resource_item_width) +
-                        2 * resources.getDimension(R.dimen.resource_item_margin)
+                val cellWidth = resources.getDimension(R.dimen.media_item_width) +
+                        2 * resources.getDimension(R.dimen.media_item_margin)
                 val spanCount = floor(width / cellWidth).toInt()
                 gridLayout.spanCount = max(2, spanCount) // set new span count with minimum 2 columns
             }

@@ -44,7 +44,7 @@
         android:layout_height="wrap_content">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_resource"
+            android:id="@+id/rv_media"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="10dp"
@@ -52,13 +52,13 @@
             android:orientation="horizontal"
             android:nestedScrollingEnabled="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_resource" />
+            tools:listitem="@layout/item_media" />
 
         <include
             android:id="@+id/layout_loading"
             layout="@layout/layout_resource_loading"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/resource_item_height"
+            android:layout_height="@dimen/media_item_height"
             android:layout_gravity="center"
             android:visibility="gone"
             tools:visibility="visible" />

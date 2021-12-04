@@ -5,33 +5,33 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
 import io.github.drumber.kitsune.GlideRequests
-import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
-import io.github.drumber.kitsune.databinding.ItemResourceBinding
+import io.github.drumber.kitsune.data.model.media.MediaAdapter
+import io.github.drumber.kitsune.databinding.ItemMediaBinding
 import java.util.concurrent.CopyOnWriteArrayList
 
-class ResourceRecyclerViewAdapter(
-    val dataSet: CopyOnWriteArrayList<ResourceAdapter>,
+class MediaRecyclerViewAdapter(
+    val dataSet: CopyOnWriteArrayList<MediaAdapter>,
     private val glide: GlideRequests,
-    private val listener: OnItemClickListener<ResourceAdapter>? = null
-) : RecyclerView.Adapter<ResourceViewHolder>() {
+    private val listener: OnItemClickListener<MediaAdapter>? = null
+) : RecyclerView.Adapter<MediaViewHolder>() {
 
     var overrideWidth: Int? = null
     var overrideHeight: Int? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResourceViewHolder {
-        val binding = ItemResourceBinding.inflate(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaViewHolder {
+        val binding = ItemMediaBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
         )
         binding.apply {
             contentWrapper.layoutParams.width = FrameLayout.LayoutParams.WRAP_CONTENT
-            cardResource.layoutParams.apply {
+            cardMedia.layoutParams.apply {
                 overrideWidth?.let { width = it }
                 overrideHeight?.let { height = it }
             }
         }
-        return ResourceViewHolder(
+        return MediaViewHolder(
             binding,
             glide
         ) { position ->
@@ -41,7 +41,7 @@ class ResourceRecyclerViewAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: ResourceViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MediaViewHolder, position: Int) {
         holder.bind(dataSet[position])
     }
 

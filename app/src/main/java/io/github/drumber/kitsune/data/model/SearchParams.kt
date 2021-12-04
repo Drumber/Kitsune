@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class SearchParams(
-    val resourceType: ResourceType,
+    val mediaType: MediaType,
     val categories: List<String>,
     val sortOrder: SortFilter
 ): Parcelable, Cloneable

@@ -4,10 +4,10 @@ import androidx.room.TypeConverter
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.data.model.RemoteKeyType
 import io.github.drumber.kitsune.data.model.library.ReactionSkip
-import io.github.drumber.kitsune.data.model.resource.AgeRating
-import io.github.drumber.kitsune.data.model.resource.AnimeSubtype
-import io.github.drumber.kitsune.data.model.resource.MangaSubtype
-import io.github.drumber.kitsune.data.model.resource.Status
+import io.github.drumber.kitsune.data.model.media.AgeRating
+import io.github.drumber.kitsune.data.model.media.AnimeSubtype
+import io.github.drumber.kitsune.data.model.media.MangaSubtype
+import io.github.drumber.kitsune.data.model.media.Status
 import io.github.drumber.kitsune.di.createObjectMapper
 
 class Converters {

@@ -5,7 +5,7 @@ import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
 import io.github.drumber.kitsune.data.model.TitlesPref
-import io.github.drumber.kitsune.data.model.resource.Image
+import io.github.drumber.kitsune.data.model.media.Image
 import io.github.drumber.kitsune.data.model.stats.Stats
 import kotlinx.parcelize.Parcelize
 

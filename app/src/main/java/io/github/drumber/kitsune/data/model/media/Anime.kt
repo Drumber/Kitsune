@@ -1,5 +1,6 @@
-package io.github.drumber.kitsune.data.model.resource
+package io.github.drumber.kitsune.data.model.media
 
+import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
@@ -9,11 +10,13 @@ import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
 import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.data.model.mediarelationship.MediaRelationship
+import io.github.drumber.kitsune.data.model.production.AnimeProduction
+import io.github.drumber.kitsune.data.model.streamer.StreamingLink
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Type("manga")
-data class Manga @Ignore constructor(
+@Type("anime")
+data class Anime @Ignore constructor(
     @PrimaryKey @Id
     override val id: String = "",
     val createdAt: String?,
@@ -33,14 +36,14 @@ data class Manga @Ignore constructor(
     val ratingRank: Int?,
     val ageRating: AgeRating?,
     val ageRatingGuide: String?,
-    val subtype: MangaSubtype?,
+    val subtype: AnimeSubtype?,
     val status: Status?,
     val tba: String?,
     @Embedded(prefix = "poster_") val posterImage: Image?,
     @Embedded(prefix = "cover_") val coverImage: Image?,
-    val chapterCount: Int?,
-    val volumeCount: Int?,
-    val serialization: String?,
+    val episodeCount: Int?,
+    val episodeLength: Int?,
+    val youtubeVideoId: String?,
     val nsfw: Boolean?,
     val nextRelease: String?,
     val totalLength: Int?,
@@ -48,9 +51,15 @@ data class Manga @Ignore constructor(
     @Relationship("categories")
     val categories: List<Category>? = null,
     @Ignore
+    @Relationship("animeProductions")
+    val animeProduction: List<AnimeProduction>? = null,
+    @Ignore
+    @Relationship("streamingLinks")
+    val streamingLinks: List<StreamingLink>? = null,
+    @Ignore
     @Relationship("mediaRelationships")
     val mediaRelationships: List<MediaRelationship>? = null
-) : Resource() {
+) : BaseMedia() {
 
     /**
      * Secondary constructor for Room
@@ -74,14 +83,14 @@ data class Manga @Ignore constructor(
         ratingRank: Int?,
         ageRating: AgeRating?,
         ageRatingGuide: String?,
-        subtype: MangaSubtype?,
+        subtype: AnimeSubtype?,
         status: Status?,
         tba: String?,
         posterImage: Image?,
         coverImage: Image?,
-        chapterCount: Int?,
-        volumeCount: Int?,
-        serialization: String?,
+        episodeCount: Int?,
+        episodeLength: Int?,
+        youtubeVideoId: String?,
         nsfw: Boolean?,
         nextRelease: String?,
         totalLength: Int?,
@@ -109,31 +118,71 @@ data class Manga @Ignore constructor(
         tba,
         posterImage,
         coverImage,
-        chapterCount,
-        volumeCount,
-        serialization,
+        episodeCount,
+        episodeLength,
+        youtubeVideoId,
         nsfw,
         nextRelease,
         totalLength,
+        null,
+        null,
         null,
         null
     )
 
 }
 
-enum class MangaSubtype {
-    @JsonProperty("doujin")
-    Doujin,
-    @JsonProperty("manga")
-    Manga,
-    @JsonProperty("manhua")
-    Manhua,
-    @JsonProperty("manhwa")
-    Manhwa,
-    @JsonProperty("novel")
-    Novel,
-    @JsonProperty("oel")
-    Oel,
-    @JsonProperty("oneshot")
-    Oneshot
+@Parcelize
+data class Rating(
+    @JsonProperty("2") val r2: String?,
+    @JsonProperty("3") val r3: String?,
+    @JsonProperty("4") val r4: String?,
+    @JsonProperty("5") val r5: String?,
+    @JsonProperty("6") val r6: String?,
+    @JsonProperty("7") val r7: String?,
+    @JsonProperty("8") val r8: String?,
+    @JsonProperty("9") val r9: String?,
+    @JsonProperty("10") val r10: String?,
+    @JsonProperty("11") val r11: String?,
+    @JsonProperty("12") val r12: String?,
+    @JsonProperty("13") val r13: String?,
+    @JsonProperty("14") val r14: String?,
+    @JsonProperty("15") val r15: String?,
+    @JsonProperty("16") val r16: String?,
+    @JsonProperty("17") val r17: String?,
+    @JsonProperty("18") val r18: String?,
+    @JsonProperty("19") val r19: String?,
+    @JsonProperty("20") val r20: String?,
+) : Parcelable
+
+enum class AgeRating {
+    G,
+    PG,
+    R,
+    R18
+}
+
+enum class AnimeSubtype {
+    ONA,
+    OVA,
+    TV,
+    @JsonProperty("movie")
+    Movie,
+    @JsonProperty("music")
+    Music,
+    @JsonProperty("special")
+    Special
+}
+
+enum class Status {
+    @JsonProperty("current")
+    Current,
+    @JsonProperty("finished")
+    Finished,
+    @JsonProperty("tba")
+    TBA,
+    @JsonProperty("unreleased")
+    Unreleased,
+    @JsonProperty("upcoming")
+    Upcoming
 }

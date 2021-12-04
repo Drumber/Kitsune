@@ -7,38 +7,38 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.paging.PagingData
 import io.github.drumber.kitsune.GlideApp
-import io.github.drumber.kitsune.data.model.ResourceType
-import io.github.drumber.kitsune.data.model.resource.Resource
-import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
+import io.github.drumber.kitsune.data.model.MediaType
+import io.github.drumber.kitsune.data.model.media.BaseMedia
+import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.paging.AnimeAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.MangaAdapter
-import io.github.drumber.kitsune.ui.adapter.paging.ResourcePagingAdapter
+import io.github.drumber.kitsune.ui.adapter.paging.MediaPagingAdapter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 
-abstract class ResourceCollectionFragment(
+abstract class MediaCollectionFragment(
     @LayoutRes contentLayoutId: Int
-): BaseCollectionFragment(contentLayoutId), OnItemClickListener<Resource> {
+): BaseCollectionFragment(contentLayoutId), OnItemClickListener<BaseMedia> {
 
     private var dataFlowScope: Job? = null
 
-    abstract val collectionViewModel: ResourceCollectionViewModel
+    abstract val collectionViewModel: MediaCollectionViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val glide = GlideApp.with(this)
-        collectionViewModel.resourceSelector.observe(viewLifecycleOwner) { selector ->
-            val adapter = when(selector.resourceType) {
-                ResourceType.Anime -> AnimeAdapter(glide) { onItemClick(it) }.setupAdapter()
-                ResourceType.Manga -> MangaAdapter(glide) { onItemClick(it) }.setupAdapter()
+        collectionViewModel.mediaSelector.observe(viewLifecycleOwner) { selector ->
+            val adapter = when(selector.mediaType) {
+                MediaType.Anime -> AnimeAdapter(glide) { onItemClick(it) }.setupAdapter()
+                MediaType.Manga -> MangaAdapter(glide) { onItemClick(it) }.setupAdapter()
             }
             setRecyclerViewAdapter(adapter)
         }
     }
 
-    private inline fun <reified T : Resource> ResourcePagingAdapter<T>.setupAdapter(): ResourcePagingAdapter<T> {
+    private inline fun <reified T : BaseMedia> MediaPagingAdapter<T>.setupAdapter(): MediaPagingAdapter<T> {
         dataFlowScope?.cancel()
         dataFlowScope = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             collectionViewModel.dataSource.collectLatest { data ->
@@ -48,14 +48,14 @@ abstract class ResourceCollectionFragment(
         return this
     }
 
-    override fun onItemClick(item: Resource) {
-        val model = ResourceAdapter.fromMedia(item)
+    override fun onItemClick(item: BaseMedia) {
+        val model = MediaAdapter.fromMedia(item)
         val options = NavOptions.Builder()
             .setLaunchSingleTop(true)
             .build()
-        onResourceClicked(model, options)
+        onMediaClicked(model, options)
     }
 
-    open fun onResourceClicked(model: ResourceAdapter, options: NavOptions) {}
+    open fun onMediaClicked(model: MediaAdapter, options: NavOptions) {}
 
 }

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
-import io.github.drumber.kitsune.data.model.resource.Media
+import io.github.drumber.kitsune.data.model.media.Media
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -14,7 +14,7 @@ data class MediaRelationship(
     @Id val id: String?,
     val role: RelationshipRole?,
     @Relationship("destination")
-    val resource: Media?
+    val media: Media?
 ) : Parcelable
 
 /**

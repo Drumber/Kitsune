@@ -2,8 +2,8 @@ package io.github.drumber.kitsune.data.model.unit
 
 import android.content.Context
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.resource.Image
-import io.github.drumber.kitsune.data.model.resource.Titles
+import io.github.drumber.kitsune.data.model.media.Image
+import io.github.drumber.kitsune.data.model.media.Titles
 import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.util.extensions.formatDate
 import io.github.drumber.kitsune.util.extensions.toDate

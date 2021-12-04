@@ -12,8 +12,8 @@ import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.auth.User
-import io.github.drumber.kitsune.data.model.resource.Anime
-import io.github.drumber.kitsune.data.model.resource.Manga
+import io.github.drumber.kitsune.data.model.media.Anime
+import io.github.drumber.kitsune.data.model.media.Manga
 import io.github.drumber.kitsune.util.network.EmptyStringIdHandler
 import io.github.drumber.kitsune.util.network.NullableIntSerializer
 import kotlinx.parcelize.Parcelize

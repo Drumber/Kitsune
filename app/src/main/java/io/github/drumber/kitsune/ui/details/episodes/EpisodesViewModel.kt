@@ -4,9 +4,9 @@ import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.data.model.resource.Anime
-import io.github.drumber.kitsune.data.model.resource.Manga
-import io.github.drumber.kitsune.data.model.resource.Resource
+import io.github.drumber.kitsune.data.model.media.Anime
+import io.github.drumber.kitsune.data.model.media.BaseMedia
+import io.github.drumber.kitsune.data.model.media.Manga
 import io.github.drumber.kitsune.data.model.unit.MediaUnit
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository
 import io.github.drumber.kitsune.data.room.LibraryEntryDao
@@ -26,7 +26,7 @@ class EpisodesViewModel(
 
     var errorListener: ((Throwable) -> Unit)? = null
 
-    private val resource = MutableLiveData<Resource>()
+    private val media = MutableLiveData<BaseMedia>()
 
     private val libraryEntryId = MutableLiveData<String>()
 
@@ -57,9 +57,9 @@ class EpisodesViewModel(
         }
     }
 
-    fun setResource(resource: Resource) {
-        if (resource != this.resource.value) {
-            this.resource.value = resource
+    fun setMedia(media: BaseMedia) {
+        if (media != this.media.value) {
+            this.media.value = media
         }
     }
 
@@ -81,16 +81,16 @@ class EpisodesViewModel(
         }
     }
 
-    val dataSource: Flow<PagingData<MediaUnit>> = resource.asFlow().flatMapLatest { resource ->
+    val dataSource: Flow<PagingData<MediaUnit>> = media.asFlow().flatMapLatest { media ->
         val filter = Filter()
             .sort("number")
-        val type = when (resource) {
+        val type = when (media) {
             is Anime -> {
-                filter.filter("media_id", resource.id)
+                filter.filter("media_id", media.id)
                 MediaUnitRepository.UnitType.Episode
             }
             is Manga -> {
-                filter.filter("manga_id", resource.id)
+                filter.filter("manga_id", media.id)
                 MediaUnitRepository.UnitType.Chapter
             }
         }

@@ -22,7 +22,7 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.model.library.LibraryEntryKind
 import io.github.drumber.kitsune.data.model.library.Status
-import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
+import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.databinding.FragmentLibraryBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.paging.LibraryEntriesAdapter
@@ -95,7 +95,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
     private fun initFilterChips() {
         viewModel.filter.observe(viewLifecycleOwner) { filter ->
-            binding.chipResourceKind.setText(when (filter.kind) {
+            binding.chipMediaKind.setText(when (filter.kind) {
                 LibraryEntryKind.Anime -> R.string.anime
                 LibraryEntryKind.Manga -> R.string.manga
                 else -> R.string.library_kind_all
@@ -113,7 +113,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         }
 
         binding.apply {
-            chipResourceKind.setOnClickListener { showResourceSelectorDialog() }
+            chipMediaKind.setOnClickListener { showMediaSelectorDialog() }
             chipCurrent.initStatusClickListener(Status.Current)
             chipPlanned.initStatusClickListener(Status.Planned)
             chipCompleted.initStatusClickListener(Status.Completed)
@@ -134,12 +134,12 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         }
     }
 
-    private fun showResourceSelectorDialog() {
+    private fun showMediaSelectorDialog() {
         val items = listOf(R.string.library_kind_all, R.string.anime, R.string.manga)
             .map { getString(it) }.toTypedArray()
         val prevSelected = KitsunePref.libraryEntryKind.ordinal
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.title_resource_type)
+            .setTitle(R.string.title_media_type)
             .setSingleChoiceItems(items, prevSelected) { dialog, which ->
                 if(which != prevSelected) {
                     val kind = LibraryEntryKind.values()[which]
@@ -196,10 +196,10 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
     }
 
     override fun onItemClicked(item: LibraryEntry) {
-        val resource = item.anime ?: item.manga
-        if (resource != null) {
-            val resourceAdapter = ResourceAdapter.fromMedia(resource)
-            val action = LibraryFragmentDirections.actionLibraryFragmentToDetailsFragment(resourceAdapter)
+        val media = item.anime ?: item.manga
+        if (media != null) {
+            val mediaAdapter = MediaAdapter.fromMedia(media)
+            val action = LibraryFragmentDirections.actionLibraryFragmentToDetailsFragment(mediaAdapter)
             findNavController().navigateSafe(R.id.library_fragment, action)
         }
     }
@@ -214,10 +214,10 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
     override fun onRatingClicked(item: LibraryEntry) {
         viewModel.lastRatedLibraryEntry = item
-        val resourceAdapter = (item.anime ?: item.manga)?.let { ResourceAdapter.fromMedia(it) }
+        val mediaAdapter = (item.anime ?: item.manga)?.let { MediaAdapter.fromMedia(it) }
         val sheetLibraryRating = RatingBottomSheet()
         val bundle = bundleOf(
-            RatingBottomSheet.BUNDLE_TITLE to resourceAdapter?.title,
+            RatingBottomSheet.BUNDLE_TITLE to mediaAdapter?.title,
             RatingBottomSheet.BUNDLE_RATING to item.ratingTwenty
         )
         sheetLibraryRating.arguments = bundle

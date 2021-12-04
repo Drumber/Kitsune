@@ -8,7 +8,7 @@ import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.model.library.Status
-import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
+import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.room.LibraryEntryDao
 import io.github.drumber.kitsune.data.service.Filter
@@ -33,9 +33,9 @@ class DetailsViewModel(
 
     fun isLoggedIn() = userRepository.hasUser
 
-    private val _resourceAdapter = MutableLiveData<ResourceAdapter>()
-    val resourceAdapter: LiveData<ResourceAdapter>
-        get() = _resourceAdapter
+    private val _mediaAdapter = MutableLiveData<MediaAdapter>()
+    val mediaAdapter: LiveData<MediaAdapter>
+        get() = _mediaAdapter
 
     private val _libraryEntry = MutableLiveData<LibraryEntry?>()
     val libraryEntry: LiveData<LibraryEntry?>
@@ -45,22 +45,22 @@ class DetailsViewModel(
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
-    fun initResourceAdapter(resourceAdapter: ResourceAdapter) {
-        if (_resourceAdapter.value == null) {
-            _resourceAdapter.value = resourceAdapter
+    fun initMediaAdapter(mediaAdapter: MediaAdapter) {
+        if (_mediaAdapter.value == null) {
+            _mediaAdapter.value = mediaAdapter
             _isLoading.value = true
             viewModelScope.launch(Dispatchers.IO) {
                 awaitAll(
-                    async { loadFullResource(resourceAdapter) },
-                    async { loadLibraryEntry(resourceAdapter) }
+                    async { loadFullMedia(mediaAdapter) },
+                    async { loadLibraryEntry(mediaAdapter) }
                 )
                 _isLoading.postValue(false)
             }
         }
     }
 
-    private suspend fun loadFullResource(resourceAdapter: ResourceAdapter) {
-        val id = resourceAdapter.id
+    private suspend fun loadFullMedia(mediaAdapter: MediaAdapter) {
+        val id = mediaAdapter.id
         val filter = Filter()
             .fields("categories", "slug", "title")
 
@@ -71,7 +71,7 @@ class DetailsViewModel(
         )
 
         try {
-            val resourceModel = if (resourceAdapter.isAnime()) {
+            val mediaModel = if (mediaAdapter.isAnime()) {
                 filter.include(
                     *commonIncludes,
                     "animeProductions.producer",
@@ -84,14 +84,14 @@ class DetailsViewModel(
                 mangaService.getManga(id, filter.options).get()
             } ?: throw ReceivedDataException("Received data is null.")
 
-            val fullResourceAdapter = ResourceAdapter.fromMedia(resourceModel)
-            _resourceAdapter.postValue(fullResourceAdapter)
+            val fullMediaAdapter = MediaAdapter.fromMedia(mediaModel)
+            _mediaAdapter.postValue(fullMediaAdapter)
         } catch (e: Exception) {
-            logE("Failed to load full resource model.", e)
+            logE("Failed to load full media model.", e)
         }
     }
 
-    private suspend fun loadLibraryEntry(resourceAdapter: ResourceAdapter) {
+    private suspend fun loadLibraryEntry(mediaAdapter: MediaAdapter) {
         val userId = userRepository.user?.id ?: return
 
         val filter = Filter()
@@ -99,14 +99,14 @@ class DetailsViewModel(
             .fields("libraryEntries", "status", "progress")
             .pageLimit(1)
 
-        if (resourceAdapter.isAnime()) {
-            filter.filter("anime_id", resourceAdapter.id)
+        if (mediaAdapter.isAnime()) {
+            filter.filter("anime_id", mediaAdapter.id)
         } else {
-            filter.filter("manga_id", resourceAdapter.id)
+            filter.filter("manga_id", mediaAdapter.id)
         }
 
         // check if library entry is cached in local database first
-        val libraryEntry = libraryEntryDao.getLibraryEntryFromResource(resourceAdapter.id)
+        val libraryEntry = libraryEntryDao.getLibraryEntryFromMedia(mediaAdapter.id)
         libraryEntry?.let { _libraryEntry.postValue(it) }
 
         try {
@@ -126,16 +126,16 @@ class DetailsViewModel(
 
     fun updateLibraryEntryStatus(status: Status) {
         val userId = userRepository.user?.id ?: return
-        val resourceAdapter = resourceAdapter.value ?: return
+        val mediaAdapter = mediaAdapter.value ?: return
         val libraryEntryId = libraryEntry.value?.id
 
         val libraryEntry = LibraryEntry(status = status)
         libraryEntry.user = User(id = userId)
 
-        if (resourceAdapter.isAnime()) {
-            libraryEntry.anime = (resourceAdapter as ResourceAdapter.AnimeResource).anime
+        if (mediaAdapter.isAnime()) {
+            libraryEntry.anime = (mediaAdapter as MediaAdapter.AnimeMedia).anime
         } else {
-            libraryEntry.manga = (resourceAdapter as ResourceAdapter.MangaResource).manga
+            libraryEntry.manga = (mediaAdapter as MediaAdapter.MangaMedia).manga
         }
 
         viewModelScope.launch(Dispatchers.IO) {

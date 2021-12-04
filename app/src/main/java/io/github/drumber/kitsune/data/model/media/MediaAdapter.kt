@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.model.resource
+package io.github.drumber.kitsune.data.model.media
 
 import android.content.Context
 import android.os.Parcelable
@@ -15,7 +15,10 @@ import io.github.drumber.kitsune.util.smallOrHigher
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
-sealed class ResourceAdapter(
+/**
+ * Adapter class for representing media attributes to the UI layer.
+ */
+sealed class MediaAdapter(
     val id: String,
     val title: String,
     val titles: Titles,
@@ -105,18 +108,18 @@ sealed class ResourceAdapter(
         return ageRatingText
     }
 
-    val serialization: String? get() = if(this is MangaResource) manga.serialization else null
+    val serialization: String? get() = if(this is MangaMedia) manga.serialization else null
 
-    val chapters: String? get() = if(this is MangaResource) manga.chapterCount?.toString() else null
+    val chapters: String? get() = if(this is MangaMedia) manga.chapterCount?.toString() else null
 
-    val volumes: String? get() = if(this is MangaResource && manga.volumeCount?.equals(0) == false) {
+    val volumes: String? get() = if(this is MangaMedia && manga.volumeCount?.equals(0) == false) {
             manga.volumeCount?.toString()
     } else { null }
 
-    val episodes: String? get() = if(this is AnimeResource) anime.episodeCount?.toString() else null
+    val episodes: String? get() = if(this is AnimeMedia) anime.episodeCount?.toString() else null
 
     fun lengthText(context: Context): String? {
-        if (this is AnimeResource) {
+        if (this is AnimeMedia) {
             val count = anime.episodeCount
             val length = anime.episodeLength ?: return null
             val lengthEachText = context.getString(R.string.data_length_each, length)
@@ -136,17 +139,17 @@ sealed class ResourceAdapter(
     }
 
     val trailerUrl: String?
-        get() = if (this is AnimeResource && !anime.youtubeVideoId.isNullOrBlank()) {
+        get() = if (this is AnimeMedia && !anime.youtubeVideoId.isNullOrBlank()) {
             "https://www.youtube.com/watch?v=${anime.youtubeVideoId}"
         } else null
 
     val trailerCoverUrl: String?
-        get() = if (this is AnimeResource && !anime.youtubeVideoId.isNullOrBlank()) {
+        get() = if (this is AnimeMedia && !anime.youtubeVideoId.isNullOrBlank()) {
             "https://img.youtube.com/vi/${anime.youtubeVideoId}/mqdefault.jpg"
         } else null
 
     fun getProducer(role: AnimeProductionRole): String? {
-        return if (this is AnimeResource) {
+        return if (this is AnimeMedia) {
             anime.animeProduction?.filter { it.role == role }
                 ?.mapNotNull { it.producer?.name }
                 ?.distinct()
@@ -156,19 +159,19 @@ sealed class ResourceAdapter(
         }
     }
 
-    fun hasStreamingLinks() = this is AnimeResource && !anime.streamingLinks.isNullOrEmpty()
+    fun hasStreamingLinks() = this is AnimeMedia && !anime.streamingLinks.isNullOrEmpty()
 
     fun hasMediaRelationships() = !mediaRelationships.isNullOrEmpty()
 
-    fun isAnime() = this is AnimeResource
+    fun isAnime() = this is AnimeMedia
 
-    fun getResource() = when (this) {
-        is AnimeResource -> anime
-        is MangaResource -> manga
+    fun getMedia() = when (this) {
+        is AnimeMedia -> anime
+        is MangaMedia -> manga
     }
 
     @Parcelize
-    class AnimeResource(val anime: Anime) : ResourceAdapter(
+    class AnimeMedia(val anime: Anime) : MediaAdapter(
         id = anime.id,
         title = getTitle(anime.titles, anime.canonicalTitle),
         titles = anime.titles.require(),
@@ -192,7 +195,7 @@ sealed class ResourceAdapter(
     ), Parcelable
 
     @Parcelize
-    class MangaResource(val manga: Manga) : ResourceAdapter(
+    class MangaMedia(val manga: Manga) : MediaAdapter(
         id = manga.id,
         title = getTitle(manga.titles, manga.canonicalTitle),
         titles = manga.titles.require(),
@@ -217,8 +220,8 @@ sealed class ResourceAdapter(
 
     companion object {
         fun fromMedia(media: Media) = when (media) {
-            is Anime -> AnimeResource(media)
-            is Manga -> MangaResource(media)
+            is Anime -> AnimeMedia(media)
+            is Manga -> MangaMedia(media)
             else -> throw IllegalStateException("Unknown media subclass: ${media::class.java}")
         }
     }

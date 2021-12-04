@@ -38,7 +38,7 @@
                 app:singleLine="true">
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_resource_kind"
+                    android:id="@+id/chip_media_kind"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:closeIcon="@drawable/ic_arrow_drop_down_24"

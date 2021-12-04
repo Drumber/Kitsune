@@ -13,10 +13,10 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.ResourceSelector
-import io.github.drumber.kitsune.data.model.ResourceType
-import io.github.drumber.kitsune.data.model.resource.Anime
-import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
+import io.github.drumber.kitsune.data.model.MediaSelector
+import io.github.drumber.kitsune.data.model.MediaType
+import io.github.drumber.kitsune.data.model.media.Anime
+import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.data.paging.RequestType
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.databinding.FragmentMainBinding
@@ -29,7 +29,7 @@ import io.github.drumber.kitsune.util.initWindowInsetsListener
 import io.github.drumber.kitsune.util.network.ResponseData
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<ResourceAdapter>,
+class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<MediaAdapter>,
     NavigationBarView.OnItemReselectedListener {
 
     private val binding: FragmentMainBinding by viewBinding()
@@ -98,25 +98,25 @@ class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<Resou
         liveData: LiveData<ResponseData<List<Anime>>>
     ): ExploreSection {
         sectionBinding.apply {
-            rvResource.isVisible = false
+            rvMedia.isVisible = false
             layoutLoading.apply {
                 tvError.isVisible = false
                 btnRetry.isVisible = false
                 root.isVisible = true
             }
         }
-        val resourceSelector = ResourceSelector(ResourceType.Anime, filter, requestType)
-        val section = createExploreSection(titleRes, resourceSelector, sectionBinding.root)
+        val mediaSelector = MediaSelector(MediaType.Anime, filter, requestType)
+        val section = createExploreSection(titleRes, mediaSelector, sectionBinding.root)
         liveData.observe(viewLifecycleOwner) { response ->
             if(response is ResponseData.Success) {
-                section.setData(response.data.map { ResourceAdapter.AnimeResource(it) })
+                section.setData(response.data.map { MediaAdapter.AnimeMedia(it) })
                 sectionBinding.apply {
                     layoutLoading.root.isVisible = false
-                    rvResource.isVisible = true
+                    rvMedia.isVisible = true
                 }
             } else {
                 sectionBinding.apply {
-                    rvResource.isVisible = false
+                    rvMedia.isVisible = false
                     layoutLoading.apply {
                         root.isVisible = true
                         tvError.isVisible = true
@@ -131,13 +131,13 @@ class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<Resou
 
     private fun createExploreSection(
         @StringRes titleRes: Int,
-        resourceSelector: ResourceSelector,
+        mediaSelector: MediaSelector,
         view: View
     ): ExploreSection {
         val title = getString(titleRes)
         val glide = GlideApp.with(this)
         val section = ExploreSection(glide, title, null, this) {
-            val action = MainFragmentDirections.actionMainFragmentToResourceListFragment(resourceSelector, title)
+            val action = MainFragmentDirections.actionMainFragmentToMediaListFragment(mediaSelector, title)
             findNavController().navigateSafe(R.id.main_fragment, action)
         }
         section.bindView(view)
@@ -149,7 +149,7 @@ class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<Resou
         binding.appBarLayout.setExpanded(true)
     }
 
-    override fun onItemClick(model: ResourceAdapter) {
+    override fun onItemClick(model: MediaAdapter) {
         val action = MainFragmentDirections.actionMainFragmentToDetailsFragment(model)
         val options = NavOptions.Builder()
             .setLaunchSingleTop(true)

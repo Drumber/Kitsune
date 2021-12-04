@@ -16,8 +16,8 @@
             android:id="@+id/action_main_fragment_to_detailsFragment"
             app:destination="@id/details_fragment" />
         <action
-            android:id="@+id/action_main_fragment_to_resourceListFragment"
-            app:destination="@id/resource_list_fragment" />
+            android:id="@+id/action_main_fragment_to_mediaListFragment"
+            app:destination="@id/media_list_fragment" />
     </fragment>
 
     <fragment
@@ -45,10 +45,10 @@
         android:label="DetailsFragment" >
         <argument
             android:name="model"
-            app:argType="io.github.drumber.kitsune.data.model.resource.ResourceAdapter" />
+            app:argType="io.github.drumber.kitsune.data.model.media.MediaAdapter" />
         <action
-            android:id="@+id/action_details_fragment_to_resource_list_fragment"
-            app:destination="@id/resource_list_fragment" />
+            android:id="@+id/action_details_fragment_to_media_list_fragment"
+            app:destination="@id/media_list_fragment" />
         <action
             android:id="@+id/action_details_fragment_self"
             app:destination="@id/details_fragment" />
@@ -60,16 +60,16 @@
             app:destination="@id/characters_fragment" />
     </fragment>
     <fragment
-        android:id="@+id/resource_list_fragment"
-        android:name="io.github.drumber.kitsune.ui.resourcelist.ResourceListFragment"
-        android:label="fragment_resource_list"
-        tools:layout="@layout/fragment_resource_list">
+        android:id="@+id/media_list_fragment"
+        android:name="io.github.drumber.kitsune.ui.medialist.MediaListFragment"
+        android:label="fragment_media_list"
+        tools:layout="@layout/fragment_media_list">
         <action
-            android:id="@+id/action_resourceListFragment_to_details_fragment"
+            android:id="@+id/action_mediaListFragment_to_details_fragment"
             app:destination="@id/details_fragment" />
         <argument
-            android:name="resourceSelector"
-            app:argType="io.github.drumber.kitsune.data.model.ResourceSelector" />
+            android:name="mediaSelector"
+            app:argType="io.github.drumber.kitsune.data.model.MediaSelector" />
         <argument
             android:name="title"
             app:argType="string" />
@@ -107,8 +107,8 @@
         android:name="io.github.drumber.kitsune.ui.details.episodes.EpisodesFragment"
         android:label="EpisodesFragment" >
         <argument
-            android:name="resource"
-            app:argType="io.github.drumber.kitsune.data.model.resource.Resource" />
+            android:name="media"
+            app:argType="io.github.drumber.kitsune.data.model.media.BaseMedia" />
         <argument
             android:name="libraryEntryId"
             app:argType="string"

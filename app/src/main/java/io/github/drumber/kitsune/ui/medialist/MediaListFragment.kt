@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.resourcelist
+package io.github.drumber.kitsune.ui.medialist
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -9,28 +9,28 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
-import io.github.drumber.kitsune.databinding.FragmentResourceListBinding
+import io.github.drumber.kitsune.data.model.media.MediaAdapter
+import io.github.drumber.kitsune.databinding.FragmentMediaListBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
-import io.github.drumber.kitsune.ui.base.ResourceCollectionFragment
-import io.github.drumber.kitsune.ui.base.ResourceCollectionViewModel
+import io.github.drumber.kitsune.ui.base.MediaCollectionFragment
+import io.github.drumber.kitsune.ui.base.MediaCollectionViewModel
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ResourceListFragment : ResourceCollectionFragment(R.layout.fragment_resource_list) {
+class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) {
 
-    private val args: ResourceListFragmentArgs by navArgs()
+    private val args: MediaListFragmentArgs by navArgs()
 
-    private val binding: FragmentResourceListBinding by viewBinding()
+    private val binding: FragmentMediaListBinding by viewBinding()
 
-    private val viewModel: ResourceListViewModel by viewModel()
+    private val viewModel: MediaListViewModel by viewModel()
 
-    override val collectionViewModel: ResourceCollectionViewModel
+    override val collectionViewModel: MediaCollectionViewModel
         get() = viewModel
 
     override val recyclerView: RecyclerView
-        get() = binding.rvResource
+        get() = binding.rvMedia
 
     override val resourceLoadingBinding: LayoutResourceLoadingBinding?
         get() = binding.layoutLoading
@@ -38,7 +38,7 @@ class ResourceListFragment : ResourceCollectionFragment(R.layout.fragment_resour
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.setResourceSelector(args.resourceSelector)
+        viewModel.setMediaSelector(args.mediaSelector)
 
         binding.toolbar.apply {
             initWindowInsetsListener(false)
@@ -47,9 +47,9 @@ class ResourceListFragment : ResourceCollectionFragment(R.layout.fragment_resour
         }
     }
 
-    override fun onResourceClicked(model: ResourceAdapter, options: NavOptions) {
-        val action = ResourceListFragmentDirections.actionResourceListFragmentToDetailsFragment(model)
-        findNavController().navigateSafe(R.id.resource_list_fragment, action, options)
+    override fun onMediaClicked(model: MediaAdapter, options: NavOptions) {
+        val action = MediaListFragmentDirections.actionMediaListFragmentToDetailsFragment(model)
+        findNavController().navigateSafe(R.id.media_list_fragment, action, options)
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {

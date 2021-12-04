@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.SortFilter
-import io.github.drumber.kitsune.data.model.ResourceType
-import io.github.drumber.kitsune.data.model.resource.Anime
+import io.github.drumber.kitsune.data.model.MediaType
+import io.github.drumber.kitsune.data.model.media.Anime
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.anime.AnimeService
 import io.github.drumber.kitsune.exception.ReceivedDataException
@@ -65,7 +65,7 @@ class MainFragmentViewModel(
         private fun createFilter(
             filterType: String? = null,
             sortBy: SortFilter = SortFilter.POPULARITY_DESC,
-            type: ResourceType = ResourceType.Anime
+            type: MediaType = MediaType.Anime
         ) = Filter().apply {
             pageLimit(10)
             filterType?.let { filter("status", it) }

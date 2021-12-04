@@ -47,7 +47,7 @@
     <string name="sort_release_date_asc">Oldest</string>
     <string name="sort_release_date_desc">Latest</string>
 
-    <string name="title_resource_type">Resource Type</string>
+    <string name="title_media_type">Media Type</string>
     <string name="title_sort">Sort by</string>
     <string name="title_categories">Categories</string>
     <string name="title_description">Description</string>

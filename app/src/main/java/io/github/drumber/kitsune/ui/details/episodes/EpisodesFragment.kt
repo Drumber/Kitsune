@@ -12,12 +12,12 @@ import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.resource.Anime
-import io.github.drumber.kitsune.data.model.resource.Manga
-import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
+import io.github.drumber.kitsune.data.model.media.Anime
+import io.github.drumber.kitsune.data.model.media.Manga
+import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.data.model.unit.MediaUnit
 import io.github.drumber.kitsune.data.model.unit.MediaUnitAdapter
-import io.github.drumber.kitsune.databinding.FragmentResourceListBinding
+import io.github.drumber.kitsune.databinding.FragmentMediaListBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
@@ -26,30 +26,30 @@ import io.github.drumber.kitsune.util.initWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_resource_list),
+class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
     MediaUnitPagingAdapter.MediaUnitActionListener {
 
     private val args: EpisodesFragmentArgs by navArgs()
 
-    private val binding: FragmentResourceListBinding by viewBinding()
+    private val binding: FragmentMediaListBinding by viewBinding()
 
     private val viewModel: EpisodesViewModel by viewModel()
 
     override val recyclerView: RecyclerView
-        get() = binding.rvResource
+        get() = binding.rvMedia
 
     override val resourceLoadingBinding: LayoutResourceLoadingBinding
         get() = binding.layoutLoading
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.setResource(args.resource)
+        viewModel.setMedia(args.media)
         args.libraryEntryId?.let { viewModel.setLibraryEntryId(it) }
 
         binding.toolbar.apply {
             initWindowInsetsListener(false)
             title = getString(
-                when (args.resource) {
+                when (args.media) {
                     is Anime -> R.string.title_episodes
                     is Manga -> R.string.title_chapters
                 }
@@ -58,10 +58,10 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_resource_list)
         }
 
         viewModel.errorListener = { e ->
-            e.showErrorSnackback(binding.rvResource)
+            e.showErrorSnackback(binding.rvMedia)
         }
 
-        val resourceAdapter = ResourceAdapter.fromMedia(args.resource)
+        val resourceAdapter = MediaAdapter.fromMedia(args.media)
         val adapter = MediaUnitPagingAdapter(GlideApp.with(this), resourceAdapter.posterImage, args.libraryEntryId != null, this)
         setRecyclerViewAdapter(adapter)
 
@@ -87,7 +87,7 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_resource_list)
         val sheetMediaUnit = MediaUnitDetailsBottomSheet()
         sheetMediaUnit.arguments = bundleOf(
             MediaUnitDetailsBottomSheet.BUNDLE_MEDIA_UNIT_ADAPTER to MediaUnitAdapter.fromMediaUnit(mediaUnit),
-            MediaUnitDetailsBottomSheet.BUNDLE_THUMBNAIL to ResourceAdapter.fromMedia(args.resource).posterImage
+            MediaUnitDetailsBottomSheet.BUNDLE_THUMBNAIL to MediaAdapter.fromMedia(args.media).posterImage
         )
         sheetMediaUnit.show(parentFragmentManager, MediaUnitDetailsBottomSheet.TAG)
     }

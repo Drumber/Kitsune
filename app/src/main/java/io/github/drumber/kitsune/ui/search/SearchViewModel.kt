@@ -5,60 +5,60 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagingData
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.data.model.ResourceSelector
-import io.github.drumber.kitsune.data.model.ResourceType
+import io.github.drumber.kitsune.data.model.MediaSelector
+import io.github.drumber.kitsune.data.model.MediaType
 import io.github.drumber.kitsune.data.model.SearchParams
-import io.github.drumber.kitsune.data.model.resource.Resource
+import io.github.drumber.kitsune.data.model.media.BaseMedia
 import io.github.drumber.kitsune.data.paging.RequestType
 import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.base.ResourceCollectionViewModel
+import io.github.drumber.kitsune.ui.base.MediaCollectionViewModel
 import kotlinx.coroutines.flow.Flow
 
 class SearchViewModel(
     private val animeRepository: AnimeRepository,
     private val mangaRepository: MangaRepository
-) : ResourceCollectionViewModel() {
+) : MediaCollectionViewModel() {
 
-    override fun getStoredResourceSelector(): ResourceSelector {
-        return KitsunePref.searchParams.toResourceSelector(
+    override fun getStoredMediaSelector(): MediaSelector {
+        return KitsunePref.searchParams.toMediaSelector(
             includeSortFilter = true,
             includeSearchQuery = false
         )
     }
 
-    override fun getData(resourceSelector: ResourceSelector): Flow<PagingData<Resource>> {
-        val filter = resourceSelector.filter
-        return when (resourceSelector.resourceType) {
-            ResourceType.Anime -> animeRepository.animeCollection(
+    override fun getData(mediaSelector: MediaSelector): Flow<PagingData<BaseMedia>> {
+        val filter = mediaSelector.filter
+        return when (mediaSelector.mediaType) {
+            MediaType.Anime -> animeRepository.animeCollection(
                 Kitsu.DEFAULT_PAGE_SIZE,
                 filter
-            ) as Flow<PagingData<Resource>>
-            ResourceType.Manga -> mangaRepository.mangaCollection(
+            ) as Flow<PagingData<BaseMedia>>
+            MediaType.Manga -> mangaRepository.mangaCollection(
                 Kitsu.DEFAULT_PAGE_SIZE,
                 filter
-            ) as Flow<PagingData<Resource>>
+            ) as Flow<PagingData<BaseMedia>>
         }
     }
 
-    private fun updateResourceSelector(searchParams: SearchParams) {
+    private fun updateMediaSelector(searchParams: SearchParams) {
         val isSearching = isSearching.value == true
-        val selector = searchParams.toResourceSelector(
+        val selector = searchParams.toMediaSelector(
             includeSortFilter = !isSearching,
             includeSearchQuery = isSearching
         )
-        setResourceSelector(selector)
+        setMediaSelector(selector)
     }
 
-    private fun SearchParams.toResourceSelector(
+    private fun SearchParams.toMediaSelector(
         includeSortFilter: Boolean,
         includeSearchQuery: Boolean
-    ): ResourceSelector {
+    ): MediaSelector {
         val params = this
-        return ResourceSelector(
-            resourceType = params.resourceType,
+        return MediaSelector(
+            mediaType = params.mediaType,
             requestType = RequestType.ALL,
             filter = Filter().apply {
                 if (includeSortFilter) {
@@ -76,7 +76,7 @@ class SearchViewModel(
 
     fun updateSearchParams(searchParams: SearchParams) {
         KitsunePref.searchParams = searchParams
-        updateResourceSelector(searchParams)
+        updateMediaSelector(searchParams)
     }
 
     val searchParams: SearchParams
@@ -91,20 +91,20 @@ class SearchViewModel(
     fun search(query: String) {
         searchQuery = query
         _isSearching.value = true
-        updateResourceSelector(searchParams)
+        updateMediaSelector(searchParams)
     }
 
     fun resetSearch() {
         searchQuery = null
         _isSearching.value = false
-        updateResourceSelector(searchParams)
+        updateMediaSelector(searchParams)
     }
 
     fun restoreDefaultFilter() {
         val defaultSearchParams = Defaults.DEFAULT_SEARCH_PARAMS
         KitsunePref.searchParams = defaultSearchParams
         KitsunePref.searchCategories = emptyList()
-        updateResourceSelector(defaultSearchParams)
+        updateMediaSelector(defaultSearchParams)
     }
 
 }

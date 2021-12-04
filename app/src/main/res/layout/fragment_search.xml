@@ -11,13 +11,13 @@
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_resource"
+            android:id="@+id/rv_media"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:orientation="horizontal"
             android:clipToPadding="false"
-            tools:listitem="@layout/item_resource"/>
+            tools:listitem="@layout/item_media"/>
 
         <include
             android:id="@+id/layout_loading"
@@ -75,7 +75,7 @@
                     app:singleLine="true">
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_resource_selector"
+                        android:id="@+id/chip_media_selector"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:closeIcon="@drawable/ic_arrow_drop_down_24"

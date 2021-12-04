@@ -24,16 +24,16 @@ import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.SortFilter
-import io.github.drumber.kitsune.data.model.ResourceSelector
-import io.github.drumber.kitsune.data.model.ResourceType
+import io.github.drumber.kitsune.data.model.MediaSelector
+import io.github.drumber.kitsune.data.model.MediaType
 import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.data.model.library.Status
 import io.github.drumber.kitsune.data.model.library.getStringResId
-import io.github.drumber.kitsune.data.model.resource.Anime
-import io.github.drumber.kitsune.data.model.resource.ResourceAdapter
+import io.github.drumber.kitsune.data.model.media.Anime
+import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
-import io.github.drumber.kitsune.ui.adapter.ResourceRecyclerViewAdapter
+import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
@@ -73,9 +73,9 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
         initAppBar()
 
-        viewModel.initResourceAdapter(args.model)
+        viewModel.initMediaAdapter(args.model)
 
-        viewModel.resourceAdapter.observe(viewLifecycleOwner) { model ->
+        viewModel.mediaAdapter.observe(viewLifecycleOwner) { model ->
             binding.data = model
             showCategoryChips(model)
             showFranchise(model)
@@ -109,14 +109,14 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             content.initPaddingWindowInsetsListener(left = true, right = true)
             btnManageLibrary.setOnClickListener { showManageLibraryBottomSheet() }
             btnMediaUnits.setOnClickListener {
-                val resource = args.model.getResource()
+                val media = args.model.getMedia()
                 val libraryEntry = viewModel.libraryEntry.value
-                val action = DetailsFragmentDirections.actionDetailsFragmentToEpisodesFragment(resource, libraryEntry?.id)
+                val action = DetailsFragmentDirections.actionDetailsFragmentToEpisodesFragment(media, libraryEntry?.id)
                 findNavController().navigate(action)
             }
             btnCharacters.setOnClickListener {
-                val resource = args.model.getResource()
-                val action = DetailsFragmentDirections.actionDetailsFragmentToCharactersFragment(resource.id, resource is Anime)
+                val media = args.model.getMedia()
+                val action = DetailsFragmentDirections.actionDetailsFragmentToCharactersFragment(media.id, media is Anime)
                 findNavController().navigate(action)
             }
         }
@@ -146,13 +146,13 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             toolbar.setNavigationOnClickListener { goBack() }
             toolbar.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
-                    R.id.menu_share_resource -> {
-                        val url = viewModel.resourceAdapter.value?.let {
+                    R.id.menu_share_media -> {
+                        val url = viewModel.mediaAdapter.value?.let {
                             when (it) {
-                                is ResourceAdapter.AnimeResource -> {
+                                is MediaAdapter.AnimeMedia -> {
                                     Kitsu.ANIME_URL_PREFIX + it.anime.slug
                                 }
-                                is ResourceAdapter.MangaResource -> {
+                                is MediaAdapter.MangaMedia -> {
                                     Kitsu.MANGA_URL_PREFIX + it.manga.slug
                                 }
                             }
@@ -182,68 +182,68 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
     }
 
-    private fun showCategoryChips(resourceAdapter: ResourceAdapter) {
-        if (!resourceAdapter.categories.isNullOrEmpty()) {
+    private fun showCategoryChips(mediaAdapter: MediaAdapter) {
+        if (!mediaAdapter.categories.isNullOrEmpty()) {
             binding.chipGroupCategories.removeAllViews()
 
-            resourceAdapter.categories
+            mediaAdapter.categories
                 .sortedBy { it.title }
                 .forEach { category ->
                     val chip = Chip(requireContext())
                     chip.text = category.title
                     chip.setOnClickListener {
-                        onCategoryChipClicked(category, resourceAdapter)
+                        onCategoryChipClicked(category, mediaAdapter)
                     }
                     binding.chipGroupCategories.addView(chip)
             }
         }
     }
 
-    private fun onCategoryChipClicked(category: Category, resourceAdapter: ResourceAdapter) {
+    private fun onCategoryChipClicked(category: Category, mediaAdapter: MediaAdapter) {
         val categorySlug = category.slug ?: return
         val title = category.title ?: getString(R.string.no_information)
 
-        val resourceSelector = ResourceSelector(
-            if (resourceAdapter.isAnime()) ResourceType.Anime else ResourceType.Manga,
+        val mediaSelector = MediaSelector(
+            if (mediaAdapter.isAnime()) MediaType.Anime else MediaType.Manga,
             Filter()
                 .filter("categories", categorySlug)
                 .sort(SortFilter.POPULARITY_DESC.queryParam)
         )
 
-        val action = DetailsFragmentDirections.actionDetailsFragmentToResourceListFragment(resourceSelector, title)
+        val action = DetailsFragmentDirections.actionDetailsFragmentToMediaListFragment(mediaSelector, title)
         findNavController().navigate(action)
     }
 
-    private fun showFranchise(resourceAdapter: ResourceAdapter) {
-        val data = resourceAdapter.mediaRelationships?.sortedBy {
+    private fun showFranchise(mediaAdapter: MediaAdapter) {
+        val data = mediaAdapter.mediaRelationships?.sortedBy {
             it.role?.ordinal
         }?.mapNotNull {
-            it.resource?.let { media -> ResourceAdapter.fromMedia(media) }
+            it.media?.let { media -> MediaAdapter.fromMedia(media) }
         } ?: emptyList()
 
-        if (binding.rvFranchise.adapter !is ResourceRecyclerViewAdapter) {
+        if (binding.rvFranchise.adapter !is MediaRecyclerViewAdapter) {
             val glide = GlideApp.with(this)
-            val adapter = ResourceRecyclerViewAdapter(CopyOnWriteArrayList(data), glide) { resource ->
-                onFranchiseItemClicked(resource)
+            val adapter = MediaRecyclerViewAdapter(CopyOnWriteArrayList(data), glide) { media ->
+                onFranchiseItemClicked(media)
             }
-            adapter.overrideWidth = resources.getDimensionPixelSize(R.dimen.resource_item_width_small)
-            adapter.overrideHeight = resources.getDimensionPixelSize(R.dimen.resource_item_height_small)
+            adapter.overrideWidth = resources.getDimensionPixelSize(R.dimen.media_item_width_small)
+            adapter.overrideHeight = resources.getDimensionPixelSize(R.dimen.media_item_height_small)
             binding.rvFranchise.adapter = adapter
         } else {
-            val adapter = binding.rvFranchise.adapter as ResourceRecyclerViewAdapter
+            val adapter = binding.rvFranchise.adapter as MediaRecyclerViewAdapter
             adapter.dataSet.addAll(0, data)
             adapter.notifyDataSetChanged()
         }
     }
 
-    private fun onFranchiseItemClicked(resourceAdapter: ResourceAdapter) {
-        val action = DetailsFragmentDirections.actionDetailsFragmentSelf(resourceAdapter)
+    private fun onFranchiseItemClicked(mediaAdapter: MediaAdapter) {
+        val action = DetailsFragmentDirections.actionDetailsFragmentSelf(mediaAdapter)
         findNavController().navigateSafe(R.id.details_fragment, action)
     }
 
-    private fun showStreamingLinks(resourceAdapter: ResourceAdapter) {
-        val data = if (resourceAdapter is ResourceAdapter.AnimeResource) {
-            resourceAdapter.anime.streamingLinks
+    private fun showStreamingLinks(mediaAdapter: MediaAdapter) {
+        val data = if (mediaAdapter is MediaAdapter.AnimeMedia) {
+            mediaAdapter.anime.streamingLinks
         } else {
             null
         } ?: emptyList()
@@ -266,11 +266,11 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
     private fun showManageLibraryBottomSheet() {
         if (viewModel.isLoggedIn()) {
-            viewModel.resourceAdapter.value?.let { resourceAdapter ->
+            viewModel.mediaAdapter.value?.let { mediaAdapter ->
                 val sheetManageLibrary = ManageLibraryBottomSheet()
                 val bundle = bundleOf(
-                    ManageLibraryBottomSheet.BUNDLE_TITLE to resourceAdapter.title,
-                    ManageLibraryBottomSheet.BUNDLE_IS_ANIME to resourceAdapter.isAnime(),
+                    ManageLibraryBottomSheet.BUNDLE_TITLE to mediaAdapter.title,
+                    ManageLibraryBottomSheet.BUNDLE_IS_ANIME to mediaAdapter.isAnime(),
                     ManageLibraryBottomSheet.BUNDLE_EXISTS_IN_LIBRARY to (viewModel.libraryEntry.value != null)
                 )
                 sheetManageLibrary.arguments = bundle

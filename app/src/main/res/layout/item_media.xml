@@ -6,7 +6,7 @@
     <data>
         <variable
             name="data"
-            type="io.github.drumber.kitsune.data.model.resource.ResourceAdapter" />
+            type="io.github.drumber.kitsune.data.model.media.MediaAdapter" />
     </data>
 
     <FrameLayout
@@ -15,10 +15,10 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_resource"
-            android:layout_width="@dimen/resource_item_width"
-            android:layout_height="@dimen/resource_item_height"
-            android:layout_margin="@dimen/resource_item_margin"
+            android:id="@+id/card_media"
+            android:layout_width="@dimen/media_item_width"
+            android:layout_height="@dimen/media_item_height"
+            android:layout_margin="@dimen/media_item_margin"
             android:layout_gravity="center"
             android:clickable="true"
             android:focusable="true"

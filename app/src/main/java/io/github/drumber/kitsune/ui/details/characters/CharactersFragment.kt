@@ -33,7 +33,7 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters),
     private val viewModel: CharactersViewModel by viewModel()
 
     override val recyclerView: RecyclerView
-        get() = binding.rvResource
+        get() = binding.rvMedia
 
     override val resourceLoadingBinding: LayoutResourceLoadingBinding
         get() = binding.layoutLoading

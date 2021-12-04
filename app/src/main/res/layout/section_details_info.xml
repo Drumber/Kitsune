@@ -7,7 +7,7 @@
         <import type="io.github.drumber.kitsune.data.model.production.AnimeProductionRole" />
         <variable
             name="data"
-            type="io.github.drumber.kitsune.data.model.resource.ResourceAdapter" />
+            type="io.github.drumber.kitsune.data.model.media.MediaAdapter" />
     </data>
 
     <TableLayout

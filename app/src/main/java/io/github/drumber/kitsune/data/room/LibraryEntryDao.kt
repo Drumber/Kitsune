@@ -27,8 +27,8 @@ interface LibraryEntryDao {
     @Query("SELECT * FROM library_table WHERE status IN (:status) AND manga_id IS NOT NULL")
     fun getMangaLibraryEntry(status: List<Status>): PagingSource<Int, LibraryEntry>
 
-    @Query("SELECT * FROM library_table WHERE anime_id = :resourceId OR manga_id = :resourceId")
-    suspend fun getLibraryEntryFromResource(resourceId: String): LibraryEntry?
+    @Query("SELECT * FROM library_table WHERE anime_id = :mediaId OR manga_id = :mediaId")
+    suspend fun getLibraryEntryFromMedia(mediaId: String): LibraryEntry?
 
     @Query("SELECT * FROM library_table WHERE id = :id")
     fun getLibraryEntryAsLiveData(id: String): LiveData<LibraryEntry?>

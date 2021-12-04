@@ -2,8 +2,8 @@ package io.github.drumber.kitsune.data.model.unit
 
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Type
-import io.github.drumber.kitsune.data.model.resource.Image
-import io.github.drumber.kitsune.data.model.resource.Titles
+import io.github.drumber.kitsune.data.model.media.Image
+import io.github.drumber.kitsune.data.model.media.Titles
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
