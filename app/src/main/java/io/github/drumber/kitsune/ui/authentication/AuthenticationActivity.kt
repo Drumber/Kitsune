@@ -111,6 +111,11 @@ class AuthenticationActivity : BaseActivity(R.layout.activity_authentication, fa
 
     private fun showLoginFailed(@StringRes errorString: Int) {
         binding.fieldPassword.error = getString(errorString)
+        Toast.makeText(
+            applicationContext,
+            errorString,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }
 

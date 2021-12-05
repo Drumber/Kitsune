@@ -160,7 +160,7 @@
     <string name="action_sign_in">Sign in</string>
     <string name="action_log_in">Log in</string>
     <string name="action_log_in_to_kitsu">Log in to Kitsu</string>
-    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_username">Not a valid email address</string>
     <string name="invalid_password">Invalid password</string>
     <string name="login_failed">"Login failed"</string>
     <string name="status_logging_in">Logging in…</string>

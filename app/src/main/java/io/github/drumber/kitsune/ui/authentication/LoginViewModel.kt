@@ -55,7 +55,8 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
     }
 
     private fun isUserNameValid(username: String): Boolean {
-        return username.isNotBlank()
+        // very that username is an email address
+        return ("""^\S+@\S+$""".toRegex().matches(username))
     }
 
     private fun isPasswordValid(password: String): Boolean {
