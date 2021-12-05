@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.widget
+package io.github.drumber.kitsune.ui.widget.chart
 
 import android.content.Context
 import androidx.annotation.StringRes
@@ -11,7 +11,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.util.extensions.getColor
 
-object PieChartStyle {
+object PieChartStyle : BaseChartStyle() {
 
     const val STATS_MAX_ELEMENTS = 7
     const val ANIMATION_DURATION = 1000
@@ -62,26 +62,14 @@ object PieChartStyle {
     }
 
     fun PieDataSet.applyStyle(c: Context) {
-        setDrawIcons(false)
+        applyBaseStyle(c)
         sliceSpace = 0f
         selectionShift = 5f
-        colors = getChartColors(c)
     }
 
     fun PieData.applyStyle(c: Context) {
+        applyBaseStyle(c)
         setValueFormatter(PercentFormatter())
-        setValueTextSize(11f)
-        setValueTextColor(c.theme.getColor(R.attr.colorOnSurface))
-    }
-
-    private fun getChartColors(c: Context): List<Int> {
-        val colors = c.resources.obtainTypedArray(R.array.stats_chart_colors)
-        val list = mutableListOf<Int>()
-        for (i in 0 until colors.length()) {
-            list += colors.getColor(i, 0)
-        }
-        colors.recycle()
-        return list
     }
 
 }

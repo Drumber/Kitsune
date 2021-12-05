@@ -23,7 +23,7 @@ import io.github.drumber.kitsune.databinding.FragmentProfileBinding
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
-import io.github.drumber.kitsune.ui.widget.PieChartStyle
+import io.github.drumber.kitsune.ui.widget.chart.PieChartStyle
 import io.github.drumber.kitsune.ui.widget.ProfilePictureBehavior
 import io.github.drumber.kitsune.util.*
 import io.github.drumber.kitsune.util.extensions.*

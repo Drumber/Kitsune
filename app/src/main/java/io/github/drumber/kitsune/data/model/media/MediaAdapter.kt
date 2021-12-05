@@ -185,4 +185,6 @@ class MediaAdapter(val media: BaseMedia) : Parcelable {
 
     fun hasMediaRelationships() = !media.mediaRelationships.isNullOrEmpty()
 
+    fun hasRatingFrequencies() = media.ratingFrequencies != null
+
 }

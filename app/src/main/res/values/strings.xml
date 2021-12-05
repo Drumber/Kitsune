@@ -53,6 +53,7 @@
     <string name="title_description">Description</string>
     <string name="title_details">Details</string>
     <string name="title_streamer">Streaming Links</string>
+    <string name="title_ratings">Ratings</string>
     <string name="title_more_franchise">More from this Series</string>
     <string name="title_authentication">Authentication</string>
     <string name="title_login">Login to your Kitsu account</string>

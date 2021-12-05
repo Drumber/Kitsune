@@ -64,7 +64,7 @@ class LibraryViewModel(
                     KitsunePref.libraryEntryStatus,
                     reqFilter
                 )
-        }.also { println("return $it") }
+        }
     }
 
     fun setLibraryEntryKind(kind: LibraryEntryKind) {

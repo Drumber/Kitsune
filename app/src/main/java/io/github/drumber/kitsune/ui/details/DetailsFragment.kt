@@ -17,6 +17,9 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.google.android.material.chip.Chip
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
@@ -38,6 +41,7 @@ import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
+import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle.applyStyle
 import io.github.drumber.kitsune.util.extensions.*
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
@@ -80,6 +84,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             showCategoryChips(model)
             showFranchise(model)
             showStreamingLinks(model)
+            showRatingChart(model)
 
             val glide = GlideApp.with(this)
 
@@ -111,12 +116,18 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             btnMediaUnits.setOnClickListener {
                 val media = args.model.media
                 val libraryEntry = viewModel.libraryEntry.value
-                val action = DetailsFragmentDirections.actionDetailsFragmentToEpisodesFragment(media, libraryEntry?.id)
+                val action = DetailsFragmentDirections.actionDetailsFragmentToEpisodesFragment(
+                    media,
+                    libraryEntry?.id
+                )
                 findNavController().navigate(action)
             }
             btnCharacters.setOnClickListener {
                 val media = args.model.media
-                val action = DetailsFragmentDirections.actionDetailsFragmentToCharactersFragment(media.id, media is Anime)
+                val action = DetailsFragmentDirections.actionDetailsFragmentToCharactersFragment(
+                    media.id,
+                    media is Anime
+                )
                 findNavController().navigate(action)
             }
         }
@@ -148,7 +159,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 when (item.itemId) {
                     R.id.menu_share_media -> {
                         val url = viewModel.mediaAdapter.value?.let {
-                            val prefix = if (it.isAnime()) Kitsu.ANIME_URL_PREFIX else Kitsu.MANGA_URL_PREFIX
+                            val prefix =
+                                if (it.isAnime()) Kitsu.ANIME_URL_PREFIX else Kitsu.MANGA_URL_PREFIX
                             prefix + it.media.slug
                         }
                         if (url != null) {
@@ -189,7 +201,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                         onCategoryChipClicked(category, mediaAdapter)
                     }
                     binding.chipGroupCategories.addView(chip)
-            }
+                }
         }
     }
 
@@ -204,7 +216,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 .sort(SortFilter.POPULARITY_DESC.queryParam)
         )
 
-        val action = DetailsFragmentDirections.actionDetailsFragmentToMediaListFragment(mediaSelector, title)
+        val action =
+            DetailsFragmentDirections.actionDetailsFragmentToMediaListFragment(mediaSelector, title)
         findNavController().navigate(action)
     }
 
@@ -221,7 +234,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 onFranchiseItemClicked(media)
             }
             adapter.overrideWidth = resources.getDimensionPixelSize(R.dimen.media_item_width_small)
-            adapter.overrideHeight = resources.getDimensionPixelSize(R.dimen.media_item_height_small)
+            adapter.overrideHeight =
+                resources.getDimensionPixelSize(R.dimen.media_item_height_small)
             binding.rvFranchise.adapter = adapter
         } else {
             val adapter = binding.rvFranchise.adapter as MediaRecyclerViewAdapter
@@ -251,6 +265,49 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             val adapter = binding.rvStreamer.adapter as StreamingLinkAdapter
             adapter.dataSet.addAll(0, data)
             adapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun showRatingChart(mediaAdapter: MediaAdapter) {
+        val ratings = mediaAdapter.media.ratingFrequencies ?: return
+
+        val ratingList = with(ratings) {
+            listOf(
+                r2,
+                r3,
+                r4,
+                r5,
+                r6,
+                r7,
+                r8,
+                r9,
+                r10,
+                r11,
+                r12,
+                r13,
+                r14,
+                r15,
+                r16,
+                r17,
+                r18,
+                r19,
+                r20
+            )
+        }
+
+        val chartEntries = ratingList.mapIndexedNotNull { index, s ->
+            s?.let { BarEntry(index.toFloat(), it.toFloat()) }
+        }
+        val dataSet = BarDataSet(chartEntries, "Ratings")
+        dataSet.applyStyle(requireContext())
+        val barData = BarData(dataSet)
+        barData.applyStyle(requireContext())
+
+        binding.chartRatings.apply {
+            data = barData
+            applyStyle(requireContext())
+            setFitBars(true)
+            invalidate()
         }
     }
 
