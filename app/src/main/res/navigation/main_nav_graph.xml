@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_search_fragment_to_details_fragment"
             app:destination="@id/details_fragment" />
+        <deepLink
+            android:id="@+id/deepLink_search"
+            app:uri="kitsune://search" />
     </fragment>
 
     <fragment
@@ -77,22 +80,28 @@
     <fragment
         android:id="@+id/settings_fragment"
         android:name="io.github.drumber.kitsune.ui.settings.SettingsFragment"
-        android:label="@string/nav_settings" >
+        android:label="@string/nav_settings">
         <action
             android:id="@+id/action_settings_fragment_to_librariesFragment"
             app:destination="@id/librariesFragment" />
         <action
             android:id="@+id/action_settings_fragment_to_themePreferenceFragment"
             app:destination="@id/theme_fragment" />
+        <deepLink
+            android:id="@+id/deepLink_settings"
+            app:uri="kitsune://settings" />
     </fragment>
     <fragment
         android:id="@+id/library_fragment"
         android:name="io.github.drumber.kitsune.ui.library.LibraryFragment"
         android:label="@string/nav_library"
-        tools:layout="@layout/fragment_library" >
+        tools:layout="@layout/fragment_library">
         <action
             android:id="@+id/action_library_fragment_to_details_fragment"
             app:destination="@id/details_fragment" />
+        <deepLink
+            android:id="@+id/deepLink_library"
+            app:uri="kitsune://library" />
     </fragment>
     <fragment
         android:id="@+id/librariesFragment"
