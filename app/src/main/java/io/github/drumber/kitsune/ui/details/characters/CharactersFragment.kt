@@ -42,6 +42,10 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters),
         super.onViewCreated(view, savedInstanceState)
         viewModel.setMediaId(args.mediaId, args.isAnime)
 
+        resourceLoadingBinding.btnRetry.setOnClickListener {
+            viewModel.retry(args.mediaId, args.isAnime)
+        }
+
         binding.toolbar.apply {
             initWindowInsetsListener(false)
             setNavigationOnClickListener { findNavController().navigateUp() }
@@ -55,6 +59,15 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters),
             (binding.fieldLanguage.editText as? AutoCompleteTextView)?.apply {
                 setAdapter(adapter)
                 setText(viewModel.selectedLanguage, false)
+            }
+        }
+
+        viewModel.isLoadingLanguages.observe(viewLifecycleOwner) { isLoading ->
+            resourceLoadingBinding.apply {
+                root.isVisible = isVisible
+                progressBar.isVisible = isLoading
+                tvError.isVisible = false
+                btnRetry.isVisible = false
             }
         }
 

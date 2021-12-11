@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationBarView
@@ -79,6 +80,9 @@ abstract class BaseCollectionFragment(@LayoutRes contentLayoutId: Int) :
     /** Triggered when clicking on retry button. */
     override fun onClick(retryButton: View?) {
         (recyclerView.adapter as? PagingDataAdapter<*, *>)?.retry()
+        (recyclerView.adapter as? ConcatAdapter)?.adapters
+            ?.filterIsInstance<PagingDataAdapter<*, *>>()
+            ?.forEach { it.retry() }
     }
 
     private val loadStateListener: (CombinedLoadStates) -> Unit = { loadState ->

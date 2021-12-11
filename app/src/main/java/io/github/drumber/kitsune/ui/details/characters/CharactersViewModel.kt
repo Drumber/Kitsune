@@ -31,6 +31,10 @@ class CharactersViewModel(
     var selectedLanguage: String? = null
         private set
 
+    private val _isLoadingLanguages = MutableLiveData<Boolean>(false)
+    val isLoadingLanguages: LiveData<Boolean>
+        get() = _isLoadingLanguages
+
     fun setMediaId(id: String, isAnime: Boolean) {
         if (id == mediaId) return
         mediaId = id
@@ -39,6 +43,7 @@ class CharactersViewModel(
             // fetch all languages of the anime
             viewModelScope.launch(Dispatchers.IO) {
                 val langs = fetchLanguages(id) ?: emptyList()
+                // select Japanese, English or the first language in the list
                 selectedLanguage = langs.find { it == "Japanese" }
                     ?: langs.find { it == "English" } ?: langs.firstOrNull()
 
@@ -50,6 +55,11 @@ class CharactersViewModel(
         } else {
             updateFilter()
         }
+    }
+
+    fun retry(id: String, isAnime: Boolean) {
+        mediaId = null
+        setMediaId(id, isAnime)
     }
 
     fun setLanguage(language: String) {
@@ -73,11 +83,14 @@ class CharactersViewModel(
     }
 
     private suspend fun fetchLanguages(id: String): List<String>? {
+        _isLoadingLanguages.postValue(true)
         return try {
             animeService.getLanguages(id)
         } catch (e: Exception) {
             logE("Failed to fetch languages for anime with id '$id'.", e)
             null
+        } finally {
+            _isLoadingLanguages.postValue(false)
         }
     }
 
