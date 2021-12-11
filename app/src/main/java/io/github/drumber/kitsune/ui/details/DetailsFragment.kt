@@ -41,7 +41,9 @@ import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
+import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle.applyStyle
+import io.github.drumber.kitsune.ui.widget.chart.StepAxisValueFormatter
 import io.github.drumber.kitsune.util.extensions.*
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
@@ -271,8 +273,13 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     private fun showRatingChart(mediaAdapter: MediaAdapter) {
         val ratings = mediaAdapter.media.ratingFrequencies ?: return
 
+
+        val displayWidth = resources.displayMetrics.widthPixels
+        // full chart will show ratings 1-10 with step size 0.5; reduced chart with step size 1
+        val isFullChart = displayWidth >= resources.getDimensionPixelSize(R.dimen.details_rating_chart_full_threshold)
+
         val ratingList = with(ratings) {
-            listOf(
+            val list = listOf(
                 r2,
                 r3,
                 r4,
@@ -293,13 +300,34 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 r19,
                 r20
             )
+
+            if (isFullChart) {
+                list
+            } else {
+                var previous = 0
+                list.filterNotNull().mapIndexedNotNull { index, s ->
+                    if (index % 2 == 0) {
+                        (previous + s.toInt()).toString()
+                    } else {
+                        previous = s.toInt()
+                        null
+                    }
+                }
+            }
         }
 
         val chartEntries = ratingList.mapIndexedNotNull { index, s ->
             s?.let { BarEntry(index.toFloat(), it.toFloat()) }
         }
+
         val dataSet = BarDataSet(chartEntries, "Ratings")
-        dataSet.applyStyle(requireContext())
+        val chartColorArray = BarChartStyle
+            .getColorArray(requireContext(), R.array.ratings_chart_colors)
+            .filterIndexed { index, _ ->
+                isFullChart || index % 2 == 0
+            }
+        dataSet.applyStyle(requireContext(), chartColorArray)
+
         val barData = BarData(dataSet)
         barData.applyStyle(requireContext())
 
@@ -307,6 +335,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             data = barData
             applyStyle(requireContext())
             setFitBars(true)
+            xAxis.valueFormatter = StepAxisValueFormatter(1f, if (isFullChart) 0.5f else 1f)
+            xAxis.labelCount = if (isFullChart) 19 else 10
             invalidate()
         }
     }

@@ -29,6 +29,7 @@ object BarChartStyle : BaseChartStyle() {
             textColor = theme.getColor(R.attr.colorOnSurface)
             setDrawAxisLine(false)
             setDrawGridLines(false)
+            granularity = 1f
         }
 
         setPinchZoom(false)
@@ -36,13 +37,14 @@ object BarChartStyle : BaseChartStyle() {
         setDrawGridBackground(false)
     }
 
-    fun BarDataSet.applyStyle(c: Context) {
+    fun BarDataSet.applyStyle(c: Context, colorArray: List<Int>) {
         valueFormatter = LargeValueFormatter()
         isHighlightEnabled = false
-        applyBaseStyle(c, R.array.ratings_chart_colors)
+        applyBaseStyle(c, colorArray)
     }
 
     fun BarData.applyStyle(c: Context) {
+        barWidth = 0.9f
         applyBaseStyle(c)
     }
 

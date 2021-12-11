@@ -23,6 +23,7 @@
     <dimen name="details_trailer_height">150dp</dimen>
     <dimen name="details_thumbnail_width">150dp</dimen>
     <dimen name="details_thumbnail_height">213dp</dimen>
+    <dimen name="details_rating_chart_full_threshold">400dp</dimen>
 
     <!-- Profile Fragment -->
     <dimen name="profile_picture_expanded">75dp</dimen>

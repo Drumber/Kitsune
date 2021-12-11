@@ -286,12 +286,12 @@
                             android:layout_height="wrap_content"
                             android:text="@string/title_ratings"
                             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                            android:layout_marginBottom="10dp" />
+                            android:layout_marginBottom="5dp" />
 
                         <com.github.mikephil.charting.charts.BarChart
                             android:id="@+id/chart_ratings"
                             android:layout_width="match_parent"
-                            android:layout_height="300dp" />
+                            android:layout_height="200dp" />
 
                     </LinearLayout>
 

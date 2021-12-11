@@ -11,10 +11,10 @@ abstract class BaseChartStyle {
 
     protected fun BaseDataSet<*>.applyBaseStyle(
         c: Context,
-        @ArrayRes colorArray: Int = R.array.stats_chart_colors
+        colorArray: List<Int> = getColorArray(c, R.array.stats_chart_colors)
     ) {
         setDrawIcons(false)
-        colors = getChartColors(c, colorArray)
+        colors = colorArray
     }
 
     fun ChartData<*>.applyBaseStyle(c: Context) {
@@ -22,7 +22,7 @@ abstract class BaseChartStyle {
         setValueTextColor(c.theme.getColor(R.attr.colorOnSurface))
     }
 
-    private fun getChartColors(c: Context, @ArrayRes colorArray: Int): List<Int> {
+    fun getColorArray(c: Context, @ArrayRes colorArray: Int): List<Int> {
         val colors = c.resources.obtainTypedArray(colorArray)
         val list = mutableListOf<Int>()
         for (i in 0 until colors.length()) {
