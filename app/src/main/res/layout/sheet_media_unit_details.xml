@@ -44,6 +44,7 @@
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                     android:maxLines="3"
                     android:ellipsize="end"
+                    android:textColor="@color/white"
                     android:text="@{adapter.title(context)}"
                     tools:text="Some Title" />
 
