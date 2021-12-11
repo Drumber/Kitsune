@@ -105,4 +105,9 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
         binding.appBarLayout.setExpanded(true)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.errorListener = null
+    }
+
 }

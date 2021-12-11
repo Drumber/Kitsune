@@ -178,4 +178,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         return findPreference(getString(preferenceKey))
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.errorMessageListener = null
+    }
+
 }

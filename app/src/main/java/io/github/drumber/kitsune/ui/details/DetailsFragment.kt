@@ -383,8 +383,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 

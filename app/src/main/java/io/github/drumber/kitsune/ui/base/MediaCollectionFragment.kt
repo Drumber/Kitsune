@@ -58,4 +58,9 @@ abstract class MediaCollectionFragment(
 
     open fun onMediaClicked(model: MediaAdapter, options: NavOptions) {}
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        dataFlowScope = null
+    }
+
 }

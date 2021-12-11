@@ -1,13 +1,15 @@
 package io.github.drumber.kitsune.ui.widget
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.KeyEvent
+import android.view.ViewTreeObserver
 import android.view.inputmethod.EditorInfo
 import androidx.cardview.widget.CardView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
+import androidx.core.view.doOnDetach
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.paulrybitskyi.persistentsearchview.PersistentSearchView
@@ -15,13 +17,10 @@ import com.paulrybitskyi.persistentsearchview.listeners.OnSearchConfirmedListene
 import com.paulrybitskyi.persistentsearchview.widgets.AdvancedEditText
 import io.github.drumber.kitsune.util.extensions.getResourceId
 
+@SuppressLint("ClickableViewAccessibility")
 class CustomPersistentSearchView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : PersistentSearchView(context, attrs) {
-
-    private val inputEt: AdvancedEditText = findViewById(com.paulrybitskyi.persistentsearchview.R.id.inputEt)
-    private val cardView: CardView = findViewById(com.paulrybitskyi.persistentsearchview.R.id.cardView)
-    private val suggestionsRV: RecyclerView = findViewById(com.paulrybitskyi.persistentsearchview.R.id.suggestionsRecyclerView)
 
     var customOnSearchConfirmedListener: OnSearchConfirmedListener? = null
     set(value) {
@@ -36,6 +35,10 @@ class CustomPersistentSearchView @JvmOverloads constructor(
     }
 
     init {
+        val inputEt: AdvancedEditText = findViewById(com.paulrybitskyi.persistentsearchview.R.id.inputEt)
+        val cardView: CardView = findViewById(com.paulrybitskyi.persistentsearchview.R.id.cardView)
+        val suggestionsRV: RecyclerView = findViewById(com.paulrybitskyi.persistentsearchview.R.id.suggestionsRecyclerView)
+
         inputEt.setOnEditorActionListener { textView, actionId, keyEvent ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH
                 || actionId == EditorInfo.IME_ACTION_DONE
@@ -64,10 +67,16 @@ class CustomPersistentSearchView @JvmOverloads constructor(
 
     private fun initExpandListener() {
         var wasExpanded = isExpanded
-        viewTreeObserver.addOnGlobalLayoutListener {
+        val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
             if(isExpanded != wasExpanded) {
                 wasExpanded = isExpanded
                 expandStateListener?.invoke(wasExpanded)
+            }
+        }
+        viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+        post {
+            doOnDetach {
+                viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
             }
         }
     }
@@ -76,21 +85,26 @@ class CustomPersistentSearchView @JvmOverloads constructor(
      * Disable dragging for the specified app bar layout while the search view is expanded.
      */
     fun setAppBarLayout(appBarLayout: AppBarLayout) {
-        var isDragCallbackAdded = false
-        appBarLayout.viewTreeObserver.addOnGlobalLayoutListener {
-            if(!isDragCallbackAdded && ViewCompat.isLaidOut(appBarLayout)) {
-                isDragCallbackAdded = true
-                val params = appBarLayout.layoutParams as CoordinatorLayout.LayoutParams
-                val behavior = params.behavior as AppBarLayout.Behavior
-                behavior.setDragCallback(appBarDragCallback)
+        appBarLayout.post {
+            val params = appBarLayout.layoutParams as CoordinatorLayout.LayoutParams
+            val behavior = params.behavior as AppBarLayout.Behavior
+
+            val appBarDragCallback = object : AppBarLayout.Behavior.DragCallback() {
+                override fun canDrag(appBarLayout: AppBarLayout): Boolean {
+                    return !isExpanded
+                }
+            }
+            behavior.setDragCallback(appBarDragCallback)
+            appBarLayout.doOnDetach {
+                behavior.setDragCallback(null)
             }
         }
     }
 
-    private val appBarDragCallback = object : AppBarLayout.Behavior.DragCallback() {
-        override fun canDrag(appBarLayout: AppBarLayout): Boolean {
-            return !isExpanded
-        }
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        expandStateListener = null
+        customOnSearchConfirmedListener = null
     }
 
 }

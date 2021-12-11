@@ -105,7 +105,7 @@ dependencies {
     implementation "io.insert-koin:koin-android:$koin_version"
 
     // View binding delegate
-    implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.5.0-beta01'
+    implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.5.3'
 
     // jsonapi-converter
     implementation 'com.github.jasminb:jsonapi-converter:0.11'
@@ -150,6 +150,9 @@ dependencies {
     def aboutLibraries_version = "8.9.4"
     implementation "com.mikepenz:aboutlibraries-core:$aboutLibraries_version"
     implementation "com.mikepenz:aboutlibraries:$aboutLibraries_version"
+
+    // LeakCanary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 
     // Tests
     testImplementation 'junit:junit:4.+'
