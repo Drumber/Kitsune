@@ -48,7 +48,6 @@ object BindingAdapter {
     fun loadGlideImage(view: ImageView, url: String?) {
         GlideApp.with(view)
             .load(url)
-            .centerCrop()
             .placeholder(R.drawable.ic_insert_photo_48)
             .into(view)
     }

@@ -24,7 +24,6 @@ class MediaViewHolder(
     fun bind(data: MediaAdapter) {
         binding.data = data
         glide.load(data.posterImage)
-            .centerCrop()
             .placeholder(R.drawable.ic_insert_photo_48)
             .into(binding.ivThumbnail)
     }

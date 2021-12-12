@@ -24,6 +24,8 @@ android {
                 arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
+
+        buildConfigField "boolean", "SCREENSHOT_MODE_ENABLED", SCREENSHOT_MODE
     }
 
     buildTypes {
@@ -153,6 +155,11 @@ dependencies {
 
     // LeakCanary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+
+    // Glide Transformations (only used for demo screenshots)
+    if (SCREENSHOT_MODE) {
+        debugImplementation 'jp.wasabeef:glide-transformations:4.3.0'
+    }
 
     // Tests
     testImplementation 'junit:junit:4.+'

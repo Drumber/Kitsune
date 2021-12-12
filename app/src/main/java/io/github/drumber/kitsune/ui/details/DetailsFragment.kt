@@ -14,7 +14,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.github.mikephil.charting.data.BarData
@@ -25,6 +24,7 @@ import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.data.model.MediaSelector
@@ -91,13 +91,12 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             val glide = GlideApp.with(this)
 
             glide.load(model.coverImage)
-                .centerCrop()
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .placeholder(R.drawable.cover_placeholder)
                 .into(binding.ivCover)
 
             glide.load(model.posterImage)
-                .transform(CenterCrop(), RoundedCorners(8))
+                .addTransform(RoundedCorners(8))
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivThumbnail)
         }

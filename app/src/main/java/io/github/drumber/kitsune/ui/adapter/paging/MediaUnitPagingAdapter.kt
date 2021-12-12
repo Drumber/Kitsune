@@ -58,7 +58,6 @@ class MediaUnitPagingAdapter(
 
         fun bind(unit: MediaUnit) {
             glide.load(unit.thumbnail?.originalOrDown() ?: posterUrl)
-                .centerCrop()
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivThumbnail)
 

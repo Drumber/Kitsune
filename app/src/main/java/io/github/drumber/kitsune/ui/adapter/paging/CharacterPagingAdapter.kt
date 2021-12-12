@@ -33,12 +33,10 @@ class CharacterPagingAdapter(
             val imgActor = casting.person?.image?.original
 
             glide.load(imgCharacter)
-                .centerCrop()
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivCharacter)
 
             glide.load(imgActor)
-                .centerCrop()
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivActor)
 
