@@ -30,7 +30,6 @@
         <item name="colorPlaceholderGradientStart">?colorPrimary</item>
         <item name="colorPlaceholderGradientEnd">?colorPrimaryDark</item>
 
-        <item name="colorSearchView">?colorSurface</item>
         <item name="preferenceTheme">@style/Theme.Kitsune.PreferenceThemeOverlay</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Kitsune.BottomSheetDialog</item>
         <item name="fullScreenDialogTheme">@style/Theme.Kitsune.FullScreenDialog</item>

@@ -39,7 +39,7 @@ class CustomPersistentSearchView @JvmOverloads constructor(
         val cardView: CardView = findViewById(com.paulrybitskyi.persistentsearchview.R.id.cardView)
         val suggestionsRV: RecyclerView = findViewById(com.paulrybitskyi.persistentsearchview.R.id.suggestionsRecyclerView)
 
-        inputEt.setOnEditorActionListener { textView, actionId, keyEvent ->
+        inputEt.setOnEditorActionListener { _, actionId, keyEvent ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH
                 || actionId == EditorInfo.IME_ACTION_DONE
                 || keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -47,7 +47,7 @@ class CustomPersistentSearchView @JvmOverloads constructor(
             }
             true
         }
-        inputEt.setTouchEventInterceptor { view, motionEvent ->
+        inputEt.setTouchEventInterceptor { _, motionEvent ->
             if(!isExpanded) {
                 cardView.onTouchEvent(motionEvent)
             } else {

@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.databinding.BindingAdapter
 import at.blogc.android.views.ExpandableTextView
 import io.github.drumber.kitsune.GlideApp
@@ -27,6 +28,11 @@ object BindingAdapter {
         })
         expandableTextView.post {
             actionView.isVisible = expandableTextView.lineCount >= expandableTextView.maxLines
+        }
+        expandableTextView.doOnTextChanged { _, _, _, _ ->
+            expandableTextView.post {
+                actionView.isVisible = expandableTextView.lineCount >= expandableTextView.maxLines
+            }
         }
         actionView.setOnClickListener { expandableTextView.toggle() }
     }

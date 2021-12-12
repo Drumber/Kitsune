@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.elevation.ElevationOverlayProvider
 import com.paulrybitskyi.persistentsearchview.adapters.model.SuggestionItem
 import com.paulrybitskyi.persistentsearchview.listeners.OnSearchConfirmedListener
 import com.paulrybitskyi.persistentsearchview.listeners.OnSuggestionChangeListener
@@ -102,7 +103,8 @@ class SearchFragment : MediaCollectionFragment(R.layout.fragment_search) {
             setAppBarLayout(binding.appBarLayout)
 
             lifecycleScope.launchWhenStarted {
-                setCardBackgroundColor(context.theme.getColor(R.attr.colorSearchView))
+                val background = ElevationOverlayProvider(context).compositeOverlayWithThemeSurfaceColorIfNeeded(4.0f)
+                setCardBackgroundColor(background)
                 setSuggestionTextColor(ContextCompat.getColor(context, R.color.foreground))
                 collapse(false) // make sure to collapse on view change
             }
