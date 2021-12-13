@@ -51,6 +51,10 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         super.onViewCreated(view, savedInstanceState)
         updateOptionsMenu()
 
+        if (context?.isNightMode() == false) {
+            activity?.clearLightStatusBar()
+        }
+
         viewModel.userModel.observe(viewLifecycleOwner) { user ->
             updateUser(user)
             updateOptionsMenu()
@@ -227,13 +231,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                 dialog.dismiss()
             }
             .show()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (context?.isNightMode() == false) {
-            activity?.clearLightStatusBar()
-        }
     }
 
     override fun onPause() {
