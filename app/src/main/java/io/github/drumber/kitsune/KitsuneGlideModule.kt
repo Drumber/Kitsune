@@ -9,17 +9,21 @@ import com.bumptech.glide.load.Transformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
-import jp.wasabeef.glide.transformations.BlurTransformation
 
 @GlideModule
 class KitsuneGlideModule : AppGlideModule() {
 
     override fun applyOptions(context: Context, builder: GlideBuilder) {
         val multiTransform = MultiTransformation(
-            buildList<Transformation<Bitmap>> {
+            buildList {
                 add(CenterCrop())
-                if (BuildConfig.SCREENSHOT_MODE_ENABLED)
-                    add(BlurTransformation(15, 2))
+                if (BuildConfig.SCREENSHOT_MODE_ENABLED) {
+                    val blurTransformation =
+                        Class.forName("jp.wasabeef.glide.transformations.BlurTransformation")
+                            .getConstructor(Integer::class.java, Integer::class.java)
+                            .newInstance(15, 2)
+                    add(blurTransformation as Transformation<Bitmap>)
+                }
             }
         )
         builder.setDefaultRequestOptions(RequestOptions.bitmapTransform(multiTransform))
