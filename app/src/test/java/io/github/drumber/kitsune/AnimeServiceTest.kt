@@ -59,7 +59,6 @@ class AnimeServiceTest : BaseTest() {
                 .options
         )
         val singleAnime = responseSingle.get()?.first()
-        assertNull(singleAnime?.createdAt)
         assertNotNull(singleAnime?.titles)
         assertEquals("Cowboy Bebop", singleAnime?.titles?.en)
     }

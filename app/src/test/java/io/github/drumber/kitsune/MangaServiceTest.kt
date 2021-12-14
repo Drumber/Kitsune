@@ -58,7 +58,6 @@ class MangaServiceTest : BaseTest() {
                 .options
         )
         val singleManga = responseSingle.get()?.first()
-        assertNull(singleManga?.createdAt)
         assertNotNull(singleManga?.titles)
         assertEquals("Monster", singleManga?.titles?.en)
     }
