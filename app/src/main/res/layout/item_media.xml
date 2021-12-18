@@ -14,10 +14,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.google.android.material.card.MaterialCardView
+        <io.github.drumber.kitsune.ui.widget.MediaItemCard
             android:id="@+id/card_media"
-            android:layout_width="@dimen/media_item_width"
-            android:layout_height="@dimen/media_item_height"
+            android:layout_width="@dimen/media_item_width_large"
+            android:layout_height="@dimen/media_item_height_large"
             android:layout_margin="@dimen/media_item_margin"
             android:layout_gravity="center"
             android:clickable="true"
@@ -60,7 +60,7 @@
 
             </RelativeLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+        </io.github.drumber.kitsune.ui.widget.MediaItemCard>
 
     </FrameLayout>
 

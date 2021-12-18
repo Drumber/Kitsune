@@ -26,6 +26,7 @@ import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.data.model.MediaSelector
 import io.github.drumber.kitsune.data.model.MediaType
@@ -234,9 +235,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             val adapter = MediaRecyclerViewAdapter(CopyOnWriteArrayList(data), glide) { media ->
                 onFranchiseItemClicked(media)
             }
-            adapter.overrideWidth = resources.getDimensionPixelSize(R.dimen.media_item_width_small)
-            adapter.overrideHeight =
-                resources.getDimensionPixelSize(R.dimen.media_item_height_small)
+            adapter.overrideItemSize = MediaItemSize.SMALL
             binding.rvFranchise.adapter = adapter
         } else {
             val adapter = binding.rvFranchise.adapter as MediaRecyclerViewAdapter

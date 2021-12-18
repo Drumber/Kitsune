@@ -21,6 +21,7 @@ import io.github.drumber.kitsune.data.paging.RequestType
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.databinding.FragmentMainBinding
 import io.github.drumber.kitsune.databinding.SectionMainExploreBinding
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.widget.ExploreSection
 import io.github.drumber.kitsune.util.extensions.navigateSafe
@@ -100,6 +101,7 @@ class MainFragment : Fragment(R.layout.fragment_main), OnItemClickListener<Media
         sectionBinding.apply {
             rvMedia.isVisible = false
             layoutLoading.apply {
+                root.layoutParams.height = resources.getDimensionPixelSize(KitsunePref.mediaItemSize.heightRes)
                 tvError.isVisible = false
                 btnRetry.isVisible = false
                 root.isVisible = true

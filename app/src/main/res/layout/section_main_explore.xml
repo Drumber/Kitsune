@@ -53,12 +53,13 @@
             android:nestedScrollingEnabled="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_media" />
-
+        
         <include
             android:id="@+id/layout_loading"
             layout="@layout/layout_resource_loading"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/media_item_height"
+            android:layout_height="wrap_content"
+            tools:layout_height="@dimen/media_item_height_large"
             android:layout_gravity="center"
             android:visibility="gone"
             tools:visibility="visible" />

@@ -43,7 +43,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                     android:text="@string/preference_app_theme" />
 
                 <LinearLayout
@@ -121,13 +121,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="10dp"
                     android:background="?android:attr/listDivider" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                     android:text="@string/preference_dark_mode" />
 
                 <RadioGroup
@@ -135,6 +135,45 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <!-- Populated in code -->
+                </RadioGroup>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="?android:attr/listDivider" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:text="@string/preference_media_item_size" />
+
+                <RadioGroup
+                    android:id="@+id/radio_group_media_item_size"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RadioButton
+                        android:id="@+id/rbtn_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.AppCompat.CompoundButton.RadioButton"
+                        android:text="@string/option_small" />
+
+                    <RadioButton
+                        android:id="@+id/rbtn_medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/option_medium" />
+
+                    <RadioButton
+                        android:id="@+id/rbtn_large"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/option_large" />
+
                 </RadioGroup>
 
             </LinearLayout>

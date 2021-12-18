@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.preference
 
 import androidx.appcompat.app.AppCompatDelegate
 import com.chibatching.kotpref.KotprefModel
+import com.chibatching.kotpref.enumpref.enumOrdinalPref
 import com.chibatching.kotpref.enumpref.enumValuePref
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.constants.Defaults
+import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.data.model.SearchParams
 import io.github.drumber.kitsune.data.model.TitlesPref
 import io.github.drumber.kitsune.data.model.category.CategoryPrefWrapper
@@ -32,6 +34,8 @@ object KitsunePref : KotprefModel(), KoinComponent {
         AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM.toString(),
         key = R.string.preference_key_dark_mode
     )
+
+    var mediaItemSize by enumOrdinalPref(MediaItemSize.LARGE)
 
 
     private var searchParamsJson by stringPref(Defaults.DEFAULT_SEARCH_PARAMS.toJsonString())

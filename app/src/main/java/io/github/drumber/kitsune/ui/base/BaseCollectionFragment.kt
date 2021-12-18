@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.widget.LoadStateSpanSizeLookup
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
@@ -46,7 +47,7 @@ abstract class BaseCollectionFragment(@LayoutRes contentLayoutId: Int) :
             if (isAdded) {
                 // calculate span count in relation to the recycler view width
                 val width = recyclerView.width
-                val cellWidth = resources.getDimension(R.dimen.media_item_width) +
+                val cellWidth = resources.getDimension(KitsunePref.mediaItemSize.widthRes) +
                         2 * resources.getDimension(R.dimen.media_item_margin)
                 val spanCount = floor(width / cellWidth).toInt()
                 gridLayout.spanCount = max(2, spanCount) // set new span count with minimum 2 columns

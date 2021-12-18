@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
 import io.github.drumber.kitsune.GlideRequests
+import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
 import java.util.concurrent.CopyOnWriteArrayList
@@ -15,8 +16,7 @@ class MediaRecyclerViewAdapter(
     private val listener: OnItemClickListener<MediaAdapter>? = null
 ) : RecyclerView.Adapter<MediaViewHolder>() {
 
-    var overrideWidth: Int? = null
-    var overrideHeight: Int? = null
+    var overrideItemSize: MediaItemSize? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaViewHolder {
         val binding = ItemMediaBinding.inflate(
@@ -26,10 +26,7 @@ class MediaRecyclerViewAdapter(
         )
         binding.apply {
             contentWrapper.layoutParams.width = FrameLayout.LayoutParams.WRAP_CONTENT
-            cardMedia.layoutParams.apply {
-                overrideWidth?.let { width = it }
-                overrideHeight?.let { height = it }
-            }
+            overrideItemSize?.let { cardMedia.setCustomItemSize(it) }
         }
         return MediaViewHolder(
             binding,

@@ -8,8 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.chibatching.kotpref.livedata.asLiveData
+import com.google.android.material.radiobutton.MaterialRadioButton
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.AppTheme
+import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.databinding.FragmentThemePreferenceBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
@@ -44,6 +46,7 @@ class ThemePreferenceFragment : Fragment(R.layout.fragment_theme_preference) {
         }
 
         initDarkModeRadioGroup()
+        initMediaItemSizeRadioGroup()
     }
 
     private fun initDarkModeRadioGroup() {
@@ -52,7 +55,7 @@ class ThemePreferenceFragment : Fragment(R.layout.fragment_theme_preference) {
         val currentValueIndex = darkModeValues.indexOfFirst { it == KitsunePref.darkMode }
 
         darkModeStrings.forEachIndexed { index, string ->
-            val radioBtn = RadioButton(requireContext())
+            val radioBtn = MaterialRadioButton(requireContext())
             radioBtn.apply {
                 text = string
 
@@ -67,6 +70,17 @@ class ThemePreferenceFragment : Fragment(R.layout.fragment_theme_preference) {
             binding.radioGroupDarkMode.addView(radioBtn)
         }
         (binding.radioGroupDarkMode.getChildAt(currentValueIndex) as RadioButton).isChecked = true
+    }
+
+    private fun initMediaItemSizeRadioGroup() {
+        binding.radioGroupMediaItemSize.apply {
+            (getChildAt(KitsunePref.mediaItemSize.ordinal) as RadioButton).isChecked = true
+            setOnCheckedChangeListener { _, checkedId ->
+                val selectedIndex = indexOfChild(findViewById(checkedId))
+                val selectedSize = MediaItemSize.values()[selectedIndex]
+                KitsunePref.mediaItemSize = selectedSize
+            }
+        }
     }
 
 }
