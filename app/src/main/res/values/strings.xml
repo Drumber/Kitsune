@@ -114,10 +114,14 @@
     <string name="season_fall">Fall</string>
 
     <string name="section_trending">Trending This Week</string>
-    <string name="section_top_airing">Top Airing Anime</string>
-    <string name="section_top_upcoming">Top Upcoming Anime</string>
-    <string name="section_highest_rated">Highest Rated Anime</string>
-    <string name="section_most_popular">Most Popular Anime</string>
+    <string name="section_top_airing_anime">Top Airing Anime</string>
+    <string name="section_top_upcoming_anime">Top Upcoming Anime</string>
+    <string name="section_highest_rated_anime">Highest Rated Anime</string>
+    <string name="section_most_popular_anime">Most Popular Anime</string>
+    <string name="section_top_airing_manga">Top Publishing Manga</string>
+    <string name="section_top_upcoming_manga">Top Upcoming Manga</string>
+    <string name="section_highest_rated_manga">Highest Rated Manga</string>
+    <string name="section_most_popular_manga">Most Popular Manga</string>
 
     <string name="preference_category_ui">User Interface</string>
     <string name="preference_category_account">Account</string>

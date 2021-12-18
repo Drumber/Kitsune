@@ -43,16 +43,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_media"
+        <io.github.drumber.kitsune.ui.widget.NestedScrollableHost
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="10dp"
-            android:clipToPadding="false"
-            android:orientation="horizontal"
-            android:nestedScrollingEnabled="false"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_media" />
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_media"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_media" />
+
+        </io.github.drumber.kitsune.ui.widget.NestedScrollableHost>
 
         <include
             android:id="@+id/layout_loading"
