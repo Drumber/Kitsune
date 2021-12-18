@@ -4,8 +4,8 @@
     <dimen name="media_item_width_small">106dp</dimen>
     <dimen name="media_item_height_small">150dp</dimen>
 
-    <dimen name="media_item_width_medium">148dp</dimen>
-    <dimen name="media_item_height_medium">210dp</dimen>
+    <dimen name="media_item_width_medium">141dp</dimen>
+    <dimen name="media_item_height_medium">200dp</dimen>
 
     <dimen name="media_item_width_large">169dp</dimen>
     <dimen name="media_item_height_large">240dp</dimen>

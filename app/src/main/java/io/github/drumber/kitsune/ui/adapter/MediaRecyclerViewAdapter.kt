@@ -27,6 +27,7 @@ class MediaRecyclerViewAdapter(
         binding.apply {
             contentWrapper.layoutParams.width = FrameLayout.LayoutParams.WRAP_CONTENT
             overrideItemSize?.let { cardMedia.setCustomItemSize(it) }
+            cardMedia.isInGridLayout = false
         }
         return MediaViewHolder(
             binding,

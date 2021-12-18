@@ -18,8 +18,11 @@ sealed class MediaPagingAdapter<T : BaseMedia>(
 ) : PagingDataAdapter<T, MediaViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaViewHolder {
+        val binding = ItemMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        binding.cardMedia.isInGridLayout = true
+
         return MediaViewHolder(
-            ItemMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            binding,
             glide
         ) { position ->
             getItem(position)?.let { item -> listener?.onItemClick(item) }

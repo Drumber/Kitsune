@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import io.github.drumber.kitsune.GlideRequests
 import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.databinding.SectionMainExploreBinding
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import java.util.concurrent.CopyOnWriteArrayList
@@ -32,6 +33,7 @@ class ExploreSection(
             glide,
             itemListener
         )
+        exploreAdapter.overrideItemSize = KitsunePref.mediaItemSize
 
         binding.apply {
             rvMedia.apply {
