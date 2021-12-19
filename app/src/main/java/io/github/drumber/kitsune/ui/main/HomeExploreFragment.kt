@@ -23,14 +23,14 @@ import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.widget.ExploreSection
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.network.ResponseData
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
     OnItemClickListener<MediaAdapter> {
 
     private val binding: FragmentHomeExploreBinding by viewBinding()
 
-    private val viewModel: MainFragmentViewModel by viewModel()
+    private val viewModel: MainFragmentViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
 
     companion object {
         const val BUNDLE_MEDIA_TYPE = "bundle_media_type"

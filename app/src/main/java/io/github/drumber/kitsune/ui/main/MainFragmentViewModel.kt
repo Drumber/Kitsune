@@ -9,59 +9,69 @@ import io.github.drumber.kitsune.data.service.anime.AnimeService
 import io.github.drumber.kitsune.data.service.manga.MangaService
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logE
+import io.github.drumber.kitsune.util.logV
 import io.github.drumber.kitsune.util.network.ResponseData
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlin.collections.set
 
 class MainFragmentViewModel(
     private val animeService: AnimeService,
     private val mangaService: MangaService
 ) : ViewModel() {
 
-    private val animeReload = MutableLiveData(false)
-    private val mangaReload = MutableLiveData(false)
+    private val animeReload = MutableLiveData(Any())
+    private val mangaReload = MutableLiveData(Any())
+
+    // Contains a boolean value for each explore section type which represents
+    // whether the entry is reloading from network or not.
+    private var animeReloadMap = mutableMapOf<String, Boolean>()
+    private var mangaReloadMap = mutableMapOf<String, Boolean>()
+
+    var reloadFinishedListener: (() -> Unit)? = null
 
     private val animeExploreSections = mutableMapOf(
         // trending
-        TRENDING to createLiveData(animeReload) {
+        createAnimeExploreEntry(TRENDING) {
             animeService.trending(Filter().limit(10).options).get()
         },
         // top airing
-        TOP_AIRING to createLiveData(animeReload) {
+        createAnimeExploreEntry(TOP_AIRING) {
             animeService.allAnime(FILTER_TOP_AIRING.options).get()
         },
         // top upcoming
-        TOP_UPCOMING to createLiveData(animeReload) {
+        createAnimeExploreEntry(TOP_UPCOMING) {
             animeService.allAnime(FILTER_TOP_UPCOMING.options).get()
         },
         // highest rated
-        HIGHEST_RATED to createLiveData(animeReload) {
+        createAnimeExploreEntry(HIGHEST_RATED) {
             animeService.allAnime(FILTER_HIGHEST_RATED.options).get()
         },
         // most popular
-        MOST_POPULAR to createLiveData(animeReload) {
+        createAnimeExploreEntry(MOST_POPULAR) {
             animeService.allAnime(FILTER_MOST_POPULAR.options).get()
         }
     )
 
     private val mangaExploreSections = mutableMapOf(
         // trending
-        TRENDING to createLiveData(mangaReload) {
+        createMangaExploreEntry(TRENDING) {
             mangaService.trending(Filter().limit(10).options).get()
         },
         // top airing
-        TOP_AIRING to createLiveData(mangaReload) {
+        createMangaExploreEntry(TOP_AIRING) {
             mangaService.allManga(FILTER_TOP_AIRING.options).get()
         },
         // top upcoming
-        TOP_UPCOMING to createLiveData(mangaReload) {
+        createMangaExploreEntry(TOP_UPCOMING) {
             mangaService.allManga(FILTER_TOP_UPCOMING.options).get()
         },
         // highest rated
-        HIGHEST_RATED to createLiveData(mangaReload) {
+        createMangaExploreEntry(HIGHEST_RATED) {
             mangaService.allManga(FILTER_HIGHEST_RATED.options).get()
         },
         // most popular
-        MOST_POPULAR to createLiveData(mangaReload) {
+        createMangaExploreEntry(MOST_POPULAR) {
             mangaService.allManga(FILTER_MOST_POPULAR.options).get()
         }
     )
@@ -72,13 +82,60 @@ class MainFragmentViewModel(
     fun getMangaExploreLiveData(type: String) = mangaExploreSections[type]
         ?: throw IllegalArgumentException("There is no manga live data for type ''$type.")
 
-    private fun <T> createLiveData(reloadLiveData: LiveData<*>, call: suspend () -> List<T>?) =
-        Transformations.switchMap(reloadLiveData) {
+    fun refreshAnimeData() {
+        if (!animeReloadMap.containsValue(true)) {
+            animeReload.postValue(Any())
+        }
+    }
+
+    fun refreshMangaData() {
+        if (!mangaReloadMap.containsValue(true)) {
+            mangaReload.postValue(Any())
+        }
+    }
+
+    private fun <T> createAnimeExploreEntry(key: String, call: suspend () -> List<T>?) = Pair(
+        key,
+        Transformations.switchMap(animeReload) {
             liveData(Dispatchers.IO) {
+                animeReloadMap[key] = true
                 val responseData = processCall(call)
+                emit(responseData)
+                animeReloadMap[key] = false
+                onEntryReloadFinished()
+            }
+        }
+    ).also { animeReloadMap[key] = false }
+
+    private fun <T> createMangaExploreEntry(key: String, call: suspend () -> List<T>?) = Pair(
+        key,
+        Transformations.switchMap(mangaReload) {
+            liveData(Dispatchers.IO) {
+                mangaReloadMap[key] = true
+                val responseData = processCall(call)
+                mangaReloadMap[key] = false
+                onEntryReloadFinished()
                 emit(responseData)
             }
         }
+    ).also { mangaReloadMap[key] = false }
+
+    private fun onEntryReloadFinished() {
+        logV("isSomeEntryReloading: ${isSomeEntryReloading()} " +
+                "Remaining: " +
+                "Anime: " + animeReloadMap.count { it.value } +
+                " Manga: " + mangaReloadMap.count { it.value }
+        )
+        if (!isSomeEntryReloading()) {
+            viewModelScope.launch(Dispatchers.Main) {
+                reloadFinishedListener?.invoke()
+            }
+        }
+    }
+
+    fun isSomeEntryReloading(): Boolean {
+        return animeReloadMap.containsValue(true) || mangaReloadMap.containsValue(true)
+    }
 
     private suspend fun <T> processCall(call: suspend () -> List<T>?): ResponseData<List<T>> {
         return try {

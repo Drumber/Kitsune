@@ -11,10 +11,13 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentMainBinding
 import io.github.drumber.kitsune.util.extensions.recyclerView
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
+import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemReselectedListener {
 
     private val binding: FragmentMainBinding by viewBinding()
+
+    private val viewModel: MainFragmentViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -26,7 +29,7 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
             right = true,
             consume = false
         )
-        binding.nsvContent.initMarginWindowInsetsListener(
+        binding.swipeRefreshLayout.initMarginWindowInsetsListener(
             left = true,
             right = true,
             consume = false
@@ -49,6 +52,21 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
                 }
             }
         }.attach()
+
+        binding.swipeRefreshLayout.apply {
+            isRefreshing = isRefreshing && viewModel.isSomeEntryReloading()
+
+            setOnRefreshListener {
+                when (binding.viewPagerExplore.currentItem) {
+                    0 -> viewModel.refreshAnimeData()
+                    1 -> viewModel.refreshMangaData()
+                }
+            }
+
+            viewModel.reloadFinishedListener = {
+                isRefreshing = false
+            }
+        }
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
@@ -58,6 +76,7 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
 
     override fun onDestroyView() {
         binding.viewPagerExplore.adapter = null
+        viewModel.reloadFinishedListener = null
         super.onDestroyView()
     }
 
