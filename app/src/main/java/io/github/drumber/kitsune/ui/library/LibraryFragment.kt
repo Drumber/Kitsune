@@ -49,15 +49,25 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
         binding.apply {
             toolbar.initWindowInsetsListener(consume = false)
-            rvLibraryEntries.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
-            layoutNotLoggedIn.initPaddingWindowInsetsListener(left = true, top = true, right = true, consume = false)
+            swipeRefreshLayout.initPaddingWindowInsetsListener(
+                left = true,
+                right = true,
+                consume = false
+            )
+            layoutNotLoggedIn.initPaddingWindowInsetsListener(
+                left = true,
+                top = true,
+                right = true,
+                consume = false
+            )
 
             btnLogin.setOnClickListener {
                 val intent = Intent(requireActivity(), AuthenticationActivity::class.java)
                 startActivity(intent)
             }
         }
-        val initialToolbarScrollFlags = (binding.toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags
+        val initialToolbarScrollFlags =
+            (binding.toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags
 
         viewModel.userRepository.userLiveData.observe(viewLifecycleOwner) { user ->
             val isLoggedIn = user != null
@@ -95,11 +105,13 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
     private fun initFilterChips() {
         viewModel.filter.observe(viewLifecycleOwner) { filter ->
-            binding.chipMediaKind.setText(when (filter.kind) {
-                LibraryEntryKind.Anime -> R.string.anime
-                LibraryEntryKind.Manga -> R.string.manga
-                else -> R.string.library_kind_all
-            })
+            binding.chipMediaKind.setText(
+                when (filter.kind) {
+                    LibraryEntryKind.Anime -> R.string.anime
+                    LibraryEntryKind.Manga -> R.string.manga
+                    else -> R.string.library_kind_all
+                }
+            )
 
             filter.libraryStatus.apply {
                 binding.apply {
@@ -141,7 +153,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.title_media_type)
             .setSingleChoiceItems(items, prevSelected) { dialog, which ->
-                if(which != prevSelected) {
+                if (which != prevSelected) {
                     val kind = LibraryEntryKind.values()[which]
                     viewModel.setLibraryEntryKind(kind)
                 }
@@ -155,8 +167,9 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         val adapter = LibraryEntriesAdapter(glide, this)
 
         adapter.addLoadStateListener { state ->
-            if(view?.parent != null) {
-                val isNotLoading = state.mediator?.refresh is LoadState.NotLoading || state.source.refresh is LoadState.NotLoading
+            if (view?.parent != null) {
+                val isNotLoading =
+                    state.mediator?.refresh is LoadState.NotLoading || state.source.refresh is LoadState.NotLoading
                 binding.apply {
                     rvLibraryEntries.isVisible = isNotLoading
                     layoutLoading.apply {
@@ -176,6 +189,9 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
                             tvNoData.isVisible = false
                         }
                     }
+
+                    swipeRefreshLayout.isRefreshing =
+                        swipeRefreshLayout.isRefreshing && state.source.refresh is LoadState.Loading
                 }
             }
         }
@@ -186,6 +202,10 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
                 footer = ResourceLoadStateAdapter(adapter)
             )
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        }
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            adapter.refresh()
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
@@ -199,7 +219,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         val media = item.anime ?: item.manga
         if (media != null) {
             val mediaAdapter = MediaAdapter.fromMedia(media)
-            val action = LibraryFragmentDirections.actionLibraryFragmentToDetailsFragment(mediaAdapter)
+            val action =
+                LibraryFragmentDirections.actionLibraryFragmentToDetailsFragment(mediaAdapter)
             findNavController().navigateSafe(R.id.library_fragment, action)
         }
     }

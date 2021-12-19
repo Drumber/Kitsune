@@ -24,13 +24,13 @@ class LibraryEntriesRemoteMediator(
     private val libraryEntryDao = database.libraryEntryDao()
     private val remoteKeyDao = database.remoteKeys()
 
-    override suspend fun load(loadType: LoadType, state: PagingState<Int, LibraryEntry>): MediatorResult {
+    override suspend fun load(
+        loadType: LoadType,
+        state: PagingState<Int, LibraryEntry>
+    ): MediatorResult {
         return try {
             val pageOffset = when (loadType) {
-                LoadType.REFRESH -> {
-                    val remoteKey = getRemoteKeyClosestToCurrentPosition(state)
-                    remoteKey?.nextPageKey?.minus(1) ?: Kitsu.DEFAULT_PAGE_OFFSET
-                }
+                LoadType.REFRESH -> Kitsu.DEFAULT_PAGE_OFFSET // we always want to refresh from first page
                 LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
                 LoadType.APPEND -> {
                     val remoteKey = getRemoteKeyForLastItem(state)
@@ -38,17 +38,21 @@ class LibraryEntriesRemoteMediator(
                     if (remoteKey == null) {
                         state.config.pageSize
                     } else {
-                        remoteKey.nextPageKey ?: return MediatorResult.Success(endOfPaginationReached = true)
+                        remoteKey.nextPageKey ?: return MediatorResult.Success(
+                            endOfPaginationReached = true
+                        )
                     }
                 }
             }
 
-            val response = service.allLibraryEntries(filter.buildFilter().pageOffset(pageOffset).options)
+            val response = service.allLibraryEntries(
+                filter.buildFilter().pageOffset(pageOffset).options
+            )
             val page = response.links?.toPage()
             val endReached = page?.next == null
 
             database.withTransaction {
-                if(loadType == LoadType.REFRESH) {
+                if (loadType == LoadType.REFRESH) {
                     libraryEntryDao.clearLibraryEntries()
                     remoteKeyDao.clearRemoteKeys(RemoteKeyType.LibraryEntry)
                 }
@@ -73,16 +77,6 @@ class LibraryEntriesRemoteMediator(
         return state.lastItemOrNull()?.let { libraryEntry ->
             database.withTransaction {
                 remoteKeyDao.remoteKeyByResourceId(libraryEntry.id, RemoteKeyType.LibraryEntry)
-            }
-        }
-    }
-
-    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, LibraryEntry>): RemoteKey? {
-        return state.anchorPosition?.let { position ->
-            state.closestItemToPosition(position)?.id?.let { id ->
-                database.withTransaction {
-                    remoteKeyDao.remoteKeyByResourceId(id, RemoteKeyType.LibraryEntry)
-                }
             }
         }
     }
