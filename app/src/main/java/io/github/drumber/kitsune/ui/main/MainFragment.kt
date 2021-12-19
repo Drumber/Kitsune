@@ -11,7 +11,6 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentMainBinding
 import io.github.drumber.kitsune.util.extensions.recyclerView
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
-import io.github.drumber.kitsune.util.initWindowInsetsListener
 
 class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemReselectedListener {
 
@@ -21,7 +20,12 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
         super.onViewCreated(view, savedInstanceState)
         initExploreViewPager()
 
-        binding.toolbar.initWindowInsetsListener(false)
+        binding.tabLayoutExplore.initMarginWindowInsetsListener(
+            left = true,
+            top = true,
+            right = true,
+            consume = false
+        )
         binding.nsvContent.initMarginWindowInsetsListener(
             left = true,
             right = true,
