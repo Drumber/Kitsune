@@ -4,8 +4,11 @@ import android.content.res.Resources
 import android.view.View
 import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
+import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,6 +25,13 @@ fun Throwable.showErrorSnackback(view: View): Snackbar {
     snackbar.view.initMarginWindowInsetsListener(left = true, right = true)
     snackbar.show()
     return snackbar
+}
+
+fun SwipeRefreshLayout.setAppTheme() {
+    setProgressBackgroundColorSchemeColor(
+        ElevationOverlayProvider(context).compositeOverlayWithThemeSurfaceColorIfNeeded(8.0f)
+    )
+    setColorSchemeColors(context.theme.getColor(R.attr.colorPrimary))
 }
 
 fun String.toDate(format: String = "yyyy-MM-dd"): Calendar {

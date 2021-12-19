@@ -30,6 +30,7 @@ import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.showErrorSnackback
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
@@ -204,8 +205,11 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         }
 
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            adapter.refresh()
+        binding.swipeRefreshLayout.apply {
+            setAppTheme()
+            setOnRefreshListener {
+                adapter.refresh()
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {

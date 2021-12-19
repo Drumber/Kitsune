@@ -10,6 +10,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentMainBinding
 import io.github.drumber.kitsune.util.extensions.recyclerView
+import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import org.koin.androidx.navigation.koinNavGraphViewModel
 
@@ -54,6 +55,7 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
         }.attach()
 
         binding.swipeRefreshLayout.apply {
+            setAppTheme()
             isRefreshing = isRefreshing && viewModel.isSomeEntryReloading()
 
             setOnRefreshListener {
