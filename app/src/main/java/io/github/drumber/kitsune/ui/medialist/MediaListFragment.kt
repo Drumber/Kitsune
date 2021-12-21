@@ -53,8 +53,12 @@ class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) 
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        super.onNavigationItemReselected(item)
-        binding.appBarLayout.setExpanded(true)
+        if (recyclerView.canScrollVertically(-1)) {
+            binding.appBarLayout.setExpanded(true)
+            super.onNavigationItemReselected(item)
+        } else {
+            findNavController().navigateUp()
+        }
     }
 
 }

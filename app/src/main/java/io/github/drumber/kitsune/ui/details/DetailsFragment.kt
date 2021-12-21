@@ -371,7 +371,12 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        goBack()
+        if (binding.nsvContent.canScrollVertically(-1)) {
+            binding.nsvContent.smoothScrollTo(0, 0)
+            binding.appBarLayout.setExpanded(true)
+        } else {
+            goBack()
+        }
     }
 
     override fun onPause() {

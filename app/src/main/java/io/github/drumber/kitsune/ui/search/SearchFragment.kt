@@ -295,8 +295,12 @@ class SearchFragment : MediaCollectionFragment(R.layout.fragment_search) {
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        super.onNavigationItemReselected(item)
         binding.appBarLayout.setExpanded(true)
+        if (recyclerView.canScrollVertically(-1)) {
+            super.onNavigationItemReselected(item)
+        } else {
+            binding.searchView.expand()
+        }
     }
 
 }
