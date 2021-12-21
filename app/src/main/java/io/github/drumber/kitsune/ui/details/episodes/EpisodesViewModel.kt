@@ -5,6 +5,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.manager.LibraryManager
+import io.github.drumber.kitsune.data.manager.ResponseCallback
 import io.github.drumber.kitsune.data.model.media.Anime
 import io.github.drumber.kitsune.data.model.media.BaseMedia
 import io.github.drumber.kitsune.data.model.media.Manga
@@ -26,7 +27,7 @@ class EpisodesViewModel(
     private val libraryManager: LibraryManager
 ) : ViewModel() {
 
-    var errorListener: ((Throwable) -> Unit)? = null
+    var responseListener: (ResponseCallback)? = null
 
     private val media = MutableLiveData<BaseMedia>()
 
@@ -79,8 +80,8 @@ class EpisodesViewModel(
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            libraryManager.updateProgress(oldLibraryEntry, progress) { e: Exception ->
-                errorListener?.invoke(e)
+            libraryManager.updateProgress(oldLibraryEntry, progress) {
+                responseListener?.invoke(it)
             }
         }
     }

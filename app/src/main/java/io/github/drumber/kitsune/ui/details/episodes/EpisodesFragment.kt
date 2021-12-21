@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.manager.LibraryUpdateResponse
 import io.github.drumber.kitsune.data.model.media.Anime
 import io.github.drumber.kitsune.data.model.media.Manga
 import io.github.drumber.kitsune.data.model.media.MediaAdapter
@@ -57,8 +58,10 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
             setNavigationOnClickListener { findNavController().navigateUp() }
         }
 
-        viewModel.errorListener = { e ->
-            e.showErrorSnackback(binding.rvMedia)
+        viewModel.responseListener = { response ->
+            if (response is LibraryUpdateResponse.Error) {
+                response.exception.showErrorSnackback(binding.rvMedia)
+            }
         }
 
         val resourceAdapter = MediaAdapter.fromMedia(args.media)
@@ -107,7 +110,7 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.errorListener = null
+        viewModel.responseListener = null
     }
 
 }

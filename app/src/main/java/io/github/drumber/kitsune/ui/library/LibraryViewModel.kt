@@ -5,6 +5,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.manager.LibraryManager
+import io.github.drumber.kitsune.data.manager.ResponseCallback
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.model.library.LibraryEntryFilter
 import io.github.drumber.kitsune.data.model.library.LibraryEntryKind
@@ -68,7 +69,7 @@ class LibraryViewModel(
         filter.value = LibraryEntryFilter(KitsunePref.libraryEntryKind, status)
     }
 
-    var responseErrorListener: ((Throwable) -> Unit)? = null
+    var responseListener: (ResponseCallback)? = null
 
     fun markEpisodeWatched(libraryEntry: LibraryEntry) {
         val newProgress = libraryEntry.progress?.plus(1)
@@ -84,7 +85,7 @@ class LibraryViewModel(
     private fun updateLibraryProgress(oldEntry: LibraryEntry, newProgress: Int?) {
         viewModelScope.launch(Dispatchers.IO) {
             libraryManager.updateProgress(oldEntry, newProgress) {
-                responseErrorListener?.invoke(it)
+                responseListener?.invoke(it)
             }
         }
     }
@@ -97,7 +98,7 @@ class LibraryViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             libraryManager.updateRating(oldEntry, rating) {
-                responseErrorListener?.invoke(it)
+                responseListener?.invoke(it)
             }
         }
     }

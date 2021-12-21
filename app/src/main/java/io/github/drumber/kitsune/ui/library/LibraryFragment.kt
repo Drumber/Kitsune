@@ -19,6 +19,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.manager.LibraryUpdateResponse
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.model.library.LibraryEntryKind
 import io.github.drumber.kitsune.data.model.library.Status
@@ -85,8 +86,10 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             }
         }
 
-        viewModel.responseErrorListener = { error ->
-            error.showErrorSnackback(binding.rvLibraryEntries)
+        viewModel.responseListener = { response ->
+            if (response is LibraryUpdateResponse.Error) {
+                response.exception.showErrorSnackback(binding.rvLibraryEntries)
+            }
         }
 
         setFragmentResultListener(RatingBottomSheet.RATING_REQUEST_KEY) { _, bundle ->
@@ -255,7 +258,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
     }
 
     override fun onDestroyView() {
-        viewModel.responseErrorListener = null
+        viewModel.responseListener = null
         super.onDestroyView()
     }
 

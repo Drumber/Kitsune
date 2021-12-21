@@ -8,6 +8,7 @@ import io.github.drumber.kitsune.data.model.library.toOfflineLibraryUpdate
 import io.github.drumber.kitsune.data.room.ResourceDatabase
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.exception.ReceivedDataException
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
@@ -21,10 +22,13 @@ class LibraryManager(
     private val libraryEntryDao = database.libraryEntryDao()
     private val offlineLibraryUpdateDao = database.offlineLibraryEntryDao()
 
+    private val isOfflineCacheEnabled
+        get() = KitsunePref.libraryOfflineSync
+
     suspend fun updateProgress(
         oldEntry: LibraryEntry,
         newProgress: Int?,
-        errorCallback: (e: Exception) -> Unit
+        responseCallback: ResponseCallback
     ) {
         val offlineEntry = offlineLibraryUpdateDao.getOfflineLibraryUpdate(oldEntry.id)
 
@@ -57,12 +61,16 @@ class LibraryManager(
                         offlineLibraryUpdateDao.deleteOfflineLibraryUpdate(offlineEntry)
                     }
                 }
+
+                responseCallback.invoke(LibraryUpdateResponse.SyncedOnline)
             } ?: throw ReceivedDataException("Received data for updated progress is 'null'.")
         } catch (e: Exception) {
             logE("Failed to update library entry progress.", e)
-            updateOfflineLibraryEntry(offlineEntry, updatedEntry)
-            withContext(Dispatchers.Main) {
-                errorCallback.invoke(e)
+            if (isOfflineCacheEnabled) {
+                updateOfflineLibraryEntry(offlineEntry, updatedEntry)
+                responseCallback.call(LibraryUpdateResponse.OfflineCache)
+            } else {
+                responseCallback.call(LibraryUpdateResponse.Error(e))
             }
         }
     }
@@ -71,10 +79,14 @@ class LibraryManager(
     suspend fun updateRating(
         oldEntry: LibraryEntry,
         rating: Int?,
-        errorCallback: (e: Exception) -> Unit
+        responseCallback: ResponseCallback
     ) {
         if (rating != null && rating !in 2..20) {
-            errorCallback.invoke(IllegalArgumentException("Rating must be in range 2..20."))
+            responseCallback.call(
+                LibraryUpdateResponse.Error(
+                    IllegalArgumentException("Rating must be in range 2..20.")
+                )
+            )
             return
         }
 
@@ -110,9 +122,11 @@ class LibraryManager(
             } ?: throw ReceivedDataException("Received data for updated rating is 'null'.")
         } catch (e: Exception) {
             logE("Failed to update library entry rating.", e)
-            updateOfflineLibraryEntry(offlineEntry, updatedEntry)
-            withContext(Dispatchers.Main) {
-                errorCallback.invoke(e)
+            if (isOfflineCacheEnabled) {
+                updateOfflineLibraryEntry(offlineEntry, updatedEntry)
+                responseCallback.call(LibraryUpdateResponse.OfflineCache)
+            } else {
+                responseCallback.call(LibraryUpdateResponse.Error(e))
             }
         }
     }
@@ -133,4 +147,12 @@ class LibraryManager(
         }
     }
 
+    private suspend fun ResponseCallback.call(response: LibraryUpdateResponse) {
+        withContext(Dispatchers.Main) {
+            this@call.invoke(response)
+        }
+    }
+
 }
+
+typealias ResponseCallback = (LibraryUpdateResponse) -> Unit
