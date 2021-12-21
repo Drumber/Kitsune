@@ -1,38 +1,29 @@
 package io.github.drumber.kitsune.ui.library
 
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.data.manager.LibraryManager
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.model.library.LibraryEntryFilter
 import io.github.drumber.kitsune.data.model.library.LibraryEntryKind
 import io.github.drumber.kitsune.data.model.library.Status
 import io.github.drumber.kitsune.data.repository.LibraryEntriesRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
-import io.github.drumber.kitsune.data.room.LibraryEntryDao
 import io.github.drumber.kitsune.data.service.Filter
-import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.base.BaseLibraryViewModel
-import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class LibraryViewModel(
     val userRepository: UserRepository,
     private val libraryEntriesRepository: LibraryEntriesRepository,
-    libraryEntriesService: LibraryEntriesService,
-    libraryEntryDao: LibraryEntryDao
-) : BaseLibraryViewModel(libraryEntriesService, libraryEntryDao) {
+    private val libraryManager: LibraryManager
+) : ViewModel() {
 
     val filter = MutableLiveData(
         LibraryEntryFilter(
@@ -91,8 +82,10 @@ class LibraryViewModel(
     }
 
     private fun updateLibraryProgress(oldEntry: LibraryEntry, newProgress: Int?) {
-        super.updateLibraryProgress(oldEntry, newProgress) { e: Exception ->
-            responseErrorListener?.invoke(e)
+        viewModelScope.launch(Dispatchers.IO) {
+            libraryManager.updateProgress(oldEntry, newProgress) {
+                responseErrorListener?.invoke(it)
+            }
         }
     }
 
@@ -100,41 +93,11 @@ class LibraryViewModel(
     var lastRatedLibraryEntry: LibraryEntry? = null
 
     fun updateRating(rating: Int?) {
-        if (rating != null && rating !in 2..20) {
-            responseErrorListener?.invoke(IllegalArgumentException("Rating must be in range 2..20."))
-            return
-        }
-        val user = userRepository.user ?: return
-        val libraryEntry = lastRatedLibraryEntry ?: return
-
-        val updatedEntry = LibraryEntry(
-            id = libraryEntry.id,
-            ratingTwenty = rating ?: -1, // '-1' will be mapped to 'null' by the json serializer
-            anime = libraryEntry.anime,
-            manga = libraryEntry.manga,
-            user = user
-        )
+        val oldEntry = lastRatedLibraryEntry ?: return
 
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val response = libraryEntriesService.updateLibraryEntry(
-                    libraryEntry.id,
-                    JSONAPIDocument(updatedEntry)
-                )
-
-                response.get()?.let { newEntry ->
-                    libraryEntryDao.updateLibraryEntry(
-                        newEntry.copy(
-                            anime = libraryEntry.anime,
-                            manga = libraryEntry.manga
-                        )
-                    )
-                }
-            } catch (e: Exception) {
-                logE("Failed to update rating.", e)
-                withContext(Dispatchers.Main) {
-                    responseErrorListener?.invoke(e)
-                }
+            libraryManager.updateRating(oldEntry, rating) {
+                responseErrorListener?.invoke(it)
             }
         }
     }

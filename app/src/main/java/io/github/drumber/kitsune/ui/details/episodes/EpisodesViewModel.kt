@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.data.manager.LibraryManager
 import io.github.drumber.kitsune.data.model.media.Anime
 import io.github.drumber.kitsune.data.model.media.BaseMedia
 import io.github.drumber.kitsune.data.model.media.Manga
@@ -12,17 +13,18 @@ import io.github.drumber.kitsune.data.repository.MediaUnitRepository
 import io.github.drumber.kitsune.data.room.LibraryEntryDao
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
-import io.github.drumber.kitsune.ui.base.BaseLibraryViewModel
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.launch
 
 class EpisodesViewModel(
     private val mediaUnitRepository: MediaUnitRepository,
     libraryEntriesService: LibraryEntriesService,
-    libraryEntryDao: LibraryEntryDao
-) : BaseLibraryViewModel(libraryEntriesService, libraryEntryDao) {
+    libraryEntryDao: LibraryEntryDao,
+    private val libraryManager: LibraryManager
+) : ViewModel() {
 
     var errorListener: ((Throwable) -> Unit)? = null
 
@@ -76,8 +78,10 @@ class EpisodesViewModel(
             number.minus(1).coerceAtLeast(0)
         }
 
-        updateLibraryProgress(oldLibraryEntry, progress) { e: Exception ->
-            errorListener?.invoke(e)
+        viewModelScope.launch(Dispatchers.IO) {
+            libraryManager.updateProgress(oldLibraryEntry, progress) { e: Exception ->
+                errorListener?.invoke(e)
+            }
         }
     }
 
