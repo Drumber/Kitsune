@@ -2,8 +2,11 @@ package io.github.drumber.kitsune.ui.library
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
@@ -14,6 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.badge.BadgeUtils
+import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
@@ -46,8 +52,16 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
     private val viewModel: LibraryViewModel by viewModel()
 
+    private var offlineLibraryUpdatesAmount = 0
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
 
         binding.apply {
             toolbar.initWindowInsetsListener(consume = false)
@@ -221,8 +235,10 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             }
         }
 
-        viewModel.offlineLibraryUpdateDao.getAllOfflineLibraryUpdates().observe(viewLifecycleOwner) {
+        viewModel.offlineLibraryUpdateDao.getAllOfflineLibraryUpdatesLiveData().observe(viewLifecycleOwner) {
             viewModel.invalidatePagingSource()
+            offlineLibraryUpdatesAmount = it.size
+            requireActivity().invalidateOptionsMenu()
         }
     }
 
@@ -254,6 +270,31 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         )
         sheetLibraryRating.arguments = bundle
         sheetLibraryRating.show(parentFragmentManager, RatingBottomSheet.TAG)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.library_menu, menu)
+        menu.findItem(R.id.menu_synchronize).isVisible = offlineLibraryUpdatesAmount > 0
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    @ExperimentalBadgeUtils
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        val badgeDrawable = BadgeDrawable.create(requireContext()).apply {
+            isVisible = offlineLibraryUpdatesAmount > 0
+            number = offlineLibraryUpdatesAmount
+        }
+        BadgeUtils.attachBadgeDrawable(badgeDrawable, binding.toolbar, R.id.menu_synchronize)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == R.id.menu_synchronize) {
+            viewModel.synchronizeOfflineLibraryUpdates()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {

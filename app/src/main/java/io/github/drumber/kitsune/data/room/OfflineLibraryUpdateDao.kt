@@ -8,7 +8,10 @@ import io.github.drumber.kitsune.data.model.library.OfflineLibraryUpdate
 interface OfflineLibraryUpdateDao {
 
     @Query("SELECT * FROM offline_library_update")
-    fun getAllOfflineLibraryUpdates(): LiveData<List<OfflineLibraryUpdate>>
+    fun getAllOfflineLibraryUpdatesLiveData(): LiveData<List<OfflineLibraryUpdate>>
+
+    @Query("SELECT * FROM offline_library_update")
+    fun getAllOfflineLibraryUpdates(): List<OfflineLibraryUpdate>
 
     @Query("SELECT * FROM offline_library_update WHERE id = :id")
     suspend fun getOfflineLibraryUpdate(id: String): OfflineLibraryUpdate?

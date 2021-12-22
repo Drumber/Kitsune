@@ -7,6 +7,7 @@ import io.github.drumber.kitsune.data.model.library.OfflineLibraryUpdate
 import io.github.drumber.kitsune.data.model.library.toOfflineLibraryUpdate
 import io.github.drumber.kitsune.data.room.ResourceDatabase
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
+import io.github.drumber.kitsune.exception.InvalidDataException
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.logD
@@ -24,6 +25,40 @@ class LibraryManager(
 
     private val isOfflineCacheEnabled
         get() = KitsunePref.libraryOfflineSync
+
+    suspend fun synchronizeLibrary(responseCallback: ResponseCallback) {
+        val offlineEntries = offlineLibraryUpdateDao.getAllOfflineLibraryUpdates()
+
+        offlineEntries.forEach { offlineLibraryEntry ->
+            val updatedEntry = offlineLibraryEntry.toLibraryEntry()
+
+            try {
+                val response = libraryEntriesService.updateLibraryEntry(
+                    updatedEntry.id,
+                    JSONAPIDocument(updatedEntry)
+                )
+
+                response.get()?.let { libraryEntry ->
+                    // delete old offline library update from database
+                    offlineLibraryUpdateDao.deleteOfflineLibraryUpdate(offlineLibraryEntry)
+
+                    // update library entry database, therefore we need the full library entry object
+                    database.libraryEntryDao().getLibraryEntry(libraryEntry.id)?.let { oldEntry ->
+                        libraryEntryDao.updateLibraryEntry(
+                            libraryEntry.copy(
+                                anime = oldEntry.anime,
+                                manga = oldEntry.manga
+                            )
+                        )
+                    } ?: throw InvalidDataException("Cannot update library database due to missing old library entity.")
+                } ?: throw ReceivedDataException("Received data for updated progress is 'null'.")
+            } catch (e: Exception) {
+                logE("Failed to synchronize library entry ${offlineLibraryEntry.id}", e)
+                responseCallback.call(LibraryUpdateResponse.Error(e))
+            }
+        }
+        responseCallback.call(LibraryUpdateResponse.SyncedOnline)
+    }
 
     suspend fun updateProgress(
         oldEntry: LibraryEntry,

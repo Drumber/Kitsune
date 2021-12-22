@@ -31,6 +31,9 @@ interface LibraryEntryDao {
     suspend fun getLibraryEntryFromMedia(mediaId: String): LibraryEntry?
 
     @Query("SELECT * FROM library_table WHERE id = :id")
+    fun getLibraryEntry(id: String): LibraryEntry?
+
+    @Query("SELECT * FROM library_table WHERE id = :id")
     fun getLibraryEntryAsLiveData(id: String): LiveData<LibraryEntry?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

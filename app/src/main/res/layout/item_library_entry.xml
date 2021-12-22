@@ -92,7 +92,7 @@
                     android:layout_height="wrap_content"
                     app:drawableLeftCompat="@drawable/ic_cloud_off_24"
                     android:drawablePadding="10dp"
-                    android:text="Not Synced"
+                    android:text="@string/library_not_synchronized"
                     android:visibility="gone"
                     tools:visibility="visible" />
 

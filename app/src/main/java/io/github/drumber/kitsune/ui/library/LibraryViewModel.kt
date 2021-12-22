@@ -27,6 +27,8 @@ class LibraryViewModel(
     val offlineLibraryUpdateDao: OfflineLibraryUpdateDao
 ) : ViewModel() {
 
+    var responseListener: (ResponseCallback)? = null
+
     val filter = MutableLiveData(
         LibraryEntryFilter(
             KitsunePref.libraryEntryKind,
@@ -82,7 +84,13 @@ class LibraryViewModel(
         filter.value = LibraryEntryFilter(KitsunePref.libraryEntryKind, status)
     }
 
-    var responseListener: (ResponseCallback)? = null
+    fun synchronizeOfflineLibraryUpdates() {
+        viewModelScope.launch(Dispatchers.IO) {
+            libraryManager.synchronizeLibrary {
+                responseListener?.invoke(it)
+            }
+        }
+    }
 
     fun markEpisodeWatched(libraryEntryWrapper: LibraryEntryWrapper) {
         val newProgress = libraryEntryWrapper.progress?.plus(1)

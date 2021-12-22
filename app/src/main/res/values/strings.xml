@@ -26,6 +26,7 @@
     <string name="action_share_profile_url">Share Profile</string>
     <string name="action_share">Share</string>
     <string name="action_dismiss">Dismiss</string>
+    <string name="action_synchronize">Synchronize</string>
 
     <string name="hint_search">Search</string>
     <string name="hint_mark_watched">Mark as watched.</string>
@@ -179,6 +180,7 @@
     <string name="library_not_logged_in_title">Log in to access your library</string>
     <string name="library_not_logged_in_text">Log in to your Kitsu Account to manage your library and get access to all features.</string>
     <string name="library_kind_all">All</string>
+    <string name="library_not_synchronized">Not Synced</string>
 
     <string name="info_log_in_required">Log in to access all features.</string>
     <string name="hint_rating">Rating</string>
