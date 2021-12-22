@@ -2,20 +2,21 @@ package io.github.drumber.kitsune.ui.adapter.paging
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import io.github.drumber.kitsune.GlideRequests
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.model.library.LibraryEntryAdapter
+import io.github.drumber.kitsune.data.model.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.databinding.ItemLibraryEntryBinding
 
 class LibraryEntriesAdapter(
     private val glide: GlideRequests,
     private val listener: LibraryEntryActionListener? = null
-) : PagingDataAdapter<LibraryEntry, LibraryEntriesAdapter.LibraryEntryViewHolder>(
+) : PagingDataAdapter<LibraryEntryWrapper, LibraryEntriesAdapter.LibraryEntryViewHolder>(
     LibraryEntryComparator
 ) {
 
@@ -62,32 +63,38 @@ class LibraryEntriesAdapter(
             }
         }
 
-        fun bind(entry: LibraryEntry) {
+        fun bind(entryWrapper: LibraryEntryWrapper) {
+            val entry = entryWrapper.libraryEntry
             val mediaAdapter = (entry.anime ?: entry.manga)?.let { MediaAdapter.fromMedia(it) }
             binding.apply {
-                this.entry = LibraryEntryAdapter(entry)
+                this.entry = LibraryEntryAdapter(entryWrapper)
                 data = mediaAdapter
             }
+
             glide.load(mediaAdapter?.posterImage)
                 .centerCrop()
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivThumbnail)
+
+            binding.tvNotSynced.isVisible = entryWrapper.offlineLibraryUpdate?.let { offlineEntry ->
+                 !offlineEntry.isEqualToLibraryEntry(entry)
+            } ?: false
         }
     }
 
-    object LibraryEntryComparator : DiffUtil.ItemCallback<LibraryEntry>() {
-        override fun areItemsTheSame(oldItem: LibraryEntry, newItem: LibraryEntry) =
-            oldItem.id == newItem.id
+    object LibraryEntryComparator : DiffUtil.ItemCallback<LibraryEntryWrapper>() {
+        override fun areItemsTheSame(oldItem: LibraryEntryWrapper, newItem: LibraryEntryWrapper) =
+            oldItem.libraryEntry.id == newItem.libraryEntry.id
 
-        override fun areContentsTheSame(oldItem: LibraryEntry, newItem: LibraryEntry) =
+        override fun areContentsTheSame(oldItem: LibraryEntryWrapper, newItem: LibraryEntryWrapper) =
             oldItem == newItem
     }
 
     interface LibraryEntryActionListener {
-        fun onItemClicked(item: LibraryEntry)
-        fun onEpisodeWatchedClicked(item: LibraryEntry)
-        fun onEpisodeUnwatchedClicked(item: LibraryEntry)
-        fun onRatingClicked(item: LibraryEntry)
+        fun onItemClicked(item: LibraryEntryWrapper)
+        fun onEpisodeWatchedClicked(item: LibraryEntryWrapper)
+        fun onEpisodeUnwatchedClicked(item: LibraryEntryWrapper)
+        fun onRatingClicked(item: LibraryEntryWrapper)
     }
 
 }

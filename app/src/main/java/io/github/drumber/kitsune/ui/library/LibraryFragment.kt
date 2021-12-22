@@ -20,8 +20,8 @@ import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.manager.LibraryUpdateResponse
-import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.model.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.model.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.data.model.library.Status
 import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.databinding.FragmentLibraryBinding
@@ -220,10 +220,14 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
                 adapter.submitData(it)
             }
         }
+
+        viewModel.offlineLibraryUpdateDao.getAllOfflineLibraryUpdates().observe(viewLifecycleOwner) {
+            viewModel.invalidatePagingSource()
+        }
     }
 
-    override fun onItemClicked(item: LibraryEntry) {
-        val media = item.anime ?: item.manga
+    override fun onItemClicked(item: LibraryEntryWrapper) {
+        val media = item.libraryEntry.anime ?: item.libraryEntry.manga
         if (media != null) {
             val mediaAdapter = MediaAdapter.fromMedia(media)
             val action =
@@ -232,17 +236,17 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         }
     }
 
-    override fun onEpisodeWatchedClicked(item: LibraryEntry) {
+    override fun onEpisodeWatchedClicked(item: LibraryEntryWrapper) {
         viewModel.markEpisodeWatched(item)
     }
 
-    override fun onEpisodeUnwatchedClicked(item: LibraryEntry) {
+    override fun onEpisodeUnwatchedClicked(item: LibraryEntryWrapper) {
         viewModel.markEpisodeUnwatched(item)
     }
 
-    override fun onRatingClicked(item: LibraryEntry) {
-        viewModel.lastRatedLibraryEntry = item
-        val mediaAdapter = (item.anime ?: item.manga)?.let { MediaAdapter.fromMedia(it) }
+    override fun onRatingClicked(item: LibraryEntryWrapper) {
+        viewModel.lastRatedLibraryEntry = item.libraryEntry
+        val mediaAdapter = (item.libraryEntry.anime ?: item.libraryEntry.manga)?.let { MediaAdapter.fromMedia(it) }
         val sheetLibraryRating = RatingBottomSheet()
         val bundle = bundleOf(
             RatingBottomSheet.BUNDLE_TITLE to mediaAdapter?.title,

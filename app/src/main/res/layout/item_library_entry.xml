@@ -86,6 +86,16 @@
                     android:text="@{data.publishingYear + ` • ` + data.subtype}"
                     tools:text="2002 • TV" />
 
+                <TextView
+                    android:id="@+id/tv_not_synced"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:drawableLeftCompat="@drawable/ic_cloud_off_24"
+                    android:drawablePadding="10dp"
+                    android:text="Not Synced"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
             </LinearLayout>
 
             <LinearLayout

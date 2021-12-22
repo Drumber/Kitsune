@@ -21,7 +21,7 @@ val viewModelModule = module {
     viewModel { SearchViewModel(get(), get()) }
     viewModel { MediaListViewModel(get(), get()) }
     viewModel { CategoriesViewModel(get()) }
-    viewModel { LibraryViewModel(get(), get(), get()) }
+    viewModel { LibraryViewModel(get(), get(), get(), get()) }
     viewModel { LoginViewModel(get()) }
     viewModel { ProfileViewModel(get(), get()) }
     viewModel { DetailsViewModel(get(), get(), get(), get(), get()) }

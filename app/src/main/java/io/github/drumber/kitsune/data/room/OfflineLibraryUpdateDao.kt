@@ -1,10 +1,14 @@
 package io.github.drumber.kitsune.data.room
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import io.github.drumber.kitsune.data.model.library.OfflineLibraryUpdate
 
 @Dao
 interface OfflineLibraryUpdateDao {
+
+    @Query("SELECT * FROM offline_library_update")
+    fun getAllOfflineLibraryUpdates(): LiveData<List<OfflineLibraryUpdate>>
 
     @Query("SELECT * FROM offline_library_update WHERE id = :id")
     suspend fun getOfflineLibraryUpdate(id: String): OfflineLibraryUpdate?

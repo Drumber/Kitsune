@@ -12,6 +12,7 @@ import io.github.drumber.kitsune.data.paging.LibraryEntriesRemoteMediator
 import io.github.drumber.kitsune.data.room.LibraryEntryDao
 import io.github.drumber.kitsune.data.room.ResourceDatabase
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
+import java.util.concurrent.CopyOnWriteArrayList
 
 class LibraryEntriesRepository(private val service: LibraryEntriesService, private val db: ResourceDatabase) {
 
@@ -22,8 +23,40 @@ class LibraryEntriesRepository(private val service: LibraryEntriesService, priva
             maxSize = Repository.MAX_CACHED_ITEMS
         ),
         remoteMediator = LibraryEntriesRemoteMediator(filter.pageSize(pageSize), service, db),
-        pagingSourceFactory = { db.libraryEntryDao().getLibraryEntriesByFilter(filter) }
+        pagingSourceFactory = { invalidatingPagingSourceFactory.createPagingSource(filter) }
     ).flow
+
+    private val invalidatingPagingSourceFactory = InvalidatingPagingSourceFactory {
+        db.libraryEntryDao().getLibraryEntriesByFilter(it)
+    }
+
+    fun invalidatePagingSources() {
+        invalidatingPagingSourceFactory.invalidate()
+    }
+
+    /**
+     * Modified version of [androidx.paging.InvalidatingPagingSourceFactory] accepting a filter object.
+     */
+    private class InvalidatingPagingSourceFactory<Key : Any, Value : Any>(
+        private val pagingSourceFactory: (filter: LibraryEntryFilter) -> PagingSource<Key, Value>
+    ) {
+
+        private val pagingSources = CopyOnWriteArrayList<PagingSource<Key, Value>>()
+
+        fun createPagingSource(filter: LibraryEntryFilter): PagingSource<Key, Value> {
+            return pagingSourceFactory(filter).also { pagingSources.add(it) }
+        }
+
+        fun invalidate() {
+            for (pagingSource in pagingSources) {
+                if (!pagingSource.invalid) {
+                    pagingSource.invalidate()
+                }
+            }
+
+            pagingSources.removeAll { it.invalid }
+        }
+    }
 
 }
 

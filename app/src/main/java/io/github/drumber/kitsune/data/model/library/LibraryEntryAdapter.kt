@@ -1,6 +1,8 @@
 package io.github.drumber.kitsune.data.model.library
 
-class LibraryEntryAdapter(val libraryEntry: LibraryEntry) {
+class LibraryEntryAdapter(private val wrapper: LibraryEntryWrapper) {
+
+    private val libraryEntry get() = wrapper.libraryEntry
 
     val episodeCount: Int?
         get() = libraryEntry.anime?.episodeCount ?: libraryEntry.manga?.volumeCount
@@ -9,7 +11,7 @@ class LibraryEntryAdapter(val libraryEntry: LibraryEntry) {
         get() = episodeCount?.toString() ?: "?"
 
     val progressCount: Int?
-        get() = libraryEntry.progress
+        get() = wrapper.progress
 
     val progress: String
         get() = progressCount?.toString() ?: "?"
@@ -24,7 +26,7 @@ class LibraryEntryAdapter(val libraryEntry: LibraryEntry) {
         get() = progressCount != episodeCount
 
     val rating: String?
-        get() = libraryEntry.ratingTwenty?.div(4.0f)?.toString()
+        get() = wrapper.ratingTwenty?.div(4.0f)?.toString()
 
     val hasRating: Boolean
         get() = libraryEntry.ratingTwenty != null

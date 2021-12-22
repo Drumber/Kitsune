@@ -24,6 +24,15 @@ data class OfflineLibraryUpdate(
         ratingTwenty = ratingTwenty
     )
 
+    fun isEqualToLibraryEntry(libraryEntry: LibraryEntry): Boolean {
+        return libraryEntry.id.equalOrNull(id)
+                && libraryEntry.status.equalOrNull(status)
+                && libraryEntry.progress.equalOrNull(progress)
+                && libraryEntry.ratingTwenty.equalOrNull(ratingTwenty)
+    }
+
+    private fun Any?.equalOrNull(that: Any?) = this@equalOrNull == that || that == null
+
 }
 
 fun LibraryEntry.toOfflineLibraryUpdate() = OfflineLibraryUpdate(
