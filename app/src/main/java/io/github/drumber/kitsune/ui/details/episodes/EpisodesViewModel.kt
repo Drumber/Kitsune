@@ -6,12 +6,15 @@ import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.manager.LibraryManager
 import io.github.drumber.kitsune.data.manager.ResponseCallback
+import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.data.model.media.Anime
 import io.github.drumber.kitsune.data.model.media.BaseMedia
 import io.github.drumber.kitsune.data.model.media.Manga
 import io.github.drumber.kitsune.data.model.unit.MediaUnit
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository
 import io.github.drumber.kitsune.data.room.LibraryEntryDao
+import io.github.drumber.kitsune.data.room.OfflineLibraryUpdateDao
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.util.logE
@@ -24,6 +27,7 @@ class EpisodesViewModel(
     private val mediaUnitRepository: MediaUnitRepository,
     libraryEntriesService: LibraryEntriesService,
     libraryEntryDao: LibraryEntryDao,
+    private val offlineLibraryUpdateDao: OfflineLibraryUpdateDao,
     private val libraryManager: LibraryManager
 ) : ViewModel() {
 
@@ -33,11 +37,11 @@ class EpisodesViewModel(
 
     private val libraryEntryId = MutableLiveData<String>()
 
-    val libraryEntry = Transformations.switchMap(libraryEntryId) { id ->
+    val libraryEntryWrapper = Transformations.switchMap(libraryEntryId) { id ->
         val dbEntry = libraryEntryDao.getLibraryEntryAsLiveData(id)
         return@switchMap if (dbEntry.value != null) {
-            // return cached library entry from database
-            dbEntry
+            // return cached library entry from database mapped to a library wrapper
+            dbEntry.mapToWrapper()
         } else {
             // request library entry from server
             liveData(Dispatchers.IO) {
@@ -51,7 +55,7 @@ class EpisodesViewModel(
                     if (entry != null) {
                         // add library entry to Room database
                         libraryEntryDao.insertSingle(entry)
-                        emitSource(libraryEntryDao.getLibraryEntryAsLiveData(id))
+                        emitSource(libraryEntryDao.getLibraryEntryAsLiveData(id).mapToWrapper())
                     }
                 } catch (e: Exception) {
                     logE("Failed to fetch library entry for id '$id'.", e)
@@ -59,6 +63,22 @@ class EpisodesViewModel(
             }
         }
     }
+
+    private fun LiveData<LibraryEntry?>.mapToWrapper() = this.switchMap { libraryEntry ->
+        liveData(Dispatchers.IO) {
+            if (libraryEntry != null) {
+                emit(
+                    LibraryEntryWrapper(
+                        libraryEntry,
+                        offlineLibraryUpdateDao.getOfflineLibraryUpdate(libraryEntry.id)
+                    )
+                )
+            } else {
+                emit(null)
+            }
+        }
+    }
+
 
     fun setMedia(media: BaseMedia) {
         if (media != this.media.value) {
@@ -71,7 +91,7 @@ class EpisodesViewModel(
     }
 
     fun setMediaUnitWatched(mediaUnit: MediaUnit, isWatched: Boolean) {
-        val oldLibraryEntry = libraryEntry.value ?: return
+        val oldLibraryEntry = libraryEntryWrapper.value?.libraryEntry ?: return
         val number = mediaUnit.number ?: 0
         val progress = if (isWatched) {
             number

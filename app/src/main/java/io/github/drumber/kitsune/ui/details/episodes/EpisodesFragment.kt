@@ -68,7 +68,7 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
         val adapter = MediaUnitPagingAdapter(GlideApp.with(this), resourceAdapter.posterImage, args.libraryEntryId != null, this)
         setRecyclerViewAdapter(adapter)
 
-        viewModel.libraryEntry.observe(viewLifecycleOwner) {
+        viewModel.libraryEntryWrapper.observe(viewLifecycleOwner) {
             it?.progress?.let { progress ->
                 adapter.updateLibraryWatchCount(progress)
             }
