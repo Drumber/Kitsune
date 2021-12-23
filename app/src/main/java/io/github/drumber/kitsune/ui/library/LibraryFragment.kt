@@ -1,6 +1,8 @@
 package io.github.drumber.kitsune.ui.library
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -242,11 +244,19 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             }
         }
 
-        viewModel.offlineLibraryUpdateDao.getAllOfflineLibraryUpdatesLiveData().observe(viewLifecycleOwner) {
-            viewModel.invalidatePagingSource()
-            offlineLibraryUpdatesAmount = it.size
-            requireActivity().invalidateOptionsMenu()
-        }
+        viewModel.offlineLibraryUpdateDao.getAllOfflineLibraryUpdatesLiveData()
+            .observe(viewLifecycleOwner) {
+                viewModel.invalidatePagingSource()
+                offlineLibraryUpdatesAmount = it.size
+                requireActivity().invalidateOptionsMenu()
+
+                // synchronize library if there are offline library updates and network is not metered
+                val connectivityManager =
+                    requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                if (it.isNotEmpty() && !connectivityManager.isActiveNetworkMetered) {
+                    viewModel.synchronizeOfflineLibraryUpdates()
+                }
+            }
     }
 
     override fun onItemClicked(item: LibraryEntryWrapper) {
@@ -269,7 +279,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
     override fun onRatingClicked(item: LibraryEntryWrapper) {
         viewModel.lastRatedLibraryEntry = item.libraryEntry
-        val mediaAdapter = (item.libraryEntry.anime ?: item.libraryEntry.manga)?.let { MediaAdapter.fromMedia(it) }
+        val mediaAdapter =
+            (item.libraryEntry.anime ?: item.libraryEntry.manga)?.let { MediaAdapter.fromMedia(it) }
         val sheetLibraryRating = RatingBottomSheet()
         val bundle = bundleOf(
             RatingBottomSheet.BUNDLE_TITLE to mediaAdapter?.title,
