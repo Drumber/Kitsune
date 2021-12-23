@@ -322,6 +322,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
     override fun onDestroyView() {
         viewModel.responseListener = null
+        (requireActivity() as AppCompatActivity).setSupportActionBar(null)
         super.onDestroyView()
     }
 

@@ -28,6 +28,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private val viewModel: SettingsViewModel by viewModel()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        preferenceManager.sharedPreferencesName = getString(R.string.preference_file_key)
         setPreferencesFromResource(R.xml.app_preferences, rootKey)
 
         findPreference<Preference>(R.string.preference_key_fragment_appearance)?.setOnPreferenceClickListener {
@@ -148,6 +149,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     true
                 }
                 requireUserLoggedIn(user) { Kitsu.USER_URL_PREFIX + it.text }
+            }
+
+            //---- Offline Library Updates
+            findPreference<SwitchPreferenceCompat>(R.string.preference_key_offline_library_updates)?.apply {
+                requireUserLoggedIn(user)
             }
         }
     }

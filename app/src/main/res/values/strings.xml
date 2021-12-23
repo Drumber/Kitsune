@@ -126,6 +126,7 @@
 
     <string name="preference_category_ui">User Interface</string>
     <string name="preference_category_account">Account</string>
+    <string name="preference_category_advanced">Advanced</string>
     <string name="preference_category_about">About</string>
 
     <string name="preference_appearance_description">Change the Theme and toggle Dark Mode.</string>
@@ -155,6 +156,8 @@
     <string name="preference_adult_content">Adult Content</string>
     <string name="preference_adult_content_description_off">Media with R18+ age rating will be hidden.</string>
     <string name="preference_adult_content_description_on">Media with R18+ age rating will be visible.</string>
+    <string name="preference_offline_library_updates">Offline Library Updates</string>
+    <string name="preference_offline_library_description">Cache offline changes to your library and synchronize them with Kitsu.io when you are back online.</string>
     <string name="preference_app_version">Version Info</string>
     <string name="preference_github_repo">GitHub Repository</string>
     <string name="preference_open_source_libraries">Open Source Libraries</string>

@@ -37,7 +37,7 @@ object KitsunePref : KotprefModel(), KoinComponent {
 
     var mediaItemSize by enumOrdinalPref(MediaItemSize.LARGE)
 
-    var libraryOfflineSync by booleanPref(true)
+    var libraryOfflineSync by booleanPref(true, key = R.string.preference_key_offline_library_updates)
 
 
     private var searchParamsJson by stringPref(Defaults.DEFAULT_SEARCH_PARAMS.toJsonString())
