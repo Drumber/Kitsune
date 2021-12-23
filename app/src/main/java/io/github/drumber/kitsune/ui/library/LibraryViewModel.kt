@@ -29,6 +29,10 @@ class LibraryViewModel(
 
     var responseListener: (ResponseCallback)? = null
 
+    private val _isSyncingLibrary = MutableLiveData(false)
+    val isSyncingLibrary: LiveData<Boolean>
+        get() = _isSyncingLibrary
+
     val filter = MutableLiveData(
         LibraryEntryFilter(
             KitsunePref.libraryEntryKind,
@@ -85,9 +89,11 @@ class LibraryViewModel(
     }
 
     fun synchronizeOfflineLibraryUpdates() {
+        _isSyncingLibrary.value = true
         viewModelScope.launch(Dispatchers.IO) {
             libraryManager.synchronizeLibrary {
                 responseListener?.invoke(it)
+                _isSyncingLibrary.postValue(false)
             }
         }
     }

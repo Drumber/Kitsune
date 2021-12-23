@@ -106,6 +106,10 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             }
         }
 
+        viewModel.isSyncingLibrary.observe(viewLifecycleOwner) {
+            binding.progressIndicator.isVisible = it
+        }
+
         setFragmentResultListener(RatingBottomSheet.RATING_REQUEST_KEY) { _, bundle ->
             val rating = bundle.getInt(RatingBottomSheet.BUNDLE_RATING, -1)
             if (rating != -1) {
@@ -225,6 +229,9 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         binding.swipeRefreshLayout.apply {
             setAppTheme()
             setOnRefreshListener {
+                if (offlineLibraryUpdatesAmount > 0) {
+                    viewModel.synchronizeOfflineLibraryUpdates()
+                }
                 adapter.refresh()
             }
         }
