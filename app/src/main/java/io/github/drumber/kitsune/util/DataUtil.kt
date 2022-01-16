@@ -27,10 +27,18 @@ object DataUtil {
     @JvmStatic
     fun getTitle(title: Titles?, canonical: String?): String? {
         return when (KitsunePref.titles) {
-            TitlesPref.Canonical -> canonical
-            TitlesPref.Romanized -> title?.enJp ?: canonical
-            TitlesPref.English -> title?.en ?: canonical
+            TitlesPref.Canonical -> canonical.nb()
+                ?: title?.enJp.nb() ?: title?.en.nb() ?: title?.jaJp
+            TitlesPref.Romanized -> title?.enJp.nb()
+                ?: canonical.nb() ?: title?.en.nb() ?: title?.jaJp
+            TitlesPref.English -> title?.en.nb()
+                ?: canonical.nb() ?: title?.enJp.nb() ?: title?.jaJp
         }
     }
+
+    /**
+     * Maps blank strings to null.
+     */
+    private fun String?.nb() = if (this.isNullOrBlank()) null else this
 
 }
