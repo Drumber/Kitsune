@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <queries>
         <intent>
@@ -20,6 +21,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kitsune.SplashScreen.DayNight">
         <activity
+            android:name=".PhotoViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:theme="@style/Theme.Kitsune.DayNight.FullScreen" />
+        <activity
             android:name=".ui.authentication.AuthenticationActivity"
             android:exported="true"
             android:label="@string/title_authentication" />
@@ -29,9 +35,12 @@
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data android:name="android.app.shortcuts"
+
+            <meta-data
+                android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
     </application>

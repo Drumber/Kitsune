@@ -27,6 +27,8 @@
     <string name="action_share">Share</string>
     <string name="action_dismiss">Dismiss</string>
     <string name="action_synchronize">Synchronize</string>
+    <string name="action_save_in_gallery">Save in Gallery</string>
+    <string name="action_open_in_browser">Open in Browser</string>
 
     <string name="hint_search">Search</string>
     <string name="hint_mark_watched">Mark as watched.</string>
@@ -186,6 +188,7 @@
     <string name="library_not_synchronized">Not Synced</string>
 
     <string name="info_log_in_required">Log in to access all features.</string>
+    <string name="info_image_saved_in_gallery">Successfully saved image in gallery.</string>
     <string name="hint_rating">Rating</string>
     <string name="action_rate">Rate</string>
     <string name="action_update_rating">Update Rating</string>

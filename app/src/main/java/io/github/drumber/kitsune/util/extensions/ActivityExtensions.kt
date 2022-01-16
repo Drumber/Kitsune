@@ -7,9 +7,11 @@ import android.content.res.Resources
 import android.os.Build
 import android.util.TypedValue
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
+import io.github.drumber.kitsune.R
 
 fun Activity.setStatusBarColor(@ColorInt color: Int) {
     window.statusBarColor = color
@@ -78,4 +80,8 @@ fun Resources.Theme.getResourceId(resid: Int): Int {
     val typedValue = TypedValue()
     this.resolveAttribute(resid, typedValue, true)
     return typedValue.resourceId
+}
+
+fun Context.showSomethingWrongToast() {
+    Toast.makeText(this, R.string.error_something_wrong, Toast.LENGTH_SHORT).show()
 }

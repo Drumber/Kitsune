@@ -47,4 +47,5 @@
     <color name="theme_preview_purple_dark">@color/dark_purple_lighter</color>
 
     <color name="edge_fade_color">#BF000000</color>
+    <color name="translucent_system_overlay">#4D000000</color>
 </resources>

@@ -20,7 +20,8 @@ import io.github.drumber.kitsune.util.extensions.setStatusBarColor
 
 abstract class BaseActivity(
     @LayoutRes contentLayoutId: Int,
-    private val edgeToEdge: Boolean = true
+    private val edgeToEdge: Boolean = true,
+    private val updateSystemUiColors: Boolean = true
 ) : AppCompatActivity(contentLayoutId) {
 
     private lateinit var appliedTheme: AppTheme
@@ -64,6 +65,7 @@ abstract class BaseActivity(
 
     private fun initEdgeToEdge() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        if (!updateSystemUiColors) return
 
         setStatusBarColor(ContextCompat.getColor(this, R.color.translucent_status_bar))
         if(Build.VERSION.SDK_INT >= 27) {

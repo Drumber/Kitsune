@@ -48,6 +48,15 @@
         <item name="fullScreenDialogTheme">@style/Theme.Kitsune.FullScreenDialog.Purple</item>
     </style>
 
+    <!-- FullScreen theme -->
+    <style name="Theme.Kitsune.DayNight.FullScreen">
+        <item name="android:statusBarColor">@color/translucent_system_overlay</item>
+        <item name="android:navigationBarColor">@color/translucent_system_overlay</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
+    </style>
+
     <!-- SplashScreen theme -->
     <style name="Theme.Kitsune.SplashScreen.DayNight" parent="Theme.Kitsune.SplashScreen" />
 

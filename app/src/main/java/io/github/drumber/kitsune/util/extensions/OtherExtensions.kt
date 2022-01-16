@@ -46,6 +46,11 @@ fun Date.formatDate(dateFormat: Int = SimpleDateFormat.DEFAULT): String {
     return format.format(this)
 }
 
+fun Date.formatDate(pattern: String): String {
+    val format = SimpleDateFormat(pattern, Locale.getDefault())
+    return format.format(this)
+}
+
 fun Calendar.formatDate(dateFormat: Int = SimpleDateFormat.DEFAULT) = this.time.formatDate(dateFormat)
 
 fun Int.toDp() = (this / Resources.getSystem().displayMetrics.density).toInt()

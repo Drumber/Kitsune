@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -49,6 +50,7 @@ import io.github.drumber.kitsune.util.extensions.*
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
+import io.github.drumber.kitsune.util.originalOrDown
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -100,6 +102,16 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 .addTransform(RoundedCorners(8))
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivThumbnail)
+
+        }
+
+        binding.ivThumbnail.setOnClickListener {
+            viewModel.mediaAdapter.value?.let { mediaAdapter ->
+                val title = mediaAdapter.title
+                mediaAdapter.media.posterImage?.originalOrDown()?.let { imageUrl ->
+                    openImageViewer(imageUrl, title, binding.ivThumbnail)
+                }
+            }
         }
 
         viewModel.libraryEntry.observe(viewLifecycleOwner) {
@@ -274,7 +286,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
         val displayWidth = resources.displayMetrics.widthPixels
         // full chart will show ratings 1-10 with step size 0.5; reduced chart with step size 1
-        val isFullChart = displayWidth >= resources.getDimensionPixelSize(R.dimen.details_rating_chart_full_threshold)
+        val isFullChart =
+            displayWidth >= resources.getDimensionPixelSize(R.dimen.details_rating_chart_full_threshold)
 
         val ratingList = with(ratings) {
             val list = listOf(
@@ -364,6 +377,11 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 }
             }.show()
         }
+    }
+
+    private fun openImageViewer(imageUrl: String, title: String?, transitionOrigin: ImageView) {
+        val action = DetailsFragmentDirections.actionDetailsFragmentToPhotoViewActivity(imageUrl, title)
+        findNavController().navigate(action)
     }
 
     private fun goBack() {

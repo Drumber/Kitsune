@@ -60,6 +60,9 @@
         <action
             android:id="@+id/action_details_fragment_to_characters_fragment"
             app:destination="@id/characters_fragment" />
+        <action
+            android:id="@+id/action_details_fragment_to_photoViewActivity"
+            app:destination="@id/photo_view_activity" />
     </fragment>
     <fragment
         android:id="@+id/media_list_fragment"
@@ -133,4 +136,17 @@
             android:name="isAnime"
             app:argType="boolean" />
     </fragment>
+    <activity
+        android:id="@+id/photo_view_activity"
+        android:name="io.github.drumber.kitsune.PhotoViewActivity"
+        android:label="activity_photo_view"
+        tools:layout="@layout/activity_photo_view" >
+        <argument
+            android:name="imageUrl"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            app:argType="string"
+            app:nullable="true" />
+    </activity>
 </navigation>

@@ -149,6 +149,9 @@ dependencies {
     // MPAndroidCharts
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
+    // Photo View
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+
     // AboutLibraries
     def aboutLibraries_version = "8.9.4"
     implementation "com.mikepenz:aboutlibraries-core:$aboutLibraries_version"

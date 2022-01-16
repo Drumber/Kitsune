@@ -1,13 +1,11 @@
 package io.github.drumber.kitsune.util.extensions
 
 import android.content.Intent
-import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
-import io.github.drumber.kitsune.R
 
 /**
  * Checks if the current destination of the back stack is equal to the specified destination id.
@@ -20,7 +18,7 @@ fun NavController.navigateSafe(@IdRes currentNavId: Int, directions: NavDirectio
 }
 
 fun Fragment.showSomethingWrongToast() {
-    Toast.makeText(context, R.string.error_something_wrong, Toast.LENGTH_SHORT).show()
+    requireContext().showSomethingWrongToast()
 }
 
 fun Fragment.startUrlShareIntent(url: String, title: String? = null) {

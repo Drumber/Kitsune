@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/black"
+    tools:context=".PhotoViewActivity">
+
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/photo_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <LinearLayout
+            android:id="@+id/fullscreen_content_controls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:orientation="horizontal"
+            android:paddingHorizontal="5dp"
+            android:background="@color/translucent_system_overlay"
+            tools:ignore="UselessParent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_save"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_save_alt_24"
+                app:iconGravity="textStart"
+                app:iconPadding="20dp"
+                android:textAllCaps="false"
+                android:text="@string/action_save_in_gallery"
+                android:textColor="@color/white"
+                app:iconTint="@color/white"
+                android:layout_weight="1"
+                style="?android:attr/buttonBarButtonStyle"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_open"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_open_in_browser_24"
+                app:iconGravity="textStart"
+                app:iconPadding="20dp"
+                android:textAllCaps="false"
+                android:text="@string/action_open_in_browser"
+                android:textColor="@color/white"
+                app:iconTint="@color/white"
+                android:layout_weight="1"
+                style="?android:attr/buttonBarButtonStyle"/>
+
+        </LinearLayout>
+    </FrameLayout>
+
+</FrameLayout>
