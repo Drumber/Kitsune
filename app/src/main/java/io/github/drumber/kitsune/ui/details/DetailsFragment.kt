@@ -114,6 +114,15 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             }
         }
 
+        binding.ivCover.setOnClickListener {
+            viewModel.mediaAdapter.value?.let { mediaAdapter ->
+                val title = mediaAdapter.title
+                mediaAdapter.media.coverImage?.originalOrDown()?.let { imageUrl ->
+                    openImageViewer(imageUrl, title, binding.ivCover)
+                }
+            }
+        }
+
         viewModel.libraryEntry.observe(viewLifecycleOwner) {
             it?.status?.let { status ->
                 binding.btnManageLibrary.setText(status.getStringResId())

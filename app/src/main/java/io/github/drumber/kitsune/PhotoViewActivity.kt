@@ -1,7 +1,9 @@
 package io.github.drumber.kitsune
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -9,6 +11,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -40,15 +43,17 @@ class PhotoViewActivity : BaseActivity(R.layout.activity_photo_view, true, false
         setContentView(binding.root)
 
         setStatusBarColorRes(R.color.translucent_system_overlay)
-        if(Build.VERSION.SDK_INT >= 27) {
-            window.navigationBarColor = ContextCompat.getColor(this, R.color.translucent_system_overlay)
+        if (Build.VERSION.SDK_INT >= 27) {
+            window.navigationBarColor =
+                ContextCompat.getColor(this, R.color.translucent_system_overlay)
         }
         if (!isNightMode()) {
             clearLightStatusBar()
             clearLightNavigationBar()
         }
 
-        WindowInsetsControllerCompat(window, binding.root).systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        WindowInsetsControllerCompat(window, binding.root).systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
         binding.photoView.setOnClickListener { toggleSystemUi() }
 
@@ -124,7 +129,35 @@ class PhotoViewActivity : BaseActivity(R.layout.activity_photo_view, true, false
         }
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == WRITE_EXTERNAL_STORAGE_REQUEST_CODE
+            && grantResults.isNotEmpty()
+            && grantResults[0] == PackageManager.PERMISSION_GRANTED
+        ) {
+            saveImage()
+        }
+    }
+
     private fun saveImage() {
+        // check if permission is granted
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                WRITE_EXTERNAL_STORAGE_REQUEST_CODE
+            )
+            return
+        }
+
         lifecycleScope.launch(Dispatchers.IO) {
             val bitmap = GlideApp.with(this@PhotoViewActivity)
                 .asBitmap()
@@ -135,7 +168,11 @@ class PhotoViewActivity : BaseActivity(R.layout.activity_photo_view, true, false
             val success = saveImageInGallery(bitmap, args.title)
             withContext(Dispatchers.Main) {
                 if (success) {
-                    Toast.makeText(this@PhotoViewActivity, R.string.info_image_saved_in_gallery, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@PhotoViewActivity,
+                        R.string.info_image_saved_in_gallery,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else {
                     showSomethingWrongToast()
                 }
@@ -160,5 +197,7 @@ class PhotoViewActivity : BaseActivity(R.layout.activity_photo_view, true, false
          * Hide system UI after this amount of milliseconds.
          */
         private const val UI_ANIMATION_DELAY = 500L
+
+        private const val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 1
     }
 }
