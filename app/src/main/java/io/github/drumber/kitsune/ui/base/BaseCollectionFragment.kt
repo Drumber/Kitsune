@@ -116,6 +116,7 @@ abstract class BaseCollectionFragment(@LayoutRes contentLayoutId: Int) :
     override fun onDestroyView() {
         super.onDestroyView()
         (recyclerView.adapter as? PagingDataAdapter<*, *>)?.removeLoadStateListener(loadStateListener)
+        recyclerView.adapter = null
     }
 
 }

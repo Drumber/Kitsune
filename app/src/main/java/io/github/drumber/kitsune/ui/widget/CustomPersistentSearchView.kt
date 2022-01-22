@@ -102,9 +102,9 @@ class CustomPersistentSearchView @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
         expandStateListener = null
         customOnSearchConfirmedListener = null
+        super.onDetachedFromWindow()
     }
 
 }

@@ -96,4 +96,12 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters),
         binding.appBarLayout.setExpanded(true)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (binding.fieldLanguage.editText as? AutoCompleteTextView)?.apply {
+            onItemClickListener = null
+            setAdapter(null)
+        }
+    }
+
 }

@@ -303,4 +303,11 @@ class SearchFragment : MediaCollectionFragment(R.layout.fragment_search) {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.searchView.customOnSearchConfirmedListener = null
+        appBarAnimator?.cancel()
+        appBarAnimator = null
+    }
+
 }
