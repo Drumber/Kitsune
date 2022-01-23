@@ -18,6 +18,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
+import app.futured.hauler.setOnDragDismissedListener
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ActivityPhotoViewBinding
@@ -76,6 +77,8 @@ class PhotoViewActivity : BaseActivity(R.layout.activity_photo_view, true, false
                 startActivity(intent)
             }
         }
+
+        binding.haulerView.setOnDragDismissedListener { finish() }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

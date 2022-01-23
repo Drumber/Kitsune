@@ -7,72 +7,90 @@
         <import type="io.github.drumber.kitsune.util.BindingAdapter" />
     </data>
 
-    <FrameLayout
+    <app.futured.hauler.HaulerView
+        android:id="@+id/hauler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black"
+        app:dragDismissDistance="120dp"
+        app:dragElasticity="1.0"
+        app:dragDismissScale="0.9"
         tools:context=".ui.details.photoview.PhotoViewActivity">
 
-        <com.github.chrisbanes.photoview.PhotoView
-            android:id="@+id/photo_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <FrameLayout
+        <app.futured.hauler.LockableNestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true">
+            android:fillViewport="true"
+            app:isScrollable="@{true}">
 
-            <LinearLayout
-                android:id="@+id/fullscreen_content_controls"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-                android:orientation="horizontal"
-                android:paddingVertical="5dp"
-                android:paddingHorizontal="10dp"
-                android:background="@color/translucent_system_overlay"
-                tools:ignore="UselessParent">
+                android:layout_height="match_parent">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_close"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:icon="@drawable/ic_close_24"
-                    app:iconTint="@color/white"
-                    app:tooltip="@{@string/action_close}"
-                    style="@style/Widget.Kitsune.Button.IconRound" />
+                <com.github.chrisbanes.photoview.PhotoView
+                    android:id="@+id/photo_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fitsSystemWindows="true">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_save"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:icon="@drawable/ic_save_alt_24"
-                    app:iconTint="@color/white"
-                    app:tooltip="@{@string/action_save_in_gallery}"
-                    style="@style/Widget.Kitsune.Button.IconRound" />
+                    <LinearLayout
+                        android:id="@+id/fullscreen_content_controls"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:orientation="horizontal"
+                        android:paddingVertical="5dp"
+                        android:paddingHorizontal="10dp"
+                        android:background="@color/translucent_system_overlay"
+                        tools:ignore="UselessParent">
 
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_close"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:icon="@drawable/ic_close_24"
+                            app:iconTint="@color/white"
+                            app:tooltip="@{@string/action_close}"
+                            style="@style/Widget.Kitsune.Button.IconRound" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_open"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:icon="@drawable/ic_open_in_browser_24"
-                    app:iconTint="@color/white"
-                    app:tooltip="@{@string/action_open_in_browser}"
-                    style="@style/Widget.Kitsune.Button.IconRound" />
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1" />
 
-            </LinearLayout>
-        </FrameLayout>
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_save"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:icon="@drawable/ic_save_alt_24"
+                            app:iconTint="@color/white"
+                            app:tooltip="@{@string/action_save_in_gallery}"
+                            style="@style/Widget.Kitsune.Button.IconRound" />
 
-    </FrameLayout>
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_open"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:icon="@drawable/ic_open_in_browser_24"
+                            app:iconTint="@color/white"
+                            app:tooltip="@{@string/action_open_in_browser}"
+                            style="@style/Widget.Kitsune.Button.IconRound" />
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+            </FrameLayout>
+
+        </app.futured.hauler.LockableNestedScrollView>
+
+    </app.futured.hauler.HaulerView>
 </layout>

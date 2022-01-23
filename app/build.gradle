@@ -152,6 +152,10 @@ dependencies {
     // Photo View
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 
+    def hauler_version = "5.0.0"
+    implementation "app.futured.hauler:hauler:$hauler_version"
+    implementation "app.futured.hauler:databinding:$hauler_version"
+
     // AboutLibraries
     def aboutLibraries_version = "8.9.4"
     implementation "com.mikepenz:aboutlibraries-core:$aboutLibraries_version"
