@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune
+package io.github.drumber.kitsune.ui.details.photoview
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -18,6 +18,8 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
+import io.github.drumber.kitsune.GlideApp
+import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ActivityPhotoViewBinding
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.util.extensions.*
@@ -63,9 +65,11 @@ class PhotoViewActivity : BaseActivity(R.layout.activity_photo_view, true, false
             .into(binding.photoView)
 
         binding.apply {
+            btnClose.resetAutoHideOnTouch()
             btnSave.resetAutoHideOnTouch()
             btnOpen.resetAutoHideOnTouch()
 
+            btnClose.setOnClickListener { finish() }
             btnSave.setOnClickListener { saveImage() }
             btnOpen.setOnClickListener {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(args.imageUrl))

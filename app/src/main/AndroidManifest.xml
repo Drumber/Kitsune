@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kitsune.SplashScreen.DayNight">
         <activity
-            android:name=".PhotoViewActivity"
+            android:name=".ui.details.photoview.PhotoViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:theme="@style/Theme.Kitsune.DayNight.FullScreen" />

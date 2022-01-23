@@ -5,7 +5,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -19,6 +18,7 @@ import io.github.drumber.kitsune.databinding.FragmentCharactersBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.ui.adapter.paging.CharacterPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
+import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -51,12 +51,14 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters),
             setNavigationOnClickListener { findNavController().navigateUp() }
         }
 
-        (binding.fieldLanguage.editText as? AutoCompleteTextView)?.onItemClickListener = this
+        binding.languageWrapper.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
+
+        binding.autoCompleteTextView.onItemClickListener = this
 
         viewModel.languages.observe(viewLifecycleOwner) { languages ->
             binding.fieldLanguage.isVisible = languages.isNotEmpty()
             val adapter = ArrayAdapter(requireContext(), R.layout.item_dropdown, languages)
-            (binding.fieldLanguage.editText as? AutoCompleteTextView)?.apply {
+            binding.autoCompleteTextView.apply {
                 setAdapter(adapter)
                 setText(viewModel.selectedLanguage, false)
             }
@@ -98,7 +100,7 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters),
 
     override fun onDestroyView() {
         super.onDestroyView()
-        (binding.fieldLanguage.editText as? AutoCompleteTextView)?.apply {
+        binding.autoCompleteTextView.apply {
             onItemClickListener = null
             setAdapter(null)
         }

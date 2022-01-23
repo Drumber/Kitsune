@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.BindingAdapter
@@ -66,6 +67,12 @@ object BindingAdapter {
     @BindingAdapter("activated")
     fun isActivated(button: Button, isActivated: Boolean) {
         button.isActivated = isActivated
+    }
+
+    @JvmStatic
+    @BindingAdapter("tooltip")
+    fun tooltip(view: View, text: String) {
+        TooltipCompat.setTooltipText(view, text)
     }
 
 }

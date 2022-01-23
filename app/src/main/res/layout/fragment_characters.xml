@@ -27,6 +27,7 @@
                 style="@style/Widget.MaterialComponents.Toolbar.Surface" />
 
             <FrameLayout
+                android:id="@+id/language_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_scrollFlags="scroll|enterAlways|snap"
@@ -44,7 +45,8 @@
                     app:hintEnabled="false"
                     style="@style/Widget.Kitsune.TextInputLayout.Dense.ExposedDropdownMenu">
 
-                    <AutoCompleteTextView
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/auto_complete_text_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:minHeight="0dp"
