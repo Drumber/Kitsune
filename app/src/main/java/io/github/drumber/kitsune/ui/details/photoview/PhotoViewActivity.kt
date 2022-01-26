@@ -18,6 +18,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
+import app.futured.hauler.setOnDragActivityListener
 import app.futured.hauler.setOnDragDismissedListener
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
@@ -29,7 +30,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class PhotoViewActivity : BaseActivity(R.layout.activity_photo_view, true, false) {
+class PhotoViewActivity : BaseActivity(
+    R.layout.activity_photo_view,
+    true,
+    false,
+    false
+) {
 
     private lateinit var binding: ActivityPhotoViewBinding
 
@@ -79,6 +85,13 @@ class PhotoViewActivity : BaseActivity(R.layout.activity_photo_view, true, false
         }
 
         binding.haulerView.setOnDragDismissedListener { finish() }
+        binding.haulerView.setOnDragActivityListener { _, rawOffset ->
+            // fade background alpha on drag
+            val alpha = (1.0f - rawOffset) * 255.0f
+            binding.photoBackground.background.alpha = alpha.toInt()
+        }
+        // reset alpha
+        binding.photoBackground.background.alpha = 255
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

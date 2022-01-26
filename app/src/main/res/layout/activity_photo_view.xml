@@ -23,8 +23,10 @@
             app:isScrollable="@{true}">
 
             <FrameLayout
+                android:id="@+id/photo_background"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/black">
 
                 <com.github.chrisbanes.photoview.PhotoView
                     android:id="@+id/photo_view"

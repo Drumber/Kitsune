@@ -20,15 +20,18 @@ import io.github.drumber.kitsune.util.extensions.setStatusBarColor
 abstract class BaseActivity(
     @LayoutRes contentLayoutId: Int,
     private val edgeToEdge: Boolean = true,
-    private val updateSystemUiColors: Boolean = true
+    private val updateSystemUiColors: Boolean = true,
+    private val setAppTheme: Boolean = true
 ) : AppCompatActivity(contentLayoutId) {
 
     private lateinit var appliedTheme: AppTheme
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // apply app theme
-        appliedTheme = KitsunePref.appTheme
-        setTheme(appliedTheme.themeRes)
+        if (setAppTheme) {
+            // apply app theme
+            appliedTheme = KitsunePref.appTheme
+            setTheme(appliedTheme.themeRes)
+        }
 
         super.onCreate(savedInstanceState)
 
@@ -55,7 +58,7 @@ abstract class BaseActivity(
     }
 
     private fun checkAppTheme() {
-        if (appliedTheme != KitsunePref.appTheme) {
+        if (setAppTheme && appliedTheme != KitsunePref.appTheme) {
             recreate()
         }
     }
