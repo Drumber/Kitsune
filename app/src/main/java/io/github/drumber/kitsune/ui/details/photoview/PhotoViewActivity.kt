@@ -117,7 +117,7 @@ class PhotoViewActivity : BaseActivity(
 
     @SuppressLint("ClickableViewAccessibility")
     private fun View.resetAutoHideOnTouch() {
-        setOnTouchListener { v, event ->
+        setOnTouchListener { _, _ ->
             resetAutoHideTime()
             false
         }
@@ -160,16 +160,18 @@ class PhotoViewActivity : BaseActivity(
             && grantResults[0] == PackageManager.PERMISSION_GRANTED
         ) {
             saveImage()
+        } else if (requestCode == WRITE_EXTERNAL_STORAGE_REQUEST_CODE) {
+            Toast.makeText(
+                this,
+                R.string.error_requires_external_storage_permission,
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
     private fun saveImage() {
         // check if permission is granted
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (shouldRequestWritePermission()) {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
@@ -198,6 +200,19 @@ class PhotoViewActivity : BaseActivity(
                 }
             }
         }
+    }
+
+    /**
+     * Check if external storage write permission must be requested.
+     * On Android 10+ this is no longer required, see
+     * [here](https://developer.android.com/training/data-storage/shared/media#scoped_storage_enabled).
+     */
+    private fun shouldRequestWritePermission(): Boolean {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
     }
 
     companion object {
