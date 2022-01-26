@@ -11,8 +11,8 @@
         <item name="colorOnPrimary">@color/black</item>
         <item name="colorOnSecondary">@color/black</item>
 
-        <item name="colorSurface">@color/background</item>
-        <item name="android:colorBackground">?colorSurface</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="android:colorBackground">?attr/colorSurface</item>
         <item name="colorOnBackground">@color/foreground</item>
         <item name="colorOnSurface">@color/foreground</item>
 
@@ -67,10 +67,11 @@
     <style name="Theme.Kitsune.SplashScreen.DayNight" parent="Theme.Kitsune.SplashScreen" />
 
     <style name="Theme.Kitsune.SplashScreen" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/background</item>
+        <item name="windowSplashScreenBackground">@color/white</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splashscreen</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+        <item name="postSplashScreenTheme">@style/Theme.Kitsune.DayNight</item>
     </style>
 
     <style name="Theme.Kitsune.FullScreenDialog" parent="Theme.Kitsune.DayNight">

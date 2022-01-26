@@ -9,7 +9,6 @@ import android.util.TypedValue
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import com.chibatching.kotpref.livedata.asLiveData
 import io.github.drumber.kitsune.R
@@ -27,8 +26,6 @@ abstract class BaseActivity(
     private lateinit var appliedTheme: AppTheme
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
-
         // apply app theme
         appliedTheme = KitsunePref.appTheme
         setTheme(appliedTheme.themeRes)
