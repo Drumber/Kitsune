@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Media item card -->
+    <dimen name="media_item_width_small">106dp</dimen>
+    <dimen name="media_item_height_small">150dp</dimen>
+
+    <dimen name="media_item_width_medium">141dp</dimen>
+    <dimen name="media_item_height_medium">200dp</dimen>
+
+    <dimen name="media_item_width_large">169dp</dimen>
+    <dimen name="media_item_height_large">240dp</dimen>
+
+    <dimen name="media_item_margin">5dp</dimen>
+
+    <!-- Library entry card -->
+    <dimen name="library_entry_img_width">106dp</dimen>
+    <dimen name="library_entry_img_height">150dp</dimen>
+
+    <!-- Streamer card -->
+    <dimen name="streamer_card_width">100dp</dimen>
+    <dimen name="streamer_card_height">100dp</dimen>
+
+    <!-- Episode card -->
+    <dimen name="episode_card_img_height">110dp</dimen>
+    <dimen name="episode_card_img_width">100dp</dimen>
+
+    <!-- Details Fragment -->
+    <dimen name="details_trailer_height">150dp</dimen>
+    <dimen name="details_thumbnail_width">150dp</dimen>
+    <dimen name="details_thumbnail_height">213dp</dimen>
+    <dimen name="details_rating_chart_full_threshold">400dp</dimen>
+
+    <!-- Profile Fragment -->
+    <dimen name="profile_picture_expanded">75dp</dimen>
+    <dimen name="profile_picture_collapsed">10dp</dimen>
+    <dimen name="profile_picture_offset_expanded">10dp</dimen>
+    <dimen name="profile_picture_x_offset_collapsed">12dp</dimen>
+    <dimen name="profile_picture_y_offset_collapsed">10dp</dimen>
+    <dimen name="profile_text_offset_expanded">100dp</dimen>
+    <dimen name="profile_text_offset_collapsed">45dp</dimen>
+    <dimen name="profile_pie_chart_height">300dp</dimen>
+
+    <!-- Icon Button -->
+    <dimen name="icon_button_size">38dp</dimen>
+    <dimen name="icon_button_padding">6dp</dimen>
+
+    <dimen name="card_inner_padding">16dp</dimen>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+</resources>

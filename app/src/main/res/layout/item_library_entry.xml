@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="androidx.core.content.ContextCompat" />
+        <variable
+            name="entry"
+            type="io.github.drumber.kitsune.data.model.library.LibraryEntryAdapter" />
+        <variable
+            name="data"
+            type="io.github.drumber.kitsune.data.model.media.MediaAdapter" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="4dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_margin="5dp">
+        
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/library_entry_img_height">
+            
+            <ImageView
+                android:id="@+id/iv_thumbnail"
+                android:layout_width="@dimen/library_entry_img_width"
+                android:layout_height="@dimen/library_entry_img_height"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                tools:src="@drawable/ic_insert_photo_48"
+                android:contentDescription="@null" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@id/iv_thumbnail"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="3"
+                        android:layout_marginBottom="8dp"
+                        android:text="@{data.title}"
+                        tools:text="Some Title" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        app:icon="@{entry.hasRating ? @drawable/ic_star_24 : @drawable/ic_star_outline_24}"
+                        app:iconGravity="end"
+                        android:text="@{entry.rating}"
+                        tools:icon="@drawable/ic_star_24"
+                        tools:text="5"
+                        android:tooltipText="@string/hint_rating"
+                        tools:targetApi="o"
+                        app:activated="@{entry.hasRating}"
+                        style="@style/Widget.Kitsune.Button.IconText" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@{data.publishingYear + ` • ` + data.subtype}"
+                    tools:text="2002 • TV" />
+
+                <TextView
+                    android:id="@+id/tv_not_synced"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:drawableLeftCompat="@drawable/ic_cloud_off_24"
+                    android:drawablePadding="10dp"
+                    android:text="@string/library_not_synchronized"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/iv_thumbnail"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="5dp"
+                android:layout_alignParentEnd="true"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:text="@{entry.hasStartedWatching ? entry.progress + `/` + entry.episodes : @string/library_not_started}"
+                    tools:text="12/24" />
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_watched_removed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:enabled="@{entry.hasStartedWatching}"
+                    app:icon="@drawable/ic_remove_24"
+                    android:tooltipText="@string/hint_mark_not_watched"
+                    tools:targetApi="o"
+                    style="@style/Widget.Kitsune.Button.Outlined.IconOnly" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_watched_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{entry.canWatchEpisode}"
+                    app:icon="@drawable/ic_add_24"
+                    android:tooltipText="@string/hint_mark_watched"
+                    tools:targetApi="o"
+                    style="@style/Widget.Kitsune.Button.IconOnly" />
+
+            </LinearLayout>
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/watch_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toEndOf="@id/iv_thumbnail"
+                android:layout_alignParentEnd="true"
+                app:trackCornerRadius="0dp"
+                app:isVisible="@{entry.hasEpisodesCount}"
+                android:max="@{entry.episodeCount}"
+                android:progress="@{entry.progressCount}"
+                tools:progress="50"/>
+            
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>

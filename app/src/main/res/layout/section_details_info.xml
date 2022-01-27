@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.text.TextUtils"/>
+        <import type="io.github.drumber.kitsune.data.model.production.AnimeProductionRole" />
+        <variable
+            name="data"
+            type="io.github.drumber.kitsune.data.model.media.MediaAdapter" />
+    </data>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="0,1">
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{data.titles.en != null}"
+            app:title="@{@string/data_title_english}"
+            app:value="@{data.titles.en}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{data.titles.jaJp != null}"
+            app:title="@{@string/data_title_japanese}"
+            app:value="@{data.titles.jaJp}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{data.titles.enJp != null}"
+            app:title="@{@string/data_title_japanese_romaji}"
+            app:value="@{data.titles.enJp}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:title="@{@string/data_title_type}"
+            app:value="@{data.subtype}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:title="@{@string/data_title_status}"
+            app:value="@{data.statusText(context)}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{TextUtils.isEmpty(data.tba)}"
+            app:title="@{data.isAnime ? @string/data_title_aired : @string/data_title_published}"
+            app:value="@{data.airedText}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{TextUtils.isEmpty(data.tba) &amp;&amp; data.isAnime}"
+            app:title="@{@string/data_title_season}"
+            app:value="@{data.season(context) + ` ` + data.seasonYear}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.tba)}"
+            app:title="@{@string/data_title_tba}"
+            app:value="@{data.tba}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.ageRatingText)}"
+            app:title="@{@string/data_title_age_rating}"
+            app:value="@{data.ageRatingText}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.serialization)}"
+            app:title="@{@string/data_title_serialization}"
+            app:value="@{data.serialization}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.chapters)}"
+            app:title="@{@string/data_title_chapters}"
+            app:value="@{data.chapters}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.volumes)}"
+            app:title="@{@string/data_title_volumes}"
+            app:value="@{data.volumes}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.episodes)}"
+            app:title="@{@string/data_title_episodes}"
+            app:value="@{data.episodes}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.getProducer(AnimeProductionRole.Producer))}"
+            app:title="@{@string/data_title_producers}"
+            app:value="@{data.getProducer(AnimeProductionRole.Producer)}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.getProducer(AnimeProductionRole.Licensor))}"
+            app:title="@{@string/data_title_licensors}"
+            app:value="@{data.getProducer(AnimeProductionRole.Licensor)}" />
+
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.getProducer(AnimeProductionRole.Studio))}"
+            app:title="@{@string/data_title_studios}"
+            app:value="@{data.getProducer(AnimeProductionRole.Studio)}" />
+
+    </TableLayout>
+</layout>

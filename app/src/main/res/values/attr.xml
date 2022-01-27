@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="fullScreenDialogTheme" format="reference" />
+
+    <attr name="colorPlaceholderGradientStart" format="color" />
+    <attr name="colorPlaceholderGradientEnd" format="color" />
+
+    <declare-styleable name="ProfilePictureBehavior">
+        <attr name="finalXPosition" format="dimension"/>
+        <attr name="finalYPosition" format="dimension"/>
+        <attr name="finalHeight" format="dimension"/>
+        <attr name="finalToolbarHeight" format="dimension"/>
+    </declare-styleable>
+</resources>

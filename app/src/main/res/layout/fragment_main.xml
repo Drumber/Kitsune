@@ -11,66 +11,46 @@
         android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.AppBarLayout.Surface"
             app:liftOnScroll="true">
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:title="@string/app_name"
-                app:layout_scrollFlags="scroll|snap"
-                style="@style/Widget.MaterialComponents.Toolbar.Surface" />
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|snap|enterAlways"
+                android:background="?attr/colorSurface">
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tab_layout_explore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </FrameLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/nsv_content"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <LinearLayout
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/nsv_content"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:divider="@drawable/explore_section_divider"
-                android:showDividers="middle">
+                android:layout_height="match_parent">
 
-                <include
-                    android:id="@+id/section_trending"
-                    layout="@layout/section_main_explore"
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/view_pager_explore"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent" />
 
-                <include
-                    android:id="@+id/section_top_airing"
-                    layout="@layout/section_main_explore"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+            </androidx.core.widget.NestedScrollView>
 
-                <include
-                    android:id="@+id/section_top_upcoming"
-                    layout="@layout/section_main_explore"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    android:id="@+id/section_highest_rated"
-                    layout="@layout/section_main_explore"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    android:id="@+id/section_most_popular"
-                    layout="@layout/section_main_explore"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-        </androidx.core.widget.NestedScrollView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <include
             android:id="@+id/layout_loading"

@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs.kotlin'
     id 'kotlin-parcelize'
+    id 'com.mikepenz.aboutlibraries.plugin'
 }
 
 android {
@@ -13,10 +14,18 @@ android {
         applicationId "io.github.drumber.kitsune"
         minSdk 21
         targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "1.2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+
+        buildConfigField "boolean", "SCREENSHOT_MODE_ENABLED", SCREENSHOT_MODE
     }
 
     buildTypes {
@@ -31,6 +40,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
     }
     buildFeatures {
         viewBinding true
@@ -43,31 +53,51 @@ android {
 
 dependencies {
     // Android core and support libs
-    implementation 'androidx.core:core-ktx:1.6.0'
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.core:core-splashscreen:1.0.0-beta01'
+    implementation "androidx.cardview:cardview:1.0.0"
 
     // Navigation
-    def nav_version = "2.4.0-alpha09"
+    def nav_version = "2.4.0-rc01"
+    def fragment_version = "1.4.0"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-    implementation 'androidx.fragment:fragment-ktx:1.4.0-alpha09'
+    implementation "androidx.fragment:fragment-ktx:$fragment_version"
+
+    // Preference
+    implementation 'androidx.preference:preference-ktx:1.1.1'
 
     // Lifecycle
-    def lifecycle_version = "2.3.1"
+    def lifecycle_version = "2.4.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
 
     // Material
     implementation 'com.google.android.material:material:1.4.0'
 
+    // Persistent search
+    implementation "com.paulrybitskyi.persistentsearchview:persistentsearchview:1.1.4"
+    implementation "com.arthurivanets.adapster:adapster:1.0.13"
+
     // Kotlin coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
 
     // Paging
-    implementation 'androidx.paging:paging-runtime-ktx:3.0.1'
+    implementation 'androidx.paging:paging-runtime-ktx:3.1.0'
+
+    // Room
+    def room_version = "2.4.1"
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-paging:$room_version"
+
+    // ViewPager
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
     // Glide
     def glide_version = "4.12.0"
@@ -76,18 +106,19 @@ dependencies {
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
 
     // Koin DI
-    def koin_version = "3.1.2"
+    def koin_version = "3.1.3"
     implementation "io.insert-koin:koin-android:$koin_version"
+    implementation "io.insert-koin:koin-androidx-navigation:$koin_version"
 
     // View binding delegate
-    implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.5.0-beta01'
+    implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.5.3'
 
     // jsonapi-converter
     implementation 'com.github.jasminb:jsonapi-converter:0.11'
 
     // Jackson
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.5'
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.12.5"
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1"
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -112,6 +143,44 @@ dependencies {
     implementation 'com.chibatching.kotpref:kotpref:2.13.1'
     implementation 'com.chibatching.kotpref:enum-support:2.13.1'
     implementation 'com.chibatching.kotpref:livedata-support:2.13.1'
+
+    // Security Crypto
+    implementation 'androidx.security:security-crypto:1.1.0-alpha03'
+
+    // TreeView
+    implementation 'com.github.bmelnychuk:atv:1.2.9'
+
+    // Expandable text view
+    implementation 'at.blogc:expandabletextview:1.0.5'
+
+    // CircleImageView
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    // Material Rating Bar
+    implementation 'me.zhanghai.android.materialratingbar:library:1.4.0'
+
+    // MPAndroidCharts
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    // Photo View
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+
+    def hauler_version = "5.0.0"
+    implementation "app.futured.hauler:hauler:$hauler_version"
+    implementation "app.futured.hauler:databinding:$hauler_version"
+
+    // AboutLibraries
+    def aboutLibraries_version = "8.9.4"
+    implementation "com.mikepenz:aboutlibraries-core:$aboutLibraries_version"
+    implementation "com.mikepenz:aboutlibraries:$aboutLibraries_version"
+
+    // LeakCanary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
+
+    // Glide Transformations (only used for demo screenshots)
+    if (SCREENSHOT_MODE) {
+        debugImplementation 'jp.wasabeef:glide-transformations:4.3.0'
+    }
 
     // Tests
     testImplementation 'junit:junit:4.+'

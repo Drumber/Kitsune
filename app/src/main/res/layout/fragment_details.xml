@@ -4,9 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.text.TextUtils"/>
+        <import type="io.github.drumber.kitsune.data.model.media.MediaAdapter" />
         <variable
             name="data"
-            type="io.github.drumber.kitsune.data.model.resource.ResourceAdapter" />
+            type="MediaAdapter" />
     </data>
 
     <FrameLayout
@@ -15,6 +17,7 @@
         tools:context=".ui.details.DetailsFragment">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/coordinator_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -32,7 +35,7 @@
                     app:scrimAnimationDuration="300"
                     app:scrimVisibleHeightTrigger="150dp"
                     app:maxLines="3"
-                    app:expandedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Expanded"
+                    app:expandedTitleTextAppearance="@style/TextAppearance.Kitsune.CollapsingToolbar.Expanded"
                     app:expandedTitleGravity="bottom"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -45,7 +48,8 @@
                         <ImageView
                             android:id="@+id/iv_cover"
                             android:layout_width="match_parent"
-                            android:layout_height="200dp" />
+                            android:layout_height="200dp"
+                            android:contentDescription="@null" />
 
                         <View
                             android:layout_width="match_parent"
@@ -66,8 +70,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
                         app:navigationIcon="@drawable/ic_arrow_back_24"
+                        app:navigationContentDescription="@string/action_back"
                         app:title="@{data.title}"
                         tools:title="Some Title"
+                        app:menu="@menu/details_menu"
+                        app:layout_collapseMode="pin"/>
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/progress_indicator"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="true"
+                        app:hideAnimationBehavior="outward"
+                        app:trackThickness="1dp"
+                        android:layout_gravity="bottom"
                         app:layout_collapseMode="pin"/>
 
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -75,6 +91,7 @@
             </com.google.android.material.appbar.AppBarLayout>
 
             <androidx.core.widget.NestedScrollView
+                android:id="@+id/nsv_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -84,7 +101,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:padding="10dp">
+                    android:clipToPadding="false"
+                    android:padding="15dp"
+                    android:layout_marginTop="10dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -92,10 +111,11 @@
 
                         <ImageView
                             android:id="@+id/iv_thumbnail"
-                            android:layout_width="110dp"
-                            android:layout_height="156dp"
-                            android:layout_alignParentTop="true"
+                            android:layout_width="@dimen/details_thumbnail_width"
+                            android:layout_height="@dimen/details_thumbnail_height"
                             android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:contentDescription="@null"
                             tools:src="@drawable/ic_insert_photo_48" />
 
                         <TextView
@@ -103,25 +123,177 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/iv_thumbnail"
                             android:layout_alignParentStart="true"
-                            android:text="@{data.publishingYear + `, ` + data.subtype}" />
+                            android:layout_marginTop="10dp"
+                            android:text="@{data.publishingYear + ` • ` + data.subtype}"
+                            tools:text="2002 • TV" />
 
                         <include
                             layout="@layout/section_details_stats"
-                            app:data="@{data}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_above="@id/btn_manage_library"
                             android:layout_toEndOf="@id/iv_thumbnail"
-                            android:layout_alignParentBottom="true" />
+                            app:data="@{data}" />
+
+                        <Button
+                            android:id="@+id/btn_manage_library"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_toEndOf="@id/iv_thumbnail"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignBottom="@id/iv_thumbnail"
+                            android:text="@string/library_action_add"
+                            android:textAllCaps="false" />
 
                     </RelativeLayout>
 
-                    <Space
+                    <HorizontalScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="10dp" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:requiresFadingEdge="horizontal"
+                        android:scrollbars="none">
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/chip_group_categories"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clipToPadding="false"
+                            app:singleLine="true" />
+
+                    </HorizontalScrollView>
 
                     <include
                         layout="@layout/section_details_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="25dp"
+                        app:isVisible="@{!TextUtils.isEmpty(data.description)}"
                         app:data="@{data}" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/title_details"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                            android:layout_marginBottom="10dp"/>
+
+                        <include
+                            layout="@layout/section_details_info"
+                            app:data="@{data}" />
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btn_media_units"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAllCaps="false"
+                        android:text="@{data.isAnime() ? @string/title_episodes : @string/title_chapters}"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+                    <Button
+                        android:id="@+id/btn_characters"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:textAllCaps="false"
+                        android:text="@string/title_characters"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+                    <include
+                        layout="@layout/section_details_trailer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        app:isVisible="@{!TextUtils.isEmpty(data.trailerUrl)}"
+                        app:videoUrl="@{data.trailerUrl}"
+                        app:coverUrl="@{data.trailerCoverUrl}" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_franchise"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        app:isVisible="@{data.hasMediaRelationships()}"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/title_more_franchise"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                            android:layout_marginBottom="10dp" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_franchise"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingVertical="5dp"
+                            android:requiresFadingEdge="horizontal"
+                            android:clipToPadding="false"
+                            android:orientation="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_streamer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        app:isVisible="@{data.hasStreamingLinks()}"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/title_streamer"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                            android:layout_marginBottom="10dp" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_streamer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingVertical="5dp"
+                            android:requiresFadingEdge="horizontal"
+                            android:clipToPadding="false"
+                            android:orientation="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_ratings"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        app:isVisible="@{data.hasRatingFrequencies()}"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/title_ratings"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                            android:layout_marginBottom="5dp" />
+
+                        <com.github.mikephil.charting.charts.BarChart
+                            android:id="@+id/chart_ratings"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 

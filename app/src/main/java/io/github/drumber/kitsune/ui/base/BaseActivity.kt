@@ -10,16 +10,34 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import com.chibatching.kotpref.livedata.asLiveData
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.util.setStatusBarColor
+import io.github.drumber.kitsune.constants.AppTheme
+import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.util.extensions.clearLightNavigationBar
+import io.github.drumber.kitsune.util.extensions.setStatusBarColor
 
 abstract class BaseActivity(
     @LayoutRes contentLayoutId: Int,
-    private val edgeToEdge: Boolean = true
+    private val edgeToEdge: Boolean = true,
+    private val updateSystemUiColors: Boolean = true,
+    private val setAppTheme: Boolean = true
 ) : AppCompatActivity(contentLayoutId) {
 
+    private lateinit var appliedTheme: AppTheme
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (setAppTheme) {
+            // apply app theme
+            appliedTheme = KitsunePref.appTheme
+            setTheme(appliedTheme.themeRes)
+        }
+
         super.onCreate(savedInstanceState)
+
+        KitsunePref.asLiveData(KitsunePref::appTheme).observe(this) {
+            checkAppTheme()
+        }
 
         // get surface color
         val typedValue = TypedValue()
@@ -29,11 +47,25 @@ abstract class BaseActivity(
 
         if(edgeToEdge) {
             initEdgeToEdge()
+        } else {
+            clearLightNavigationBar()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkAppTheme()
+    }
+
+    private fun checkAppTheme() {
+        if (setAppTheme && appliedTheme != KitsunePref.appTheme) {
+            recreate()
         }
     }
 
     private fun initEdgeToEdge() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        if (!updateSystemUiColors) return
 
         setStatusBarColor(ContextCompat.getColor(this, R.color.translucent_status_bar))
         if(Build.VERSION.SDK_INT >= 27) {

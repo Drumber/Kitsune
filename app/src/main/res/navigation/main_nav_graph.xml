@@ -12,12 +12,11 @@
         tools:layout="@layout/fragment_main" >
         <action
             app:restoreState="true"
-            app:launchSingleTop="true"
             android:id="@+id/action_main_fragment_to_detailsFragment"
             app:destination="@id/details_fragment" />
         <action
-            android:id="@+id/action_main_fragment_to_exploreFragment2"
-            app:destination="@id/explore_fragment" />
+            android:id="@+id/action_main_fragment_to_mediaListFragment"
+            app:destination="@id/media_list_fragment" />
     </fragment>
 
     <fragment
@@ -28,34 +27,126 @@
         <action
             android:id="@+id/action_search_fragment_to_details_fragment"
             app:destination="@id/details_fragment" />
+        <deepLink
+            android:id="@+id/deepLink_search"
+            app:uri="kitsune://search" />
     </fragment>
 
     <fragment
         android:id="@+id/profile_fragment"
         android:name="io.github.drumber.kitsune.ui.profile.ProfileFragment"
         android:label="@string/nav_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profile_fragment_to_settingsFragment"
+            app:destination="@id/settings_fragment" />
+    </fragment>
     <fragment
         android:id="@+id/details_fragment"
         android:name="io.github.drumber.kitsune.ui.details.DetailsFragment"
         android:label="DetailsFragment" >
         <argument
             android:name="model"
-            app:argType="io.github.drumber.kitsune.data.model.resource.ResourceAdapter" />
+            app:argType="io.github.drumber.kitsune.data.model.media.MediaAdapter" />
+        <action
+            android:id="@+id/action_details_fragment_to_media_list_fragment"
+            app:destination="@id/media_list_fragment" />
+        <action
+            android:id="@+id/action_details_fragment_self"
+            app:destination="@id/details_fragment" />
+        <action
+            android:id="@+id/action_details_fragment_to_episodes_fragment"
+            app:destination="@id/episodes_fragment" />
+        <action
+            android:id="@+id/action_details_fragment_to_characters_fragment"
+            app:destination="@id/characters_fragment" />
+        <action
+            android:id="@+id/action_details_fragment_to_photoViewActivity"
+            app:destination="@id/photo_view_activity" />
     </fragment>
     <fragment
-        android:id="@+id/explore_fragment"
-        android:name="io.github.drumber.kitsune.ui.main.explore.ExploreFragment"
-        android:label="fragment_explore"
-        tools:layout="@layout/fragment_explore" >
+        android:id="@+id/media_list_fragment"
+        android:name="io.github.drumber.kitsune.ui.medialist.MediaListFragment"
+        android:label="fragment_media_list"
+        tools:layout="@layout/fragment_media_list">
         <action
-            android:id="@+id/action_exploreFragment_to_details_fragment2"
+            android:id="@+id/action_mediaListFragment_to_details_fragment"
             app:destination="@id/details_fragment" />
         <argument
-            android:name="resourceSelector"
-            app:argType="io.github.drumber.kitsune.data.model.ResourceSelector" />
+            android:name="mediaSelector"
+            app:argType="io.github.drumber.kitsune.data.model.MediaSelector" />
         <argument
             android:name="title"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/settings_fragment"
+        android:name="io.github.drumber.kitsune.ui.settings.SettingsFragment"
+        android:label="@string/nav_settings">
+        <action
+            android:id="@+id/action_settings_fragment_to_librariesFragment"
+            app:destination="@id/librariesFragment" />
+        <action
+            android:id="@+id/action_settings_fragment_to_themePreferenceFragment"
+            app:destination="@id/theme_fragment" />
+        <deepLink
+            android:id="@+id/deepLink_settings"
+            app:uri="kitsune://settings" />
+    </fragment>
+    <fragment
+        android:id="@+id/library_fragment"
+        android:name="io.github.drumber.kitsune.ui.library.LibraryFragment"
+        android:label="@string/nav_library"
+        tools:layout="@layout/fragment_library">
+        <action
+            android:id="@+id/action_library_fragment_to_details_fragment"
+            app:destination="@id/details_fragment" />
+        <deepLink
+            android:id="@+id/deepLink_library"
+            app:uri="kitsune://library" />
+    </fragment>
+    <fragment
+        android:id="@+id/librariesFragment"
+        android:name="io.github.drumber.kitsune.ui.settings.LibrariesFragment"
+        android:label="LibrariesFragment" />
+    <fragment
+        android:id="@+id/theme_fragment"
+        android:name="io.github.drumber.kitsune.ui.settings.ThemePreferenceFragment"
+        android:label="@string/nav_appearance" />
+    <fragment
+        android:id="@+id/episodes_fragment"
+        android:name="io.github.drumber.kitsune.ui.details.episodes.EpisodesFragment"
+        android:label="EpisodesFragment" >
+        <argument
+            android:name="media"
+            app:argType="io.github.drumber.kitsune.data.model.media.BaseMedia" />
+        <argument
+            android:name="libraryEntryId"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/characters_fragment"
+        android:name="io.github.drumber.kitsune.ui.details.characters.CharactersFragment"
+        android:label="CharactersFragment" >
+        <argument
+            android:name="mediaId"
+            app:argType="string" />
+        <argument
+            android:name="isAnime"
+            app:argType="boolean" />
+    </fragment>
+    <activity
+        android:id="@+id/photo_view_activity"
+        android:name="io.github.drumber.kitsune.ui.details.photoview.PhotoViewActivity"
+        android:label="activity_photo_view"
+        tools:layout="@layout/activity_photo_view" >
+        <argument
+            android:name="imageUrl"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            app:argType="string"
+            app:nullable="true" />
+    </activity>
 </navigation>

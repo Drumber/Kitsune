@@ -27,7 +27,7 @@ data class Filter(val options: MutableMap<String, String> = mutableMapOf()): Par
 
     fun include(vararg relationships: String) = put("include", relationships.joinToString(","))
 
-    private inline fun put(key: String, value: Any): Filter {
+    private fun put(key: String, value: Any): Filter {
         options[key] = value.toString()
         return this
     }

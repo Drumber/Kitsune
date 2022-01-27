@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="preference_dark_mode_values">
+        <item>1</item>
+        <item>2</item>
+        <item>-1</item>
+        <item>3</item>
+    </string-array>
+
+    <array name="stats_chart_colors">
+        <item>#FEB700</item>
+        <item>#FF9300</item>
+        <item>#FF3281</item>
+        <item>#BC6EDA</item>
+        <item>#00BBED</item>
+        <item>#545C97</item>
+        <item>#EA6200</item>
+    </array>
+
+    <array name="ratings_chart_colors">
+        <item>#ba2020</item>
+        <item>#ba2d20</item>
+        <item>#ba3920</item>
+        <item>#ba4620</item>
+        <item>#ba5320</item>
+        <item>#ba6020</item>
+        <item>#ba6d20</item>
+        <item>#ba7a20</item>
+        <item>#ba8720</item>
+        <item>#ba9420</item>
+        <item>#baa020</item>
+        <item>#baad20</item>
+        <item>#baba20</item>
+        <item>#adba20</item>
+        <item>#a0ba20</item>
+        <item>#94ba20</item>
+        <item>#87ba20</item>
+        <item>#7aba20</item>
+        <item>#6dba20</item>
+        <item>#60ba20</item>
+    </array>
+</resources>

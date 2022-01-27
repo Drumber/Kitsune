@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="ic_launcher_background">#312631</color>
 
     <color name="orange_900">#bc3d2c</color>
     <color name="orange_800">#d64a35</color>
@@ -15,15 +16,35 @@
     <color name="yellow_600">#ffdb64</color>
     <color name="yellow_500">#fee561</color>
     <color name="yellow_400">#ffea75</color>
+    
+    <!-- Purple Theme Colors -->
+    <color name="dark_purple">#161116</color>
+    <color name="dark_purple_lighter">#221B22</color>
+    <color name="purple_900">#332532</color>
+    <color name="purple_800">#433140</color>
+    <color name="purple_700">#533c4c</color>
+    <color name="purple_600">#63485a</color>
+    <color name="purple_500">#6f5064</color>
+    <color name="purple_400">#836a7a</color>
+    <color name="purple_300">#988591</color>
+    <color name="purple_200">#b4a8b0</color>
+    <color name="purple_100">#d2cbcf</color>
 
-    <color name="background">#ffffff</color>
     <color name="foreground">#000000</color>
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="translucent_overlay_50">#80FFFFFF</color>
+    <color name="color_star">#F39C12</color>
+    <color name="color_heart">#E74C3C</color>
+    <color name="color_score">#1BBC9C</color>
 
-    <color name="translucent_status_bar">@color/translucent_overlay_50</color>
+    <!-- Preview colors for theme selector cards -->
+    <color name="theme_preview_default_light">@color/white</color>
+    <color name="theme_preview_default_dark">@color/black</color>
+    <color name="theme_preview_purple_light">@color/white</color>
+    <color name="theme_preview_purple_dark">@color/dark_purple_lighter</color>
+
     <color name="edge_fade_color">#BF000000</color>
+    <color name="translucent_system_overlay">#4D000000</color>
 </resources>

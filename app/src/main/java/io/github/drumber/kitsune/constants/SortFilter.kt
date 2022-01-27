@@ -28,6 +28,13 @@ enum class SortFilter(val queryParam: String) {
 
 }
 
+enum class CategorySortFilter(val queryParam: String) {
+
+    TOTAL_MEDIA_COUNT_DESC("-total_media_count"),
+    TOTAL_MEDIA_COUNT_ASC("total_media_count")
+
+}
+
 inline fun SortFilter.toStringRes() = when (this) {
     SortFilter.POPULARITY_DESC -> R.string.sort_popularity_desc
     SortFilter.POPULARITY_ASC -> R.string.sort_popularity_asc

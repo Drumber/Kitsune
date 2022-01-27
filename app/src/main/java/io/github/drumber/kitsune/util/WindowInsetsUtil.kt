@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.*
 
-inline fun Toolbar.initWindowInsetsListener(consume: Boolean = true) {
+fun Toolbar.initWindowInsetsListener(consume: Boolean = true) {
     val initialHeight = this.layoutParams.height
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
         val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -19,7 +19,7 @@ inline fun Toolbar.initWindowInsetsListener(consume: Boolean = true) {
     }
 }
 
-inline fun View.initPaddingWindowInsetsListener(
+fun View.initPaddingWindowInsetsListener(
     left: Boolean = false,
     top: Boolean = false,
     right: Boolean = false,
@@ -44,7 +44,7 @@ inline fun View.initPaddingWindowInsetsListener(
     }
 }
 
-inline fun View.initMarginWindowInsetsListener(
+fun View.initMarginWindowInsetsListener(
     left: Boolean = false,
     top: Boolean = false,
     right: Boolean = false,

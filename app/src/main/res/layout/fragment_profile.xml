@@ -1,9 +1,252 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.profile.ProfileFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <import type="io.github.drumber.kitsune.util.DataUtil" />
+        <import type="android.text.TextUtils" />
+        <variable
+            name="user"
+            type="io.github.drumber.kitsune.data.model.auth.User" />
+    </data>
 
-</FrameLayout>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.profile.ProfileFragment"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:liftOnScroll="true">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:contentScrim="?attr/colorSurface"
+                app:scrimAnimationDuration="300"
+                app:scrimVisibleHeightTrigger="120dp"
+                app:titleCollapseMode="scale"
+                app:titleEnabled="true"
+                app:title="@{user.name ?? @string/not_logged_in}"
+                tools:expandedTitleMarginStart="@dimen/profile_text_offset_expanded"
+                app:expandedTitleTextAppearance="@style/TextAppearance.Kitsune.CollapsingToolbar.Expanded"
+                app:expandedTitleGravity="center_vertical"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom">
+
+                    <ImageView
+                        android:id="@+id/iv_cover"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/cover_placeholder"
+                        android:contentDescription="@null" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_gravity="top"
+                        android:background="@drawable/top_edge_fade" />
+
+                    <FrameLayout
+                        android:id="@+id/cover_spacer"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/profile_picture_expanded"
+                        android:visibility="invisible"
+                        android:layout_marginTop="@dimen/profile_picture_offset_expanded"
+                        android:layout_marginBottom="20dp" />
+
+                </FrameLayout>
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    app:menu="@menu/profile_menu"
+                    app:titleMarginStart="@dimen/profile_text_offset_collapsed" />
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nsv_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:isVisible="@{user != null}"
+                    tools:visibility="visible"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        app:strokeWidth="1dp"
+                        app:strokeColor="@color/card_stroke_color"
+                        app:cardElevation="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/card_inner_padding"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                                android:text="@string/title_about_me" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                app:isVisible="@{!TextUtils.isEmpty(user.about)}"
+                                android:text="@{user.about}"
+                                tools:text="Personal about me text." />
+
+                            <TableLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:stretchColumns="0,1">
+
+                                <include
+                                    layout="@layout/item_details_info_row"
+                                    app:icon="@{@drawable/ic_person_24}"
+                                    app:title="@{@string/profile_data_gender}"
+                                    app:value="@{DataUtil.getGenderString(user.gender, context) ?? @string/profile_data_private}" />
+
+                                <include
+                                    layout="@layout/item_details_info_row"
+                                    app:icon="@{@drawable/ic_location_24}"
+                                    app:title="@{@string/profile_data_location}"
+                                    app:value="@{user.location ?? @string/profile_data_private}" />
+
+                                <include
+                                    layout="@layout/item_details_info_row"
+                                    app:icon="@{@drawable/ic_cake_24}"
+                                    app:title="@{@string/profile_data_birthday}"
+                                    app:value="@{DataUtil.formatDate(user.birthday) ?? @string/profile_data_private}" />
+
+                                <include
+                                    layout="@layout/item_details_info_row"
+                                    app:icon="@{@drawable/ic_calendar_24}"
+                                    app:title="@{@string/profile_data_join_date}"
+                                    app:value="@{DataUtil.formatDate(user.createdAt) ?? @string/profile_data_private}" />
+
+                            </TableLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <com.google.android.material.tabs.TabLayout
+                                android:id="@+id/tab_layout_stats"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:tabTextAppearance="@style/TextAppearance.Kitsune.TabLayout" />
+
+                            <androidx.viewpager2.widget.ViewPager2
+                                android:id="@+id/view_pager_stats"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/card_inner_padding" />
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+                <!-- Not Logged In Message -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:visibility="gone"
+                    app:isVisible="@{user == null}">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:padding="20dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                            android:text="@string/profile_not_logged_in_title" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                            android:text="@string/profile_not_logged_in_text" />
+
+                        <Button
+                            android:id="@+id/btn_login"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="20dp"
+                            android:text="@string/action_log_in_to_kitsu"
+                            android:textAllCaps="false" />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </FrameLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_profile_image"
+            android:layout_width="@dimen/profile_picture_expanded"
+            android:layout_height="@dimen/profile_picture_expanded"
+            android:layout_gravity="top|start"
+            android:layout_marginTop="@dimen/profile_picture_offset_expanded"
+            android:layout_marginStart="@dimen/profile_picture_offset_expanded"
+            android:elevation="4dp"
+            android:src="@drawable/profile_picture_placeholder"
+            app:finalHeight="@dimen/profile_picture_collapsed"
+            app:finalXPosition="@dimen/profile_picture_x_offset_collapsed"
+            app:finalYPosition="@dimen/profile_picture_y_offset_collapsed"
+            app:finalToolbarHeight="?attr/actionBarSize"
+            app:layout_behavior=".ui.widget.ProfilePictureBehavior" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

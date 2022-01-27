@@ -1,10 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Kitsune" parent="Theme.Kitsune.Base">
+    <style name="Theme.Kitsune.DayNight" parent="Theme.Kitsune" />
 
-    </style>
-
-    <style name="Theme.Kitsune.Base" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.Kitsune" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/orange_400</item>
         <item name="colorPrimaryVariant">@color/orange_700</item>
         <item name="colorSecondary">@color/yellow_700</item>
@@ -13,8 +11,8 @@
         <item name="colorOnPrimary">@color/black</item>
         <item name="colorOnSecondary">@color/black</item>
 
-        <item name="android:colorBackground">@color/background</item>
-        <item name="colorSurface">@color/background</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="android:colorBackground">?attr/colorSurface</item>
         <item name="colorOnBackground">@color/foreground</item>
         <item name="colorOnSurface">@color/foreground</item>
 
@@ -28,11 +26,174 @@
 
         <item name="colorPrimaryDark">?colorPrimaryVariant</item>
         <item name="colorAccent">?colorSecondary</item>
+
+        <item name="colorPlaceholderGradientStart">?colorPrimary</item>
+        <item name="colorPlaceholderGradientEnd">?colorPrimaryDark</item>
+
+        <item name="preferenceTheme">@style/Theme.Kitsune.PreferenceThemeOverlay</item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Kitsune.BottomSheetDialog</item>
+        <item name="fullScreenDialogTheme">@style/Theme.Kitsune.FullScreenDialog</item>
+    </style>
+    
+    <style name="Theme.Kitsune.DayNight.Purple" parent="Theme.Kitsune.DayNight">
+        <item name="colorSurface">@color/white</item>
+        <item name="colorPrimary">@color/purple_400</item>
+        <item name="colorPrimaryVariant">@color/purple_500</item>
+        <item name="colorSecondary">@color/orange_400</item>
+        <item name="colorSecondaryVariant">@color/orange_700</item>
+
+        <item name="colorPlaceholderGradientStart">?colorPrimary</item>
+        <item name="colorPlaceholderGradientEnd">?colorPrimaryVariant</item>
+
+        <item name="fullScreenDialogTheme">@style/Theme.Kitsune.FullScreenDialog.Purple</item>
     </style>
 
-    <style name="TextAppearance.App.CollapsingToolbar.Expanded" parent="TextAppearance.Design.CollapsingToolbar.Expanded">
+    <!-- FullScreen theme -->
+    <style name="Theme.Kitsune.DayNight.FullScreen">
+        <item name="android:statusBarColor">@color/translucent_system_overlay</item>
+        <item name="android:navigationBarColor">@color/translucent_system_overlay</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
+
+        <item name="colorSurface">@color/black</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <!-- SplashScreen theme -->
+    <style name="Theme.Kitsune.SplashScreen.DayNight" parent="Theme.Kitsune.SplashScreen" />
+
+    <style name="Theme.Kitsune.SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splashscreen</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+        <item name="postSplashScreenTheme">@style/Theme.Kitsune.DayNight</item>
+    </style>
+
+    <style name="Theme.Kitsune.FullScreenDialog" parent="Theme.Kitsune.DayNight">
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <style name="Theme.Kitsune.FullScreenDialog.Purple" parent="Theme.Kitsune.DayNight.Purple">
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <style name="ThemeOverlay.Kitsune.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="bottomSheetStyle">@style/ModalBottomSheet</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="paddingLeftSystemWindowInsets">false</item>
+        <item name="paddingRightSystemWindowInsets">false</item>
+    </style>
+
+    <style name="ModalBottomSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="shapeAppearance">@style/ShapeAppearance.Kitsune.LargeComponent</item>
+    </style>
+
+    <style name="TextAppearance.Kitsune.CollapsingToolbar.Expanded" parent="TextAppearance.Design.CollapsingToolbar.Expanded">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">28sp</item>
+    </style>
+
+    <style name="TextAppearance.Kitsune.TabLayout" parent="TextAppearance.MaterialComponents.Button">
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="Widget.Kitsune.TextView.BottomSheetTitle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Headline6</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="AppTheme.Slide">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+
+    <style name="Widget.Kitsune.Chip.Selectable" parent="Base.Widget.MaterialComponents.Chip">
+        <item name="android:textColor">@color/mtrl_choice_chip_text_color</item>
+        <item name="chipBackgroundColor">@color/mtrl_choice_chip_background_color</item>
+        <item name="rippleColor">@color/chip_selectable_ripple_color</item>
+        <item name="closeIconTint">@color/mtrl_choice_chip_text_color</item>
+    </style>
+
+    <style name="Widget.Kitsune.Button.IconOnly" parent="Widget.MaterialComponents.Button">
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">@dimen/icon_button_padding</item>
+        <item name="android:paddingRight">@dimen/icon_button_padding</item>
+        <item name="android:minWidth">@dimen/icon_button_size</item>
+        <item name="android:minHeight">@dimen/icon_button_size</item>
+    </style>
+
+    <style name="Widget.Kitsune.Button.Outlined.IconOnly" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">@dimen/icon_button_padding</item>
+        <item name="android:paddingRight">@dimen/icon_button_padding</item>
+        <item name="android:minWidth">@dimen/icon_button_size</item>
+        <item name="android:minHeight">@dimen/icon_button_size</item>
+    </style>
+
+    <style name="Widget.Kitsune.Button.IconRound" parent="@style/Widget.Kitsune.Button.Outlined.IconOnly">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Kitsune.Button.Circle</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="strokeColor">@android:color/transparent</item>
+        <item name="iconTint">?attr/colorControlNormal</item>
+    </style>
+
+    <style name="Widget.Kitsune.Button.IconText" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">@dimen/icon_button_padding</item>
+        <item name="android:paddingRight">@dimen/icon_button_padding</item>
+        <item name="android:minWidth">@dimen/icon_button_size</item>
+        <item name="android:minHeight">@dimen/icon_button_size</item>
+        <item name="android:textColor">@color/button_text_color_selector</item>
+        <item name="iconTint">@color/button_text_color_selector</item>
+    </style>
+
+    <style name="Widget.Kitsune.Button.IconText.Inactive" parent="Widget.Kitsune.Button.IconText">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+    
+    <style name="Widget.Kitsune.TextInputLayout.Dense.ExposedDropdownMenu" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Kitsune.AutoCompleteTextView.Dense</item>
+    </style>
+
+    <style name="ThemeOverlay.Kitsune.AutoCompleteTextView.Dense" parent="@style/ThemeOverlay.MaterialComponents.AutoCompleteTextView.OutlinedBox.Dense">
+        <item name="autoCompleteTextViewStyle">@style/Widget.Kitsune.AutoCompleteTextView.Dense</item>
+    </style>
+
+    <style name="Widget.Kitsune.AutoCompleteTextView.Dense" parent="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox.Dense">
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+    </style>
+
+    <style name="Theme.Kitsune.PreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
+        <item name="android:layout">@layout/fragment_preference</item>
+    </style>
+
+    <style name="ShapeAppearance.Kitsune.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.Kitsune.Button.Circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
     </style>
 
 </resources>

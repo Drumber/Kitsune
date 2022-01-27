@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginVertical="5dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardElevation="2dp">
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        
+        <ImageView
+            android:id="@+id/iv_thumbnail"
+            android:layout_width="@dimen/episode_card_img_width"
+            android:layout_height="@dimen/episode_card_img_height"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@null" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/iv_thumbnail"
+            android:layout_toStartOf="@id/checkbox_watched"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/card_inner_padding"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_episode_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_marginBottom="8dp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                tools:text="Some Episode Title" />
+
+            <TextView
+                android:id="@+id/tv_episode_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:maxLines="2"
+                android:ellipsize="end"
+                tools:text="Some Episode Title" />
+
+        </LinearLayout>
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/checkbox_watched"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" />
+        
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>

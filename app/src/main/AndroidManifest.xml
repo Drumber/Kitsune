@@ -2,25 +2,48 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.github.drumber.kitsune">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
+    <queries>
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
+    </queries>
 
     <application
+        android:name=".KitsuneApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name="io.github.drumber.kitsune.KitsuneApplication"
-        android:theme="@style/Theme.Kitsune">
+        android:theme="@style/Theme.Kitsune.SplashScreen.DayNight">
         <activity
-            android:name="io.github.drumber.kitsune.ui.main.MainActivity"
-            android:exported="true">
+            android:name=".ui.details.photoview.PhotoViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:theme="@style/Theme.Kitsune.DayNight.FullScreen" />
+        <activity
+            android:name=".ui.authentication.AuthenticationActivity"
+            android:exported="true"
+            android:label="@string/title_authentication" />
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
     </application>
 

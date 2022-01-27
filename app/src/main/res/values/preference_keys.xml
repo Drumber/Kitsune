@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Preference Files -->
+    <string name="preference_file_key">app_preferences</string>
+    <string name="auth_preference_file_key">auth_preferences</string>
+    <string name="user_preference_file_key">user_preferences</string>
+
+    <!-- Preference Keys -->
+    <string name="preference_key_fragment_appearance">fragment_appearance</string>
+    <string name="preference_key_app_theme">app_theme</string>
+    <string name="preference_key_dark_mode">dark_mode</string>
+    <string name="preference_key_language">language</string>
+    <string name="preference_key_offline_library_updates">offline_library_updates</string>
+    <string name="preference_key_app_version">app_version</string>
+    <string name="preference_key_open_source_libraries">open_source_libraries</string>
+
+    <!-- Kitsune Preference Keys -->
+    <string name="preference_key_display_name">display_name</string>
+    <string name="preference_key_profile_url">profile_url</string>
+    <string name="preference_key_country">country</string>
+    <string name="preference_key_titles">titles</string>
+    <string name="preference_key_adult_content">adult_content</string>
+</resources>
