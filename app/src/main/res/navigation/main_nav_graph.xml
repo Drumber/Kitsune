@@ -30,6 +30,9 @@
         <deepLink
             android:id="@+id/deepLink_search"
             app:uri="kitsune://search" />
+        <action
+            android:id="@+id/action_search_fragment_to_facet_fragment"
+            app:destination="@id/facet_fragment" />
     </fragment>
 
     <fragment
@@ -149,4 +152,8 @@
             app:argType="string"
             app:nullable="true" />
     </activity>
+    <fragment
+        android:id="@+id/facet_fragment"
+        android:name="io.github.drumber.kitsune.ui.search.filter.FacetFragment"
+        android:label="FacetFragment" />
 </navigation>

@@ -27,7 +27,7 @@ import io.github.drumber.kitsune.util.algolia.connectView
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
     OnItemClickListener<MediaSearchResult>,
@@ -35,7 +35,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
 
     private val binding: FragmentSearchBinding by viewBinding()
 
-    private val viewModel: SearchViewModel by viewModel()
+    private val viewModel: SearchViewModel by sharedViewModel()
 
     override val recyclerView: RecyclerView
         get() = binding.rvMedia
@@ -65,6 +65,11 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
             viewModel.searchResultSource.collectLatest {
                 adapter.submitData(it)
             }
+        }
+
+        binding.btnFilter.setOnClickListener {
+            val action = SearchFragmentDirections.actionSearchFragmentToFacetFragment()
+            findNavController().navigateSafe(R.id.search_fragment, action)
         }
 
         observeSearchBox()

@@ -3,8 +3,14 @@ package io.github.drumber.kitsune.ui.search
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.algolia.instantsearch.core.connection.ConnectionHandler
+import com.algolia.instantsearch.core.selectable.list.SelectionMode
+import com.algolia.instantsearch.helper.filter.facet.FacetListConnector
+import com.algolia.instantsearch.helper.filter.facet.FacetListPresenterImpl
+import com.algolia.instantsearch.helper.filter.state.FilterState
 import com.algolia.instantsearch.helper.searcher.SearcherSingleIndex
+import com.algolia.instantsearch.helper.searcher.connectFilterState
 import com.algolia.search.dsl.*
+import com.algolia.search.model.Attribute
 import com.algolia.search.model.search.Query
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.model.auth.SearchType
@@ -12,6 +18,7 @@ import io.github.drumber.kitsune.data.model.media.MediaSearchResult
 import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.data.repository.SearchRepository
 import io.github.drumber.kitsune.util.algolia.SearchBoxConnectorPaging
+import io.github.drumber.kitsune.util.algolia.connectPaging
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -27,6 +34,9 @@ class SearchViewModel(
 
     private val _searchBox = MutableLiveData<SearchBoxConnectorPaging<*>>()
     val searchBox get() = _searchBox as LiveData<SearchBoxConnectorPaging<*>>
+
+    private val _filterFacets = MutableLiveData<FilterFacets>()
+    val filterFacets get() = _filterFacets as LiveData<FilterFacets>
 
     private val connectionHandler = ConnectionHandler()
 
@@ -66,7 +76,14 @@ class SearchViewModel(
     fun createSearchClient(searchType: SearchType, query: Query) {
         viewModelScope.launch {
             searchProvider.createSearchClient(searchType, query) { searcher ->
+                connectionHandler.clear()
                 searchSelector.postValue(Pair(searchType, searcher))
+
+                val filterState = FilterState()
+                createFilterFacets(searcher, filterState)
+                connectionHandler += searcher.connectFilterState(filterState)
+                connectionHandler += filterState.connectPaging { SearchRepository.invalidate() }
+
                 createSearchBox(searcher)
             }
         }
@@ -76,7 +93,6 @@ class SearchViewModel(
         val searchBox = SearchBoxConnectorPaging(searcher) {
             SearchRepository.invalidate()
         }
-        connectionHandler.clear()
         connectionHandler += searchBox
         _searchBox.postValue(searchBox)
     }
@@ -91,10 +107,40 @@ class SearchViewModel(
         }
     }.cachedIn(viewModelScope)
 
+
+    private fun createFilterFacets(searcher: SearcherSingleIndex, filterState: FilterState) {
+        val filterFacets = FilterFacets(searcher, filterState)
+        _filterFacets.postValue(filterFacets)
+    }
+
     override fun onCleared() {
         super.onCleared()
         searchProvider.cancel()
         connectionHandler.clear()
+    }
+
+    inner class FilterFacets(
+        searcher: SearcherSingleIndex,
+        filterState: FilterState
+    ) {
+
+        val kindConnector = FacetListConnector(
+            searcher = searcher,
+            filterState = filterState,
+            attribute = Attribute("kind"),
+            selectionMode = SelectionMode.Multiple,
+        ).bind()
+        val kindPresenter = FacetListPresenterImpl(limit = 2)
+
+        val subtypeConnector = FacetListConnector(
+            searcher = searcher,
+            filterState = filterState,
+            attribute = Attribute("subtype"),
+            selectionMode = SelectionMode.Multiple,
+        ).bind()
+        val subtypePresenter = FacetListPresenterImpl(limit = 100)
+
+        private fun FacetListConnector.bind() = apply { connectionHandler += this }
     }
 
 }

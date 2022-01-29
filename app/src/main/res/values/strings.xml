@@ -54,6 +54,7 @@
     <string name="title_media_type">Media Type</string>
     <string name="title_sort">Sort by</string>
     <string name="title_categories">Categories</string>
+    <string name="title_filter">Filter</string>
     <string name="title_description">Description</string>
     <string name="title_details">Details</string>
     <string name="title_streamer">Streaming Links</string>
@@ -194,6 +195,9 @@
     <string name="action_rate">Rate</string>
     <string name="action_update_rating">Update Rating</string>
     <string name="action_remove_rating">Remove Rating</string>
+
+    <string name="filter_kind">Kind</string>
+    <string name="filter_subtype">Subtype</string>
 
     <string name="profile_not_logged_in_title">Nothing to see here!</string>
     <string name="profile_not_logged_in_text">Log in to your Kitsu Account or create a new Account to get access to all features.</string>
