@@ -8,21 +8,44 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clipChildren="false">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:liftOnScroll="true"
-            android:background="?attr/colorSurface">
+            android:translationZ="1dp"
+            android:outlineSpotShadowColor="@android:color/transparent"
+            android:outlineAmbientShadowColor="@android:color/transparent"
+            app:liftOnScroll="false"
+            app:elevation="0dp"
+            android:background="@android:color/transparent"
+            tools:targetApi="p">
 
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/search_view"
+            <FrameLayout
+                android:id="@+id/search_wrapper"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:iconifiedByDefault="false"
-                app:defaultQueryHint="@string/hint_search" />
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|enterAlways|snap"
+                android:background="@android:color/transparent">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    app:cardElevation="4dp">
+
+                    <androidx.appcompat.widget.SearchView
+                        android:id="@+id/search_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:defaultQueryHint="@string/hint_search"
+                        style="@style/Widget.Kitsune.SearchView" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </FrameLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
 

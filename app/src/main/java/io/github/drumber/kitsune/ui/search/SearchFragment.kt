@@ -1,8 +1,10 @@
 package io.github.drumber.kitsune.ui.search
 
+import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -49,10 +51,10 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
         binding.apply {
             root.initPaddingWindowInsetsListener(
                 left = true,
-                top = true,
                 right = true,
-                bottom = false
+                consume = false
             )
+            searchWrapper.initPaddingWindowInsetsListener(top = true, consume = false)
         }
 
         val adapter = MediaSearchPagingAdapter(GlideApp.with(this), this)
@@ -86,8 +88,15 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
         if (recyclerView.canScrollVertically(-1)) {
             super.onNavigationItemReselected(item)
         } else {
-            binding.searchView.requestFocus()
+            focusSearchView()
         }
+    }
+
+    private fun focusSearchView() {
+        binding.searchView.requestFocus()
+        val imm =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.searchView.findFocus(), InputMethodManager.SHOW_IMPLICIT)
     }
 
     override fun onDestroyView() {
