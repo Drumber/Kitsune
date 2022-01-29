@@ -10,6 +10,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:liftOnScroll="true"
+            android:background="?attr/colorSurface">
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:iconifiedByDefault="false"
+                app:defaultQueryHint="@string/hint_search" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_media"
             android:layout_width="match_parent"
@@ -27,90 +43,6 @@
             android:layout_gravity="center"
             android:visibility="gone"
             tools:visibility="visible"/>
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/app_bar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:liftOnScroll="true"
-            android:background="?attr/colorSurface">
-
-            <FrameLayout
-                android:id="@+id/search_wrapper"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorSurface"
-                app:layout_scrollFlags="scroll|enterAlways|snap">
-
-                <io.github.drumber.kitsune.ui.widget.CustomPersistentSearchView
-                    android:id="@+id/search_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="10dp"
-                    app:isClearInputButtonEnabled="true"
-                    app:isVoiceInputButtonEnabled="true"
-                    app:isDismissableOnTouchOutside="true"
-                    app:areSuggestionsDisabled="false"
-                    app:shouldDimBehind="false"
-                    app:queryInputHint="@string/hint_search"
-                    app:leftButtonDrawable="@drawable/ic_search_24"
-                    app:cardElevation="2dp"
-                    app:cardCornerRadius="8dp" />
-
-            </FrameLayout>
-
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="none"
-                android:background="?attr/colorSurface">
-
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chip_group_filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="10dp"
-                    android:clipToPadding="false"
-                    app:singleLine="true">
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_media_selector"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:closeIcon="@drawable/ic_arrow_drop_down_24"
-                        app:closeIconEnabled="true"
-                        android:text="@string/anime"/>
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_sort"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:chipIcon="@drawable/ic_sort_24"
-                        app:closeIcon="@drawable/ic_arrow_drop_down_24"
-                        app:closeIconEnabled="true"
-                        android:text="@string/sort_popularity_desc"/>
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_categories"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/Widget.Kitsune.Chip.Selectable"
-                        app:closeIcon="@drawable/ic_arrow_drop_down_24"
-                        app:closeIconEnabled="true"
-                        android:text="@string/title_categories"/>
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_reset"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:chipIcon="@drawable/ic_restore_24"
-                        android:text="@string/action_reset_filter"/>
-
-                </com.google.android.material.chip.ChipGroup>
-
-            </HorizontalScrollView>
-
-        </com.google.android.material.appbar.AppBarLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

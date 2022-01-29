@@ -3,6 +3,7 @@ package io.github.drumber.kitsune
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import by.kirich1409.viewbindingdelegate.ViewBindingPropertyDelegate
+import com.algolia.instantsearch.telemetry.Telemetry
 import com.chibatching.kotpref.Kotpref
 import com.chibatching.kotpref.livedata.asLiveData
 import io.github.drumber.kitsune.data.repository.AuthRepository
@@ -39,6 +40,9 @@ class KitsuneApplication : Application() {
         KitsunePref.asLiveData(KitsunePref::darkMode).observeForever {
             AppCompatDelegate.setDefaultNightMode(it.toInt())
         }
+
+        // opt out of algolia telemetry
+        Telemetry.shared.enabled = false
 
         initLoggedInUser()
     }

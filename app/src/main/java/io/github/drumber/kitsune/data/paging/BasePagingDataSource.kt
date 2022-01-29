@@ -2,8 +2,9 @@ package io.github.drumber.kitsune.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.data.model.Page
+import io.github.drumber.kitsune.data.model.toPage
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logE
@@ -17,8 +18,8 @@ abstract class BasePagingDataSource<Value : Any>(
             val pageOffset = params.key ?: Kitsu.DEFAULT_PAGE_OFFSET
             val response = requestService(filter.pageOffset(pageOffset))
 
-            val data = response.data ?: throw ReceivedDataException("Received data is 'null'.")
-            val page = response.page
+            val data = response.get() ?: throw ReceivedDataException("Received data is 'null'.")
+            val page = response.links?.toPage()
 
             LoadResult.Page(
                 data = data,
@@ -37,7 +38,5 @@ abstract class BasePagingDataSource<Value : Any>(
         state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1) ?:
         state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
     }
-
-    inner class Response(val data: List<Value>?, val page: Page?)
 
 }

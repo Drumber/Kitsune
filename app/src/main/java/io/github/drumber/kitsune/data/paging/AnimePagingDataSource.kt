@@ -16,10 +16,6 @@ class AnimePagingDataSource(
             RequestType.ALL -> service.allAnime(filter.options)
             RequestType.TRENDING -> service.trending(filter.options)
         }
-        return Response(
-            data = response.get(),
-            page = response.links?.toPage()
-        )
     }
 
 }

@@ -1,112 +1,99 @@
 package io.github.drumber.kitsune.ui.search
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.paging.PagingData
-import io.github.drumber.kitsune.constants.Defaults
+import androidx.lifecycle.*
+import com.algolia.instantsearch.core.connection.ConnectionHandler
+import com.algolia.instantsearch.helper.searcher.SearcherSingleIndex
+import com.algolia.search.dsl.*
+import com.algolia.search.model.search.Query
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.data.model.MediaSelector
-import io.github.drumber.kitsune.data.model.MediaType
-import io.github.drumber.kitsune.data.model.SearchParams
-import io.github.drumber.kitsune.data.model.media.BaseMedia
-import io.github.drumber.kitsune.data.paging.RequestType
-import io.github.drumber.kitsune.data.repository.AnimeRepository
-import io.github.drumber.kitsune.data.repository.MangaRepository
-import io.github.drumber.kitsune.data.service.Filter
-import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.base.MediaCollectionViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.serialization.encodeToString
+import io.github.drumber.kitsune.data.model.auth.SearchType
+import io.github.drumber.kitsune.data.model.media.MediaSearchResult
+import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
+import io.github.drumber.kitsune.data.repository.SearchRepository
+import io.github.drumber.kitsune.util.algolia.SearchBoxConnectorPaging
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromJsonElement
 
 class SearchViewModel(
-    private val animeRepository: AnimeRepository,
-    private val mangaRepository: MangaRepository
-) : MediaCollectionViewModel() {
+    algoliaKeyRepository: AlgoliaKeyRepository
+) : ViewModel() {
 
-    override fun getStoredMediaSelector(): MediaSelector {
-        return KitsunePref.searchParams.toMediaSelector(
-            includeSortFilter = true,
-            includeSearchQuery = false
-        )
+    private val searchProvider = SearchProvider(algoliaKeyRepository, defaultIndexSettings)
+
+    private val searchSelector = MutableLiveData<Pair<SearchType, SearcherSingleIndex>>()
+
+    private val _searchBox = MutableLiveData<SearchBoxConnectorPaging<*>>()
+    val searchBox get() = _searchBox as LiveData<SearchBoxConnectorPaging<*>>
+
+    private val connectionHandler = ConnectionHandler()
+
+    private val json = Json { ignoreUnknownKeys = true }
+
+    private val defaultIndexSettings
+        get() = settings {
+            queryLanguages {
+                +English
+                +Japanese
+            }
+            responseFields {
+                +Hits
+                +HitsPerPage
+                +NbHits
+                +NbPages
+                +Offset
+                +Page
+            }
+        }
+
+    init {
+        val query = query {
+            attributesToRetrieve {
+                +"id"
+                +"slug"
+                +"kind"
+                +"canonicalTitle"
+                +"titles"
+                +"posterImage"
+                +"subtype"
+            }
+        }
+        createSearchClient(SearchType.Media, query)
     }
 
-    override fun getData(mediaSelector: MediaSelector): Flow<PagingData<BaseMedia>> {
-        val filter = mediaSelector.filter
-        return when (mediaSelector.mediaType) {
-            MediaType.Anime -> animeRepository.animeCollection(
-                Kitsu.DEFAULT_PAGE_SIZE,
-                filter
-            ) as Flow<PagingData<BaseMedia>>
-            MediaType.Manga -> mangaRepository.mangaCollection(
-                Kitsu.DEFAULT_PAGE_SIZE,
-                filter
-            ) as Flow<PagingData<BaseMedia>>
+    fun createSearchClient(searchType: SearchType, query: Query) {
+        viewModelScope.launch {
+            searchProvider.createSearchClient(searchType, query) { searcher ->
+                searchSelector.postValue(Pair(searchType, searcher))
+                createSearchBox(searcher)
+            }
         }
     }
 
-    private fun updateMediaSelector(searchParams: SearchParams) {
-        val isSearching = isSearching.value == true
-        val selector = searchParams.toMediaSelector(
-            includeSortFilter = !isSearching,
-            includeSearchQuery = isSearching
-        )
-        setMediaSelector(selector)
+    private fun createSearchBox(searcher: SearcherSingleIndex) {
+        val searchBox = SearchBoxConnectorPaging(searcher) {
+            SearchRepository.invalidate()
+        }
+        connectionHandler.clear()
+        connectionHandler += searchBox
+        _searchBox.postValue(searchBox)
     }
 
-    private fun SearchParams.toMediaSelector(
-        includeSortFilter: Boolean,
-        includeSearchQuery: Boolean
-    ): MediaSelector {
-        val params = this
-        return MediaSelector(
-            mediaType = params.mediaType,
-            requestType = RequestType.ALL,
-            filter = Filter().apply {
-                if (includeSortFilter) {
-                    sort(params.sortOrder.queryParam)
-                }
-                if (params.categories.isNotEmpty()) {
-                    filter("categories", params.categories.joinToString(","))
-                }
-                if (includeSearchQuery) {
-                    searchQuery?.let { filter("text", it) }
-                }
+    val searchResultSource = searchSelector.asFlow().flatMapLatest { selector ->
+        val (searchType, searcher) = selector
+        SearchRepository.search(Kitsu.DEFAULT_PAGE_SIZE, searcher) { hit ->
+            when (searchType) {
+                SearchType.Media -> json.decodeFromJsonElement<MediaSearchResult>(hit.json)
+                else -> throw IllegalStateException("Search type '$searchType' is not supported.")
             }
-        )
+        }
     }
 
-    fun updateSearchParams(searchParams: SearchParams) {
-        KitsunePref.searchParams = searchParams
-        updateMediaSelector(searchParams)
-    }
-
-    val searchParams: SearchParams
-        get() = KitsunePref.searchParams
-
-    private val _isSearching = MutableLiveData(false)
-    val isSearching: LiveData<Boolean>
-        get() = _isSearching
-
-    private var searchQuery: String? = null
-
-    fun search(query: String) {
-        searchQuery = query
-        _isSearching.value = true
-        updateMediaSelector(searchParams)
-    }
-
-    fun resetSearch() {
-        searchQuery = null
-        _isSearching.value = false
-        updateMediaSelector(searchParams)
-    }
-
-    fun restoreDefaultFilter() {
-        val defaultSearchParams = Defaults.DEFAULT_SEARCH_PARAMS
-        KitsunePref.searchParams = defaultSearchParams
-        KitsunePref.searchCategories = emptyList()
-        updateMediaSelector(defaultSearchParams)
+    override fun onCleared() {
+        super.onCleared()
+        searchProvider.cancel()
+        connectionHandler.clear()
     }
 
 }

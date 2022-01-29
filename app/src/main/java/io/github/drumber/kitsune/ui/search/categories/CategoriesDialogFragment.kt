@@ -38,7 +38,7 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
             val height = ViewGroup.LayoutParams.MATCH_PARENT
             it.window?.apply {
                 setLayout(width, height)
-                setWindowAnimations(R.style.AppTheme_Slide)
+                setWindowAnimations(R.style.Theme_Kitsune_Slide)
             }
         }
     }

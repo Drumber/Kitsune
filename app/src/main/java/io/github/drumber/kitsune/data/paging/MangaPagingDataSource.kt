@@ -16,10 +16,6 @@ class MangaPagingDataSource(
             RequestType.ALL -> service.allManga(filter.options)
             RequestType.TRENDING -> service.trending(filter.options)
         }
-        return Response(
-            data = response.get(),
-            page = response.links?.toPage()
-        )
     }
 
 }

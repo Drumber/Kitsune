@@ -2,18 +2,19 @@ package io.github.drumber.kitsune.data.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingSource
 import com.algolia.instantsearch.helper.searcher.SearcherSingleIndex
 import com.algolia.search.model.response.ResponseSearch
 import io.github.drumber.kitsune.constants.Repository
-import io.github.drumber.kitsune.data.model.resource.Resource
 import io.github.drumber.kitsune.data.paging.SearchPagingDataSource
-import io.github.drumber.kitsune.data.service.Filter
+import java.util.concurrent.CopyOnWriteArrayList
 
 object SearchRepository {
 
-    fun <T : Resource> search(
+    private val pagingSources = CopyOnWriteArrayList<PagingSource<Int, *>>()
+
+    fun <T : Any> search(
         pageSize: Int,
-        filter: Filter,
         searcher: SearcherSingleIndex,
         transformer: (ResponseSearch.Hit) -> T
     ) = Pager(
@@ -21,7 +22,19 @@ object SearchRepository {
             pageSize = pageSize,
             maxSize = Repository.MAX_CACHED_ITEMS
         ),
-        pagingSourceFactory = { SearchPagingDataSource(searcher, filter, transformer) }
+        pagingSourceFactory = {
+            SearchPagingDataSource(searcher, transformer).also { pagingSources.add(it) }
+        }
     ).flow
+
+    fun invalidate() {
+        for (pagingSource in pagingSources) {
+            if (!pagingSource.invalid) {
+                pagingSource.invalidate()
+            }
+        }
+
+        pagingSources.removeAll { it.invalid }
+    }
 
 }
