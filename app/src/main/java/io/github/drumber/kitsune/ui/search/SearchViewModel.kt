@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.ui.search
 
 import androidx.lifecycle.*
+import androidx.paging.cachedIn
 import com.algolia.instantsearch.core.connection.ConnectionHandler
 import com.algolia.instantsearch.helper.searcher.SearcherSingleIndex
 import com.algolia.search.dsl.*
@@ -88,7 +89,7 @@ class SearchViewModel(
                 else -> throw IllegalStateException("Search type '$searchType' is not supported.")
             }
         }
-    }
+    }.cachedIn(viewModelScope)
 
     override fun onCleared() {
         super.onCleared()

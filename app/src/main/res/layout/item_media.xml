@@ -4,9 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.text.TextUtils" />
         <variable
             name="data"
             type="io.github.drumber.kitsune.data.model.media.MediaAdapter" />
+        <variable
+            name="showSubtype"
+            type="boolean" />
     </data>
 
     <FrameLayout
@@ -57,6 +61,30 @@
                     android:text="@{data.title}"
                     android:textColor="@color/white"
                     tools:text="Title" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    app:cardBackgroundColor="@color/subtype_badge_background"
+                    app:cardElevation="0dp"
+                    app:shapeAppearance="@style/ShapeAppearance.Kitsune.SubtypeBadge"
+                    app:isVisible="@{showSubtype &amp;&amp; !TextUtils.isEmpty(data.subtype)}"
+                    tools:ignore="RelativeOverlap,RtlHardcoded">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_subtype"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="4dp"
+                        android:paddingVertical="2dp"
+                        android:textAppearance="@style/TextAppearance.Kitsune.SubtypeBadge"
+                        android:maxLines="1"
+                        android:text="@{data.subtype}"
+                        tools:text="TV" />
+
+                </com.google.android.material.card.MaterialCardView>
 
             </RelativeLayout>
 

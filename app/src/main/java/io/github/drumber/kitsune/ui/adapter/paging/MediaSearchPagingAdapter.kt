@@ -27,7 +27,8 @@ class MediaSearchPagingAdapter(
 
         return MediaViewHolder(
             binding,
-            glide
+            glide,
+            true
         ) { position ->
             getItem(position)?.let { item -> listener?.onItemClick(item) }
         }

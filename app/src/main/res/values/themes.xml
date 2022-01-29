@@ -102,6 +102,11 @@
         <item name="android:textSize">28sp</item>
     </style>
 
+    <style name="TextAppearance.Kitsune.SubtypeBadge" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="TextAppearance.Kitsune.TabLayout" parent="TextAppearance.MaterialComponents.Button">
         <item name="textAllCaps">false</item>
     </style>
@@ -200,6 +205,14 @@
     <style name="ShapeAppearanceOverlay.Kitsune.Button.Circle" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="ShapeAppearance.Kitsune.SubtypeBadge" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeBottomLeft">4dp</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
     </style>
 
 </resources>
