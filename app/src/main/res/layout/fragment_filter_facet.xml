@@ -22,6 +22,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nsv_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
@@ -33,6 +34,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_kind"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
@@ -47,10 +49,40 @@
                 tools:itemCount="2"
                 tools:listitem="@layout/item_facet" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/filter_year"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+
+                <TextView
+                    android:id="@+id/tv_year_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="1862 - 2024" />
+
+            </LinearLayout>
+
+            <com.google.android.material.slider.RangeSlider
+                android:id="@+id/slider_year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp" />
+
             <TextView
+                android:id="@+id/tv_subtype"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/filter_subtype"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
 
@@ -81,6 +113,60 @@
                     style="@style/Widget.Kitsune.Button.Surface" />
 
             </io.github.drumber.kitsune.ui.widget.ExpandableLayout>
+
+            <TextView
+                android:id="@+id/tv_streamers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/filter_streamers"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+
+            <io.github.drumber.kitsune.ui.widget.ExpandableLayout
+                android:id="@+id/wrapper_streamers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:expanded="false"
+                app:min_height="300dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_streamers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="40dp"
+                    android:clipToPadding="false"
+                    tools:itemCount="5"
+                    tools:listitem="@layout/item_facet" />
+
+                <Button
+                    android:id="@+id/btn_expand_streamers"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/bottom_edge_fade"
+                    android:textAllCaps="false"
+                    tools:text="@string/action_show_more"
+                    style="@style/Widget.Kitsune.Button.Surface" />
+
+            </io.github.drumber.kitsune.ui.widget.ExpandableLayout>
+
+            <TextView
+                android:id="@+id/tv_age_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/filter_age_rating"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_age_rating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                tools:itemCount="4"
+                tools:listitem="@layout/item_facet" />
 
         </LinearLayout>
 

@@ -3,9 +3,11 @@ package io.github.drumber.kitsune.ui.search
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.algolia.instantsearch.core.connection.ConnectionHandler
+import com.algolia.instantsearch.core.connection.ConnectionImpl
 import com.algolia.instantsearch.core.selectable.list.SelectionMode
 import com.algolia.instantsearch.helper.filter.facet.FacetListConnector
 import com.algolia.instantsearch.helper.filter.facet.FacetListPresenterImpl
+import com.algolia.instantsearch.helper.filter.range.FilterRangeConnector
 import com.algolia.instantsearch.helper.filter.state.FilterState
 import com.algolia.instantsearch.helper.searcher.SearcherSingleIndex
 import com.algolia.instantsearch.helper.searcher.connectFilterState
@@ -23,6 +25,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
+import java.util.*
 
 class SearchViewModel(
     algoliaKeyRepository: AlgoliaKeyRepository
@@ -132,6 +135,13 @@ class SearchViewModel(
         ).bind()
         val kindPresenter = FacetListPresenterImpl(limit = 2)
 
+        val yearConnector = FilterRangeConnector(
+            filterState = filterState,
+            attribute = Attribute("year"),
+            range = minYear..maxYear,
+            bounds = minYear..maxYear
+        ).bind()
+
         val subtypeConnector = FacetListConnector(
             searcher = searcher,
             filterState = filterState,
@@ -140,7 +150,28 @@ class SearchViewModel(
         ).bind()
         val subtypePresenter = FacetListPresenterImpl(limit = 100)
 
-        private fun FacetListConnector.bind() = apply { connectionHandler += this }
+        val streamersConnector = FacetListConnector(
+            searcher = searcher,
+            filterState = filterState,
+            attribute = Attribute("streamers"),
+            selectionMode = SelectionMode.Multiple,
+        ).bind()
+        val streamersPresenter = FacetListPresenterImpl(limit = 100)
+
+        val ageRatingConnector = FacetListConnector(
+            searcher = searcher,
+            filterState = filterState,
+            attribute = Attribute("ageRating"),
+            selectionMode = SelectionMode.Multiple,
+        ).bind()
+        val ageRatingPresenter = FacetListPresenterImpl(limit = 4)
+
+        private fun <T : ConnectionImpl> T.bind() = apply { connectionHandler += this }
+    }
+
+    companion object {
+        val maxYear get() = Calendar.getInstance().get(Calendar.YEAR) + 2
+        const val minYear = 1862
     }
 
 }

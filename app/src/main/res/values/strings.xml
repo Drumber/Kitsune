@@ -200,6 +200,9 @@
 
     <string name="filter_kind">Kind</string>
     <string name="filter_subtype">Subtype</string>
+    <string name="filter_streamers">Streamers</string>
+    <string name="filter_age_rating">Age Rating</string>
+    <string name="filter_year">Year</string>
 
     <string name="profile_not_logged_in_title">Nothing to see here!</string>
     <string name="profile_not_logged_in_text">Log in to your Kitsu Account or create a new Account to get access to all features.</string>
