@@ -11,4 +11,10 @@
         <attr name="finalHeight" format="dimension"/>
         <attr name="finalToolbarHeight" format="dimension"/>
     </declare-styleable>
+
+    <declare-styleable name="ExpandableLayout">
+        <attr name="duration" format="integer" />
+        <attr name="expanded" format="boolean" />
+        <attr name="min_height" format="dimension" />
+    </declare-styleable>
 </resources>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -12,12 +12,12 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
+            style="@style/Widget.MaterialComponents.Toolbar.Surface"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="@string/title_filter"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:layout_scrollFlags="noScroll"
             app:navigationIcon="@drawable/ic_close_24"
-            style="@style/Widget.MaterialComponents.Toolbar.Surface"/>
+            app:title="@string/title_filter" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -43,8 +43,9 @@
                 android:id="@+id/rv_kind"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
                 tools:itemCount="2"
-                tools:listitem="@layout/item_facet"/>
+                tools:listitem="@layout/item_facet" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -53,12 +54,33 @@
                 android:text="@string/filter_subtype"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_subtype"
+            <io.github.drumber.kitsune.ui.widget.ExpandableLayout
+                android:id="@+id/wrapper_subtype"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:itemCount="5"
-                tools:listitem="@layout/item_facet"/>
+                app:expanded="false"
+                app:min_height="300dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_subtype"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="40dp"
+                    android:clipToPadding="false"
+                    tools:itemCount="5"
+                    tools:listitem="@layout/item_facet" />
+
+                <Button
+                    android:id="@+id/btn_expand_subtype"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/bottom_edge_fade"
+                    android:textAllCaps="false"
+                    tools:text="@string/action_show_more"
+                    style="@style/Widget.Kitsune.Button.Surface" />
+
+            </io.github.drumber.kitsune.ui.widget.ExpandableLayout>
 
         </LinearLayout>
 

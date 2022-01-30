@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.ui.search.filter
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +15,7 @@ import com.algolia.instantsearch.helper.filter.facet.connectView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentFilterFacetBinding
 import io.github.drumber.kitsune.ui.search.SearchViewModel
+import io.github.drumber.kitsune.ui.widget.ExpandableLayout
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -45,6 +47,7 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet) {
 
         val adapterSubtype = FacetListAdapter(FilterFacetListViewHolder.Factory)
         binding.rvSubtype.initAdapter(adapterSubtype)
+        binding.wrapperSubtype.connectButton(binding.btnExpandSubtype)
         connection += filterFacets.subtypeConnector.connectView(adapterSubtype, filterFacets.subtypePresenter)
     }
 
@@ -52,6 +55,16 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet) {
         this.adapter = adapter
         layoutManager = LinearLayoutManager(requireContext())
         autoScrollToStart(adapter)
+    }
+
+    private fun ExpandableLayout.connectButton(button: Button) {
+        button.apply {
+            setOnClickListener { toggle() }
+            setText(if (isExpanded()) R.string.action_show_less else R.string.action_show_more)
+        }
+        expandedState.observe(viewLifecycleOwner) { expanded ->
+            button.setText(if (expanded) R.string.action_show_less else R.string.action_show_more)
+        }
     }
 
     override fun onDestroyView() {

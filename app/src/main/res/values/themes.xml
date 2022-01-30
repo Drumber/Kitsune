@@ -173,6 +173,10 @@
     <style name="Widget.Kitsune.Button.IconText.Inactive" parent="Widget.Kitsune.Button.IconText">
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
+
+    <style name="Widget.Kitsune.Button.Surface" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/button_surface_color_selector</item>
+    </style>
     
     <style name="Widget.Kitsune.TextInputLayout.Dense.ExposedDropdownMenu" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
         <item name="materialThemeOverlay">@style/ThemeOverlay.Kitsune.AutoCompleteTextView.Dense</item>

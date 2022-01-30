@@ -20,6 +20,8 @@
     <string name="action_unselect_all">Unselect all</string>
     <string name="action_read_more">Read more</string>
     <string name="action_read_less">Read less</string>
+    <string name="action_show_more">Show more</string>
+    <string name="action_show_less">Show less</string>
     <string name="action_back">Back</string>
     <string name="action_close">Close</string>
     <string name="action_log_out">Log out</string>
