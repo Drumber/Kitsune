@@ -9,11 +9,11 @@ import com.algolia.instantsearch.helper.filter.facet.FacetListConnector
 import com.algolia.instantsearch.helper.filter.facet.FacetListPresenterImpl
 import com.algolia.instantsearch.helper.filter.range.FilterRangeConnector
 import com.algolia.instantsearch.helper.filter.state.FilterState
+import com.algolia.instantsearch.helper.filter.state.Filters
 import com.algolia.instantsearch.helper.searcher.SearcherSingleIndex
 import com.algolia.instantsearch.helper.searcher.connectFilterState
 import com.algolia.search.dsl.*
 import com.algolia.search.model.Attribute
-import com.algolia.search.model.filter.Filter
 import com.algolia.search.model.search.Query
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.model.FilterCollection
@@ -44,6 +44,9 @@ class SearchViewModel(
     private val searchSelector = MutableLiveData<Pair<SearchType, SearcherSingleIndex>>()
 
     private var filterState: FilterState? = null
+
+    private var _filtersLiveData = MutableLiveData<Filters?>()
+    val filtersLiveData get() = _filtersLiveData as LiveData<Filters?>
 
     private val _searchClientStatus = MutableLiveData(SearchClientStatus.NotInitialized)
     val searchClientStatus get() = _searchClientStatus as LiveData<SearchClientStatus>
@@ -109,7 +112,9 @@ class SearchViewModel(
                     connectionHandler += searcher.connectFilterState(filterState)
                     connectionHandler += filterState.connectPaging { SearchRepository.invalidate() }
 
+                    _filtersLiveData.postValue(filterState.filters.value)
                     filterState.filters.subscribe {
+                        _filtersLiveData.postValue(it)
                         // store search filters
                         KitsunePref.searchFilters = it.toFilterCollection()
                     }
@@ -153,8 +158,8 @@ class SearchViewModel(
     }
 
     fun clearSearchFilter() {
-        filterState?.let {
-            it.clear(*it.getGroups().keys.toTypedArray())
+        filterState?.notify {
+            clear(*getGroups().keys.toTypedArray())
         }
         KitsunePref.searchFilters = FilterCollection()
     }

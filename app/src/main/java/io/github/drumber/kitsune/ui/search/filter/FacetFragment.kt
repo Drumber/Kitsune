@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.ui.search.filter
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -41,6 +42,7 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet) {
         binding.toolbar.apply {
             initWindowInsetsListener(false)
             setNavigationOnClickListener { findNavController().navigateUp() }
+            setOnMenuItemClickListener { onMenuItemClicked(it) }
         }
 
         binding.nsvContent.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
@@ -63,6 +65,16 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet) {
                     progressBar.isVisible = status == NotInitialized
                 }
             }
+        }
+    }
+
+    private fun onMenuItemClicked(menuItem: MenuItem): Boolean {
+        return when (menuItem.itemId) {
+            R.id.menu_reset_filter -> {
+                viewModel.clearSearchFilter()
+                true
+            }
+            else -> false
         }
     }
 

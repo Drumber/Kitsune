@@ -17,6 +17,7 @@
             android:layout_height="?attr/actionBarSize"
             app:layout_scrollFlags="noScroll"
             app:navigationIcon="@drawable/ic_close_24"
+            app:menu="@menu/filter_facet_menu"
             app:title="@string/title_filter" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -96,7 +97,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_subtype"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:paddingBottom="40dp"
                     android:clipToPadding="false"
                     tools:itemCount="5"
@@ -133,7 +134,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_streamers"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:paddingBottom="40dp"
                     android:clipToPadding="false"
                     tools:itemCount="5"

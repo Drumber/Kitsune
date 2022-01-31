@@ -13,6 +13,9 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.algolia.instantsearch.core.connection.ConnectionHandler
 import com.algolia.instantsearch.helper.android.list.autoScrollToStart
 import com.algolia.instantsearch.helper.android.searchbox.SearchBoxViewAppCompat
+import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.badge.BadgeUtils
+import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
@@ -75,6 +78,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
         }
 
         observeSearchBox()
+        observeFilters()
         initSearchProviderStatusLayout()
     }
 
@@ -96,6 +100,22 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
                 btnRetry.isVisible = status == Error || status == NotAvailable
                 tvStatus.isVisible = btnRetry.isVisible
                 progressBar.isVisible = status == NotInitialized
+            }
+        }
+    }
+
+    @ExperimentalBadgeUtils
+    private fun observeFilters() {
+        viewModel.filtersLiveData.observe(viewLifecycleOwner) { filters ->
+            val filterCount = filters?.getFilters()?.size ?: 0
+            binding.btnFilter.post {
+                val badgeDrawable = BadgeDrawable.create(requireContext()).apply {
+                    isVisible = filterCount > 0
+                    number = filterCount
+                    verticalOffset = 30
+                    horizontalOffset = 30
+                }
+                BadgeUtils.attachBadgeDrawable(badgeDrawable, binding.btnFilter)
             }
         }
     }

@@ -39,6 +39,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:clipChildren="false"
                         android:orientation="horizontal">
 
                         <androidx.appcompat.widget.SearchView
@@ -49,14 +51,15 @@
                             app:defaultQueryHint="@string/hint_search"
                             style="@style/Widget.Kitsune.SearchView" />
 
-                        <ImageButton
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/btn_filter"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_filter_24"
+                            android:layout_marginEnd="4dp"
+                            app:icon="@drawable/ic_filter_24"
                             android:layout_gravity="center"
                             android:contentDescription="@string/title_filter"
-                            style="@style/Widget.Kitsune.Button.IconOnly" />
+                            style="@style/Widget.Kitsune.Button.IconRound" />
 
                     </LinearLayout>
 
