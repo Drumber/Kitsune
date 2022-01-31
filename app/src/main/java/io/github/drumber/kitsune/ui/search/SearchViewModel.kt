@@ -13,13 +13,18 @@ import com.algolia.instantsearch.helper.searcher.SearcherSingleIndex
 import com.algolia.instantsearch.helper.searcher.connectFilterState
 import com.algolia.search.dsl.*
 import com.algolia.search.model.Attribute
+import com.algolia.search.model.filter.Filter
 import com.algolia.search.model.search.Query
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.data.model.FilterCollection
 import io.github.drumber.kitsune.data.model.auth.SearchType
 import io.github.drumber.kitsune.data.model.media.MediaSearchResult
+import io.github.drumber.kitsune.data.model.toCombinedMap
+import io.github.drumber.kitsune.data.model.toFilterCollection
 import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.data.repository.SearchRepository
 import io.github.drumber.kitsune.exception.SearchProviderUnavailableException
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.algolia.SearchBoxConnectorPaging
 import io.github.drumber.kitsune.util.algolia.connectPaging
 import io.github.drumber.kitsune.util.logE
@@ -37,6 +42,8 @@ class SearchViewModel(
     private val searchProvider = SearchProvider(algoliaKeyRepository, defaultIndexSettings)
 
     private val searchSelector = MutableLiveData<Pair<SearchType, SearcherSingleIndex>>()
+
+    private var filterState: FilterState? = null
 
     private val _searchClientStatus = MutableLiveData(SearchClientStatus.NotInitialized)
     val searchClientStatus get() = _searchClientStatus as LiveData<SearchClientStatus>
@@ -89,18 +96,26 @@ class SearchViewModel(
 
     private fun createSearchClient(searchType: SearchType, query: Query) {
         viewModelScope.launch {
+            filterState = null
             _searchClientStatus.postValue(SearchClientStatus.NotInitialized)
             try {
                 searchProvider.createSearchClient(searchType, query) { searcher ->
                     connectionHandler.clear()
                     searchSelector.postValue(Pair(searchType, searcher))
 
-                    val filterState = FilterState()
+                    val storedFilters = KitsunePref.searchFilters.toCombinedMap()
+                    val filterState = FilterState(storedFilters)
                     createFilterFacets(searcher, filterState)
                     connectionHandler += searcher.connectFilterState(filterState)
                     connectionHandler += filterState.connectPaging { SearchRepository.invalidate() }
 
+                    filterState.filters.subscribe {
+                        // store search filters
+                        KitsunePref.searchFilters = it.toFilterCollection()
+                    }
+
                     createSearchBox(searcher)
+                    this@SearchViewModel.filterState = filterState
                     _searchClientStatus.postValue(SearchClientStatus.Initialized)
                 }
             } catch (e: SearchProviderUnavailableException) {
@@ -135,6 +150,13 @@ class SearchViewModel(
     private fun createFilterFacets(searcher: SearcherSingleIndex, filterState: FilterState) {
         val filterFacets = FilterFacets(searcher, filterState)
         _filterFacets.postValue(filterFacets)
+    }
+
+    fun clearSearchFilter() {
+        filterState?.let {
+            it.clear(*it.getGroups().keys.toTypedArray())
+        }
+        KitsunePref.searchFilters = FilterCollection()
     }
 
     override fun onCleared() {

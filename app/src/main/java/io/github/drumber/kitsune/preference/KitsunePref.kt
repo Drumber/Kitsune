@@ -11,6 +11,7 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.MediaItemSize
+import io.github.drumber.kitsune.data.model.FilterCollection
 import io.github.drumber.kitsune.data.model.SearchParams
 import io.github.drumber.kitsune.data.model.TitlesPref
 import io.github.drumber.kitsune.data.model.category.CategoryPrefWrapper
@@ -37,7 +38,10 @@ object KitsunePref : KotprefModel(), KoinComponent {
 
     var mediaItemSize by enumOrdinalPref(MediaItemSize.LARGE)
 
-    var libraryOfflineSync by booleanPref(true, key = R.string.preference_key_offline_library_updates)
+    var libraryOfflineSync by booleanPref(
+        true,
+        key = R.string.preference_key_offline_library_updates
+    )
 
 
     private var searchParamsJson by stringPref(Defaults.DEFAULT_SEARCH_PARAMS.toJsonString())
@@ -49,11 +53,13 @@ object KitsunePref : KotprefModel(), KoinComponent {
         get() = ::searchParamsJson.fromJsonString(Defaults.DEFAULT_SEARCH_PARAMS)
 
 
-    private var searchQueriesJson by stringPref("[]")
+    private var searchFiltersJson by stringPref("{}")
 
-    val searchQueries = SearchQueryData(::searchQueriesJson.fromJsonString(emptyList())) {
-        searchQueriesJson = it.toJsonString()
-    }
+    var searchFilters: FilterCollection
+        set(value) {
+            searchFiltersJson = value.toJsonString()
+        }
+        get() = ::searchFiltersJson.fromJsonString(FilterCollection())
 
 
     private var searchCategoriesJson by stringPref("[]")

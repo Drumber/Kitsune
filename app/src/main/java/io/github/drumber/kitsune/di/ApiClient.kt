@@ -1,9 +1,11 @@
 package io.github.drumber.kitsune.di
 
+import com.algolia.search.model.filter.Filter
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.jasminb.jsonapi.ResourceConverter
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
@@ -11,13 +13,13 @@ import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.media.Anime
+import io.github.drumber.kitsune.data.model.media.Manga
 import io.github.drumber.kitsune.data.model.mediarelationship.MediaRelationship
 import io.github.drumber.kitsune.data.model.production.AnimeProduction
 import io.github.drumber.kitsune.data.model.production.Casting
 import io.github.drumber.kitsune.data.model.production.Character
 import io.github.drumber.kitsune.data.model.production.Producer
-import io.github.drumber.kitsune.data.model.media.Anime
-import io.github.drumber.kitsune.data.model.media.Manga
 import io.github.drumber.kitsune.data.model.stats.Stats
 import io.github.drumber.kitsune.data.model.streamer.Streamer
 import io.github.drumber.kitsune.data.model.streamer.StreamingLink
@@ -33,6 +35,8 @@ import io.github.drumber.kitsune.data.service.manga.ChaptersService
 import io.github.drumber.kitsune.data.service.manga.MangaService
 import io.github.drumber.kitsune.data.service.production.CastingService
 import io.github.drumber.kitsune.data.service.user.UserService
+import io.github.drumber.kitsune.util.deserializer.AlgoliaFacetValueDeserializer
+import io.github.drumber.kitsune.util.deserializer.AlgoliaNumericValueDeserializer
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptor
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptorDummy
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptorImpl
@@ -120,6 +124,8 @@ fun createObjectMapper(): ObjectMapper = jacksonObjectMapper()
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
     .configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, false)
+    .registerModule(SimpleModule().addDeserializer(Filter.Facet.Value::class.java, AlgoliaFacetValueDeserializer()))
+    .registerModule(SimpleModule().addDeserializer(Filter.Numeric.Value::class.java, AlgoliaNumericValueDeserializer()))
 
 private fun createConverterFactory(
     httpClient: OkHttpClient,
