@@ -27,8 +27,16 @@ class SearchProvider(
     private var clientSearch: ClientSearch? = null
     private var searcherIndex: SearcherSingleIndex? = null
 
-    suspend fun createSearchClient(searchType: SearchType, query: Query, createdListener: SearcherCreatedListener) {
+    var isInitialized = false
+        private set
+
+    suspend fun createSearchClient(
+        searchType: SearchType,
+        query: Query,
+        createdListener: SearcherCreatedListener
+    ) {
         searcherIndex?.cancel() // cancel any previous created searcher
+        isInitialized = false
 
         val algoliaKeys = getAlgoliaKeysAsync().await()
             ?: throw SearchProviderUnavailableException()
@@ -45,6 +53,7 @@ class SearchProvider(
         clientSearch = client
         searcherIndex = searcher
 
+        isInitialized = true
         createdListener.onSearcherCreated(searcher)
     }
 

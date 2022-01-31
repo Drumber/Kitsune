@@ -84,6 +84,15 @@
             android:visibility="gone"
             tools:visibility="visible"/>
 
+        <include
+            android:id="@+id/layout_search_provider_status"
+            layout="@layout/layout_search_provider_loading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            tools:visibility="gone"/>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </FrameLayout>

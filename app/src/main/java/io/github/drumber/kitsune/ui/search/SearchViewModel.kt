@@ -19,8 +19,11 @@ import io.github.drumber.kitsune.data.model.auth.SearchType
 import io.github.drumber.kitsune.data.model.media.MediaSearchResult
 import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.data.repository.SearchRepository
+import io.github.drumber.kitsune.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.util.algolia.SearchBoxConnectorPaging
 import io.github.drumber.kitsune.util.algolia.connectPaging
+import io.github.drumber.kitsune.util.logE
+import io.github.drumber.kitsune.util.logI
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -34,6 +37,9 @@ class SearchViewModel(
     private val searchProvider = SearchProvider(algoliaKeyRepository, defaultIndexSettings)
 
     private val searchSelector = MutableLiveData<Pair<SearchType, SearcherSingleIndex>>()
+
+    private val _searchClientStatus = MutableLiveData(SearchClientStatus.NotInitialized)
+    val searchClientStatus get() = _searchClientStatus as LiveData<SearchClientStatus>
 
     private val _searchBox = MutableLiveData<SearchBoxConnectorPaging<*>>()
     val searchBox get() = _searchBox as LiveData<SearchBoxConnectorPaging<*>>
@@ -62,6 +68,11 @@ class SearchViewModel(
         }
 
     init {
+        initializeSearchClient()
+    }
+
+    fun initializeSearchClient() {
+        if (searchProvider.isInitialized) return
         val query = query {
             attributesToRetrieve {
                 +"id"
@@ -76,18 +87,28 @@ class SearchViewModel(
         createSearchClient(SearchType.Media, query)
     }
 
-    fun createSearchClient(searchType: SearchType, query: Query) {
+    private fun createSearchClient(searchType: SearchType, query: Query) {
         viewModelScope.launch {
-            searchProvider.createSearchClient(searchType, query) { searcher ->
-                connectionHandler.clear()
-                searchSelector.postValue(Pair(searchType, searcher))
+            _searchClientStatus.postValue(SearchClientStatus.NotInitialized)
+            try {
+                searchProvider.createSearchClient(searchType, query) { searcher ->
+                    connectionHandler.clear()
+                    searchSelector.postValue(Pair(searchType, searcher))
 
-                val filterState = FilterState()
-                createFilterFacets(searcher, filterState)
-                connectionHandler += searcher.connectFilterState(filterState)
-                connectionHandler += filterState.connectPaging { SearchRepository.invalidate() }
+                    val filterState = FilterState()
+                    createFilterFacets(searcher, filterState)
+                    connectionHandler += searcher.connectFilterState(filterState)
+                    connectionHandler += filterState.connectPaging { SearchRepository.invalidate() }
 
-                createSearchBox(searcher)
+                    createSearchBox(searcher)
+                    _searchClientStatus.postValue(SearchClientStatus.Initialized)
+                }
+            } catch (e: SearchProviderUnavailableException) {
+                logI("Search provider not available. Is the device offline?")
+                _searchClientStatus.postValue(SearchClientStatus.NotAvailable)
+            } catch (e: Exception) {
+                logE("Could not create search client.", e)
+                _searchClientStatus.postValue(SearchClientStatus.Error)
             }
         }
     }
@@ -172,6 +193,13 @@ class SearchViewModel(
     companion object {
         val maxYear get() = Calendar.getInstance().get(Calendar.YEAR) + 2
         const val minYear = 1862
+    }
+
+    enum class SearchClientStatus {
+        NotInitialized,
+        Initialized,
+        NotAvailable,
+        Error
     }
 
 }

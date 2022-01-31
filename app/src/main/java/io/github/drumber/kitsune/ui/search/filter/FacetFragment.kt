@@ -20,6 +20,7 @@ import com.google.android.material.slider.RangeSlider
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentFilterFacetBinding
 import io.github.drumber.kitsune.ui.search.SearchViewModel
+import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.*
 import io.github.drumber.kitsune.ui.widget.ExpandableLayout
 import io.github.drumber.kitsune.ui.widget.algolia.IntNumberRangeView
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
@@ -46,6 +47,22 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet) {
 
         viewModel.filterFacets.observe(viewLifecycleOwner) { filterFacets ->
             createFilterViews(filterFacets)
+        }
+
+        binding.layoutSearchProviderStatus.btnRetry.setOnClickListener {
+            viewModel.initializeSearchClient()
+        }
+
+        viewModel.searchClientStatus.observe(viewLifecycleOwner) { status ->
+            binding.apply {
+                nsvContent.isVisible = status == Initialized
+                layoutSearchProviderStatus.apply {
+                    root.isVisible = status != Initialized
+                    btnRetry.isVisible = status == Error || status == NotAvailable
+                    tvStatus.isVisible = btnRetry.isVisible
+                    progressBar.isVisible = status == NotInitialized
+                }
+            }
         }
     }
 

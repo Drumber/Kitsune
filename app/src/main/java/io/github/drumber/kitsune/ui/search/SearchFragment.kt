@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +24,7 @@ import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.paging.MediaSearchPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
+import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.*
 import io.github.drumber.kitsune.util.algolia.connectView
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
@@ -73,12 +75,28 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
         }
 
         observeSearchBox()
+        initSearchProviderStatusLayout()
     }
 
     private fun observeSearchBox() {
         viewModel.searchBox.observe(viewLifecycleOwner) { searchBox ->
             val searchBoxView = SearchBoxViewAppCompat(binding.searchView)
             connectionHandler += searchBox.connectView(searchBoxView)
+        }
+    }
+
+    private fun initSearchProviderStatusLayout() {
+        binding.layoutSearchProviderStatus.btnRetry.setOnClickListener {
+            viewModel.initializeSearchClient()
+        }
+
+        viewModel.searchClientStatus.observe(viewLifecycleOwner) { status ->
+            binding.layoutSearchProviderStatus.apply {
+                root.isVisible = status != Initialized
+                btnRetry.isVisible = status == Error || status == NotAvailable
+                tvStatus.isVisible = btnRetry.isVisible
+                progressBar.isVisible = status == NotInitialized
+            }
         }
     }
 
