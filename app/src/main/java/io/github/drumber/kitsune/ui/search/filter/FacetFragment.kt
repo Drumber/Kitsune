@@ -66,6 +66,12 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet) {
                 }
             }
         }
+
+        binding.toolbar.menu.findItem(R.id.menu_reset_filter).isVisible = false
+        viewModel.filtersLiveData.observe(viewLifecycleOwner) { filters ->
+            val filterCount = filters?.getFilters()?.size ?: 0
+            binding.toolbar.menu.findItem(R.id.menu_reset_filter).isVisible = filterCount > 0
+        }
     }
 
     private fun onMenuItemClicked(menuItem: MenuItem): Boolean {
@@ -128,7 +134,7 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet) {
             button.setText(if (expanded) R.string.action_show_less else R.string.action_show_more)
         }
         addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-            button.isVisible = minHeight <= measuredHeight
+            button.isVisible = minHeight.toInt() <= measuredHeight
         }
     }
 
