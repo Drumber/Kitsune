@@ -43,19 +43,30 @@
                         android:clipChildren="false"
                         android:orientation="horizontal">
 
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_search"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            app:icon="@drawable/ic_search_24"
+                            android:layout_gravity="center"
+                            android:contentDescription="@string/hint_search"
+                            style="@style/Widget.Kitsune.Button.IconRound" />
+
                         <androidx.appcompat.widget.SearchView
                             android:id="@+id/search_view"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             app:defaultQueryHint="@string/hint_search"
+                            app:searchIcon="@null"
                             style="@style/Widget.Kitsune.SearchView" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btn_filter"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="4dp"
+                            android:layout_marginEnd="6dp"
                             app:icon="@drawable/ic_filter_24"
                             android:layout_gravity="center"
                             android:contentDescription="@string/title_filter"

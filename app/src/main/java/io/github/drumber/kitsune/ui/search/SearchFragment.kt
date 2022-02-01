@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -72,6 +73,34 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
             }
         }
 
+        initSearchBar()
+        observeSearchBox()
+        observeFilters()
+        initSearchProviderStatusLayout()
+    }
+
+    private fun initSearchBar() {
+        binding.btnSearch.setOnClickListener {
+            val isSearchFocussed = binding.searchView.getTag(TAG_SEARCH_FOCUSED) as? Boolean
+            if (isSearchFocussed == true) {
+                val focusedView = binding.searchView.findFocus()
+                focusedView.clearFocus()
+                val imm =
+                    requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(focusedView.windowToken, 0)
+            } else {
+                focusSearchView()
+            }
+        }
+
+        binding.searchView.setOnQueryTextFocusChangeListener { v, hasFocus ->
+            binding.btnSearch.icon = AppCompatResources.getDrawable(
+                requireContext(),
+                if (hasFocus) R.drawable.ic_arrow_back_24 else R.drawable.ic_search_24
+            )
+            binding.searchView.setTag(TAG_SEARCH_FOCUSED, hasFocus)
+        }
+
         binding.btnFilter.apply {
             setOnClickListener {
                 val action = SearchFragmentDirections.actionSearchFragmentToFacetFragment()
@@ -85,10 +114,6 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
                 false
             }
         }
-
-        observeSearchBox()
-        observeFilters()
-        initSearchProviderStatusLayout()
     }
 
     private fun observeSearchBox() {
@@ -155,6 +180,10 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
     override fun onDestroyView() {
         super.onDestroyView()
         connectionHandler.clear()
+    }
+
+    companion object {
+        const val TAG_SEARCH_FOCUSED = R.drawable.ic_search_24
     }
 
 }
