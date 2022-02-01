@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -17,6 +18,7 @@ import com.algolia.instantsearch.helper.android.filter.facet.FacetListAdapter
 import com.algolia.instantsearch.helper.android.list.autoScrollToStart
 import com.algolia.instantsearch.helper.filter.facet.connectView
 import com.algolia.instantsearch.helper.filter.range.connectView
+import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.slider.RangeSlider
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentFilterFacetBinding
@@ -28,7 +30,8 @@ import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class FacetFragment : Fragment(R.layout.fragment_filter_facet) {
+class FacetFragment : Fragment(R.layout.fragment_filter_facet),
+    NavigationBarView.OnItemReselectedListener {
 
     private val binding: FragmentFilterFacetBinding by viewBinding()
 
@@ -93,6 +96,14 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet) {
         binding.sliderYear.attachTextView(binding.tvYearValue)
         connection += filterFacets.yearConnector.connectView(yearView)
 
+        val avgRatingView = IntNumberRangeView(binding.sliderAvgRating, lifecycleScope)
+        binding.sliderAvgRating.attachTextView(binding.tvAvgRatingValue, "%d%% - %d%%")
+        connection += filterFacets.avgRatingConnector.connectView(avgRatingView)
+
+        val adapterSeason = FacetListAdapter(FilterFacetListViewHolder.Factory)
+        binding.rvSeason.initAdapter(adapterSeason, binding.tvSeason)
+        connection += filterFacets.seasonConnector.connectView(adapterSeason, filterFacets.seasonPresenter)
+
         val adapterSubtype = FacetListAdapter(FilterFacetListViewHolder.Factory)
         binding.rvSubtype.initAdapter(adapterSubtype, binding.tvSubtype)
         binding.wrapperSubtype.connectButton(binding.btnExpandSubtype)
@@ -149,6 +160,14 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet) {
         }
         if (values.size >= 2) {
             updateText(this)
+        }
+    }
+
+    override fun onNavigationItemReselected(item: MenuItem) {
+        if (binding.nsvContent.canScrollVertically(-1)) {
+            binding.nsvContent.smoothScrollTo(0, 0)
+        } else {
+            findNavController().navigateUp()
         }
     }
 

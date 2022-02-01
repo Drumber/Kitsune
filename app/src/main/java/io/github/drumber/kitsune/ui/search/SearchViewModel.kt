@@ -26,6 +26,7 @@ import io.github.drumber.kitsune.data.repository.SearchRepository
 import io.github.drumber.kitsune.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.algolia.SearchBoxConnectorPaging
+import io.github.drumber.kitsune.util.algolia.SeasonListPresenter
 import io.github.drumber.kitsune.util.algolia.connectPaging
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logI
@@ -190,6 +191,21 @@ class SearchViewModel(
             range = minYear..maxYear,
             bounds = minYear..maxYear
         ).bind()
+
+        val avgRatingConnector = FilterRangeConnector(
+            filterState = filterState,
+            attribute = Attribute("averageRating"),
+            range = 5..100,
+            bounds = 5..100
+        ).bind()
+
+        val seasonConnector = FacetListConnector(
+            searcher = searcher,
+            filterState = filterState,
+            attribute = Attribute("season"),
+            selectionMode = SelectionMode.Multiple,
+        ).bind()
+        val seasonPresenter = SeasonListPresenter()
 
         val subtypeConnector = FacetListConnector(
             searcher = searcher,
