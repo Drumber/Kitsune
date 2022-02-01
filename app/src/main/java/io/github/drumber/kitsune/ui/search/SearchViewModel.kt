@@ -162,6 +162,7 @@ class SearchViewModel(
             clear(*getGroups().keys.toTypedArray())
         }
         KitsunePref.searchFilters = FilterCollection()
+        _filtersLiveData.postValue(null)
     }
 
     override fun onCleared() {

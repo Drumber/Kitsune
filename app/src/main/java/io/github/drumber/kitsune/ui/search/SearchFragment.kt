@@ -72,9 +72,18 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
             }
         }
 
-        binding.btnFilter.setOnClickListener {
-            val action = SearchFragmentDirections.actionSearchFragmentToFacetFragment()
-            findNavController().navigateSafe(R.id.search_fragment, action)
+        binding.btnFilter.apply {
+            setOnClickListener {
+                val action = SearchFragmentDirections.actionSearchFragmentToFacetFragment()
+                findNavController().navigateSafe(R.id.search_fragment, action)
+            }
+            setOnLongClickListener {
+                if (!viewModel.filtersLiveData.value?.getFilters().isNullOrEmpty()) {
+                    viewModel.clearSearchFilter()
+                    return@setOnLongClickListener true
+                }
+                false
+            }
         }
 
         observeSearchBox()
@@ -109,6 +118,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
         viewModel.filtersLiveData.observe(viewLifecycleOwner) { filters ->
             val filterCount = filters?.getFilters()?.size ?: 0
             binding.btnFilter.post {
+                binding.btnFilter.overlay.clear()
                 val badgeDrawable = BadgeDrawable.create(requireContext()).apply {
                     isVisible = filterCount > 0
                     number = filterCount
