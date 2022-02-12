@@ -5,6 +5,7 @@
     <item
         android:id="@+id/unselect_all"
         android:title="@string/action_unselect_all"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_restore_24"
+        app:showAsAction="ifRoom" />
 
 </menu>

@@ -8,18 +8,16 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:elevation="0dp">
+        app:liftOnScroll="true">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:paddingEnd="16dp"
-            android:paddingStart="6dp"
             app:title="@string/title_categories"
-            app:contentInsetStartWithNavigation="0dp"
             app:navigationIcon="@drawable/ic_close_24"
             app:navigationContentDescription="@string/action_close"
+            app:layout_scrollFlags="noScroll"
             style="@style/Widget.MaterialComponents.Toolbar.Surface" />
 
     </com.google.android.material.appbar.AppBarLayout>

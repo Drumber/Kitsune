@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -22,8 +23,10 @@ import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.slider.RangeSlider
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentFilterFacetBinding
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.search.SearchViewModel
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.*
+import io.github.drumber.kitsune.ui.search.categories.CategoriesDialogFragment
 import io.github.drumber.kitsune.ui.widget.ExpandableLayout
 import io.github.drumber.kitsune.ui.widget.algolia.IntNumberRangeView
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
@@ -74,7 +77,10 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
         viewModel.filtersLiveData.observe(viewLifecycleOwner) { filters ->
             val filterCount = filters?.getFilters()?.size ?: 0
             binding.toolbar.menu.findItem(R.id.menu_reset_filter).isVisible = filterCount > 0
+            updateCategoriesCounter()
         }
+
+        initCategoriesCard()
     }
 
     private fun onMenuItemClicked(menuItem: MenuItem): Boolean {
@@ -84,6 +90,35 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
                 true
             }
             else -> false
+        }
+    }
+
+    private fun initCategoriesCard() {
+        binding.cardCategories.setOnClickListener {
+            showCategoriesDialog()
+        }
+        updateCategoriesCounter()
+    }
+
+    private fun showCategoriesDialog() {
+        parentFragmentManager.fragments.forEach { fragment ->
+            if (fragment is DialogFragment) {
+                // dismiss any open dialogs
+                fragment.dismissAllowingStateLoss()
+            }
+        }
+        val dialog = CategoriesDialogFragment.showDialog(parentFragmentManager)
+        dialog.setOnDismissListener {
+            updateCategoriesCounter()
+            viewModel.updateCategoryFilters()
+        }
+    }
+
+    private fun updateCategoriesCounter() {
+        val numCategories = KitsunePref.searchCategories.size
+        binding.tvCategoriesCounter.apply {
+            isVisible = numCategories > 0
+            text = numCategories.toString()
         }
     }
 

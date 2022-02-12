@@ -165,7 +165,7 @@ class CategoriesDialogFragment : DialogFragment(R.layout.fragment_categories) {
         val parentCategories = findRootCategoryNodes(childNode)
         val parentIds = parentCategories.mapNotNull { (it.value as CategoryNode).category.id }
         val category = (childNode.value as CategoryNode).category
-        return CategoryPrefWrapper(category.id, category.slug, parentIds)
+        return CategoryPrefWrapper(category.id, category.title, category.slug, parentIds)
     }
 
     override fun onDismiss(dialog: DialogInterface) {

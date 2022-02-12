@@ -17,6 +17,7 @@
             android:layout_height="?attr/actionBarSize"
             app:layout_scrollFlags="noScroll"
             app:navigationIcon="@drawable/ic_close_24"
+            app:navigationContentDescription="@string/action_close"
             app:menu="@menu/filter_facet_menu"
             app:title="@string/title_filter" />
 
@@ -105,6 +106,67 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/title_categories"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_categories"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/listPreferredItemHeightSmall"
+                android:layout_marginBottom="0.5dp"
+                app:cardCornerRadius="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="16dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:textSize="16sp"
+                        android:text="@string/filter_select_categories" />
+
+                    <TextView
+                        android:id="@+id/tv_categories_counter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/badge_background"
+                        android:elevation="2dp"
+                        android:minHeight="22dp"
+                        android:minWidth="22dp"
+                        android:layout_marginEnd="16dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:maxLines="1"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        tools:text="99+"
+                        tools:visibility="visible" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_arrow_forward_24"
+                        android:contentDescription="@null" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:id="@+id/tv_season"

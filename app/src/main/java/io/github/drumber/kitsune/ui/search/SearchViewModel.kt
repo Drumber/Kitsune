@@ -10,10 +10,12 @@ import com.algolia.instantsearch.helper.filter.facet.FacetListPresenterImpl
 import com.algolia.instantsearch.helper.filter.range.FilterRangeConnector
 import com.algolia.instantsearch.helper.filter.state.FilterState
 import com.algolia.instantsearch.helper.filter.state.Filters
+import com.algolia.instantsearch.helper.filter.state.groupOr
 import com.algolia.instantsearch.helper.searcher.SearcherSingleIndex
 import com.algolia.instantsearch.helper.searcher.connectFilterState
 import com.algolia.search.dsl.*
 import com.algolia.search.model.Attribute
+import com.algolia.search.model.filter.Filter
 import com.algolia.search.model.search.Query
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.model.FilterCollection
@@ -155,6 +157,7 @@ class SearchViewModel(
 
     private fun createFilterFacets(searcher: SearcherSingleIndex, filterState: FilterState) {
         val filterFacets = FilterFacets(searcher, filterState)
+        applyCategoryFilters(filterState)
         _filterFacets.postValue(filterFacets)
     }
 
@@ -163,7 +166,29 @@ class SearchViewModel(
             clear(*getGroups().keys.toTypedArray())
         }
         KitsunePref.searchFilters = FilterCollection()
+        KitsunePref.searchCategories = emptyList()
         _filtersLiveData.postValue(null)
+    }
+
+    private fun applyCategoryFilters(filterState: FilterState) {
+        filterState.notify {
+            val categories = Attribute("categories")
+            val filterFacets = KitsunePref.searchCategories.mapNotNull { wrapper ->
+                wrapper.categoryName?.let { categoryName ->
+                    Filter.Facet(categories, categoryName)
+                }
+            }
+
+            val group = groupOr(categories)
+            clear(group)
+            if (filterFacets.isNotEmpty()) {
+                add(group, *filterFacets.toTypedArray())
+            }
+        }
+    }
+
+    fun updateCategoryFilters() {
+        filterState?.let { applyCategoryFilters(it) }
     }
 
     override fun onCleared() {

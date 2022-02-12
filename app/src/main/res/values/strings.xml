@@ -202,6 +202,7 @@
     <string name="filter_kind">Kind</string>
     <string name="filter_year">Year</string>
     <string name="filter_avg_rating">Average Rating</string>
+    <string name="filter_select_categories">Select Categories</string>
     <string name="filter_season">Season</string>
     <string name="filter_subtype">Subtype</string>
     <string name="filter_streamers">Streamers</string>
