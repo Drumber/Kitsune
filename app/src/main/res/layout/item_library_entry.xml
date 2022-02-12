@@ -121,26 +121,41 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_watched_removed"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:enabled="@{entry.hasStartedWatching}"
-                    app:icon="@drawable/ic_remove_24"
-                    android:tooltipText="@string/hint_mark_not_watched"
-                    tools:targetApi="o"
-                    style="@style/Widget.Kitsune.Button.Outlined.IconOnly" />
+                    android:orientation="horizontal"
+                    android:background="@drawable/rectangle_background">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_watched_add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:enabled="@{entry.canWatchEpisode}"
-                    app:icon="@drawable/ic_add_24"
-                    android:tooltipText="@string/hint_mark_watched"
-                    tools:targetApi="o"
-                    style="@style/Widget.Kitsune.Button.IconOnly" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_watched_removed"
+                        android:layout_width="48dp"
+                        android:layout_height="wrap_content"
+                        android:enabled="@{entry.hasStartedWatching}"
+                        app:icon="@drawable/ic_remove_24"
+                        app:iconGravity="textStart"
+                        android:tooltipText="@string/hint_mark_not_watched"
+                        tools:targetApi="o"
+                        style="@style/Widget.Kitsune.Button.IconOnly.NoBackground" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="?attr/colorButtonNormal"
+                        android:layout_marginVertical="8dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_watched_add"
+                        android:layout_width="48dp"
+                        android:layout_height="wrap_content"
+                        android:enabled="@{entry.canWatchEpisode}"
+                        app:icon="@drawable/ic_add_24"
+                        app:iconGravity="textStart"
+                        android:tooltipText="@string/hint_mark_watched"
+                        tools:targetApi="o"
+                        style="@style/Widget.Kitsune.Button.IconOnly.NoBackground" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
