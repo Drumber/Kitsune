@@ -62,17 +62,17 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
 
     // Navigation
-    def nav_version = "2.4.0-rc01"
-    def fragment_version = "1.4.0"
+    def nav_version = "2.4.1"
+    def fragment_version = "1.4.1"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 
     // Preference
-    implementation 'androidx.preference:preference-ktx:1.1.1'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
 
     // Lifecycle
-    def lifecycle_version = "2.4.0"
+    def lifecycle_version = "2.4.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
 
@@ -103,7 +103,7 @@ dependencies {
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
 
     // Koin DI
-    def koin_version = "3.1.3"
+    def koin_version = "3.1.5"
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation "io.insert-koin:koin-androidx-navigation:$koin_version"
 
@@ -138,9 +138,10 @@ dependencies {
     implementation "io.ktor:ktor-client-okhttp:$ktor_version"
 
     // Kotpref
-    implementation 'com.chibatching.kotpref:kotpref:2.13.1'
-    implementation 'com.chibatching.kotpref:enum-support:2.13.1'
-    implementation 'com.chibatching.kotpref:livedata-support:2.13.1'
+    def kotpref_version = "2.13.2"
+    implementation "com.chibatching.kotpref:kotpref:$kotpref_version"
+    implementation "com.chibatching.kotpref:enum-support:$kotpref_version"
+    implementation "com.chibatching.kotpref:livedata-support:$kotpref_version"
 
     // Security Crypto
     implementation 'androidx.security:security-crypto:1.1.0-alpha03'
