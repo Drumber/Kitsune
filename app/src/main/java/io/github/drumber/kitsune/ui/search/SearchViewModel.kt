@@ -109,8 +109,12 @@ class SearchViewModel(
                     connectionHandler.clear()
                     searchSelector.postValue(Pair(searchType, searcher))
 
-                    val storedFilters = KitsunePref.searchFilters.toCombinedMap()
-                    val filterState = FilterState(storedFilters)
+                    val filterState = if (KitsunePref.rememberSearchFilters) {
+                        val storedFilters = KitsunePref.searchFilters.toCombinedMap()
+                        FilterState(storedFilters)
+                    } else {
+                        FilterState()
+                    }
                     createFilterFacets(searcher, filterState)
                     connectionHandler += searcher.connectFilterState(filterState)
                     connectionHandler += filterState.connectPaging { SearchRepository.invalidate() }

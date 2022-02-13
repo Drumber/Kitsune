@@ -51,6 +51,12 @@
         android:title="@string/preference_category_advanced">
 
         <SwitchPreferenceCompat
+            android:key="@string/preference_key_remember_search_filters"
+            android:title="@string/preference_remember_search_filters"
+            android:summary="@string/preference_remember_search_filters_description"
+            android:defaultValue="true" />
+
+        <SwitchPreferenceCompat
             android:key="@string/preference_key_offline_library_updates"
             android:title="@string/preference_offline_library_updates"
             android:summary="@string/preference_offline_library_description" />

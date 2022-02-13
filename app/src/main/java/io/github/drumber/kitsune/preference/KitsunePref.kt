@@ -43,6 +43,11 @@ object KitsunePref : KotprefModel(), KoinComponent {
         key = R.string.preference_key_offline_library_updates
     )
 
+    var rememberSearchFilters by booleanPref(
+        true,
+        key = R.string.preference_key_remember_search_filters
+    )
+
 
     private var searchParamsJson by stringPref(Defaults.DEFAULT_SEARCH_PARAMS.toJsonString())
 

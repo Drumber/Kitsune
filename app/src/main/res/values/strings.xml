@@ -165,6 +165,8 @@
     <string name="preference_adult_content_description_on">Media with R18+ age rating will be visible.</string>
     <string name="preference_offline_library_updates">Offline Library Updates</string>
     <string name="preference_offline_library_description">Cache offline changes to your library and synchronize them with Kitsu.io when you are back online.</string>
+    <string name="preference_remember_search_filters">Remember Search Filters</string>
+    <string name="preference_remember_search_filters_description">Apply the last used search filters after an app restart.</string>
     <string name="preference_app_version">Version Info</string>
     <string name="preference_github_repo">GitHub Repository</string>
     <string name="preference_open_source_libraries">Open Source Libraries</string>
