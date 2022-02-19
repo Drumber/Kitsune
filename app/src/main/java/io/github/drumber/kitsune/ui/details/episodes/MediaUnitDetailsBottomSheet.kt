@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.unit.MediaUnitAdapter
 import io.github.drumber.kitsune.databinding.SheetMediaUnitDetailsBinding
+import io.github.drumber.kitsune.util.originalOrDown
 import io.github.drumber.kitsune.util.smallOrHigher
 
 class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {
@@ -31,6 +33,14 @@ class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {
             .centerCrop()
             .placeholder(R.drawable.ic_insert_photo_48)
             .into(binding.ivThumbnail)
+
+        binding.ivThumbnail.setOnClickListener {
+            mediaUnit?.thumbnail?.originalOrDown()?.let { imageUrl ->
+                val title = mediaUnit.title(requireContext())
+                val action = EpisodesFragmentDirections.actionEpisodesFragmentToPhotoViewActivity(imageUrl, title)
+                findNavController().navigate(action)
+            }
+        }
 
         return binding.root
     }

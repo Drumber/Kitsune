@@ -127,6 +127,9 @@
             android:name="libraryEntryId"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_episodes_fragment_to_photo_view_activity"
+            app:destination="@id/photo_view_activity" />
     </fragment>
     <fragment
         android:id="@+id/characters_fragment"

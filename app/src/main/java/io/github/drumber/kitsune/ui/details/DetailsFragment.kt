@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -109,7 +108,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             viewModel.mediaAdapter.value?.let { mediaAdapter ->
                 val title = mediaAdapter.title
                 mediaAdapter.media.posterImage?.originalOrDown()?.let { imageUrl ->
-                    openImageViewer(imageUrl, title, binding.ivThumbnail)
+                    openImageViewer(imageUrl, title)
                 }
             }
         }
@@ -118,7 +117,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             viewModel.mediaAdapter.value?.let { mediaAdapter ->
                 val title = mediaAdapter.title
                 mediaAdapter.media.coverImage?.originalOrDown()?.let { imageUrl ->
-                    openImageViewer(imageUrl, title, binding.ivCover)
+                    openImageViewer(imageUrl, title)
                 }
             }
         }
@@ -388,7 +387,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
     }
 
-    private fun openImageViewer(imageUrl: String, title: String?, transitionOrigin: ImageView) {
+    private fun openImageViewer(imageUrl: String, title: String?) {
         val action = DetailsFragmentDirections.actionDetailsFragmentToPhotoViewActivity(imageUrl, title)
         findNavController().navigate(action)
     }
