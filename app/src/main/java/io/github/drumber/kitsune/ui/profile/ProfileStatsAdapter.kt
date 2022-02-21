@@ -79,40 +79,48 @@ class ProfileStatsAdapter(dataSet: List<ProfileStatsData>) :
                 progressBar.isVisible = dataModel.isLoading
 
                 dataModel.amountConsumedData?.let { stats ->
-                    stats.time?.let { time ->
-                        tvTimeSpent.text = when {
-                            isAnime -> {
-                                context.getString(
-                                    R.string.profile_stats_anime_watch_time,
-                                    TimeUtil.roundTime(time, context, 1)
+                    if (isAnime) {
+                        stats.time?.let { time ->
+                            tvTimeSpent.text = context.getString(
+                                R.string.profile_stats_anime_watch_time,
+                                TimeUtil.roundTime(time, context, 1)
+                            )
+
+                            if (time > 0) {
+                                tvTimeSpentTotal.text = context.getString(
+                                    R.string.profile_stats_time_spent_total,
+                                    TimeUtil.timeToHumanReadableFormat(time, context)
                                 )
                             }
-                            isManga -> {
-                                context.getString(R.string.profile_stats_manga_chapters_read, time)
-                            }
-                            else -> null
                         }
+                    } else if (isManga) {
+                        tvTimeSpent.text = stats.units?.let { chapters ->
+                            context.getString(R.string.profile_stats_manga_chapters_read, chapters)
+                        }
+                    }
 
-                        tvTimeSpentTotal.text = if (time > 0) {
+                    val htmlText = if (isAnime) {
+                        val completed = stats.completed
+                        val percentilesTime = stats.percentiles?.time
+                        if (completed != null && percentilesTime != null) {
                             context.getString(
-                                R.string.profile_stats_time_spent_total,
-                                TimeUtil.timeToHumanReadableFormat(time, context)
+                                R.string.profile_stats_completed,
+                                completed,
+                                percentilesTime.times(100).roundToInt()
                             )
                         } else {
                             null
                         }
-                    }
-
-                    val (completed, percentiles) = Pair(stats.completed, stats.percentiles?.time)
-                    tvCompleted.text = if (completed != null && percentiles != null) {
-                        val text = context.getString(
-                            R.string.profile_stats_completed,
-                            completed,
-                            percentiles.times(100).roundToInt()
-                        )
-                        HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY)
                     } else {
-                        null
+                        stats.percentiles?.units?.let { percentilesUnits ->
+                            context.getString(
+                                R.string.profile_stats_manga_percentile,
+                                percentilesUnits.times(100).roundToInt()
+                            )
+                        }
+                    }
+                    tvCompleted.text = htmlText?.let {
+                        HtmlCompat.fromHtml(it, HtmlCompat.FROM_HTML_MODE_LEGACY)
                     }
                 }
             }

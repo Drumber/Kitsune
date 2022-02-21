@@ -2,7 +2,9 @@ package io.github.drumber.kitsune.ui.profile
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
@@ -25,8 +27,10 @@ import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.ui.widget.ProfilePictureBehavior
 import io.github.drumber.kitsune.ui.widget.chart.PieChartStyle
-import io.github.drumber.kitsune.util.*
 import io.github.drumber.kitsune.util.extensions.*
+import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
+import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.initWindowInsetsListener
 import io.github.drumber.kitsune.util.network.ResponseData
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.round
