@@ -5,12 +5,12 @@ import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ActivityMainBinding
 import io.github.drumber.kitsune.ui.base.BaseActivity
+import io.github.drumber.kitsune.util.CustomNavigationUI.bindToNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity(R.layout.activity_main) {
@@ -27,7 +27,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         binding.bottomNavigation.apply {
-            setupWithNavController(navController)
+            bindToNavController(navController)
 
             // handle reselect of navigation item and pass event to current fragment
             // we use setOnItemSelectedListener instead of setOnItemReselectedListener because we still
@@ -41,8 +41,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                         (fragments[0] as NavigationBarView.OnItemReselectedListener).onNavigationItemReselected(item)
                     }
                 }
-                // since we overwrote the old select listener added with setupWithNavController,
-                // we have to manually inform NavigationUI about the event
+
+                // navigate to the target destination
                 NavigationUI.onNavDestinationSelected(item, navController)
             }
         }
