@@ -155,6 +155,8 @@ class LibraryManager(
                     }
                 }
             } ?: throw ReceivedDataException("Received data for updated rating is 'null'.")
+
+            responseCallback.call(LibraryUpdateResponse.SyncedOnline)
         } catch (e: Exception) {
             logE("Failed to update library entry rating.", e)
             if (isOfflineCacheEnabled) {

@@ -43,6 +43,7 @@ import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.showErrorSnackback
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
+import io.github.drumber.kitsune.util.logD
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -108,7 +109,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             }
         }
 
-        viewModel.isSyncingLibrary.observe(viewLifecycleOwner) {
+        viewModel.isUpdatingOrSyncingLibrary.observe(viewLifecycleOwner) {
             binding.progressIndicator.isVisible = it
         }
 

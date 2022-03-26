@@ -27,11 +27,44 @@ class LibraryViewModel(
     val offlineLibraryUpdateDao: OfflineLibraryUpdateDao
 ) : ViewModel() {
 
+    private val updateLock = Any()
+
     var responseListener: (ResponseCallback)? = null
 
-    private val _isSyncingLibrary = MutableLiveData(false)
-    val isSyncingLibrary: LiveData<Boolean>
-        get() = _isSyncingLibrary
+    private val isSyncingLibrary = MutableLiveData(false)
+
+    private val isUpdatingLibraryProgress = MutableLiveData(false)
+
+    private val isUpdatingLibraryRating = MutableLiveData(false)
+
+    private val _isUpdatingOrSyncingLibrary = MediatorLiveData<Boolean>()
+    val isUpdatingOrSyncingLibrary: LiveData<Boolean>
+        get() = _isUpdatingOrSyncingLibrary
+
+    init {
+        // merge multiple live data states into single isUpdatingOrSyncingLibrary live data
+        _isUpdatingOrSyncingLibrary.combine(
+            isSyncingLibrary,
+            isUpdatingLibraryProgress,
+            isUpdatingLibraryRating
+        )
+    }
+
+    /**
+     * Combines multiple live data sources representing a boolean state into this mediator live data.
+     * The combined state is the result of an OR operation on every given source live data.
+     */
+    private fun MediatorLiveData<Boolean>.combine(vararg sources: LiveData<Boolean>) {
+        sources.forEach { source ->
+            addSource(source) {
+                synchronized(updateLock) {
+                    this.value = sources
+                        .map { it.value ?: false }
+                        .reduce { state, element -> state || element }
+                }
+            }
+        }
+    }
 
     val filter = MutableLiveData(
         LibraryEntryFilter(
@@ -89,11 +122,11 @@ class LibraryViewModel(
     }
 
     fun synchronizeOfflineLibraryUpdates() {
-        _isSyncingLibrary.value = true
+        isSyncingLibrary.value = true
         viewModelScope.launch(Dispatchers.IO) {
             libraryManager.synchronizeLibrary {
                 responseListener?.invoke(it)
-                _isSyncingLibrary.postValue(false)
+                isSyncingLibrary.postValue(false)
             }
         }
     }
@@ -110,9 +143,11 @@ class LibraryViewModel(
     }
 
     private fun updateLibraryProgress(oldEntry: LibraryEntry, newProgress: Int?) {
+        isUpdatingLibraryProgress.value = true
         viewModelScope.launch(Dispatchers.IO) {
             libraryManager.updateProgress(oldEntry, newProgress) {
                 responseListener?.invoke(it)
+                isUpdatingLibraryProgress.postValue(false)
             }
         }
     }
@@ -123,9 +158,11 @@ class LibraryViewModel(
     fun updateRating(rating: Int?) {
         val oldEntry = lastRatedLibraryEntry ?: return
 
+        isUpdatingLibraryRating.value = true
         viewModelScope.launch(Dispatchers.IO) {
             libraryManager.updateRating(oldEntry, rating) {
                 responseListener?.invoke(it)
+                isUpdatingLibraryRating.postValue(false)
             }
         }
     }
