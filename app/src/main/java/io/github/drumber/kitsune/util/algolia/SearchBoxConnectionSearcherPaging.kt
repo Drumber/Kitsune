@@ -21,6 +21,7 @@ data class SearchBoxConnectionSearcherPaging<R>(
             invalidateCallback()
         }
     }
+
     private val searchOnSubmit: Callback<String?> = { query ->
         searcher.setQuery(query)
         invalidateCallback()

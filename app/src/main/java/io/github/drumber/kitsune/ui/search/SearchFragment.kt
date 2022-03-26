@@ -13,8 +13,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.algolia.instantsearch.core.connection.ConnectionHandler
-import com.algolia.instantsearch.helper.android.list.autoScrollToStart
+import com.algolia.instantsearch.core.connection.ConnectionImpl
 import com.algolia.instantsearch.helper.android.searchbox.SearchBoxViewAppCompat
+import com.algolia.search.model.response.ResponseSearch
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.navigation.NavigationBarView
@@ -29,11 +30,13 @@ import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.paging.MediaSearchPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.*
+import io.github.drumber.kitsune.util.algolia.SearchBoxConnectorPaging
 import io.github.drumber.kitsune.util.algolia.connectView
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import java.lang.ref.WeakReference
 
 class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
     OnItemClickListener<MediaSearchResult>,
@@ -65,7 +68,6 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
 
         val adapter = MediaSearchPagingAdapter(GlideApp.with(this), this)
         setRecyclerViewAdapter(adapter)
-        recyclerView.autoScrollToStart(adapter)
 
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.searchResultSource.collectLatest {
@@ -120,6 +122,14 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
         viewModel.searchBox.observe(viewLifecycleOwner) { searchBox ->
             val searchBoxView = SearchBoxViewAppCompat(binding.searchView)
             connectionHandler += searchBox.connectView(searchBoxView)
+            searchBox.viewModel
+            connectionHandler += SearchResponseListener(searchBox) {
+                recyclerView.post {
+                    // scroll to top when searching
+                    recyclerView.scrollToPosition(0)
+                    binding.appBarLayout.setExpanded(true)
+                }
+            }
         }
     }
 
@@ -184,6 +194,50 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
 
     companion object {
         const val TAG_SEARCH_FOCUSED = R.drawable.ic_search_24
+    }
+
+    /**
+     * Triggers the onSearchReceived callback after the
+     * search query was changed AND the response is received.
+     */
+    private class SearchResponseListener(
+        searchBox: SearchBoxConnectorPaging<ResponseSearch>,
+        private val onSearchReceived: () -> Unit
+    ) : ConnectionImpl() {
+
+        private val _searchBox = WeakReference(searchBox)
+        private var pendingSearch = false
+
+        private val onQueryChanged = { _: Any? ->
+            pendingSearch = true
+        }
+        private val onSearchResponse = { r: ResponseSearch? ->
+            // new data was received while there is a pending search, so notify the callback
+            if (pendingSearch) {
+                onSearchReceived()
+            }
+            // reset pendingSearch flag when the first page was received
+            if (pendingSearch && r?.pageOrNull == 0) {
+                pendingSearch = false
+            }
+        }
+
+        override fun connect() {
+            super.connect()
+            _searchBox.get()?.let {
+                it.viewModel.query.subscribe(onQueryChanged)
+                it.searcher.response.subscribe(onSearchResponse)
+            }
+        }
+
+        override fun disconnect() {
+            super.disconnect()
+            _searchBox.get()?.let {
+                it.viewModel.query.unsubscribe(onQueryChanged)
+                it.searcher.response.unsubscribe(onSearchResponse)
+            }
+        }
+
     }
 
 }

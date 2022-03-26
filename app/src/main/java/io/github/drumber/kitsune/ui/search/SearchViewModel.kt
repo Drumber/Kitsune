@@ -16,6 +16,7 @@ import com.algolia.instantsearch.helper.searcher.connectFilterState
 import com.algolia.search.dsl.*
 import com.algolia.search.model.Attribute
 import com.algolia.search.model.filter.Filter
+import com.algolia.search.model.response.ResponseSearch
 import com.algolia.search.model.search.Query
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.model.FilterCollection
@@ -54,8 +55,8 @@ class SearchViewModel(
     private val _searchClientStatus = MutableLiveData(SearchClientStatus.NotInitialized)
     val searchClientStatus get() = _searchClientStatus as LiveData<SearchClientStatus>
 
-    private val _searchBox = MutableLiveData<SearchBoxConnectorPaging<*>>()
-    val searchBox get() = _searchBox as LiveData<SearchBoxConnectorPaging<*>>
+    private val _searchBox = MutableLiveData<SearchBoxConnectorPaging<ResponseSearch>>()
+    val searchBox get() = _searchBox as LiveData<SearchBoxConnectorPaging<ResponseSearch>>
 
     private val _filterFacets = MutableLiveData<FilterFacets>()
     val filterFacets get() = _filterFacets as LiveData<FilterFacets>
