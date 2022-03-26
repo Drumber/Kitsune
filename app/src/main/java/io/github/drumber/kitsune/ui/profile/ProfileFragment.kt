@@ -23,6 +23,7 @@ import io.github.drumber.kitsune.data.model.stats.StatsData
 import io.github.drumber.kitsune.data.model.stats.StatsKind
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
+import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.ui.widget.ProfilePictureBehavior
@@ -231,10 +232,18 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                 dialog.dismiss()
             }
             .setPositiveButton(R.string.action_log_out) { dialog, _ ->
-                viewModel.logOut()
+                onLogOut()
                 dialog.dismiss()
             }
             .show()
+    }
+
+    private fun onLogOut() {
+        viewModel.logOut()
+        (requireActivity() as BaseActivity).apply {
+            startNewMainActivity()
+            finish()
+        }
     }
 
     override fun onPause() {

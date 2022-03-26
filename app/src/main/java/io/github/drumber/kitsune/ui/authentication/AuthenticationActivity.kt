@@ -50,7 +50,8 @@ class AuthenticationActivity : BaseActivity(R.layout.activity_authentication, fa
 
                 setResult(Activity.RESULT_OK)
 
-                //Complete and destroy login activity once successful
+                // Start new clean main activity and destroy login activity once successful
+                startNewMainActivity()
                 finish()
             }
         }
