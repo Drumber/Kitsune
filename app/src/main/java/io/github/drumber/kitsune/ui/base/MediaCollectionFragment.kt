@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavOptions
 import androidx.paging.PagingData
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.data.model.MediaType
@@ -50,13 +49,10 @@ abstract class MediaCollectionFragment(
 
     override fun onItemClick(item: BaseMedia) {
         val model = MediaAdapter.fromMedia(item)
-        val options = NavOptions.Builder()
-            .setLaunchSingleTop(true)
-            .build()
-        onMediaClicked(model, options)
+        onMediaClicked(model)
     }
 
-    open fun onMediaClicked(model: MediaAdapter, options: NavOptions) {}
+    open fun onMediaClicked(model: MediaAdapter) {}
 
     override fun onDestroyView() {
         super.onDestroyView()

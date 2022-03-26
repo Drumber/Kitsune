@@ -18,7 +18,9 @@ abstract class MediaCollectionViewModel : ViewModel() {
         get() = _mediaSelector
 
     open fun setMediaSelector(mediaSelector: MediaSelector) {
-        _mediaSelector.value = mediaSelector
+        if (_mediaSelector.value != mediaSelector) {
+            _mediaSelector.value = mediaSelector
+        }
     }
 
     val currentMediaSelector: MediaSelector

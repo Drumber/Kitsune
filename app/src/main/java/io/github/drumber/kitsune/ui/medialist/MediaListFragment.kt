@@ -3,7 +3,6 @@ package io.github.drumber.kitsune.ui.medialist
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
@@ -47,9 +46,9 @@ class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) 
         }
     }
 
-    override fun onMediaClicked(model: MediaAdapter, options: NavOptions) {
+    override fun onMediaClicked(model: MediaAdapter) {
         val action = MediaListFragmentDirections.actionMediaListFragmentToDetailsFragment(model)
-        findNavController().navigateSafe(R.id.media_list_fragment, action, options)
+        findNavController().navigateSafe(R.id.media_list_fragment, action)
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
