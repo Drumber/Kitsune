@@ -110,8 +110,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     true
                 }
                 requireUserLoggedIn(user) {
-                    val countryName = Locale("", it.value).displayName
-                    getString(R.string.preference_country_summary, countryName)
+                    if (it.value == null) {
+                        getString(R.string.preference_country_summary_non)
+                    } else {
+                        val countryName = Locale("", it.value).displayName
+                        getString(R.string.preference_country_summary, countryName)
+                    }
                 }
             }
 

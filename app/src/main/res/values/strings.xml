@@ -153,6 +153,7 @@
     <string name="preference_profile_url">Profile URL</string>
     <string name="preference_country">Country</string>
     <string name="preference_country_summary">Country is set to %s</string>
+    <string name="preference_country_summary_non">No country specified.</string>
     <string name="preference_titles">Titles</string>
     <string name="preference_titles_description">Define how media titles will be displayed.</string>
     <string-array name="preference_titles_values">
