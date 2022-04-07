@@ -13,6 +13,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 class MediaRecyclerViewAdapter(
     val dataSet: CopyOnWriteArrayList<MediaAdapter>,
     private val glide: GlideRequests,
+    private val showSubtype: Boolean = false,
     private val listener: OnItemClickListener<MediaAdapter>? = null
 ) : RecyclerView.Adapter<MediaViewHolder>() {
 
@@ -31,7 +32,8 @@ class MediaRecyclerViewAdapter(
         }
         return MediaViewHolder(
             binding,
-            glide
+            glide,
+            showSubtype
         ) { position ->
             if (position < dataSet.size) {
                 listener?.onItemClick(dataSet[position])

@@ -252,7 +252,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
         if (binding.rvFranchise.adapter !is MediaRecyclerViewAdapter) {
             val glide = GlideApp.with(this)
-            val adapter = MediaRecyclerViewAdapter(CopyOnWriteArrayList(data), glide) { media ->
+            val adapter = MediaRecyclerViewAdapter(CopyOnWriteArrayList(data), glide, true) { media ->
                 onFranchiseItemClicked(media)
             }
             adapter.overrideItemSize = MediaItemSize.SMALL
