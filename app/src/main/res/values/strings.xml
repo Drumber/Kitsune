@@ -100,6 +100,7 @@
     <string name="data_title_english">English</string>
     <string name="data_title_japanese">Japanese</string>
     <string name="data_title_japanese_romaji">Japanese (Romaji)</string>
+    <string name="data_abbreviated_titles">Synonyms</string>
     <string name="data_title_type">Type</string>
     <string name="data_title_status">Status</string>
     <string name="data_title_aired">Aired</string>

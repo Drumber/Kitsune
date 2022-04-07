@@ -35,6 +35,8 @@ class MediaAdapter(val media: BaseMedia) : Parcelable {
 
     val titles get() = media.titles ?: Titles(null, null, null)
 
+    val abbreviatedTitles get() = media.abbreviatedTitles?.joinToString(", ")
+
     val description get() = media.description.orEmpty()
 
     val avgRating get() = media.averageRating

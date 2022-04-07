@@ -3,8 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.text.TextUtils"/>
+
+        <import type="android.text.TextUtils" />
+
         <import type="io.github.drumber.kitsune.data.model.production.AnimeProductionRole" />
+
         <variable
             name="data"
             type="io.github.drumber.kitsune.data.model.media.MediaAdapter" />
@@ -15,94 +18,124 @@
         android:layout_height="wrap_content"
         android:stretchColumns="0,1">
 
+        <!-- Title English -->
         <include
             layout="@layout/item_details_info_row"
             app:isVisible="@{data.titles.en != null}"
             app:title="@{@string/data_title_english}"
             app:value="@{data.titles.en}" />
 
+        <!-- Title Japanese -->
         <include
             layout="@layout/item_details_info_row"
             app:isVisible="@{data.titles.jaJp != null}"
             app:title="@{@string/data_title_japanese}"
             app:value="@{data.titles.jaJp}" />
 
+        <!-- Title Romaji -->
         <include
             layout="@layout/item_details_info_row"
             app:isVisible="@{data.titles.enJp != null}"
             app:title="@{@string/data_title_japanese_romaji}"
             app:value="@{data.titles.enJp}" />
 
+        <!-- Abbreviated Titles (Synonyms) -->
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.abbreviatedTitles)}"
+            app:title="@{@string/data_abbreviated_titles}"
+            app:value="@{data.abbreviatedTitles}" />
+
+        <!-- Subtype -->
         <include
             layout="@layout/item_details_info_row"
             app:title="@{@string/data_title_type}"
             app:value="@{data.subtype}" />
 
+        <!-- Status -->
         <include
             layout="@layout/item_details_info_row"
             app:title="@{@string/data_title_status}"
             app:value="@{data.statusText(context)}" />
 
+        <!-- Aired Date -->
         <include
             layout="@layout/item_details_info_row"
             app:isVisible="@{TextUtils.isEmpty(data.tba)}"
             app:title="@{data.isAnime ? @string/data_title_aired : @string/data_title_published}"
             app:value="@{data.airedText}" />
 
+        <!-- Season -->
         <include
             layout="@layout/item_details_info_row"
             app:isVisible="@{TextUtils.isEmpty(data.tba) &amp;&amp; data.isAnime}"
             app:title="@{@string/data_title_season}"
             app:value="@{data.season(context) + ` ` + data.seasonYear}" />
 
+        <!-- TBA (Expected Date) -->
         <include
             layout="@layout/item_details_info_row"
             app:isVisible="@{!TextUtils.isEmpty(data.tba)}"
             app:title="@{@string/data_title_tba}"
             app:value="@{data.tba}" />
 
+        <!-- Age Rating -->
         <include
             layout="@layout/item_details_info_row"
             app:isVisible="@{!TextUtils.isEmpty(data.ageRatingText)}"
             app:title="@{@string/data_title_age_rating}"
             app:value="@{data.ageRatingText}" />
 
+        <!-- Serialization (Manga) -->
         <include
             layout="@layout/item_details_info_row"
             app:isVisible="@{!TextUtils.isEmpty(data.serialization)}"
             app:title="@{@string/data_title_serialization}"
             app:value="@{data.serialization}" />
 
+        <!-- Chapters (Manga) -->
         <include
             layout="@layout/item_details_info_row"
             app:isVisible="@{!TextUtils.isEmpty(data.chapters)}"
             app:title="@{@string/data_title_chapters}"
             app:value="@{data.chapters}" />
 
+        <!-- Volumes (Manga) -->
         <include
             layout="@layout/item_details_info_row"
             app:isVisible="@{!TextUtils.isEmpty(data.volumes)}"
             app:title="@{@string/data_title_volumes}"
             app:value="@{data.volumes}" />
 
+        <!-- Episodes (Anime) -->
         <include
             layout="@layout/item_details_info_row"
             app:isVisible="@{!TextUtils.isEmpty(data.episodes)}"
             app:title="@{@string/data_title_episodes}"
             app:value="@{data.episodes}" />
 
+        <!-- Length -->
+        <include
+            layout="@layout/item_details_info_row"
+            app:isVisible="@{!TextUtils.isEmpty(data.lengthText(context))}"
+            app:title="@{@string/data_title_length}"
+            app:value="@{data.lengthText(context)}" />
+
+        <!-- Producers (Anime) -->
         <include
             layout="@layout/item_details_info_row"
             app:isVisible="@{!TextUtils.isEmpty(data.getProducer(AnimeProductionRole.Producer))}"
             app:title="@{@string/data_title_producers}"
             app:value="@{data.getProducer(AnimeProductionRole.Producer)}" />
 
+        <!-- Licensor (Anime) -->
         <include
             layout="@layout/item_details_info_row"
             app:isVisible="@{!TextUtils.isEmpty(data.getProducer(AnimeProductionRole.Licensor))}"
             app:title="@{@string/data_title_licensors}"
             app:value="@{data.getProducer(AnimeProductionRole.Licensor)}" />
 
+        <!-- Studio (Anime) -->
         <include
             layout="@layout/item_details_info_row"
             app:isVisible="@{!TextUtils.isEmpty(data.getProducer(AnimeProductionRole.Studio))}"
