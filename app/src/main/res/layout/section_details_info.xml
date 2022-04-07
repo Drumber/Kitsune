@@ -61,14 +61,14 @@
         <!-- Aired Date -->
         <include
             layout="@layout/item_details_info_row"
-            app:isVisible="@{TextUtils.isEmpty(data.tba)}"
+            app:isVisible="@{TextUtils.isEmpty(data.tba) &amp;&amp; !TextUtils.isEmpty(data.airedText)}"
             app:title="@{data.isAnime ? @string/data_title_aired : @string/data_title_published}"
             app:value="@{data.airedText}" />
 
         <!-- Season -->
         <include
             layout="@layout/item_details_info_row"
-            app:isVisible="@{TextUtils.isEmpty(data.tba) &amp;&amp; data.isAnime}"
+            app:isVisible="@{TextUtils.isEmpty(data.tba) &amp;&amp; !TextUtils.isEmpty(data.seasonYear) &amp;&amp; data.isAnime}"
             app:title="@{@string/data_title_season}"
             app:value="@{data.season(context) + ` ` + data.seasonYear}" />
 

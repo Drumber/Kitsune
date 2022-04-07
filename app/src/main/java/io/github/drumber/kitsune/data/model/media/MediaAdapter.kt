@@ -87,7 +87,7 @@ class MediaAdapter(val media: BaseMedia) : Parcelable {
                 } else {
                     year
                 }
-            }?.toString() ?: "?"
+            }?.toString() ?: ""
         }
 
     val airedText: String
@@ -103,7 +103,7 @@ class MediaAdapter(val media: BaseMedia) : Parcelable {
         return if (!dateString.isNullOrBlank()) {
             dateString.toDate().formatDate()
         } else {
-            "?"
+            ""
         }
     }
 
