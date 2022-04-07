@@ -4,7 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs.kotlin'
     id 'kotlin-parcelize'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.20'
     id 'com.mikepenz.aboutlibraries.plugin'
 }
 
@@ -62,7 +62,7 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
 
     // Navigation
-    def nav_version = "2.4.1"
+    def nav_version = "2.4.2"
     def fragment_version = "1.4.1"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
@@ -80,7 +80,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
 
     // Kotlin coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
 
     // Paging
@@ -114,8 +114,8 @@ dependencies {
     implementation 'com.github.jasminb:jsonapi-converter:0.11'
 
     // Jackson
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1"
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2'
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.13.2"
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
