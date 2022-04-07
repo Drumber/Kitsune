@@ -5,7 +5,6 @@ import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.formatter.LargeValueFormatter
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.util.extensions.getColor
 
@@ -38,7 +37,7 @@ object BarChartStyle : BaseChartStyle() {
     }
 
     fun BarDataSet.applyStyle(c: Context, colorArray: List<Int>) {
-        valueFormatter = LargeValueFormatter()
+        valueFormatter = NonZeroLargeValueFormatter()
         isHighlightEnabled = false
         applyBaseStyle(c, colorArray)
     }

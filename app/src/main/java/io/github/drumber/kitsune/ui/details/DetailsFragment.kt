@@ -324,19 +324,19 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 list
             } else {
                 var previous = 0
-                list.filterNotNull().mapIndexedNotNull { index, s ->
+                list.mapIndexedNotNull { index, s ->
                     if (index % 2 == 0) {
-                        (previous + s.toInt()).toString()
+                        (previous + (s?.toInt() ?: 0)).toString()
                     } else {
-                        previous = s.toInt()
+                        previous = s?.toInt() ?: 0
                         null
                     }
                 }
             }
         }
 
-        val chartEntries = ratingList.mapIndexedNotNull { index, s ->
-            s?.let { BarEntry(index.toFloat(), it.toFloat()) }
+        val chartEntries = ratingList.mapIndexed { index, s ->
+            BarEntry(index.toFloat(), s?.toFloat() ?: 0f)
         }
 
         val dataSet = BarDataSet(chartEntries, "Ratings")
