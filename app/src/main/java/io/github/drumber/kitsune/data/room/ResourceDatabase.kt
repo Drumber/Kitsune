@@ -9,7 +9,7 @@ import io.github.drumber.kitsune.data.model.library.OfflineLibraryUpdate
 
 @Database(
     entities = [LibraryEntry::class, RemoteKey::class, OfflineLibraryUpdate::class],
-    version = 23,
+    version = 24,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

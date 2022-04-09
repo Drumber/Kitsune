@@ -52,11 +52,14 @@ data class LibraryEntry(
 ): Parcelable
 
 enum class Status {
-    @JsonProperty("completed") Completed,
+    // Note: Changing the order of these enum values affects the library database
+    // since the library entry status is stored as ordinal number.
+    // Make sure to bump the database version after changing!
     @JsonProperty("current") Current,
-    @JsonProperty("dropped") Dropped,
+    @JsonProperty("planned") Planned,
+    @JsonProperty("completed") Completed,
     @JsonProperty("on_hold") OnHold,
-    @JsonProperty("planned") Planned
+    @JsonProperty("dropped") Dropped
 }
 
 enum class ReactionSkip {

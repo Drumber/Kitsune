@@ -24,24 +24,42 @@ class LibraryEntriesRemoteMediator(
     private val libraryEntryDao = database.libraryEntryDao()
     private val remoteKeyDao = database.remoteKeys()
 
+    /**
+     * Implementation based on android paging example from google code labs:
+     * [https://github.com/googlecodelabs/android-paging/blob/78d231f6fbe9bf1326993362e1d08f823bef5ea2/app/src/main/java/com/example/android/codelabs/paging/data/GithubRemoteMediator.kt]
+     */
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, LibraryEntry>
     ): MediatorResult {
+        val pageSize = state.config.pageSize
         return try {
             val pageOffset = when (loadType) {
-                LoadType.REFRESH -> Kitsu.DEFAULT_PAGE_OFFSET // we always want to refresh from first page
-                LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
+                LoadType.REFRESH -> {
+                    val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
+                    remoteKeys?.nextPageKey?.minus(pageSize) ?: Kitsu.DEFAULT_PAGE_OFFSET
+                }
+                LoadType.PREPEND -> {
+                    val remoteKeys = getRemoteKeyForFirstItem(state)
+                    // If remoteKeys is null, that means the refresh result is not in the database yet.
+                    // We can return Success with `endOfPaginationReached = false` because Paging
+                    // will call this method again if RemoteKeys becomes non-null.
+                    // If remoteKeys is NOT NULL but its prevKey is null, that means we've reached
+                    // the end of pagination for prepend.
+                    val prevKey = remoteKeys?.prevPageKey
+                        ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                    prevKey
+                }
                 LoadType.APPEND -> {
-                    val remoteKey = getRemoteKeyForLastItem(state)
-
-                    if (remoteKey == null) {
-                        state.config.pageSize
-                    } else {
-                        remoteKey.nextPageKey ?: return MediatorResult.Success(
-                            endOfPaginationReached = true
-                        )
-                    }
+                    val remoteKeys = getRemoteKeyForLastItem(state)
+                    // If remoteKeys is null, that means the refresh result is not in the database yet.
+                    // We can return Success with `endOfPaginationReached = false` because Paging
+                    // will call this method again if RemoteKeys becomes non-null.
+                    // If remoteKeys is NOT NULL but its prevKey is null, that means we've reached
+                    // the end of pagination for append.
+                    val nextKey = remoteKeys?.nextPageKey
+                        ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                    nextKey
                 }
             }
 
@@ -76,9 +94,33 @@ class LibraryEntriesRemoteMediator(
     }
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, LibraryEntry>): RemoteKey? {
-        return state.lastItemOrNull()?.let { libraryEntry ->
-            database.withTransaction {
+        // Get the last page that was retrieved, that contained items.
+        // From that last page, get the last item
+        return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
+            ?.let { libraryEntry ->
+                // Get the remote keys of the last item retrieved
                 remoteKeyDao.remoteKeyByResourceId(libraryEntry.id, RemoteKeyType.LibraryEntry)
+            }
+    }
+
+    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, LibraryEntry>): RemoteKey? {
+        // Get the first page that was retrieved, that contained items.
+        // From that first page, get the first item
+        return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
+            ?.let { libraryEntry ->
+                // Get the remote keys of the first items retrieved
+                remoteKeyDao.remoteKeyByResourceId(libraryEntry.id, RemoteKeyType.LibraryEntry)
+            }
+    }
+
+    private suspend fun getRemoteKeyClosestToCurrentPosition(
+        state: PagingState<Int, LibraryEntry>
+    ): RemoteKey? {
+        // The paging library is trying to load data after the anchor position
+        // Get the item closest to the anchor position
+        return state.anchorPosition?.let { position ->
+            state.closestItemToPosition(position)?.id?.let { libraryEntryId ->
+                remoteKeyDao.remoteKeyByResourceId(libraryEntryId, RemoteKeyType.LibraryEntry)
             }
         }
     }

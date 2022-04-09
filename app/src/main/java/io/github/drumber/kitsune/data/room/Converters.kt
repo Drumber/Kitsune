@@ -105,18 +105,14 @@ class Converters {
     }
 
     @TypeConverter
-    fun libraryStatusToString(status: io.github.drumber.kitsune.data.model.library.Status?): String? {
-        return if (status != null) {
-            objectMapper.writeValueAsString(status)
-        } else {
-            null
-        }
+    fun libraryStatusToOrdinal(status: io.github.drumber.kitsune.data.model.library.Status?): Int? {
+        return status?.ordinal
     }
 
     @TypeConverter
-    fun stringToLibraryStatus(json: String?): io.github.drumber.kitsune.data.model.library.Status? {
-        return if (json != null) {
-            objectMapper.readValue(json)
+    fun ordinalToLibraryStatus(ordinal: Int?): io.github.drumber.kitsune.data.model.library.Status? {
+        return if (ordinal != null) {
+            io.github.drumber.kitsune.data.model.library.Status.values()[ordinal]
         } else {
             null
         }
