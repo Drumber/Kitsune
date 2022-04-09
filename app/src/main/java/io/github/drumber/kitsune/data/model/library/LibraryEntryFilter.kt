@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.data.model.library
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.github.drumber.kitsune.data.service.Filter
 
 data class LibraryEntryFilter(
@@ -13,11 +14,7 @@ data class LibraryEntryFilter(
         return this
     }
 
-    // Note: Do not apply filters to the network-request filter object to allow offline caching
-    // of the whole user library instead of the last filtered library response.
-    // Filtering will be performed only locally on the Room database.
-    // Maybe add a preference to disable caching of the whole library to reduce cache size.
-    fun buildFilter() = Filter(initialFilter.options.toMutableMap())/*.apply {
+    fun buildFilter() = Filter(initialFilter.options.toMutableMap()).apply {
             if (kind != LibraryEntryKind.All) {
                 filter("kind", kind.name.lowercase())
             }
@@ -26,7 +23,9 @@ data class LibraryEntryFilter(
                 val status = libraryStatus.joinToString(",") { objectMapper.writeValueAsString(it) }
                 filter("status", status)
             }
-        }*/
+        }
+
+    fun isFiltered() = kind != LibraryEntryKind.All || libraryStatus.isNotEmpty()
 
 }
 

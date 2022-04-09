@@ -52,7 +52,9 @@ class LibraryEntriesRemoteMediator(
             val endReached = page?.next == null
 
             database.withTransaction {
-                if (loadType == LoadType.REFRESH) {
+                // only clear database on REFRESH and if the full library was requested (is not filtered)
+                // otherwise library entries won't be available for offline use
+                if (loadType == LoadType.REFRESH && !filter.isFiltered()) {
                     libraryEntryDao.clearLibraryEntries()
                     remoteKeyDao.clearRemoteKeys(RemoteKeyType.LibraryEntry)
                 }
