@@ -16,6 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Kitsune.DayNight">
+        <profileable android:shell="true"/>
         <activity
             android:name=".ui.details.photoview.PhotoViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
