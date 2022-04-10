@@ -51,15 +51,16 @@ data class LibraryEntry(
     var user: User? = null
 ): Parcelable
 
-enum class Status {
-    // Note: Changing the order of these enum values affects the library database
-    // since the library entry status is stored as ordinal number.
-    // Make sure to bump the database version after changing!
-    @JsonProperty("current") Current,
-    @JsonProperty("planned") Planned,
-    @JsonProperty("completed") Completed,
-    @JsonProperty("on_hold") OnHold,
-    @JsonProperty("dropped") Dropped
+/**
+ * @param orderId   Unique order ID for storing the status in the library entries database and
+ *                  to receive the entries in the here defined order.
+ */
+enum class Status(val orderId: Int) {
+    @JsonProperty("current") Current(0),
+    @JsonProperty("planned") Planned(1),
+    @JsonProperty("completed") Completed(2),
+    @JsonProperty("on_hold") OnHold(3),
+    @JsonProperty("dropped") Dropped(4)
 }
 
 enum class ReactionSkip {

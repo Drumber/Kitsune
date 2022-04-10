@@ -105,14 +105,15 @@ class Converters {
     }
 
     @TypeConverter
-    fun libraryStatusToOrdinal(status: io.github.drumber.kitsune.data.model.library.Status?): Int? {
-        return status?.ordinal
+    fun libraryStatusToOrderId(status: io.github.drumber.kitsune.data.model.library.Status?): Int? {
+        return status?.orderId
     }
 
     @TypeConverter
-    fun ordinalToLibraryStatus(ordinal: Int?): io.github.drumber.kitsune.data.model.library.Status? {
-        return if (ordinal != null) {
-            io.github.drumber.kitsune.data.model.library.Status.values()[ordinal]
+    fun orderIdToLibraryStatus(orderId: Int?): io.github.drumber.kitsune.data.model.library.Status? {
+        return if (orderId != null) {
+            io.github.drumber.kitsune.data.model.library.Status.values()
+                .find { it.orderId == orderId }
         } else {
             null
         }

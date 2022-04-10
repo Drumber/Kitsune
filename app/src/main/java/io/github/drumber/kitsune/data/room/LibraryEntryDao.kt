@@ -10,7 +10,7 @@ import io.github.drumber.kitsune.data.model.library.Status
 interface LibraryEntryDao {
 
     companion object {
-        /** Order by ordinal status (see [io.github.drumber.kitsune.data.model.library.Status]) and update time */
+        /** Order by status orderId (see [io.github.drumber.kitsune.data.model.library.Status]) and update time */
         const val ORDER_BY_STATUS = "ORDER BY status, DATETIME(updatedAt) DESC"
     }
 
