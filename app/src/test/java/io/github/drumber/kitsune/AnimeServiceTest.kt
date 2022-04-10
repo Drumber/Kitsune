@@ -2,14 +2,14 @@ package io.github.drumber.kitsune
 
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.anime.AnimeService
-import io.github.drumber.kitsune.di.serviceModule
+import io.github.drumber.kitsune.di.networkModule
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
 
 class AnimeServiceTest : BaseTest() {
 
-    override val koinModules = listOf(serviceModule)
+    override val koinModules = listOf(networkModule)
 
     @Test
     fun fetchAllAnime() = runBlocking {

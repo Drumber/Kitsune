@@ -2,14 +2,14 @@ package io.github.drumber.kitsune
 
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.user.UserService
-import io.github.drumber.kitsune.di.serviceModule
+import io.github.drumber.kitsune.di.networkModule
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertNotNull
 import org.junit.Test
 
 class UserServiceTest : BaseTest() {
 
-    override val koinModules = listOf(serviceModule)
+    override val koinModules = listOf(networkModule)
 
     @Test
     fun fetchUser() = runBlocking {

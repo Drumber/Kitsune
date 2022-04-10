@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.preference.*
 import androidx.recyclerview.widget.RecyclerView
@@ -15,11 +17,15 @@ import com.mikepenz.aboutlibraries.LibsBuilder
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.data.manager.GitHubUpdateChecker
 import io.github.drumber.kitsune.data.model.TitlesPref
 import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
+import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -27,12 +33,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private val viewModel: SettingsViewModel by viewModel()
 
+    private val updateChecker: GitHubUpdateChecker by inject()
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.sharedPreferencesName = getString(R.string.preference_file_key)
         setPreferencesFromResource(R.xml.app_preferences, rootKey)
 
         findPreference<Preference>(R.string.preference_key_fragment_appearance)?.setOnPreferenceClickListener {
-            val action = SettingsFragmentDirections.actionSettingsFragmentToThemePreferenceFragment()
+            val action =
+                SettingsFragmentDirections.actionSettingsFragmentToThemePreferenceFragment()
             findNavController().navigate(action)
             true
         }
@@ -55,7 +64,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         val appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
-        findPreference<Preference>(R.string.preference_key_app_version)?.summary = appVersion
+        findPreference<Preference>(R.string.preference_key_app_version)?.apply {
+            summary = appVersion
+            setOnPreferenceClickListener {
+                checkForNewVersion()
+                true
+            }
+        }
 
         findPreference<Preference>(R.string.preference_key_open_source_libraries)?.setOnPreferenceClickListener {
             val libsBuilder = LibsBuilder()
@@ -98,15 +113,50 @@ class SettingsFragment : PreferenceFragmentCompat() {
         return recyclerView
     }
 
+    private fun checkForNewVersion() {
+        Toast.makeText(
+            requireContext(),
+            R.string.info_update_checking_new_version,
+            Toast.LENGTH_SHORT
+        ).show()
+
+        lifecycleScope.launch {
+            when (val result = updateChecker.checkForUpdates()) {
+                is GitHubUpdateChecker.UpdateCheckerResult.NewVersion -> {
+                    Notifications.showNewVersion(requireContext(), result.release)
+                }
+                is GitHubUpdateChecker.UpdateCheckerResult.NoNewVersion -> {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.info_update_no_new_version_available,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                is GitHubUpdateChecker.UpdateCheckerResult.Failed -> {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.info_update_failed,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
     private fun observeUserModel() {
         viewModel.userModel.observe(this) { user ->
             //---- Country
             findPreference<ListPreference>(R.string.preference_key_country)?.apply {
                 entryValues = Locale.getISOCountries()
-                entries = Locale.getISOCountries().map { Locale("", it).displayCountry }.toTypedArray()
+                entries =
+                    Locale.getISOCountries().map { Locale("", it).displayCountry }.toTypedArray()
                 value = user?.country
                 setOnPreferenceChangeListener { _, newValue ->
-                    updateUserIfChanged(value, newValue, User(user?.id, country = newValue as String))
+                    updateUserIfChanged(
+                        value,
+                        newValue,
+                        User(user?.id, country = newValue as String)
+                    )
                     true
                 }
                 requireUserLoggedIn(user) {
@@ -123,15 +173,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
             findPreference<SwitchPreferenceCompat>(R.string.preference_key_adult_content)?.apply {
                 isChecked = user?.sfwFilter?.not() ?: false
                 setOnPreferenceChangeListener { _, newValue ->
-                    updateUserIfChanged(isChecked, newValue, User(user?.id, sfwFilter = !(newValue as Boolean)))
+                    updateUserIfChanged(
+                        isChecked,
+                        newValue,
+                        User(user?.id, sfwFilter = !(newValue as Boolean))
+                    )
                     true
                 }
                 requireUserLoggedIn(user) {
-                    getString(if (it.isChecked) {
-                        R.string.preference_adult_content_description_on
-                    } else {
-                        R.string.preference_adult_content_description_off
-                    })
+                    getString(
+                        if (it.isChecked) {
+                            R.string.preference_adult_content_description_on
+                        } else {
+                            R.string.preference_adult_content_description_off
+                        }
+                    )
                 }
             }
 

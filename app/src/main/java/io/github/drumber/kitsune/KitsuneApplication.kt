@@ -9,7 +9,9 @@ import com.chibatching.kotpref.livedata.asLiveData
 import io.github.drumber.kitsune.data.repository.AuthRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.di.appModule
+import io.github.drumber.kitsune.notification.NotificationChannels
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -26,6 +28,12 @@ class KitsuneApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        try {
+            NotificationChannels.registerNotificationChannels(this)
+        } catch (e: Exception) {
+            logE("Failed to register notification channels.", e)
+        }
 
         startKoin {
             androidLogger(if (BuildConfig.DEBUG) Level.ERROR else Level.NONE)

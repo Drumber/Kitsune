@@ -30,6 +30,7 @@ import io.github.drumber.kitsune.data.service.anime.EpisodesService
 import io.github.drumber.kitsune.data.service.auth.AlgoliaKeyService
 import io.github.drumber.kitsune.data.service.auth.AuthService
 import io.github.drumber.kitsune.data.service.category.CategoryService
+import io.github.drumber.kitsune.data.service.github.GitHubApiService
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.data.service.manga.ChaptersService
 import io.github.drumber.kitsune.data.service.manga.MangaService
@@ -43,6 +44,7 @@ import io.github.drumber.kitsune.util.network.AuthenticationInterceptorImpl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.core.qualifier.named
 import org.koin.core.scope.Scope
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -51,11 +53,13 @@ import java.util.concurrent.TimeUnit
 
 const val KITSU_API_URL = "https://kitsu.io/api/edge/"
 const val KITSU_OAUTH_URL = "https://kitsu.io/api/oauth/"
+const val GITHUB_API_URL = "https://api.github.com/repos/drumber/kitsune/"
 
-val serviceModule = module {
+val networkModule = module {
     single { createHttpClient(get()) }
+    single(named("unauthenticated")) { createHttpClientBuilder().build() }
     single { createObjectMapper() }
-    factory { createAuthService() }
+    factory { createAuthService(get()) }
     factory { createAuthenticationInterceptor() }
     factory {
         createService<AnimeService>(get(), get(),
@@ -89,7 +93,8 @@ val serviceModule = module {
         )
     }
     factory { createService<CastingService>(get(), get(), Casting::class.java, Character::class.java) }
-    factory { createService<AlgoliaKeyService>(get()) }
+    factory { createService<AlgoliaKeyService>(get(), get()) }
+    factory { createService<GitHubApiService>(get(named("unauthenticated")), get(), GITHUB_API_URL) }
 }
 
 private fun createHttpClientBuilder() = OkHttpClient.Builder()
@@ -114,8 +119,9 @@ private fun Scope.createAuthenticationInterceptor() = try {
     AuthenticationInterceptorDummy()
 }
 
-private fun createAuthService() = createService<AuthService>(
+private fun createAuthService(objectMapper: ObjectMapper) = createService<AuthService>(
     createHttpClientBuilder().build(),
+    objectMapper,
     KITSU_OAUTH_URL
 )
 
@@ -157,12 +163,13 @@ private inline fun <reified T> createService(
 
 private inline fun <reified T> createService(
     httpClient: OkHttpClient,
+    objectMapper: ObjectMapper,
     baseUrl: String = KITSU_API_URL
 ): T {
     return Retrofit.Builder()
         .baseUrl(baseUrl)
         .client(httpClient)
-        .addConverterFactory(JacksonConverterFactory.create())
+        .addConverterFactory(JacksonConverterFactory.create(objectMapper))
         .build()
         .create(T::class.java)
 }

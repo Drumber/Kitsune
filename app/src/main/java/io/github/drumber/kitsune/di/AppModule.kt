@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.di
 
 val appModule = listOf(
-    serviceModule,
+    networkModule,
     viewModelModule,
     repositoryModule,
     databaseModule,

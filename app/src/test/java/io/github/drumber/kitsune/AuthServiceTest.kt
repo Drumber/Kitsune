@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune
 
 import io.github.drumber.kitsune.data.service.auth.AuthService
-import io.github.drumber.kitsune.di.serviceModule
+import io.github.drumber.kitsune.di.networkModule
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertNotNull
 import org.junit.Ignore
@@ -9,7 +9,7 @@ import org.junit.Test
 
 class AuthServiceTest : BaseTest() {
 
-    override val koinModules = listOf(serviceModule)
+    override val koinModules = listOf(networkModule)
 
     @Ignore("Requires working credentials.")
     @Test
