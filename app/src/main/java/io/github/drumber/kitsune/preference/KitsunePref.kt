@@ -48,6 +48,11 @@ object KitsunePref : KotprefModel(), KoinComponent {
         key = R.string.preference_key_remember_search_filters
     )
 
+    var checkForUpdatesOnStart by booleanPref(
+        true,
+        key = R.string.preference_key_check_for_updates_on_start
+    )
+
 
     private var searchParamsJson by stringPref(Defaults.DEFAULT_SEARCH_PARAMS.toJsonString())
 

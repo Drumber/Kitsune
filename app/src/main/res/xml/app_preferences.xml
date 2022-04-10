@@ -61,6 +61,12 @@
             android:title="@string/preference_offline_library_updates"
             android:summary="@string/preference_offline_library_description" />
 
+        <SwitchPreferenceCompat
+            android:key="@string/preference_key_check_for_updates_on_start"
+            android:title="@string/preference_check_for_updates"
+            android:summary="@string/preference_check_for_updates_description"
+            android:defaultValue="true" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
