@@ -226,6 +226,7 @@
     <string name="profile_data_location">Location</string>
     <string name="profile_data_birthday">Birthday</string>
     <string name="profile_data_join_date">Join Date</string>
+    <string name="profile_data_join_date_ago">%s ago</string>
     <string name="profile_data_private">It\'s a secret.</string>
     <string name="gender_male">Male</string>
     <string name="gender_female">Female</string>

@@ -14,6 +14,10 @@ import kotlin.time.ExperimentalTime
 
 object TimeUtil {
 
+    /**
+     * Formats the given time in seconds to a human readable time string like:
+     * `2 years, 1 month, 5 days, 1 hour, 2 minutes`
+     */
     @OptIn(ExperimentalTime::class)
     fun timeToHumanReadableFormat(
         timeSeconds: Long,
@@ -58,6 +62,18 @@ object TimeUtil {
         return parts.joinToString(", ")
     }
 
+    /**
+     * Formats the given time in seconds to a rounded time string.
+     *
+     * Example:
+     * ```
+     * 1s    -> 1 second
+     * 59s   -> 59 seconds
+     * 60s   -> 1 minute
+     * 90s   -> 1.5 minutes
+     * 3600s -> 1 hour
+     * ```
+     */
     @OptIn(ExperimentalTime::class)
     fun roundTime(timeSeconds: Long, context: Context, decimalPlaces: Int = 1): String {
         val res = context.resources

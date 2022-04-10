@@ -8,6 +8,7 @@ import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.extensions.formatDate
 import io.github.drumber.kitsune.util.extensions.toDate
 import java.text.SimpleDateFormat
+import java.util.*
 
 object DataUtil {
 
@@ -21,6 +22,17 @@ object DataUtil {
             "female" -> context.getString(R.string.gender_female)
             "secret", null -> context.getString(R.string.profile_data_private)
             else -> gender
+        }
+    }
+
+    @JvmStatic
+    fun formatUserJoinDate(joinDate: String?, context: Context): String? {
+        return joinDate?.let { dateString ->
+            val dateJoined = dateString.toDate()
+            val diffMillis = Calendar.getInstance().timeInMillis - dateJoined.timeInMillis
+            val differenceString = TimeUtil.roundTime(diffMillis / 1000, context)
+            "${formatDate(dateString)} " +
+                    "(${context.getString(R.string.profile_data_join_date_ago, differenceString)})"
         }
     }
 
