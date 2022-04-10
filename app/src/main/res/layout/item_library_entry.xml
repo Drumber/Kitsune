@@ -169,7 +169,7 @@
                 android:layout_toEndOf="@id/iv_thumbnail"
                 android:layout_alignParentEnd="true"
                 app:trackCornerRadius="0dp"
-                app:isVisible="@{entry.hasEpisodesCount}"
+                app:isVisible="@{entry.hasEpisodesCount &amp;&amp; entry.hasStartedWatchingOrIsCurrent}"
                 android:max="@{entry.episodeCount}"
                 android:progress="@{entry.progressCount}"
                 tools:progress="50"/>

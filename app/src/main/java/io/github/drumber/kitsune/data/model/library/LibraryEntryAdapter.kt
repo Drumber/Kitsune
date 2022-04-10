@@ -22,6 +22,9 @@ class LibraryEntryAdapter(private val wrapper: LibraryEntryWrapper) {
     val hasStartedWatching: Boolean
         get() = progressCount?.equals(0) == false
 
+    val hasStartedWatchingOrIsCurrent: Boolean
+        get() = hasStartedWatching || libraryEntry.status == Status.Current
+
     val canWatchEpisode: Boolean
         get() = progressCount != episodeCount
 
