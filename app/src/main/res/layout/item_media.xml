@@ -9,8 +9,8 @@
             name="data"
             type="io.github.drumber.kitsune.data.model.media.MediaAdapter" />
         <variable
-            name="showSubtype"
-            type="boolean" />
+            name="overlayTagText"
+            type="String" />
     </data>
 
     <FrameLayout
@@ -70,18 +70,18 @@
                     app:cardBackgroundColor="@color/subtype_badge_background"
                     app:cardElevation="0dp"
                     app:shapeAppearance="@style/ShapeAppearance.Kitsune.SubtypeBadge"
-                    app:isVisible="@{showSubtype &amp;&amp; !TextUtils.isEmpty(data.subtype)}"
+                    app:isVisible="@{!TextUtils.isEmpty(overlayTagText)}"
                     tools:ignore="RelativeOverlap,RtlHardcoded">
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tv_subtype"
+                        android:id="@+id/tv_overlay_tag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="4dp"
                         android:paddingVertical="2dp"
                         android:textAppearance="@style/TextAppearance.Kitsune.SubtypeBadge"
                         android:maxLines="1"
-                        android:text="@{data.subtype}"
+                        android:text="@{overlayTagText}"
                         tools:text="TV" />
 
                 </com.google.android.material.card.MaterialCardView>

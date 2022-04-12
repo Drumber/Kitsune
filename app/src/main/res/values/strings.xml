@@ -122,6 +122,19 @@
     <string name="season_summer">Summer</string>
     <string name="season_fall">Fall</string>
 
+    <string name="relationship_sequel">Sequel</string>
+    <string name="relationship_prequel">Prequel</string>
+    <string name="relationship_alternative_setting">Alt. setting</string>
+    <string name="relationship_alternative_version">Alt. version</string>
+    <string name="relationship_side_story">Side story</string>
+    <string name="relationship_parent_story">Parent story</string>
+    <string name="relationship_summary">Summary</string>
+    <string name="relationship_full_story">Full story</string>
+    <string name="relationship_spinoff">Spin-off</string>
+    <string name="relationship_adaptation">Adaptation</string>
+    <string name="relationship_character">Character</string>
+    <string name="relationship_other">Other</string>
+
     <string name="section_trending">Trending This Week</string>
     <string name="section_top_airing_anime">Top Airing Anime</string>
     <string name="section_top_upcoming_anime">Top Upcoming Anime</string>

@@ -3,6 +3,8 @@ package io.github.drumber.kitsune.data.model.media
 import android.content.Context
 import android.os.Parcelable
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.model.mediarelationship.RelationshipRole
+import io.github.drumber.kitsune.data.model.mediarelationship.getString
 import io.github.drumber.kitsune.data.model.production.AnimeProductionRole
 import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.util.TimeUtil
@@ -17,12 +19,16 @@ import java.util.*
  * Adapter class for representing media attributes to the UI layer.
  */
 @Parcelize
-class MediaAdapter(val media: BaseMedia) : Parcelable {
+class MediaAdapter(
+    val media: BaseMedia,
+    /** Relationship role that this media has to a another media. */
+    val ownRelationshipRole: RelationshipRole? = null
+) : Parcelable {
 
     companion object {
-        fun fromMedia(media: Media) = when (media) {
-            is Anime -> MediaAdapter(media)
-            is Manga -> MediaAdapter(media)
+        fun fromMedia(media: Media, ownRelationshipRole: RelationshipRole? = null) = when (media) {
+            is Anime -> MediaAdapter(media, ownRelationshipRole)
+            is Manga -> MediaAdapter(media, ownRelationshipRole)
             else -> throw IllegalStateException("Unknown media subclass: ${media::class.java}")
         }
     }
@@ -58,6 +64,10 @@ class MediaAdapter(val media: BaseMedia) : Parcelable {
             is Anime -> media.subtype
             is Manga -> media.subtype
         }?.name.orEmpty().replaceFirstChar(Char::titlecase)
+
+    fun ownRelationshipRoleText(context: Context): String? {
+        return ownRelationshipRole?.getString(context)
+    }
 
     val publishingYear: String
         get() = if (!media.startDate.isNullOrBlank()) {

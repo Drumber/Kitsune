@@ -8,12 +8,13 @@ import io.github.drumber.kitsune.GlideRequests
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
+import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
 import java.util.concurrent.CopyOnWriteArrayList
 
 class MediaRecyclerViewAdapter(
     val dataSet: CopyOnWriteArrayList<MediaAdapter>,
     private val glide: GlideRequests,
-    private val showSubtype: Boolean = false,
+    private val tagData: TagData = TagData.None,
     private val listener: OnItemClickListener<MediaAdapter>? = null
 ) : RecyclerView.Adapter<MediaViewHolder>() {
 
@@ -33,7 +34,7 @@ class MediaRecyclerViewAdapter(
         return MediaViewHolder(
             binding,
             glide,
-            showSubtype
+            tagData
         ) { position ->
             if (position < dataSet.size) {
                 listener?.onItemClick(dataSet[position])

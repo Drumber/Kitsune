@@ -10,6 +10,7 @@ import io.github.drumber.kitsune.data.model.media.MediaSearchResult
 import io.github.drumber.kitsune.data.model.media.toMedia
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder
+import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 
 class MediaSearchPagingAdapter(
@@ -28,7 +29,7 @@ class MediaSearchPagingAdapter(
         return MediaViewHolder(
             binding,
             glide,
-            true
+            TagData.Subtype
         ) { position ->
             getItem(position)?.let { item -> listener?.onItemClick(item) }
         }

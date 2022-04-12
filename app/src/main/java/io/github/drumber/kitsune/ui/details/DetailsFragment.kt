@@ -38,6 +38,7 @@ import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
+import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
 import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
@@ -247,12 +248,12 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         val data = mediaAdapter.media.mediaRelationships?.sortedBy {
             it.role?.ordinal
         }?.mapNotNull {
-            it.media?.let { media -> MediaAdapter.fromMedia(media) }
+            it.media?.let { media -> MediaAdapter.fromMedia(media, it.role) }
         } ?: emptyList()
 
         if (binding.rvFranchise.adapter !is MediaRecyclerViewAdapter) {
             val glide = GlideApp.with(this)
-            val adapter = MediaRecyclerViewAdapter(CopyOnWriteArrayList(data), glide, true) { media ->
+            val adapter = MediaRecyclerViewAdapter(CopyOnWriteArrayList(data), glide, TagData.RelationshipRole) { media ->
                 onFranchiseItemClicked(media)
             }
             adapter.overrideItemSize = MediaItemSize.SMALL

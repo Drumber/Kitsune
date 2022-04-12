@@ -9,9 +9,18 @@ import io.github.drumber.kitsune.databinding.ItemMediaBinding
 class MediaViewHolder(
     private val binding: ItemMediaBinding,
     private val glide: GlideRequests,
-    private val showSubtype: Boolean = false,
+    private val tagData: TagData = TagData.None,
     private val listener: (position: Int) -> Unit
 ): RecyclerView.ViewHolder(binding.root) {
+
+    /**
+     * Information type for the overlay tag.
+     */
+    enum class TagData {
+        None,
+        Subtype,
+        RelationshipRole
+    }
 
     init {
         binding.cardMedia.setOnClickListener {
@@ -24,7 +33,11 @@ class MediaViewHolder(
 
     fun bind(data: MediaAdapter) {
         binding.data = data
-        binding.showSubtype = showSubtype
+        binding.overlayTagText = when (tagData) {
+            TagData.None -> null
+            TagData.Subtype -> data.subtype
+            TagData.RelationshipRole -> data.ownRelationshipRoleText(binding.root.context)
+        }
         glide.load(data.posterImage)
             .placeholder(R.drawable.ic_insert_photo_48)
             .into(binding.ivThumbnail)
