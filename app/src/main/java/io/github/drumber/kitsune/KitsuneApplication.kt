@@ -39,7 +39,7 @@ class KitsuneApplication : Application() {
         }
 
         startKoin {
-            androidLogger(if (BuildConfig.DEBUG) Level.ERROR else Level.NONE)
+            androidLogger(if (BuildConfig.DEBUG) Level.DEBUG else Level.INFO)
             androidContext(this@KitsuneApplication)
             modules(appModule)
         }

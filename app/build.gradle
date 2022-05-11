@@ -4,7 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs.kotlin'
     id 'kotlin-parcelize'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.20'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.21'
     id 'com.mikepenz.aboutlibraries.plugin'
 }
 
@@ -51,6 +51,7 @@ android {
     packagingOptions {
         exclude 'META-INF/*.kotlin_module'
     }
+    namespace 'io.github.drumber.kitsune'
 }
 
 dependencies {
@@ -104,7 +105,7 @@ dependencies {
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
 
     // Koin DI
-    def koin_version = "3.1.6"
+    def koin_version = "3.2.0"
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation "io.insert-koin:koin-androidx-navigation:$koin_version"
 
