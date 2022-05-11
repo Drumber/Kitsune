@@ -9,6 +9,7 @@ import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.network.ResponseData
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val userRepository: UserRepository,
@@ -24,8 +25,8 @@ class ProfileViewModel(
             liveData(context = Dispatchers.IO) {
                 val response = try {
                     val response = userService.getUser(userId, FULL_USER_FILTER.options)
-                    response.get()?.let {
-                            fullUser -> ResponseData.Success(fullUser)
+                    response.get()?.let { fullUser ->
+                        ResponseData.Success(fullUser)
                     } ?: throw ReceivedDataException("Received data is null.")
                 } catch (e: Exception) {
                     logE("Failed to fetch full user model.", e)
@@ -34,6 +35,22 @@ class ProfileViewModel(
                 emit(response)
             }
         } ?: MutableLiveData(ResponseData.Error(ReceivedDataException("User is null.")))
+    }
+
+    private val _isLoading = MutableLiveData(false)
+    val isLoading get() = _isLoading as LiveData<Boolean>
+
+    fun refreshUser() {
+        _isLoading.value = true
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                userRepository.updateUserCache()
+            } catch (e: Exception) {
+                logE("Failed to refresh user model.", e)
+            } finally {
+                _isLoading.postValue(false)
+            }
+        }
     }
 
     fun logOut() {

@@ -64,9 +64,16 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
             updateUser(user)
             updateOptionsMenu()
         }
+
         viewModel.fullUserModel.observe(viewLifecycleOwner) { fullUser ->
             if (fullUser is ResponseData.Success) {
                 updateUser(fullUser.data)
+            }
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.swipeRefreshLayout.apply {
+                isRefreshing = isRefreshing && isLoading
             }
         }
 
@@ -79,7 +86,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
             toolbar.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.menu_settings -> {
-                        val action = ProfileFragmentDirections.actionProfileFragmentToSettingsFragment()
+                        val action = ProfileFragmentDirections
+                            .actionProfileFragmentToSettingsFragment()
                         findNavController().navigate(action)
                     }
                     R.id.menu_share_profile_url -> {
@@ -129,7 +137,18 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                 windowInsets
             }
 
-            nsvContent.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
+            swipeRefreshLayout.initPaddingWindowInsetsListener(
+                left = true,
+                right = true,
+                consume = false
+            )
+
+            swipeRefreshLayout.apply {
+                setAppTheme()
+                setOnRefreshListener {
+                    viewModel.refreshUser()
+                }
+            }
         }
 
         initStatsViewPager()
@@ -174,16 +193,32 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         viewModel.fullUserModel.observe(viewLifecycleOwner) { response ->
             val user = response.data
 
-            val animeCategoryStats: StatsData.CategoryBreakdownData? = user?.stats.findStatsData(StatsKind.AnimeCategoryBreakdown)
-            updateStatsChart(ProfileStatsAdapter.POS_ANIME, R.string.profile_anime_stats, animeCategoryStats)
+            val animeCategoryStats: StatsData.CategoryBreakdownData? = user
+                ?.stats
+                .findStatsData(StatsKind.AnimeCategoryBreakdown)
+            updateStatsChart(
+                ProfileStatsAdapter.POS_ANIME,
+                R.string.profile_anime_stats,
+                animeCategoryStats
+            )
 
-            val mangaCategoryStats: StatsData.CategoryBreakdownData? = user?.stats.findStatsData(StatsKind.MangaCategoryBreakdown)
-            updateStatsChart(ProfileStatsAdapter.POS_MANGA, R.string.profile_manga_stats, mangaCategoryStats)
+            val mangaCategoryStats: StatsData.CategoryBreakdownData? = user
+                ?.stats
+                .findStatsData(StatsKind.MangaCategoryBreakdown)
+            updateStatsChart(
+                ProfileStatsAdapter.POS_MANGA,
+                R.string.profile_manga_stats,
+                mangaCategoryStats
+            )
 
-            val animeAmountConsumed: StatsData.AmountConsumedData? = user?.stats.findStatsData(StatsKind.AnimeAmountConsumed)
+            val animeAmountConsumed: StatsData.AmountConsumedData? = user
+                ?.stats
+                .findStatsData(StatsKind.AnimeAmountConsumed)
             adapter.updateAmountConsumedData(ProfileStatsAdapter.POS_ANIME, animeAmountConsumed)
 
-            val mangaAmountConsumed: StatsData.AmountConsumedData? = user?.stats.findStatsData(StatsKind.MangaAmountConsumed)
+            val mangaAmountConsumed: StatsData.AmountConsumedData? = user
+                ?.stats
+                .findStatsData(StatsKind.MangaAmountConsumed)
             adapter.updateAmountConsumedData(ProfileStatsAdapter.POS_MANGA, mangaAmountConsumed)
 
             adapter.setLoading(ProfileStatsAdapter.POS_ANIME, false)
@@ -207,7 +242,12 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                 .filter { it.second != 0 }
                 .sortedByDescending { it.second }
                 .take(PieChartStyle.STATS_MAX_ELEMENTS)
-                .map { (category, value) -> PieEntry(round(value.toFloat() / total * 100f), category) }
+                .map { (category, value) ->
+                    PieEntry(
+                        round(value.toFloat() / total * 100f),
+                        category
+                    )
+                }
         } ?: emptyList()
 
         val set = PieDataSet(categoryEntries, getString(titleRes))

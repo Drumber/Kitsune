@@ -79,159 +79,166 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/nsv_content"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <FrameLayout
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/nsv_content"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:fillViewport="true">
 
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:isVisible="@{user != null}"
-                    tools:visibility="visible"
-                    android:orientation="vertical">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        app:strokeWidth="1dp"
-                        app:strokeColor="@color/card_stroke_color"
-                        app:cardElevation="0dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="@dimen/card_inner_padding"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="10dp"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                                android:text="@string/title_about_me" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="10dp"
-                                app:isVisible="@{!TextUtils.isEmpty(user.about)}"
-                                android:text="@{user.about}"
-                                tools:text="Personal about me text." />
-
-                            <TableLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:stretchColumns="0,1">
-
-                                <include
-                                    layout="@layout/item_details_info_row"
-                                    app:icon="@{@drawable/ic_person_24}"
-                                    app:title="@{@string/profile_data_gender}"
-                                    app:value="@{DataUtil.getGenderString(user.gender, context) ?? @string/profile_data_private}" />
-
-                                <include
-                                    layout="@layout/item_details_info_row"
-                                    app:icon="@{@drawable/ic_location_24}"
-                                    app:title="@{@string/profile_data_location}"
-                                    app:value="@{user.location ?? @string/profile_data_private}" />
-
-                                <include
-                                    layout="@layout/item_details_info_row"
-                                    app:icon="@{@drawable/ic_cake_24}"
-                                    app:title="@{@string/profile_data_birthday}"
-                                    app:value="@{DataUtil.formatDate(user.birthday) ?? @string/profile_data_private}" />
-
-                                <include
-                                    layout="@layout/item_details_info_row"
-                                    app:icon="@{@drawable/ic_calendar_24}"
-                                    app:title="@{@string/profile_data_join_date}"
-                                    app:value="@{DataUtil.formatUserJoinDate(user.createdAt, context) ?? @string/profile_data_private}" />
-
-                            </TableLayout>
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        app:cardElevation="2dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <com.google.android.material.tabs.TabLayout
-                                android:id="@+id/tab_layout_stats"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                app:tabTextAppearance="@style/TextAppearance.Kitsune.TabLayout" />
-
-                            <androidx.viewpager2.widget.ViewPager2
-                                android:id="@+id/view_pager_stats"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:padding="@dimen/card_inner_padding" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                </LinearLayout>
-
-                <!-- Not Logged In Message -->
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    tools:visibility="gone"
-                    app:isVisible="@{user == null}">
+                    android:layout_height="match_parent">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:padding="20dp"
+                        app:isVisible="@{user != null}"
+                        tools:visibility="visible"
                         android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-                            android:text="@string/profile_not_logged_in_title" />
+                            android:layout_margin="10dp"
+                            app:strokeWidth="1dp"
+                            app:strokeColor="@color/card_stroke_color"
+                            app:cardElevation="0dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                            android:text="@string/profile_not_logged_in_text" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/card_inner_padding"
+                                android:orientation="vertical">
 
-                        <Button
-                            android:id="@+id/btn_login"
-                            android:layout_width="wrap_content"
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="10dp"
+                                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                                    android:text="@string/title_about_me" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="10dp"
+                                    app:isVisible="@{!TextUtils.isEmpty(user.about)}"
+                                    android:text="@{user.about}"
+                                    tools:text="Personal about me text." />
+
+                                <TableLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:stretchColumns="0,1">
+
+                                    <include
+                                        layout="@layout/item_details_info_row"
+                                        app:icon="@{@drawable/ic_person_24}"
+                                        app:title="@{@string/profile_data_gender}"
+                                        app:value="@{DataUtil.getGenderString(user.gender, context) ?? @string/profile_data_private}" />
+
+                                    <include
+                                        layout="@layout/item_details_info_row"
+                                        app:icon="@{@drawable/ic_location_24}"
+                                        app:title="@{@string/profile_data_location}"
+                                        app:value="@{user.location ?? @string/profile_data_private}" />
+
+                                    <include
+                                        layout="@layout/item_details_info_row"
+                                        app:icon="@{@drawable/ic_cake_24}"
+                                        app:title="@{@string/profile_data_birthday}"
+                                        app:value="@{DataUtil.formatDate(user.birthday) ?? @string/profile_data_private}" />
+
+                                    <include
+                                        layout="@layout/item_details_info_row"
+                                        app:icon="@{@drawable/ic_calendar_24}"
+                                        app:title="@{@string/profile_data_join_date}"
+                                        app:value="@{DataUtil.formatUserJoinDate(user.createdAt, context) ?? @string/profile_data_private}" />
+
+                                </TableLayout>
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginVertical="20dp"
-                            android:text="@string/action_log_in_to_kitsu"
-                            android:textAllCaps="false" />
+                            android:layout_margin="10dp"
+                            app:cardElevation="2dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <com.google.android.material.tabs.TabLayout
+                                    android:id="@+id/tab_layout_stats"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    app:tabTextAppearance="@style/TextAppearance.Kitsune.TabLayout" />
+
+                                <androidx.viewpager2.widget.ViewPager2
+                                    android:id="@+id/view_pager_stats"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/card_inner_padding" />
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
 
                     </LinearLayout>
 
-                </RelativeLayout>
+                    <!-- Not Logged In Message -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:visibility="gone"
+                        app:isVisible="@{user == null}">
 
-            </FrameLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:padding="20dp"
+                            android:orientation="vertical">
 
-        </androidx.core.widget.NestedScrollView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                                android:text="@string/profile_not_logged_in_title" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                                android:text="@string/profile_not_logged_in_text" />
+
+                            <Button
+                                android:id="@+id/btn_login"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginVertical="20dp"
+                                android:text="@string/action_log_in_to_kitsu"
+                                android:textAllCaps="false" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                </FrameLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_profile_image"
