@@ -8,4 +8,11 @@
         android:icon="@drawable/ic_sync_24"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/menu_search"
+        android:title="@string/hint_search"
+        android:icon="@drawable/ic_search_24"
+        app:showAsAction="always|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView" />
+
 </menu>

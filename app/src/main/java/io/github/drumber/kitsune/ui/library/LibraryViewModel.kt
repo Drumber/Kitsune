@@ -31,6 +31,19 @@ class LibraryViewModel(
 
     var responseListener: (ResponseCallback)? = null
 
+    private val _filter = MutableLiveData(
+        LibraryEntryFilter(
+            KitsunePref.libraryEntryKind,
+            KitsunePref.libraryEntryStatus,
+        )
+    )
+    val filter get() = _filter as LiveData<LibraryEntryFilter>
+
+    private val _searchQuery = MutableLiveData<String?>()
+    val searchQuery get() = _searchQuery.value
+
+    var scrollToTopAfterSearch = false
+
     private val isSyncingLibrary = MutableLiveData(false)
 
     private val isUpdatingLibraryProgress = MutableLiveData(false)
@@ -66,21 +79,15 @@ class LibraryViewModel(
         }
     }
 
-    val filter = MutableLiveData(
-        LibraryEntryFilter(
-            KitsunePref.libraryEntryKind,
-            KitsunePref.libraryEntryStatus,
-        )
-    )
-
     private val filterMediator = MediatorLiveData<LibraryEntryFilter?>().apply {
         addSource(userRepository.userLiveData) { this.value = buildLibraryEntryFilter() }
         addSource(filter) { this.value = buildLibraryEntryFilter() }
+        addSource(_searchQuery) { this.value = buildLibraryEntryFilter() }
     }
 
     val dataSource: Flow<PagingData<LibraryEntryWrapper>> = filterMediator.asFlow().filterNotNull()
         .flatMapLatest { filter ->
-            libraryEntriesRepository.libraryEntries(Kitsu.DEFAULT_PAGE_SIZE_LIBRARY, filter)
+            handleLibraryEntriesDataSource(filter)
                 .map { pagingData ->
                     pagingData.map { entry ->
                         LibraryEntryWrapper(
@@ -91,19 +98,43 @@ class LibraryViewModel(
                 }
         }.cachedIn(viewModelScope)
 
+    /**
+     * If the search query is blank, request the remote mediator for data
+     * otherwise search the library online.
+     */
+    private fun handleLibraryEntriesDataSource(filter: LibraryEntryFilter): Flow<PagingData<LibraryEntry>> {
+        val searchQueryText = searchQuery
+        return if (searchQueryText.isNullOrBlank()) {
+            libraryEntriesRepository.libraryEntries(Kitsu.DEFAULT_PAGE_SIZE_LIBRARY, filter)
+        } else {
+            libraryEntriesRepository.searchLibraryEntries(
+                Kitsu.DEFAULT_PAGE_SIZE_LIBRARY,
+                filter.buildFilter()
+                    .filter("title", searchQueryText)
+            )
+        }
+    }
+
     private fun buildLibraryEntryFilter(): LibraryEntryFilter? {
         return userRepository.user?.id?.let { userId ->
-            val reqFilter = Filter()
+            val requestFilter = Filter()
                 .filter("user_id", userId)
                 .sort("status", "-progressed_at")
                 .include("anime", "manga")
 
-            filter.value?.copy(initialFilter = reqFilter)
+            filter.value?.copy(initialFilter = requestFilter)
                 ?: LibraryEntryFilter(
                     KitsunePref.libraryEntryKind,
                     KitsunePref.libraryEntryStatus,
-                    reqFilter
+                    requestFilter
                 )
+        }
+    }
+
+    fun searchLibrary(searchQueryText: String?) {
+        if ((searchQuery ?: "").trim() != (searchQueryText ?: "").trim()) {
+            scrollToTopAfterSearch = true
+            _searchQuery.postValue(searchQueryText)
         }
     }
 
@@ -113,12 +144,12 @@ class LibraryViewModel(
 
     fun setLibraryEntryKind(kind: LibraryEntryKind) {
         KitsunePref.libraryEntryKind = kind
-        filter.value = LibraryEntryFilter(kind, KitsunePref.libraryEntryStatus)
+        _filter.value = LibraryEntryFilter(kind, KitsunePref.libraryEntryStatus)
     }
 
     fun setLibraryEntryStatus(status: List<Status>) {
         KitsunePref.libraryEntryStatus = status
-        filter.value = LibraryEntryFilter(KitsunePref.libraryEntryKind, status)
+        _filter.value = LibraryEntryFilter(KitsunePref.libraryEntryKind, status)
     }
 
     fun synchronizeOfflineLibraryUpdates() {

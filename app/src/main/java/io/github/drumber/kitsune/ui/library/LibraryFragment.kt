@@ -9,6 +9,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
@@ -18,6 +19,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.algolia.instantsearch.core.searcher.Debouncer
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
@@ -56,6 +58,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
     private var offlineLibraryUpdatesAmount = 0
 
+    private val searchDebouncer by lazy { Debouncer(300L) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -90,15 +94,17 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         viewModel.userRepository.userLiveData.observe(viewLifecycleOwner) { user ->
             val isLoggedIn = user != null
             binding.apply {
+                setMenuVisibility(isLoggedIn)
                 rvLibraryEntries.isVisible = isLoggedIn
                 nsvNotLoggedIn.isVisible = !isLoggedIn
                 scrollViewFilter.isVisible = isLoggedIn
                 // disable toolbar scrolling if library is not shown (not logged in)
-                (toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags = if (isLoggedIn) {
-                    initialToolbarScrollFlags
-                } else {
-                    AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
-                }
+                (toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags =
+                    if (isLoggedIn) {
+                        initialToolbarScrollFlags
+                    } else {
+                        AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
+                    }
             }
         }
 
@@ -216,6 +222,13 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
                     swipeRefreshLayout.isRefreshing =
                         swipeRefreshLayout.isRefreshing && state.source.refresh is LoadState.Loading
+
+                    // TODO: this only scrolls to the top after the first load finished,
+                    //       we also need to scroll to top after the last load finished
+                    if (isNotLoading && viewModel.scrollToTopAfterSearch) {
+                        rvLibraryEntries.scrollToPosition(0)
+                        viewModel.scrollToTopAfterSearch = false
+                    }
                 }
             }
         }
@@ -290,9 +303,64 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         sheetLibraryRating.show(parentFragmentManager, RatingBottomSheet.TAG)
     }
 
+    private fun initSearchView(menuItem: MenuItem) {
+        val searchView = menuItem.actionView as SearchView
+
+        searchView.queryHint = getString(R.string.hint_search)
+
+        val searchQueryText = viewModel.searchQuery
+        if (!searchQueryText.isNullOrBlank()) {
+            // restore previous search view state
+            menuItem.expandActionView()
+            searchView.post {
+                searchView.setQuery(searchQueryText, false)
+            }
+        }
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchDebouncer.debounce(lifecycleScope) {
+                    viewModel.searchLibrary(query)
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                searchView.post {
+                    // empty search queries triggered on collapse will be ignored
+                    if (!searchView.isIconified) {
+                        searchDebouncer.debounce(lifecycleScope) {
+                            viewModel.searchLibrary(newText)
+                        }
+                    }
+                }
+                return false
+            }
+        })
+
+        menuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                viewModel.searchLibrary(null)
+                binding.rvLibraryEntries.apply {
+                    post {
+                        scrollToPosition(0)
+                    }
+                }
+                return true
+            }
+        })
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.library_menu, menu)
         menu.findItem(R.id.menu_synchronize).isVisible = offlineLibraryUpdatesAmount > 0
+
+        initSearchView(menu.findItem(R.id.menu_search))
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -303,7 +371,11 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             isVisible = offlineLibraryUpdatesAmount > 0
             number = offlineLibraryUpdatesAmount
         }
-        BadgeUtils.attachBadgeDrawable(badgeDrawable, binding.toolbar, R.id.menu_synchronize)
+        BadgeUtils.attachBadgeDrawable(
+            badgeDrawable,
+            binding.toolbar,
+            R.id.menu_synchronize
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
