@@ -37,7 +37,7 @@ class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {
         binding.ivThumbnail.setOnClickListener {
             mediaUnit?.thumbnail?.originalOrDown()?.let { imageUrl ->
                 val title = mediaUnit.title(requireContext())
-                val action = EpisodesFragmentDirections.actionEpisodesFragmentToPhotoViewActivity(imageUrl, title)
+                val action = EpisodesFragmentDirections.actionEpisodesFragmentToPhotoViewActivity(imageUrl, title, thumbnailUrl)
                 findNavController().navigate(action)
             }
         }

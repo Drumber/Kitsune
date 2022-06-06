@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -20,6 +21,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import app.futured.hauler.setOnDragActivityListener
 import app.futured.hauler.setOnDragDismissedListener
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ActivityPhotoViewBinding
@@ -32,9 +37,9 @@ import kotlinx.coroutines.withContext
 
 class PhotoViewActivity : BaseActivity(
     R.layout.activity_photo_view,
-    true,
-    false,
-    false
+    edgeToEdge = true,
+    updateSystemUiColors = false,
+    setAppTheme = false
 ) {
 
     private lateinit var binding: ActivityPhotoViewBinding
@@ -68,6 +73,32 @@ class PhotoViewActivity : BaseActivity(
 
         GlideApp.with(this)
             .load(args.imageUrl)
+            .thumbnail(
+                GlideApp.with(this)
+                    .load(args.thumbnailUrl)
+                    .dontTransform()
+            )
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    onImageLoadFailed()
+                    return false
+                }
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    binding.progressIndicator.hide()
+                    return false
+                }
+            })
             .dontTransform()
             .into(binding.photoView)
 
@@ -92,6 +123,11 @@ class PhotoViewActivity : BaseActivity(
         }
         // reset alpha
         binding.photoBackground.background.alpha = 255
+    }
+
+    private fun onImageLoadFailed() {
+        Toast.makeText(this, R.string.error_image_loading, Toast.LENGTH_SHORT).show()
+        finish()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

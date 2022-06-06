@@ -109,7 +109,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             viewModel.mediaAdapter.value?.let { mediaAdapter ->
                 val title = mediaAdapter.title
                 mediaAdapter.media.posterImage?.originalOrDown()?.let { imageUrl ->
-                    openImageViewer(imageUrl, title)
+                    openImageViewer(imageUrl, title, mediaAdapter.posterImage)
                 }
             }
         }
@@ -118,7 +118,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             viewModel.mediaAdapter.value?.let { mediaAdapter ->
                 val title = mediaAdapter.title
                 mediaAdapter.media.coverImage?.originalOrDown()?.let { imageUrl ->
-                    openImageViewer(imageUrl, title)
+                    openImageViewer(imageUrl, title, mediaAdapter.coverImage)
                 }
             }
         }
@@ -388,8 +388,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
     }
 
-    private fun openImageViewer(imageUrl: String, title: String?) {
-        val action = DetailsFragmentDirections.actionDetailsFragmentToPhotoViewActivity(imageUrl, title)
+    private fun openImageViewer(imageUrl: String, title: String?, thumbnailUrl: String?) {
+        val action = DetailsFragmentDirections.actionDetailsFragmentToPhotoViewActivity(imageUrl, title, thumbnailUrl)
         findNavController().navigate(action)
     }
 

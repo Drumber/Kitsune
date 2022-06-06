@@ -154,6 +154,10 @@
             android:name="title"
             app:argType="string"
             app:nullable="true" />
+        <argument
+            android:name="thumbnailUrl"
+            app:argType="string"
+            app:nullable="true" />
     </activity>
     <fragment
         android:id="@+id/facet_fragment"
