@@ -89,7 +89,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.initPaddingWindowInsetsListener(left = true, top = true, right = true, consume = false)
+        view.initPaddingWindowInsetsListener(left = true, top = true, right = true, bottom = true, consume = false)
         val binding = FragmentPreferenceBinding.bind(view)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
