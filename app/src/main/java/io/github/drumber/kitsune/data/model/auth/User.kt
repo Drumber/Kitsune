@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.data.model.auth
 
 import android.os.Parcelable
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
@@ -47,6 +48,7 @@ data class User(
     val shareToGlobal: Boolean? = null,
     val titleLanguagePreference: TitlesPref? = null,
     val sfwFilter: Boolean? = null,
+    val sfwFilterPreference: SfwFilterPreference? = null,
     val ratingSystem: RatingSystem? = null,
     val theme: Theme? = null,
     val facebookId: String? = null,
@@ -65,6 +67,15 @@ enum class RatingSystem {
     Regular,
     // :(, :|, :), :D
     Simple
+}
+
+enum class SfwFilterPreference {
+    @JsonProperty("sfw")
+    SFW,
+    @JsonProperty("nsfw_sometimes")
+    NSFW_SOMETIMES,
+    @JsonProperty("nsfw_everywhere")
+    NSFW_EVERYWHERE
 }
 
 enum class Theme {

@@ -19,6 +19,7 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.manager.GitHubUpdateChecker
 import io.github.drumber.kitsune.data.model.TitlesPref
+import io.github.drumber.kitsune.data.model.auth.SfwFilterPreference
 import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
 import io.github.drumber.kitsune.notification.Notifications
@@ -170,22 +171,26 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
 
             //---- Adult Content
-            findPreference<SwitchPreferenceCompat>(R.string.preference_key_adult_content)?.apply {
-                isChecked = user?.sfwFilter?.not() ?: false
+            findPreference<ListPreference>(R.string.preference_key_sfw_filter)?.apply {
+                value = user?.sfwFilterPreference?.name
+                entryValues = SfwFilterPreference.values().map { it.name }.toTypedArray()
                 setOnPreferenceChangeListener { _, newValue ->
                     updateUserIfChanged(
-                        isChecked,
+                        value,
                         newValue,
-                        User(user?.id, sfwFilter = !(newValue as Boolean))
+                        User(
+                            user?.id,
+                            sfwFilterPreference = SfwFilterPreference.valueOf(newValue as String)
+                        )
                     )
                     true
                 }
                 requireUserLoggedIn(user) {
                     getString(
-                        if (it.isChecked) {
-                            R.string.preference_adult_content_description_on
-                        } else {
-                            R.string.preference_adult_content_description_off
+                        when (SfwFilterPreference.valueOf(it.value)) {
+                            SfwFilterPreference.SFW -> R.string.preference_adult_content_description_sfw
+                            SfwFilterPreference.NSFW_SOMETIMES -> R.string.preference_adult_content_description_sometimes
+                            SfwFilterPreference.NSFW_EVERYWHERE -> R.string.preference_adult_content_description_everywhere
                         }
                     )
                 }

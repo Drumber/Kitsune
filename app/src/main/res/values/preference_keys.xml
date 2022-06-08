@@ -21,5 +21,6 @@
     <string name="preference_key_profile_url">profile_url</string>
     <string name="preference_key_country">country</string>
     <string name="preference_key_titles">titles</string>
-    <string name="preference_key_adult_content">adult_content</string>
+<!--    <string name="preference_key_adult_content">adult_content</string>-->
+    <string name="preference_key_sfw_filter">sfw_filter</string>
 </resources>

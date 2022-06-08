@@ -177,8 +177,14 @@
         <item>English</item>
     </string-array>
     <string name="preference_adult_content">Adult Content</string>
-    <string name="preference_adult_content_description_off">Media with R18+ age rating will be hidden.</string>
-    <string name="preference_adult_content_description_on">Media with R18+ age rating will be visible.</string>
+    <string name="preference_adult_content_description_sfw">Media with R18+ age rating will be hidden.</string>
+    <string name="preference_adult_content_description_sometimes">Media with R18+ age rating will be visible, but posts tagged NSFW will be hidden in the global feed.</string>
+    <string name="preference_adult_content_description_everywhere">Media with R18+ age rating will be visible everywhere.</string>
+    <string-array name="preference_sfw_filter_values">
+        <item>Hide all Adult Content</item>
+        <item>Limit to Following Feed</item>
+        <item>Adult Content Everywhere</item>
+    </string-array>
     <string name="preference_offline_library_updates">Offline Library Updates</string>
     <string name="preference_offline_library_description">Cache offline changes to your library and synchronize them with Kitsu.io when you are back online.</string>
     <string name="preference_remember_search_filters">Remember Search Filters</string>

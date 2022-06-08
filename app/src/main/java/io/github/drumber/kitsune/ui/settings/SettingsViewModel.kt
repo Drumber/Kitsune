@@ -26,6 +26,13 @@ class SettingsViewModel(
 
     var errorMessageListener: ((ErrorMessage) -> Unit)? = null
 
+    init {
+        // make sure cached user data is up-to-date
+        viewModelScope.launch(Dispatchers.IO) {
+            userRepository.updateUserCache()
+        }
+    }
+
     fun updateUser(user: User) {
         if (user.id.isNullOrBlank()) {
             errorMessageListener?.invoke(ErrorMessage(R.string.error_invalid_user))

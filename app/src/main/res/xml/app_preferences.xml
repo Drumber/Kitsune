@@ -27,10 +27,16 @@
             android:key="@string/preference_key_country"
             android:title="@string/preference_country" />
 
-        <SwitchPreferenceCompat
-            android:key="@string/preference_key_adult_content"
+        <!-- Use sfw filter list instead -->
+<!--        <SwitchPreferenceCompat-->
+<!--            android:key="@string/preference_key_adult_content"-->
+<!--            android:title="@string/preference_adult_content"-->
+<!--            android:summary="@string/preference_adult_content_description_off" />-->
+
+        <ListPreference
+            android:key="@string/preference_key_sfw_filter"
             android:title="@string/preference_adult_content"
-            android:summary="@string/preference_adult_content_description_off" />
+            android:entries="@array/preference_sfw_filter_values" />
 
     </PreferenceCategory>
 
