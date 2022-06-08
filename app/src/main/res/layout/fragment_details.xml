@@ -9,6 +9,9 @@
         <variable
             name="data"
             type="MediaAdapter" />
+        <variable
+            name="libraryEntry"
+            type="io.github.drumber.kitsune.data.model.library.LibraryEntryAdapter" />
     </data>
 
     <FrameLayout
@@ -141,12 +144,31 @@
                             android:id="@+id/btn_manage_library"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_toEndOf="@id/iv_thumbnail"
-                            android:layout_alignParentEnd="true"
                             android:layout_alignBottom="@id/iv_thumbnail"
+                            android:layout_toStartOf="@id/btn_rating"
+                            android:layout_toEndOf="@id/iv_thumbnail"
+                            android:layout_alignWithParentIfMissing="true"
+                            android:layout_marginStart="10dp"
                             android:text="@string/library_action_add"
                             android:textAllCaps="false" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_rating"
+                            style="@style/Widget.Kitsune.Button.IconText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@id/btn_manage_library"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginStart="2dp"
+                            android:text="@{libraryEntry.rating}"
+                            android:tooltipText="@string/hint_rating"
+                            app:activated="@{libraryEntry.hasRating}"
+                            app:icon="@{libraryEntry.hasRating ? @drawable/ic_star_24 : @drawable/ic_star_outline_24}"
+                            app:iconGravity="end"
+                            app:isVisible="@{libraryEntry != null}"
+                            tools:icon="@drawable/ic_star_24"
+                            tools:targetApi="o"
+                            tools:text="5" />
 
                     </RelativeLayout>
 

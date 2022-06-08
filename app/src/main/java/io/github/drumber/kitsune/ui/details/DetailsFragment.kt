@@ -31,6 +31,8 @@ import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.data.model.MediaSelector
 import io.github.drumber.kitsune.data.model.MediaType
 import io.github.drumber.kitsune.data.model.category.Category
+import io.github.drumber.kitsune.data.model.library.LibraryEntryAdapter
+import io.github.drumber.kitsune.data.model.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.data.model.library.Status
 import io.github.drumber.kitsune.data.model.library.getStringResId
 import io.github.drumber.kitsune.data.model.media.Anime
@@ -42,6 +44,7 @@ import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
 import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
+import io.github.drumber.kitsune.ui.library.RatingBottomSheet
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle.applyStyle
@@ -124,9 +127,12 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
 
         viewModel.libraryEntry.observe(viewLifecycleOwner) {
-            it?.status?.let { status ->
-                binding.btnManageLibrary.setText(status.getStringResId())
-            } ?: binding.btnManageLibrary.setText(R.string.library_action_add)
+            it?.let { libraryEntry ->
+                libraryEntry.status?.let { status ->
+                    binding.btnManageLibrary.setText(status.getStringResId())
+                } ?: binding.btnManageLibrary.setText(R.string.library_action_add)
+                binding.libraryEntry = LibraryEntryAdapter(LibraryEntryWrapper(libraryEntry, null))
+            }
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
@@ -153,6 +159,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 )
                 findNavController().navigate(action)
             }
+            btnRating.setOnClickListener { showRatingBottomSheet() }
         }
 
         setFragmentResultListener(ManageLibraryBottomSheet.STATUS_REQUEST_KEY) { _, bundle ->
@@ -165,6 +172,17 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             if (shouldRemove) {
                 viewModel.removeLibraryEntry()
             }
+        }
+
+        setFragmentResultListener(RatingBottomSheet.RATING_REQUEST_KEY) { _, bundle ->
+            val rating = bundle.getInt(RatingBottomSheet.BUNDLE_RATING, -1)
+            if (rating != -1) {
+                viewModel.updateLibraryEntryRating(rating)
+            }
+        }
+
+        setFragmentResultListener(RatingBottomSheet.REMOVE_RATING_REQUEST_KEY) { _, _ ->
+            viewModel.updateLibraryEntryRating(null)
         }
     }
 
@@ -253,7 +271,11 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
         if (binding.rvFranchise.adapter !is MediaRecyclerViewAdapter) {
             val glide = GlideApp.with(this)
-            val adapter = MediaRecyclerViewAdapter(CopyOnWriteArrayList(data), glide, TagData.RelationshipRole) { media ->
+            val adapter = MediaRecyclerViewAdapter(
+                CopyOnWriteArrayList(data),
+                glide,
+                TagData.RelationshipRole
+            ) { media ->
                 onFranchiseItemClicked(media)
             }
             adapter.overrideItemSize = MediaItemSize.SMALL
@@ -388,8 +410,25 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
     }
 
+    private fun showRatingBottomSheet() {
+        val libraryEntry = viewModel.libraryEntry.value ?: return
+        val mediaAdapter = viewModel.mediaAdapter.value ?: return
+
+        val sheetLibraryRating = RatingBottomSheet()
+        val bundle = bundleOf(
+            RatingBottomSheet.BUNDLE_TITLE to mediaAdapter.title,
+            RatingBottomSheet.BUNDLE_RATING to libraryEntry.ratingTwenty
+        )
+        sheetLibraryRating.arguments = bundle
+        sheetLibraryRating.show(parentFragmentManager, RatingBottomSheet.TAG)
+    }
+
     private fun openImageViewer(imageUrl: String, title: String?, thumbnailUrl: String?) {
-        val action = DetailsFragmentDirections.actionDetailsFragmentToPhotoViewActivity(imageUrl, title, thumbnailUrl)
+        val action = DetailsFragmentDirections.actionDetailsFragmentToPhotoViewActivity(
+            imageUrl,
+            title,
+            thumbnailUrl
+        )
         findNavController().navigate(action)
     }
 

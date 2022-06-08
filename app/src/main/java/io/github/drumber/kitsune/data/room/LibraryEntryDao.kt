@@ -47,6 +47,9 @@ interface LibraryEntryDao {
     @Query("SELECT * FROM library_table WHERE anime_id = :mediaId OR manga_id = :mediaId")
     suspend fun getLibraryEntryFromMedia(mediaId: String): LibraryEntry?
 
+    @Query("SELECT * FROM library_table WHERE anime_id = :mediaId OR manga_id = :mediaId")
+    fun getLibraryEntryFromMediaLiveData(mediaId: String): LiveData<LibraryEntry?>
+
     @Query("SELECT * FROM library_table WHERE id = :id")
     fun getLibraryEntry(id: String): LibraryEntry?
 

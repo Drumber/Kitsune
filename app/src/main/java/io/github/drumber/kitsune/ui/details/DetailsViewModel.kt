@@ -1,10 +1,9 @@
 package io.github.drumber.kitsune.ui.details
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.github.jasminb.jsonapi.JSONAPIDocument
+import io.github.drumber.kitsune.data.manager.LibraryManager
+import io.github.drumber.kitsune.data.manager.LibraryUpdateResponse
 import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.model.library.Status
@@ -18,6 +17,7 @@ import io.github.drumber.kitsune.data.service.anime.AnimeService
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.data.service.manga.MangaService
 import io.github.drumber.kitsune.exception.ReceivedDataException
+import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -29,6 +29,7 @@ class DetailsViewModel(
     private val userRepository: UserRepository,
     private val libraryEntriesService: LibraryEntriesService,
     private val libraryEntryDao: LibraryEntryDao,
+    private val libraryManager: LibraryManager,
     private val animeService: AnimeService,
     private val mangaService: MangaService
 ) : ViewModel() {
@@ -39,7 +40,8 @@ class DetailsViewModel(
     val mediaAdapter: LiveData<MediaAdapter>
         get() = _mediaAdapter
 
-    private val _libraryEntry = MutableLiveData<LibraryEntry?>()
+    /** Combines local cached and fetched library entry. */
+    private val _libraryEntry = MediatorLiveData<LibraryEntry?>()
     val libraryEntry: LiveData<LibraryEntry?>
         get() = _libraryEntry
 
@@ -96,9 +98,15 @@ class DetailsViewModel(
     private suspend fun loadLibraryEntry(mediaAdapter: MediaAdapter) {
         val userId = userRepository.user?.id ?: return
 
+        // add local database as library entry source
+        viewModelScope.launch(Dispatchers.Main) {
+            _libraryEntry.addSource(libraryEntryDao.getLibraryEntryFromMediaLiveData(mediaAdapter.id)) {
+                _libraryEntry.value = it
+            }
+        }
         val filter = Filter()
             .filter("user_id", userId)
-            .fields("libraryEntries", "status", "progress")
+            .fields("libraryEntries", "status", "progress", "ratingTwenty")
             .pageLimit(1)
 
         if (mediaAdapter.isAnime()) {
@@ -107,19 +115,23 @@ class DetailsViewModel(
             filter.filter("manga_id", mediaAdapter.id)
         }
 
-        // check if library entry is cached in local database first
-        val libraryEntry = libraryEntryDao.getLibraryEntryFromMedia(mediaAdapter.id)
-        libraryEntry?.let { _libraryEntry.postValue(it) }
-
         try {
             // fetch library entry from the server
             val libraryEntries = libraryEntriesService.allLibraryEntries(filter.options).get()
             if (!libraryEntries.isNullOrEmpty()) {
+                // post fetched library entry that is possibly more up-to-date than the local cached one
                 _libraryEntry.postValue(libraryEntries[0])
-            } else if (libraryEntry != null) {
-                _libraryEntry.postValue(null)
-                // local database cache is out of sync, remove entry from database
-                libraryEntryDao.delete(libraryEntry)
+            } else if (libraryEntry.value != null) {
+                // library entry is not available on the server but it is in the local cache, was it deleted?
+                // -> local database cache is out of sync, remove entry from database
+                libraryEntry.value?.let {
+                    libraryEntryDao.delete(it)
+                    _libraryEntry.postValue(null)
+                    logD(
+                        "There is no library entry on the server, but it exists in the local cache. " +
+                                "Removed it from local database..."
+                    )
+                }
             }
         } catch (e: Exception) {
             logE("Failed to load library entry.", e)
@@ -180,6 +192,31 @@ class DetailsViewModel(
                 }
             } catch (e: Exception) {
                 logE("Failed to remove library entry.", e)
+            }
+        }
+    }
+
+    fun updateLibraryEntryRating(rating: Int?) {
+        val mediaAdapter = mediaAdapter.value ?: return
+
+        viewModelScope.launch(Dispatchers.IO) {
+            // obtain library entry from database
+            val entry = libraryEntryDao.getLibraryEntryFromMedia(mediaAdapter.id)
+                ?: libraryEntry.value // use fetched library entry if not cached in local database
+                ?: return@launch // ...or return
+
+            libraryManager.updateRating(entry, rating) { response ->
+                if (response !is LibraryUpdateResponse.Error) {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        // the library manager will store the updated library entry in the local database,
+                        // so we need to get the new library entry from the database and show it to the UI
+                        val localLibraryEntry =
+                            libraryEntryDao.getLibraryEntryFromMedia(mediaAdapter.id)
+                        _libraryEntry.postValue(localLibraryEntry)
+                    }
+                } else {
+                    logE("Failed to update rating of library entry.", response.exception)
+                }
             }
         }
     }
