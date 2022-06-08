@@ -186,11 +186,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     true
                 }
                 requireUserLoggedIn(user) {
+                    val filterPreference = it.value?.let { filter -> SfwFilterPreference.valueOf(filter) }
                     getString(
-                        when (SfwFilterPreference.valueOf(it.value)) {
+                        when (filterPreference) {
                             SfwFilterPreference.SFW -> R.string.preference_adult_content_description_sfw
                             SfwFilterPreference.NSFW_SOMETIMES -> R.string.preference_adult_content_description_sometimes
                             SfwFilterPreference.NSFW_EVERYWHERE -> R.string.preference_adult_content_description_everywhere
+                            else -> R.string.no_information
                         }
                     )
                 }

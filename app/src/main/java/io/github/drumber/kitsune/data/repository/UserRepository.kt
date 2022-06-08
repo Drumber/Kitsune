@@ -6,6 +6,7 @@ import io.github.drumber.kitsune.data.Result
 import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.user.UserService
+import io.github.drumber.kitsune.exception.AccessTokenRefreshException
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.preference.UserPreferences
 import io.github.drumber.kitsune.util.logE
@@ -33,6 +34,8 @@ class UserRepository(
     init {
         user = userPreferences.getStoredUserModel()
     }
+
+    val userReLoginPrompt = MutableLiveData(false)
 
     fun logOut() {
         authRepository.logout()
@@ -69,7 +72,14 @@ class UserRepository(
     }
 
     suspend fun updateUserCache() {
-        authRepository.refreshAccessTokenIfExpired()
+        val refreshResult = authRepository.refreshAccessTokenIfExpired()
+
+        if (refreshResult is Result.Error && refreshResult.exception is AccessTokenRefreshException) {
+            // failed to automatically refresh access token; log out and notify user about re-login
+            logOut()
+            userReLoginPrompt.postValue(true)
+            return
+        }
 
         if (!authRepository.isLoggedIn) {
             logI("Cannot update user cache: No access token available.")

@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
@@ -8,9 +9,12 @@ import androidx.navigation.ui.NavigationUI
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.databinding.ActivityMainBinding
+import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.util.CustomNavigationUI.bindToNavController
+import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity(R.layout.activity_main) {
@@ -23,6 +27,14 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val userRepository = get<UserRepository>()
+        userRepository.userReLoginPrompt.observe(this) {
+            if (it) {
+                promptUserReLogin()
+                userRepository.userReLoginPrompt.postValue(false)
+            }
+        }
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
@@ -52,6 +64,13 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         navController.addOnDestinationChangedListener { _, _, _ ->
             toggleBottomNavigation(isSettingsFragmentInBackStack())
         }
+    }
+
+    private fun promptUserReLogin() {
+        val intent = Intent(this, AuthenticationActivity::class.java)
+        intent.putExtra(AuthenticationActivity.EXTRA_LOGGED_OUT, true)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -18,12 +18,20 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AuthenticationActivity : BaseActivity(R.layout.activity_authentication, false) {
 
+    companion object {
+        const val EXTRA_LOGGED_OUT = "extra_logged_out"
+    }
+
     private val viewModel: LoginViewModel by viewModel()
 
     private val binding: ActivityAuthenticationBinding by viewBinding()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (intent.getBooleanExtra(EXTRA_LOGGED_OUT, false)) {
+            showWasLoggedOutInfo()
+        }
 
         val username = binding.fieldUsername
         val password = binding.fieldPassword
@@ -118,6 +126,14 @@ class AuthenticationActivity : BaseActivity(R.layout.activity_authentication, fa
             Toast.LENGTH_SHORT
         ).show()
     }
+
+    private fun showWasLoggedOutInfo() {
+        binding.tvAdditionalInfo.apply {
+            setText(R.string.info_logged_out_token_expired)
+            isVisible = true
+        }
+    }
+
 }
 
 /**

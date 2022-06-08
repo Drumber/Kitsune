@@ -225,6 +225,7 @@
     <string name="info_update_new_version_available_text">Version %s of Kitsune is available.</string>
     <string name="info_update_no_new_version_available">No new version available.</string>
     <string name="info_update_failed">Failed to check for a new version.</string>
+    <string name="info_logged_out_token_expired">Your access token has expired. Please log in again.</string>
     <string name="hint_rating">Rating</string>
     <string name="action_rate">Rate</string>
     <string name="action_update_rating">Update Rating</string>

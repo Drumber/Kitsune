@@ -49,13 +49,24 @@
                         android:layout_height="wrap_content"
                         android:text="@string/title_login"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-                        android:textColor="?attr/colorPrimaryVariant"/>
+                        android:textColor="?attr/colorPrimaryVariant"
+                        android:layout_marginBottom="24dp" />
+
+                    <TextView
+                        android:id="@+id/tv_additional_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        tools:text="Your access token has expired. Please log in again."
+                        tools:visibility="visible"
+                        android:drawablePadding="4dp"
+                        app:drawableStartCompat="@drawable/ic_outline_info_24" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/field_username"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="48dp"
+                        android:layout_marginTop="24dp"
                         android:hint="@string/prompt_email"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -116,7 +127,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
-            android:background="@color/translucent_overlay"
+            android:background="@drawable/translucent_background"
             android:clickable="true"
             android:focusable="true"
             android:visibility="gone"
