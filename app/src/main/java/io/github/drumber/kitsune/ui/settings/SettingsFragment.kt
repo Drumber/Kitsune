@@ -24,6 +24,7 @@ import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -89,13 +90,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.initPaddingWindowInsetsListener(left = true, top = true, right = true, bottom = true, consume = false)
+        view.initPaddingWindowInsetsListener(left = true, top = true, right = true, consume = false)
         val binding = FragmentPreferenceBinding.bind(view)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
         viewModel.errorMessageListener = {
             Snackbar.make(view, "Error: ${it.getMessage(requireContext())}", Snackbar.LENGTH_LONG)
                 .setAction(R.string.action_dismiss) { /* dismiss */ }
+                .apply {
+                    this.view.initMarginWindowInsetsListener(bottom = true, consume = false)
+                }
                 .show()
         }
 
