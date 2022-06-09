@@ -57,11 +57,13 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
     private val viewModel: LibraryViewModel by viewModel()
 
     private var offlineLibraryUpdatesAmount = 0
+    private lateinit var offlineLibraryUpdateBadge: BadgeDrawable
 
     private val searchDebouncer by lazy { Debouncer(300L) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        offlineLibraryUpdateBadge = BadgeDrawable.create(requireContext())
         setHasOptionsMenu(true)
     }
 
@@ -367,12 +369,23 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
     @ExperimentalBadgeUtils
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        val badgeDrawable = BadgeDrawable.create(requireContext()).apply {
+
+        BadgeUtils.detachBadgeDrawable(
+            offlineLibraryUpdateBadge,
+            binding.toolbar,
+            R.id.menu_synchronize
+        )
+
+        binding.toolbar.menu.findItem(R.id.menu_synchronize).isVisible =
+            offlineLibraryUpdatesAmount > 0
+
+        offlineLibraryUpdateBadge.apply {
             isVisible = offlineLibraryUpdatesAmount > 0
             number = offlineLibraryUpdatesAmount
         }
+
         BadgeUtils.attachBadgeDrawable(
-            badgeDrawable,
+            offlineLibraryUpdateBadge,
             binding.toolbar,
             R.id.menu_synchronize
         )
