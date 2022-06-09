@@ -7,6 +7,7 @@ import com.algolia.instantsearch.core.connection.ConnectionImpl
 import com.algolia.instantsearch.core.selectable.list.SelectionMode
 import com.algolia.instantsearch.helper.filter.facet.FacetListConnector
 import com.algolia.instantsearch.helper.filter.facet.FacetListPresenterImpl
+import com.algolia.instantsearch.helper.filter.facet.FacetSortCriterion
 import com.algolia.instantsearch.helper.filter.range.FilterRangeConnector
 import com.algolia.instantsearch.helper.filter.state.FilterState
 import com.algolia.instantsearch.helper.filter.state.Filters
@@ -243,7 +244,7 @@ class SearchViewModel(
             attribute = Attribute("subtype"),
             selectionMode = SelectionMode.Multiple,
         ).bind()
-        val subtypePresenter = FacetListPresenterImpl(limit = 100)
+        val subtypePresenter = FacetListPresenterImpl(limit = 100, sortBy = defaultFacetSortBy)
 
         val streamersConnector = FacetListConnector(
             searcher = searcher,
@@ -251,7 +252,7 @@ class SearchViewModel(
             attribute = Attribute("streamers"),
             selectionMode = SelectionMode.Multiple,
         ).bind()
-        val streamersPresenter = FacetListPresenterImpl(limit = 100)
+        val streamersPresenter = FacetListPresenterImpl(limit = 100, sortBy = defaultFacetSortBy)
 
         val ageRatingConnector = FacetListConnector(
             searcher = searcher,
@@ -259,12 +260,18 @@ class SearchViewModel(
             attribute = Attribute("ageRating"),
             selectionMode = SelectionMode.Multiple,
         ).bind()
-        val ageRatingPresenter = FacetListPresenterImpl(limit = 4)
+        val ageRatingPresenter = FacetListPresenterImpl(limit = 4, sortBy = defaultFacetSortBy)
 
         private fun <T : ConnectionImpl> T.bind() = apply { connectionHandler += this }
     }
 
     companion object {
+        private val defaultFacetSortBy
+            get() = listOf(
+                FacetSortCriterion.IsRefined,
+                FacetSortCriterion.CountDescending
+            )
+
         val maxYear get() = Calendar.getInstance().get(Calendar.YEAR) + 2
         const val minYear = 1862
     }
