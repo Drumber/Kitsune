@@ -5,10 +5,9 @@
         android:shortcutId="library"
         android:shortcutShortLabel="@string/nav_library">
         <intent
-            android:action="android.intent.action.VIEW"
+            android:action="io.github.drumber.kitsune.LIBRARY"
             android:targetClass="io.github.drumber.kitsune.ui.main.MainActivity"
-            android:targetPackage="io.github.drumber.kitsune"
-            android:data="kitsune://library" />
+            android:targetPackage="io.github.drumber.kitsune" />
     </shortcut>
 
     <shortcut
@@ -16,10 +15,9 @@
         android:shortcutId="search"
         android:shortcutShortLabel="@string/nav_search">
         <intent
-            android:action="android.intent.action.VIEW"
+            android:action="io.github.drumber.kitsune.SEARCH"
             android:targetClass="io.github.drumber.kitsune.ui.main.MainActivity"
-            android:targetPackage="io.github.drumber.kitsune"
-            android:data="kitsune://search" />
+            android:targetPackage="io.github.drumber.kitsune" />
     </shortcut>
 
     <shortcut
@@ -27,9 +25,8 @@
         android:shortcutId="settings"
         android:shortcutShortLabel="@string/nav_settings">
         <intent
-            android:action="android.intent.action.VIEW"
+            android:action="io.github.drumber.kitsune.SETTINGS"
             android:targetClass="io.github.drumber.kitsune.ui.main.MainActivity"
-            android:targetPackage="io.github.drumber.kitsune"
-            android:data="kitsune://settings" />
+            android:targetPackage="io.github.drumber.kitsune" />
     </shortcut>
 </shortcuts>

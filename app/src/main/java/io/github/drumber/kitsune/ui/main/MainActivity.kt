@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -36,7 +38,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
         }
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         binding.bottomNavigation.apply {
             bindToNavController(navController)
@@ -50,7 +53,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                         && fragments.size > 0
                         && fragments[0] is NavigationBarView.OnItemReselectedListener
                     ) {
-                        (fragments[0] as NavigationBarView.OnItemReselectedListener).onNavigationItemReselected(item)
+                        (fragments[0] as NavigationBarView.OnItemReselectedListener).onNavigationItemReselected(
+                            item
+                        )
                     }
                 }
 
@@ -63,6 +68,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         toggleBottomNavigation(isSettingsFragmentInBackStack(), false)
         navController.addOnDestinationChangedListener { _, _, _ ->
             toggleBottomNavigation(isSettingsFragmentInBackStack())
+        }
+
+        if (savedInstanceState == null) {
+            handleShortcutAction()
         }
     }
 
@@ -77,6 +86,57 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
+    override fun onBackPressed() {
+        if (!handleBackPressed()) {
+            super.onBackPressed()
+        }
+    }
+
+    /**
+     * Make sure to enter the start destination before exiting the app through back-button press.
+     */
+    private fun handleBackPressed(): Boolean {
+        val backStackDestinations = navController.backQueue.filter { entry ->
+            entry.destination !is NavGraph
+        }
+        // do nothing if there are more than 1 back stack items left
+        if (backStackDestinations.size > 1) {
+            return false
+        }
+
+        val startDestinationId = navController.graph.startDestinationId
+        val hasStartDestination = navController.backQueue
+            .any { it.destination.id == startDestinationId }
+
+        // if the start destination is not in the back stack, navigate to it (launches a new instance of it)
+        if (!hasStartDestination) {
+            val navOptions = NavOptions.Builder()
+                .setPopUpTo(backStackDestinations.first().destination.id, true)
+                .build()
+            navController.navigate(startDestinationId, null, navOptions)
+            return true
+        }
+        return false
+    }
+
+    private fun handleShortcutAction(): Boolean {
+        val navigationId = when (intent.action) {
+            SHORTCUT_LIBRARY -> R.id.library_fragment
+            SHORTCUT_SEARCH -> R.id.search_fragment
+            SHORTCUT_SETTINGS -> R.id.settings_fragment
+            else -> null
+        }
+
+        if (navigationId != null) {
+            val navOptions = NavOptions.Builder()
+                .setPopUpTo(R.id.main_fragment, true)
+                .build()
+            navController.navigate(navigationId, null, navOptions)
+            return true
+        }
+        return false
+    }
+
     private fun isSettingsFragmentInBackStack(): Boolean {
         return navController.backQueue.lastOrNull { entry ->
             entry.destination.id == R.id.settings_fragment
@@ -89,7 +149,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 if (animate) {
                     animate().translationY(this.height.toFloat())
                         .withEndAction { this.isVisible = false }
-                        .duration = resources.getInteger(R.integer.bottom_navigation_animation_duration).toLong()
+                        .duration =
+                        resources.getInteger(R.integer.bottom_navigation_animation_duration)
+                            .toLong()
                 } else {
                     this.isVisible = false
                 }
@@ -97,12 +159,20 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 if (animate) {
                     animate().translationY(0f)
                         .withStartAction { this.isVisible = true }
-                        .duration = resources.getInteger(R.integer.bottom_navigation_animation_duration).toLong()
+                        .duration =
+                        resources.getInteger(R.integer.bottom_navigation_animation_duration)
+                            .toLong()
                 } else {
                     this.isVisible = true
                 }
             }
         }
+    }
+
+    companion object {
+        const val SHORTCUT_LIBRARY = "io.github.drumber.kitsune.LIBRARY"
+        const val SHORTCUT_SEARCH = "io.github.drumber.kitsune.SEARCH"
+        const val SHORTCUT_SETTINGS = "io.github.drumber.kitsune.SETTINGS"
     }
 
 }
