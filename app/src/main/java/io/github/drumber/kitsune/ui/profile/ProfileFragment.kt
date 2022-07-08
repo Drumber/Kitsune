@@ -33,6 +33,7 @@ import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import io.github.drumber.kitsune.util.network.ResponseData
+import io.github.drumber.kitsune.util.originalOrDown
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.round
 
@@ -160,12 +161,12 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
 
         val glide = GlideApp.with(this)
 
-        glide.load(user?.avatar)
+        glide.load(user?.avatar?.originalOrDown())
             .dontAnimate()
             .placeholder(R.drawable.profile_picture_placeholder)
             .into(binding.ivProfileImage)
 
-        glide.load(user?.coverImage)
+        glide.load(user?.coverImage?.originalOrDown())
             .centerCrop()
             .placeholder(R.drawable.cover_placeholder)
             .into(binding.ivCover)
