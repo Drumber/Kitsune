@@ -1,7 +1,6 @@
 package io.github.drumber.kitsune.ui.profile
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -334,10 +333,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
 
     private fun onFavoriteCharacterItemClicked(character: Character) {
         character.malId?.let { malId ->
-            // show character on myanimelist.net
-            val malCharacterUrl = "https://myanimelist.net/character/$malId"
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(malCharacterUrl))
-            startActivity(intent)
+            openCharacterOnMAL(malId)
         }
     }
 

@@ -9,10 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import io.github.drumber.kitsune.GlideRequests
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.production.Casting
+import io.github.drumber.kitsune.data.model.production.Character
 import io.github.drumber.kitsune.databinding.ItemCharacterBinding
+import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 
 class CharacterPagingAdapter(
-    private val glide: GlideRequests
+    private val glide: GlideRequests,
+    private val characterClickListener: OnItemClickListener<Character>? = null
 ) : PagingDataAdapter<Casting, CharacterPagingAdapter.CharacterViewHolder>(CharacterComparator) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
@@ -46,6 +49,12 @@ class CharacterPagingAdapter(
 
                 ivCharacter.isVisible = imgCharacter != null || !tvCharacterName.text.isNullOrBlank()
                 ivActor.isVisible = imgActor != null || !tvActorName.text.isNullOrBlank()
+
+                ivCharacter.setOnClickListener {
+                    casting.character?.let { character ->
+                        characterClickListener?.onItemClick(character)
+                    }
+                }
             }
         }
 

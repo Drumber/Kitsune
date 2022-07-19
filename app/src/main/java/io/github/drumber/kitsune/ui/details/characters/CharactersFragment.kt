@@ -18,6 +18,7 @@ import io.github.drumber.kitsune.databinding.FragmentCharactersBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.ui.adapter.paging.CharacterPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
+import io.github.drumber.kitsune.util.extensions.openCharacterOnMAL
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
@@ -73,7 +74,11 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters),
             }
         }
 
-        val adapter = CharacterPagingAdapter(GlideApp.with(this))
+        val adapter = CharacterPagingAdapter(GlideApp.with(this)) { character ->
+            character.malId?.let { malId ->
+                openCharacterOnMAL(malId)
+            }
+        }
         setRecyclerViewAdapter(adapter)
 
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
