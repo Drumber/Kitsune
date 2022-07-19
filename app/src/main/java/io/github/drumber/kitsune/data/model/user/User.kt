@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.model.auth
+package io.github.drumber.kitsune.data.model.user
 
 import android.os.Parcelable
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -57,7 +57,9 @@ data class User(
     val subscribedToNewsletter: Boolean? = null,
     val aoPro: String? = null,
     @Relationship("stats")
-    val stats: List<Stats>? = null
+    val stats: List<Stats>? = null,
+    @Relationship("favorites")
+    val favorites: List<Favorite>? = null
 ) : Parcelable
 
 enum class RatingSystem {

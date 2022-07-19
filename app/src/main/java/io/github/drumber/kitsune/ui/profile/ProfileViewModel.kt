@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.ui.profile
 
 import androidx.lifecycle.*
-import io.github.drumber.kitsune.data.model.auth.User
+import io.github.drumber.kitsune.data.model.user.User
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.user.UserService

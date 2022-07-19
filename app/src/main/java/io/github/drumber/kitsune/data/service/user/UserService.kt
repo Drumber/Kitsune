@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.service.user
 
 import com.github.jasminb.jsonapi.JSONAPIDocument
-import io.github.drumber.kitsune.data.model.auth.User
+import io.github.drumber.kitsune.data.model.user.User
 import retrofit2.http.*
 
 interface UserService {

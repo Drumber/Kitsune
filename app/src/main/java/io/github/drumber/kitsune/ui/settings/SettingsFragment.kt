@@ -19,8 +19,8 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.manager.GitHubUpdateChecker
 import io.github.drumber.kitsune.data.model.TitlesPref
-import io.github.drumber.kitsune.data.model.auth.SfwFilterPreference
-import io.github.drumber.kitsune.data.model.auth.User
+import io.github.drumber.kitsune.data.model.user.SfwFilterPreference
+import io.github.drumber.kitsune.data.model.user.User
 import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref

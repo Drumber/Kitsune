@@ -135,6 +135,11 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             }
         }
 
+        viewModel.favorite.observe(viewLifecycleOwner) { favorite ->
+            val isFavorite = favorite != null
+            updateFavoriteIcon(isFavorite)
+        }
+
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressIndicator.isVisible = isLoading
         }
@@ -210,6 +215,17 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                             showSomethingWrongToast()
                         }
                     }
+                    R.id.menu_favorite -> {
+                        if (viewModel.isLoggedIn()) {
+                            // update icon immediately before waiting for response
+                            val willBeFavorite = viewModel.favorite.value == null
+                            updateFavoriteIcon(willBeFavorite)
+                            // send update to server
+                            viewModel.toggleFavorite()
+                        } else {
+                            showLogInSnackbar()
+                        }
+                    }
                 }
                 true
             }
@@ -226,6 +242,23 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 windowInsets
             }
             toolbar.initWindowInsetsListener(consume = false)
+        }
+    }
+
+    private fun updateFavoriteIcon(isFavorite: Boolean) {
+        binding.toolbar.menu.findItem(R.id.menu_favorite).apply {
+            setIcon(
+                if (isFavorite)
+                    R.drawable.ic_favorite_24
+                else
+                    R.drawable.ic_favorite_border_24
+            )
+            setTitle(
+                if (isFavorite)
+                    R.string.action_remove_from_favorites
+                else
+                    R.string.action_add_to_favorites
+            )
         }
     }
 
@@ -396,17 +429,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 sheetManageLibrary.show(parentFragmentManager, ManageLibraryBottomSheet.TAG)
             }
         } else {
-            Snackbar.make(
-                binding.btnManageLibrary,
-                R.string.info_log_in_required,
-                Snackbar.LENGTH_LONG
-            ).apply {
-                view.initMarginWindowInsetsListener(left = true, right = true)
-                setAction(R.string.action_log_in) {
-                    val intent = Intent(requireActivity(), AuthenticationActivity::class.java)
-                    startActivity(intent)
-                }
-            }.show()
+            showLogInSnackbar()
         }
     }
 
@@ -421,6 +444,20 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         )
         sheetLibraryRating.arguments = bundle
         sheetLibraryRating.show(parentFragmentManager, RatingBottomSheet.TAG)
+    }
+
+    private fun showLogInSnackbar() {
+        Snackbar.make(
+            binding.btnManageLibrary,
+            R.string.info_log_in_required,
+            Snackbar.LENGTH_LONG
+        ).apply {
+            view.initMarginWindowInsetsListener(left = true, right = true)
+            setAction(R.string.action_log_in) {
+                val intent = Intent(requireActivity(), AuthenticationActivity::class.java)
+                startActivity(intent)
+            }
+        }.show()
     }
 
     private fun openImageViewer(imageUrl: String, title: String?, thumbnailUrl: String?) {

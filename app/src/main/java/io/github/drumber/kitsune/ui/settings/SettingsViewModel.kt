@@ -5,7 +5,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.auth.User
+import io.github.drumber.kitsune.data.model.user.User
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.service.user.UserService
 import io.github.drumber.kitsune.exception.ReceivedDataException

@@ -134,9 +134,9 @@
                             layout="@layout/section_details_stats"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_above="@id/btn_manage_library"
                             android:layout_marginStart="10dp"
                             android:layout_marginBottom="10dp"
-                            android:layout_above="@id/btn_manage_library"
                             android:layout_toEndOf="@id/iv_thumbnail"
                             app:data="@{data}" />
 

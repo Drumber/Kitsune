@@ -17,7 +17,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.data.model.auth.User
+import io.github.drumber.kitsune.data.model.user.User
 import io.github.drumber.kitsune.data.model.stats.Stats
 import io.github.drumber.kitsune.data.model.stats.StatsData
 import io.github.drumber.kitsune.data.model.stats.StatsKind

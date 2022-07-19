@@ -4,18 +4,20 @@ import androidx.lifecycle.*
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.data.manager.LibraryManager
 import io.github.drumber.kitsune.data.manager.LibraryUpdateResponse
-import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.model.library.Status
 import io.github.drumber.kitsune.data.model.media.Anime
 import io.github.drumber.kitsune.data.model.media.Manga
 import io.github.drumber.kitsune.data.model.media.MediaAdapter
+import io.github.drumber.kitsune.data.model.user.Favorite
+import io.github.drumber.kitsune.data.model.user.User
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.room.LibraryEntryDao
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.anime.AnimeService
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.data.service.manga.MangaService
+import io.github.drumber.kitsune.data.service.user.FavoriteService
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
@@ -31,7 +33,8 @@ class DetailsViewModel(
     private val libraryEntryDao: LibraryEntryDao,
     private val libraryManager: LibraryManager,
     private val animeService: AnimeService,
-    private val mangaService: MangaService
+    private val mangaService: MangaService,
+    private val favoriteService: FavoriteService
 ) : ViewModel() {
 
     fun isLoggedIn() = userRepository.hasUser
@@ -45,6 +48,10 @@ class DetailsViewModel(
     val libraryEntry: LiveData<LibraryEntry?>
         get() = _libraryEntry
 
+    private val _favorite = MutableLiveData<Favorite?>()
+    val favorite: LiveData<Favorite?>
+        get() = _favorite
+
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean>
         get() = _isLoading
@@ -56,7 +63,8 @@ class DetailsViewModel(
             viewModelScope.launch(Dispatchers.IO) {
                 awaitAll(
                     async { loadFullMedia(mediaAdapter) },
-                    async { loadLibraryEntry(mediaAdapter) }
+                    async { loadLibraryEntry(mediaAdapter) },
+                    async { loadFavorite(mediaAdapter) }
                 )
                 _isLoading.postValue(false)
             }
@@ -138,6 +146,22 @@ class DetailsViewModel(
         }
     }
 
+    private suspend fun loadFavorite(mediaAdapter: MediaAdapter) {
+        val userId = userRepository.user?.id ?: return
+
+        val filter = Filter()
+            .filter("user_id", userId)
+            .filter("item_id", mediaAdapter.id)
+            .filter("item_type", if (mediaAdapter.isAnime()) "Anime" else "Manga")
+
+        try {
+            val favorites = favoriteService.allFavorites(filter.options).get()
+            _favorite.postValue(favorites?.firstOrNull())
+        } catch (e: Exception) {
+            logE("Failed to load favorites.", e)
+        }
+    }
+
     fun updateLibraryEntryStatus(status: Status) {
         val userId = userRepository.user?.id ?: return
         val mediaAdapter = mediaAdapter.value ?: return
@@ -216,6 +240,37 @@ class DetailsViewModel(
                     }
                 } else {
                     logE("Failed to update rating of library entry.", response.exception)
+                }
+            }
+        }
+    }
+
+    fun toggleFavorite() {
+        val favorite = favorite.value
+
+        viewModelScope.launch(Dispatchers.IO) {
+            if (favorite == null) {
+                val mediaItem = mediaAdapter.value?.media ?: return@launch
+                val userId = userRepository.user?.id ?: return@launch
+
+                val newFavorite = Favorite(item = mediaItem, user = User(id = userId))
+                try {
+                    val resFavorite = favoriteService.postFavorite(JSONAPIDocument(newFavorite)).get()
+                    _favorite.postValue(resFavorite)
+                } catch (e: Exception) {
+                    logE("Failed to post favorite.", e)
+                }
+            } else {
+                val favoriteId = favorite.id ?: return@launch
+                try {
+                    val response = favoriteService.deleteFavorite(favoriteId).execute()
+                    if (response.isSuccessful) {
+                        _favorite.postValue(null)
+                    } else {
+                        throw HttpException(response)
+                    }
+                } catch (e: Exception) {
+                    logE("Failed to delete favorite.", e)
                 }
             }
         }

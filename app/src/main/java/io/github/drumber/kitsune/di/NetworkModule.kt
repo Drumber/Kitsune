@@ -10,7 +10,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.jasminb.jsonapi.ResourceConverter
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.BuildConfig
-import io.github.drumber.kitsune.data.model.auth.User
 import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.model.media.Anime
@@ -25,6 +24,8 @@ import io.github.drumber.kitsune.data.model.streamer.Streamer
 import io.github.drumber.kitsune.data.model.streamer.StreamingLink
 import io.github.drumber.kitsune.data.model.unit.Chapter
 import io.github.drumber.kitsune.data.model.unit.Episode
+import io.github.drumber.kitsune.data.model.user.Favorite
+import io.github.drumber.kitsune.data.model.user.User
 import io.github.drumber.kitsune.data.service.anime.AnimeService
 import io.github.drumber.kitsune.data.service.anime.EpisodesService
 import io.github.drumber.kitsune.data.service.auth.AlgoliaKeyService
@@ -35,6 +36,7 @@ import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.data.service.manga.ChaptersService
 import io.github.drumber.kitsune.data.service.manga.MangaService
 import io.github.drumber.kitsune.data.service.production.CastingService
+import io.github.drumber.kitsune.data.service.user.FavoriteService
 import io.github.drumber.kitsune.data.service.user.UserService
 import io.github.drumber.kitsune.util.deserializer.AlgoliaFacetValueDeserializer
 import io.github.drumber.kitsune.util.deserializer.AlgoliaNumericValueDeserializer
@@ -62,7 +64,8 @@ val networkModule = module {
     factory { createAuthService(get()) }
     factory { createAuthenticationInterceptor() }
     factory {
-        createService<AnimeService>(get(), get(),
+        createService<AnimeService>(
+            get(), get(),
             Anime::class.java,
             Manga::class.java,
             Category::class.java,
@@ -75,7 +78,8 @@ val networkModule = module {
     }
     factory { createService<EpisodesService>(get(), get(), Episode::class.java) }
     factory {
-        createService<MangaService>(get(), get(),
+        createService<MangaService>(
+            get(), get(),
             Manga::class.java,
             Anime::class.java,
             Category::class.java,
@@ -86,26 +90,51 @@ val networkModule = module {
     factory { createService<CategoryService>(get(), get(), Category::class.java) }
     factory { createService<UserService>(get(), get(), User::class.java, Stats::class.java) }
     factory {
-        createService<LibraryEntriesService>(get(), get(),
+        createService<LibraryEntriesService>(
+            get(), get(),
             LibraryEntry::class.java,
             Anime::class.java,
             Manga::class.java
         )
     }
-    factory { createService<CastingService>(get(), get(), Casting::class.java, Character::class.java) }
+    factory {
+        createService<FavoriteService>(
+            get(),
+            get(),
+            Favorite::class.java,
+            Anime::class.java,
+            Manga::class.java,
+            User::class.java
+        )
+    }
+    factory {
+        createService<CastingService>(
+            get(),
+            get(),
+            Casting::class.java,
+            Character::class.java
+        )
+    }
     factory { createService<AlgoliaKeyService>(get(), get()) }
-    factory { createService<GitHubApiService>(get(named("unauthenticated")), get(), GITHUB_API_URL) }
+    factory {
+        createService<GitHubApiService>(
+            get(named("unauthenticated")),
+            get(),
+            GITHUB_API_URL
+        )
+    }
 }
 
 private fun createHttpClientBuilder() = OkHttpClient.Builder()
-    .apply { if(BuildConfig.DEBUG) addInterceptor(createHttpLoggingInterceptor()) }
+    .apply { if (BuildConfig.DEBUG) addInterceptor(createHttpLoggingInterceptor()) }
     .connectTimeout(30, TimeUnit.SECONDS)
     .readTimeout(60, TimeUnit.SECONDS)
     .writeTimeout(60, TimeUnit.SECONDS)
 
-private fun createHttpClient(authenticationInterceptor: AuthenticationInterceptor) = createHttpClientBuilder()
-    .addInterceptor(authenticationInterceptor)
-    .build()
+private fun createHttpClient(authenticationInterceptor: AuthenticationInterceptor) =
+    createHttpClientBuilder()
+        .addInterceptor(authenticationInterceptor)
+        .build()
 
 private fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
     level = HttpLoggingInterceptor.Level.BASIC
@@ -130,8 +159,18 @@ fun createObjectMapper(): ObjectMapper = jacksonObjectMapper()
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
     .configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, false)
-    .registerModule(SimpleModule().addDeserializer(Filter.Facet.Value::class.java, AlgoliaFacetValueDeserializer()))
-    .registerModule(SimpleModule().addDeserializer(Filter.Numeric.Value::class.java, AlgoliaNumericValueDeserializer()))
+    .registerModule(
+        SimpleModule().addDeserializer(
+            Filter.Facet.Value::class.java,
+            AlgoliaFacetValueDeserializer()
+        )
+    )
+    .registerModule(
+        SimpleModule().addDeserializer(
+            Filter.Numeric.Value::class.java,
+            AlgoliaNumericValueDeserializer()
+        )
+    )
 
 private fun createConverterFactory(
     httpClient: OkHttpClient,

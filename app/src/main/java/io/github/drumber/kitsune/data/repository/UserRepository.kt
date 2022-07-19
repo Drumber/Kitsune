@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.data.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.github.drumber.kitsune.data.Result
-import io.github.drumber.kitsune.data.model.auth.User
+import io.github.drumber.kitsune.data.model.user.User
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.user.UserService
 import io.github.drumber.kitsune.exception.AccessTokenRefreshException
