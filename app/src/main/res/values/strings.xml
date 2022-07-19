@@ -66,6 +66,9 @@
     <string name="title_streamer">Streaming Links</string>
     <string name="title_ratings">Ratings</string>
     <string name="title_more_franchise">More from this Series</string>
+    <string name="title_favorite_anime">Favorite Anime</string>
+    <string name="title_favorite_manga">Favorite Manga</string>
+    <string name="title_favorite_characters">Favorite Characters</string>
     <string name="title_authentication">Authentication</string>
     <string name="title_login">Login to your Kitsu account</string>
     <string name="title_play_trailer">Play Trailer</string>

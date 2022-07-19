@@ -1,9 +1,9 @@
 package io.github.drumber.kitsune.data.model.production
 
-import android.os.Parcelable
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Type
 import io.github.drumber.kitsune.data.model.media.Image
+import io.github.drumber.kitsune.data.model.user.FavoriteItem
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -15,4 +15,4 @@ data class Character(
     val malId: Int?,
     val description: String?,
     val image: Image?
-) : Parcelable
+) : FavoriteItem

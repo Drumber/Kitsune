@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.ui.profile
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,9 @@ import androidx.annotation.StringRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -17,11 +20,20 @@ import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.data.model.user.User
+import io.github.drumber.kitsune.constants.MediaItemSize
+import io.github.drumber.kitsune.data.model.media.Anime
+import io.github.drumber.kitsune.data.model.media.Manga
+import io.github.drumber.kitsune.data.model.media.MediaAdapter
+import io.github.drumber.kitsune.data.model.production.Character
 import io.github.drumber.kitsune.data.model.stats.Stats
 import io.github.drumber.kitsune.data.model.stats.StatsData
 import io.github.drumber.kitsune.data.model.stats.StatsKind
+import io.github.drumber.kitsune.data.model.user.Favorite
+import io.github.drumber.kitsune.data.model.user.User
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
+import io.github.drumber.kitsune.ui.adapter.CharacterAdapter
+import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
+import io.github.drumber.kitsune.ui.adapter.MediaViewHolder
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
@@ -35,6 +47,7 @@ import io.github.drumber.kitsune.util.initWindowInsetsListener
 import io.github.drumber.kitsune.util.network.ResponseData
 import io.github.drumber.kitsune.util.originalOrDown
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.math.round
 
 class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
@@ -170,6 +183,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
             .centerCrop()
             .placeholder(R.drawable.cover_placeholder)
             .into(binding.ivCover)
+
+        user?.favorites?.let { updateFavoritesData(it) }
     }
 
     private fun initStatsViewPager() {
@@ -255,6 +270,75 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
 
         val adapter = binding.viewPagerStats.adapter as ProfileStatsAdapter
         adapter.updateCategoryData(position, set)
+    }
+
+    private fun updateFavoritesData(favorites: List<Favorite>) {
+        val favAnime = favorites
+            .mapNotNull { (it.item as? Anime)?.let { media -> MediaAdapter.fromMedia(media) } }
+        val favManga = favorites
+            .mapNotNull { (it.item as? Manga)?.let { media -> MediaAdapter.fromMedia(media) } }
+        val favCharacters = favorites
+            .mapNotNull { it.item as? Character }
+
+        showFavoriteMediaInRecyclerView(binding.rvFavoriteAnime, favAnime)
+        showFavoriteMediaInRecyclerView(binding.rvFavoriteManga, favManga)
+        showFavoriteCharactersInRecyclerView(binding.rvFavoriteCharacters, favCharacters)
+
+        binding.layoutFavoriteAnime.isVisible = favAnime.isNotEmpty()
+        binding.layoutFavoriteManga.isVisible = favManga.isNotEmpty()
+        binding.layoutFavoriteCharacters.isVisible = favCharacters.isNotEmpty()
+    }
+
+    private fun showFavoriteMediaInRecyclerView(recyclerView: RecyclerView, data: List<MediaAdapter>) {
+        if (recyclerView.adapter !is MediaRecyclerViewAdapter) {
+            val glide = GlideApp.with(this)
+            val adapter = MediaRecyclerViewAdapter(
+                CopyOnWriteArrayList(data),
+                glide,
+                MediaViewHolder.TagData.RelationshipRole
+            ) { media ->
+                onFavoriteMediaItemClicked(media)
+            }
+            adapter.overrideItemSize = MediaItemSize.SMALL
+            recyclerView.adapter = adapter
+        } else {
+            val adapter = recyclerView.adapter as MediaRecyclerViewAdapter
+            adapter.dataSet.clear()
+            adapter.dataSet.addAll(data)
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun showFavoriteCharactersInRecyclerView(recyclerView: RecyclerView, data: List<Character>) {
+        if (recyclerView.adapter !is CharacterAdapter) {
+            val glide = GlideApp.with(this)
+            val adapter = CharacterAdapter(
+                CopyOnWriteArrayList(data),
+                glide,
+            ) { character ->
+                onFavoriteCharacterItemClicked(character)
+            }
+            recyclerView.adapter = adapter
+        } else {
+            val adapter = recyclerView.adapter as CharacterAdapter
+            adapter.dataSet.clear()
+            adapter.dataSet.addAll(data)
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun onFavoriteMediaItemClicked(mediaAdapter: MediaAdapter) {
+        val action = ProfileFragmentDirections.actionProfileFragmentToDetailsFragment(mediaAdapter)
+        findNavController().navigateSafe(R.id.profile_fragment, action)
+    }
+
+    private fun onFavoriteCharacterItemClicked(character: Character) {
+        character.malId?.let { malId ->
+            // show character on myanimelist.net
+            val malCharacterUrl = "https://myanimelist.net/character/$malId"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(malCharacterUrl))
+            startActivity(intent)
+        }
     }
 
     private fun updateOptionsMenu() {

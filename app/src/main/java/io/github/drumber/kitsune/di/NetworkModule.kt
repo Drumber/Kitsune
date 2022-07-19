@@ -88,7 +88,18 @@ val networkModule = module {
     }
     factory { createService<ChaptersService>(get(), get(), Chapter::class.java) }
     factory { createService<CategoryService>(get(), get(), Category::class.java) }
-    factory { createService<UserService>(get(), get(), User::class.java, Stats::class.java) }
+    factory {
+        createService<UserService>(
+            get(),
+            get(),
+            User::class.java,
+            Stats::class.java,
+            Favorite::class.java,
+            Anime::class.java,
+            Manga::class.java,
+            Character::class.java
+        )
+    }
     factory {
         createService<LibraryEntriesService>(
             get(), get(),

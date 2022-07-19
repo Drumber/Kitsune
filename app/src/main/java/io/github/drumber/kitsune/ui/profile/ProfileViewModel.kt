@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.ui.profile
 
 import androidx.lifecycle.*
+import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.data.model.user.User
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.service.Filter
@@ -19,7 +20,7 @@ class ProfileViewModel(
     // simple user model stored in user preference
     val userModel: LiveData<User?> = Transformations.map(userRepository.userLiveData) { it }
 
-    // full user model including stats
+    // full user model including stats and favorites
     val fullUserModel: LiveData<ResponseData<User>> = Transformations.switchMap(userModel) {
         it?.id?.let { userId ->
             liveData(context = Dispatchers.IO) {
@@ -59,7 +60,9 @@ class ProfileViewModel(
 
     companion object {
         val FULL_USER_FILTER
-            get() = Filter().include("stats")
+            get() = Filter()
+                .include("stats", "favorites.item")
+                .fields("media", *Defaults.MINIMUM_COLLECTION_FIELDS)
     }
 
 }

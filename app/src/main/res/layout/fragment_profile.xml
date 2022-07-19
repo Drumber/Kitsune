@@ -12,6 +12,7 @@
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.profile.ProfileFragment"
@@ -192,6 +193,90 @@
                             </LinearLayout>
 
                         </com.google.android.material.card.MaterialCardView>
+
+                        <LinearLayout
+                            android:id="@+id/layout_favorite_anime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_margin="10dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/title_favorite_anime"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                                android:layout_marginBottom="10dp" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rv_favorite_anime"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingVertical="5dp"
+                                android:requiresFadingEdge="horizontal"
+                                android:clipToPadding="false"
+                                android:orientation="horizontal"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_favorite_manga"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_margin="10dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/title_favorite_manga"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                                android:layout_marginBottom="10dp" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rv_favorite_manga"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingVertical="5dp"
+                                android:requiresFadingEdge="horizontal"
+                                android:clipToPadding="false"
+                                android:orientation="horizontal"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_favorite_characters"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_margin="10dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/title_favorite_characters"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                                android:layout_marginBottom="10dp" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rv_favorite_characters"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingVertical="5dp"
+                                android:requiresFadingEdge="horizontal"
+                                android:clipToPadding="false"
+                                android:orientation="horizontal"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 

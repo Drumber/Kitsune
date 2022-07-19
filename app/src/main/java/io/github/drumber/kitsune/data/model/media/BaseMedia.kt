@@ -3,8 +3,9 @@ package io.github.drumber.kitsune.data.model.media
 import android.os.Parcelable
 import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.data.model.mediarelationship.MediaRelationship
+import io.github.drumber.kitsune.data.model.user.FavoriteItem
 
-sealed class BaseMedia : Media, Parcelable
+sealed class BaseMedia : Media, FavoriteItem, Parcelable
 
 interface Media : Parcelable {
     val id: String
