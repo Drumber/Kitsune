@@ -57,15 +57,15 @@ android {
 dependencies {
     // Android core and support libs
     implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.appcompat:appcompat:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.core:core-splashscreen:1.0.0-rc01'
+    implementation 'androidx.core:core-splashscreen:1.0.0'
     implementation "androidx.cardview:cardview:1.0.0"
 
     // Navigation
-    def nav_version = "2.5.0"
-    def fragment_version = "1.5.0"
+    def nav_version = "2.5.1"
+    def fragment_version = "1.5.2"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
@@ -74,7 +74,7 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.2.0'
 
     // Lifecycle
-    def lifecycle_version = "2.5.0"
+    def lifecycle_version = "2.5.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
 
@@ -89,7 +89,7 @@ dependencies {
     implementation 'androidx.paging:paging-runtime-ktx:3.1.1'
 
     // Room
-    def room_version = "2.4.2"
+    def room_version = "2.4.3"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
