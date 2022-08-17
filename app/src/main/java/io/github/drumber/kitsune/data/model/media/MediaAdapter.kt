@@ -153,6 +153,8 @@ class MediaAdapter(
 
     val episodes: String? get() = (media as? Anime)?.episodeCount?.toString()
 
+    val episodeOrChapterCount get() = (media as? Anime)?.episodeCount ?: (media as? Manga)?.chapterCount
+
     fun lengthText(context: Context): String? {
         if (media is Anime) {
             val count = media.episodeCount

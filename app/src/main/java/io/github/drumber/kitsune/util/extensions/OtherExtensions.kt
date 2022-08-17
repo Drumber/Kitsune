@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.util.extensions
 
 import android.content.res.Resources
 import android.view.View
+import android.widget.TextView
 import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -34,10 +35,21 @@ fun SwipeRefreshLayout.setAppTheme() {
     setColorSchemeColors(context.theme.getColor(R.attr.colorPrimary))
 }
 
+fun TextView.setMaxLinesFitHeight() {
+    post {
+        val maxLines = (height / (lineHeight + lineSpacingExtra)).toInt()
+        setMaxLines(maxLines)
+    }
+}
+
+const val DATE_FORMAT_ISO = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+
 fun String.toDate(format: String = "yyyy-MM-dd"): Calendar {
-    val date = SimpleDateFormat(format).parse(this)
+    val date = SimpleDateFormat(format, Locale.getDefault()).parse(this)
     return Calendar.getInstance().apply {
-        time = date
+        if (date != null) {
+            time = date
+        }
     }
 }
 
@@ -49,6 +61,12 @@ fun Date.formatDate(dateFormat: Int = SimpleDateFormat.DEFAULT): String {
 fun Date.formatDate(pattern: String): String {
     val format = SimpleDateFormat(pattern, Locale.getDefault())
     return format.format(this)
+}
+
+fun Long.toDate(): Date {
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = this
+    return calendar.time
 }
 
 fun Calendar.formatDate(dateFormat: Int = SimpleDateFormat.DEFAULT) = this.time.formatDate(dateFormat)

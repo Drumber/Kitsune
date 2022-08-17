@@ -17,4 +17,25 @@
         <attr name="expanded" format="boolean" />
         <attr name="min_height" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="CustomNumberSpinner">
+        <attr name="suffixMode" format="enum">
+            <!-- Disable suffix text (default) -->
+            <enum name="disabled" value="0" />
+            <!-- Show max value in suffix -->
+            <enum name="maxValue" value="1" />
+            <!-- Use custom suffix text -->
+            <enum name="customText" value="2" />
+        </attr>
+        <!-- Custom suffix text -->
+        <attr name="suffixText" format="string" />
+
+        <attr name="enableAction" format="boolean" />
+        <attr name="actionText" format="string" />
+        <attr name="actionTooltip" format="string" />
+
+        <attr name="value" format="integer" />
+        <attr name="maxValue" format="integer" />
+        <attr name="minValue" format="integer" />
+    </declare-styleable>
 </resources>

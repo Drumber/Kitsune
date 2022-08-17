@@ -51,7 +51,7 @@ interface LibraryEntryDao {
     fun getLibraryEntryFromMediaLiveData(mediaId: String): LiveData<LibraryEntry?>
 
     @Query("SELECT * FROM library_table WHERE id = :id")
-    fun getLibraryEntry(id: String): LibraryEntry?
+    suspend fun getLibraryEntry(id: String): LibraryEntry?
 
     @Query("SELECT * FROM library_table WHERE id = :id")
     fun getLibraryEntryAsLiveData(id: String): LiveData<LibraryEntry?>

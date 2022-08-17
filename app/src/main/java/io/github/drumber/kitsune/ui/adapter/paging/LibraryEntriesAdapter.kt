@@ -76,8 +76,8 @@ class LibraryEntriesAdapter(
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivThumbnail)
 
-            val isNotSynced = entryWrapper.offlineLibraryUpdate?.let { offlineEntry ->
-                !offlineEntry.isEqualToLibraryEntry(entry)
+            val isNotSynced = entryWrapper.libraryModification?.let { libraryModification ->
+                !libraryModification.isEqualToLibraryEntry(entry)
             } ?: false
             binding.tvNotSynced.isVisible = isNotSynced
             binding.tvTitle.maxLines = if (isNotSynced) 2 else 3

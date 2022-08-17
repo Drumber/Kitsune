@@ -56,7 +56,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
     private val viewModel: LibraryViewModel by viewModel()
 
-    private var offlineLibraryUpdatesAmount = 0
+    private var offlineLibraryModificationsAmount = 0
     private lateinit var offlineLibraryUpdateBadge: BadgeDrawable
 
     private val searchDebouncer by lazy { Debouncer(300L) }
@@ -246,7 +246,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         binding.swipeRefreshLayout.apply {
             setAppTheme()
             setOnRefreshListener {
-                if (offlineLibraryUpdatesAmount > 0) {
+                if (offlineLibraryModificationsAmount > 0) {
                     viewModel.synchronizeOfflineLibraryUpdates()
                 }
                 adapter.refresh()
@@ -259,10 +259,10 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             }
         }
 
-        viewModel.offlineLibraryUpdateDao.getAllOfflineLibraryUpdatesLiveData()
+        viewModel.offlineLibraryModificationDao.getAllOfflineLibraryModificationsLiveData()
             .observe(viewLifecycleOwner) {
                 viewModel.invalidatePagingSource()
-                offlineLibraryUpdatesAmount = it.size
+                offlineLibraryModificationsAmount = it.size
                 requireActivity().invalidateOptionsMenu()
 
                 // synchronize library if there are offline library updates and network is not metered
@@ -359,7 +359,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.library_menu, menu)
-        menu.findItem(R.id.menu_synchronize).isVisible = offlineLibraryUpdatesAmount > 0
+        menu.findItem(R.id.menu_synchronize).isVisible = offlineLibraryModificationsAmount > 0
 
         initSearchView(menu.findItem(R.id.menu_search))
 
@@ -377,11 +377,11 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         )
 
         binding.toolbar.menu.findItem(R.id.menu_synchronize).isVisible =
-            offlineLibraryUpdatesAmount > 0
+            offlineLibraryModificationsAmount > 0
 
         offlineLibraryUpdateBadge.apply {
-            isVisible = offlineLibraryUpdatesAmount > 0
-            number = offlineLibraryUpdatesAmount
+            isVisible = offlineLibraryModificationsAmount > 0
+            number = offlineLibraryModificationsAmount
         }
 
         BadgeUtils.attachBadgeDrawable(

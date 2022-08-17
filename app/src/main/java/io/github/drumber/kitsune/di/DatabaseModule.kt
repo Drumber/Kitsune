@@ -9,10 +9,11 @@ import org.koin.dsl.module
 val databaseModule = module {
     single { createResourceDatabase(androidApplication()) }
     single { get<ResourceDatabase>().libraryEntryDao() }
-    single { get<ResourceDatabase>().offlineLibraryEntryDao() }
+    single { get<ResourceDatabase>().offlineLibraryModificationDao() }
 }
 
 private fun createResourceDatabase(application: Application): ResourceDatabase {
+    // TODO: add migration for offline library modification
     return Room.databaseBuilder(application, ResourceDatabase::class.java, "resources.db")
         .fallbackToDestructiveMigration()
         .build()

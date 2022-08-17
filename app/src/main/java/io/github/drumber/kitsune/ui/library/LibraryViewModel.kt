@@ -10,7 +10,7 @@ import io.github.drumber.kitsune.data.manager.ResponseCallback
 import io.github.drumber.kitsune.data.model.library.*
 import io.github.drumber.kitsune.data.repository.LibraryEntriesRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
-import io.github.drumber.kitsune.data.room.OfflineLibraryUpdateDao
+import io.github.drumber.kitsune.data.room.OfflineLibraryModificationDao
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.preference.KitsunePref
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +24,7 @@ class LibraryViewModel(
     val userRepository: UserRepository,
     private val libraryEntriesRepository: LibraryEntriesRepository,
     private val libraryManager: LibraryManager,
-    val offlineLibraryUpdateDao: OfflineLibraryUpdateDao
+    val offlineLibraryModificationDao: OfflineLibraryModificationDao
 ) : ViewModel() {
 
     private val updateLock = Any()
@@ -92,7 +92,7 @@ class LibraryViewModel(
                     pagingData.map { entry ->
                         LibraryEntryWrapper(
                             entry,
-                            offlineLibraryUpdateDao.getOfflineLibraryUpdate(entry.id)
+                            offlineLibraryModificationDao.getOfflineLibraryModification(entry.id)
                         )
                     }
                 }

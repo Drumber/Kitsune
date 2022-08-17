@@ -144,11 +144,11 @@
                             android:id="@+id/btn_manage_library"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignWithParentIfMissing="true"
                             android:layout_alignBottom="@id/iv_thumbnail"
+                            android:layout_marginStart="10dp"
                             android:layout_toStartOf="@id/btn_rating"
                             android:layout_toEndOf="@id/iv_thumbnail"
-                            android:layout_alignWithParentIfMissing="true"
-                            android:layout_marginStart="10dp"
                             android:text="@string/library_action_add"
                             android:textAllCaps="false" />
 
@@ -169,6 +169,14 @@
                             tools:icon="@drawable/ic_star_24"
                             tools:targetApi="o"
                             tools:text="5" />
+
+                        <Button
+                            android:id="@+id/btn_edit_library"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Edit Library"
+                            android:layout_below="@id/btn_manage_library"
+                            android:layout_alignParentEnd="true" />
 
                     </RelativeLayout>
 

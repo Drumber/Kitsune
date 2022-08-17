@@ -69,6 +69,9 @@
         <action
             android:id="@+id/action_details_fragment_to_photoViewActivity"
             app:destination="@id/photo_view_activity" />
+        <action
+            android:id="@+id/action_details_fragment_to_libraryEditEntryFragment"
+            app:destination="@id/libraryEditEntryFragment" />
     </fragment>
     <fragment
         android:id="@+id/media_list_fragment"
@@ -110,6 +113,9 @@
         <deepLink
             android:id="@+id/deepLink_library"
             app:uri="kitsune://library" />
+        <action
+            android:id="@+id/action_library_fragment_to_libraryEditEntryFragment"
+            app:destination="@id/libraryEditEntryFragment" />
     </fragment>
     <fragment
         android:id="@+id/librariesFragment"
@@ -166,4 +172,12 @@
         android:id="@+id/facet_fragment"
         android:name="io.github.drumber.kitsune.ui.search.filter.FacetFragment"
         android:label="FacetFragment" />
+    <dialog
+        android:id="@+id/libraryEditEntryFragment"
+        android:name="io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryFragment"
+        android:label="LibraryEditEntryFragment" >
+        <argument
+            android:name="libraryEntryId"
+            app:argType="string" />
+    </dialog>
 </navigation>

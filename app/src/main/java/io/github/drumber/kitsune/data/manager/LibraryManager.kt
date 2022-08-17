@@ -3,8 +3,7 @@ package io.github.drumber.kitsune.data.manager
 import androidx.room.withTransaction
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
-import io.github.drumber.kitsune.data.model.library.OfflineLibraryUpdate
-import io.github.drumber.kitsune.data.model.library.toOfflineLibraryUpdate
+import io.github.drumber.kitsune.data.model.library.LibraryModification
 import io.github.drumber.kitsune.data.room.ResourceDatabase
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.exception.InvalidDataException
@@ -21,16 +20,16 @@ class LibraryManager(
 ) {
 
     private val libraryEntryDao = database.libraryEntryDao()
-    private val offlineLibraryUpdateDao = database.offlineLibraryEntryDao()
+    private val offlineLibraryModificationDao = database.offlineLibraryModificationDao()
 
     private val isOfflineCacheEnabled
         get() = KitsunePref.libraryOfflineSync
 
     suspend fun synchronizeLibrary(responseCallback: ResponseCallback) {
-        val offlineEntries = offlineLibraryUpdateDao.getAllOfflineLibraryUpdates()
+        val offlineModifications = offlineLibraryModificationDao.getAllOfflineLibraryModifications()
 
-        offlineEntries.forEach { offlineLibraryEntry ->
-            val updatedEntry = offlineLibraryEntry.toLibraryEntry()
+        offlineModifications.forEach { offlineLibraryModification ->
+            val updatedEntry = offlineLibraryModification.toLibraryEntry()
 
             try {
                 val response = libraryEntriesService.updateLibraryEntry(
@@ -40,7 +39,7 @@ class LibraryManager(
 
                 response.get()?.let { libraryEntry ->
                     // delete old offline library update from database
-                    offlineLibraryUpdateDao.deleteOfflineLibraryUpdate(offlineLibraryEntry)
+                    offlineLibraryModificationDao.deleteOfflineLibraryModification(offlineLibraryModification)
 
                     // update library entry database, therefore we need the full library entry object
                     database.libraryEntryDao().getLibraryEntry(libraryEntry.id)?.let { oldEntry ->
@@ -53,7 +52,7 @@ class LibraryManager(
                     } ?: throw InvalidDataException("Cannot update library database due to missing old library entity.")
                 } ?: throw ReceivedDataException("Received data for updated progress is 'null'.")
             } catch (e: Exception) {
-                logE("Failed to synchronize library entry ${offlineLibraryEntry.id}", e)
+                logE("Failed to synchronize library entry ${offlineLibraryModification.id}", e)
                 responseCallback.call(LibraryUpdateResponse.Error(e))
             }
         }
@@ -65,12 +64,11 @@ class LibraryManager(
         newProgress: Int?,
         responseCallback: ResponseCallback
     ) {
-        val offlineEntry = offlineLibraryUpdateDao.getOfflineLibraryUpdate(oldEntry.id)
+        val libraryModification = offlineLibraryModificationDao.getOfflineLibraryModification(oldEntry.id)?.copy(
+            progress = newProgress // apply new progress
+        )
 
-        val updatedEntry = offlineEntry?.toLibraryEntry()?.apply {
-            // update offline entry with new progress
-            progress = newProgress
-        } ?: LibraryEntry(
+        val updatedEntry = libraryModification?.toLibraryEntry() ?: LibraryEntry(
             id = oldEntry.id,
             progress = newProgress
         )
@@ -90,10 +88,10 @@ class LibraryManager(
                     )
                 )
 
-                if (offlineEntry != null) {
-                    // remove offline library entry since we successfully synced with the server
+                if (libraryModification != null) {
+                    // remove offline library modification since we successfully synced with the server
                     database.withTransaction {
-                        offlineLibraryUpdateDao.deleteOfflineLibraryUpdate(offlineEntry)
+                        offlineLibraryModificationDao.deleteOfflineLibraryModification(libraryModification)
                     }
                 }
 
@@ -102,7 +100,20 @@ class LibraryManager(
         } catch (e: Exception) {
             logE("Failed to update library entry progress.", e)
             if (isOfflineCacheEnabled) {
-                updateOfflineLibraryEntry(offlineEntry, updatedEntry)
+                // update or insert offline library modification
+                database.withTransaction {
+                    if (libraryModification != null) {
+                        logD("Update offline library modification: $libraryModification")
+                        offlineLibraryModificationDao.updateOfflineLibraryModification(libraryModification)
+                    } else {
+                        val newOfflineModification = LibraryModification(
+                            id = updatedEntry.id,
+                            ratingTwenty = newProgress
+                        )
+                        logD("Insert new offline library modification: $libraryModification")
+                        offlineLibraryModificationDao.insertSingle(newOfflineModification)
+                    }
+                }
                 responseCallback.call(LibraryUpdateResponse.OfflineCache)
             } else {
                 responseCallback.call(LibraryUpdateResponse.Error(e))
@@ -126,11 +137,11 @@ class LibraryManager(
         }
 
         val updatedRating = rating ?: -1 // '-1' will be mapped to 'null' by the json serializer
-        val offlineEntry = offlineLibraryUpdateDao.getOfflineLibraryUpdate(oldEntry.id)
+        val libraryModification = offlineLibraryModificationDao.getOfflineLibraryModification(oldEntry.id)?.copy(
+            ratingTwenty = updatedRating // apply new rating
+        )
 
-        val updatedEntry = offlineEntry?.toLibraryEntry()?.apply {
-            ratingTwenty = updatedRating
-        } ?: LibraryEntry(
+        val updatedEntry = libraryModification?.toLibraryEntry() ?: LibraryEntry(
             id = oldEntry.id,
             ratingTwenty = updatedRating
         )
@@ -149,9 +160,9 @@ class LibraryManager(
                     )
                 )
 
-                if (offlineEntry != null) {
+                if (libraryModification != null) {
                     database.withTransaction {
-                        offlineLibraryUpdateDao.deleteOfflineLibraryUpdate(offlineEntry)
+                        offlineLibraryModificationDao.deleteOfflineLibraryModification(libraryModification)
                     }
                 }
             } ?: throw ReceivedDataException("Received data for updated rating is 'null'.")
@@ -159,27 +170,25 @@ class LibraryManager(
             responseCallback.call(LibraryUpdateResponse.SyncedOnline)
         } catch (e: Exception) {
             logE("Failed to update library entry rating.", e)
+
             if (isOfflineCacheEnabled) {
-                updateOfflineLibraryEntry(offlineEntry, updatedEntry)
+                // update or insert offline library modification
+                database.withTransaction {
+                    if (libraryModification != null) {
+                        logD("Update offline library modification: $libraryModification")
+                        offlineLibraryModificationDao.updateOfflineLibraryModification(libraryModification)
+                    } else {
+                        val newOfflineModification = LibraryModification(
+                            id = updatedEntry.id,
+                            ratingTwenty = updatedRating
+                        )
+                        logD("Insert new offline library modification: $libraryModification")
+                        offlineLibraryModificationDao.insertSingle(newOfflineModification)
+                    }
+                }
                 responseCallback.call(LibraryUpdateResponse.OfflineCache)
             } else {
                 responseCallback.call(LibraryUpdateResponse.Error(e))
-            }
-        }
-    }
-
-    private suspend fun updateOfflineLibraryEntry(
-        offlineEntry: OfflineLibraryUpdate?,
-        updatedEntry: LibraryEntry
-    ) {
-        val newOfflineUpdate = updatedEntry.toOfflineLibraryUpdate()
-        database.withTransaction {
-            if (offlineEntry != null) {
-                logD("Update offline library entry: (old) $offlineEntry -> (new) $newOfflineUpdate")
-                offlineLibraryUpdateDao.updateOfflineLibraryUpdate(newOfflineUpdate)
-            } else {
-                logD("Insert new offline library entry: $newOfflineUpdate")
-                offlineLibraryUpdateDao.insertSingle(newOfflineUpdate)
             }
         }
     }

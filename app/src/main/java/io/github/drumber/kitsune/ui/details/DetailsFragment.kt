@@ -165,6 +165,12 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 findNavController().navigate(action)
             }
             btnRating.setOnClickListener { showRatingBottomSheet() }
+
+            btnEditLibrary.setOnClickListener {
+                val entryId = viewModel.libraryEntry.value?.id ?: return@setOnClickListener
+                val action = DetailsFragmentDirections.actionDetailsFragmentToLibraryEditEntryFragment(entryId)
+                findNavController().navigateSafe(R.id.details_fragment, action)
+            }
         }
 
         setFragmentResultListener(ManageLibraryBottomSheet.STATUS_REQUEST_KEY) { _, bundle ->

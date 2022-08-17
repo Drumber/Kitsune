@@ -69,10 +69,10 @@ enum class ReactionSkip {
     Ignored
 }
 
-fun Status.getStringResId() = when (this) {
+fun Status.getStringResId(isAnime: Boolean = true) = when (this) {
     Status.Completed -> R.string.library_status_completed
-    Status.Current -> R.string.library_status_watching
+    Status.Current -> if (isAnime) R.string.library_status_watching else R.string.library_status_reading
     Status.Dropped -> R.string.library_status_dropped
     Status.OnHold -> R.string.library_status_on_hold
-    Status.Planned -> R.string.library_status_planned
+    Status.Planned -> if (isAnime) R.string.library_status_planned else R.string.library_status_planned_manga
 }

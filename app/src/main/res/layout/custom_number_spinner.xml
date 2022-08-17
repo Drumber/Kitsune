@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minWidth="@dimen/edit_library_min_width"
+    android:background="@drawable/rectangle_background"
+    android:orientation="horizontal">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_decrement"
+        style="@style/Widget.Kitsune.Button.IconOnly.NoBackground"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/ic_remove_24"
+        app:iconGravity="textStart" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="8dp"
+        android:background="?attr/colorButtonNormal" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/field_count"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="10dp"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:inputType="number|numberDecimal|numberSigned"
+        android:minWidth="30dp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        tools:text="8" />
+
+    <TextView
+        android:id="@+id/tv_suffix"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="10dp"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        tools:text="/ 12" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="8dp"
+        android:background="?attr/colorButtonNormal" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_increment"
+        style="@style/Widget.Kitsune.Button.IconOnly.NoBackground"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/ic_add_24"
+        app:iconGravity="textStart" />
+
+    <LinearLayout
+        android:id="@+id/layout_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="?attr/colorButtonNormal" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_action"
+            style="@style/Widget.Kitsune.Button.IconOnly.NoBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            tools:text="@string/action_start"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+
+</LinearLayout>

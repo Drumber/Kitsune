@@ -14,7 +14,7 @@ import io.github.drumber.kitsune.data.model.media.Manga
 import io.github.drumber.kitsune.data.model.unit.MediaUnit
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository
 import io.github.drumber.kitsune.data.room.LibraryEntryDao
-import io.github.drumber.kitsune.data.room.OfflineLibraryUpdateDao
+import io.github.drumber.kitsune.data.room.OfflineLibraryModificationDao
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.util.logE
@@ -27,7 +27,7 @@ class EpisodesViewModel(
     private val mediaUnitRepository: MediaUnitRepository,
     libraryEntriesService: LibraryEntriesService,
     libraryEntryDao: LibraryEntryDao,
-    private val offlineLibraryUpdateDao: OfflineLibraryUpdateDao,
+    private val offlineLibraryModificationDao: OfflineLibraryModificationDao,
     private val libraryManager: LibraryManager
 ) : ViewModel() {
 
@@ -70,7 +70,7 @@ class EpisodesViewModel(
                 emit(
                     LibraryEntryWrapper(
                         libraryEntry,
-                        offlineLibraryUpdateDao.getOfflineLibraryUpdate(libraryEntry.id)
+                        offlineLibraryModificationDao.getOfflineLibraryModification(libraryEntry.id)
                     )
                 )
             } else {

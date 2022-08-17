@@ -33,6 +33,9 @@
     <string name="action_synchronize">Synchronize</string>
     <string name="action_save_in_gallery">Save in Gallery</string>
     <string name="action_open_in_browser">Open in Browser</string>
+    <string name="action_save_changes">Save Changes</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_start">Start</string>
 
     <string name="hint_search">Search</string>
     <string name="hint_mark_watched">Mark as watched.</string>
@@ -76,6 +79,7 @@
     <string name="title_episodes">Episodes</string>
     <string name="title_chapters">Chapters</string>
     <string name="title_characters">Characters</string>
+    <string name="title_edit_library_entry">Edit Library Entry</string>
 
     <string name="no_information">Unknown</string>
     <string name="no_data_available">No Data available</string>
@@ -222,6 +226,22 @@
     <string name="library_not_logged_in_text">Log in to your Kitsu Account to manage your library and get access to all features.</string>
     <string name="library_kind_all">All</string>
     <string name="library_not_synchronized">Not Synced</string>
+
+    <string name="library_edit_status">Library Status</string>
+    <string name="library_edit_progress">Progress</string>
+    <string name="library_edit_volumes">Volumes</string>
+    <string name="library_edit_rating">Rating</string>
+    <string name="library_edit_rewatch_count">Rewatch Count</string>
+    <string name="library_edit_reread_count">Reread Count</string>
+    <string name="library_edit_start_rewatch">Start Rewatch</string>
+    <string name="library_edit_start_reread">Start Reread</string>
+    <string name="library_edit_privacy">Privacy</string>
+    <string name="library_edit_privacy_public">Public</string>
+    <string name="library_edit_privacy_private">Private</string>
+    <string name="library_edit_started">Started</string>
+    <string name="library_edit_finished">Finished</string>
+    <string name="library_edit_no_date_set">No Date set</string>
+    <string name="library_edit_notes">Personal Notes</string>
 
     <string name="info_log_in_required">Log in to access all features.</string>
     <string name="info_image_saved_in_gallery">Successfully saved image in gallery.</string>
