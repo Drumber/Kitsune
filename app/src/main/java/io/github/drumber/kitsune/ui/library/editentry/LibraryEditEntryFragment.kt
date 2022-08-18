@@ -33,6 +33,8 @@ import io.github.drumber.kitsune.data.model.media.Manga
 import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.databinding.FragmentEditLibraryEntryBinding
 import io.github.drumber.kitsune.ui.library.RatingBottomSheet
+import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel.LoadState
+import io.github.drumber.kitsune.ui.widget.CustomNumberSpinner
 import io.github.drumber.kitsune.util.*
 import io.github.drumber.kitsune.util.extensions.setMaxLinesFitHeight
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -144,6 +146,14 @@ class LibraryEditEntryFragment : DialogFragment() {
             }
         }
 
+        viewModel.loadState.observe(viewLifecycleOwner) { state ->
+            if (state == LoadState.CloseDialog) {
+                dismiss()
+            } else {
+                binding.layoutLoading.isVisible = state == LoadState.Loading
+            }
+        }
+
         viewModel.libraryEntry.observe(viewLifecycleOwner) { libraryEntry ->
             val mediaAdapter = (libraryEntry.anime ?: libraryEntry.manga)
                 ?.let { MediaAdapter.fromMedia(it) }
@@ -164,7 +174,9 @@ class LibraryEditEntryFragment : DialogFragment() {
             binding.apply {
                 setLibraryStatusMenu(mediaAdapter, wrapper.status)
 
-                spinnerProgress.setMaxValue(mediaAdapter?.episodeOrChapterCount ?: 0)
+                mediaAdapter?.episodeOrChapterCount?.let {
+                    spinnerProgress.setMaxValue(it)
+                } ?: spinnerProgress.setSuffixMode(CustomNumberSpinner.SuffixMode.Disabled)
                 spinnerProgress.setValue(wrapper.progress ?: 0)
 
                 layoutVolumes.isVisible = mediaAdapter?.isAnime() == false

@@ -9,8 +9,10 @@ import io.github.drumber.kitsune.data.room.LibraryEntryDao
 import io.github.drumber.kitsune.data.room.OfflineLibraryModificationDao
 import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
+import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class LibraryEditEntryViewModel(
     private val libraryManager: LibraryManager,
@@ -30,6 +32,10 @@ class LibraryEditEntryViewModel(
     val libraryEntry
         get() = _libraryEntry as LiveData<LibraryEntry>
 
+    private val _loadState = MutableLiveData(LoadState.NotLoading)
+    val loadState
+        get() = _loadState as LiveData<LoadState>
+
     val hasChanges: LiveData<Boolean> = libraryEntryWrapper.map {
         val uneditedWrapper = uneditedLibraryEntryWrapper ?: return@map false
         val entry = uneditedWrapper.libraryEntry.copy()
@@ -43,8 +49,12 @@ class LibraryEditEntryViewModel(
     fun initLibraryEntry(libraryEntryId: String) {
         if (_libraryEntryWrapper.value != null) return
 
+        _loadState.value = LoadState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            val libraryEntry = getLibraryEntry(libraryEntryId) ?: return@launch
+            val libraryEntry = getLibraryEntry(libraryEntryId) ?: run {
+                _loadState.postValue(LoadState.CloseDialog)
+                return@launch
+            }
             _libraryEntry.postValue(libraryEntry)
 
             val libraryModification =
@@ -54,15 +64,22 @@ class LibraryEditEntryViewModel(
             val libraryEntryWrapper = LibraryEntryWrapper(libraryEntry, libraryModification)
             uneditedLibraryEntryWrapper = libraryEntryWrapper.copy()
             _libraryEntryWrapper.postValue(libraryEntryWrapper)
+        }.invokeOnCompletion {
+            _loadState.postValue(LoadState.NotLoading)
         }
     }
 
     private suspend fun getLibraryEntry(libraryEntryId: String): LibraryEntry? {
-        return libraryEntryDao.getLibraryEntry(libraryEntryId)
-            ?: libraryEntriesService.getLibraryEntry(
-                libraryEntryId,
-                Filter().include("anime", "manga").options
-            ).get()
+        return try {
+            libraryEntryDao.getLibraryEntry(libraryEntryId)
+                ?: libraryEntriesService.getLibraryEntry(
+                    libraryEntryId,
+                    Filter().include("anime", "manga").options
+                ).get()
+        } catch (e: Exception) {
+            logE("Failed to obtain library entry.", e)
+            return null
+        }
     }
 
     fun setLibraryModification(libraryModification: LibraryModification) {
@@ -85,7 +102,28 @@ class LibraryEditEntryViewModel(
     }
 
     fun removeLibraryEntry() {
-        // TODO
+        val libraryEntry = libraryEntry.value ?: return
+        _loadState.value = LoadState.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = libraryEntriesService.deleteLibraryEntry(libraryEntry.id).execute()
+                if (response.isSuccessful) {
+                    libraryEntryDao.delete(libraryEntry)
+                    _loadState.postValue(LoadState.CloseDialog)
+                } else {
+                    throw HttpException(response)
+                }
+            } catch (e: Exception) {
+                logE("Failed to remove library entry.", e)
+                _loadState.postValue(LoadState.NotLoading)
+            }
+        }
+    }
+
+    enum class LoadState {
+        NotLoading,
+        Loading,
+        CloseDialog
     }
 
 }
