@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.util
 
+import com.google.android.material.datepicker.MaterialDatePicker
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -67,3 +68,5 @@ fun stripTimeOfUtcMillis(rawDate: Long): Long {
  * Keeps only year, month and day information of the specified time in milliseconds.
  */
 fun Long.stripTimeUtcMillis() = stripTimeOfUtcMillis(this)
+
+fun todayUtcMillis() = MaterialDatePicker.todayInUtcMilliseconds()

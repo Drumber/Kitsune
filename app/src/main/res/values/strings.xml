@@ -42,6 +42,8 @@
     <string name="hint_mark_not_watched">Mark as not watched.</string>
 
     <string name="dialog_log_out_confirmation">Are you sure you want to log out?</string>
+    <string name="dialog_remove_from_library_title">Remove from Library?</string>
+    <string name="dialog_remove_from_library_msg">&lt;b>%s&lt;/b> will be removed from your library.</string>
 
     <string name="error_resource_loading">Could not load data.</string>
     <string name="error_image_loading">Failed to load image.</string>

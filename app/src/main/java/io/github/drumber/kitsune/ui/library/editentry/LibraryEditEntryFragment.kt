@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.os.bundleOf
+import androidx.core.text.htmlEncode
+import androidx.core.text.parseAsHtml
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
@@ -20,6 +22,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.internal.EdgeToEdgeUtils
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
@@ -118,7 +121,26 @@ class LibraryEditEntryFragment : DialogFragment() {
                 viewModel.saveChanges()
             }
             btnRemoveEntry.setOnClickListener {
-                viewModel.removeLibraryEntry()
+                val libraryEntry = viewModel.libraryEntry.value
+                val mediaAdapter = (libraryEntry?.anime ?: libraryEntry?.manga)
+                    ?.let { MediaAdapter.fromMedia(it) }
+
+                val dialogMsg = getString(
+                    R.string.dialog_remove_from_library_msg,
+                    mediaAdapter?.title?.htmlEncode() ?: getString(R.string.no_information)
+                ).parseAsHtml()
+
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.dialog_remove_from_library_title)
+                    .setMessage(dialogMsg)
+                    .setNegativeButton(android.R.string.cancel) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .setPositiveButton(R.string.action_remove) { dialog, _ ->
+                        dialog.dismiss()
+                        viewModel.removeLibraryEntry()
+                    }
+                    .show()
             }
         }
 
@@ -246,7 +268,22 @@ class LibraryEditEntryFragment : DialogFragment() {
             }
 
             spinnerProgress.setValueChangedListener { value ->
-                viewModel.updateLibraryEntry { it.copy(progress = value) }
+                val wrapper = viewModel.libraryEntryWrapper.value
+                val mediaAdapter = (wrapper?.libraryEntry?.anime ?: wrapper?.libraryEntry?.manga)
+                    ?.let { MediaAdapter.fromMedia(it) }
+
+                if (value == mediaAdapter?.episodeOrChapterCount) {
+                    viewModel.updateLibraryEntry {
+                        it.copy(
+                            progress = value,
+                            status = Status.Completed,
+                            finishedAt = wrapper?.finishedAt ?: todayUtcMillis().toDate()
+                                .formatDate(DATE_FORMAT_ISO)
+                        )
+                    }
+                } else {
+                    viewModel.updateLibraryEntry { it.copy(progress = value) }
+                }
             }
 
             spinnerVolumes.setValueChangedListener { value ->
