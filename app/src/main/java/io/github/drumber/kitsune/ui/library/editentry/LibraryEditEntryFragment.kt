@@ -17,6 +17,8 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.internal.EdgeToEdgeUtils
 import io.github.drumber.kitsune.GlideApp
@@ -28,13 +30,8 @@ import io.github.drumber.kitsune.data.model.media.Manga
 import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.databinding.FragmentEditLibraryEntryBinding
 import io.github.drumber.kitsune.ui.library.RatingBottomSheet
-import io.github.drumber.kitsune.util.extensions.DATE_FORMAT_ISO
-import io.github.drumber.kitsune.util.extensions.formatDate
+import io.github.drumber.kitsune.util.*
 import io.github.drumber.kitsune.util.extensions.setMaxLinesFitHeight
-import io.github.drumber.kitsune.util.extensions.toDate
-import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
-import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LibraryEditEntryFragment : DialogFragment() {
@@ -235,7 +232,7 @@ class LibraryEditEntryFragment : DialogFragment() {
 
         setFragmentResultListener(RatingBottomSheet.REMOVE_RATING_REQUEST_KEY) { _, _ ->
             val oldRating = viewModel.uneditedLibraryEntryWrapper?.ratingTwenty
-            val rating = if (oldRating == null) null  else -1
+            val rating = if (oldRating == null) null else -1
             viewModel.updateLibraryEntry { it.copy(ratingTwenty = rating) }
         }
     }
@@ -282,10 +279,20 @@ class LibraryEditEntryFragment : DialogFragment() {
             }
 
             fieldStarted.editText?.setOnClickListener {
-                val selection = viewModel.libraryEntryWrapper.value
-                    ?.startedAt?.toDate(DATE_FORMAT_ISO)?.timeInMillis
-                    ?: MaterialDatePicker.todayInUtcMilliseconds()
-                openDatePicker(getString(R.string.library_edit_started), selection) { dateMillis ->
+                val wrapper = viewModel.libraryEntryWrapper.value
+                val selection = wrapper?.startedAt?.toDate(DATE_FORMAT_ISO)?.timeInMillis
+                    ?.stripTimeUtcMillis() ?: MaterialDatePicker.todayInUtcMilliseconds()
+
+                val validator = wrapper?.finishedAt?.toDate(DATE_FORMAT_ISO)?.timeInMillis
+                    ?.stripTimeUtcMillis()?.let {
+                        DateValidatorPointBackward.before(it)
+                    } ?: DateValidatorPointBackward.now()
+
+                openDatePicker(
+                    getString(R.string.library_edit_started),
+                    selection,
+                    validator
+                ) { dateMillis ->
                     val dateString = dateMillis.toDate().formatDate(DATE_FORMAT_ISO)
                     viewModel.updateLibraryEntry { it.copy(startedAt = dateString) }
                 }
@@ -297,10 +304,20 @@ class LibraryEditEntryFragment : DialogFragment() {
             }
 
             fieldFinished.editText?.setOnClickListener {
-                val selection = viewModel.libraryEntryWrapper.value
-                    ?.startedAt?.toDate(DATE_FORMAT_ISO)?.timeInMillis
-                    ?: MaterialDatePicker.todayInUtcMilliseconds()
-                openDatePicker(getString(R.string.library_edit_finished), selection) { dateMillis ->
+                val wrapper = viewModel.libraryEntryWrapper.value
+                val selection = wrapper?.finishedAt?.toDate(DATE_FORMAT_ISO)?.timeInMillis
+                    ?.stripTimeUtcMillis() ?: MaterialDatePicker.todayInUtcMilliseconds()
+
+                val validator = wrapper?.startedAt?.toDate(DATE_FORMAT_ISO)?.timeInMillis
+                    ?.stripTimeUtcMillis()?.let {
+                        DateValidatorPointBetween.nowAndFrom(it)
+                    } ?: DateValidatorPointBackward.now()
+
+                openDatePicker(
+                    getString(R.string.library_edit_finished),
+                    selection,
+                    validator
+                ) { dateMillis ->
                     val dateString = dateMillis.toDate().formatDate(DATE_FORMAT_ISO)
                     viewModel.updateLibraryEntry { it.copy(finishedAt = dateString) }
                 }
@@ -355,10 +372,21 @@ class LibraryEditEntryFragment : DialogFragment() {
         sheetLibraryRating.show(parentFragmentManager, RatingBottomSheet.TAG)
     }
 
-    private fun openDatePicker(title: String, selection: Long, action: (Long) -> Unit) {
+    private fun openDatePicker(
+        title: String,
+        selection: Long,
+        validator: CalendarConstraints.DateValidator,
+        action: (Long) -> Unit
+    ) {
+        val constraints = CalendarConstraints.Builder()
+            .setValidator(validator)
+            .setEnd(MaterialDatePicker.todayInUtcMilliseconds())
+            .build()
+
         val datePicker = MaterialDatePicker.Builder.datePicker()
             .setTitleText(title)
             .setSelection(selection)
+            .setCalendarConstraints(constraints)
             .build()
 
         datePicker.addOnPositiveButtonClickListener(action)

@@ -8,8 +8,8 @@ import io.github.drumber.kitsune.data.model.mediarelationship.getString
 import io.github.drumber.kitsune.data.model.production.AnimeProductionRole
 import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.util.TimeUtil
-import io.github.drumber.kitsune.util.extensions.formatDate
-import io.github.drumber.kitsune.util.extensions.toDate
+import io.github.drumber.kitsune.util.formatDate
+import io.github.drumber.kitsune.util.toDate
 import io.github.drumber.kitsune.util.originalOrDown
 import io.github.drumber.kitsune.util.smallOrHigher
 import kotlinx.parcelize.Parcelize

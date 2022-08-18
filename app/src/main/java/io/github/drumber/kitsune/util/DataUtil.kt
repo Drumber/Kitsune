@@ -5,8 +5,6 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.TitlesPref
 import io.github.drumber.kitsune.data.model.media.Titles
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.util.extensions.formatDate
-import io.github.drumber.kitsune.util.extensions.toDate
 import java.text.SimpleDateFormat
 import java.util.*
 
