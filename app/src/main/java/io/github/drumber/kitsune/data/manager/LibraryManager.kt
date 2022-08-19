@@ -118,6 +118,20 @@ class LibraryManager(
         }
     }
 
+    suspend fun updateLibraryEntry(libraryModification: LibraryModification): LibraryUpdateResponse {
+        var modification = libraryModification.applyFixes()
+
+        // check if there is an existing library modification
+        val existingModification =
+            offlineLibraryModificationDao.getOfflineLibraryModification(libraryModification.id)
+        if (existingModification != null) {
+            // merge with changes from existing library modification
+            modification = existingModification.mergeModificationFrom(libraryModification)
+        }
+
+        return updateLibraryEntryIntern(modification, existingModification != null)
+    }
+
     suspend fun removeLibraryEntry(libraryEntry: LibraryEntry) {
         libraryEntriesService.deleteLibraryEntry(libraryEntry.id)
         // remove any offline modification and the library entry itself from database
@@ -243,20 +257,6 @@ class LibraryManager(
         }
     }
 
-    suspend fun updateLibraryEntry(libraryModification: LibraryModification): LibraryUpdateResponse {
-        var modification = libraryModification
-
-        // check if there is an existing library modification
-        val existingModification =
-            offlineLibraryModificationDao.getOfflineLibraryModification(libraryModification.id)
-        if (existingModification != null) {
-            // merge with changes from existing library modification
-            modification = existingModification.mergeModificationFrom(libraryModification)
-        }
-
-        return updateLibraryEntryIntern(modification, existingModification != null)
-    }
-
     private suspend fun fetchFullLibraryEntry(id: String): LibraryEntry? {
         return try {
             val response = libraryEntriesService.getLibraryEntry(
@@ -269,5 +269,15 @@ class LibraryManager(
             null
         }
     }
+
+    /**
+     * Apply fixes to the library modification before submitting it to the server.
+     */
+    private fun LibraryModification.applyFixes() = this.copy(
+        // Fix for setting startedAt date when user starts consuming the media.
+        // startedAt is only set if status is CURRENT or COMPLETED, see here:
+        // https://github.com/hummingbird-me/kitsu-server/blob/703726fc84a1a0172eae9a55c751ae6ffb1665b3/app/models/library_entry.rb#L204
+        status = if (status == null && progress == 1) Status.Current else status
+    )
 
 }
