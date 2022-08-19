@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
@@ -69,7 +70,14 @@ class PhotoViewActivity : BaseActivity(
         WindowInsetsControllerCompat(window, binding.root).systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
-        binding.photoView.setOnClickListener { toggleSystemUi() }
+        binding.photoView.apply {
+            setOnClickListener { toggleSystemUi() }
+            setAllowParentInterceptOnEdge(false) // we manage scroll interception on our own
+            setOnMatrixChangeListener {
+                // disallow touch event interception unless image is scrolled to the top
+                binding.nestedScrollView.requestDisallowInterceptTouchEvent(it.top < 0f)
+            }
+        }
 
         GlideApp.with(this)
             .load(args.imageUrl)
@@ -88,6 +96,7 @@ class PhotoViewActivity : BaseActivity(
                     onImageLoadFailed()
                     return false
                 }
+
                 override fun onResourceReady(
                     resource: Drawable?,
                     model: Any?,
@@ -119,10 +128,11 @@ class PhotoViewActivity : BaseActivity(
         binding.haulerView.setOnDragActivityListener { _, rawOffset ->
             // fade background alpha on drag
             val alpha = (1.0f - rawOffset) * 255.0f
-            binding.photoBackground.background.alpha = alpha.toInt()
+            val color = Color.argb(alpha.toInt(), 0, 0, 0)
+            binding.photoBackground.setBackgroundColor(color)
         }
-        // reset alpha
-        binding.photoBackground.background.alpha = 255
+        // reset background color
+        binding.photoBackground.setBackgroundColor(Color.BLACK)
     }
 
     private fun onImageLoadFailed() {

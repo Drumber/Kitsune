@@ -16,11 +16,11 @@
         app:dragDismissScale="0.9"
         tools:context=".ui.details.photoview.PhotoViewActivity">
 
-        <app.futured.hauler.LockableNestedScrollView
+        <io.github.drumber.kitsune.ui.widget.PhotoViewNestedScrollView
+            android:id="@+id/nested_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true"
-            app:isScrollable="@{true}">
+            android:fillViewport="true">
 
             <FrameLayout
                 android:id="@+id/photo_background"
@@ -101,7 +101,7 @@
 
             </FrameLayout>
 
-        </app.futured.hauler.LockableNestedScrollView>
+        </io.github.drumber.kitsune.ui.widget.PhotoViewNestedScrollView>
 
     </app.futured.hauler.HaulerView>
 </layout>
