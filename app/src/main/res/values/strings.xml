@@ -103,6 +103,7 @@
     <string name="library_status_planned_manga">Want to Read</string>
     <string name="library_action_remove">Remove from Library</string>
     <string name="library_action_add">Add to Library</string>
+    <string name="library_action_edit">Edit Library Entry</string>
 
     <string name="data_rank">Rank #%d</string>
     <string name="data_popularity">Popularity #%d</string>

@@ -45,7 +45,6 @@ import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.details.DetailsViewModel.ErrorResponseType
-import io.github.drumber.kitsune.ui.library.RatingBottomSheet
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle.applyStyle
@@ -67,11 +66,6 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     private val binding get() = _binding!!
 
     private val viewModel: DetailsViewModel by viewModel()
-
-    companion object {
-        const val RESULT_KEY_RATING = "details_rating_result_key"
-        const val RESULT_KEY_REMOVE_RATING = "details_remove_rating_result_key"
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -174,13 +168,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 )
                 findNavController().navigate(action)
             }
-            btnRating.setOnClickListener { showRatingBottomSheet() }
 
-            btnEditLibrary.setOnClickListener {
-                val entryId = viewModel.libraryEntry.value?.id ?: return@setOnClickListener
-                val action = DetailsFragmentDirections.actionDetailsFragmentToLibraryEditEntryFragment(entryId)
-                findNavController().navigateSafe(R.id.details_fragment, action)
-            }
+            btnEditLibraryEntry.setOnClickListener { showEditLibraryEntryFragment() }
         }
 
         viewModel.errorResponseListener = { type ->
@@ -202,17 +191,6 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             if (shouldRemove) {
                 viewModel.removeLibraryEntry()
             }
-        }
-
-        setFragmentResultListener(RESULT_KEY_RATING) { _, bundle ->
-            val rating = bundle.getInt(RatingBottomSheet.BUNDLE_RATING, -1)
-            if (rating != -1) {
-                viewModel.updateLibraryEntryRating(rating)
-            }
-        }
-
-        setFragmentResultListener(RESULT_KEY_REMOVE_RATING) { _, _ ->
-            viewModel.updateLibraryEntryRating(null)
         }
     }
 
@@ -458,16 +436,10 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
     }
 
-    private fun showRatingBottomSheet() {
-        val libraryEntry = viewModel.libraryEntry.value ?: return
-        val mediaAdapter = viewModel.mediaAdapter.value ?: return
-
-        val action = DetailsFragmentDirections.actionDetailsFragmentToRatingBottomSheet(
-            title = mediaAdapter.title ?: "",
-            ratingTwenty = libraryEntry.ratingTwenty ?: -1,
-            ratingResultKey = RESULT_KEY_RATING,
-            removeResultKey = RESULT_KEY_REMOVE_RATING
-        )
+    private fun showEditLibraryEntryFragment() {
+        if (!viewModel.isLoggedIn()) return
+        val entryId = viewModel.libraryEntry.value?.id ?: return
+        val action = DetailsFragmentDirections.actionDetailsFragmentToLibraryEditEntryFragment(entryId)
         findNavController().navigateSafe(R.id.details_fragment, action)
     }
 

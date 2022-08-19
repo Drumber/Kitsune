@@ -72,9 +72,6 @@
         <action
             android:id="@+id/action_details_fragment_to_libraryEditEntryFragment"
             app:destination="@id/libraryEditEntryFragment" />
-        <action
-            android:id="@+id/action_details_fragment_to_ratingBottomSheet"
-            app:destination="@id/ratingBottomSheet" />
     </fragment>
     <fragment
         android:id="@+id/media_list_fragment"

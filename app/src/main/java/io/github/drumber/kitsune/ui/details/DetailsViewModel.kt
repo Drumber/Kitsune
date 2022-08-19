@@ -209,39 +209,6 @@ class DetailsViewModel(
         }
     }
 
-    fun updateLibraryEntryRating(rating: Int?) {
-        val mediaAdapter = mediaAdapter.value ?: return
-
-        val updatedRating = rating ?: -1 // '-1' will be mapped to 'null' by the json serializer
-
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                // obtain library entry from database
-                val entry = libraryEntryDao.getLibraryEntryFromMedia(mediaAdapter.id)
-                    ?: libraryEntry.value // use fetched library entry if not cached in local database
-                    ?: return@launch // ...or return
-
-                val modification = LibraryModification(entry.id, ratingTwenty = updatedRating)
-
-                val response = libraryManager.updateLibraryEntry(modification)
-                if (response !is LibraryUpdateResponse.Error) {
-                    // the library manager will store the updated library entry in the local database,
-                    // so we need to get the new library entry from the database and show it to the UI
-                    val localLibraryEntry =
-                        libraryEntryDao.getLibraryEntryFromMedia(mediaAdapter.id)
-                    _libraryEntry.postValue(localLibraryEntry)
-                } else {
-                    throw response.exception
-                }
-            } catch (e: Exception) {
-                logE("Failed to update rating of library entry.", e)
-                withContext(Dispatchers.Main) {
-                    errorResponseListener?.invoke(ErrorResponseType.LibraryUpdateFailed)
-                }
-            }
-        }
-    }
-
     fun toggleFavorite() {
         val favorite = favorite.value
 

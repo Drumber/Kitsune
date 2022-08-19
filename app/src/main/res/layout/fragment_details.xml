@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.text.TextUtils"/>
+
+        <import type="android.text.TextUtils" />
+
         <import type="io.github.drumber.kitsune.data.model.media.MediaAdapter" />
+
         <variable
             name="data"
             type="MediaAdapter" />
+
         <variable
             name="libraryEntry"
             type="io.github.drumber.kitsune.data.model.library.LibraryEntryAdapter" />
@@ -35,12 +39,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:contentScrim="?attr/colorSurface"
-                    app:scrimAnimationDuration="300"
-                    app:scrimVisibleHeightTrigger="150dp"
-                    app:maxLines="3"
-                    app:expandedTitleTextAppearance="@style/TextAppearance.Kitsune.CollapsingToolbar.Expanded"
                     app:expandedTitleGravity="bottom"
-                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                    app:expandedTitleTextAppearance="@style/TextAppearance.Kitsune.CollapsingToolbar.Expanded"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                    app:maxLines="3"
+                    app:scrimAnimationDuration="300"
+                    app:scrimVisibleHeightTrigger="150dp">
 
                     <FrameLayout
                         android:layout_width="match_parent"
@@ -72,22 +76,22 @@
                         android:id="@+id/toolbar"
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
-                        app:navigationIcon="@drawable/ic_arrow_back_24"
-                        app:navigationContentDescription="@string/action_back"
-                        app:title="@{data.title}"
-                        tools:title="Some Title"
+                        app:layout_collapseMode="pin"
                         app:menu="@menu/details_menu"
-                        app:layout_collapseMode="pin"/>
+                        app:navigationContentDescription="@string/action_back"
+                        app:navigationIcon="@drawable/ic_arrow_back_24"
+                        app:title="@{data.title}"
+                        tools:title="Some Title" />
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/progress_indicator"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
                         android:indeterminate="true"
                         app:hideAnimationBehavior="outward"
-                        app:trackThickness="1dp"
-                        android:layout_gravity="bottom"
-                        app:layout_collapseMode="pin"/>
+                        app:layout_collapseMode="pin"
+                        app:trackThickness="1dp" />
 
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -103,10 +107,10 @@
                     android:id="@+id/content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
                     android:clipToPadding="false"
-                    android:padding="15dp"
-                    android:layout_marginTop="10dp">
+                    android:orientation="vertical"
+                    android:padding="15dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -130,53 +134,40 @@
                             android:text="@{data.publishingYear + ` • ` + data.subtype}"
                             tools:text="2002 • TV" />
 
-                        <include
-                            layout="@layout/section_details_stats"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_above="@id/btn_manage_library"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:layout_toEndOf="@id/iv_thumbnail"
-                            app:data="@{data}" />
-
-                        <Button
-                            android:id="@+id/btn_manage_library"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignWithParentIfMissing="true"
-                            android:layout_alignBottom="@id/iv_thumbnail"
-                            android:layout_marginStart="10dp"
-                            android:layout_toStartOf="@id/btn_rating"
-                            android:layout_toEndOf="@id/iv_thumbnail"
-                            android:text="@string/library_action_add"
-                            android:textAllCaps="false" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btn_rating"
-                            style="@style/Widget.Kitsune.Button.IconText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBaseline="@id/btn_manage_library"
+                            android:layout_height="match_parent"
                             android:layout_alignParentEnd="true"
-                            android:layout_marginStart="2dp"
-                            android:text="@{libraryEntry.rating}"
-                            android:tooltipText="@string/hint_rating"
-                            app:activated="@{libraryEntry.hasRating}"
-                            app:icon="@{libraryEntry.hasRating ? @drawable/ic_star_24 : @drawable/ic_star_outline_24}"
-                            app:iconGravity="end"
-                            app:isVisible="@{libraryEntry != null}"
-                            tools:icon="@drawable/ic_star_24"
-                            tools:targetApi="o"
-                            tools:text="5" />
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="10dp"
+                            android:layout_toEndOf="@id/iv_thumbnail"
+                            android:orientation="vertical">
 
-                        <Button
-                            android:id="@+id/btn_edit_library"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Edit Library"
-                            android:layout_below="@id/btn_manage_library"
-                            android:layout_alignParentEnd="true" />
+                            <include
+                                layout="@layout/section_details_stats"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                app:data="@{data}" />
+
+                            <Button
+                                android:id="@+id/btn_manage_library"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/library_action_add"
+                                android:textAllCaps="false" />
+
+                            <Button
+                                android:id="@+id/btn_edit_library_entry"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/library_action_edit"
+                                android:textAllCaps="false"
+                                app:isVisible="@{libraryEntry != null}"
+                                tools:visibility="visible" />
+
+                        </LinearLayout>
 
                     </RelativeLayout>
 
@@ -202,8 +193,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="25dp"
-                        app:isVisible="@{!TextUtils.isEmpty(data.description)}"
-                        app:data="@{data}" />
+                        app:data="@{data}"
+                        app:isVisible="@{!TextUtils.isEmpty(data.description)}" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -213,9 +204,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
                             android:text="@string/title_details"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                            android:layout_marginBottom="10dp"/>
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
                         <include
                             layout="@layout/section_details_info"
@@ -225,53 +216,53 @@
 
                     <Button
                         android:id="@+id/btn_media_units"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAllCaps="false"
                         android:text="@{data.isAnime() ? @string/title_episodes : @string/title_chapters}"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                        android:textAllCaps="false" />
 
                     <Button
                         android:id="@+id/btn_characters"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:textAllCaps="false"
                         android:text="@string/title_characters"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                        android:textAllCaps="false" />
 
                     <include
                         layout="@layout/section_details_trailer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
+                        app:coverUrl="@{data.trailerCoverUrl}"
                         app:isVisible="@{!TextUtils.isEmpty(data.trailerUrl)}"
-                        app:videoUrl="@{data.trailerUrl}"
-                        app:coverUrl="@{data.trailerCoverUrl}" />
+                        app:videoUrl="@{data.trailerUrl}" />
 
                     <LinearLayout
                         android:id="@+id/layout_franchise"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        app:isVisible="@{data.hasMediaRelationships()}"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        app:isVisible="@{data.hasMediaRelationships()}">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
                             android:text="@string/title_more_franchise"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                            android:layout_marginBottom="10dp" />
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_franchise"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingVertical="5dp"
-                            android:requiresFadingEdge="horizontal"
                             android:clipToPadding="false"
                             android:orientation="horizontal"
+                            android:paddingVertical="5dp"
+                            android:requiresFadingEdge="horizontal"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                     </LinearLayout>
@@ -281,24 +272,24 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        app:isVisible="@{data.hasStreamingLinks()}"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        app:isVisible="@{data.hasStreamingLinks()}">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
                             android:text="@string/title_streamer"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                            android:layout_marginBottom="10dp" />
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_streamer"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingVertical="5dp"
-                            android:requiresFadingEdge="horizontal"
                             android:clipToPadding="false"
                             android:orientation="horizontal"
+                            android:paddingVertical="5dp"
+                            android:requiresFadingEdge="horizontal"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                     </LinearLayout>
@@ -308,15 +299,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        app:isVisible="@{data.hasRatingFrequencies()}"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        app:isVisible="@{data.hasRatingFrequencies()}">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
                             android:text="@string/title_ratings"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                            android:layout_marginBottom="5dp" />
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
                         <com.github.mikephil.charting.charts.BarChart
                             android:id="@+id/chart_ratings"
