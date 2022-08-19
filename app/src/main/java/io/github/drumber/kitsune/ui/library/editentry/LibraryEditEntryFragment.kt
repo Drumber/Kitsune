@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.ui.library.editentry
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.widget.TooltipCompat
+import androidx.core.content.ContextCompat
 import androidx.core.text.htmlEncode
 import androidx.core.text.parseAsHtml
 import androidx.core.view.isVisible
@@ -37,6 +39,7 @@ import io.github.drumber.kitsune.ui.library.RatingBottomSheet
 import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel.LoadState
 import io.github.drumber.kitsune.ui.widget.CustomNumberSpinner
 import io.github.drumber.kitsune.util.*
+import io.github.drumber.kitsune.util.extensions.getResourceId
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setMaxLinesFitHeight
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -120,7 +123,6 @@ class LibraryEditEntryFragment : DialogFragment() {
                 dismiss()
             }
 
-            tvTitle.setMaxLinesFitHeight()
             TooltipCompat.setTooltipText(
                 btnRemoveEntry,
                 getString(R.string.library_action_remove)
@@ -159,7 +161,11 @@ class LibraryEditEntryFragment : DialogFragment() {
             } else {
                 binding.layoutLoading.isVisible = state == LoadState.Loading
                 if (state == LoadState.Error) {
-                    Snackbar.make(binding.root, R.string.error_library_update_failed, Snackbar.LENGTH_LONG)
+                    Snackbar.make(
+                        binding.root,
+                        R.string.error_library_update_failed,
+                        Snackbar.LENGTH_LONG
+                    )
                         .setAnchorView(binding.cardBottomBar)
                         .show()
                 }
@@ -171,6 +177,9 @@ class LibraryEditEntryFragment : DialogFragment() {
                 ?.let { MediaAdapter.fromMedia(it) }
 
             binding.tvTitle.text = mediaAdapter?.title
+            binding.tvTitle.setMaxLinesFitHeight()
+
+            binding.tvMediaInfo.text = mediaAdapter?.let { "${it.publishingYear} • ${it.subtype}" }
 
             GlideApp.with(this)
                 .load(mediaAdapter?.posterImage)
@@ -211,6 +220,7 @@ class LibraryEditEntryFragment : DialogFragment() {
                     else
                         R.drawable.ic_star_outline_24
                 )
+                fieldRating.setEndIconTintList(ColorStateList.valueOf(getControlColor(hasRated)))
 
                 tvReconsumeLabel.text = getString(
                     if (mediaAdapter?.isAnime() != false)
@@ -424,12 +434,13 @@ class LibraryEditEntryFragment : DialogFragment() {
         val media = libraryEntry.anime ?: libraryEntry.manga ?: return
         val mediaAdapter = MediaAdapter.fromMedia(media)
 
-        val action = LibraryEditEntryFragmentDirections.actionLibraryEditEntryFragmentToRatingBottomSheet(
-            title = mediaAdapter.title ?: "",
-            ratingTwenty = libraryEntryWrapper.ratingTwenty ?: -1,
-            ratingResultKey = RESULT_KEY_RATING,
-            removeResultKey = RESULT_KEY_REMOVE_RATING
-        )
+        val action =
+            LibraryEditEntryFragmentDirections.actionLibraryEditEntryFragmentToRatingBottomSheet(
+                title = mediaAdapter.title ?: "",
+                ratingTwenty = libraryEntryWrapper.ratingTwenty ?: -1,
+                ratingResultKey = RESULT_KEY_RATING,
+                removeResultKey = RESULT_KEY_REMOVE_RATING
+            )
         findNavController().navigateSafe(R.id.libraryEditEntryFragment, action)
     }
 
@@ -452,6 +463,14 @@ class LibraryEditEntryFragment : DialogFragment() {
 
         datePicker.addOnPositiveButtonClickListener(action)
         datePicker.show(parentFragmentManager, "DATE_PICKER_$title")
+    }
+
+    private fun getControlColor(accent: Boolean): Int {
+        return ContextCompat.getColor(
+            requireContext(), requireActivity().theme.getResourceId(
+                if (accent) R.attr.colorPrimary else R.attr.colorControlNormal
+            )
+        )
     }
 
     override fun onDestroyView() {
