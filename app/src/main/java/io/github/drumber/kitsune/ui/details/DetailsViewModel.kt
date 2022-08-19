@@ -5,9 +5,8 @@ import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.data.manager.LibraryManager
 import io.github.drumber.kitsune.data.manager.LibraryUpdateResponse
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.library.LibraryModification
 import io.github.drumber.kitsune.data.model.library.Status
-import io.github.drumber.kitsune.data.model.media.Anime
-import io.github.drumber.kitsune.data.model.media.Manga
 import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.data.model.user.Favorite
 import io.github.drumber.kitsune.data.model.user.User
@@ -21,10 +20,7 @@ import io.github.drumber.kitsune.data.service.user.FavoriteService
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import retrofit2.HttpException
 
 class DetailsViewModel(
@@ -55,6 +51,8 @@ class DetailsViewModel(
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean>
         get() = _isLoading
+
+    var errorResponseListener: ((ErrorResponseType) -> Unit)? = null
 
     fun initMediaAdapter(mediaAdapter: MediaAdapter) {
         if (_mediaAdapter.value == null) {
@@ -133,12 +131,14 @@ class DetailsViewModel(
                 // library entry is not available on the server but it is in the local cache, was it deleted?
                 // -> local database cache is out of sync, remove entry from database
                 libraryEntry.value?.let {
-                    libraryEntryDao.delete(it)
-                    _libraryEntry.postValue(null)
                     logD(
                         "There is no library entry on the server, but it exists in the local cache. " +
                                 "Removed it from local database..."
                     )
+                    withContext(Dispatchers.IO) {
+                        _libraryEntry.postValue(null)
+                        libraryManager.mayRemoveSingleLibraryEntry(it)
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -165,40 +165,31 @@ class DetailsViewModel(
     fun updateLibraryEntryStatus(status: Status) {
         val userId = userRepository.user?.id ?: return
         val mediaAdapter = mediaAdapter.value ?: return
-        val libraryEntryId = libraryEntry.value?.id
-
-        val libraryEntry = LibraryEntry(status = status)
-        libraryEntry.user = User(id = userId)
-
-        if (mediaAdapter.isAnime()) {
-            libraryEntry.anime = mediaAdapter.media as Anime
-        } else {
-            libraryEntry.manga = mediaAdapter.media as Manga
-        }
+        val existingLibraryEntryId = libraryEntry.value?.id
 
         viewModelScope.launch(Dispatchers.IO) {
-            val response = if (libraryEntryId.isNullOrBlank()) { // post new library entry
-                try {
-                    libraryEntriesService.postLibraryEntry(JSONAPIDocument(libraryEntry))
-                } catch (e: Exception) {
-                    logE("Failed to post new library entry.", e)
-                    null
-                }
-            } else { // update existing library entry
-                libraryEntry.id = libraryEntryId
-                try {
-                    libraryEntriesService.updateLibraryEntry(
-                        libraryEntryId,
-                        JSONAPIDocument(libraryEntry)
-                    )
-                } catch (e: Exception) {
-                    logE("Failed to update library entry.", e)
-                    null
-                }
-            }
+            try {
+                if (existingLibraryEntryId.isNullOrBlank()) { // post new library entry
+                    val newLibraryEntry = libraryManager.postNewLibraryEntry(
+                        userId,
+                        mediaAdapter.media,
+                        status
+                    ) ?: throw Exception("Failed to post new library entry.")
 
-            response?.get()?.let {
-                _libraryEntry.postValue(it)
+                    _libraryEntry.postValue(newLibraryEntry)
+                } else { // update existing library entry
+                    val modification = LibraryModification(existingLibraryEntryId, status = status)
+                    val response = libraryManager.updateLibraryEntry(modification)
+
+                    if (response is LibraryUpdateResponse.Error) {
+                        throw response.exception
+                    }
+                }
+            } catch (e: Exception) {
+                logE("Failed to update library status.", e)
+                withContext(Dispatchers.Main) {
+                    errorResponseListener?.invoke(ErrorResponseType.LibraryUpdateFailed)
+                }
             }
         }
     }
@@ -207,15 +198,13 @@ class DetailsViewModel(
         val libraryEntry = libraryEntry.value ?: return
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = libraryEntriesService.deleteLibraryEntry(libraryEntry.id).execute()
-                if (response.isSuccessful) {
-                    _libraryEntry.postValue(null)
-                    libraryEntryDao.delete(libraryEntry)
-                } else {
-                    throw HttpException(response)
-                }
+                libraryManager.removeLibraryEntry(libraryEntry)
+                _libraryEntry.postValue(null)
             } catch (e: Exception) {
                 logE("Failed to remove library entry.", e)
+                withContext(Dispatchers.Main) {
+                    errorResponseListener?.invoke(ErrorResponseType.LibraryUpdateFailed)
+                }
             }
         }
     }
@@ -223,23 +212,31 @@ class DetailsViewModel(
     fun updateLibraryEntryRating(rating: Int?) {
         val mediaAdapter = mediaAdapter.value ?: return
 
-        viewModelScope.launch(Dispatchers.IO) {
-            // obtain library entry from database
-            val entry = libraryEntryDao.getLibraryEntryFromMedia(mediaAdapter.id)
-                ?: libraryEntry.value // use fetched library entry if not cached in local database
-                ?: return@launch // ...or return
+        val updatedRating = rating ?: -1 // '-1' will be mapped to 'null' by the json serializer
 
-            libraryManager.updateRating(entry, rating) { response ->
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                // obtain library entry from database
+                val entry = libraryEntryDao.getLibraryEntryFromMedia(mediaAdapter.id)
+                    ?: libraryEntry.value // use fetched library entry if not cached in local database
+                    ?: return@launch // ...or return
+
+                val modification = LibraryModification(entry.id, ratingTwenty = updatedRating)
+
+                val response = libraryManager.updateLibraryEntry(modification)
                 if (response !is LibraryUpdateResponse.Error) {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        // the library manager will store the updated library entry in the local database,
-                        // so we need to get the new library entry from the database and show it to the UI
-                        val localLibraryEntry =
-                            libraryEntryDao.getLibraryEntryFromMedia(mediaAdapter.id)
-                        _libraryEntry.postValue(localLibraryEntry)
-                    }
+                    // the library manager will store the updated library entry in the local database,
+                    // so we need to get the new library entry from the database and show it to the UI
+                    val localLibraryEntry =
+                        libraryEntryDao.getLibraryEntryFromMedia(mediaAdapter.id)
+                    _libraryEntry.postValue(localLibraryEntry)
                 } else {
-                    logE("Failed to update rating of library entry.", response.exception)
+                    throw response.exception
+                }
+            } catch (e: Exception) {
+                logE("Failed to update rating of library entry.", e)
+                withContext(Dispatchers.Main) {
+                    errorResponseListener?.invoke(ErrorResponseType.LibraryUpdateFailed)
                 }
             }
         }
@@ -255,7 +252,8 @@ class DetailsViewModel(
 
                 val newFavorite = Favorite(item = mediaItem, user = User(id = userId))
                 try {
-                    val resFavorite = favoriteService.postFavorite(JSONAPIDocument(newFavorite)).get()
+                    val resFavorite =
+                        favoriteService.postFavorite(JSONAPIDocument(newFavorite)).get()
                     _favorite.postValue(resFavorite)
                 } catch (e: Exception) {
                     logE("Failed to post favorite.", e)
@@ -274,6 +272,10 @@ class DetailsViewModel(
                 }
             }
         }
+    }
+
+    enum class ErrorResponseType {
+        LibraryUpdateFailed
     }
 
 }

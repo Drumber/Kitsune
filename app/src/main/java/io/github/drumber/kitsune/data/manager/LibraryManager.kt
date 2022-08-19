@@ -4,15 +4,21 @@ import androidx.room.withTransaction
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.model.library.LibraryModification
+import io.github.drumber.kitsune.data.model.library.Status
+import io.github.drumber.kitsune.data.model.media.Anime
+import io.github.drumber.kitsune.data.model.media.BaseMedia
+import io.github.drumber.kitsune.data.model.media.Manga
+import io.github.drumber.kitsune.data.model.user.User
 import io.github.drumber.kitsune.data.room.ResourceDatabase
+import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.exception.InvalidDataException
-import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import io.github.drumber.kitsune.util.logI
+import io.github.drumber.kitsune.util.logW
+import retrofit2.HttpException
 
 class LibraryManager(
     private val libraryEntriesService: LibraryEntriesService,
@@ -25,180 +31,243 @@ class LibraryManager(
     private val isOfflineCacheEnabled
         get() = KitsunePref.libraryOfflineSync
 
-    suspend fun synchronizeLibrary(responseCallback: ResponseCallback) {
-        val offlineModifications = offlineLibraryModificationDao.getAllOfflineLibraryModifications()
+    private var isSynchronizationInProgress = false
 
-        offlineModifications.forEach { offlineLibraryModification ->
-            val updatedEntry = offlineLibraryModification.toLibraryEntry()
-
-            try {
-                val response = libraryEntriesService.updateLibraryEntry(
-                    updatedEntry.id,
-                    JSONAPIDocument(updatedEntry)
-                )
-
-                response.get()?.let { libraryEntry ->
-                    // delete old offline library update from database
-                    offlineLibraryModificationDao.deleteOfflineLibraryModification(offlineLibraryModification)
-
-                    // update library entry database, therefore we need the full library entry object
-                    database.libraryEntryDao().getLibraryEntry(libraryEntry.id)?.let { oldEntry ->
-                        libraryEntryDao.updateLibraryEntry(
-                            libraryEntry.copy(
-                                anime = oldEntry.anime,
-                                manga = oldEntry.manga
-                            )
-                        )
-                    } ?: throw InvalidDataException("Cannot update library database due to missing old library entity.")
-                } ?: throw ReceivedDataException("Received data for updated progress is 'null'.")
-            } catch (e: Exception) {
-                logE("Failed to synchronize library entry ${offlineLibraryModification.id}", e)
-                responseCallback.call(LibraryUpdateResponse.Error(e))
-            }
-        }
-        responseCallback.call(LibraryUpdateResponse.SyncedOnline)
-    }
-
-    suspend fun updateProgress(
-        oldEntry: LibraryEntry,
-        newProgress: Int?,
-        responseCallback: ResponseCallback
-    ) {
-        val libraryModification = offlineLibraryModificationDao.getOfflineLibraryModification(oldEntry.id)?.copy(
-            progress = newProgress // apply new progress
-        )
-
-        val updatedEntry = libraryModification?.toLibraryEntry() ?: LibraryEntry(
-            id = oldEntry.id,
-            progress = newProgress
-        )
+    suspend fun synchronizeLibrary(responseCallback: (LibraryUpdateResponse) -> Unit) {
+        if (isSynchronizationInProgress) return
+        isSynchronizationInProgress = true
 
         try {
-            val response = libraryEntriesService.updateLibraryEntry(
-                updatedEntry.id,
-                JSONAPIDocument(updatedEntry)
-            )
+            val offlineModifications =
+                offlineLibraryModificationDao.getAllOfflineLibraryModifications()
 
-            response.get()?.let { libraryEntry ->
-                // update the database, but copy anime and manga object from old library first
-                libraryEntryDao.updateLibraryEntry(
-                    libraryEntry.copy(
-                        anime = oldEntry.anime,
-                        manga = oldEntry.manga
-                    )
-                )
+            logD("Synchronizing ${offlineModifications.size} offline modifications...")
 
-                if (libraryModification != null) {
-                    // remove offline library modification since we successfully synced with the server
+            offlineModifications.forEach { libraryModification ->
+                val modifiedLibraryEntry = libraryModification.toLibraryEntry()
+
+                try {
+                    // post library update to server
+                    val responseLibraryEntry = libraryEntriesService.updateLibraryEntry(
+                        modifiedLibraryEntry.id,
+                        JSONAPIDocument(modifiedLibraryEntry)
+                    ).get() ?: throw InvalidDataException("Received library entry is 'null'.")
+
+                    logI("Successfully synchronized offline library modification, removing modification from database: ${libraryModification.id}")
+                    // remove offline library modification from database
                     database.withTransaction {
-                        offlineLibraryModificationDao.deleteOfflineLibraryModification(libraryModification)
-                    }
-                }
-
-                responseCallback.invoke(LibraryUpdateResponse.SyncedOnline)
-            } ?: throw ReceivedDataException("Received data for updated progress is 'null'.")
-        } catch (e: Exception) {
-            logE("Failed to update library entry progress.", e)
-            if (isOfflineCacheEnabled) {
-                // update or insert offline library modification
-                database.withTransaction {
-                    if (libraryModification != null) {
-                        logD("Update offline library modification: $libraryModification")
-                        offlineLibraryModificationDao.updateOfflineLibraryModification(libraryModification)
-                    } else {
-                        val newOfflineModification = LibraryModification(
-                            id = updatedEntry.id,
-                            ratingTwenty = newProgress
+                        offlineLibraryModificationDao.deleteOfflineLibraryModification(
+                            libraryModification
                         )
-                        logD("Insert new offline library modification: $libraryModification")
-                        offlineLibraryModificationDao.insertSingle(newOfflineModification)
                     }
+
+                    // update library entry in database
+                    updateLibraryEntryInDatabase(responseLibraryEntry)
+                } catch (e: Exception) {
+                    if (e is HttpException && e.code() == 404) {
+                        // library entry was removed from the server, remove is also locally
+                        logW("Library entry was not found on the server. Removing it from the database: ${libraryModification.id}")
+                        removeFromDatabaseIntern(modifiedLibraryEntry)
+                    } else {
+                        logE("Failed to synchronize library entry ${libraryModification.id}", e)
+                    }
+                    responseCallback(LibraryUpdateResponse.Error(e))
                 }
-                responseCallback.call(LibraryUpdateResponse.OfflineCache)
-            } else {
-                responseCallback.call(LibraryUpdateResponse.Error(e))
             }
+
+            logD("Finished synchronizing offline modifications.")
+            responseCallback(LibraryUpdateResponse.SyncedOnline)
+        } catch (e: Exception) {
+            logE("Something went wrong while synchronizing offline modifications.", e)
+        } finally {
+            isSynchronizationInProgress = false
         }
     }
 
-
-    suspend fun updateRating(
-        oldEntry: LibraryEntry,
-        rating: Int?,
-        responseCallback: ResponseCallback
-    ) {
-        if (rating != null && rating !in 2..20) {
-            responseCallback.call(
-                LibraryUpdateResponse.Error(
-                    IllegalArgumentException("Rating must be in range 2..20.")
-                )
-            )
-            return
+    suspend fun postNewLibraryEntry(
+        userId: String,
+        media: BaseMedia,
+        status: Status = Status.Planned
+    ): LibraryEntry? {
+        val libraryEntry = LibraryEntry(status = status)
+        libraryEntry.user = User(id = userId)
+        when (media) {
+            is Anime -> libraryEntry.anime = media
+            is Manga -> libraryEntry.manga = media
         }
 
-        val updatedRating = rating ?: -1 // '-1' will be mapped to 'null' by the json serializer
-        val libraryModification = offlineLibraryModificationDao.getOfflineLibraryModification(oldEntry.id)?.copy(
-            ratingTwenty = updatedRating // apply new rating
-        )
+        return try {
+            val response = libraryEntriesService.postLibraryEntry(JSONAPIDocument(libraryEntry))
+            val responseLibraryEntry = response.get()
+                ?: throw InvalidDataException("Response library entry is 'null'.")
 
-        val updatedEntry = libraryModification?.toLibraryEntry() ?: LibraryEntry(
-            id = oldEntry.id,
-            ratingTwenty = updatedRating
-        )
+            // fetch full library entry and add it to the db
+            val fullLibraryEntry = fetchFullLibraryEntry(responseLibraryEntry.id)
+                ?: throw InvalidDataException("Full library entry is 'null'.")
 
+            database.withTransaction {
+                libraryEntryDao.insertSingle(fullLibraryEntry)
+            }
+
+            logI("Added new library entry to local database: ${fullLibraryEntry.id}")
+
+            fullLibraryEntry
+        } catch (e: Exception) {
+            logE("Failed to post new library entry.", e)
+            null
+        }
+    }
+
+    suspend fun removeLibraryEntry(libraryEntry: LibraryEntry) {
+        libraryEntriesService.deleteLibraryEntry(libraryEntry.id)
+        // remove any offline modification and the library entry itself from database
+        removeFromDatabaseIntern(libraryEntry)
+    }
+
+    /**
+     * Check if library entry was deleted on the server. If so, remove it from local database.
+     */
+    suspend fun mayRemoveSingleLibraryEntry(libraryEntry: LibraryEntry) {
         try {
+            val response = libraryEntriesService.getLibraryEntry(
+                libraryEntry.id,
+                Filter().fields("libraryEntries", "status").options
+            )
+            if (response.get() == null) {
+                removeFromDatabaseIntern(libraryEntry)
+            }
+        } catch (e: HttpException) {
+            if (e.code() == 404) {
+                removeFromDatabaseIntern(libraryEntry)
+            }
+        } catch (e: Exception) {
+            logE("Failed to check for library entry: ${libraryEntry.id}", e)
+        }
+    }
+
+    private suspend fun removeFromDatabaseIntern(libraryEntry: LibraryEntry) {
+        database.withTransaction {
+            offlineLibraryModificationDao.getOfflineLibraryModification(libraryEntry.id)?.let {
+                offlineLibraryModificationDao.deleteOfflineLibraryModification(it)
+            }
+            libraryEntryDao.delete(libraryEntry)
+        }
+        logI("Removed library entry from local database: ${libraryEntry.id}")
+    }
+
+    private suspend fun updateLibraryEntryIntern(
+        modification: LibraryModification,
+        isExistingModification: Boolean
+    ): LibraryUpdateResponse {
+        val modifiedLibraryEntry = modification.toLibraryEntry()
+
+        val responseLibraryEntry = try {
+            // post library update to server
             val response = libraryEntriesService.updateLibraryEntry(
-                updatedEntry.id,
-                JSONAPIDocument(updatedEntry)
+                modifiedLibraryEntry.id,
+                JSONAPIDocument(modifiedLibraryEntry)
+            )
+            response.get()
+        } catch (e: Exception) {
+            if (e is HttpException && e.code() == 404) {
+                logD("Library entry was not found on the server, removing it from database: ${modification.id}")
+                // library entry was removed on the server, make sure it is also removed locally
+                removeFromDatabaseIntern(modifiedLibraryEntry)
+                return LibraryUpdateResponse.Error(e)
+            }
+
+            logE("Failed to update library entry: ${modification.id}", e)
+
+            if (!isOfflineCacheEnabled) {
+                // offline cache is disabled, return here
+                return LibraryUpdateResponse.Error(e)
+            }
+            null
+        }
+
+        return if (responseLibraryEntry != null) { // successful update
+            // check if there was an existing library modification and remove it
+            if (isExistingModification) {
+                database.withTransaction {
+                    offlineLibraryModificationDao.deleteOfflineLibraryModification(modification)
+                }
+                logD("Removed existing offline library modification for ${modification.id}")
+            }
+
+            updateLibraryEntryInDatabase(responseLibraryEntry)
+
+            LibraryUpdateResponse.SyncedOnline
+        } else { // update failed: cache modifications
+            database.withTransaction {
+                if (isExistingModification) {
+                    // update existing modification
+                    offlineLibraryModificationDao.updateOfflineLibraryModification(modification)
+                    logD("Updated offline library modification: $modification")
+                } else {
+                    // insert new modification
+                    offlineLibraryModificationDao.insertSingle(modification)
+                    logD("Inserted new offline library modification: $modification")
+                }
+            }
+            LibraryUpdateResponse.OfflineCache
+        }
+    }
+
+    private suspend fun updateLibraryEntryInDatabase(libraryEntry: LibraryEntry) {
+        val dbFullLibraryEntry = libraryEntryDao.getLibraryEntry(libraryEntry.id)
+
+        // check if there is a full library entry in the database
+        if (dbFullLibraryEntry != null) {
+            // copy anime/manga media item to the new modified library entry
+            val modifiedFullLibraryEntry = libraryEntry.copy(
+                anime = dbFullLibraryEntry.anime,
+                manga = dbFullLibraryEntry.manga
             )
 
-            response.get()?.let { newEntry ->
-                libraryEntryDao.updateLibraryEntry(
-                    newEntry.copy(
-                        anime = oldEntry.anime,
-                        manga = oldEntry.manga
-                    )
-                )
+            // update database entry
+            database.withTransaction {
+                libraryEntryDao.updateLibraryEntry(modifiedFullLibraryEntry)
+            }
+            logD("Updated library entry in database: ${dbFullLibraryEntry.id}")
+        } else {
+            // if not, fetch full library entry inclusive anime and manga media item
+            val fetchedFullLibraryEntry = fetchFullLibraryEntry(libraryEntry.id)
 
-                if (libraryModification != null) {
-                    database.withTransaction {
-                        offlineLibraryModificationDao.deleteOfflineLibraryModification(libraryModification)
-                    }
-                }
-            } ?: throw ReceivedDataException("Received data for updated rating is 'null'.")
-
-            responseCallback.call(LibraryUpdateResponse.SyncedOnline)
-        } catch (e: Exception) {
-            logE("Failed to update library entry rating.", e)
-
-            if (isOfflineCacheEnabled) {
-                // update or insert offline library modification
+            if (fetchedFullLibraryEntry != null) {
+                // insert into database
                 database.withTransaction {
-                    if (libraryModification != null) {
-                        logD("Update offline library modification: $libraryModification")
-                        offlineLibraryModificationDao.updateOfflineLibraryModification(libraryModification)
-                    } else {
-                        val newOfflineModification = LibraryModification(
-                            id = updatedEntry.id,
-                            ratingTwenty = updatedRating
-                        )
-                        logD("Insert new offline library modification: $libraryModification")
-                        offlineLibraryModificationDao.insertSingle(newOfflineModification)
-                    }
+                    libraryEntryDao.insertSingle(fetchedFullLibraryEntry)
                 }
-                responseCallback.call(LibraryUpdateResponse.OfflineCache)
-            } else {
-                responseCallback.call(LibraryUpdateResponse.Error(e))
+                logD("Inserted library entry into database: ${fetchedFullLibraryEntry.id}")
             }
         }
     }
 
-    private suspend fun ResponseCallback.call(response: LibraryUpdateResponse) {
-        withContext(Dispatchers.Main) {
-            this@call.invoke(response)
+    suspend fun updateLibraryEntry(libraryModification: LibraryModification): LibraryUpdateResponse {
+        var modification = libraryModification
+
+        // check if there is an existing library modification
+        val existingModification =
+            offlineLibraryModificationDao.getOfflineLibraryModification(libraryModification.id)
+        if (existingModification != null) {
+            // merge with changes from existing library modification
+            modification = existingModification.mergeModificationFrom(libraryModification)
+        }
+
+        return updateLibraryEntryIntern(modification, existingModification != null)
+    }
+
+    private suspend fun fetchFullLibraryEntry(id: String): LibraryEntry? {
+        return try {
+            val response = libraryEntriesService.getLibraryEntry(
+                id,
+                Filter().include("anime", "manga").options
+            )
+            response.get()
+        } catch (e: Exception) {
+            logE("Failed to fetch full library entry: $id", e)
+            null
         }
     }
 
 }
-
-typealias ResponseCallback = (LibraryUpdateResponse) -> Unit

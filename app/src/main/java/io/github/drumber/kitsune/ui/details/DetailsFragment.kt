@@ -44,6 +44,7 @@ import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
 import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
+import io.github.drumber.kitsune.ui.details.DetailsViewModel.ErrorResponseType
 import io.github.drumber.kitsune.ui.library.RatingBottomSheet
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle
@@ -66,6 +67,11 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     private val binding get() = _binding!!
 
     private val viewModel: DetailsViewModel by viewModel()
+
+    companion object {
+        const val RESULT_KEY_RATING = "details_rating_result_key"
+        const val RESULT_KEY_REMOVE_RATING = "details_remove_rating_result_key"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -126,12 +132,16 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             }
         }
 
-        viewModel.libraryEntry.observe(viewLifecycleOwner) {
-            it?.let { libraryEntry ->
+        viewModel.libraryEntry.observe(viewLifecycleOwner) { libraryEntry ->
+            if (libraryEntry != null) {
                 libraryEntry.status?.let { status ->
                     binding.btnManageLibrary.setText(status.getStringResId())
                 } ?: binding.btnManageLibrary.setText(R.string.library_action_add)
                 binding.libraryEntry = LibraryEntryAdapter(LibraryEntryWrapper(libraryEntry, null))
+            } else {
+                // reset to defaults
+                binding.btnManageLibrary.setText(R.string.library_action_add)
+                binding.libraryEntry = null
             }
         }
 
@@ -173,6 +183,15 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             }
         }
 
+        viewModel.errorResponseListener = { type ->
+            val stringRes = when (type) {
+                ErrorResponseType.LibraryUpdateFailed -> R.string.error_library_update_failed
+            }
+            Snackbar.make(binding.btnManageLibrary, stringRes, Snackbar.LENGTH_LONG)
+                .apply { view.initMarginWindowInsetsListener(left = true, right = true) }
+                .show()
+        }
+
         setFragmentResultListener(ManageLibraryBottomSheet.STATUS_REQUEST_KEY) { _, bundle ->
             val libraryEntryStatus = bundle.get(ManageLibraryBottomSheet.BUNDLE_STATUS) as? Status
             libraryEntryStatus?.let { viewModel.updateLibraryEntryStatus(it) }
@@ -185,14 +204,14 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             }
         }
 
-        setFragmentResultListener(RatingBottomSheet.RATING_REQUEST_KEY) { _, bundle ->
+        setFragmentResultListener(RESULT_KEY_RATING) { _, bundle ->
             val rating = bundle.getInt(RatingBottomSheet.BUNDLE_RATING, -1)
             if (rating != -1) {
                 viewModel.updateLibraryEntryRating(rating)
             }
         }
 
-        setFragmentResultListener(RatingBottomSheet.REMOVE_RATING_REQUEST_KEY) { _, _ ->
+        setFragmentResultListener(RESULT_KEY_REMOVE_RATING) { _, _ ->
             viewModel.updateLibraryEntryRating(null)
         }
     }
@@ -443,13 +462,13 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         val libraryEntry = viewModel.libraryEntry.value ?: return
         val mediaAdapter = viewModel.mediaAdapter.value ?: return
 
-        val sheetLibraryRating = RatingBottomSheet()
-        val bundle = bundleOf(
-            RatingBottomSheet.BUNDLE_TITLE to mediaAdapter.title,
-            RatingBottomSheet.BUNDLE_RATING to libraryEntry.ratingTwenty
+        val action = DetailsFragmentDirections.actionDetailsFragmentToRatingBottomSheet(
+            title = mediaAdapter.title ?: "",
+            ratingTwenty = libraryEntry.ratingTwenty ?: -1,
+            ratingResultKey = RESULT_KEY_RATING,
+            removeResultKey = RESULT_KEY_REMOVE_RATING
         )
-        sheetLibraryRating.arguments = bundle
-        sheetLibraryRating.show(parentFragmentManager, RatingBottomSheet.TAG)
+        findNavController().navigateSafe(R.id.details_fragment, action)
     }
 
     private fun showLogInSnackbar() {

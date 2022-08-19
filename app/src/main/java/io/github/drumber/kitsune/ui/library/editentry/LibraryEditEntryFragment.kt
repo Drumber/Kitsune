@@ -10,13 +10,13 @@ import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.widget.TooltipCompat
-import androidx.core.os.bundleOf
 import androidx.core.text.htmlEncode
 import androidx.core.text.parseAsHtml
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResultListener
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.datepicker.CalendarConstraints
@@ -24,6 +24,7 @@ import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.internal.EdgeToEdgeUtils
+import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.addTransform
@@ -36,6 +37,7 @@ import io.github.drumber.kitsune.ui.library.RatingBottomSheet
 import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel.LoadState
 import io.github.drumber.kitsune.ui.widget.CustomNumberSpinner
 import io.github.drumber.kitsune.util.*
+import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setMaxLinesFitHeight
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -49,6 +51,11 @@ class LibraryEditEntryFragment : DialogFragment() {
     private val viewModel: LibraryEditEntryViewModel by viewModel()
 
     private var listenersInitialized = false
+
+    companion object {
+        const val RESULT_KEY_RATING = "library_edit_rating_result_key"
+        const val RESULT_KEY_REMOVE_RATING = "library_edit_remove_rating_result_key"
+    }
 
     private val libraryStatusMenuItems = listOf(
         Status.Current,
@@ -151,6 +158,11 @@ class LibraryEditEntryFragment : DialogFragment() {
                 dismiss()
             } else {
                 binding.layoutLoading.isVisible = state == LoadState.Loading
+                if (state == LoadState.Error) {
+                    Snackbar.make(binding.root, R.string.error_library_update_failed, Snackbar.LENGTH_LONG)
+                        .setAnchorView(binding.cardBottomBar)
+                        .show()
+                }
             }
         }
 
@@ -257,14 +269,14 @@ class LibraryEditEntryFragment : DialogFragment() {
             binding.btnSaveChanges.isEnabled = hasChanges
         }
 
-        setFragmentResultListener(RatingBottomSheet.RATING_REQUEST_KEY) { _, bundle ->
+        setFragmentResultListener(RESULT_KEY_RATING) { _, bundle ->
             val rating = bundle.getInt(RatingBottomSheet.BUNDLE_RATING, -1)
             if (rating != -1) {
                 viewModel.updateLibraryEntry { it.copy(ratingTwenty = rating) }
             }
         }
 
-        setFragmentResultListener(RatingBottomSheet.REMOVE_RATING_REQUEST_KEY) { _, _ ->
+        setFragmentResultListener(RESULT_KEY_REMOVE_RATING) { _, _ ->
             val oldRating = viewModel.uneditedLibraryEntryWrapper?.ratingTwenty
             val rating = if (oldRating == null) null else -1
             viewModel.updateLibraryEntry { it.copy(ratingTwenty = rating) }
@@ -412,13 +424,13 @@ class LibraryEditEntryFragment : DialogFragment() {
         val media = libraryEntry.anime ?: libraryEntry.manga ?: return
         val mediaAdapter = MediaAdapter.fromMedia(media)
 
-        val sheetLibraryRating = RatingBottomSheet()
-        val bundle = bundleOf(
-            RatingBottomSheet.BUNDLE_TITLE to mediaAdapter.title,
-            RatingBottomSheet.BUNDLE_RATING to libraryEntryWrapper.ratingTwenty
+        val action = LibraryEditEntryFragmentDirections.actionLibraryEditEntryFragmentToRatingBottomSheet(
+            title = mediaAdapter.title ?: "",
+            ratingTwenty = libraryEntryWrapper.ratingTwenty ?: -1,
+            ratingResultKey = RESULT_KEY_RATING,
+            removeResultKey = RESULT_KEY_REMOVE_RATING
         )
-        sheetLibraryRating.arguments = bundle
-        sheetLibraryRating.show(parentFragmentManager, RatingBottomSheet.TAG)
+        findNavController().navigateSafe(R.id.libraryEditEntryFragment, action)
     }
 
     private fun openDatePicker(

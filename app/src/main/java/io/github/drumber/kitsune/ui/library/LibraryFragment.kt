@@ -10,7 +10,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
@@ -60,6 +59,13 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
     private lateinit var offlineLibraryUpdateBadge: BadgeDrawable
 
     private val searchDebouncer by lazy { Debouncer(300L) }
+
+    private val autoSyncDebouncer by lazy { Debouncer(5000L) }
+
+    companion object {
+        const val RESULT_KEY_RATING = "library_rating_result_key"
+        const val RESULT_KEY_REMOVE_RATING = "library_remove_rating_result_key"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,14 +126,14 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             binding.progressIndicator.isVisible = it
         }
 
-        setFragmentResultListener(RatingBottomSheet.RATING_REQUEST_KEY) { _, bundle ->
+        setFragmentResultListener(RESULT_KEY_RATING) { _, bundle ->
             val rating = bundle.getInt(RatingBottomSheet.BUNDLE_RATING, -1)
             if (rating != -1) {
                 viewModel.updateRating(rating)
             }
         }
 
-        setFragmentResultListener(RatingBottomSheet.REMOVE_RATING_REQUEST_KEY) { _, _ ->
+        setFragmentResultListener(RESULT_KEY_REMOVE_RATING) { _, _ ->
             viewModel.updateRating(null)
         }
 
@@ -265,11 +271,13 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
                 offlineLibraryModificationsAmount = it.size
                 requireActivity().invalidateOptionsMenu()
 
-                // synchronize library if there are offline library updates and network is not metered
-                val connectivityManager =
-                    requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-                if (it.isNotEmpty() && !connectivityManager.isActiveNetworkMetered) {
-                    viewModel.synchronizeOfflineLibraryUpdates()
+                autoSyncDebouncer.debounce(viewLifecycleOwner.lifecycleScope) {
+                    // synchronize library if there are offline library updates and network is not metered
+                    val connectivityManager =
+                        requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                    if (it.isNotEmpty() && !connectivityManager.isActiveNetworkMetered) {
+                        viewModel.synchronizeOfflineLibraryUpdates()
+                    }
                 }
             }
     }
@@ -296,13 +304,14 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         viewModel.lastRatedLibraryEntry = item.libraryEntry
         val mediaAdapter =
             (item.libraryEntry.anime ?: item.libraryEntry.manga)?.let { MediaAdapter.fromMedia(it) }
-        val sheetLibraryRating = RatingBottomSheet()
-        val bundle = bundleOf(
-            RatingBottomSheet.BUNDLE_TITLE to mediaAdapter?.title,
-            RatingBottomSheet.BUNDLE_RATING to item.ratingTwenty
+
+        val action = LibraryFragmentDirections.actionLibraryFragmentToRatingBottomSheet(
+            title = mediaAdapter?.title ?: "",
+            ratingTwenty = item.ratingTwenty ?: -1,
+            ratingResultKey = RESULT_KEY_RATING,
+            removeResultKey = RESULT_KEY_REMOVE_RATING
         )
-        sheetLibraryRating.arguments = bundle
-        sheetLibraryRating.show(parentFragmentManager, RatingBottomSheet.TAG)
+        findNavController().navigateSafe(R.id.library_fragment, action)
     }
 
     private fun initSearchView(menuItem: MenuItem) {

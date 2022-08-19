@@ -53,6 +53,7 @@
     <string name="error_something_wrong">Oops, something went wrong!</string>
     <string name="error_requires_external_storage_permission">Require permission to write to external storage.</string>
     <string name="error_search_provider_unavailable">Search Provider unavailable.</string>
+    <string name="error_library_update_failed">Failed to update library entry.</string>
 
     <string name="menu_filter">Filter</string>
     <string name="sort_popularity_asc">Least Popular</string>

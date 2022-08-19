@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.ui.library.editentry
 
 import androidx.lifecycle.*
 import io.github.drumber.kitsune.data.manager.LibraryManager
+import io.github.drumber.kitsune.data.manager.LibraryUpdateResponse
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.model.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.data.model.library.LibraryModification
@@ -12,7 +13,6 @@ import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
 class LibraryEditEntryViewModel(
     private val libraryManager: LibraryManager,
@@ -98,7 +98,22 @@ class LibraryEditEntryViewModel(
     }
 
     fun saveChanges() {
-        // TODO
+        val libraryModification = libraryEntryWrapper.value?.libraryModification ?: return
+
+        _loadState.value = LoadState.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = libraryManager.updateLibraryEntry(libraryModification)
+                if (response !is LibraryUpdateResponse.Error) {
+                    _loadState.postValue(LoadState.CloseDialog)
+                } else {
+                    throw response.exception
+                }
+            } catch (e: Exception) {
+                logE("Failed to update library entry.", e)
+                _loadState.postValue(LoadState.Error)
+            }
+        }
     }
 
     fun removeLibraryEntry() {
@@ -106,16 +121,11 @@ class LibraryEditEntryViewModel(
         _loadState.value = LoadState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = libraryEntriesService.deleteLibraryEntry(libraryEntry.id).execute()
-                if (response.isSuccessful) {
-                    libraryEntryDao.delete(libraryEntry)
-                    _loadState.postValue(LoadState.CloseDialog)
-                } else {
-                    throw HttpException(response)
-                }
+                libraryManager.removeLibraryEntry(libraryEntry)
+                _loadState.postValue(LoadState.CloseDialog)
             } catch (e: Exception) {
                 logE("Failed to remove library entry.", e)
-                _loadState.postValue(LoadState.NotLoading)
+                _loadState.postValue(LoadState.Error)
             }
         }
     }
@@ -123,6 +133,7 @@ class LibraryEditEntryViewModel(
     enum class LoadState {
         NotLoading,
         Loading,
+        Error,
         CloseDialog
     }
 

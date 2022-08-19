@@ -3,9 +3,6 @@ package io.github.drumber.kitsune.data.model.library
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import io.github.drumber.kitsune.util.network.NullableIntSerializer
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -18,11 +15,10 @@ data class LibraryModification(
     val volumesOwned: Int? = null,
     val reconsumeCount: Int? = null,
     val notes: String? = null,
-    @JsonProperty("private")
     val isPrivate: Boolean? = null,
     val startedAt: String? = null,
     val finishedAt: String? = null,
-    @JsonSerialize(using = NullableIntSerializer::class)
+    /** Set to `-1` to remove rating (will be mapped to `null` by the json serializer). */
     val ratingTwenty: Int? = null
 ) : Parcelable {
 
@@ -51,6 +47,19 @@ data class LibraryModification(
 
         return libraryEntry
     }
+
+    fun mergeModificationFrom(other: LibraryModification) = LibraryModification(
+        id = id,
+        status = other.status ?: status,
+        progress = other.progress ?: progress,
+        volumesOwned = other.volumesOwned ?: volumesOwned,
+        reconsumeCount = other.reconsumeCount ?: reconsumeCount,
+        notes = other.notes ?: notes,
+        isPrivate = other.isPrivate ?: isPrivate,
+        startedAt = other.startedAt ?: startedAt,
+        finishedAt = other.finishedAt ?: finishedAt,
+        ratingTwenty = other.ratingTwenty ?: ratingTwenty
+    )
 
     fun toLibraryEntry(ignoreBlankNotes: Boolean = true): LibraryEntry {
         val newEntry = LibraryEntry(id = id)

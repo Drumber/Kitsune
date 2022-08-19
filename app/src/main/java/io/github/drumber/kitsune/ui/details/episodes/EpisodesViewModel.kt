@@ -5,9 +5,10 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.manager.LibraryManager
-import io.github.drumber.kitsune.data.manager.ResponseCallback
+import io.github.drumber.kitsune.data.manager.LibraryUpdateResponse
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.model.library.LibraryEntryWrapper
+import io.github.drumber.kitsune.data.model.library.LibraryModification
 import io.github.drumber.kitsune.data.model.media.Anime
 import io.github.drumber.kitsune.data.model.media.BaseMedia
 import io.github.drumber.kitsune.data.model.media.Manga
@@ -22,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class EpisodesViewModel(
     private val mediaUnitRepository: MediaUnitRepository,
@@ -31,7 +33,7 @@ class EpisodesViewModel(
     private val libraryManager: LibraryManager
 ) : ViewModel() {
 
-    var responseListener: (ResponseCallback)? = null
+    var responseListener: ((LibraryUpdateResponse) -> Unit)? = null
 
     private val media = MutableLiveData<BaseMedia>()
 
@@ -91,7 +93,7 @@ class EpisodesViewModel(
     }
 
     fun setMediaUnitWatched(mediaUnit: MediaUnit, isWatched: Boolean) {
-        val oldLibraryEntry = libraryEntryWrapper.value?.libraryEntry ?: return
+        val libraryEntry = libraryEntryWrapper.value?.libraryEntry ?: return
         val number = mediaUnit.number ?: 0
         val progress = if (isWatched) {
             number
@@ -99,9 +101,16 @@ class EpisodesViewModel(
             number.minus(1).coerceAtLeast(0)
         }
 
+        val modification = LibraryModification(libraryEntry.id, progress = progress)
+
         viewModelScope.launch(Dispatchers.IO) {
-            libraryManager.updateProgress(oldLibraryEntry, progress) {
-                responseListener?.invoke(it)
+            try {
+                val response = libraryManager.updateLibraryEntry(modification)
+                withContext(Dispatchers.Main) {
+                    responseListener?.invoke(response)
+                }
+            } catch (e: Exception) {
+                logE("Failed to update progress.", e)
             }
         }
     }

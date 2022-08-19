@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResult
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.SheetLibraryRatingBinding
@@ -17,6 +18,8 @@ class RatingBottomSheet : BottomSheetDialogFragment() {
     private var _binding: SheetLibraryRatingBinding? = null
     private val binding get() = _binding!!
 
+    private val args: RatingBottomSheetArgs by navArgs()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -24,11 +27,11 @@ class RatingBottomSheet : BottomSheetDialogFragment() {
     ): View {
         _binding = SheetLibraryRatingBinding.inflate(inflater, container, false)
 
-        val ratingTwenty = arguments?.getInt(BUNDLE_RATING)
+        val ratingTwenty = args.ratingTwenty.takeIf { it != -1 }
         val hasNoRating = ratingTwenty == null || ratingTwenty == 0
 
         binding.apply {
-            title = arguments?.getString(BUNDLE_TITLE)
+            title = args.title
 
             ratingBar.apply {
                 setOnRatingChangeListener { ratingBar, rating ->
@@ -72,12 +75,12 @@ class RatingBottomSheet : BottomSheetDialogFragment() {
 
     private fun onRateClicked() {
         val rating = binding.ratingBar.rating.times(4.0f).toInt()
-        setFragmentResult(RATING_REQUEST_KEY, bundleOf(BUNDLE_RATING to rating))
+        setFragmentResult(args.ratingResultKey, bundleOf(BUNDLE_RATING to rating))
         dismiss()
     }
 
     private fun onRemoveRatingClicked() {
-        setFragmentResult(REMOVE_RATING_REQUEST_KEY, bundleOf(BUNDLE_RATING to null))
+        setFragmentResult(args.removeResultKey, bundleOf(BUNDLE_RATING to null))
         dismiss()
     }
 
@@ -87,11 +90,7 @@ class RatingBottomSheet : BottomSheetDialogFragment() {
     }
 
     companion object {
-        const val TAG = "library_rating_bottom_sheet"
-        const val BUNDLE_TITLE = "title_bundle_key"
         const val BUNDLE_RATING = "rating_bundle_key"
-        const val RATING_REQUEST_KEY = "rating_request_key"
-        const val REMOVE_RATING_REQUEST_KEY = "remove_rating_request_key"
     }
 
 }

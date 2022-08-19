@@ -72,6 +72,9 @@
         <action
             android:id="@+id/action_details_fragment_to_libraryEditEntryFragment"
             app:destination="@id/libraryEditEntryFragment" />
+        <action
+            android:id="@+id/action_details_fragment_to_ratingBottomSheet"
+            app:destination="@id/ratingBottomSheet" />
     </fragment>
     <fragment
         android:id="@+id/media_list_fragment"
@@ -116,6 +119,9 @@
         <action
             android:id="@+id/action_library_fragment_to_libraryEditEntryFragment"
             app:destination="@id/libraryEditEntryFragment" />
+        <action
+            android:id="@+id/action_library_fragment_to_ratingBottomSheet"
+            app:destination="@id/ratingBottomSheet" />
     </fragment>
     <fragment
         android:id="@+id/librariesFragment"
@@ -179,5 +185,23 @@
         <argument
             android:name="libraryEntryId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_libraryEditEntryFragment_to_ratingBottomSheet"
+            app:destination="@id/ratingBottomSheet" />
+    </dialog>
+    <dialog
+        android:id="@+id/ratingBottomSheet"
+        android:name="io.github.drumber.kitsune.ui.library.RatingBottomSheet"
+        android:label="RatingBottomSheet" >
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="ratingTwenty"
+            app:argType="integer" />
+        <argument
+            android:name="ratingResultKey"
+            app:argType="string" />
+        <argument android:name="removeResultKey" />
     </dialog>
 </navigation>
