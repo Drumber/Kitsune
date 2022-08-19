@@ -41,6 +41,13 @@ class LibraryEntriesAdapter(
                         getItem(bindingAdapterPosition)?.let { listener?.onItemClicked(it) }
                     }
                 }
+                cardView.setOnLongClickListener {
+                    if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                        getItem(bindingAdapterPosition)?.let { listener?.onItemLongClicked(it) }
+                        return@setOnLongClickListener true
+                    }
+                    return@setOnLongClickListener false
+                }
                 btnWatchedAdd.setOnClickListener {
                     if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
                         getItem(bindingAdapterPosition)?.let { listener?.onEpisodeWatchedClicked(it) }
@@ -94,6 +101,7 @@ class LibraryEntriesAdapter(
 
     interface LibraryEntryActionListener {
         fun onItemClicked(item: LibraryEntryWrapper)
+        fun onItemLongClicked(item: LibraryEntryWrapper)
         fun onEpisodeWatchedClicked(item: LibraryEntryWrapper)
         fun onEpisodeUnwatchedClicked(item: LibraryEntryWrapper)
         fun onRatingClicked(item: LibraryEntryWrapper)

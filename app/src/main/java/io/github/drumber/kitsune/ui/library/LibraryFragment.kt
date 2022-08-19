@@ -292,6 +292,11 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         }
     }
 
+    override fun onItemLongClicked(item: LibraryEntryWrapper) {
+        val action = LibraryFragmentDirections.actionLibraryFragmentToLibraryEditEntryFragment(item.libraryEntry.id)
+        findNavController().navigateSafe(R.id.library_fragment, action)
+    }
+
     override fun onEpisodeWatchedClicked(item: LibraryEntryWrapper) {
         viewModel.markEpisodeWatched(item)
     }
