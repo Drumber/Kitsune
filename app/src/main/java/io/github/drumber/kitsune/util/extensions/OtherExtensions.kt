@@ -11,6 +11,7 @@ import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
+import java.text.NumberFormat
 
 /**
  * Make the internal RecyclerView of ViewPager2 accessible.
@@ -39,6 +40,11 @@ fun TextView.setMaxLinesFitHeight() {
         setMaxLines(maxLines)
     }
 }
+
+/**
+ * Format double using default locale format.
+ */
+fun Double.format() = NumberFormat.getInstance().format(this)
 
 fun Int.toDp() = (this / Resources.getSystem().displayMetrics.density).toInt()
 

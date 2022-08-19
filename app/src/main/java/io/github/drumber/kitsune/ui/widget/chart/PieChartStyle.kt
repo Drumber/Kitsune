@@ -7,7 +7,6 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.formatter.PercentFormatter
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.util.extensions.getColor
 
@@ -69,7 +68,7 @@ object PieChartStyle : BaseChartStyle() {
 
     fun PieData.applyStyle(c: Context) {
         applyBaseStyle(c)
-        setValueFormatter(PercentFormatter())
+        setValueFormatter(CustomPercentFormatter())
     }
 
 }

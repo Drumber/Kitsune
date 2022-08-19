@@ -6,12 +6,8 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.mediarelationship.RelationshipRole
 import io.github.drumber.kitsune.data.model.mediarelationship.getString
 import io.github.drumber.kitsune.data.model.production.AnimeProductionRole
-import io.github.drumber.kitsune.util.DataUtil
-import io.github.drumber.kitsune.util.TimeUtil
-import io.github.drumber.kitsune.util.formatDate
-import io.github.drumber.kitsune.util.toDate
-import io.github.drumber.kitsune.util.originalOrDown
-import io.github.drumber.kitsune.util.smallOrHigher
+import io.github.drumber.kitsune.util.*
+import io.github.drumber.kitsune.util.extensions.format
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
@@ -45,7 +41,7 @@ class MediaAdapter(
 
     val description get() = media.description.orEmpty()
 
-    val avgRating get() = media.averageRating
+    val avgRating get() = media.averageRating?.tryFormatDouble()
 
     val ratingRank get() = media.ratingRank
 
@@ -200,5 +196,7 @@ class MediaAdapter(
     fun hasMediaRelationships() = !media.mediaRelationships.isNullOrEmpty()
 
     fun hasRatingFrequencies() = media.ratingFrequencies != null
+
+    private fun String?.tryFormatDouble() = this?.toDoubleOrNull()?.format()
 
 }

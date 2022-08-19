@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.util
 
 import android.content.Context
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.util.extensions.format
 import java.math.RoundingMode
 import kotlin.math.roundToInt
 import kotlin.time.Duration
@@ -82,23 +83,23 @@ object TimeUtil {
         return when {
             time.inWholeYears > 0 -> {
                 val years = time.toYearsDouble().round(decimalPlaces)
-                res.getQuantityString(R.plurals.duration_years, years.roundToInt(), years)
+                res.getQuantityString(R.plurals.duration_years, years.roundToInt(), years.format())
             }
             time.inWholeMonths > 0 -> {
                 val months = time.toMonthsDouble().round(decimalPlaces)
-                res.getQuantityString(R.plurals.duration_months, months.roundToInt(), months)
+                res.getQuantityString(R.plurals.duration_months, months.roundToInt(), months.format())
             }
             time.inWholeDays > 0 -> {
                 val days = time.toDouble(DurationUnit.DAYS).round(decimalPlaces)
-                res.getQuantityString(R.plurals.duration_days, days.roundToInt(), days)
+                res.getQuantityString(R.plurals.duration_days, days.roundToInt(), days.format())
             }
             time.inWholeHours > 0 -> {
                 val hours = time.toDouble(DurationUnit.HOURS).round(decimalPlaces)
-                res.getQuantityString(R.plurals.duration_hours, hours.roundToInt(), hours)
+                res.getQuantityString(R.plurals.duration_hours, hours.roundToInt(), hours.format())
             }
             time.inWholeMinutes > 0 -> {
                 val minutes = time.toDouble(DurationUnit.MINUTES).round(decimalPlaces)
-                res.getQuantityString(R.plurals.duration_minutes, minutes.roundToInt(), minutes)
+                res.getQuantityString(R.plurals.duration_minutes, minutes.roundToInt(), minutes.format())
             }
             else -> {
                 res.getQuantityString(R.plurals.duration_seconds, timeSeconds.toInt(), timeSeconds)
