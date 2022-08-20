@@ -1,37 +1,42 @@
 package io.github.drumber.kitsune.ui.search
 
 import androidx.lifecycle.*
+import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import com.algolia.instantsearch.android.paging3.Paginator
+import com.algolia.instantsearch.android.paging3.filterstate.connectPaginator
+import com.algolia.instantsearch.android.paging3.flow
+import com.algolia.instantsearch.android.paging3.searchbox.connectPaginator
+import com.algolia.instantsearch.core.connection.AbstractConnection
 import com.algolia.instantsearch.core.connection.ConnectionHandler
-import com.algolia.instantsearch.core.connection.ConnectionImpl
 import com.algolia.instantsearch.core.selectable.list.SelectionMode
-import com.algolia.instantsearch.helper.filter.facet.FacetListConnector
-import com.algolia.instantsearch.helper.filter.facet.FacetListPresenterImpl
-import com.algolia.instantsearch.helper.filter.facet.FacetSortCriterion
-import com.algolia.instantsearch.helper.filter.range.FilterRangeConnector
-import com.algolia.instantsearch.helper.filter.state.FilterState
-import com.algolia.instantsearch.helper.filter.state.Filters
-import com.algolia.instantsearch.helper.filter.state.groupOr
-import com.algolia.instantsearch.helper.searcher.SearcherSingleIndex
-import com.algolia.instantsearch.helper.searcher.connectFilterState
-import com.algolia.search.dsl.*
+import com.algolia.instantsearch.filter.facet.DefaultFacetListPresenter
+import com.algolia.instantsearch.filter.facet.FacetListConnector
+import com.algolia.instantsearch.filter.facet.FacetSortCriterion
+import com.algolia.instantsearch.filter.range.FilterRangeConnector
+import com.algolia.instantsearch.filter.state.FilterState
+import com.algolia.instantsearch.filter.state.Filters
+import com.algolia.instantsearch.filter.state.groupOr
+import com.algolia.instantsearch.searchbox.SearchBoxConnector
+import com.algolia.instantsearch.searcher.connectFilterState
+import com.algolia.instantsearch.searcher.hits.HitsSearcher
+import com.algolia.search.dsl.attributesToRetrieve
+import com.algolia.search.dsl.query
 import com.algolia.search.model.Attribute
 import com.algolia.search.model.filter.Filter
 import com.algolia.search.model.response.ResponseSearch
 import com.algolia.search.model.search.Query
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.constants.Repository
 import io.github.drumber.kitsune.data.model.FilterCollection
 import io.github.drumber.kitsune.data.model.auth.SearchType
 import io.github.drumber.kitsune.data.model.media.MediaSearchResult
 import io.github.drumber.kitsune.data.model.toCombinedMap
 import io.github.drumber.kitsune.data.model.toFilterCollection
 import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
-import io.github.drumber.kitsune.data.repository.SearchRepository
 import io.github.drumber.kitsune.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.util.algolia.SearchBoxConnectorPaging
 import io.github.drumber.kitsune.util.algolia.SeasonListPresenter
-import io.github.drumber.kitsune.util.algolia.connectPaging
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logI
 import kotlinx.coroutines.flow.flatMapLatest
@@ -44,20 +49,22 @@ class SearchViewModel(
     algoliaKeyRepository: AlgoliaKeyRepository
 ) : ViewModel() {
 
-    private val searchProvider = SearchProvider(algoliaKeyRepository, defaultIndexSettings)
+    private val searchProvider = SearchProvider(algoliaKeyRepository)
 
-    private val searchSelector = MutableLiveData<Pair<SearchType, SearcherSingleIndex>>()
+    private val searchSelector = MutableLiveData<Pair<SearchType, HitsSearcher>>()
 
     private var filterState: FilterState? = null
 
-    private var _filtersLiveData = MutableLiveData<Filters?>()
+    private val searchPaginator = MutableLiveData<Paginator<MediaSearchResult>>()
+
+    private val _filtersLiveData = MutableLiveData<Filters?>()
     val filtersLiveData get() = _filtersLiveData as LiveData<Filters?>
 
     private val _searchClientStatus = MutableLiveData(SearchClientStatus.NotInitialized)
     val searchClientStatus get() = _searchClientStatus as LiveData<SearchClientStatus>
 
-    private val _searchBox = MutableLiveData<SearchBoxConnectorPaging<ResponseSearch>>()
-    val searchBox get() = _searchBox as LiveData<SearchBoxConnectorPaging<ResponseSearch>>
+    private val _searchBox = MutableLiveData<SearchBoxConnector<ResponseSearch>>()
+    val searchBox get() = _searchBox as LiveData<SearchBoxConnector<ResponseSearch>>
 
     private val _filterFacets = MutableLiveData<FilterFacets>()
     val filterFacets get() = _filterFacets as LiveData<FilterFacets>
@@ -65,22 +72,6 @@ class SearchViewModel(
     private val connectionHandler = ConnectionHandler()
 
     private val json = Json { ignoreUnknownKeys = true }
-
-    private val defaultIndexSettings
-        get() = settings {
-            queryLanguages {
-                +English
-                +Japanese
-            }
-            responseFields {
-                +Hits
-                +HitsPerPage
-                +NbHits
-                +NbPages
-                +Offset
-                +Page
-            }
-        }
 
     init {
         initializeSearchClient()
@@ -108,8 +99,24 @@ class SearchViewModel(
             _searchClientStatus.postValue(SearchClientStatus.NotInitialized)
             try {
                 searchProvider.createSearchClient(searchType, query) { searcher ->
+                    searchPaginator.value?.invalidate()
                     connectionHandler.clear()
                     searchSelector.postValue(Pair(searchType, searcher))
+
+                    val paginator = Paginator(
+                        searcher = searcher,
+                        pagingConfig = PagingConfig(
+                            pageSize = Kitsu.DEFAULT_PAGE_SIZE,
+                            maxSize = Repository.MAX_CACHED_ITEMS
+                        ),
+                        transformer = { hit ->
+                            when (searchType) {
+                                SearchType.Media -> json.decodeFromJsonElement<MediaSearchResult>(hit.json)
+                                else -> throw IllegalStateException("Search type '$searchType' is not supported.")
+                            }
+                        }
+                    )
+                    searchPaginator.postValue(paginator)
 
                     val filterState = if (KitsunePref.rememberSearchFilters) {
                         val storedFilters = KitsunePref.searchFilters.toCombinedMap()
@@ -119,7 +126,7 @@ class SearchViewModel(
                     }
                     createFilterFacets(searcher, filterState)
                     connectionHandler += searcher.connectFilterState(filterState)
-                    connectionHandler += filterState.connectPaging { SearchRepository.invalidate() }
+                    connectionHandler += filterState.connectPaginator(paginator)
 
                     _filtersLiveData.postValue(filterState.filters.value)
                     filterState.filters.subscribe {
@@ -128,7 +135,7 @@ class SearchViewModel(
                         KitsunePref.searchFilters = it.toFilterCollection()
                     }
 
-                    createSearchBox(searcher)
+                    createSearchBox(searcher, paginator)
                     this@SearchViewModel.filterState = filterState
                     _searchClientStatus.postValue(SearchClientStatus.Initialized)
                 }
@@ -142,26 +149,19 @@ class SearchViewModel(
         }
     }
 
-    private fun createSearchBox(searcher: SearcherSingleIndex) {
-        val searchBox = SearchBoxConnectorPaging(searcher) {
-            SearchRepository.invalidate()
-        }
+    private fun createSearchBox(searcher: HitsSearcher, paginator: Paginator<MediaSearchResult>) {
+        val searchBox = SearchBoxConnector(searcher)
         connectionHandler += searchBox
+        connectionHandler += searchBox.connectPaginator(paginator)
         _searchBox.postValue(searchBox)
     }
 
-    val searchResultSource = searchSelector.asFlow().flatMapLatest { selector ->
-        val (searchType, searcher) = selector
-        SearchRepository.search(Kitsu.DEFAULT_PAGE_SIZE, searcher) { hit ->
-            when (searchType) {
-                SearchType.Media -> json.decodeFromJsonElement<MediaSearchResult>(hit.json)
-                else -> throw IllegalStateException("Search type '$searchType' is not supported.")
-            }
-        }
+    val searchResultSource = searchPaginator.asFlow().flatMapLatest { paginator ->
+        paginator.flow
     }.cachedIn(viewModelScope)
 
 
-    private fun createFilterFacets(searcher: SearcherSingleIndex, filterState: FilterState) {
+    private fun createFilterFacets(searcher: HitsSearcher, filterState: FilterState) {
         val filterFacets = FilterFacets(searcher, filterState)
         applyCategoryFilters(filterState)
         _filterFacets.postValue(filterFacets)
@@ -204,7 +204,7 @@ class SearchViewModel(
     }
 
     inner class FilterFacets(
-        searcher: SearcherSingleIndex,
+        searcher: HitsSearcher,
         filterState: FilterState
     ) {
 
@@ -214,7 +214,7 @@ class SearchViewModel(
             attribute = Attribute("kind"),
             selectionMode = SelectionMode.Multiple,
         ).bind()
-        val kindPresenter = FacetListPresenterImpl(limit = 2)
+        val kindPresenter = DefaultFacetListPresenter(limit = 2)
 
         val yearConnector = FilterRangeConnector(
             filterState = filterState,
@@ -244,7 +244,7 @@ class SearchViewModel(
             attribute = Attribute("subtype"),
             selectionMode = SelectionMode.Multiple,
         ).bind()
-        val subtypePresenter = FacetListPresenterImpl(limit = 100, sortBy = defaultFacetSortBy)
+        val subtypePresenter = DefaultFacetListPresenter(limit = 100, sortBy = defaultFacetSortBy)
 
         val streamersConnector = FacetListConnector(
             searcher = searcher,
@@ -252,7 +252,7 @@ class SearchViewModel(
             attribute = Attribute("streamers"),
             selectionMode = SelectionMode.Multiple,
         ).bind()
-        val streamersPresenter = FacetListPresenterImpl(limit = 100, sortBy = defaultFacetSortBy)
+        val streamersPresenter = DefaultFacetListPresenter(limit = 100, sortBy = defaultFacetSortBy)
 
         val ageRatingConnector = FacetListConnector(
             searcher = searcher,
@@ -260,9 +260,9 @@ class SearchViewModel(
             attribute = Attribute("ageRating"),
             selectionMode = SelectionMode.Multiple,
         ).bind()
-        val ageRatingPresenter = FacetListPresenterImpl(limit = 4, sortBy = defaultFacetSortBy)
+        val ageRatingPresenter = DefaultFacetListPresenter(limit = 4, sortBy = defaultFacetSortBy)
 
-        private fun <T : ConnectionImpl> T.bind() = apply { connectionHandler += this }
+        private fun <T : AbstractConnection> T.bind() = apply { connectionHandler += this }
     }
 
     companion object {

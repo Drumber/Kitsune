@@ -14,11 +14,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.algolia.instantsearch.android.filter.facet.FacetListAdapter
+import com.algolia.instantsearch.android.list.autoScrollToStart
 import com.algolia.instantsearch.core.connection.ConnectionHandler
-import com.algolia.instantsearch.helper.android.filter.facet.FacetListAdapter
-import com.algolia.instantsearch.helper.android.list.autoScrollToStart
-import com.algolia.instantsearch.helper.filter.facet.connectView
-import com.algolia.instantsearch.helper.filter.range.connectView
+import com.algolia.instantsearch.filter.facet.connectView
+import com.algolia.instantsearch.filter.range.connectView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.slider.RangeSlider
 import io.github.drumber.kitsune.R

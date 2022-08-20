@@ -12,9 +12,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.algolia.instantsearch.android.searchbox.SearchBoxViewAppCompat
+import com.algolia.instantsearch.core.connection.AbstractConnection
 import com.algolia.instantsearch.core.connection.ConnectionHandler
-import com.algolia.instantsearch.core.connection.ConnectionImpl
-import com.algolia.instantsearch.helper.android.searchbox.SearchBoxViewAppCompat
+import com.algolia.instantsearch.searchbox.SearchBoxConnector
+import com.algolia.instantsearch.searchbox.connectView
 import com.algolia.search.model.response.ResponseSearch
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
@@ -30,8 +32,6 @@ import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.paging.MediaSearchPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.*
-import io.github.drumber.kitsune.util.algolia.SearchBoxConnectorPaging
-import io.github.drumber.kitsune.util.algolia.connectView
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
@@ -68,6 +68,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
 
         val adapter = MediaSearchPagingAdapter(GlideApp.with(this), this)
         setRecyclerViewAdapter(adapter)
+        recyclerView.itemAnimator = null
 
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.searchResultSource.collectLatest {
@@ -122,7 +123,6 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
         viewModel.searchBox.observe(viewLifecycleOwner) { searchBox ->
             val searchBoxView = SearchBoxViewAppCompat(binding.searchView)
             connectionHandler += searchBox.connectView(searchBoxView)
-            searchBox.viewModel
             connectionHandler += SearchResponseListener(searchBox) {
                 recyclerView.post {
                     // scroll to top when searching
@@ -201,9 +201,9 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
      * search query was changed AND the response is received.
      */
     private class SearchResponseListener(
-        searchBox: SearchBoxConnectorPaging<ResponseSearch>,
+        searchBox: SearchBoxConnector<ResponseSearch>,
         private val onSearchReceived: () -> Unit
-    ) : ConnectionImpl() {
+    ) : AbstractConnection() {
 
         private val _searchBox = WeakReference(searchBox)
         private var pendingSearch = false

@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.util.algolia
 
-import com.algolia.instantsearch.helper.filter.facet.FacetListItem
-import com.algolia.instantsearch.helper.filter.facet.FacetListPresenter
+import com.algolia.instantsearch.filter.facet.FacetListItem
+import com.algolia.instantsearch.filter.facet.FacetListPresenter
 
 class SeasonListPresenter(
     private val sortOrder: Array<String> = arrayOf("spring", "summer", "fall", "winter")

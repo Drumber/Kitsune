@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.model
 
-import com.algolia.instantsearch.helper.filter.state.FilterGroupID
-import com.algolia.instantsearch.helper.filter.state.Filters
+import com.algolia.instantsearch.filter.state.FilterGroupID
+import com.algolia.instantsearch.filter.state.Filters
 import com.algolia.search.model.filter.Filter
 
 data class FilterCollection(

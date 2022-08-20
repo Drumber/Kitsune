@@ -2,8 +2,8 @@ package io.github.drumber.kitsune.ui.search.filter
 
 import android.view.View
 import android.view.ViewGroup
-import com.algolia.instantsearch.helper.android.filter.facet.FacetListViewHolder
-import com.algolia.instantsearch.helper.android.inflate
+import com.algolia.instantsearch.android.filter.facet.FacetListViewHolder
+import com.algolia.instantsearch.android.inflate
 import com.algolia.search.model.search.Facet
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ItemFacetBinding

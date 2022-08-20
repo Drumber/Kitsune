@@ -97,7 +97,7 @@ abstract class BaseCollectionFragment(@LayoutRes contentLayoutId: Int) :
 
                 if (loadState.refresh is LoadState.NotLoading
                     && loadState.append.endOfPaginationReached
-                    && recyclerView.adapter?.itemCount ?: 0 < 1
+                    && (recyclerView.adapter?.itemCount ?: 0) < 1
                 ) {
                     root.isVisible = true
                     tvNoData.isVisible = true

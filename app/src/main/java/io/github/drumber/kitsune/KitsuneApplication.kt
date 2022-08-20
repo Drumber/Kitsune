@@ -3,7 +3,7 @@ package io.github.drumber.kitsune
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import by.kirich1409.viewbindingdelegate.ViewBindingPropertyDelegate
-import com.algolia.instantsearch.telemetry.Telemetry
+import com.algolia.instantsearch.core.InstantSearchTelemetry
 import com.chibatching.kotpref.Kotpref
 import com.chibatching.kotpref.livedata.asLiveData
 import io.github.drumber.kitsune.data.manager.GitHubUpdateChecker
@@ -53,7 +53,7 @@ class KitsuneApplication : Application() {
         }
 
         // opt out of algolia telemetry
-        Telemetry.shared.enabled = false
+        InstantSearchTelemetry.shared.enabled = false
 
         initLoggedInUser()
 
