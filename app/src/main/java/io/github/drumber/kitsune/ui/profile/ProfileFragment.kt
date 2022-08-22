@@ -162,6 +162,24 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                     viewModel.refreshUser()
                 }
             }
+
+            ivProfileImage.setOnClickListener {
+                val avatarImgUrl = (viewModel.fullUserModel.value?.data?.avatar
+                    ?: viewModel.userModel.value?.avatar)?.originalOrDown()
+                    ?: return@setOnClickListener
+                val title = (viewModel.fullUserModel.value?.data?.name
+                    ?: viewModel.userModel.value?.name)?.let { "$it Avatar" }
+                openImageViewer(avatarImgUrl, title, null)
+            }
+
+            ivCover.setOnClickListener {
+                val coverImgUrl = (viewModel.fullUserModel.value?.data?.coverImage
+                    ?: viewModel.userModel.value?.coverImage)?.originalOrDown()
+                    ?: return@setOnClickListener
+                val title = (viewModel.fullUserModel.value?.data?.name
+                    ?: viewModel.userModel.value?.name)?.let { "$it Cover" }
+                openImageViewer(coverImgUrl, title, null)
+            }
         }
 
         initStatsViewPager()
@@ -288,7 +306,10 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         binding.layoutFavoriteCharacters.isVisible = favCharacters.isNotEmpty()
     }
 
-    private fun showFavoriteMediaInRecyclerView(recyclerView: RecyclerView, data: List<MediaAdapter>) {
+    private fun showFavoriteMediaInRecyclerView(
+        recyclerView: RecyclerView,
+        data: List<MediaAdapter>
+    ) {
         if (recyclerView.adapter !is MediaRecyclerViewAdapter) {
             val glide = GlideApp.with(this)
             val adapter = MediaRecyclerViewAdapter(
@@ -308,7 +329,10 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         }
     }
 
-    private fun showFavoriteCharactersInRecyclerView(recyclerView: RecyclerView, data: List<Character>) {
+    private fun showFavoriteCharactersInRecyclerView(
+        recyclerView: RecyclerView,
+        data: List<Character>
+    ) {
         if (recyclerView.adapter !is CharacterAdapter) {
             val glide = GlideApp.with(this)
             val adapter = CharacterAdapter(
@@ -343,6 +367,15 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
             findItem(R.id.menu_log_out).isVisible = isLoggedIn
             findItem(R.id.menu_share_profile_url).isVisible = isLoggedIn
         }
+    }
+
+    private fun openImageViewer(imageUrl: String, title: String?, thumbnailUrl: String?) {
+        val action = ProfileFragmentDirections.actionProfileFragmentToPhotoViewActivity(
+            imageUrl,
+            title,
+            thumbnailUrl
+        )
+        findNavController().navigate(action)
     }
 
     private fun showLogOutConfirmationDialog() {

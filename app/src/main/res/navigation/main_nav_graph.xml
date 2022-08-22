@@ -46,6 +46,9 @@
         <action
             android:id="@+id/action_profile_fragment_to_details_fragment"
             app:destination="@id/details_fragment" />
+        <action
+            android:id="@+id/action_profile_fragment_to_photo_view_activity"
+            app:destination="@id/photo_view_activity" />
     </fragment>
     <fragment
         android:id="@+id/details_fragment"
