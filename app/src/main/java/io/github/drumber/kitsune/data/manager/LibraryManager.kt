@@ -14,10 +14,7 @@ import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.exception.InvalidDataException
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.util.logD
-import io.github.drumber.kitsune.util.logE
-import io.github.drumber.kitsune.util.logI
-import io.github.drumber.kitsune.util.logW
+import io.github.drumber.kitsune.util.*
 import retrofit2.HttpException
 
 class LibraryManager(
@@ -277,7 +274,11 @@ class LibraryManager(
         // Fix for setting startedAt date when user starts consuming the media.
         // startedAt is only set if status is CURRENT or COMPLETED, see here:
         // https://github.com/hummingbird-me/kitsu-server/blob/703726fc84a1a0172eae9a55c751ae6ffb1665b3/app/models/library_entry.rb#L204
-        status = if (status == null && progress == 1) Status.Current else status
+        // Since we don't know if the media has only 1 unit, we set the startedAt date instead of the status.
+        startedAt = if (startedAt == null && progress == 1)
+            todayUtcMillis().toDate().formatDate(DATE_FORMAT_ISO)
+        else
+            startedAt
     )
 
 }
