@@ -38,6 +38,8 @@ object KitsunePref : KotprefModel(), KoinComponent {
 
     var mediaItemSize by enumOrdinalPref(MediaItemSize.LARGE)
 
+    var startFragment by intPref(R.id.main_fragment)
+
     var libraryOfflineSync by booleanPref(
         true,
         key = R.string.preference_key_offline_library_updates

@@ -13,6 +13,7 @@ import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.databinding.ActivityMainBinding
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.util.CustomNavigationUI.bindToNavController
@@ -59,6 +60,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                     }
                 }
 
+                if (item.itemId == selectedItemId) {
+                    // no need to navigate if the we are already at the selected destination
+                    return@setOnItemSelectedListener true
+                }
+
                 // navigate to the target destination
                 NavigationUI.onNavDestinationSelected(item, navController)
             }
@@ -71,7 +77,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
 
         if (savedInstanceState == null) {
-            handleShortcutAction()
+            if (!handleShortcutAction() && KitsunePref.startFragment != R.id.main_fragment) {
+                setStartFragment(KitsunePref.startFragment)
+            }
         }
     }
 
@@ -128,13 +136,17 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
 
         if (navigationId != null) {
-            val navOptions = NavOptions.Builder()
-                .setPopUpTo(R.id.main_fragment, true)
-                .build()
-            navController.navigate(navigationId, null, navOptions)
+            setStartFragment(navigationId)
             return true
         }
         return false
+    }
+
+    private fun setStartFragment(navigationId: Int) {
+        val navOptions = NavOptions.Builder()
+            .setPopUpTo(R.id.main_fragment, true)
+            .build()
+        navController.navigate(navigationId, null, navOptions)
     }
 
     private fun isSettingsFragmentInBackStack(): Boolean {

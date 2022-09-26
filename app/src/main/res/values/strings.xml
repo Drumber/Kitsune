@@ -176,6 +176,14 @@
     <string name="preference_app_theme_default">Default</string>
     <string name="preference_app_theme_purple">Purple</string>
     <string name="preference_media_item_size">Media Item Size</string>
+    <string name="preference_start_fragment">Default Start Page</string>
+    <string-array name="preference_start_fragment_entries">
+        <item>Home</item>
+        <item>Search</item>
+        <item>Library</item>
+        <item>Profile</item>
+    </string-array>
+    <string name="preference_start_fragment_description">The Start Page is set to %s.</string>
     <string name="preference_language">Language</string>
     <string name="preference_display_name">Display Name</string>
     <string name="preference_profile_url">Profile URL</string>

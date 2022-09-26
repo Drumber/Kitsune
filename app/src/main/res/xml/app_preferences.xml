@@ -18,6 +18,11 @@
 <!--            android:summary="Not yet implemented." />-->
 
         <ListPreference
+            android:key="@string/preference_key_start_fragment"
+            android:title="@string/preference_start_fragment"
+            android:entries="@array/preference_start_fragment_entries" />
+
+        <ListPreference
             android:key="@string/preference_key_titles"
             android:title="@string/preference_titles"
             android:summary="@string/preference_titles_description"
@@ -26,12 +31,6 @@
         <ListPreference
             android:key="@string/preference_key_country"
             android:title="@string/preference_country" />
-
-        <!-- Use sfw filter list instead -->
-<!--        <SwitchPreferenceCompat-->
-<!--            android:key="@string/preference_key_adult_content"-->
-<!--            android:title="@string/preference_adult_content"-->
-<!--            android:summary="@string/preference_adult_content_description_off" />-->
 
         <ListPreference
             android:key="@string/preference_key_sfw_filter"

@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -48,11 +47,24 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
-        findPreference<ListPreference>(R.string.preference_key_dark_mode)?.setOnPreferenceChangeListener { _, newValue ->
-            (newValue as? String)?.toIntOrNull()?.let {
-                AppCompatDelegate.setDefaultNightMode(it)
+        findPreference<ListPreference>(R.string.preference_key_start_fragment)?.apply {
+            entryValues = arrayOf(
+                R.id.main_fragment,
+                R.id.search_fragment,
+                R.id.library_fragment,
+                R.id.profile_fragment
+            ).map { it.toString() }.toTypedArray()
+            value = KitsunePref.startFragment.toString()
+            setSummaryProvider {
+                getString(R.string.preference_start_fragment_description, entry)
             }
-            true
+            setOnPreferenceChangeListener { _, newValue ->
+                (newValue as? String)?.toIntOrNull()?.let {
+                    KitsunePref.startFragment = it
+                    return@setOnPreferenceChangeListener true
+                }
+                false
+            }
         }
 
         findPreference<ListPreference>(R.string.preference_key_titles)?.apply {
@@ -190,7 +202,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     true
                 }
                 requireUserLoggedIn(user) {
-                    val filterPreference = it.value?.let { filter -> SfwFilterPreference.valueOf(filter) }
+                    val filterPreference =
+                        it.value?.let { filter -> SfwFilterPreference.valueOf(filter) }
                     getString(
                         when (filterPreference) {
                             SfwFilterPreference.SFW -> R.string.preference_adult_content_description_sfw

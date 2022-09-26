@@ -9,6 +9,7 @@
     <string name="preference_key_fragment_appearance">fragment_appearance</string>
     <string name="preference_key_app_theme">app_theme</string>
     <string name="preference_key_dark_mode">dark_mode</string>
+    <string name="preference_key_start_fragment">start_fragment</string>
     <string name="preference_key_language">language</string>
     <string name="preference_key_offline_library_updates">offline_library_updates</string>
     <string name="preference_key_remember_search_filters">remember_search_filters</string>
@@ -21,6 +22,5 @@
     <string name="preference_key_profile_url">profile_url</string>
     <string name="preference_key_country">country</string>
     <string name="preference_key_titles">titles</string>
-<!--    <string name="preference_key_adult_content">adult_content</string>-->
     <string name="preference_key_sfw_filter">sfw_filter</string>
 </resources>
