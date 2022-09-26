@@ -13,6 +13,7 @@ import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.data.model.FilterCollection
 import io.github.drumber.kitsune.data.model.SearchParams
+import io.github.drumber.kitsune.data.model.StartPagePref
 import io.github.drumber.kitsune.data.model.TitlesPref
 import io.github.drumber.kitsune.data.model.category.CategoryPrefWrapper
 import io.github.drumber.kitsune.data.model.library.LibraryEntryKind
@@ -51,7 +52,7 @@ object KitsunePref : KotprefModel(), KoinComponent {
 
     var mediaItemSize by enumOrdinalPref(MediaItemSize.LARGE)
 
-    var startFragment by intPref(R.id.main_fragment)
+    var startFragment by enumValuePref(StartPagePref.Home)
 
     var libraryOfflineSync by booleanPref(
         true,

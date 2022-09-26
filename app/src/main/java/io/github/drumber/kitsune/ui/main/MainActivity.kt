@@ -11,6 +11,8 @@ import androidx.navigation.ui.NavigationUI
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.model.StartPagePref
+import io.github.drumber.kitsune.data.model.getDestinationId
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.databinding.ActivityMainBinding
 import io.github.drumber.kitsune.preference.KitsunePref
@@ -77,8 +79,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
 
         if (savedInstanceState == null) {
-            if (!handleShortcutAction() && KitsunePref.startFragment != R.id.main_fragment) {
-                setStartFragment(KitsunePref.startFragment)
+            if (!handleShortcutAction() && KitsunePref.startFragment != StartPagePref.Home) {
+                setStartFragment(KitsunePref.startFragment.getDestinationId())
             }
         }
     }

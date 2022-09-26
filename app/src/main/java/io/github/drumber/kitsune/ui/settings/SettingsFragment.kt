@@ -18,6 +18,7 @@ import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.manager.GitHubUpdateChecker
+import io.github.drumber.kitsune.data.model.StartPagePref
 import io.github.drumber.kitsune.data.model.TitlesPref
 import io.github.drumber.kitsune.data.model.user.RatingSystem
 import io.github.drumber.kitsune.data.model.user.SfwFilterPreference
@@ -52,22 +53,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         //---- Start Fragment
         findPreference<ListPreference>(R.string.preference_key_start_fragment)?.apply {
-            entryValues = arrayOf(
-                R.id.main_fragment,
-                R.id.search_fragment,
-                R.id.library_fragment,
-                R.id.profile_fragment
-            ).map { it.toString() }.toTypedArray()
-            value = KitsunePref.startFragment.toString()
+            entryValues = StartPagePref.values().map { it.name }.toTypedArray()
+            value = KitsunePref.startFragment.name
             setSummaryProvider {
                 getString(R.string.preference_start_fragment_description, entry)
             }
             setOnPreferenceChangeListener { _, newValue ->
-                (newValue as? String)?.toIntOrNull()?.let {
-                    KitsunePref.startFragment = it
-                    return@setOnPreferenceChangeListener true
-                }
-                false
+                KitsunePref.startFragment = StartPagePref.valueOf(newValue as String)
+                true
             }
         }
 
