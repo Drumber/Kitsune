@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.preference.*
+import androidx.preference.ListPreference.SimpleSummaryProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.aboutlibraries.LibsBuilder
@@ -18,6 +19,7 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.manager.GitHubUpdateChecker
 import io.github.drumber.kitsune.data.model.TitlesPref
+import io.github.drumber.kitsune.data.model.user.RatingSystem
 import io.github.drumber.kitsune.data.model.user.SfwFilterPreference
 import io.github.drumber.kitsune.data.model.user.User
 import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
@@ -156,7 +158,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun observeUserModel() {
         viewModel.userModel.observe(this) { user ->
-            println("#### User model changed $user")
             //---- Title Language Preference
             findPreference<ListPreference>(R.string.preference_key_titles)?.apply {
                 entryValues = TitlesPref.values().map { it.name }.toTypedArray()
@@ -230,6 +231,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         }
                     )
                 }
+            }
+
+            //---- Rating System
+            findPreference<ListPreference>(R.string.preference_key_rating_system)?.apply {
+                entryValues = RatingSystem.values().reversed().map { it.name }.toTypedArray()
+                value = user?.ratingSystem?.name
+                setOnPreferenceChangeListener { _, newValue ->
+                    updateUserIfChanged(
+                        value,
+                        newValue,
+                        User(user?.id, ratingSystem = RatingSystem.valueOf(newValue as String))
+                    )
+                    true
+                }
+                requireUserLoggedIn(user, summaryProvider = SimpleSummaryProvider.getInstance())
             }
 
             //---- Display Name

@@ -206,6 +206,12 @@
         <item>Limit to Following Feed</item>
         <item>Adult Content Everywhere</item>
     </string-array>
+    <string name="preference_rating_system">Rating System</string>
+    <string-array name="preference_rating_system_values">
+        <item>Simple</item>
+        <item>Regular</item>
+        <item>Advanced</item>
+    </string-array>
     <string name="preference_offline_library_updates">Offline Library Updates</string>
     <string name="preference_offline_library_description">Cache offline changes to your library and synchronize them with Kitsu.io when you are back online.</string>
     <string name="preference_remember_search_filters">Remember Search Filters</string>

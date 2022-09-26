@@ -23,4 +23,5 @@
     <string name="preference_key_country">country</string>
     <string name="preference_key_titles">titles</string>
     <string name="preference_key_sfw_filter">sfw_filter</string>
+    <string name="preference_key_rating_system">rating_system</string>
 </resources>

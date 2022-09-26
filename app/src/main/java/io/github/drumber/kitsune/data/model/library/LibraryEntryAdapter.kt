@@ -1,5 +1,7 @@
 package io.github.drumber.kitsune.data.model.library
 
+import io.github.drumber.kitsune.util.RatingSystemUtil.formatRatingTwenty
+
 class LibraryEntryAdapter(private val wrapper: LibraryEntryWrapper) {
 
     private val libraryEntry get() = wrapper.libraryEntry
@@ -29,7 +31,7 @@ class LibraryEntryAdapter(private val wrapper: LibraryEntryWrapper) {
         get() = progressCount != episodeCount
 
     val rating: String?
-        get() = wrapper.ratingTwenty?.div(4.0f)?.toString()
+        get() = wrapper.ratingTwenty?.formatRatingTwenty()
 
     val hasRating: Boolean
         get() = libraryEntry.ratingTwenty != null

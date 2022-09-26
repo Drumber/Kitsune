@@ -40,6 +40,7 @@ import io.github.drumber.kitsune.ui.adapter.paging.LibraryEntriesAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
+import io.github.drumber.kitsune.util.RatingSystemUtil
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.showErrorSnackback
@@ -316,7 +317,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             title = mediaAdapter?.title ?: "",
             ratingTwenty = item.ratingTwenty ?: -1,
             ratingResultKey = RESULT_KEY_RATING,
-            removeResultKey = RESULT_KEY_REMOVE_RATING
+            removeResultKey = RESULT_KEY_REMOVE_RATING,
+            ratingSystem = RatingSystemUtil.getRatingSystem()
         )
         findNavController().navigateSafe(R.id.library_fragment, action)
     }

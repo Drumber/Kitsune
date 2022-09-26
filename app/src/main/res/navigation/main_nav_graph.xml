@@ -203,5 +203,8 @@
             android:name="ratingResultKey"
             app:argType="string" />
         <argument android:name="removeResultKey" />
+        <argument
+            android:name="ratingSystem"
+            app:argType="io.github.drumber.kitsune.data.model.user.RatingSystem" />
     </dialog>
 </navigation>

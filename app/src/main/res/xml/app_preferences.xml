@@ -37,6 +37,11 @@
             android:title="@string/preference_adult_content"
             android:entries="@array/preference_sfw_filter_values" />
 
+        <ListPreference
+            android:key="@string/preference_key_rating_system"
+            android:title="@string/preference_rating_system"
+            android:entries="@array/preference_rating_system_values" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

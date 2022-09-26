@@ -39,6 +39,7 @@ import io.github.drumber.kitsune.ui.library.RatingBottomSheet
 import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel.LoadState
 import io.github.drumber.kitsune.ui.widget.CustomNumberSpinner
 import io.github.drumber.kitsune.util.*
+import io.github.drumber.kitsune.util.RatingSystemUtil.formatRatingTwenty
 import io.github.drumber.kitsune.util.extensions.getResourceId
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setMaxLinesFitHeight
@@ -208,7 +209,7 @@ class LibraryEditEntryFragment : DialogFragment() {
                 val hasRated = ratingTwenty != null && ratingTwenty != -1
                 fieldRating.editText?.apply {
                     val ratingText = if (hasRated) {
-                        "${ratingTwenty!! / 4.0f} / 5.0"
+                        "${ratingTwenty!!.formatRatingTwenty()} / ${20.formatRatingTwenty()}"
                     } else {
                         getString(R.string.library_not_rated)
                     }
@@ -439,7 +440,8 @@ class LibraryEditEntryFragment : DialogFragment() {
                 title = mediaAdapter.title ?: "",
                 ratingTwenty = libraryEntryWrapper.ratingTwenty ?: -1,
                 ratingResultKey = RESULT_KEY_RATING,
-                removeResultKey = RESULT_KEY_REMOVE_RATING
+                removeResultKey = RESULT_KEY_REMOVE_RATING,
+                ratingSystem = RatingSystemUtil.getRatingSystem()
             )
         findNavController().navigateSafe(R.id.libraryEditEntryFragment, action)
     }
