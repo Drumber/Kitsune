@@ -29,8 +29,8 @@ class FadingToolbarOffsetListener(
             DrawableCompat.setTint(overFlowIcon, iconTint)
         }
         toolbar.menu.forEach { menuItem ->
-            if (menuItem.icon != null) {
-                val drawable = menuItem.icon.mutate()
+            menuItem.icon?.let { icon ->
+                val drawable = icon.mutate()
                 DrawableCompat.setTint(drawable, iconTint)
             }
         }

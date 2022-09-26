@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
@@ -48,6 +49,7 @@ import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
+    MenuProvider,
     LibraryEntriesAdapter.LibraryEntryActionListener,
     NavigationBarView.OnItemReselectedListener {
 
@@ -70,12 +72,12 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         offlineLibraryUpdateBadge = BadgeDrawable.create(requireContext())
-        setHasOptionsMenu(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner)
 
         binding.apply {
             toolbar.initWindowInsetsListener(consume = false)
@@ -355,11 +357,11 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         })
 
         menuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 return true
             }
 
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 viewModel.searchLibrary(null)
                 binding.rvLibraryEntries.apply {
                     post {
@@ -371,19 +373,15 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.library_menu, menu)
         menu.findItem(R.id.menu_synchronize).isVisible = offlineLibraryModificationsAmount > 0
 
         initSearchView(menu.findItem(R.id.menu_search))
-
-        super.onCreateOptionsMenu(menu, inflater)
     }
 
     @ExperimentalBadgeUtils
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        super.onPrepareOptionsMenu(menu)
-
+    override fun onPrepareMenu(menu: Menu) {
         BadgeUtils.detachBadgeDrawable(
             offlineLibraryUpdateBadge,
             binding.toolbar,
@@ -405,12 +403,12 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         )
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
         return if (item.itemId == R.id.menu_synchronize) {
             viewModel.synchronizeOfflineLibraryUpdates()
             true
         } else {
-            super.onOptionsItemSelected(item)
+            false
         }
     }
 

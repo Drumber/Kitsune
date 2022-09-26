@@ -96,7 +96,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
             }
         }
 
-        binding.searchView.setOnQueryTextFocusChangeListener { v, hasFocus ->
+        binding.searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
             binding.btnSearch.icon = AppCompatResources.getDrawable(
                 requireContext(),
                 if (hasFocus) R.drawable.ic_arrow_back_24 else R.drawable.ic_search_24
