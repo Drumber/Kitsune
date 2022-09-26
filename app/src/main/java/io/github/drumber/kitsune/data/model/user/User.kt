@@ -64,10 +64,13 @@ data class User(
 
 enum class RatingSystem {
     // 0.5, 1...10
+    @JsonProperty("advanced")
     Advanced,
     // 0.5, 1...5
+    @JsonProperty("regular")
     Regular,
     // :(, :|, :), :D
+    @JsonProperty("simple")
     Simple
 }
 

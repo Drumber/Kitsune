@@ -17,6 +17,7 @@ import io.github.drumber.kitsune.data.model.TitlesPref
 import io.github.drumber.kitsune.data.model.category.CategoryPrefWrapper
 import io.github.drumber.kitsune.data.model.library.LibraryEntryKind
 import io.github.drumber.kitsune.data.model.library.Status
+import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.util.logE
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -27,7 +28,19 @@ object KitsunePref : KotprefModel(), KoinComponent {
     override val commitAllPropertiesByDefault = true
     override val kotprefName = context.getString(R.string.preference_file_key)
 
-    var titles by enumValuePref(TitlesPref.Canonical, key = R.string.preference_key_titles)
+    private var titlesIntern by enumValuePref(
+        TitlesPref.Canonical,
+        key = R.string.preference_key_titles
+    )
+
+    var titles: TitlesPref
+        set(value) {
+            titlesIntern = value
+        }
+        get() {
+            val userRepository: UserRepository = get()
+            return userRepository.user?.titleLanguagePreference ?: titlesIntern
+        }
 
     var appTheme by enumValuePref(AppTheme.DEFAULT)
 

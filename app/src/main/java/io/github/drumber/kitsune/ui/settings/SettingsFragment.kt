@@ -40,6 +40,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceManager.sharedPreferencesName = getString(R.string.preference_file_key)
         setPreferencesFromResource(R.xml.app_preferences, rootKey)
 
+        //---- Appearance
         findPreference<Preference>(R.string.preference_key_fragment_appearance)?.setOnPreferenceClickListener {
             val action =
                 SettingsFragmentDirections.actionSettingsFragmentToThemePreferenceFragment()
@@ -47,6 +48,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
+        //---- Start Fragment
         findPreference<ListPreference>(R.string.preference_key_start_fragment)?.apply {
             entryValues = arrayOf(
                 R.id.main_fragment,
@@ -67,16 +69,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
         }
 
-        findPreference<ListPreference>(R.string.preference_key_titles)?.apply {
-            entryValues = TitlesPref.values().map { it.name }.toTypedArray()
-            setDefaultValue(KitsunePref.titles.name)
-            value = KitsunePref.titles.name
-            setOnPreferenceChangeListener { _, newValue ->
-                KitsunePref.titles = TitlesPref.valueOf(newValue.toString())
-                true
-            }
-        }
-
+        //---- App Version
         val appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
         findPreference<Preference>(R.string.preference_key_app_version)?.apply {
             summary = appVersion
@@ -86,6 +79,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
         }
 
+        //---- Open Source Libraries
         findPreference<Preference>(R.string.preference_key_open_source_libraries)?.setOnPreferenceClickListener {
             val libsBuilder = LibsBuilder()
                 .withLicenseShown(true)
@@ -162,6 +156,29 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun observeUserModel() {
         viewModel.userModel.observe(this) { user ->
+            println("#### User model changed $user")
+            //---- Title Language Preference
+            findPreference<ListPreference>(R.string.preference_key_titles)?.apply {
+                entryValues = TitlesPref.values().map { it.name }.toTypedArray()
+                setDefaultValue(KitsunePref.titles.name)
+                value = KitsunePref.titles.name
+                setOnPreferenceChangeListener { _, newValue ->
+                    val titlesPref = TitlesPref.valueOf(newValue.toString())
+                    KitsunePref.titles = titlesPref
+
+                    // Title preference can be also changed without being logged in.
+                    // Do only try to update the user model if logged in.
+                    if (user != null) {
+                        updateUserIfChanged(
+                            value,
+                            newValue,
+                            User(user.id, titleLanguagePreference = titlesPref)
+                        )
+                    }
+                    true
+                }
+            }
+
             //---- Country
             findPreference<ListPreference>(R.string.preference_key_country)?.apply {
                 entryValues = Locale.getISOCountries()
