@@ -352,7 +352,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
 
         val displayWidth = resources.displayMetrics.widthPixels
-        // full chart will show ratings 1-10 with step size 0.5; reduced chart with step size 1
+        // full chart shows advanced ratings (1-10); reduced chart with shows regular rating (0.5-5)
         val isFullChart =
             displayWidth >= resources.getDimensionPixelSize(R.dimen.details_rating_chart_full_threshold)
 
@@ -413,7 +413,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             data = barData
             applyStyle(requireContext())
             setFitBars(true)
-            xAxis.valueFormatter = StepAxisValueFormatter(1f, if (isFullChart) 0.5f else 1f)
+            xAxis.valueFormatter = StepAxisValueFormatter(if (isFullChart) 1f else 0.5f, 0.5f)
             xAxis.labelCount = if (isFullChart) 19 else 10
             invalidate()
         }
@@ -439,7 +439,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     private fun showEditLibraryEntryFragment() {
         if (!viewModel.isLoggedIn()) return
         val entryId = viewModel.libraryEntry.value?.id ?: return
-        val action = DetailsFragmentDirections.actionDetailsFragmentToLibraryEditEntryFragment(entryId)
+        val action =
+            DetailsFragmentDirections.actionDetailsFragmentToLibraryEditEntryFragment(entryId)
         findNavController().navigateSafe(R.id.details_fragment, action)
     }
 
