@@ -268,6 +268,18 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             }
         }
 
+        // On page update check if user performed a library update. If so, scroll to the entry.
+        adapter.addOnPagesUpdatedListener {
+            if (viewModel.scrollToUpdatedEntryId.isNullOrBlank()) return@addOnPagesUpdatedListener
+
+            val indexOfUpdatedEntry = adapter.snapshot()
+                .indexOfFirst { it?.libraryEntry?.id == viewModel.scrollToUpdatedEntryId }
+            if (indexOfUpdatedEntry != -1) {
+                binding.rvLibraryEntries.scrollToPosition(indexOfUpdatedEntry)
+                viewModel.hasScrolledToUpdatedEntry()
+            }
+        }
+
         viewModel.offlineLibraryModificationDao.getAllOfflineLibraryModificationsLiveData()
             .observe(viewLifecycleOwner) {
                 viewModel.invalidatePagingSource()
@@ -296,7 +308,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
     }
 
     override fun onItemLongClicked(item: LibraryEntryWrapper) {
-        val action = LibraryFragmentDirections.actionLibraryFragmentToLibraryEditEntryFragment(item.libraryEntry.id)
+        val action =
+            LibraryFragmentDirections.actionLibraryFragmentToLibraryEditEntryFragment(item.libraryEntry.id)
         findNavController().navigateSafe(R.id.library_fragment, action)
     }
 

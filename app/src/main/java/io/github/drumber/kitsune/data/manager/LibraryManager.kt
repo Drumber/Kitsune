@@ -250,6 +250,8 @@ class LibraryManager(
                     libraryEntryDao.insertSingle(fetchedFullLibraryEntry)
                 }
                 logD("Inserted library entry into database: ${fetchedFullLibraryEntry.id}")
+            } else {
+                logW("Library Entry was not inserted into database due to failed fetch of full model: ${libraryEntry.id}")
             }
         }
     }

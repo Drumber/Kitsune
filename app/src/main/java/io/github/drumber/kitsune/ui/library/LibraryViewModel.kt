@@ -46,6 +46,12 @@ class LibraryViewModel(
 
     var scrollToTopAfterSearch = false
 
+    /**
+     * The ID of the last updated entry the fragment should scroll to.
+     */
+    var scrollToUpdatedEntryId: String? = null
+        private set
+
     private val isSyncingLibrary = MutableLiveData(false)
 
     private val isUpdatingLibraryProgress = MutableLiveData(false)
@@ -184,6 +190,7 @@ class LibraryViewModel(
                 val response = libraryManager.updateLibraryEntry(modification)
                 withContext(Dispatchers.Main) {
                     responseListener?.invoke(response)
+                    scrollToUpdatedEntry(response, libraryEntry.id)
                 }
             } catch (e: Exception) {
                 logE("Failed to update library entry progress.", e)
@@ -208,6 +215,7 @@ class LibraryViewModel(
                 val response = libraryManager.updateLibraryEntry(modification)
                 withContext(Dispatchers.Main) {
                     responseListener?.invoke(response)
+                    scrollToUpdatedEntry(response, libraryEntry.id)
                 }
             } catch (e: Exception) {
                 logE("Failed to update library entry rating.")
@@ -215,6 +223,19 @@ class LibraryViewModel(
                 isUpdatingLibraryRating.postValue(false)
             }
         }
+    }
+
+    private fun scrollToUpdatedEntry(response: LibraryUpdateResponse, libraryEntryId: String?) {
+        if (response is LibraryUpdateResponse.SyncedOnline) {
+            scrollToUpdatedEntryId = libraryEntryId
+        }
+    }
+
+    /**
+     * Signals that the recycler view was scrolled to the updated entry.
+     */
+    fun hasScrolledToUpdatedEntry() {
+        scrollToUpdatedEntryId = null
     }
 
 }
