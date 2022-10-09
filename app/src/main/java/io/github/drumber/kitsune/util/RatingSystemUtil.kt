@@ -43,7 +43,12 @@ object RatingSystemUtil : KoinComponent {
 
     fun RatingSystem.convertToRatingTwenty(rating: Float): Int {
         return when (this) {
-            RatingSystem.Simple -> floor(rating * 5).toInt()
+            RatingSystem.Simple -> when (rating) {
+                1f -> 2
+                2f -> 8
+                3f -> 14
+                else -> 20
+            }
             RatingSystem.Regular -> floor(rating * 4).toInt()
             RatingSystem.Advanced -> floor(rating * 2).toInt()
         }
