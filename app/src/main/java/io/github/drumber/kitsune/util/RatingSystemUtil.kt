@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.util
 import io.github.drumber.kitsune.data.model.user.RatingSystem
 import io.github.drumber.kitsune.data.repository.UserRepository
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
+import org.koin.core.component.inject
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
@@ -11,8 +11,9 @@ object RatingSystemUtil : KoinComponent {
 
     private val DEFAULT = RatingSystem.Regular
 
+    private val userRepository: UserRepository by inject()
+
     fun getRatingSystem(): RatingSystem {
-        val userRepository: UserRepository = get()
         return userRepository.user?.ratingSystem ?: DEFAULT
     }
 

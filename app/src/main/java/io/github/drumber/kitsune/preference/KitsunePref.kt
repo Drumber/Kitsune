@@ -22,12 +22,15 @@ import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.util.logE
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import org.koin.core.component.inject
 import kotlin.reflect.KProperty
 
 object KitsunePref : KotprefModel(), KoinComponent {
 
     override val commitAllPropertiesByDefault = true
     override val kotprefName = context.getString(R.string.preference_file_key)
+
+    private val userRepository: UserRepository by inject()
 
     private var titlesIntern by enumValuePref(
         TitlesPref.Canonical,
@@ -39,7 +42,6 @@ object KitsunePref : KotprefModel(), KoinComponent {
             titlesIntern = value
         }
         get() {
-            val userRepository: UserRepository = get()
             return userRepository.user?.titleLanguagePreference ?: titlesIntern
         }
 
