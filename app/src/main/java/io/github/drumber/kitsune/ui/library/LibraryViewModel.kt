@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.ui.library
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.insertSeparators
 import androidx.paging.map
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.manager.LibraryManager
@@ -93,7 +94,7 @@ class LibraryViewModel(
         addSource(_searchQuery) { this.value = buildLibraryEntryFilter() }
     }
 
-    val dataSource: Flow<PagingData<LibraryEntryWrapper>> = filterMediator.asFlow().filterNotNull()
+    val dataSource: Flow<PagingData<LibraryEntryUiModel>> = filterMediator.asFlow().filterNotNull()
         .flatMapLatest { filter ->
             handleLibraryEntriesDataSource(filter)
                 .map { pagingData ->
@@ -102,6 +103,19 @@ class LibraryViewModel(
                             entry,
                             offlineLibraryModificationDao.getOfflineLibraryModification(entry.id)
                         )
+                    }
+                }
+                .map {
+                    it.insertSeparators { before: LibraryEntryWrapper?, after: LibraryEntryWrapper? ->
+                        // do not insert separators if currently searching
+                        if (!searchQuery.isNullOrBlank()) return@insertSeparators null
+
+                        when {
+                            after?.status == null -> null
+                            before == null || before.status != after.status ->
+                                LibraryEntryUiModel.StatusSeparatorModel(after.status!!)
+                            else -> null
+                        }
                     }
                 }
         }.cachedIn(viewModelScope)

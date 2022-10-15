@@ -9,25 +9,46 @@ import androidx.recyclerview.widget.RecyclerView
 import io.github.drumber.kitsune.GlideRequests
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.library.LibraryEntryAdapter
+import io.github.drumber.kitsune.data.model.library.LibraryEntryUiModel
+import io.github.drumber.kitsune.data.model.library.LibraryEntryUiModel.StatusSeparatorModel
 import io.github.drumber.kitsune.data.model.library.LibraryEntryWrapper
+import io.github.drumber.kitsune.data.model.library.getStringResId
 import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.databinding.ItemLibraryEntryBinding
+import io.github.drumber.kitsune.databinding.ItemLibraryStatusSeparatorBinding
 
 class LibraryEntriesAdapter(
     private val glide: GlideRequests,
     private val listener: LibraryEntryActionListener? = null
-) : PagingDataAdapter<LibraryEntryWrapper, LibraryEntriesAdapter.LibraryEntryViewHolder>(
-    LibraryEntryComparator
-) {
+) : PagingDataAdapter<LibraryEntryUiModel, RecyclerView.ViewHolder>(LibraryEntryUiModelComparator) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryEntryViewHolder {
-        return LibraryEntryViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = when (viewType) {
+        R.layout.item_library_entry -> LibraryEntryViewHolder(
             ItemLibraryEntryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        )
+        else -> StatusSeparatorViewHolder(
+            ItemLibraryStatusSeparatorBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         )
     }
 
-    override fun onBindViewHolder(holder: LibraryEntryViewHolder, position: Int) {
-        getItem(position)?.let { holder.bind(it) }
+    override fun getItemViewType(position: Int): Int {
+        return when (peek(position)) {
+            is LibraryEntryWrapper -> R.layout.item_library_entry
+            is StatusSeparatorModel -> R.layout.item_library_status_separator
+            else -> throw IllegalStateException("Unknown view")
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item = getItem(position) ?: return
+        when (holder) {
+            is LibraryEntryViewHolder -> holder.bind(item as LibraryEntryWrapper)
+            is StatusSeparatorViewHolder -> holder.bind(item as StatusSeparatorModel)
+        }
     }
 
     inner class LibraryEntryViewHolder(
@@ -38,32 +59,32 @@ class LibraryEntriesAdapter(
             binding.apply {
                 cardView.setOnClickListener {
                     if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
-                        getItem(bindingAdapterPosition)?.let { listener?.onItemClicked(it) }
+                        getItem(bindingAdapterPosition)?.let { listener?.onItemClicked(it as LibraryEntryWrapper) }
                     }
                 }
                 cardView.setOnLongClickListener {
                     if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
-                        getItem(bindingAdapterPosition)?.let { listener?.onItemLongClicked(it) }
+                        getItem(bindingAdapterPosition)?.let { listener?.onItemLongClicked(it as LibraryEntryWrapper) }
                         return@setOnLongClickListener true
                     }
                     return@setOnLongClickListener false
                 }
                 btnWatchedAdd.setOnClickListener {
                     if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
-                        getItem(bindingAdapterPosition)?.let { listener?.onEpisodeWatchedClicked(it) }
+                        getItem(bindingAdapterPosition)?.let { listener?.onEpisodeWatchedClicked(it as LibraryEntryWrapper) }
                     }
                 }
                 btnWatchedRemoved.setOnClickListener {
                     if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
                         getItem(bindingAdapterPosition)?.let {
-                            listener?.onEpisodeUnwatchedClicked(it)
+                            listener?.onEpisodeUnwatchedClicked(it as LibraryEntryWrapper)
                         }
                     }
                 }
                 btnRating.setOnClickListener {
                     if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
                         getItem(bindingAdapterPosition)?.let {
-                            listener?.onRatingClicked(it)
+                            listener?.onRatingClicked(it as LibraryEntryWrapper)
                         }
                     }
                 }
@@ -91,11 +112,37 @@ class LibraryEntriesAdapter(
         }
     }
 
-    object LibraryEntryComparator : DiffUtil.ItemCallback<LibraryEntryWrapper>() {
-        override fun areItemsTheSame(oldItem: LibraryEntryWrapper, newItem: LibraryEntryWrapper) =
-            oldItem.libraryEntry.id == newItem.libraryEntry.id
+    inner class StatusSeparatorViewHolder(
+        private val binding: ItemLibraryStatusSeparatorBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        override fun areContentsTheSame(oldItem: LibraryEntryWrapper, newItem: LibraryEntryWrapper) =
+        fun bind(statusSeparator: StatusSeparatorModel) {
+            binding.tvTitle.setText(statusSeparator.status.getStringResId())
+        }
+
+    }
+
+    object LibraryEntryUiModelComparator : DiffUtil.ItemCallback<LibraryEntryUiModel>() {
+        override fun areItemsTheSame(
+            oldItem: LibraryEntryUiModel,
+            newItem: LibraryEntryUiModel
+        ): Boolean {
+            val isSameLibraryEntry = oldItem is LibraryEntryWrapper
+                    && newItem is LibraryEntryWrapper
+                    && oldItem.libraryEntry.id == newItem.libraryEntry.id
+
+            val isSameSeparator = oldItem is StatusSeparatorModel
+                    && newItem is StatusSeparatorModel
+                    && oldItem.status == newItem.status
+
+            return isSameLibraryEntry || isSameSeparator
+        }
+
+
+        override fun areContentsTheSame(
+            oldItem: LibraryEntryUiModel,
+            newItem: LibraryEntryUiModel
+        ) =
             oldItem == newItem
     }
 

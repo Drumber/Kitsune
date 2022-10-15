@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class LibraryEntryWrapper(
     val libraryEntry: LibraryEntry,
     val libraryModification: LibraryModification?
-) : Parcelable {
+) : LibraryEntryUiModel(), Parcelable {
 
     val progress
         get() = libraryModification?.progress ?: libraryEntry.progress

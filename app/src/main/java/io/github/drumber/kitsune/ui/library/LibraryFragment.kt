@@ -273,7 +273,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             if (viewModel.scrollToUpdatedEntryId.isNullOrBlank()) return@addOnPagesUpdatedListener
 
             val indexOfUpdatedEntry = adapter.snapshot()
-                .indexOfFirst { it?.libraryEntry?.id == viewModel.scrollToUpdatedEntryId }
+                .indexOfFirst { (it as? LibraryEntryWrapper)?.libraryEntry?.id == viewModel.scrollToUpdatedEntryId }
+
             if (indexOfUpdatedEntry != -1) {
                 binding.rvLibraryEntries.scrollToPosition(indexOfUpdatedEntry)
                 viewModel.hasScrolledToUpdatedEntry()
