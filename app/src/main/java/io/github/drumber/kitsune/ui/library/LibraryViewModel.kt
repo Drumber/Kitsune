@@ -156,8 +156,10 @@ class LibraryViewModel(
     }
 
     fun setLibraryEntryStatus(status: List<Status>) {
-        KitsunePref.libraryEntryStatus = status
-        _filter.value = LibraryEntryFilter(KitsunePref.libraryEntryKind, status)
+        // clear status filter if all filters are selected
+        val statusFilter = if (status.size == 5) emptyList() else status
+        KitsunePref.libraryEntryStatus = statusFilter
+        _filter.value = LibraryEntryFilter(KitsunePref.libraryEntryKind, statusFilter)
     }
 
     fun synchronizeOfflineLibraryUpdates() {
