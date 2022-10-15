@@ -127,9 +127,11 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
 
         viewModel.libraryEntry.observe(viewLifecycleOwner) { libraryEntry ->
+            val isManga = libraryEntry?.manga != null
+                    || viewModel.mediaAdapter.value?.isAnime() == false
             if (libraryEntry != null) {
                 libraryEntry.status?.let { status ->
-                    binding.btnManageLibrary.setText(status.getStringResId())
+                    binding.btnManageLibrary.setText(status.getStringResId(!isManga))
                 } ?: binding.btnManageLibrary.setText(R.string.library_action_add)
                 binding.libraryEntry = LibraryEntryAdapter(LibraryEntryWrapper(libraryEntry, null))
             } else {
