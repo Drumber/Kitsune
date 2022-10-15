@@ -15,6 +15,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -207,7 +208,10 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         val glide = GlideApp.with(this)
         val adapter = LibraryEntriesAdapter(glide, this)
 
+        var lastLoadState: CombinedLoadStates? = null
+
         adapter.addLoadStateListener { state ->
+            lastLoadState = state
             if (view?.parent != null) {
                 val isNotLoading =
                     state.mediator?.refresh is LoadState.NotLoading || state.source.refresh is LoadState.NotLoading
@@ -270,7 +274,9 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
         // On page update check if user performed a library update. If so, scroll to the entry.
         adapter.addOnPagesUpdatedListener {
-            if (viewModel.scrollToUpdatedEntryId.isNullOrBlank()) return@addOnPagesUpdatedListener
+            val isLoading = lastLoadState?.source?.refresh is LoadState.Loading
+                    || lastLoadState?.mediator?.refresh is LoadState.Loading
+            if (viewModel.scrollToUpdatedEntryId.isNullOrBlank() || isLoading) return@addOnPagesUpdatedListener
 
             val indexOfUpdatedEntry = adapter.snapshot()
                 .indexOfFirst { (it as? LibraryEntryWrapper)?.libraryEntry?.id == viewModel.scrollToUpdatedEntryId }
