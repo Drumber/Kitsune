@@ -16,10 +16,7 @@ import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -94,7 +91,9 @@ class LibraryViewModel(
         addSource(_searchQuery) { this.value = buildLibraryEntryFilter() }
     }
 
-    val dataSource: Flow<PagingData<LibraryEntryUiModel>> = filterMediator.asFlow().filterNotNull()
+    val dataSource: Flow<PagingData<LibraryEntryUiModel>> = filterMediator.asFlow()
+        .filterNotNull()
+        .distinctUntilChanged()
         .flatMapLatest { filter ->
             handleLibraryEntriesDataSource(filter)
                 .map { pagingData ->

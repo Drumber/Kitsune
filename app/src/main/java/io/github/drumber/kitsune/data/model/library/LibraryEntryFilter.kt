@@ -10,8 +10,7 @@ data class LibraryEntryFilter(
 ) {
 
     fun pageSize(pageSize: Int): LibraryEntryFilter {
-        initialFilter.pageLimit(pageSize)
-        return this
+        return copy(initialFilter = Filter(initialFilter.options.toMutableMap()).pageLimit(pageSize))
     }
 
     fun buildFilter() = Filter(initialFilter.options.toMutableMap()).apply {
