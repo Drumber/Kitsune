@@ -10,10 +10,13 @@ import io.github.drumber.kitsune.data.model.RemoteKey
 import io.github.drumber.kitsune.data.model.RemoteKeyType
 import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.model.library.LibraryEntryFilter
+import io.github.drumber.kitsune.data.model.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.model.library.Status
 import io.github.drumber.kitsune.data.model.toPage
 import io.github.drumber.kitsune.data.room.ResourceDatabase
 import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.exception.ReceivedDataException
+import io.github.drumber.kitsune.util.logD
 
 @OptIn(ExperimentalPagingApi::class)
 class LibraryEntriesRemoteMediator(
@@ -70,11 +73,32 @@ class LibraryEntriesRemoteMediator(
             val endReached = page?.next == null
 
             database.withTransaction {
-                // only clear database on REFRESH and if the full library was requested (is not filtered)
-                // otherwise library entries won't be available for offline use
-                if (loadType == LoadType.REFRESH && !filter.isFiltered()) {
-                    libraryEntryDao.clearLibraryEntries()
-                    remoteKeyDao.clearRemoteKeys(RemoteKeyType.LibraryEntry)
+                // only clear database on REFRESH
+                if (loadType == LoadType.REFRESH) {
+                    // if no filter is selected (full library is shown), clear full database
+                    if (!filter.isFiltered()) {
+                        logD("Clearing all library entries and remote keys from database.")
+                        libraryEntryDao.clearLibraryEntries()
+                        remoteKeyDao.clearRemoteKeys(RemoteKeyType.LibraryEntry)
+                    }
+                    // otherwise clear all displayed library entries
+                    else {
+                        logD("Clearing filtered library entries and corresponding remote keys from database.")
+                        // if no status filter is selected, we target all status types
+                        val targetStatus = filter.libraryStatus.ifEmpty { Status.values().toList() }
+
+                        // clear all library entries in database with the selected kind and status
+                        val libraryEntriesToBeCleared = when (filter.kind) {
+                            LibraryEntryKind.Anime -> libraryEntryDao.getAnimeLibraryEntryByStatus(targetStatus)
+                            LibraryEntryKind.Manga -> libraryEntryDao.getMangaLibraryEntryByStatus(targetStatus)
+                            else -> libraryEntryDao.getAllLibraryEntryByStatus(targetStatus)
+                        }
+
+                        libraryEntryDao.delete(libraryEntriesToBeCleared)
+                        libraryEntriesToBeCleared.forEach { libraryEntry ->
+                            remoteKeyDao.deleteByResourceId(libraryEntry.id, RemoteKeyType.LibraryEntry)
+                        }
+                    }
                 }
 
                 val data = response.get() ?: throw ReceivedDataException("Received data is 'null'.")

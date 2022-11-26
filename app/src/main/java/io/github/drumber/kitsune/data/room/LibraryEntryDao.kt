@@ -44,6 +44,15 @@ interface LibraryEntryDao {
      * Non Paging Queries
      * =================== */
 
+    @Query("SELECT * FROM library_table WHERE status IN (:status) $ORDER_BY_STATUS")
+    suspend fun getAllLibraryEntryByStatus(status: List<Status>): List<LibraryEntry>
+
+    @Query("SELECT * FROM library_table WHERE status IN (:status) AND anime_id IS NOT NULL $ORDER_BY_STATUS")
+    suspend fun getAnimeLibraryEntryByStatus(status: List<Status>): List<LibraryEntry>
+
+    @Query("SELECT * FROM library_table WHERE status IN (:status) AND manga_id IS NOT NULL $ORDER_BY_STATUS")
+    suspend fun getMangaLibraryEntryByStatus(status: List<Status>): List<LibraryEntry>
+
     @Query("SELECT * FROM library_table WHERE anime_id = :mediaId OR manga_id = :mediaId")
     suspend fun getLibraryEntryFromMedia(mediaId: String): LibraryEntry?
 
@@ -67,6 +76,9 @@ interface LibraryEntryDao {
 
     @Delete
     suspend fun delete(libraryEntry: LibraryEntry)
+
+    @Delete
+    suspend fun delete(libraryEntries: List<LibraryEntry>)
 
     @Query("DELETE FROM library_table")
     suspend fun clearLibraryEntries()
