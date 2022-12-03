@@ -1,7 +1,6 @@
 package io.github.drumber.kitsune.ui.details
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -16,46 +15,29 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
-import com.google.android.material.chip.Chip
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.constants.MediaItemSize
-import io.github.drumber.kitsune.constants.SortFilter
-import io.github.drumber.kitsune.data.model.MediaSelector
-import io.github.drumber.kitsune.data.model.MediaType
-import io.github.drumber.kitsune.data.model.category.Category
 import io.github.drumber.kitsune.data.model.library.LibraryEntryAdapter
 import io.github.drumber.kitsune.data.model.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.data.model.library.Status
 import io.github.drumber.kitsune.data.model.library.getStringResId
-import io.github.drumber.kitsune.data.model.media.Anime
-import io.github.drumber.kitsune.data.model.media.MediaAdapter
-import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
-import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
-import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
-import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.details.DetailsViewModel.ErrorResponseType
+import io.github.drumber.kitsune.ui.details.tabs.DetailsTabsAdapter
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
-import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle
-import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle.applyStyle
-import io.github.drumber.kitsune.ui.widget.chart.StepAxisValueFormatter
 import io.github.drumber.kitsune.util.extensions.*
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import io.github.drumber.kitsune.util.originalOrDown
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.concurrent.CopyOnWriteArrayList
 
 class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     NavigationBarView.OnItemReselectedListener {
@@ -84,15 +66,12 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
 
         initAppBar()
+        initTabLayout()
 
         viewModel.initMediaAdapter(args.model)
 
         viewModel.mediaAdapter.observe(viewLifecycleOwner) { model ->
             binding.data = model
-            showCategoryChips(model)
-            showFranchise(model)
-            showStreamingLinks(model)
-            showRatingChart(model)
 
             val glide = GlideApp.with(this)
 
@@ -153,23 +132,6 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         binding.apply {
             content.initPaddingWindowInsetsListener(left = true, right = true)
             btnManageLibrary.setOnClickListener { showManageLibraryBottomSheet() }
-            btnMediaUnits.setOnClickListener {
-                val media = args.model.media
-                val libraryEntry = viewModel.libraryEntry.value
-                val action = DetailsFragmentDirections.actionDetailsFragmentToEpisodesFragment(
-                    media,
-                    libraryEntry?.id
-                )
-                findNavController().navigate(action)
-            }
-            btnCharacters.setOnClickListener {
-                val media = args.model.media
-                val action = DetailsFragmentDirections.actionDetailsFragmentToCharactersFragment(
-                    media.id,
-                    media is Anime
-                )
-                findNavController().navigate(action)
-            }
 
             btnEditLibraryEntry.setOnClickListener { showEditLibraryEntryFragment() }
         }
@@ -267,158 +229,12 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
     }
 
-    private fun showCategoryChips(mediaAdapter: MediaAdapter) {
-        if (!mediaAdapter.categories.isNullOrEmpty()) {
-            binding.chipGroupCategories.removeAllViews()
-
-            mediaAdapter.categories.orEmpty()
-                .sortedBy { it.title }
-                .forEach { category ->
-                    val chip = Chip(requireContext())
-                    chip.text = category.title
-                    chip.setOnClickListener {
-                        onCategoryChipClicked(category, mediaAdapter)
-                    }
-                    binding.chipGroupCategories.addView(chip)
-                }
-        }
-    }
-
-    private fun onCategoryChipClicked(category: Category, mediaAdapter: MediaAdapter) {
-        val categorySlug = category.slug ?: return
-        val title = category.title ?: getString(R.string.no_information)
-
-        val mediaSelector = MediaSelector(
-            if (mediaAdapter.isAnime()) MediaType.Anime else MediaType.Manga,
-            Filter()
-                .filter("categories", categorySlug)
-                .sort(SortFilter.POPULARITY_DESC.queryParam)
-        )
-
-        val action =
-            DetailsFragmentDirections.actionDetailsFragmentToMediaListFragment(mediaSelector, title)
-        findNavController().navigate(action)
-    }
-
-    private fun showFranchise(mediaAdapter: MediaAdapter) {
-        val data = mediaAdapter.media.mediaRelationships?.sortedBy {
-            it.role?.ordinal
-        }?.mapNotNull {
-            it.media?.let { media -> MediaAdapter.fromMedia(media, it.role) }
-        } ?: emptyList()
-
-        if (binding.rvFranchise.adapter !is MediaRecyclerViewAdapter) {
-            val glide = GlideApp.with(this)
-            val adapter = MediaRecyclerViewAdapter(
-                CopyOnWriteArrayList(data),
-                glide,
-                TagData.RelationshipRole
-            ) { media ->
-                onFranchiseItemClicked(media)
-            }
-            adapter.overrideItemSize = MediaItemSize.SMALL
-            binding.rvFranchise.adapter = adapter
-        } else {
-            val adapter = binding.rvFranchise.adapter as MediaRecyclerViewAdapter
-            adapter.dataSet.addAll(0, data)
-            adapter.notifyDataSetChanged()
-        }
-    }
-
-    private fun onFranchiseItemClicked(mediaAdapter: MediaAdapter) {
-        val action = DetailsFragmentDirections.actionDetailsFragmentSelf(mediaAdapter)
-        findNavController().navigateSafe(R.id.details_fragment, action)
-    }
-
-    private fun showStreamingLinks(mediaAdapter: MediaAdapter) {
-        val data = (mediaAdapter.media as? Anime)?.streamingLinks ?: emptyList()
-
-        if (binding.rvStreamer.adapter !is StreamingLinkAdapter) {
-            val glide = GlideApp.with(this)
-            val adapter = StreamingLinkAdapter(CopyOnWriteArrayList(data), glide) { streamingLink ->
-                streamingLink.url?.let { url ->
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                    startActivity(intent)
-                }
-            }
-            binding.rvStreamer.adapter = adapter
-        } else {
-            val adapter = binding.rvStreamer.adapter as StreamingLinkAdapter
-            adapter.dataSet.addAll(0, data)
-            adapter.notifyDataSetChanged()
-        }
-    }
-
-    private fun showRatingChart(mediaAdapter: MediaAdapter) {
-        val ratings = mediaAdapter.media.ratingFrequencies ?: return
-
-
-        val displayWidth = resources.displayMetrics.widthPixels
-        // full chart shows advanced ratings (1-10); reduced chart with shows regular rating (0.5-5)
-        val isFullChart =
-            displayWidth >= resources.getDimensionPixelSize(R.dimen.details_rating_chart_full_threshold)
-
-        val ratingList = with(ratings) {
-            val list = listOf(
-                r2,
-                r3,
-                r4,
-                r5,
-                r6,
-                r7,
-                r8,
-                r9,
-                r10,
-                r11,
-                r12,
-                r13,
-                r14,
-                r15,
-                r16,
-                r17,
-                r18,
-                r19,
-                r20
-            )
-
-            if (isFullChart) {
-                list
-            } else {
-                var previous = 0
-                list.mapIndexedNotNull { index, s ->
-                    if (index % 2 == 0) {
-                        (previous + (s?.toInt() ?: 0)).toString()
-                    } else {
-                        previous = s?.toInt() ?: 0
-                        null
-                    }
-                }
-            }
-        }
-
-        val chartEntries = ratingList.mapIndexed { index, s ->
-            BarEntry(index.toFloat(), s?.toFloat() ?: 0f)
-        }
-
-        val dataSet = BarDataSet(chartEntries, "Ratings")
-        val chartColorArray = BarChartStyle
-            .getColorArray(requireContext(), R.array.ratings_chart_colors)
-            .filterIndexed { index, _ ->
-                isFullChart || index % 2 == 0
-            }
-        dataSet.applyStyle(requireContext(), chartColorArray)
-
-        val barData = BarData(dataSet)
-        barData.applyStyle(requireContext())
-
-        binding.chartRatings.apply {
-            data = barData
-            applyStyle(requireContext())
-            setFitBars(true)
-            xAxis.valueFormatter = StepAxisValueFormatter(if (isFullChart) 1f else 0.5f, 0.5f)
-            xAxis.labelCount = if (isFullChart) 19 else 10
-            invalidate()
-        }
+    private fun initTabLayout() {
+        val detailsTabsAdapter = DetailsTabsAdapter(this)
+        binding.viewPagerDetails.adapter = detailsTabsAdapter
+        TabLayoutMediator(binding.tabLayoutDetails, binding.viewPagerDetails) { tab, position ->
+            tab.text = "Tab $position"
+        }.attach()
     }
 
     private fun showManageLibraryBottomSheet() {

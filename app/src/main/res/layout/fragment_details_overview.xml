@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.text.TextUtils" />
+
+        <import type="io.github.drumber.kitsune.data.model.media.MediaAdapter" />
+
+        <variable
+            name="data"
+            type="MediaAdapter" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.details.tabs.OverviewTabFragment">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nsv_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:requiresFadingEdge="horizontal"
+                    android:scrollbars="none">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chip_group_categories"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        app:singleLine="true" />
+
+                </HorizontalScrollView>
+
+                <include
+                    layout="@layout/section_details_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="25dp"
+                    app:data="@{data}"
+                    app:isVisible="@{!TextUtils.isEmpty(data.description)}" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/title_details"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+                    <include
+                        layout="@layout/section_details_info"
+                        app:data="@{data}" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_media_units"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{data.isAnime() ? @string/title_episodes : @string/title_chapters}"
+                    android:textAllCaps="false" />
+
+                <Button
+                    android:id="@+id/btn_characters"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/title_characters"
+                    android:textAllCaps="false" />
+
+                <include
+                    layout="@layout/section_details_trailer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:coverUrl="@{data.trailerCoverUrl}"
+                    app:isVisible="@{!TextUtils.isEmpty(data.trailerUrl)}"
+                    app:videoUrl="@{data.trailerUrl}" />
+
+                <LinearLayout
+                    android:id="@+id/layout_franchise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical"
+                    app:isVisible="@{data.hasMediaRelationships()}">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/title_more_franchise"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_franchise"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:orientation="horizontal"
+                        android:paddingVertical="5dp"
+                        android:requiresFadingEdge="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_streamer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    app:isVisible="@{data.hasStreamingLinks()}">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/title_streamer"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_streamer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:orientation="horizontal"
+                        android:paddingVertical="5dp"
+                        android:requiresFadingEdge="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_ratings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    app:isVisible="@{data.hasRatingFrequencies()}">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="@string/title_ratings"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/chart_ratings"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </FrameLayout>
+</layout>

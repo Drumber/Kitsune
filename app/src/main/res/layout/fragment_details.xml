@@ -109,12 +109,12 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
                     android:clipToPadding="false"
-                    android:orientation="vertical"
-                    android:padding="15dp">
+                    android:orientation="vertical">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:padding="15dp">
 
                         <ImageView
                             android:id="@+id/iv_thumbnail"
@@ -171,148 +171,21 @@
 
                     </RelativeLayout>
 
-                    <HorizontalScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:requiresFadingEdge="horizontal"
-                        android:scrollbars="none">
-
-                        <com.google.android.material.chip.ChipGroup
-                            android:id="@+id/chip_group_categories"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clipToPadding="false"
-                            app:singleLine="true" />
-
-                    </HorizontalScrollView>
-
-                    <include
-                        layout="@layout/section_details_description"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="25dp"
-                        app:data="@{data}"
-                        app:isVisible="@{!TextUtils.isEmpty(data.description)}" />
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:text="@string/title_details"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
-
-                        <include
-                            layout="@layout/section_details_info"
-                            app:data="@{data}" />
-
-                    </LinearLayout>
-
-                    <Button
-                        android:id="@+id/btn_media_units"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@{data.isAnime() ? @string/title_episodes : @string/title_chapters}"
-                        android:textAllCaps="false" />
-
-                    <Button
-                        android:id="@+id/btn_characters"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/title_characters"
-                        android:textAllCaps="false" />
-
-                    <include
-                        layout="@layout/section_details_trailer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        app:coverUrl="@{data.trailerCoverUrl}"
-                        app:isVisible="@{!TextUtils.isEmpty(data.trailerUrl)}"
-                        app:videoUrl="@{data.trailerUrl}" />
-
-                    <LinearLayout
-                        android:id="@+id/layout_franchise"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:orientation="vertical"
-                        app:isVisible="@{data.hasMediaRelationships()}">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:text="@string/title_more_franchise"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rv_franchise"
+                        <com.google.android.material.tabs.TabLayout
+                            android:id="@+id/tab_layout_details"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:clipToPadding="false"
-                            android:orientation="horizontal"
-                            android:paddingVertical="5dp"
-                            android:requiresFadingEdge="horizontal"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                            android:layout_height="wrap_content"/>
 
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_streamer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="vertical"
-                        app:isVisible="@{data.hasStreamingLinks()}">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:text="@string/title_streamer"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rv_streamer"
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/view_pager_details"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:clipToPadding="false"
-                            android:orientation="horizontal"
-                            android:paddingVertical="5dp"
-                            android:requiresFadingEdge="horizontal"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_ratings"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="vertical"
-                        app:isVisible="@{data.hasRatingFrequencies()}">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:text="@string/title_ratings"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
-
-                        <com.github.mikephil.charting.charts.BarChart
-                            android:id="@+id/chart_ratings"
-                            android:layout_width="match_parent"
-                            android:layout_height="200dp" />
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
 
                     </LinearLayout>
 
