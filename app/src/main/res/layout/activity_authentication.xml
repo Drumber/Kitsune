@@ -38,7 +38,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <ImageView
+                    android:layout_width="144dp"
+                    android:layout_height="144dp"
+                    android:layout_marginBottom="20dp"
+                    android:src="@drawable/ic_launcher_foreground"
+                    android:layout_centerHorizontal="true"
+                    android:layout_above="@id/layout_login_form"
+                    android:contentDescription="@null" />
+
                 <LinearLayout
+                    android:id="@+id/layout_login_form"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -112,6 +122,7 @@
                     android:id="@+id/tv_create_account"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceBody2"
                     android:text="@string/login_no_account"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"

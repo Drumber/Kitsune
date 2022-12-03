@@ -47,16 +47,14 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
     fun loginDataChanged(username: String, password: String) {
         if (!isUserNameValid(username)) {
             _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
-        } else if (!isPasswordValid(password)) {
-            _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
-        } else {
+        } else if (isPasswordValid(password)) {
             _loginForm.value = LoginFormState(isDataValid = true)
         }
     }
 
     private fun isUserNameValid(username: String): Boolean {
-        // very that username is an email address
-        return ("""^\S+@\S+$""".toRegex().matches(username))
+        // verify that username is an email address
+        return ("""^\S+@\S+\.\S+$""".toRegex().matches(username))
     }
 
     private fun isPasswordValid(password: String): Boolean {

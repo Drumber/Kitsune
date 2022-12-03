@@ -76,7 +76,7 @@
     <string name="title_favorite_manga">Favorite Manga</string>
     <string name="title_favorite_characters">Favorite Characters</string>
     <string name="title_authentication">Authentication</string>
-    <string name="title_login">Login to your Kitsu account</string>
+    <string name="title_login">Log in to your Kitsu account</string>
     <string name="title_play_trailer">Play Trailer</string>
     <string name="title_about_me">About Me</string>
     <string name="title_episodes">Episodes</string>
@@ -231,7 +231,6 @@
     <string name="action_log_in">Log in</string>
     <string name="action_log_in_to_kitsu">Log in to Kitsu</string>
     <string name="invalid_username">Not a valid email address</string>
-    <string name="invalid_password">Invalid password</string>
     <string name="login_failed">"Login failed"</string>
     <string name="status_logging_in">Logging in…</string>
     <string name="logged_in_success">Logged in as %s.</string>

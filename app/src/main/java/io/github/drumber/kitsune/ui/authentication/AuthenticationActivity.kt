@@ -43,8 +43,9 @@ class AuthenticationActivity : BaseActivity(R.layout.activity_authentication, fa
             // disable login button unless both username / password is valid
             login.isEnabled = loginState.isDataValid
 
-            username.error = loginState.usernameError?.let { getString(it) }
-            password.error = loginState.passwordError?.let { getString(it) }
+            username.error = loginState.usernameError
+                ?.takeIf { username.editText?.isFocused == false }
+                ?.let { getString(it) }
         }
 
         viewModel.loginResult.observe(this) {
