@@ -31,7 +31,7 @@ import io.github.drumber.kitsune.ui.widget.ExpandableLayout
 import io.github.drumber.kitsune.ui.widget.algolia.IntNumberRangeView
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class FacetFragment : Fragment(R.layout.fragment_filter_facet),
     NavigationBarView.OnItemReselectedListener {
@@ -40,7 +40,7 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
 
     private val connection = ConnectionHandler()
 
-    private val viewModel: SearchViewModel by sharedViewModel()
+    private val viewModel: SearchViewModel by activityViewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
