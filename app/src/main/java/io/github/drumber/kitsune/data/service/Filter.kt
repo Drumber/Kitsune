@@ -25,6 +25,9 @@ data class Filter(val options: MutableMap<String, String> = mutableMapOf()): Par
     /** Filter by certain matching attributes or relationships. */
     fun filter(attribute: String, value: String) = put("filter[$attribute]", value)
 
+    /** Checks if there is a filter applied for the given attribute name. */
+    fun hasFilterAttribute(attribute: String) = options.containsKey("filter[$attribute]")
+
     fun include(vararg relationships: String) = put("include", relationships.joinToString(","))
 
     private fun put(key: String, value: Any): Filter {

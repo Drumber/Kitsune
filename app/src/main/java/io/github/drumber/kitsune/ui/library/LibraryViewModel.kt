@@ -124,15 +124,13 @@ class LibraryViewModel(
      * otherwise search the library online.
      */
     private fun handleLibraryEntriesDataSource(filter: LibraryEntryFilter): Flow<PagingData<LibraryEntry>> {
-        val searchQueryText = searchQuery
-        return if (searchQueryText.isNullOrBlank()) {
-            libraryEntriesRepository.libraryEntries(Kitsu.DEFAULT_PAGE_SIZE_LIBRARY, filter)
-        } else {
+        return if (filter.isFilteredBySearchQuery()) {
             libraryEntriesRepository.searchLibraryEntries(
                 Kitsu.DEFAULT_PAGE_SIZE_LIBRARY,
                 filter.buildFilter()
-                    .filter("title", searchQueryText)
             )
+        } else {
+            libraryEntriesRepository.libraryEntries(Kitsu.DEFAULT_PAGE_SIZE_LIBRARY, filter)
         }
     }
 
@@ -142,6 +140,12 @@ class LibraryViewModel(
                 .filter("user_id", userId)
                 .sort("status", "-progressed_at")
                 .include("anime", "manga")
+
+            // if the search query is not blank, add it to the filter and we will later search for the given query
+            val searchQueryText = searchQuery
+            if (!searchQueryText.isNullOrBlank()) {
+                requestFilter.filter("title", searchQueryText)
+            }
 
             filter.value?.copy(initialFilter = requestFilter)
                 ?: LibraryEntryFilter(

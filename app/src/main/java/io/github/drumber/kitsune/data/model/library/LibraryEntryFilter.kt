@@ -26,6 +26,9 @@ data class LibraryEntryFilter(
 
     fun isFiltered() = kind != LibraryEntryKind.All || libraryStatus.isNotEmpty()
 
+    /** Checks if the initial filter has a 'title' filter applied. */
+    fun isFilteredBySearchQuery() = initialFilter.hasFilterAttribute("title")
+
 }
 
 enum class LibraryEntryKind {
