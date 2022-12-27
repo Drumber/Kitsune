@@ -237,13 +237,6 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
                     swipeRefreshLayout.isRefreshing =
                         swipeRefreshLayout.isRefreshing && state.source.refresh is LoadState.Loading
-
-                    // TODO: this only scrolls to the top after the first load finished,
-                    //       we also need to scroll to top after the last load finished
-                    if (isNotLoading && viewModel.scrollToTopAfterSearch) {
-                        rvLibraryEntries.scrollToPosition(0)
-                        viewModel.scrollToTopAfterSearch = false
-                    }
                 }
             }
         }
@@ -272,11 +265,23 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             }
         }
 
-        // On page update check if user performed a library update. If so, scroll to the entry.
+        // On page update check if the user performed a search or library update.
+        // If so, scroll to the top in case of a search or to the updated entry.
         adapter.addOnPagesUpdatedListener {
             val isLoading = lastLoadState?.source?.refresh is LoadState.Loading
                     || lastLoadState?.mediator?.refresh is LoadState.Loading
-            if (viewModel.scrollToUpdatedEntryId.isNullOrBlank() || isLoading) return@addOnPagesUpdatedListener
+
+            val shouldScroll = !viewModel.scrollToUpdatedEntryId.isNullOrBlank() || viewModel.scrollToTopAfterSearch
+
+            if (!shouldScroll || isLoading) return@addOnPagesUpdatedListener
+
+            // check if we only need to scroll to the top (on search)
+            if (viewModel.scrollToTopAfterSearch) {
+                viewModel.scrollToTopAfterSearch = false
+                binding.rvLibraryEntries.scrollToPosition(0)
+                return@addOnPagesUpdatedListener
+            }
+            // ... else we need to scroll to a specific library entry (on update)
 
             val indexOfUpdatedEntry = adapter.snapshot()
                 .indexOfFirst { (it as? LibraryEntryWrapper)?.libraryEntry?.id == viewModel.scrollToUpdatedEntryId }
