@@ -6,8 +6,8 @@ import java.io.File
 
 object LogCatReader {
 
-    suspend fun readAppLogs() = withContext(Dispatchers.IO) {
-        val process = Runtime.getRuntime().exec("logcat -d")
+    suspend fun readAppLogs(maxLines: Int = 5000) = withContext(Dispatchers.IO) {
+        val process = Runtime.getRuntime().exec("logcat -d -t $maxLines")
         process.inputStream.bufferedReader().use {
             return@withContext it.readLines()
         }
