@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.*
 import androidx.preference.ListPreference.SimpleSummaryProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.aboutlibraries.LibsBuilder
 import io.github.drumber.kitsune.BuildConfig
@@ -26,8 +27,10 @@ import io.github.drumber.kitsune.data.model.user.User
 import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.util.LogCatReader
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -62,6 +65,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 KitsunePref.startFragment = StartPagePref.valueOf(newValue as String)
                 true
             }
+        }
+
+        //---- App Logs
+        findPreference<Preference>(R.string.preference_key_app_logs)?.setOnPreferenceClickListener {
+            val action = SettingsFragmentDirections.actionSettingsFragmentToAppLogsFragment()
+            findNavController().navigate(action)
+            true
         }
 
         //---- App Version

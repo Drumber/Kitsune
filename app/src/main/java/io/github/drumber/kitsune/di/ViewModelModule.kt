@@ -12,6 +12,7 @@ import io.github.drumber.kitsune.ui.medialist.MediaListViewModel
 import io.github.drumber.kitsune.ui.profile.ProfileViewModel
 import io.github.drumber.kitsune.ui.search.SearchViewModel
 import io.github.drumber.kitsune.ui.search.categories.CategoriesViewModel
+import io.github.drumber.kitsune.ui.settings.AppLogsViewModel
 import io.github.drumber.kitsune.ui.settings.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -30,4 +31,5 @@ val viewModelModule = module {
     viewModel { EpisodesViewModel(get(), get(), get(), get(), get()) }
     viewModel { CharactersViewModel(get(), get()) }
     viewModel { SettingsViewModel(get(), get()) }
+    viewModel { AppLogsViewModel() }
 }

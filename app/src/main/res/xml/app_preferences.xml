@@ -77,6 +77,11 @@
             android:summary="@string/preference_check_for_updates_description"
             android:defaultValue="true" />
 
+        <Preference
+            android:key="@string/preference_key_app_logs"
+            android:title="@string/preference_app_logs"
+            android:summary="@string/preference_app_logs_description" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

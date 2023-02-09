@@ -14,6 +14,7 @@
     <string name="preference_key_offline_library_updates">offline_library_updates</string>
     <string name="preference_key_remember_search_filters">remember_search_filters</string>
     <string name="preference_key_check_for_updates_on_start">check_for_updates_on_start</string>
+    <string name="preference_key_app_logs">app_logs</string>
     <string name="preference_key_app_version">app_version</string>
     <string name="preference_key_open_source_libraries">open_source_libraries</string>
 

@@ -104,6 +104,9 @@
         <deepLink
             android:id="@+id/deepLink_settings"
             app:uri="kitsune://settings" />
+        <action
+            android:id="@+id/action_settings_fragment_to_appLogsFragment"
+            app:destination="@id/appLogsFragment" />
     </fragment>
     <fragment
         android:id="@+id/library_fragment"
@@ -207,4 +210,9 @@
             android:name="ratingSystem"
             app:argType="io.github.drumber.kitsune.data.model.user.RatingSystem" />
     </dialog>
+    <fragment
+        android:id="@+id/appLogsFragment"
+        android:name="io.github.drumber.kitsune.ui.settings.AppLogsFragment"
+        android:label="fragment_app_logs"
+        tools:layout="@layout/fragment_app_logs" />
 </navigation>
