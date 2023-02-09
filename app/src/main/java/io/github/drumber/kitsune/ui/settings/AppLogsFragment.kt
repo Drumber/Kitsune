@@ -1,19 +1,26 @@
 package io.github.drumber.kitsune.ui.settings
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentAppLogsBinding
+import io.github.drumber.kitsune.util.LogCatReader
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
+import io.github.drumber.kitsune.util.logI
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 class AppLogsFragment : Fragment(R.layout.fragment_app_logs) {
 
@@ -30,6 +37,13 @@ class AppLogsFragment : Fragment(R.layout.fragment_app_logs) {
             findNavController().navigateUp()
         }
 
+        binding.toolbar.setOnMenuItemClickListener { menuItem ->
+            if (menuItem.itemId == R.id.menu_share_app_logs) {
+                shareLogFile()
+            }
+            true
+        }
+
         viewModel.logMessages.observe(viewLifecycleOwner) { logMessages ->
             binding.apply {
                 progressBar.isVisible = false
@@ -44,6 +58,32 @@ class AppLogsFragment : Fragment(R.layout.fragment_app_logs) {
                 }
             }
         }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun shareLogFile() {
+        val dateTime = SimpleDateFormat("yyy-MM-dd_HH-mm-ss").format(Date())
+        val fileName = "Kitsune_$dateTime.txt"
+        val logsDir = File(requireContext().cacheDir, "logs")
+        val logFile = File(logsDir, fileName)
+
+        deleteAllFiles(logsDir) // delete any previously created log files
+        logFile.deleteOnExit()
+
+        lifecycleScope.launch {
+            LogCatReader.writeAppLogsToFile(logFile)
+
+            val contentUri = FileProvider.getUriForFile(requireContext(), "io.github.drumber.kitsune.fileprovider", logFile)
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/*"
+                putExtra(Intent.EXTRA_STREAM, contentUri)
+            }
+            startActivity(Intent.createChooser(shareIntent, getText(R.string.action_share_app_logs)))
+        }
+    }
+
+    private fun deleteAllFiles(directory: File) {
+        directory.listFiles { file: File -> file.isFile }?.forEach { it.delete() }
     }
 
 }

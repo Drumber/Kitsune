@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="@string/nav_app_logs"
+            app:menu="@menu/logs_menu"
             app:navigationIcon="@drawable/ic_arrow_back_24"
             app:navigationContentDescription="@string/action_back"
             app:layout_scrollFlags="scroll|enterAlways"
