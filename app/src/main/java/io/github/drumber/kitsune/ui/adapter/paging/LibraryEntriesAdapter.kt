@@ -16,6 +16,7 @@ import io.github.drumber.kitsune.data.model.library.getStringResId
 import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.databinding.ItemLibraryEntryBinding
 import io.github.drumber.kitsune.databinding.ItemLibraryStatusSeparatorBinding
+import io.github.drumber.kitsune.util.logD
 
 class LibraryEntriesAdapter(
     private val glide: GlideRequests,
@@ -39,7 +40,7 @@ class LibraryEntriesAdapter(
         return when (peek(position)) {
             is LibraryEntryWrapper -> R.layout.item_library_entry
             is StatusSeparatorModel -> R.layout.item_library_status_separator
-            else -> throw IllegalStateException("Unknown view")
+            else -> 0
         }
     }
 
