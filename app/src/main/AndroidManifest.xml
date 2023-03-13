@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -16,8 +16,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Kitsune.DayNight">
-        <profileable android:shell="true"
+        <profileable
+            android:shell="true"
             tools:targetApi="q" />
+
         <activity
             android:name=".ui.details.photoview.PhotoViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -30,13 +32,15 @@
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/Theme.Kitsune.SplashScreen.DayNight">
+            android:theme="@style/Theme.Kitsune.SplashScreen.DayNight"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <nav-graph android:value="@navigation/main_nav_graph" />
 
             <meta-data
                 android:name="android.app.shortcuts"
@@ -46,8 +50,8 @@
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="io.github.drumber.kitsune.fileprovider"
-            android:grantUriPermissions="true"
-            android:exported="false">
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />

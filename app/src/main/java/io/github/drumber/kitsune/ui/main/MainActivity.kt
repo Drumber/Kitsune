@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.ui.main
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
@@ -19,6 +20,7 @@ import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.util.CustomNavigationUI.bindToNavController
+import io.github.drumber.kitsune.util.logD
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -78,7 +80,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             toggleBottomNavigation(isSettingsFragmentInBackStack())
         }
 
-        if (savedInstanceState == null) {
+        // override start fragment, but only on clean launch and when not launched by a deep link
+        if (savedInstanceState == null && !isLaunchedByDeepLink()) {
+            // if the app wasn't launched from an app shortcut
+            // and the user has specified a custom start page
+            // then set the start fragment to the custom one
             if (!handleShortcutAction() && KitsunePref.startFragment != StartPagePref.Home) {
                 setStartFragment(KitsunePref.startFragment.getDestinationId())
             }
@@ -127,6 +133,16 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             return true
         }
         return false
+    }
+
+    /** Checks if the activity was launched using an app link, */
+    private fun isLaunchedByDeepLink(): Boolean {
+        return intent.action == Intent.ACTION_VIEW && intent.data != null
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        navController.handleDeepLink(intent)
     }
 
     private fun handleShortcutAction(): Boolean {

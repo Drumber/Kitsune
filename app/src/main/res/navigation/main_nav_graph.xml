@@ -53,10 +53,12 @@
     <fragment
         android:id="@+id/details_fragment"
         android:name="io.github.drumber.kitsune.ui.details.DetailsFragment"
-        android:label="DetailsFragment" >
+        android:label="DetailsFragment">
         <argument
             android:name="model"
-            app:argType="io.github.drumber.kitsune.data.model.media.MediaAdapter" />
+            app:argType="io.github.drumber.kitsune.data.model.media.MediaAdapter"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <action
             android:id="@+id/action_details_fragment_to_media_list_fragment"
             app:destination="@id/media_list_fragment" />
@@ -75,6 +77,20 @@
         <action
             android:id="@+id/action_details_fragment_to_libraryEditEntryFragment"
             app:destination="@id/libraryEditEntryFragment" />
+        <deepLink
+            android:id="@+id/deepLink"
+            app:action="ACTION_VIEW"
+            app:uri="kitsu.io/{type}/{slug}" />
+        <argument
+            android:name="type"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="slug"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/media_list_fragment"

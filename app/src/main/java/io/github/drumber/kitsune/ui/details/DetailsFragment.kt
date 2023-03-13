@@ -49,11 +49,8 @@ import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle.applyStyle
 import io.github.drumber.kitsune.ui.widget.chart.StepAxisValueFormatter
+import io.github.drumber.kitsune.util.*
 import io.github.drumber.kitsune.util.extensions.*
-import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
-import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.initWindowInsetsListener
-import io.github.drumber.kitsune.util.originalOrDown
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -85,7 +82,27 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
         initAppBar()
 
-        viewModel.initMediaAdapter(args.model)
+        if (args.model != null) {
+            viewModel.initMediaAdapter(args.model!!)
+        } else if (!args.type.isNullOrBlank() && !args.slug.isNullOrBlank()) {
+            val isAnime = when (args.type!!.lowercase()) {
+                "anime" -> true
+                "manga" -> false
+                else -> null
+            }
+
+            if (isAnime == null) {
+                logW("Unknown media type '${args.type}'.")
+                showSomethingWrongToast()
+                goBack()
+            } else {
+                viewModel.initFromDeepLink(isAnime, args.slug!!)
+            }
+        } else {
+            logW("DetailsFragment opened without media adapter or invalid deeplink parameters.")
+            showSomethingWrongToast()
+            goBack()
+        }
 
         viewModel.mediaAdapter.observe(viewLifecycleOwner) { model ->
             binding.data = model
@@ -154,7 +171,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             content.initPaddingWindowInsetsListener(left = true, right = true)
             btnManageLibrary.setOnClickListener { showManageLibraryBottomSheet() }
             btnMediaUnits.setOnClickListener {
-                val media = args.model.media
+                val media = viewModel.mediaAdapter.value?.media ?: return@setOnClickListener
                 val libraryEntry = viewModel.libraryEntry.value
                 val action = DetailsFragmentDirections.actionDetailsFragmentToEpisodesFragment(
                     media,
@@ -163,10 +180,10 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 findNavController().navigate(action)
             }
             btnCharacters.setOnClickListener {
-                val media = args.model.media
+                val media = viewModel.mediaAdapter.value ?: return@setOnClickListener
                 val action = DetailsFragmentDirections.actionDetailsFragmentToCharactersFragment(
                     media.id,
-                    media is Anime
+                    media.isAnime()
                 )
                 findNavController().navigate(action)
             }

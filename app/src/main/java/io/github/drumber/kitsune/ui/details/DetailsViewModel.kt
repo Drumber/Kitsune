@@ -20,6 +20,7 @@ import io.github.drumber.kitsune.data.service.user.FavoriteService
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
+import io.github.drumber.kitsune.util.logW
 import kotlinx.coroutines.*
 import retrofit2.HttpException
 
@@ -53,6 +54,30 @@ class DetailsViewModel(
         get() = _isLoading
 
     var errorResponseListener: ((ErrorResponseType) -> Unit)? = null
+
+    fun initFromDeepLink(isAnime: Boolean, slug: String) {
+        val filter = Filter()
+            .filter("slug", slug)
+            .fields("media", "id")
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val media = if (isAnime) {
+                animeService.allAnime(filter.options).get()
+            } else {
+                mangaService.allManga(filter.options).get()
+            }
+
+            if (media.isNullOrEmpty()) {
+                logW("No media for slug '$slug' found.")
+                return@launch
+            }
+
+            val mediaAdapter = MediaAdapter.fromMedia(media.first())
+            withContext(Dispatchers.Main) {
+                initMediaAdapter(mediaAdapter)
+            }
+        }
+    }
 
     fun initMediaAdapter(mediaAdapter: MediaAdapter) {
         if (_mediaAdapter.value == null) {
