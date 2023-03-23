@@ -30,6 +30,7 @@ class LibraryViewModel(
     private val updateLock = Any()
 
     var responseListener: ((LibraryUpdateResponse) -> Unit)? = null
+    var doRefreshListener: (() -> Unit)? = null
 
     private val _filter = MutableLiveData(
         LibraryEntryFilter(
@@ -206,11 +207,7 @@ class LibraryViewModel(
         isUpdatingLibraryProgress.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = libraryManager.updateLibraryEntry(modification)
-                withContext(Dispatchers.Main) {
-                    responseListener?.invoke(response)
-                    scrollToUpdatedEntry(response, libraryEntry.id)
-                }
+                updateLibraryEntry(modification)
             } catch (e: Exception) {
                 logE("Failed to update library entry progress.", e)
             } finally {
@@ -231,17 +228,29 @@ class LibraryViewModel(
         isUpdatingLibraryRating.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = libraryManager.updateLibraryEntry(modification)
-                withContext(Dispatchers.Main) {
-                    responseListener?.invoke(response)
-                    scrollToUpdatedEntry(response, libraryEntry.id)
-                }
+                updateLibraryEntry(modification)
             } catch (e: Exception) {
                 logE("Failed to update library entry rating.")
             } finally {
                 isUpdatingLibraryRating.postValue(false)
             }
         }
+    }
+
+    private suspend fun updateLibraryEntry(modification: LibraryModification): LibraryUpdateResponse {
+        val response = libraryManager.updateLibraryEntry(modification)
+
+        // temp fix for issue #6
+        if (response is LibraryUpdateResponse.SyncedOnline && filterMediator.value?.isFilteredBySearchQuery() == true) {
+            // trigger new search to show the updated data
+            doRefreshListener?.invoke()
+        }
+
+        withContext(Dispatchers.Main) {
+            responseListener?.invoke(response)
+            scrollToUpdatedEntry(response, modification.id)
+        }
+        return response
     }
 
     private fun scrollToUpdatedEntry(response: LibraryUpdateResponse, libraryEntryId: String?) {

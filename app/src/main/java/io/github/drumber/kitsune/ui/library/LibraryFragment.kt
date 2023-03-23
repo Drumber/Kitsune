@@ -259,6 +259,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             }
         }
 
+        viewModel.doRefreshListener = { adapter.refresh() }
+
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.dataSource.collectLatest {
                 adapter.submitData(it)
@@ -446,6 +448,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
     override fun onDestroyView() {
         viewModel.responseListener = null
+        viewModel.doRefreshListener = null
         (requireActivity() as AppCompatActivity).setSupportActionBar(null)
         super.onDestroyView()
     }
