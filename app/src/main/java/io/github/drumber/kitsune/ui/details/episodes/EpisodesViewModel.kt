@@ -1,6 +1,12 @@
 package io.github.drumber.kitsune.ui.details.episodes
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.liveData
+import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Kitsu
@@ -39,7 +45,7 @@ class EpisodesViewModel(
 
     private val libraryEntryId = MutableLiveData<String>()
 
-    val libraryEntryWrapper = Transformations.switchMap(libraryEntryId) { id ->
+    val libraryEntryWrapper = libraryEntryId.switchMap { id ->
         val dbEntry = libraryEntryDao.getLibraryEntryAsLiveData(id)
         return@switchMap if (dbEntry.value != null) {
             // return cached library entry from database mapped to a library wrapper

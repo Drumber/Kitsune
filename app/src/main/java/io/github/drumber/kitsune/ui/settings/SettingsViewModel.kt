@@ -2,7 +2,11 @@ package io.github.drumber.kitsune.ui.settings
 
 import android.content.Context
 import androidx.annotation.StringRes
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.user.User
@@ -18,7 +22,7 @@ class SettingsViewModel(
     private val userService: UserService
 ) : ViewModel() {
 
-    val userModel = Transformations.map(userRepository.userLiveData) { it }
+    val userModel = userRepository.userLiveData.map { it }
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean>

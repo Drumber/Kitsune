@@ -1,6 +1,10 @@
 package io.github.drumber.kitsune.ui.main
 
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.data.model.MediaType
@@ -96,7 +100,7 @@ class MainFragmentViewModel(
 
     private fun <T> createAnimeExploreEntry(key: String, call: suspend () -> List<T>?) = Pair(
         key,
-        Transformations.switchMap(animeReload) {
+        animeReload.switchMap {
             liveData(Dispatchers.IO) {
                 animeReloadMap[key] = true
                 val responseData = processCall(call)
@@ -109,7 +113,7 @@ class MainFragmentViewModel(
 
     private fun <T> createMangaExploreEntry(key: String, call: suspend () -> List<T>?) = Pair(
         key,
-        Transformations.switchMap(mangaReload) {
+        mangaReload.switchMap {
             liveData(Dispatchers.IO) {
                 mangaReloadMap[key] = true
                 val responseData = processCall(call)

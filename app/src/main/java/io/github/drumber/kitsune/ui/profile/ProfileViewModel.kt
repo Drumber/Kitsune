@@ -1,6 +1,12 @@
 package io.github.drumber.kitsune.ui.profile
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.data.model.user.User
 import io.github.drumber.kitsune.data.repository.UserRepository
@@ -18,10 +24,10 @@ class ProfileViewModel(
 ) : ViewModel() {
 
     // simple user model stored in user preference
-    val userModel: LiveData<User?> = Transformations.map(userRepository.userLiveData) { it }
+    val userModel: LiveData<User?> = userRepository.userLiveData.map { it }
 
     // full user model including stats and favorites
-    val fullUserModel: LiveData<ResponseData<User>> = Transformations.switchMap(userModel) {
+    val fullUserModel: LiveData<ResponseData<User>> = userModel.switchMap {
         it?.id?.let { userId ->
             liveData(context = Dispatchers.IO) {
                 val response = try {
