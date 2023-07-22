@@ -18,17 +18,17 @@ data class Image(
 
 @Serializable
 @Parcelize
-data class Meta(@Embedded val dimensions: Dimensions?) : Parcelable
+data class Meta(@Embedded val dimensions: Dimensions? = null) : Parcelable
 
 @Serializable
 @Parcelize
 data class Dimensions(
-    @Embedded(prefix = "tiny_") val tiny: Dimension?,
-    @Embedded(prefix = "small_") val small: Dimension?,
-    @Embedded(prefix = "medium_") val medium: Dimension?,
-    @Embedded(prefix = "large_") val large: Dimension?
+    @Embedded(prefix = "tiny_") val tiny: Dimension? = null,
+    @Embedded(prefix = "small_") val small: Dimension? = null,
+    @Embedded(prefix = "medium_") val medium: Dimension? = null,
+    @Embedded(prefix = "large_") val large: Dimension? = null
 ) : Parcelable
 
 @Serializable
 @Parcelize
-data class Dimension(val width: Int?, val height: Int?) : Parcelable
+data class Dimension(val width: Int? = null, val height: Int? = null) : Parcelable
