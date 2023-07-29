@@ -207,6 +207,11 @@
         <action
             android:id="@+id/action_libraryEditEntryFragment_to_ratingBottomSheet"
             app:destination="@id/ratingBottomSheet" />
+        <argument
+            android:name="entryUpdatedResultKey"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </dialog>
     <dialog
         android:id="@+id/ratingBottomSheet"

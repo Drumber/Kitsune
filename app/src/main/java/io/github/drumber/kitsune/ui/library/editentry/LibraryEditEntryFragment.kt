@@ -12,11 +12,13 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.text.htmlEncode
 import androidx.core.text.parseAsHtml
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -158,6 +160,9 @@ class LibraryEditEntryFragment : DialogFragment() {
 
         viewModel.loadState.observe(viewLifecycleOwner) { state ->
             if (state == LoadState.CloseDialog) {
+                args.entryUpdatedResultKey?.let {
+                    setFragmentResult(it, bundleOf())
+                }
                 dismiss()
             } else {
                 binding.layoutLoading.isVisible = state == LoadState.Loading

@@ -1,6 +1,11 @@
 package io.github.drumber.kitsune.ui.library
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
@@ -8,7 +13,13 @@ import androidx.paging.map
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.manager.LibraryManager
 import io.github.drumber.kitsune.data.manager.LibraryUpdateResponse
-import io.github.drumber.kitsune.data.model.library.*
+import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.library.LibraryEntryFilter
+import io.github.drumber.kitsune.data.model.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.model.library.LibraryEntryUiModel
+import io.github.drumber.kitsune.data.model.library.LibraryEntryWrapper
+import io.github.drumber.kitsune.data.model.library.LibraryModification
+import io.github.drumber.kitsune.data.model.library.Status
 import io.github.drumber.kitsune.data.repository.LibraryEntriesRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.room.OfflineLibraryModificationDao
@@ -16,7 +27,11 @@ import io.github.drumber.kitsune.data.service.Filter
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -243,7 +258,7 @@ class LibraryViewModel(
         // temp fix for issue #6
         if (response is LibraryUpdateResponse.SyncedOnline && filterMediator.value?.isFilteredBySearchQuery() == true) {
             // trigger new search to show the updated data
-            doRefreshListener?.invoke()
+            triggerAdapterUpdate()
         }
 
         withContext(Dispatchers.Main) {
@@ -264,6 +279,10 @@ class LibraryViewModel(
      */
     fun hasScrolledToUpdatedEntry() {
         scrollToUpdatedEntryId = null
+    }
+
+    fun triggerAdapterUpdate() {
+        doRefreshListener?.invoke()
     }
 
 }

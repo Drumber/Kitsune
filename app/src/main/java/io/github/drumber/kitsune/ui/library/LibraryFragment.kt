@@ -69,6 +69,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
     companion object {
         const val RESULT_KEY_RATING = "library_rating_result_key"
         const val RESULT_KEY_REMOVE_RATING = "library_remove_rating_result_key"
+        const val RESULT_KEY_EDIT_ENTRY_UPDATED = "library_edit_entry_updated"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,6 +140,10 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
         setFragmentResultListener(RESULT_KEY_REMOVE_RATING) { _, _ ->
             viewModel.updateRating(null)
+        }
+
+        setFragmentResultListener(RESULT_KEY_EDIT_ENTRY_UPDATED) { _, _ ->
+            viewModel.triggerAdapterUpdate()
         }
 
         initFilterChips()
@@ -323,7 +328,10 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
     override fun onItemLongClicked(item: LibraryEntryWrapper) {
         val action =
-            LibraryFragmentDirections.actionLibraryFragmentToLibraryEditEntryFragment(item.libraryEntry.id)
+            LibraryFragmentDirections.actionLibraryFragmentToLibraryEditEntryFragment(
+                item.libraryEntry.id,
+                RESULT_KEY_EDIT_ENTRY_UPDATED
+            )
         findNavController().navigateSafe(R.id.library_fragment, action)
     }
 
