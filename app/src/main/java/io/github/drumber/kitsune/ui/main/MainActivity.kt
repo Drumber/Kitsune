@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.ui.main
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
@@ -77,7 +78,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
         // hide bottom navigation if the destination is not a main one
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            toggleBottomNavigation(!isDestinationOnMainNavGraph(destination))
+            toggleBottomNavigation(!isDestinationOnMainNavGraph(destination), lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED))
         }
 
         // override start fragment, but only on clean launch and when not launched by a deep link
