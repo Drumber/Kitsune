@@ -9,7 +9,7 @@
         <Preference
             android:key="@string/preference_key_fragment_appearance"
             android:title="@string/nav_appearance"
-            android:summary="@string/preference_appearance_description"/>
+            android:summary="@string/preference_appearance_description" />
 
 <!--        <ListPreference-->
 <!--            android:key="@string/preference_key_language"-->

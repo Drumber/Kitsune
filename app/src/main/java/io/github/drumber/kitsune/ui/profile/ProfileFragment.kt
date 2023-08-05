@@ -39,7 +39,16 @@ import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.ui.widget.ProfilePictureBehavior
 import io.github.drumber.kitsune.ui.widget.chart.PieChartStyle
-import io.github.drumber.kitsune.util.extensions.*
+import io.github.drumber.kitsune.util.extensions.clearLightStatusBar
+import io.github.drumber.kitsune.util.extensions.isLightStatusBar
+import io.github.drumber.kitsune.util.extensions.isNightMode
+import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.util.extensions.openCharacterOnMAL
+import io.github.drumber.kitsune.util.extensions.recyclerView
+import io.github.drumber.kitsune.util.extensions.setAppTheme
+import io.github.drumber.kitsune.util.extensions.setLightStatusBar
+import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
+import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
@@ -100,7 +109,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                 when (item.itemId) {
                     R.id.menu_settings -> {
                         val action = ProfileFragmentDirections
-                            .actionProfileFragmentToSettingsFragment()
+                            .actionProfileFragmentToSettingsNavGraph()
                         findNavController().navigate(action)
                     }
                     R.id.menu_share_profile_url -> {

@@ -21,6 +21,22 @@
             tools:targetApi="q" />
 
         <activity
+            android:name=".ui.main.MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Kitsune.SplashScreen.DayNight"
+            android:windowSoftInputMode="adjustPan">
+            <nav-graph android:value="@navigation/main_nav_graph" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity>
+        <activity
             android:name=".ui.details.photoview.PhotoViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
@@ -29,23 +45,6 @@
             android:name=".ui.authentication.AuthenticationActivity"
             android:exported="true"
             android:label="@string/title_authentication" />
-        <activity
-            android:name=".ui.main.MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Kitsune.SplashScreen.DayNight"
-            android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            <nav-graph android:value="@navigation/main_nav_graph" />
-
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
-        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"

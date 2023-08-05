@@ -28,13 +28,13 @@ object CustomNavigationUI {
                     }
 
                     // for each back queue item, check if there is a menu item with the same ID and set it as selected.
-                    for (backQueItem in controller.backQueue.reversed()) {
-                        val menuItem = view.menu.findItem(backQueItem.destination.id)
-                        if (menuItem != null) {
-                            menuItem.isChecked = true
-                            break
-                        }
-                    }
+//                    for (backQueItem in controller.backQueue.reversed()) {
+//                        val menuItem = view.menu.findItem(backQueItem.destination.id)
+//                        if (menuItem != null) {
+//                            menuItem.isChecked = true
+//                            break
+//                        }
+//                    }
                 }
             })
     }

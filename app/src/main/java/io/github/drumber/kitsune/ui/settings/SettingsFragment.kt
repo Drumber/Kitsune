@@ -9,10 +9,13 @@ import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.preference.*
+import androidx.preference.EditTextPreference
+import androidx.preference.ListPreference
 import androidx.preference.ListPreference.SimpleSummaryProvider
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.aboutlibraries.LibsBuilder
 import io.github.drumber.kitsune.BuildConfig
@@ -27,14 +30,12 @@ import io.github.drumber.kitsune.data.model.user.User
 import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.util.LogCatReader
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.*
+import java.util.Locale
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -88,11 +89,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
         findPreference<Preference>(R.string.preference_key_open_source_libraries)?.setOnPreferenceClickListener {
             val libsBuilder = LibsBuilder()
                 .withLicenseShown(true)
+                .withEdgeToEdge(true)
 
             val bundle = Bundle()
             bundle.putSerializable("data", libsBuilder)
 
-            findNavController().navigate(R.id.action_settings_fragment_to_librariesFragment, bundle)
+            findNavController().navigate(R.id.action_settingsFragment_to_librariesFragment, bundle)
             true
         }
 

@@ -41,14 +41,14 @@
         android:label="@string/nav_profile"
         tools:layout="@layout/fragment_profile" >
         <action
-            android:id="@+id/action_profile_fragment_to_settingsFragment"
-            app:destination="@id/settings_fragment" />
-        <action
             android:id="@+id/action_profile_fragment_to_details_fragment"
             app:destination="@id/details_fragment" />
         <action
             android:id="@+id/action_profile_fragment_to_photo_view_activity"
             app:destination="@id/photo_view_activity" />
+        <action
+            android:id="@+id/action_profile_fragment_to_settings_nav_graph"
+            app:destination="@id/settings_nav_graph" />
     </fragment>
     <fragment
         android:id="@+id/details_fragment"
@@ -79,7 +79,6 @@
             app:destination="@id/libraryEditEntryFragment" />
         <deepLink
             android:id="@+id/deepLink"
-            app:action="ACTION_VIEW"
             app:uri="kitsu.io/{type}/{slug}" />
         <argument
             android:name="type"
@@ -108,23 +107,6 @@
             app:argType="string" />
     </fragment>
     <fragment
-        android:id="@+id/settings_fragment"
-        android:name="io.github.drumber.kitsune.ui.settings.SettingsFragment"
-        android:label="@string/nav_settings">
-        <action
-            android:id="@+id/action_settings_fragment_to_librariesFragment"
-            app:destination="@id/librariesFragment" />
-        <action
-            android:id="@+id/action_settings_fragment_to_themePreferenceFragment"
-            app:destination="@id/theme_fragment" />
-        <deepLink
-            android:id="@+id/deepLink_settings"
-            app:uri="kitsune://settings" />
-        <action
-            android:id="@+id/action_settings_fragment_to_appLogsFragment"
-            app:destination="@id/appLogsFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/library_fragment"
         android:name="io.github.drumber.kitsune.ui.library.LibraryFragment"
         android:label="@string/nav_library"
@@ -142,14 +124,6 @@
             android:id="@+id/action_library_fragment_to_ratingBottomSheet"
             app:destination="@id/ratingBottomSheet" />
     </fragment>
-    <fragment
-        android:id="@+id/librariesFragment"
-        android:name="io.github.drumber.kitsune.ui.settings.LibrariesFragment"
-        android:label="LibrariesFragment" />
-    <fragment
-        android:id="@+id/theme_fragment"
-        android:name="io.github.drumber.kitsune.ui.settings.ThemePreferenceFragment"
-        android:label="@string/nav_appearance" />
     <fragment
         android:id="@+id/episodes_fragment"
         android:name="io.github.drumber.kitsune.ui.details.episodes.EpisodesFragment"
@@ -231,9 +205,5 @@
             android:name="ratingSystem"
             app:argType="io.github.drumber.kitsune.data.model.user.RatingSystem" />
     </dialog>
-    <fragment
-        android:id="@+id/appLogsFragment"
-        android:name="io.github.drumber.kitsune.ui.settings.AppLogsFragment"
-        android:label="fragment_app_logs"
-        tools:layout="@layout/fragment_app_logs" />
+    <include app:graph="@navigation/settings_nav_graph" />
 </navigation>

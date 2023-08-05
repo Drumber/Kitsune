@@ -1,14 +1,14 @@
 package io.github.drumber.kitsune.ui.main
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph
+import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
@@ -19,8 +19,6 @@ import io.github.drumber.kitsune.databinding.ActivityMainBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
-import io.github.drumber.kitsune.util.CustomNavigationUI.bindToNavController
-import io.github.drumber.kitsune.util.logD
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -31,6 +29,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private val binding: ActivityMainBinding by viewBinding()
 
     private lateinit var navController: NavController
+
+    private var overrideStartDestination: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +47,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         binding.bottomNavigation.apply {
-            bindToNavController(navController)
+            //bindToNavController(navController)
+            setupWithNavController(navController)
 
             // handle reselect of navigation item and pass event to current fragment
             // we use setOnItemSelectedListener instead of setOnItemReselectedListener because we still
@@ -74,20 +75,28 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
         }
 
-        // hide bottom navigation if settings fragment or one of its subordinate fragments is displayed
-        toggleBottomNavigation(isSettingsFragmentInBackStack(), false)
-        navController.addOnDestinationChangedListener { _, _, _ ->
-            toggleBottomNavigation(isSettingsFragmentInBackStack())
+        // hide bottom navigation if the destination is not a main one
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            toggleBottomNavigation(!isDestinationOnMainNavGraph(destination))
         }
 
         // override start fragment, but only on clean launch and when not launched by a deep link
         if (savedInstanceState == null && !isLaunchedByDeepLink()) {
+            overrideStartDestination = getShortcutStartDestinationId()
             // if the app wasn't launched from an app shortcut
             // and the user has specified a custom start page
             // then set the start fragment to the custom one
-            if (!handleShortcutAction() && KitsunePref.startFragment != StartPagePref.Home) {
-                setStartFragment(KitsunePref.startFragment.getDestinationId())
+            if (overrideStartDestination == null && KitsunePref.startFragment != StartPagePref.Home) {
+                overrideStartDestination = KitsunePref.startFragment.getDestinationId()
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        overrideStartDestination?.let {
+            navigateToStartFragment(it)
+            overrideStartDestination = null
         }
     }
 
@@ -102,39 +111,6 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    override fun onBackPressed() {
-        if (!handleBackPressed()) {
-            super.onBackPressed()
-        }
-    }
-
-    /**
-     * Make sure to enter the start destination before exiting the app through back-button press.
-     */
-    private fun handleBackPressed(): Boolean {
-        val backStackDestinations = navController.backQueue.filter { entry ->
-            entry.destination !is NavGraph
-        }
-        // do nothing if there are more than 1 back stack items left
-        if (backStackDestinations.size > 1) {
-            return false
-        }
-
-        val startDestinationId = navController.graph.startDestinationId
-        val hasStartDestination = navController.backQueue
-            .any { it.destination.id == startDestinationId }
-
-        // if the start destination is not in the back stack, navigate to it (launches a new instance of it)
-        if (!hasStartDestination) {
-            val navOptions = NavOptions.Builder()
-                .setPopUpTo(backStackDestinations.first().destination.id, true)
-                .build()
-            navController.navigate(startDestinationId, null, navOptions)
-            return true
-        }
-        return false
-    }
-
     /** Checks if the activity was launched using an app link, */
     private fun isLaunchedByDeepLink(): Boolean {
         return intent.action == Intent.ACTION_VIEW && intent.data != null
@@ -145,32 +121,24 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         navController.handleDeepLink(intent)
     }
 
-    private fun handleShortcutAction(): Boolean {
-        val navigationId = when (intent.action) {
+    private fun getShortcutStartDestinationId(): Int? {
+        return when (intent.action) {
             SHORTCUT_LIBRARY -> R.id.library_fragment
             SHORTCUT_SEARCH -> R.id.search_fragment
-            SHORTCUT_SETTINGS -> R.id.settings_fragment
+            SHORTCUT_SETTINGS -> R.id.settings_nav_graph
             else -> null
         }
-
-        if (navigationId != null) {
-            setStartFragment(navigationId)
-            return true
-        }
-        return false
     }
 
-    private fun setStartFragment(navigationId: Int) {
+    private fun navigateToStartFragment(navigationId: Int) {
         val navOptions = NavOptions.Builder()
-            .setPopUpTo(R.id.main_fragment, true)
+            .setPopUpTo(R.id.main_fragment, false)
             .build()
         navController.navigate(navigationId, null, navOptions)
     }
 
-    private fun isSettingsFragmentInBackStack(): Boolean {
-        return navController.backQueue.lastOrNull { entry ->
-            entry.destination.id == R.id.settings_fragment
-        } != null
+    private fun isDestinationOnMainNavGraph(destination: NavDestination): Boolean {
+        return destination.parent?.id == R.id.main_nav_graph
     }
 
     private fun toggleBottomNavigation(hideBottomNav: Boolean, animate: Boolean = true) {

@@ -64,8 +64,8 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
 
     // Navigation
-    def nav_version = "2.5.3"
-    def fragment_version = "1.5.7"
+    def nav_version = "2.6.0"
+    def fragment_version = "1.6.1"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
@@ -174,7 +174,7 @@ dependencies {
     implementation "app.futured.hauler:databinding:$hauler_version"
 
     // AboutLibraries
-    def aboutLibraries_version = "8.9.4"
+    def aboutLibraries_version = "10.8.3"
     implementation "com.mikepenz:aboutlibraries-core:$aboutLibraries_version"
     implementation "com.mikepenz:aboutlibraries:$aboutLibraries_version"
 

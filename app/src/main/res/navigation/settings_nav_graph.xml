@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_nav_graph"
+    app:startDestination="@id/settingsFragment">
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="io.github.drumber.kitsune.ui.settings.SettingsFragment"
+        android:label="SettingsFragment">
+        <action
+            android:id="@+id/action_settingsFragment_to_themePreferenceFragment"
+            app:destination="@id/themePreferenceFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_appLogsFragment"
+            app:destination="@id/appLogsFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_librariesFragment"
+            app:destination="@id/librariesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/themePreferenceFragment"
+        android:name="io.github.drumber.kitsune.ui.settings.ThemePreferenceFragment"
+        android:label="fragment_theme_preference"
+        tools:layout="@layout/fragment_theme_preference" />
+    <fragment
+        android:id="@+id/appLogsFragment"
+        android:name="io.github.drumber.kitsune.ui.settings.AppLogsFragment"
+        android:label="fragment_app_logs"
+        tools:layout="@layout/fragment_app_logs" />
+    <fragment
+        android:id="@+id/librariesFragment"
+        android:name="io.github.drumber.kitsune.ui.settings.LibrariesFragment"
+        android:label="LibrariesFragment" />
+</navigation>
