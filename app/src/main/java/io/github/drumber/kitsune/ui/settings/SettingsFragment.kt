@@ -17,7 +17,6 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.mikepenz.aboutlibraries.LibsBuilder
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
@@ -87,14 +86,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         //---- Open Source Libraries
         findPreference<Preference>(R.string.preference_key_open_source_libraries)?.setOnPreferenceClickListener {
-            val libsBuilder = LibsBuilder()
-                .withLicenseShown(true)
-                .withEdgeToEdge(true)
-
-            val bundle = Bundle()
-            bundle.putSerializable("data", libsBuilder)
-
-            findNavController().navigate(R.id.action_settingsFragment_to_librariesFragment, bundle)
+            val action = SettingsFragmentDirections.actionSettingsFragmentToLibrariesFragment()
+            findNavController().navigate(action)
             true
         }
 

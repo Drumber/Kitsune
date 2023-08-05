@@ -17,7 +17,7 @@
             app:destination="@id/appLogsFragment" />
         <action
             android:id="@+id/action_settingsFragment_to_librariesFragment"
-            app:destination="@id/librariesFragment" />
+            app:destination="@id/osLibrariesFragment" />
     </fragment>
     <fragment
         android:id="@+id/themePreferenceFragment"
@@ -30,7 +30,7 @@
         android:label="fragment_app_logs"
         tools:layout="@layout/fragment_app_logs" />
     <fragment
-        android:id="@+id/librariesFragment"
-        android:name="io.github.drumber.kitsune.ui.settings.LibrariesFragment"
-        android:label="LibrariesFragment" />
+        android:id="@+id/osLibrariesFragment"
+        android:name="io.github.drumber.kitsune.ui.settings.OSLibrariesFragment"
+        android:label="OSLibrariesFragment" />
 </navigation>

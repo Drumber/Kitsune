@@ -10,6 +10,7 @@
     <string name="nav_settings">Settings</string>
     <string name="nav_appearance">Appearance</string>
     <string name="nav_app_logs">Application Logs</string>
+    <string name="nav_os_libraries">Open Source Libraries</string>
 
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
@@ -220,11 +221,11 @@
     <string name="preference_remember_search_filters_description">Apply the last used search filters after an app restart.</string>
     <string name="preference_check_for_updates">Check for Updates on Launch</string>
     <string name="preference_check_for_updates_description">Check for a new app version on every launch.</string>
-    <string name="preference_app_logs">Application Logs</string>
+    <string name="preference_app_logs">@string/nav_app_logs</string>
     <string name="preference_app_logs_description">See and share the application log messages.</string>
     <string name="preference_app_version">Version Info</string>
     <string name="preference_github_repo">GitHub Repository</string>
-    <string name="preference_open_source_libraries">Open Source Libraries</string>
+    <string name="preference_open_source_libraries">@string/nav_os_libraries</string>
     <string name="preference_open_source_libraries_description">A list of all used open source libraries.</string>
 
     <string name="preference_not_logged_in">You must be logged in to edit this setting.</string>
