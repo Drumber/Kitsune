@@ -3,13 +3,13 @@ package io.github.drumber.kitsune.ui.main
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.view.isVisible
+import androidx.core.view.iterator
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
@@ -48,13 +48,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         binding.bottomNavigation.apply {
-            //bindToNavController(navController)
-            setupWithNavController(navController)
-
-            // handle reselect of navigation item and pass event to current fragment
-            // we use setOnItemSelectedListener instead of setOnItemReselectedListener because we still
-            // want to be able to navigate back when clicking on the current menu item
             setOnItemSelectedListener { item ->
+                viewModel.currentNavRootDestId = item.itemId
+
+                // handle reselect of navigation item and pass event to current fragment
                 navHostFragment.childFragmentManager.fragments.let { fragments ->
                     if (item.itemId == selectedItemId
                         && fragments.size > 0
@@ -67,7 +64,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 }
 
                 if (item.itemId == selectedItemId) {
-                    // no need to navigate if the we are already at the selected destination
+                    // no need to navigate if we are already at the selected destination
                     return@setOnItemSelectedListener true
                 }
 
@@ -76,8 +73,18 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
         }
 
-        // hide bottom navigation if the destination is not a main one
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            // set the selected bottom navigation item
+            for (menuItem in binding.bottomNavigation.menu) {
+                if (menuItem.itemId == destination.id) {
+                    viewModel.currentNavRootDestId = menuItem.itemId
+                }
+                if (menuItem.itemId == viewModel.currentNavRootDestId) {
+                    menuItem.isChecked = true
+                }
+            }
+
+            // hide bottom navigation if the destination is not a main one
             toggleBottomNavigation(!isDestinationOnMainNavGraph(destination), lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED))
         }
 
@@ -133,7 +140,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     private fun navigateToStartFragment(navigationId: Int) {
         val navOptions = NavOptions.Builder()
-            .setPopUpTo(R.id.main_fragment, false)
+            .setLaunchSingleTop(true)
+            .setRestoreState(true)
+            .setPopUpTo(R.id.main_fragment, inclusive = false, saveState = true)
             .build()
         navController.navigate(navigationId, null, navOptions)
     }

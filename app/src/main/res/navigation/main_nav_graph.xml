@@ -11,9 +11,9 @@
         android:label="@string/nav_home"
         tools:layout="@layout/fragment_main" >
         <action
-            app:restoreState="true"
             android:id="@+id/action_main_fragment_to_detailsFragment"
-            app:destination="@id/details_fragment" />
+            app:destination="@id/details_fragment"
+            app:launchSingleTop="true" />
         <action
             android:id="@+id/action_main_fragment_to_mediaListFragment"
             app:destination="@id/media_list_fragment" />
@@ -26,7 +26,8 @@
         tools:layout="@layout/fragment_search" >
         <action
             android:id="@+id/action_search_fragment_to_details_fragment"
-            app:destination="@id/details_fragment" />
+            app:destination="@id/details_fragment"
+            app:launchSingleTop="true" />
         <deepLink
             android:id="@+id/deepLink_search"
             app:uri="kitsune://search" />
@@ -42,7 +43,8 @@
         tools:layout="@layout/fragment_profile" >
         <action
             android:id="@+id/action_profile_fragment_to_details_fragment"
-            app:destination="@id/details_fragment" />
+            app:destination="@id/details_fragment"
+            app:launchSingleTop="true" />
         <action
             android:id="@+id/action_profile_fragment_to_photo_view_activity"
             app:destination="@id/photo_view_activity" />
@@ -64,7 +66,8 @@
             app:destination="@id/media_list_fragment" />
         <action
             android:id="@+id/action_details_fragment_self"
-            app:destination="@id/details_fragment" />
+            app:destination="@id/details_fragment"
+            app:launchSingleTop="false" />
         <action
             android:id="@+id/action_details_fragment_to_episodes_fragment"
             app:destination="@id/episodes_fragment" />
@@ -98,7 +101,8 @@
         tools:layout="@layout/fragment_media_list">
         <action
             android:id="@+id/action_mediaListFragment_to_details_fragment"
-            app:destination="@id/details_fragment" />
+            app:destination="@id/details_fragment"
+            app:launchSingleTop="true" />
         <argument
             android:name="mediaSelector"
             app:argType="io.github.drumber.kitsune.data.model.MediaSelector" />
@@ -113,7 +117,8 @@
         tools:layout="@layout/fragment_library">
         <action
             android:id="@+id/action_library_fragment_to_details_fragment"
-            app:destination="@id/details_fragment" />
+            app:destination="@id/details_fragment"
+            app:launchSingleTop="true" />
         <deepLink
             android:id="@+id/deepLink_library"
             app:uri="kitsune://library" />
