@@ -7,14 +7,33 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
+import androidx.navigation.Navigator
 
 /**
  * Checks if the current destination of the back stack is equal to the specified destination id.
  * This avoids simultaneous navigation calls, e.g. when the user clicks on two list items at the same time.
  */
-fun NavController.navigateSafe(@IdRes currentNavId: Int, directions: NavDirections, navOptions: NavOptions? = null) {
+fun NavController.navigateSafe(
+    @IdRes currentNavId: Int,
+    directions: NavDirections,
+    navOptions: NavOptions? = null
+) {
     if (this.currentDestination?.id == currentNavId) {
         this.navigate(directions, navOptions)
+    }
+}
+
+/**
+ * Checks if the current destination of the back stack is equal to the specified destination id.
+ * This avoids simultaneous navigation calls, e.g. when the user clicks on two list items at the same time.
+ */
+fun NavController.navigateSafe(
+    @IdRes currentNavId: Int,
+    directions: NavDirections,
+    navigationExtras: Navigator.Extras
+) {
+    if (this.currentDestination?.id == currentNavId) {
+        this.navigate(directions, navigationExtras)
     }
 }
 

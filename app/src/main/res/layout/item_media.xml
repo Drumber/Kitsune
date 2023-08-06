@@ -24,6 +24,7 @@
             android:layout_height="@dimen/media_item_height_large"
             android:layout_margin="@dimen/media_item_margin"
             android:layout_gravity="center"
+            android:transitionName="@{@string/unique_poster_transition_name(data.id)}"
             android:clickable="true"
             android:focusable="true"
             app:cardElevation="4dp">

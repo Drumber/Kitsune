@@ -55,6 +55,7 @@
                 android:orientation="horizontal"
                 android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:transitionGroup="true"
                 tools:listitem="@layout/item_media" />
 
         </io.github.drumber.kitsune.ui.widget.NestedScrollableHost>

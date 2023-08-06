@@ -9,7 +9,9 @@ import androidx.annotation.StringRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.data.PieDataSet
@@ -76,6 +78,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
         updateOptionsMenu()
 
         if (context?.isNightMode() == false) {
@@ -325,8 +329,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                 CopyOnWriteArrayList(data),
                 glide,
                 MediaViewHolder.TagData.RelationshipRole
-            ) { media ->
-                onFavoriteMediaItemClicked(media)
+            ) { view, media ->
+                onFavoriteMediaItemClicked(view, media)
             }
             adapter.overrideItemSize = MediaItemSize.SMALL
             recyclerView.adapter = adapter
@@ -347,7 +351,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
             val adapter = CharacterAdapter(
                 CopyOnWriteArrayList(data),
                 glide,
-            ) { character ->
+            ) { _, character ->
                 onFavoriteCharacterItemClicked(character)
             }
             recyclerView.adapter = adapter
@@ -359,9 +363,11 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         }
     }
 
-    private fun onFavoriteMediaItemClicked(mediaAdapter: MediaAdapter) {
+    private fun onFavoriteMediaItemClicked(view: View, mediaAdapter: MediaAdapter) {
         val action = ProfileFragmentDirections.actionProfileFragmentToDetailsFragment(mediaAdapter)
-        findNavController().navigateSafe(R.id.profile_fragment, action)
+        val detailsTransitionName = getString(R.string.details_poster_transition_name)
+        val extras = FragmentNavigatorExtras(view to detailsTransitionName)
+        findNavController().navigateSafe(R.id.profile_fragment, action, extras)
     }
 
     private fun onFavoriteCharacterItemClicked(character: Character) {

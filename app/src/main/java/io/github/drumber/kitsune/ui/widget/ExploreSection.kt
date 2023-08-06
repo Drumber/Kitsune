@@ -31,6 +31,7 @@ class ExploreSection(
         exploreAdapter = MediaRecyclerViewAdapter(
             if(initialData != null) CopyOnWriteArrayList(initialData) else CopyOnWriteArrayList(),
             glide,
+            transitionNameSuffix = "_$title",
             listener = itemListener
         )
         exploreAdapter.overrideItemSize = KitsunePref.mediaItemSize

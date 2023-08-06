@@ -31,7 +31,7 @@ class MediaSearchPagingAdapter(
             glide,
             TagData.Subtype
         ) { position ->
-            getItem(position)?.let { item -> listener?.onItemClick(item) }
+            getItem(position)?.let { item -> listener?.onItemClick(binding.cardMedia, item) }
         }
     }
 

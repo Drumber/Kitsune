@@ -30,8 +30,8 @@ abstract class MediaCollectionFragment(
         val glide = GlideApp.with(this)
         collectionViewModel.mediaSelector.observe(viewLifecycleOwner) { selector ->
             val adapter = when(selector.mediaType) {
-                MediaType.Anime -> AnimeAdapter(glide) { onItemClick(it) }.setupAdapter()
-                MediaType.Manga -> MangaAdapter(glide) { onItemClick(it) }.setupAdapter()
+                MediaType.Anime -> AnimeAdapter(glide, this::onItemClick).setupAdapter()
+                MediaType.Manga -> MangaAdapter(glide, this::onItemClick).setupAdapter()
             }
             setRecyclerViewAdapter(adapter)
         }
@@ -47,12 +47,12 @@ abstract class MediaCollectionFragment(
         return this
     }
 
-    override fun onItemClick(item: BaseMedia) {
+    override fun onItemClick(view: View, item: BaseMedia) {
         val model = MediaAdapter.fromMedia(item)
-        onMediaClicked(model)
+        onMediaClicked(view, model)
     }
 
-    open fun onMediaClicked(model: MediaAdapter) {}
+    open fun onMediaClicked(view: View, model: MediaAdapter) {}
 
     override fun onDestroyView() {
         super.onDestroyView()

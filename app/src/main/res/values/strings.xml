@@ -352,7 +352,9 @@
         <item quantity="one">%s year</item>
         <item quantity="other">%s years</item>
     </plurals>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Transition names -->
+    <string name="unique_poster_transition_name" translatable="false">media_item_poster_%1$s</string>
+    <string name="details_poster_transition_name" translatable="false">media_details_poster</string>
 
 </resources>

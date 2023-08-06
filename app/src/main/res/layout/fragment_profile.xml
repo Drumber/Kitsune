@@ -218,6 +218,7 @@
                                 android:requiresFadingEdge="horizontal"
                                 android:clipToPadding="false"
                                 android:orientation="horizontal"
+                                android:transitionGroup="true"
                                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                         </LinearLayout>
@@ -246,6 +247,7 @@
                                 android:requiresFadingEdge="horizontal"
                                 android:clipToPadding="false"
                                 android:orientation="horizontal"
+                                android:transitionGroup="true"
                                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                         </LinearLayout>

@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.ui.details
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,8 +11,10 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -22,6 +25,7 @@ import com.github.mikephil.charting.data.BarEntry
 import com.google.android.material.chip.Chip
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.transition.MaterialContainerTransform
 import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.addTransform
@@ -49,8 +53,19 @@ import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle.applyStyle
 import io.github.drumber.kitsune.ui.widget.chart.StepAxisValueFormatter
-import io.github.drumber.kitsune.util.*
-import io.github.drumber.kitsune.util.extensions.*
+import io.github.drumber.kitsune.util.extensions.clearLightStatusBar
+import io.github.drumber.kitsune.util.extensions.getColor
+import io.github.drumber.kitsune.util.extensions.isLightStatusBar
+import io.github.drumber.kitsune.util.extensions.isNightMode
+import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.util.extensions.setLightStatusBar
+import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
+import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
+import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
+import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.initWindowInsetsListener
+import io.github.drumber.kitsune.util.logW
+import io.github.drumber.kitsune.util.originalOrDown
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -64,6 +79,19 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
     private val viewModel: DetailsViewModel by viewModel()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val transition = MaterialContainerTransform().apply {
+            drawingViewId = R.id.nav_host_fragment
+            duration = resources.getInteger(R.integer.material_motion_duration_short_2).toLong()
+            scrimColor = Color.TRANSPARENT
+            setAllContainerColors(requireContext().theme.getColor(R.attr.colorSurface))
+        }
+        sharedElementEnterTransition = transition
+        sharedElementReturnTransition = transition
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -75,6 +103,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
 
         if (context?.isNightMode() == false) {
             activity?.clearLightStatusBar()
@@ -330,8 +360,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 CopyOnWriteArrayList(data),
                 glide,
                 TagData.RelationshipRole
-            ) { media ->
-                onFranchiseItemClicked(media)
+            ) { view, media ->
+                onFranchiseItemClicked(view, media)
             }
             adapter.overrideItemSize = MediaItemSize.SMALL
             binding.rvFranchise.adapter = adapter
@@ -342,9 +372,11 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
     }
 
-    private fun onFranchiseItemClicked(mediaAdapter: MediaAdapter) {
+    private fun onFranchiseItemClicked(view: View, mediaAdapter: MediaAdapter) {
         val action = DetailsFragmentDirections.actionDetailsFragmentSelf(mediaAdapter)
-        findNavController().navigateSafe(R.id.details_fragment, action)
+        val detailsTransitionName = getString(R.string.details_poster_transition_name)
+        val extras = FragmentNavigatorExtras(view to detailsTransitionName)
+        findNavController().navigateSafe(R.id.details_fragment, action, extras)
     }
 
     private fun showStreamingLinks(mediaAdapter: MediaAdapter) {
@@ -352,7 +384,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
         if (binding.rvStreamer.adapter !is StreamingLinkAdapter) {
             val glide = GlideApp.with(this)
-            val adapter = StreamingLinkAdapter(CopyOnWriteArrayList(data), glide) { streamingLink ->
+            val adapter = StreamingLinkAdapter(CopyOnWriteArrayList(data), glide) { _, streamingLink ->
                 streamingLink.url?.let { url ->
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     startActivity(intent)

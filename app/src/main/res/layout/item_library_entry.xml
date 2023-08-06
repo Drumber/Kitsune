@@ -32,6 +32,7 @@
                 android:layout_height="@dimen/library_entry_img_height"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
+                android:transitionName="@{@string/unique_poster_transition_name(entry.id)}"
                 tools:src="@drawable/ic_insert_photo_48"
                 android:contentDescription="@null" />
 

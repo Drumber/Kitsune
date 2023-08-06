@@ -1,8 +1,11 @@
 package io.github.drumber.kitsune.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.view.ViewCompat
+import androidx.databinding.OnRebindCallback
 import androidx.recyclerview.widget.RecyclerView
 import io.github.drumber.kitsune.GlideRequests
 import io.github.drumber.kitsune.constants.MediaItemSize
@@ -15,6 +18,7 @@ class MediaRecyclerViewAdapter(
     val dataSet: CopyOnWriteArrayList<MediaAdapter>,
     private val glide: GlideRequests,
     private val tagData: TagData = TagData.None,
+    private val transitionNameSuffix: String? = null,
     private val listener: OnItemClickListener<MediaAdapter>? = null
 ) : RecyclerView.Adapter<MediaViewHolder>() {
 
@@ -31,14 +35,32 @@ class MediaRecyclerViewAdapter(
             overrideItemSize?.let { cardMedia.setCustomItemSize(it) }
             cardMedia.isInGridLayout = false
         }
+
+        binding.addOnRebindCallback(object : OnRebindCallback<ItemMediaBinding>() {
+            override fun onBound(binding: ItemMediaBinding) {
+                // If the same media (with the same ID) is shown in more than one recyclerview,
+                // the shared-element-transition won't work. To make the transition name unique again,
+                // we may add a suffix (e.g. the section title on the home page).
+                transitionNameSuffix?.let { binding.cardMedia.fixUniqueTransitionName(it) }
+            }
+        })
+
         return MediaViewHolder(
             binding,
             glide,
             tagData
         ) { position ->
             if (position < dataSet.size) {
-                listener?.onItemClick(dataSet[position])
+                listener?.onItemClick(binding.cardMedia, dataSet[position])
             }
+        }
+    }
+
+    /** Add a suffix to the transitionName if not already present. */
+    private fun View.fixUniqueTransitionName(suffix: String) {
+        ViewCompat.getTransitionName(this)?.let { transitionName ->
+            if (!transitionName.endsWith(suffix))
+                ViewCompat.setTransitionName(this, transitionName + suffix)
         }
     }
 

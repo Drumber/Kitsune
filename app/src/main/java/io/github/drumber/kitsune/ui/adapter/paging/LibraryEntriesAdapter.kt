@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.ui.adapter.paging
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
@@ -16,7 +17,6 @@ import io.github.drumber.kitsune.data.model.library.getStringResId
 import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.databinding.ItemLibraryEntryBinding
 import io.github.drumber.kitsune.databinding.ItemLibraryStatusSeparatorBinding
-import io.github.drumber.kitsune.util.logD
 
 class LibraryEntriesAdapter(
     private val glide: GlideRequests,
@@ -60,7 +60,7 @@ class LibraryEntriesAdapter(
             binding.apply {
                 cardView.setOnClickListener {
                     if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
-                        getItem(bindingAdapterPosition)?.let { listener?.onItemClicked(it as LibraryEntryWrapper) }
+                        getItem(bindingAdapterPosition)?.let { listener?.onItemClicked(cardView, it as LibraryEntryWrapper) }
                     }
                 }
                 cardView.setOnLongClickListener {
@@ -148,7 +148,7 @@ class LibraryEntriesAdapter(
     }
 
     interface LibraryEntryActionListener {
-        fun onItemClicked(item: LibraryEntryWrapper)
+        fun onItemClicked(view: View, item: LibraryEntryWrapper)
         fun onItemLongClicked(item: LibraryEntryWrapper)
         fun onEpisodeWatchedClicked(item: LibraryEntryWrapper)
         fun onEpisodeUnwatchedClicked(item: LibraryEntryWrapper)

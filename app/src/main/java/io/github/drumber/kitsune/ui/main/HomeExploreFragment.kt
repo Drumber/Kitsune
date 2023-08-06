@@ -3,8 +3,10 @@ package io.github.drumber.kitsune.ui.main
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.github.drumber.kitsune.GlideApp
@@ -38,6 +40,9 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
+
         val mediaType = arguments?.takeIf { it.containsKey(BUNDLE_MEDIA_TYPE) }?.let {
             it.getSerializable(BUNDLE_MEDIA_TYPE) as? MediaType
         }
@@ -214,9 +219,11 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         return section
     }
 
-    override fun onItemClick(item: MediaAdapter) {
+    override fun onItemClick(view: View, item: MediaAdapter) {
         val action = MainFragmentDirections.actionMainFragmentToDetailsFragment(item)
-        findNavController().navigateSafe(R.id.main_fragment, action)
+        val detailsTransitionName = getString(R.string.details_poster_transition_name)
+        val extras = FragmentNavigatorExtras(view to detailsTransitionName)
+        findNavController().navigateSafe(R.id.main_fragment, action, extras)
     }
 
 }

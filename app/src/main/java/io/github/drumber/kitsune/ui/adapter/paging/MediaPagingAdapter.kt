@@ -25,7 +25,7 @@ sealed class MediaPagingAdapter<T : BaseMedia>(
             binding,
             glide
         ) { position ->
-            getItem(position)?.let { item -> listener?.onItemClick(item) }
+            getItem(position)?.let { item -> listener?.onItemClick(binding.cardMedia, item) }
         }
     }
 

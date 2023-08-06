@@ -52,7 +52,7 @@ class CharacterPagingAdapter(
 
                 ivCharacter.setOnClickListener {
                     casting.character?.let { character ->
-                        characterClickListener?.onItemClick(character)
+                        characterClickListener?.onItemClick(ivCharacter, character)
                     }
                 }
             }

@@ -37,7 +37,7 @@ class CharacterAdapter(
 
         fun bind(character: Character) {
             binding.cardCharacter.setOnClickListener {
-                listener?.onItemClick(character)
+                listener?.onItemClick(binding.cardCharacter, character)
             }
 
             glide.load(character.image?.originalOrDown())

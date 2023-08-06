@@ -165,7 +165,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
         }
     }
 
-    override fun onItemClick(item: MediaSearchResult) {
+    override fun onItemClick(view: View, item: MediaSearchResult) {
         val mediaAdapter = MediaAdapter.fromMedia(item.toMedia())
         val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(mediaAdapter)
         findNavController().navigateSafe(R.id.search_fragment, action)

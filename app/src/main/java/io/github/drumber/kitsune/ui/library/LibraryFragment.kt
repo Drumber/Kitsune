@@ -11,9 +11,11 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuProvider
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
@@ -79,6 +81,9 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
+
         (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
         requireActivity().addMenuProvider(this, viewLifecycleOwner)
 
@@ -316,13 +321,15 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             }
     }
 
-    override fun onItemClicked(item: LibraryEntryWrapper) {
+    override fun onItemClicked(view: View, item: LibraryEntryWrapper) {
         val media = item.libraryEntry.anime ?: item.libraryEntry.manga
         if (media != null) {
             val mediaAdapter = MediaAdapter.fromMedia(media)
+            val detailsTransitionName = getString(R.string.details_poster_transition_name)
+            val extras = FragmentNavigatorExtras(view.findViewById<View>(R.id.iv_thumbnail) to detailsTransitionName)
             val action =
                 LibraryFragmentDirections.actionLibraryFragmentToDetailsFragment(mediaAdapter)
-            findNavController().navigateSafe(R.id.library_fragment, action)
+            findNavController().navigateSafe(R.id.library_fragment, action, extras)
         }
     }
 

@@ -74,7 +74,7 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters),
             }
         }
 
-        val adapter = CharacterPagingAdapter(GlideApp.with(this)) { character ->
+        val adapter = CharacterPagingAdapter(GlideApp.with(this)) { _, character ->
             character.malId?.let { malId ->
                 openCharacterOnMAL(malId)
             }

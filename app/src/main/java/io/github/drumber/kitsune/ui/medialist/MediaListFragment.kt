@@ -3,6 +3,8 @@ package io.github.drumber.kitsune.ui.medialist
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.core.view.doOnPreDraw
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
@@ -36,6 +38,8 @@ class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
 
         viewModel.setMediaSelector(args.mediaSelector)
 
@@ -46,9 +50,11 @@ class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) 
         }
     }
 
-    override fun onMediaClicked(model: MediaAdapter) {
+    override fun onMediaClicked(view: View, model: MediaAdapter) {
         val action = MediaListFragmentDirections.actionMediaListFragmentToDetailsFragment(model)
-        findNavController().navigateSafe(R.id.media_list_fragment, action)
+        val detailsTransitionName = getString(R.string.details_poster_transition_name)
+        val extras = FragmentNavigatorExtras(view to detailsTransitionName)
+        findNavController().navigateSafe(R.id.media_list_fragment, action, extras)
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {

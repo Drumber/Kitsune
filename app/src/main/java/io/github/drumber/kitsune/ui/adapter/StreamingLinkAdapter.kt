@@ -21,7 +21,7 @@ class StreamingLinkAdapter(
         val binding = ItemStreamerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return StreamingLinkViewHolder(binding) { position ->
             if (position < dataSet.size) {
-                listener?.onItemClick(dataSet[position])
+                listener?.onItemClick(binding.root, dataSet[position])
             }
         }
     }
