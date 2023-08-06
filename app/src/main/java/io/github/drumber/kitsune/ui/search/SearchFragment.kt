@@ -7,8 +7,10 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -56,6 +58,8 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
 
         binding.apply {
             root.initPaddingWindowInsetsListener(
@@ -168,7 +172,9 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
     override fun onItemClick(view: View, item: MediaSearchResult) {
         val mediaAdapter = MediaAdapter.fromMedia(item.toMedia())
         val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(mediaAdapter)
-        findNavController().navigateSafe(R.id.search_fragment, action)
+        val detailsTransitionName = getString(R.string.details_poster_transition_name)
+        val extras = FragmentNavigatorExtras(view to detailsTransitionName)
+        findNavController().navigateSafe(R.id.search_fragment, action, extras)
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
