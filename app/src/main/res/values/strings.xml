@@ -356,5 +356,6 @@
     <!-- Transition names -->
     <string name="unique_poster_transition_name" translatable="false">media_item_poster_%1$s</string>
     <string name="details_poster_transition_name" translatable="false">media_details_poster</string>
+    <string name="profile_picture_transition_name" translatable="false">profile_picture</string>
 
 </resources>

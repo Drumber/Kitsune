@@ -8,12 +8,14 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
+import androidx.navigation.ActivityNavigatorExtras
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -159,7 +161,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             viewModel.mediaAdapter.value?.let { mediaAdapter ->
                 val title = mediaAdapter.title
                 mediaAdapter.media.posterImage?.originalOrDown()?.let { imageUrl ->
-                    openImageViewer(imageUrl, title, mediaAdapter.posterImage)
+                    openImageViewer(imageUrl, title, mediaAdapter.posterImage, binding.ivThumbnail)
                 }
             }
         }
@@ -168,7 +170,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             viewModel.mediaAdapter.value?.let { mediaAdapter ->
                 val title = mediaAdapter.title
                 mediaAdapter.media.coverImage?.originalOrDown()?.let { imageUrl ->
-                    openImageViewer(imageUrl, title, mediaAdapter.coverImage)
+                    openImageViewer(imageUrl, title, mediaAdapter.coverImage, binding.ivCover)
                 }
             }
         }
@@ -509,13 +511,21 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }.show()
     }
 
-    private fun openImageViewer(imageUrl: String, title: String?, thumbnailUrl: String?) {
+    private fun openImageViewer(imageUrl: String, title: String?, thumbnailUrl: String?, sharedElement: View?) {
+        val transitionName = sharedElement?.let { ViewCompat.getTransitionName(it) }
         val action = DetailsFragmentDirections.actionDetailsFragmentToPhotoViewActivity(
             imageUrl,
             title,
-            thumbnailUrl
+            thumbnailUrl,
+            transitionName
         )
-        findNavController().navigate(action)
+        val options = if (sharedElement != null && transitionName != null) {
+            ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), sharedElement, transitionName)
+        } else {
+            null
+        }
+        val extras = ActivityNavigatorExtras(options)
+        findNavController().navigate(action, extras)
     }
 
     private fun goBack() {

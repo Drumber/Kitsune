@@ -12,6 +12,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.StartPagePref
 import io.github.drumber.kitsune.data.model.getDestinationId
@@ -34,6 +35,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private var overrideStartDestination: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
+        window.sharedElementsUseOverlay = false
         super.onCreate(savedInstanceState)
 
         val userRepository = get<UserRepository>()

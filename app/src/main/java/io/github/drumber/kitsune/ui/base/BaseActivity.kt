@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
+import android.view.Window
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -29,6 +30,7 @@ abstract class BaseActivity(
     private lateinit var appliedTheme: AppTheme
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
         if (setAppTheme) {
             // apply app theme
             appliedTheme = KitsunePref.appTheme

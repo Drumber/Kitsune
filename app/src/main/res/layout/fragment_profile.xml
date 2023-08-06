@@ -336,6 +336,7 @@
             android:layout_marginStart="@dimen/profile_picture_offset_expanded"
             android:elevation="4dp"
             android:src="@drawable/profile_picture_placeholder"
+            android:transitionName="@string/profile_picture_transition_name"
             app:finalHeight="@dimen/profile_picture_collapsed"
             app:finalXPosition="@dimen/profile_picture_x_offset_collapsed"
             app:finalYPosition="@dimen/profile_picture_y_offset_collapsed"

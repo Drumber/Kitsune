@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
+import androidx.navigation.ActivityNavigatorExtras
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -182,7 +184,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                     ?: return@setOnClickListener
                 val title = (viewModel.fullUserModel.value?.data?.name
                     ?: viewModel.userModel.value?.name)?.let { "$it Avatar" }
-                openImageViewer(avatarImgUrl, title, null)
+                openImageViewer(avatarImgUrl, title, null, ivProfileImage)
             }
 
             ivCover.setOnClickListener {
@@ -191,7 +193,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                     ?: return@setOnClickListener
                 val title = (viewModel.fullUserModel.value?.data?.name
                     ?: viewModel.userModel.value?.name)?.let { "$it Cover" }
-                openImageViewer(coverImgUrl, title, null)
+                openImageViewer(coverImgUrl, title, null, ivCover)
             }
         }
 
@@ -384,13 +386,21 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         }
     }
 
-    private fun openImageViewer(imageUrl: String, title: String?, thumbnailUrl: String?) {
+    private fun openImageViewer(imageUrl: String, title: String?, thumbnailUrl: String?, sharedElement: View?) {
+        val transitionName = sharedElement?.let { ViewCompat.getTransitionName(it) }
         val action = ProfileFragmentDirections.actionProfileFragmentToPhotoViewActivity(
             imageUrl,
             title,
-            thumbnailUrl
+            thumbnailUrl,
+            transitionName
         )
-        findNavController().navigate(action)
+        val options = if (sharedElement != null && transitionName != null) {
+            ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), sharedElement, transitionName)
+        } else {
+            null
+        }
+        val extras = ActivityNavigatorExtras(options)
+        findNavController().navigate(action, extras)
     }
 
     private fun showLogOutConfirmationDialog() {
