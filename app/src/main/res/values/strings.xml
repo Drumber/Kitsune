@@ -297,7 +297,6 @@
     <string name="profile_stats_manga_chapters_read">%d chapters read.</string>
     <string name="profile_stats_time_spent_total">%s in total.</string>
     <string name="profile_stats_completed">%d completed. More than &lt;b>%d%%&lt;/b> of users.</string>
-    <string name="profile_stats_manga_percentile">More than &lt;b>%d%%&lt;/b> of users.</string>
     <string name="profile_data_gender">Gender</string>
     <string name="profile_data_location">Location</string>
     <string name="profile_data_birthday">Birthday</string>

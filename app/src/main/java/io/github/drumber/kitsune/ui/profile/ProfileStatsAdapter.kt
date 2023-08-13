@@ -99,25 +99,20 @@ class ProfileStatsAdapter(dataSet: List<ProfileStatsData>) :
                         }
                     }
 
-                    val htmlText = if (isAnime) {
-                        val completed = stats.completed
-                        val percentilesTime = stats.percentiles?.time
-                        if (completed != null && percentilesTime != null) {
-                            context.getString(
-                                R.string.profile_stats_completed,
-                                completed,
-                                percentilesTime.times(100).roundToInt()
-                            )
-                        } else {
-                            null
-                        }
+                    val completed = stats.completed
+                    val percentiles = if (isAnime) {
+                        stats.percentiles?.time
                     } else {
-                        stats.percentiles?.units?.let { percentilesUnits ->
-                            context.getString(
-                                R.string.profile_stats_manga_percentile,
-                                percentilesUnits.times(100).roundToInt()
-                            )
-                        }
+                        stats.percentiles?.units
+                    }
+                    val htmlText = if (completed != null && percentiles != null) {
+                        context.getString(
+                            R.string.profile_stats_completed,
+                            completed,
+                            percentiles.times(100).roundToInt()
+                        )
+                    } else {
+                        null
                     }
                     tvCompleted.text = htmlText?.let {
                         HtmlCompat.fromHtml(it, HtmlCompat.FROM_HTML_MODE_LEGACY)
