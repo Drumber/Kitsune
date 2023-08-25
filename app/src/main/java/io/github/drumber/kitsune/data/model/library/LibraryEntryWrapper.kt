@@ -25,7 +25,7 @@ data class LibraryEntryWrapper(
         get() = libraryModification?.reconsumeCount ?: libraryEntry.reconsumeCount
 
     val isPrivate
-        get() = libraryModification?.isPrivate ?: libraryEntry.isPrivate
+        get() = libraryModification?.isPrivate ?: libraryEntry.privateEntry
 
     val startedAt
         get() = libraryModification?.startedAt ?: libraryEntry.startedAt

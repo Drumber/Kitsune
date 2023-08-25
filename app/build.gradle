@@ -2,19 +2,20 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'com.google.devtools.ksp'
     id 'androidx.navigation.safeargs.kotlin'
     id 'kotlin-parcelize'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.10'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.10'
     id 'com.mikepenz.aboutlibraries.plugin'
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "io.github.drumber.kitsune"
         minSdk 21
-        targetSdk 33
+        targetSdk 34
         versionCode 16
         versionName "1.7.7"
 
@@ -44,6 +45,9 @@ android {
         jvmTarget = '1.8'
         freeCompilerArgs += ["-opt-in=kotlin.RequiresOptIn"]
     }
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas".toString())
+    }
     buildFeatures {
         viewBinding true
         dataBinding true
@@ -64,14 +68,14 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
 
     // Navigation
-    def nav_version = "2.6.0"
+    def nav_version = "2.7.1"
     def fragment_version = "1.6.1"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 
     // Preference
-    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
 
     // Lifecycle
     def lifecycle_version = "2.6.1"
@@ -82,17 +86,17 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0'
 
     // Kotlin coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
 
     // Paging
     implementation 'androidx.paging:paging-runtime-ktx:3.2.0'
 
     // Room
-    def room_version = "2.5.2"
+    def room_version = "2.6.0-beta01"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-paging:$room_version"
 
     // ViewPager
@@ -105,19 +109,19 @@ dependencies {
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
 
     // Koin DI
-    def koin_version = "3.4.0"
+    def koin_version = "3.4.3"
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation "io.insert-koin:koin-androidx-navigation:$koin_version"
 
     // View binding delegate
-    implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.5.3'
+    implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.5.9'
 
     // jsonapi-converter
-    implementation 'com.github.jasminb:jsonapi-converter:0.11'
+    implementation 'com.github.jasminb:jsonapi-converter:0.13'
 
     // Jackson
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1"
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2"
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -135,7 +139,7 @@ dependencies {
     implementation "com.algolia:instantsearch-coroutines-extensions:$algolia_instantsearch_version"
 
     // Kotlinx serialization
-    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1'
 
     // Ktor client
     def ktor_version = "1.6.3"

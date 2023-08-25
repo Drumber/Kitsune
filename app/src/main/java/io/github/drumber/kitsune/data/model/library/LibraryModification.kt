@@ -40,7 +40,7 @@ data class LibraryModification(
                 libraryEntry.notes = it
             }
         }
-        isPrivate?.let { libraryEntry.isPrivate = it }
+        isPrivate?.let { libraryEntry.privateEntry = it }
         startedAt?.let { libraryEntry.startedAt = it }
         finishedAt?.let { libraryEntry.finishedAt = it }
         ratingTwenty?.let { libraryEntry.ratingTwenty = it }
