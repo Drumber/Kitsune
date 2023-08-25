@@ -31,7 +31,8 @@
             android:ellipsize="end"
             app:actionButton="@{btnExpandCollapse}"
             app:animation_duration="200"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textIsSelectable="true" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_expand_collapse"

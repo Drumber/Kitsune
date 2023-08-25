@@ -32,6 +32,7 @@
                 android:layout_marginEnd="10dp"
                 android:src="@{icon}"
                 app:isVisible="@{icon != null}"
+                android:contentDescription="@null"
                 tools:visibility="gone"
                 tools:src="@drawable/ic_favorite_24" />
 
@@ -54,6 +55,7 @@
             android:paddingStart="5dp"
             android:paddingBottom="5dp"
             android:ellipsize="end"
+            android:textIsSelectable="true"
             tools:text="Row Value" />
     </TableRow>
 

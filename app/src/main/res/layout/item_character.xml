@@ -6,8 +6,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginHorizontal="10dp"
     android:layout_marginVertical="5dp"
-    android:clickable="true"
-    android:focusable="true"
     app:cardElevation="2dp">
     
     <RelativeLayout
@@ -41,6 +39,7 @@
                 android:gravity="start"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
                 android:ellipsize="end"
+                android:textIsSelectable="true"
                 tools:text="Character Name" />
 
             <androidx.legacy.widget.Space
@@ -55,6 +54,7 @@
                 android:gravity="end"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
                 android:ellipsize="end"
+                android:textIsSelectable="true"
                 tools:text="Actor Name" />
 
         </LinearLayout>
