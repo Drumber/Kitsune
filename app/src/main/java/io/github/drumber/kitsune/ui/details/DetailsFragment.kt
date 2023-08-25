@@ -19,6 +19,7 @@ import androidx.navigation.ActivityNavigatorExtras
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.github.mikephil.charting.data.BarData
@@ -28,7 +29,6 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialContainerTransform
-import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.constants.Kitsu
@@ -143,7 +143,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             showStreamingLinks(model)
             showRatingChart(model)
 
-            val glide = GlideApp.with(this)
+            val glide = Glide.with(this)
 
             glide.load(model.coverImage)
                 .transition(DrawableTransitionOptions.withCrossFade())
@@ -357,7 +357,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         } ?: emptyList()
 
         if (binding.rvFranchise.adapter !is MediaRecyclerViewAdapter) {
-            val glide = GlideApp.with(this)
+            val glide = Glide.with(this)
             val adapter = MediaRecyclerViewAdapter(
                 CopyOnWriteArrayList(data),
                 glide,
@@ -385,7 +385,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         val data = (mediaAdapter.media as? Anime)?.streamingLinks ?: emptyList()
 
         if (binding.rvStreamer.adapter !is StreamingLinkAdapter) {
-            val glide = GlideApp.with(this)
+            val glide = Glide.with(this)
             val adapter = StreamingLinkAdapter(CopyOnWriteArrayList(data), glide) { _, streamingLink ->
                 streamingLink.url?.let { url ->
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))

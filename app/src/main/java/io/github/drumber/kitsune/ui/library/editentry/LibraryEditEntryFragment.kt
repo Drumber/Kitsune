@@ -22,6 +22,7 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
@@ -29,7 +30,6 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.internal.EdgeToEdgeUtils
 import com.google.android.material.snackbar.Snackbar
-import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.data.model.library.Status
@@ -187,7 +187,7 @@ class LibraryEditEntryFragment : DialogFragment() {
 
             binding.tvMediaInfo.text = mediaAdapter?.let { "${it.publishingYear} • ${it.subtype}" }
 
-            GlideApp.with(this)
+            Glide.with(this)
                 .load(mediaAdapter?.posterImage)
                 .addTransform(RoundedCorners(8))
                 .placeholder(R.drawable.ic_insert_photo_48)

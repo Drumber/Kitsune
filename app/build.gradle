@@ -30,6 +30,10 @@ android {
         buildConfigField "boolean", "SCREENSHOT_MODE_ENABLED", SCREENSHOT_MODE
     }
 
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas".toString())
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -37,21 +41,22 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
         freeCompilerArgs += ["-opt-in=kotlin.RequiresOptIn"]
     }
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas".toString())
-    }
+
     buildFeatures {
         viewBinding true
         dataBinding true
     }
+
     packagingOptions {
         exclude 'META-INF/*.kotlin_module'
     }
@@ -103,9 +108,9 @@ dependencies {
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
     // Glide
-    def glide_version = "4.15.1"
+    def glide_version = "4.16.0"
     implementation "com.github.bumptech.glide:glide:$glide_version"
-    kapt "com.github.bumptech.glide:compiler:$glide_version"
+    ksp "com.github.bumptech.glide:ksp:$glide_version"
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
 
     // Koin DI

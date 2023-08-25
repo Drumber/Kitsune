@@ -23,13 +23,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import app.futured.hauler.setOnDragActivityListener
 import app.futured.hauler.setOnDragDismissedListener
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
-import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ActivityPhotoViewBinding
 import io.github.drumber.kitsune.ui.base.BaseActivity
@@ -92,10 +92,10 @@ class PhotoViewActivity : BaseActivity(
             }
         }
 
-        GlideApp.with(this)
+        Glide.with(this)
             .load(args.imageUrl)
             .thumbnail(
-                GlideApp.with(this)
+                Glide.with(this)
                     .load(args.thumbnailUrl)
                     .dontTransform()
             )
@@ -103,7 +103,7 @@ class PhotoViewActivity : BaseActivity(
                 override fun onLoadFailed(
                     e: GlideException?,
                     model: Any?,
-                    target: Target<Drawable>?,
+                    target: Target<Drawable>,
                     isFirstResource: Boolean
                 ): Boolean {
                     onImageLoadFailed()
@@ -111,10 +111,10 @@ class PhotoViewActivity : BaseActivity(
                 }
 
                 override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
+                    resource: Drawable,
+                    model: Any,
                     target: Target<Drawable>?,
-                    dataSource: DataSource?,
+                    dataSource: DataSource,
                     isFirstResource: Boolean
                 ): Boolean {
                     binding.progressIndicator.hide()
@@ -240,7 +240,7 @@ class PhotoViewActivity : BaseActivity(
         }
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val bitmap = GlideApp.with(this@PhotoViewActivity)
+            val bitmap = Glide.with(this@PhotoViewActivity)
                 .asBitmap()
                 .load(args.imageUrl)
                 .submit()

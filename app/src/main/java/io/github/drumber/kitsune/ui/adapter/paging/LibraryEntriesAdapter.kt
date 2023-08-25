@@ -7,7 +7,7 @@ import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import io.github.drumber.kitsune.GlideRequests
+import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.library.LibraryEntryAdapter
 import io.github.drumber.kitsune.data.model.library.LibraryEntryUiModel
@@ -19,7 +19,7 @@ import io.github.drumber.kitsune.databinding.ItemLibraryEntryBinding
 import io.github.drumber.kitsune.databinding.ItemLibraryStatusSeparatorBinding
 
 class LibraryEntriesAdapter(
-    private val glide: GlideRequests,
+    private val glide: RequestManager,
     private val listener: LibraryEntryActionListener? = null
 ) : PagingDataAdapter<LibraryEntryUiModel, RecyclerView.ViewHolder>(LibraryEntryUiModelComparator) {
 

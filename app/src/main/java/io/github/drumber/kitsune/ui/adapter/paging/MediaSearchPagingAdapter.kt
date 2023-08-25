@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import io.github.drumber.kitsune.GlideRequests
+import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.data.model.media.MediaSearchResult
 import io.github.drumber.kitsune.data.model.media.toMedia
@@ -14,7 +14,7 @@ import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 
 class MediaSearchPagingAdapter(
-    private val glide: GlideRequests,
+    private val glide: RequestManager,
     private val listener: OnItemClickListener<MediaSearchResult>? = null
 ) : PagingDataAdapter<MediaSearchResult, MediaViewHolder>(MediaSearchComparator) {
 

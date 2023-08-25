@@ -7,7 +7,7 @@ import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
 import androidx.databinding.OnRebindCallback
 import androidx.recyclerview.widget.RecyclerView
-import io.github.drumber.kitsune.GlideRequests
+import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
@@ -16,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 class MediaRecyclerViewAdapter(
     val dataSet: CopyOnWriteArrayList<MediaAdapter>,
-    private val glide: GlideRequests,
+    private val glide: RequestManager,
     private val tagData: TagData = TagData.None,
     private val transitionNameSuffix: String? = null,
     private val listener: OnItemClickListener<MediaAdapter>? = null

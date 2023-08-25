@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
-import io.github.drumber.kitsune.GlideApp
+import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.MediaSelector
 import io.github.drumber.kitsune.data.model.MediaType
@@ -208,7 +208,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         view: View
     ): ExploreSection {
         val title = getString(titleRes)
-        val glide = GlideApp.with(this)
+        val glide = Glide.with(this)
 
         val section = ExploreSection(glide, title, null, this) {
             val action =

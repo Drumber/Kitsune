@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import io.github.drumber.kitsune.GlideRequests
+import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.production.Character
 import io.github.drumber.kitsune.databinding.ItemSingleCharacterBinding
@@ -12,7 +12,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 class CharacterAdapter(
     val dataSet: CopyOnWriteArrayList<Character>,
-    private val glide: GlideRequests,
+    private val glide: RequestManager,
     private val listener: OnItemClickListener<Character>? = null
 ) : RecyclerView.Adapter<CharacterAdapter.SingleCharacterViewHolder>() {
 

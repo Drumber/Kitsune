@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.algolia.instantsearch.core.searcher.Debouncer
+import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
@@ -30,7 +31,6 @@ import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
-import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.manager.LibraryUpdateResponse
 import io.github.drumber.kitsune.data.model.library.LibraryEntryKind
@@ -215,7 +215,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
     }
 
     private fun initRecyclerView() {
-        val glide = GlideApp.with(this)
+        val glide = Glide.with(this)
         val adapter = LibraryEntriesAdapter(glide, this)
 
         var lastLoadState: CombinedLoadStates? = null

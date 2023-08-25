@@ -6,7 +6,7 @@ import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import io.github.drumber.kitsune.GlideRequests
+import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.unit.Chapter
 import io.github.drumber.kitsune.data.model.unit.Episode
@@ -17,7 +17,7 @@ import io.github.drumber.kitsune.util.originalOrDown
 import kotlin.math.max
 
 class MediaUnitPagingAdapter(
-    private val glide: GlideRequests,
+    private val glide: RequestManager,
     private val posterUrl: String?,
     private val enableWatchedCheckbox: Boolean,
     private val listener: MediaUnitActionListener

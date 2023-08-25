@@ -5,7 +5,7 @@ import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingData
-import io.github.drumber.kitsune.GlideApp
+import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.data.model.MediaType
 import io.github.drumber.kitsune.data.model.media.BaseMedia
 import io.github.drumber.kitsune.data.model.media.MediaAdapter
@@ -27,7 +27,7 @@ abstract class MediaCollectionFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val glide = GlideApp.with(this)
+        val glide = Glide.with(this)
         collectionViewModel.mediaSelector.observe(viewLifecycleOwner) { selector ->
             val adapter = when(selector.mediaType) {
                 MediaType.Anime -> AnimeAdapter(glide, this::onItemClick).setupAdapter()

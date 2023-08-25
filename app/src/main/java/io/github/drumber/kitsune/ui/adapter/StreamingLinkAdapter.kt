@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.widget.TooltipCompat
 import androidx.recyclerview.widget.RecyclerView
-import io.github.drumber.kitsune.GlideRequests
+import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.StreamingLogo
 import io.github.drumber.kitsune.data.model.streamer.StreamingLink
@@ -13,7 +13,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 class StreamingLinkAdapter(
     val dataSet: CopyOnWriteArrayList<StreamingLink> = CopyOnWriteArrayList(),
-    private val glide: GlideRequests,
+    private val glide: RequestManager,
     private val listener: OnItemClickListener<StreamingLink>? = null
 ) : RecyclerView.Adapter<StreamingLinkAdapter.StreamingLinkViewHolder>() {
 

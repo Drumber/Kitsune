@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import io.github.drumber.kitsune.GlideApp
+import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.unit.MediaUnitAdapter
 import io.github.drumber.kitsune.databinding.SheetMediaUnitDetailsBinding
@@ -28,7 +28,7 @@ class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {
         binding.adapter = mediaUnit
 
         val thumbnailUrl = mediaUnit?.thumbnail?.smallOrHigher() ?: arguments?.getString(BUNDLE_THUMBNAIL)
-        GlideApp.with(this)
+        Glide.with(this)
             .load(thumbnailUrl)
             .centerCrop()
             .placeholder(R.drawable.ic_insert_photo_48)

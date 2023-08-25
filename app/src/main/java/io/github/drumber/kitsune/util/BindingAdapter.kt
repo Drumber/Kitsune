@@ -11,7 +11,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.BindingAdapter
 import at.blogc.android.views.ExpandableTextView
-import io.github.drumber.kitsune.GlideApp
+import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 
 object BindingAdapter {
@@ -47,7 +47,7 @@ object BindingAdapter {
     @JvmStatic
     @BindingAdapter("imageUrl")
     fun loadGlideImage(view: ImageView, url: String?) {
-        GlideApp.with(view)
+        Glide.with(view)
             .load(url)
             .placeholder(R.drawable.ic_insert_photo_48)
             .into(view)

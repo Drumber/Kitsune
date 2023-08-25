@@ -20,10 +20,10 @@ import com.algolia.instantsearch.core.connection.ConnectionHandler
 import com.algolia.instantsearch.searchbox.SearchBoxConnector
 import com.algolia.instantsearch.searchbox.connectView
 import com.algolia.search.model.response.ResponseSearch
+import com.bumptech.glide.Glide
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.navigation.NavigationBarView
-import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.media.MediaAdapter
 import io.github.drumber.kitsune.data.model.media.MediaSearchResult
@@ -70,7 +70,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
             searchWrapper.initPaddingWindowInsetsListener(top = true, consume = false)
         }
 
-        val adapter = MediaSearchPagingAdapter(GlideApp.with(this), this)
+        val adapter = MediaSearchPagingAdapter(Glide.with(this), this)
         setRecyclerViewAdapter(adapter)
         recyclerView.itemAnimator = null
 

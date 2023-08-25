@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.Registry
+import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader
 import com.bumptech.glide.load.MultiTransformation
@@ -29,7 +30,7 @@ class KitsuneGlideModule : AppGlideModule(), KoinComponent {
                 if (BuildConfig.SCREENSHOT_MODE_ENABLED) {
                     val blurTransformation =
                         Class.forName("jp.wasabeef.glide.transformations.BlurTransformation")
-                            .getConstructor(Integer::class.java, Integer::class.java)
+                            .getConstructor(Integer.TYPE, Integer.TYPE)
                             .newInstance(15, 2)
                     add(blurTransformation as Transformation<Bitmap>)
                 }
@@ -46,7 +47,7 @@ class KitsuneGlideModule : AppGlideModule(), KoinComponent {
 
 }
 
-fun GlideRequest<*>.addTransform(vararg transformations: Transformation<Bitmap>) = with(this) {
+fun RequestBuilder<*>.addTransform(vararg transformations: Transformation<Bitmap>) = with(this) {
     val oldTransforms = this.transformations
         .filterKeys { it.isAssignableFrom(Bitmap::class.java) }
         .map { it.value as Transformation<Bitmap> }

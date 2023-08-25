@@ -12,7 +12,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
-import io.github.drumber.kitsune.GlideApp
+import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentCharactersBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
@@ -74,7 +74,7 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters),
             }
         }
 
-        val adapter = CharacterPagingAdapter(GlideApp.with(this)) { _, character ->
+        val adapter = CharacterPagingAdapter(Glide.with(this)) { _, character ->
             character.malId?.let { malId ->
                 openCharacterOnMAL(malId)
             }

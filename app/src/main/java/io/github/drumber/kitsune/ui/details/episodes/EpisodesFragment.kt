@@ -10,7 +10,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
-import io.github.drumber.kitsune.GlideApp
+import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.manager.LibraryUpdateResponse
 import io.github.drumber.kitsune.data.model.media.Anime
@@ -65,7 +65,7 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
         }
 
         val resourceAdapter = MediaAdapter.fromMedia(args.media)
-        val adapter = MediaUnitPagingAdapter(GlideApp.with(this), resourceAdapter.posterImage, args.libraryEntryId != null, this)
+        val adapter = MediaUnitPagingAdapter(Glide.with(this), resourceAdapter.posterImage, args.libraryEntryId != null, this)
         setRecyclerViewAdapter(adapter)
 
         viewModel.libraryEntryWrapper.observe(viewLifecycleOwner) {

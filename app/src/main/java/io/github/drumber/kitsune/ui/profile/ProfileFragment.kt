@@ -16,11 +16,11 @@ import androidx.navigation.ActivityNavigatorExtras
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
-import io.github.drumber.kitsune.GlideApp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.MediaItemSize
@@ -204,7 +204,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         binding.user = user
         binding.invalidateAll()
 
-        val glide = GlideApp.with(this)
+        val glide = Glide.with(this)
 
         glide.load(user?.avatar?.originalOrDown())
             .dontAnimate()
@@ -326,7 +326,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         data: List<MediaAdapter>
     ) {
         if (recyclerView.adapter !is MediaRecyclerViewAdapter) {
-            val glide = GlideApp.with(this)
+            val glide = Glide.with(this)
             val adapter = MediaRecyclerViewAdapter(
                 CopyOnWriteArrayList(data),
                 glide,
@@ -349,7 +349,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         data: List<Character>
     ) {
         if (recyclerView.adapter !is CharacterAdapter) {
-            val glide = GlideApp.with(this)
+            val glide = Glide.with(this)
             val adapter = CharacterAdapter(
                 CopyOnWriteArrayList(data),
                 glide,
