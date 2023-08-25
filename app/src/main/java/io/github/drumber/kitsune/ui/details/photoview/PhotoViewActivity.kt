@@ -34,10 +34,12 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ActivityPhotoViewBinding
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.util.extensions.*
+import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.saveImageInGallery
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.IOException
 
 class PhotoViewActivity : BaseActivity(
     R.layout.activity_photo_view,
@@ -106,7 +108,10 @@ class PhotoViewActivity : BaseActivity(
                     target: Target<Drawable>,
                     isFirstResource: Boolean
                 ): Boolean {
-                    onImageLoadFailed()
+                    binding.progressIndicator.hide()
+                    val shouldHaveThumbnailLoaded =
+                        !isFirstResource && !args.thumbnailUrl.isNullOrBlank()
+                    onImageLoadFailed(!shouldHaveThumbnailLoaded)
                     return false
                 }
 
@@ -148,9 +153,11 @@ class PhotoViewActivity : BaseActivity(
         binding.photoBackground.setBackgroundColor(Color.BLACK)
     }
 
-    private fun onImageLoadFailed() {
+    private fun onImageLoadFailed(exit: Boolean) {
         Toast.makeText(this, R.string.error_image_loading, Toast.LENGTH_SHORT).show()
-        finish()
+        if (exit) {
+            finish()
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -240,13 +247,23 @@ class PhotoViewActivity : BaseActivity(
         }
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val bitmap = Glide.with(this@PhotoViewActivity)
-                .asBitmap()
-                .load(args.imageUrl)
-                .submit()
-                .get()
+            val bitmap = try {
+                Glide.with(this@PhotoViewActivity)
+                    .asBitmap()
+                    .load(args.imageUrl)
+                    .submit()
+                    .get()
+            } catch (e: Exception) {
+                runOnUiThread { onImageLoadFailed(false) }
+                return@launch
+            }
 
-            val success = saveImageInGallery(bitmap, args.title)
+            val success = try {
+                saveImageInGallery(bitmap, args.title)
+            } catch (e: IOException) {
+                logE("Failed to save image in gallery.", e)
+                false
+            }
             withContext(Dispatchers.Main) {
                 if (success) {
                     Toast.makeText(
