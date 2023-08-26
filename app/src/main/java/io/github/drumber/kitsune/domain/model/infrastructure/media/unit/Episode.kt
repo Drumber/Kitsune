@@ -10,7 +10,7 @@ import kotlinx.parcelize.Parcelize
 @Type("episodes")
 data class Episode(
     @Id
-    override val id: String,
+    override val id: String?,
 
     override val description: String?,
     override val titles: Titles?,

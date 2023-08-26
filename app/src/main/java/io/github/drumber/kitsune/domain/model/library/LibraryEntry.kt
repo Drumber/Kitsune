@@ -2,7 +2,6 @@ package io.github.drumber.kitsune.domain.model.library
 
 import android.os.Parcelable
 import androidx.room.Embedded
-import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -21,7 +20,7 @@ import kotlinx.parcelize.Parcelize
 
 // TODO: delete this
 @Parcelize
-@Entity(tableName = "library_table")
+//@Entity(tableName = "library_table")
 @Type("libraryEntries")
 data class LibraryEntry(
     @PrimaryKey @Id(EmptyStringIdHandler::class)

@@ -11,7 +11,7 @@ import kotlinx.parcelize.Parcelize
 @Type("mediaRelationships")
 data class MediaRelationship(
     @Id
-    val id: String,
+    val id: String?,
     val role: MediaRelationshipRole?,
 
     @Relationship("destination")

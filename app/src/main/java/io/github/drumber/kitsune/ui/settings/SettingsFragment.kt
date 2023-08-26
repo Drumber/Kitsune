@@ -17,15 +17,16 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
 import io.github.drumber.kitsune.domain.manager.GitHubUpdateChecker
-import io.github.drumber.kitsune.domain.model.preference.StartPagePref
-import io.github.drumber.kitsune.domain.model.infrastructure.user.TitleLanguagePreference
 import io.github.drumber.kitsune.domain.model.infrastructure.user.RatingSystemPreference
 import io.github.drumber.kitsune.domain.model.infrastructure.user.SfwFilterPreference
+import io.github.drumber.kitsune.domain.model.infrastructure.user.TitleLanguagePreference
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
-import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
+import io.github.drumber.kitsune.domain.model.preference.StartPagePref
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
@@ -135,6 +136,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 is GitHubUpdateChecker.UpdateCheckerResult.NewVersion -> {
                     Notifications.showNewVersion(requireContext(), result.release)
                 }
+
                 is GitHubUpdateChecker.UpdateCheckerResult.NoNewVersion -> {
                     Toast.makeText(
                         requireContext(),
@@ -142,6 +144,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+
                 is GitHubUpdateChecker.UpdateCheckerResult.Failed -> {
                     Toast.makeText(
                         requireContext(),
@@ -184,10 +187,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     Locale.getISOCountries().map { Locale("", it).displayCountry }.toTypedArray()
                 value = user?.country
                 setOnPreferenceChangeListener { _, newValue ->
+                    if (user == null) return@setOnPreferenceChangeListener false
                     updateUserIfChanged(
                         value,
                         newValue,
-                        User(user?.id, country = newValue as String)
+                        User(user.id, country = newValue as String)
                     )
                     true
                 }
@@ -206,11 +210,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 value = user?.sfwFilterPreference?.name
                 entryValues = SfwFilterPreference.values().map { it.name }.toTypedArray()
                 setOnPreferenceChangeListener { _, newValue ->
+                    if (user == null) return@setOnPreferenceChangeListener false
                     updateUserIfChanged(
                         value,
                         newValue,
                         User(
-                            user?.id,
+                            user.id,
                             sfwFilterPreference = SfwFilterPreference.valueOf(newValue as String)
                         )
                     )
@@ -232,13 +237,18 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
             //---- Rating System
             findPreference<ListPreference>(R.string.preference_key_rating_system)?.apply {
-                entryValues = RatingSystemPreference.values().reversed().map { it.name }.toTypedArray()
+                entryValues =
+                    RatingSystemPreference.values().reversed().map { it.name }.toTypedArray()
                 value = user?.ratingSystem?.name
                 setOnPreferenceChangeListener { _, newValue ->
+                    if (user == null) return@setOnPreferenceChangeListener false
                     updateUserIfChanged(
                         value,
                         newValue,
-                        User(user?.id, ratingSystem = RatingSystemPreference.valueOf(newValue as String))
+                        User(
+                            user.id,
+                            ratingSystem = RatingSystemPreference.valueOf(newValue as String)
+                        )
                     )
                     true
                 }
@@ -249,7 +259,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
             findPreference<EditTextPreference>(R.string.preference_key_display_name)?.apply {
                 text = user?.name
                 setOnPreferenceChangeListener { _, newValue ->
-                    updateUserIfChanged(text, newValue, User(user?.id, name = newValue as String))
+                    if (user == null) return@setOnPreferenceChangeListener false
+                    updateUserIfChanged(text, newValue, User(user.id, name = newValue as String))
                     true
                 }
                 requireUserLoggedIn(user) { it.text }
@@ -259,7 +270,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
             findPreference<EditTextPreference>(R.string.preference_key_profile_url)?.apply {
                 text = user?.slug
                 setOnPreferenceChangeListener { _, newValue ->
-                    updateUserIfChanged(text, newValue, User(user?.id, slug = newValue as String))
+                    if (user == null) return@setOnPreferenceChangeListener false
+                    updateUserIfChanged(text, newValue, User(user.id, slug = newValue as String))
                     true
                 }
                 requireUserLoggedIn(user) { Kitsu.USER_URL_PREFIX + it.text }

@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.domain.manager
 
+import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.domain.model.infrastructure.github.GitHubRelease
 import io.github.drumber.kitsune.domain.service.github.GitHubApiService
 import io.github.drumber.kitsune.util.logE

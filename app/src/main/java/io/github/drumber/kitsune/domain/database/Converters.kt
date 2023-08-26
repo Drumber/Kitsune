@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.domain.database
 
 import androidx.room.TypeConverter
 import com.fasterxml.jackson.module.kotlin.readValue
+import io.github.drumber.kitsune.di.createObjectMapper
 import io.github.drumber.kitsune.domain.model.RemoteKeyType
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.infrastructure.library.ReactionSkip
@@ -9,7 +10,6 @@ import io.github.drumber.kitsune.domain.model.infrastructure.media.AgeRating
 import io.github.drumber.kitsune.domain.model.infrastructure.media.AnimeSubtype
 import io.github.drumber.kitsune.domain.model.infrastructure.media.MangaSubtype
 import io.github.drumber.kitsune.domain.model.infrastructure.media.ReleaseStatus
-import io.github.drumber.kitsune.di.createObjectMapper
 
 class Converters {
 
@@ -28,6 +28,24 @@ class Converters {
     fun stringToStringList(listJson: String?): List<String>? {
         return if (listJson != null) {
             objectMapper.readValue(listJson)
+        } else {
+            null
+        }
+    }
+
+    @TypeConverter
+    fun stringMapToString(map: Map<String, String>?): String? {
+        return if (map != null) {
+            objectMapper.writeValueAsString(map)
+        } else {
+            null
+        }
+    }
+
+    @TypeConverter
+    fun stringToStringMap(mapJson: String?): Map<String, String>? {
+        return if (mapJson != null) {
+            objectMapper.readValue(mapJson)
         } else {
             null
         }
