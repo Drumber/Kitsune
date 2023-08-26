@@ -7,15 +7,15 @@
 
         <import type="android.text.TextUtils" />
 
-        <import type="io.github.drumber.kitsune.data.model.media.MediaAdapter" />
+        <import type="io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter" />
 
         <variable
             name="data"
-            type="MediaAdapter" />
+            type="io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter" />
 
         <variable
             name="libraryEntry"
-            type="io.github.drumber.kitsune.data.model.library.LibraryEntryAdapter" />
+            type="io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryAdapter" />
     </data>
 
     <FrameLayout

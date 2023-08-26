@@ -3,11 +3,11 @@ package io.github.drumber.kitsune.ui.medialist
 import androidx.paging.PagingData
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.data.model.MediaSelector
-import io.github.drumber.kitsune.data.model.MediaType
-import io.github.drumber.kitsune.data.model.media.BaseMedia
-import io.github.drumber.kitsune.data.repository.AnimeRepository
-import io.github.drumber.kitsune.data.repository.MangaRepository
+import io.github.drumber.kitsune.domain.model.MediaSelector
+import io.github.drumber.kitsune.domain.model.MediaType
+import io.github.drumber.kitsune.domain.model.media.BaseMedia
+import io.github.drumber.kitsune.domain.repository.AnimeRepository
+import io.github.drumber.kitsune.domain.repository.MangaRepository
 import io.github.drumber.kitsune.ui.base.MediaCollectionViewModel
 import kotlinx.coroutines.flow.Flow
 

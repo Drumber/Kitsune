@@ -32,11 +32,11 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.manager.LibraryUpdateResponse
-import io.github.drumber.kitsune.data.model.library.LibraryEntryKind
-import io.github.drumber.kitsune.data.model.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.data.model.library.Status
-import io.github.drumber.kitsune.data.model.media.MediaAdapter
+import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
+import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind
+import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
+import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.databinding.FragmentLibraryBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.paging.LibraryEntriesAdapter
@@ -167,26 +167,26 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
             filter.libraryStatus.apply {
                 binding.apply {
-                    chipCurrent.isChecked = contains(Status.Current)
-                    chipPlanned.isChecked = contains(Status.Planned)
-                    chipCompleted.isChecked = contains(Status.Completed)
-                    chipOnHold.isChecked = contains(Status.OnHold)
-                    chipDropped.isChecked = contains(Status.Dropped)
+                    chipCurrent.isChecked = contains(LibraryStatus.Current)
+                    chipPlanned.isChecked = contains(LibraryStatus.Planned)
+                    chipCompleted.isChecked = contains(LibraryStatus.Completed)
+                    chipOnHold.isChecked = contains(LibraryStatus.OnHold)
+                    chipDropped.isChecked = contains(LibraryStatus.Dropped)
                 }
             }
         }
 
         binding.apply {
             chipMediaKind.setOnClickListener { showMediaSelectorDialog() }
-            chipCurrent.initStatusClickListener(Status.Current)
-            chipPlanned.initStatusClickListener(Status.Planned)
-            chipCompleted.initStatusClickListener(Status.Completed)
-            chipOnHold.initStatusClickListener(Status.OnHold)
-            chipDropped.initStatusClickListener(Status.Dropped)
+            chipCurrent.initStatusClickListener(LibraryStatus.Current)
+            chipPlanned.initStatusClickListener(LibraryStatus.Planned)
+            chipCompleted.initStatusClickListener(LibraryStatus.Completed)
+            chipOnHold.initStatusClickListener(LibraryStatus.OnHold)
+            chipDropped.initStatusClickListener(LibraryStatus.Dropped)
         }
     }
 
-    private fun Chip.initStatusClickListener(status: Status) {
+    private fun Chip.initStatusClickListener(status: LibraryStatus) {
         setOnClickListener {
             val statusList = KitsunePref.libraryEntryStatus.toMutableList()
             if (statusList.contains(status)) {

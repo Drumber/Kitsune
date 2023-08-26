@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.util.network
 
-import io.github.drumber.kitsune.data.repository.AuthRepository
+import io.github.drumber.kitsune.domain.repository.AuthRepository
 import okhttp3.Interceptor
 import okhttp3.Response
 

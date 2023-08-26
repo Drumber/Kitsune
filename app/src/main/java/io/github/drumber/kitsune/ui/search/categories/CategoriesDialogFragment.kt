@@ -14,8 +14,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.unnamed.b.atv.model.TreeNode
 import com.unnamed.b.atv.view.AndroidTreeView
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.category.CategoryNode
-import io.github.drumber.kitsune.data.model.category.CategoryPrefWrapper
+import io.github.drumber.kitsune.domain.model.ui.media.CategoryNode
+import io.github.drumber.kitsune.domain.model.preference.CategoryPrefWrapper
 import io.github.drumber.kitsune.databinding.FragmentCategoriesBinding
 import io.github.drumber.kitsune.util.network.ResponseData
 import org.koin.androidx.viewmodel.ext.android.viewModel

@@ -8,10 +8,10 @@ import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.constants.Defaults
-import io.github.drumber.kitsune.data.model.user.User
-import io.github.drumber.kitsune.data.repository.UserRepository
-import io.github.drumber.kitsune.data.service.Filter
-import io.github.drumber.kitsune.data.service.user.UserService
+import io.github.drumber.kitsune.domain.model.infrastructure.user.User
+import io.github.drumber.kitsune.domain.repository.UserRepository
+import io.github.drumber.kitsune.domain.service.Filter
+import io.github.drumber.kitsune.domain.service.user.UserService
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.network.ResponseData

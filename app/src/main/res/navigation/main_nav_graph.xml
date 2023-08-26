@@ -58,7 +58,7 @@
         android:label="DetailsFragment">
         <argument
             android:name="model"
-            app:argType="io.github.drumber.kitsune.data.model.media.MediaAdapter"
+            app:argType="io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter"
             app:nullable="true"
             android:defaultValue="@null" />
         <action
@@ -105,7 +105,7 @@
             app:launchSingleTop="true" />
         <argument
             android:name="mediaSelector"
-            app:argType="io.github.drumber.kitsune.data.model.MediaSelector" />
+            app:argType="io.github.drumber.kitsune.domain.model.MediaSelector" />
         <argument
             android:name="title"
             app:argType="string" />
@@ -135,7 +135,7 @@
         android:label="EpisodesFragment" >
         <argument
             android:name="media"
-            app:argType="io.github.drumber.kitsune.data.model.media.BaseMedia" />
+            app:argType="io.github.drumber.kitsune.domain.model.media.BaseMedia" />
         <argument
             android:name="libraryEntryId"
             app:argType="string"
@@ -213,7 +213,7 @@
         <argument android:name="removeResultKey" />
         <argument
             android:name="ratingSystem"
-            app:argType="io.github.drumber.kitsune.data.model.user.RatingSystem" />
+            app:argType="io.github.drumber.kitsune.domain.model.infrastructure.user.RatingSystemPreference" />
     </dialog>
     <include app:graph="@navigation/settings_nav_graph" />
 </navigation>

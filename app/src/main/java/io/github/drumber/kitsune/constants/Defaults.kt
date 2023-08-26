@@ -1,9 +1,9 @@
 package io.github.drumber.kitsune.constants
 
-import io.github.drumber.kitsune.data.model.MediaSelector
-import io.github.drumber.kitsune.data.model.MediaType
-import io.github.drumber.kitsune.data.model.SearchParams
-import io.github.drumber.kitsune.data.service.Filter
+import io.github.drumber.kitsune.domain.model.MediaSelector
+import io.github.drumber.kitsune.domain.model.MediaType
+import io.github.drumber.kitsune.domain.model.SearchParams
+import io.github.drumber.kitsune.domain.service.Filter
 
 object Defaults {
 

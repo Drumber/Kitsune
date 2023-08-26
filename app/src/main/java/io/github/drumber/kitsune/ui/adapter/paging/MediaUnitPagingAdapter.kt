@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.unit.Chapter
-import io.github.drumber.kitsune.data.model.unit.Episode
-import io.github.drumber.kitsune.data.model.unit.MediaUnit
-import io.github.drumber.kitsune.data.model.unit.MediaUnitAdapter
+import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.Chapter
+import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.Episode
+import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.MediaUnit
+import io.github.drumber.kitsune.domain.model.ui.media.MediaUnitAdapter
 import io.github.drumber.kitsune.databinding.ItemEpisodeBinding
-import io.github.drumber.kitsune.util.originalOrDown
+import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
 import kotlin.math.max
 
 class MediaUnitPagingAdapter(

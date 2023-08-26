@@ -4,9 +4,9 @@ import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Defaults
-import io.github.drumber.kitsune.data.model.MediaSelector
-import io.github.drumber.kitsune.data.model.media.BaseMedia
-import io.github.drumber.kitsune.data.service.Filter
+import io.github.drumber.kitsune.domain.model.MediaSelector
+import io.github.drumber.kitsune.domain.model.media.BaseMedia
+import io.github.drumber.kitsune.domain.service.Filter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 

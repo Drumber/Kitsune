@@ -6,9 +6,9 @@ import by.kirich1409.viewbindingdelegate.ViewBindingPropertyDelegate
 import com.algolia.instantsearch.core.InstantSearchTelemetry
 import com.chibatching.kotpref.Kotpref
 import com.chibatching.kotpref.livedata.asLiveData
-import io.github.drumber.kitsune.data.manager.GitHubUpdateChecker
-import io.github.drumber.kitsune.data.repository.AuthRepository
-import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.domain.manager.GitHubUpdateChecker
+import io.github.drumber.kitsune.domain.repository.AuthRepository
+import io.github.drumber.kitsune.domain.repository.UserRepository
 import io.github.drumber.kitsune.di.appModule
 import io.github.drumber.kitsune.notification.NotificationChannels
 import io.github.drumber.kitsune.notification.Notifications

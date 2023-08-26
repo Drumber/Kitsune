@@ -7,10 +7,10 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.SortFilter
-import io.github.drumber.kitsune.data.model.MediaType
-import io.github.drumber.kitsune.data.service.Filter
-import io.github.drumber.kitsune.data.service.anime.AnimeService
-import io.github.drumber.kitsune.data.service.manga.MangaService
+import io.github.drumber.kitsune.domain.model.MediaType
+import io.github.drumber.kitsune.domain.service.Filter
+import io.github.drumber.kitsune.domain.service.anime.AnimeService
+import io.github.drumber.kitsune.domain.service.manga.MangaService
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logV

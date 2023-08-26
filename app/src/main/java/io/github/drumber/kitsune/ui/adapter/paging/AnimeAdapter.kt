@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.ui.adapter.paging
 
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.RequestManager
-import io.github.drumber.kitsune.data.model.media.Anime
+import io.github.drumber.kitsune.domain.model.media.Anime
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 
 class AnimeAdapter(glide: RequestManager, listener: OnItemClickListener<Anime>? = null) :

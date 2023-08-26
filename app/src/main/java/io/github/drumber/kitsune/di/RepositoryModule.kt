@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.di
 
-import io.github.drumber.kitsune.data.repository.*
+import io.github.drumber.kitsune.domain.repository.*
 import io.github.drumber.kitsune.preference.AuthPreferences
 import io.github.drumber.kitsune.preference.UserPreferences
 import org.koin.android.ext.koin.androidContext

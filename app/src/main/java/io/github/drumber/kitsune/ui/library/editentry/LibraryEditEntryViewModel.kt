@@ -1,15 +1,15 @@
 package io.github.drumber.kitsune.ui.library.editentry
 
 import androidx.lifecycle.*
-import io.github.drumber.kitsune.data.manager.LibraryManager
-import io.github.drumber.kitsune.data.manager.LibraryUpdateResponse
-import io.github.drumber.kitsune.data.model.library.LibraryEntry
-import io.github.drumber.kitsune.data.model.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.data.model.library.LibraryModification
-import io.github.drumber.kitsune.data.room.LibraryEntryDao
-import io.github.drumber.kitsune.data.room.OfflineLibraryModificationDao
-import io.github.drumber.kitsune.data.service.Filter
-import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
+import io.github.drumber.kitsune.domain.manager.LibraryManager
+import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
+import io.github.drumber.kitsune.domain.model.library.LibraryEntry
+import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
+import io.github.drumber.kitsune.domain.model.library.LibraryModification
+import io.github.drumber.kitsune.domain.room.LibraryEntryDao
+import io.github.drumber.kitsune.domain.room.OfflineLibraryModificationDao
+import io.github.drumber.kitsune.domain.service.Filter
+import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

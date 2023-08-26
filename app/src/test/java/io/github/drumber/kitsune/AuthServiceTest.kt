@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune
 
-import io.github.drumber.kitsune.data.service.auth.AuthService
+import io.github.drumber.kitsune.domain.service.auth.AuthService
 import io.github.drumber.kitsune.di.networkModule
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertNotNull
