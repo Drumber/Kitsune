@@ -1,12 +1,10 @@
 package io.github.drumber.kitsune.domain.model.infrastructure.algolia.search
 
 import io.github.drumber.kitsune.domain.model.infrastructure.media.AnimeSubtype
-import io.github.drumber.kitsune.domain.model.infrastructure.image.Image
 import io.github.drumber.kitsune.domain.model.infrastructure.media.MangaSubtype
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Titles
 import io.github.drumber.kitsune.domain.model.media.Anime
 import io.github.drumber.kitsune.domain.model.media.Manga
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -17,16 +15,8 @@ data class MediaSearchResult(
     val slug: String,
     val titles: Titles? = null,
     val canonicalTitle: String? = null,
-    val posterImage: Image? = null
+    val posterImage: AlgoliaImage? = null
 )
-
-@Serializable
-enum class MediaSearchKind {
-    @SerialName("anime")
-    Anime,
-    @SerialName("manga")
-    Manga
-}
 
 fun MediaSearchResult.toMedia() = when (kind) {
     MediaSearchKind.Anime -> Anime(
@@ -35,7 +25,7 @@ fun MediaSearchResult.toMedia() = when (kind) {
         slug = slug,
         titles = titles,
         canonicalTitle = canonicalTitle,
-        posterImage = posterImage,
+        posterImage = posterImage?.map(),
         abbreviatedTitles = null,
         ageRating = null,
         ageRatingGuide = null,
@@ -68,7 +58,7 @@ fun MediaSearchResult.toMedia() = when (kind) {
         slug = slug,
         titles = titles,
         canonicalTitle = canonicalTitle,
-        posterImage = posterImage,
+        posterImage = posterImage?.map(),
         userCount = null,
         totalLength = null,
         tba = null,

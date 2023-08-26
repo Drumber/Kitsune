@@ -4,17 +4,19 @@ import android.content.Context
 import android.os.Parcelable
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.domain.model.infrastructure.media.ReleaseStatus
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Titles
 import io.github.drumber.kitsune.domain.model.infrastructure.media.mediarelationship.MediaRelationshipRole
+import io.github.drumber.kitsune.domain.model.infrastructure.production.AnimeProductionRole
 import io.github.drumber.kitsune.domain.model.media.Anime
 import io.github.drumber.kitsune.domain.model.media.BaseMedia
 import io.github.drumber.kitsune.domain.model.media.Manga
 import io.github.drumber.kitsune.domain.model.media.Media
-import io.github.drumber.kitsune.domain.model.infrastructure.production.AnimeProductionRole
-import io.github.drumber.kitsune.util.*
+import io.github.drumber.kitsune.util.DataUtil
+import io.github.drumber.kitsune.util.TimeUtil
 import io.github.drumber.kitsune.util.extensions.format
+import io.github.drumber.kitsune.util.formatDate
+import io.github.drumber.kitsune.util.toDate
 import kotlinx.parcelize.Parcelize
-import java.util.*
+import java.util.Calendar
 
 /**
  * Adapter class for representing media attributes to the UI layer.
@@ -40,7 +42,7 @@ class MediaAdapter(
 
     val title get() = DataUtil.getTitle(media.titles, media.canonicalTitle)
 
-    val titles get() = media.titles ?: Titles(null, null, null)
+    val titles get() = media.titles ?: emptyMap()
 
     val abbreviatedTitles get() = media.abbreviatedTitles?.joinToString(", ")
 

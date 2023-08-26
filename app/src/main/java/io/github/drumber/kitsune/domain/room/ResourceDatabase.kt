@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.domain.room
 
 import androidx.room.*
 import androidx.room.migration.AutoMigrationSpec
+import io.github.drumber.kitsune.domain.database.Converters
 import io.github.drumber.kitsune.domain.model.RemoteKey
 import io.github.drumber.kitsune.domain.model.library.LibraryEntry
 import io.github.drumber.kitsune.domain.model.library.LibraryModification
