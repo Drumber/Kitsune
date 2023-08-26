@@ -10,7 +10,7 @@ import kotlinx.parcelize.Parcelize
 @Type("chapters")
 data class Chapter(
     @Id
-    override val id: String,
+    override val id: String?,
 
     override val description: String?,
     override val titles: Titles?,

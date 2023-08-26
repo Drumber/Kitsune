@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat
 @Parcelize
 class MediaUnitAdapter(
     val unit: MediaUnit,
-    override val id: String,
+    override val id: String?,
     override val description: String?,
     override val titles: Titles?,
     override val canonicalTitle: String?,

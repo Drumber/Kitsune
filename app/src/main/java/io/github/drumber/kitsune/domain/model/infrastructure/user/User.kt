@@ -12,7 +12,7 @@ import kotlinx.parcelize.Parcelize
 @Type("users")
 data class User(
     @Id
-    val id: String,
+    val id: String?,
     val createdAt: String? = null,
     val updatedAt: String? = null,
 

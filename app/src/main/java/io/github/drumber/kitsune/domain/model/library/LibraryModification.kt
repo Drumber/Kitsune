@@ -1,14 +1,13 @@
 package io.github.drumber.kitsune.domain.model.library
 
 import android.os.Parcelable
-import androidx.room.Entity
 import androidx.room.PrimaryKey
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import kotlinx.parcelize.Parcelize
 
 // TODO: delete this
 @Parcelize
-@Entity(tableName = "offline_library_modification")
+//@Entity(tableName = "offline_library_modification")
 data class LibraryModification(
     /** Corresponds to the library entry ID */
     @PrimaryKey val id: String,

@@ -10,7 +10,7 @@ import kotlinx.parcelize.Parcelize
 @Type("favorites")
 data class Favorite(
     @Id
-    val id: String,
+    val id: String? = null,
     val favRank: Int? = null,
 
     @Relationship("item")

@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
 @Type("categories")
 data class Category(
     @Id
-    val id: String,
+    val id: String?,
     val slug: String?,
 
     val title: String?,

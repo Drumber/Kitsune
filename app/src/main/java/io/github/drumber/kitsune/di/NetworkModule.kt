@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.jasminb.jsonapi.ResourceConverter
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
+import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
 import io.github.drumber.kitsune.domain.model.library.LibraryEntry
 import io.github.drumber.kitsune.domain.model.media.Anime

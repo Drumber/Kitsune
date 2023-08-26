@@ -5,7 +5,7 @@ import io.github.drumber.kitsune.domain.model.infrastructure.image.Image
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Titles
 
 interface MediaUnit : Parcelable {
-    val id: String
+    val id: String?
 
     val description: String?
     val titles: Titles?

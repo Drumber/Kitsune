@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.domain.database
 import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
 import androidx.room.*
-import io.github.drumber.kitsune.domain.model.database.LibraryEntryWithModification
+import io.github.drumber.kitsune.domain.model.database.CombinedLibraryEntry
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntry
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 
@@ -20,54 +20,67 @@ interface LibraryEntryDao {
      * All Library Status
      * =================== */
 
+    @Transaction
     @Query("SELECT * FROM library_entries $ORDER_BY_STATUS")
-    fun getAllLibraryEntry(): PagingSource<Int, LibraryEntryWithModification>
+    fun getAllLibraryEntry(): PagingSource<Int, CombinedLibraryEntry>
 
-    @Query("SELECT * FROM library_entries WHERE media_isAnime = 1 $ORDER_BY_STATUS")
-    fun getAnimeLibraryEntry(): PagingSource<Int, LibraryEntryWithModification>
+    @Transaction
+    @Query("SELECT * FROM library_entries WHERE animeId IS NOT NULL $ORDER_BY_STATUS")
+    fun getAnimeLibraryEntry(): PagingSource<Int, CombinedLibraryEntry>
 
-    @Query("SELECT * FROM library_entries WHERE media_isAnime = 0 $ORDER_BY_STATUS")
-    fun getMangaLibraryEntry(): PagingSource<Int, LibraryEntryWithModification>
+    @Transaction
+    @Query("SELECT * FROM library_entries WHERE mangaId IS NOT NULL $ORDER_BY_STATUS")
+    fun getMangaLibraryEntry(): PagingSource<Int, CombinedLibraryEntry>
 
 
     /* ===================
      * Filtered by Status
      * =================== */
 
+    @Transaction
     @Query("SELECT * FROM library_entries WHERE status IN (:status) $ORDER_BY_STATUS")
-    fun getAllLibraryEntry(status: List<LibraryStatus>): PagingSource<Int, LibraryEntryWithModification>
+    fun getAllLibraryEntry(status: List<LibraryStatus>): PagingSource<Int, CombinedLibraryEntry>
 
-    @Query("SELECT * FROM library_entries WHERE status IN (:status) AND media_isAnime = 1 $ORDER_BY_STATUS")
-    fun getAnimeLibraryEntry(status: List<LibraryStatus>): PagingSource<Int, LibraryEntryWithModification>
+    @Transaction
+    @Query("SELECT * FROM library_entries WHERE status IN (:status) AND animeId IS NOT NULL $ORDER_BY_STATUS")
+    fun getAnimeLibraryEntry(status: List<LibraryStatus>): PagingSource<Int, CombinedLibraryEntry>
 
-    @Query("SELECT * FROM library_entries WHERE status IN (:status) AND media_isAnime = 0 $ORDER_BY_STATUS")
-    fun getMangaLibraryEntry(status: List<LibraryStatus>): PagingSource<Int, LibraryEntryWithModification>
+    @Transaction
+    @Query("SELECT * FROM library_entries WHERE status IN (:status) AND mangaId IS NOT NULL $ORDER_BY_STATUS")
+    fun getMangaLibraryEntry(status: List<LibraryStatus>): PagingSource<Int, CombinedLibraryEntry>
 
 
     /* ===================
      * Non Paging Queries
      * =================== */
 
+    @Transaction
     @Query("SELECT * FROM library_entries WHERE status IN (:status) $ORDER_BY_STATUS")
-    suspend fun getAllLibraryEntryByStatus(status: List<LibraryStatus>): List<LibraryEntryWithModification>
+    suspend fun getAllLibraryEntryByStatus(status: List<LibraryStatus>): List<CombinedLibraryEntry>
 
-    @Query("SELECT * FROM library_entries WHERE status IN (:status) AND media_isAnime = 1 $ORDER_BY_STATUS")
-    suspend fun getAnimeLibraryEntryByStatus(status: List<LibraryStatus>): List<LibraryEntryWithModification>
+    @Transaction
+    @Query("SELECT * FROM library_entries WHERE status IN (:status) AND animeId IS NOT NULL $ORDER_BY_STATUS")
+    suspend fun getAnimeLibraryEntryByStatus(status: List<LibraryStatus>): List<CombinedLibraryEntry>
 
-    @Query("SELECT * FROM library_entries WHERE status IN (:status) AND media_isAnime = 0 $ORDER_BY_STATUS")
-    suspend fun getMangaLibraryEntryByStatus(status: List<LibraryStatus>): List<LibraryEntryWithModification>
+    @Transaction
+    @Query("SELECT * FROM library_entries WHERE status IN (:status) AND mangaId IS NOT NULL $ORDER_BY_STATUS")
+    suspend fun getMangaLibraryEntryByStatus(status: List<LibraryStatus>): List<CombinedLibraryEntry>
 
-    @Query("SELECT * FROM library_entries WHERE media_id = :mediaId")
-    suspend fun getLibraryEntryFromMedia(mediaId: String): LibraryEntryWithModification?
+    @Transaction
+    @Query("SELECT * FROM library_entries WHERE animeId = :mediaId OR mangaId = :mediaId")
+    suspend fun getLibraryEntryFromMedia(mediaId: String): CombinedLibraryEntry?
 
-    @Query("SELECT * FROM library_entries WHERE media_id = :mediaId")
-    fun getLibraryEntryFromMediaLiveData(mediaId: String): LiveData<LibraryEntryWithModification?>
+    @Transaction
+    @Query("SELECT * FROM library_entries WHERE animeId = :mediaId OR mangaId = :mediaId")
+    fun getLibraryEntryFromMediaLiveData(mediaId: String): LiveData<CombinedLibraryEntry?>
 
+    @Transaction
     @Query("SELECT * FROM library_entries WHERE id = :id")
-    suspend fun getLibraryEntry(id: String): LibraryEntryWithModification?
+    suspend fun getLibraryEntry(id: String): CombinedLibraryEntry?
 
+    @Transaction
     @Query("SELECT * FROM library_entries WHERE id = :id")
-    fun getLibraryEntryAsLiveData(id: String): LiveData<LibraryEntryWithModification?>
+    fun getLibraryEntryAsLiveData(id: String): LiveData<CombinedLibraryEntry?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(libraryEntry: List<LocalLibraryEntry>)

@@ -21,12 +21,6 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
-            }
-        }
-
         buildConfigField "boolean", "SCREENSHOT_MODE_ENABLED", SCREENSHOT_MODE
     }
 
