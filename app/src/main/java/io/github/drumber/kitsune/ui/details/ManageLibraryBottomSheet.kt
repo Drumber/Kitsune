@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import io.github.drumber.kitsune.data.model.library.Status
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import io.github.drumber.kitsune.databinding.SheetManageLibraryBinding
 
 class ManageLibraryBottomSheet : BottomSheetDialogFragment() {
@@ -25,7 +25,7 @@ class ManageLibraryBottomSheet : BottomSheetDialogFragment() {
         return binding.root
     }
 
-    fun onStatusClicked(status: Status) {
+    fun onStatusClicked(status: LibraryStatus) {
         setFragmentResult(STATUS_REQUEST_KEY, bundleOf(BUNDLE_STATUS to status))
         dismiss()
     }

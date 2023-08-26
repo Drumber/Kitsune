@@ -5,7 +5,7 @@ import androidx.core.content.edit
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.user.User
+import io.github.drumber.kitsune.domain.model.infrastructure.user.User
 import io.github.drumber.kitsune.util.logD
 
 class UserPreferences(context: Context, private val objectMapper: ObjectMapper) {

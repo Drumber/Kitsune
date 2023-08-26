@@ -11,14 +11,14 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.MediaItemSize
-import io.github.drumber.kitsune.data.model.FilterCollection
-import io.github.drumber.kitsune.data.model.SearchParams
-import io.github.drumber.kitsune.data.model.StartPagePref
-import io.github.drumber.kitsune.data.model.TitlesPref
-import io.github.drumber.kitsune.data.model.category.CategoryPrefWrapper
-import io.github.drumber.kitsune.data.model.library.LibraryEntryKind
-import io.github.drumber.kitsune.data.model.library.Status
-import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.domain.model.FilterCollection
+import io.github.drumber.kitsune.domain.model.SearchParams
+import io.github.drumber.kitsune.domain.model.preference.StartPagePref
+import io.github.drumber.kitsune.domain.model.infrastructure.user.TitleLanguagePreference
+import io.github.drumber.kitsune.domain.model.preference.CategoryPrefWrapper
+import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
+import io.github.drumber.kitsune.domain.repository.UserRepository
 import io.github.drumber.kitsune.util.logE
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -33,11 +33,11 @@ object KitsunePref : KotprefModel(), KoinComponent {
     private val userRepository: UserRepository by inject()
 
     private var titlesIntern by enumValuePref(
-        TitlesPref.Canonical,
+        TitleLanguagePreference.Canonical,
         key = R.string.preference_key_titles
     )
 
-    var titles: TitlesPref
+    var titles: TitleLanguagePreference
         set(value) {
             titlesIntern = value
         }
@@ -103,7 +103,7 @@ object KitsunePref : KotprefModel(), KoinComponent {
 
     private var libraryEntryStatusJson by stringPref("[]")
 
-    var libraryEntryStatus: List<Status>
+    var libraryEntryStatus: List<LibraryStatus>
         set(value) {
             libraryEntryStatusJson = value.toJsonString()
         }

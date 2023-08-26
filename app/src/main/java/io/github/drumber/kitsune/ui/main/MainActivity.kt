@@ -14,9 +14,9 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.StartPagePref
-import io.github.drumber.kitsune.data.model.getDestinationId
-import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.domain.model.preference.StartPagePref
+import io.github.drumber.kitsune.domain.model.preference.getDestinationId
+import io.github.drumber.kitsune.domain.repository.UserRepository
 import io.github.drumber.kitsune.databinding.ActivityMainBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity

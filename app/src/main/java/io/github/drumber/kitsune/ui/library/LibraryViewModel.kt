@@ -11,19 +11,19 @@ import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import androidx.paging.map
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.data.manager.LibraryManager
-import io.github.drumber.kitsune.data.manager.LibraryUpdateResponse
-import io.github.drumber.kitsune.data.model.library.LibraryEntry
-import io.github.drumber.kitsune.data.model.library.LibraryEntryFilter
-import io.github.drumber.kitsune.data.model.library.LibraryEntryKind
-import io.github.drumber.kitsune.data.model.library.LibraryEntryUiModel
-import io.github.drumber.kitsune.data.model.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.data.model.library.LibraryModification
-import io.github.drumber.kitsune.data.model.library.Status
-import io.github.drumber.kitsune.data.repository.LibraryEntriesRepository
-import io.github.drumber.kitsune.data.repository.UserRepository
-import io.github.drumber.kitsune.data.room.OfflineLibraryModificationDao
-import io.github.drumber.kitsune.data.service.Filter
+import io.github.drumber.kitsune.domain.manager.LibraryManager
+import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
+import io.github.drumber.kitsune.domain.model.library.LibraryEntry
+import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryFilter
+import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind
+import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryUiModel
+import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
+import io.github.drumber.kitsune.domain.model.library.LibraryModification
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
+import io.github.drumber.kitsune.domain.repository.LibraryEntriesRepository
+import io.github.drumber.kitsune.domain.repository.UserRepository
+import io.github.drumber.kitsune.domain.room.OfflineLibraryModificationDao
+import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
@@ -188,7 +188,7 @@ class LibraryViewModel(
         _filter.value = LibraryEntryFilter(kind, KitsunePref.libraryEntryStatus)
     }
 
-    fun setLibraryEntryStatus(status: List<Status>) {
+    fun setLibraryEntryStatus(status: List<LibraryStatus>) {
         // clear status filter if all filters are selected
         val statusFilter = if (status.size == 5) emptyList() else status
         KitsunePref.libraryEntryStatus = statusFilter

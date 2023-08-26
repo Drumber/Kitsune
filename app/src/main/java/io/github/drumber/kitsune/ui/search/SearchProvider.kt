@@ -7,10 +7,9 @@ import com.algolia.search.model.APIKey
 import com.algolia.search.model.ApplicationID
 import com.algolia.search.model.IndexName
 import com.algolia.search.model.search.Query
-import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.data.model.auth.SearchType
-import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
+import io.github.drumber.kitsune.domain.model.infrastructure.algolia.SearchType
+import io.github.drumber.kitsune.domain.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.exception.InvalidDataException
 import io.github.drumber.kitsune.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.util.logE

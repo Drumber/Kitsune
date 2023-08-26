@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.Result
-import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.domain.Result
+import io.github.drumber.kitsune.domain.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

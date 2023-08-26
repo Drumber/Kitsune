@@ -32,10 +32,10 @@ import com.google.android.material.internal.EdgeToEdgeUtils
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.addTransform
-import io.github.drumber.kitsune.data.model.library.Status
-import io.github.drumber.kitsune.data.model.library.getStringResId
-import io.github.drumber.kitsune.data.model.media.Manga
-import io.github.drumber.kitsune.data.model.media.MediaAdapter
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
+import io.github.drumber.kitsune.domain.model.ui.library.getStringResId
+import io.github.drumber.kitsune.domain.model.media.Manga
+import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.databinding.FragmentEditLibraryEntryBinding
 import io.github.drumber.kitsune.ui.library.RatingBottomSheet
 import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel.LoadState
@@ -64,11 +64,11 @@ class LibraryEditEntryFragment : DialogFragment() {
     }
 
     private val libraryStatusMenuItems = listOf(
-        Status.Current,
-        Status.Planned,
-        Status.Completed,
-        Status.OnHold,
-        Status.Dropped
+        LibraryStatus.Current,
+        LibraryStatus.Planned,
+        LibraryStatus.Completed,
+        LibraryStatus.OnHold,
+        LibraryStatus.Dropped
     )
 
     override fun getTheme(): Int {
@@ -316,7 +316,7 @@ class LibraryEditEntryFragment : DialogFragment() {
                     viewModel.updateLibraryEntry {
                         it.copy(
                             progress = value,
-                            status = Status.Completed,
+                            status = LibraryStatus.Completed,
                             finishedAt = wrapper?.finishedAt ?: todayUtcMillis().toDate()
                                 .formatDate(DATE_FORMAT_ISO)
                         )
@@ -345,7 +345,7 @@ class LibraryEditEntryFragment : DialogFragment() {
                     it.copy(
                         progress = 0,
                         reconsumeCount = wrapper?.reconsumeCount?.plus(1) ?: 1,
-                        status = Status.Current
+                        status = LibraryStatus.Current
                     )
                 }
             }
@@ -418,7 +418,7 @@ class LibraryEditEntryFragment : DialogFragment() {
         }
     }
 
-    private fun setLibraryStatusMenu(mediaAdapter: MediaAdapter?, currValue: Status?) {
+    private fun setLibraryStatusMenu(mediaAdapter: MediaAdapter?, currValue: LibraryStatus?) {
         val isAnime = mediaAdapter?.isAnime() != false
         val statusItems = libraryStatusMenuItems.map { getString(it.getStringResId(isAnime)) }
 

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.StreamingLogo
-import io.github.drumber.kitsune.data.model.streamer.StreamingLink
+import io.github.drumber.kitsune.domain.model.infrastructure.media.streamer.StreamingLink
 import io.github.drumber.kitsune.databinding.ItemStreamerBinding
 import java.util.concurrent.CopyOnWriteArrayList
 

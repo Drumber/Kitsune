@@ -34,16 +34,16 @@ import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.constants.SortFilter
-import io.github.drumber.kitsune.data.model.MediaSelector
-import io.github.drumber.kitsune.data.model.MediaType
-import io.github.drumber.kitsune.data.model.category.Category
-import io.github.drumber.kitsune.data.model.library.LibraryEntryAdapter
-import io.github.drumber.kitsune.data.model.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.data.model.library.Status
-import io.github.drumber.kitsune.data.model.library.getStringResId
-import io.github.drumber.kitsune.data.model.media.Anime
-import io.github.drumber.kitsune.data.model.media.MediaAdapter
-import io.github.drumber.kitsune.data.service.Filter
+import io.github.drumber.kitsune.domain.model.MediaSelector
+import io.github.drumber.kitsune.domain.model.MediaType
+import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
+import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryAdapter
+import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
+import io.github.drumber.kitsune.domain.model.ui.library.getStringResId
+import io.github.drumber.kitsune.domain.model.media.Anime
+import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
@@ -67,7 +67,7 @@ import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import io.github.drumber.kitsune.util.logW
-import io.github.drumber.kitsune.util.originalOrDown
+import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -233,7 +233,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
 
         setFragmentResultListener(ManageLibraryBottomSheet.STATUS_REQUEST_KEY) { _, bundle ->
-            val libraryEntryStatus = bundle.get(ManageLibraryBottomSheet.BUNDLE_STATUS) as? Status
+            val libraryEntryStatus = bundle.get(ManageLibraryBottomSheet.BUNDLE_STATUS) as? LibraryStatus
             libraryEntryStatus?.let { viewModel.updateLibraryEntryStatus(it) }
         }
 

@@ -6,11 +6,11 @@
 
         <import type="android.text.TextUtils" />
 
-        <import type="io.github.drumber.kitsune.data.model.production.AnimeProductionRole" />
+        <import type="io.github.drumber.kitsune.domain.model.infrastructure.production.AnimeProductionRole" />
 
         <variable
             name="data"
-            type="io.github.drumber.kitsune.data.model.media.MediaAdapter" />
+            type="io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter" />
     </data>
 
     <TableLayout

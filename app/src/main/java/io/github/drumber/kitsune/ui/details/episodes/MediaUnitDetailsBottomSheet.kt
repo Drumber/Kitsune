@@ -8,10 +8,10 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.unit.MediaUnitAdapter
+import io.github.drumber.kitsune.domain.model.ui.media.MediaUnitAdapter
 import io.github.drumber.kitsune.databinding.SheetMediaUnitDetailsBinding
-import io.github.drumber.kitsune.util.originalOrDown
-import io.github.drumber.kitsune.util.smallOrHigher
+import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
+import io.github.drumber.kitsune.domain.model.ui.media.smallOrHigher
 
 class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {
 

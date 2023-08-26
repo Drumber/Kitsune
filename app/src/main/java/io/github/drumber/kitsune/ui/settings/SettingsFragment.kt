@@ -17,15 +17,14 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.data.manager.GitHubUpdateChecker
-import io.github.drumber.kitsune.data.model.StartPagePref
-import io.github.drumber.kitsune.data.model.TitlesPref
-import io.github.drumber.kitsune.data.model.user.RatingSystem
-import io.github.drumber.kitsune.data.model.user.SfwFilterPreference
-import io.github.drumber.kitsune.data.model.user.User
+import io.github.drumber.kitsune.domain.manager.GitHubUpdateChecker
+import io.github.drumber.kitsune.domain.model.preference.StartPagePref
+import io.github.drumber.kitsune.domain.model.infrastructure.user.TitleLanguagePreference
+import io.github.drumber.kitsune.domain.model.infrastructure.user.RatingSystemPreference
+import io.github.drumber.kitsune.domain.model.infrastructure.user.SfwFilterPreference
+import io.github.drumber.kitsune.domain.model.infrastructure.user.User
 import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
@@ -158,11 +157,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
         viewModel.userModel.observe(this) { user ->
             //---- Title Language Preference
             findPreference<ListPreference>(R.string.preference_key_titles)?.apply {
-                entryValues = TitlesPref.values().map { it.name }.toTypedArray()
+                entryValues = TitleLanguagePreference.values().map { it.name }.toTypedArray()
                 setDefaultValue(KitsunePref.titles.name)
                 value = KitsunePref.titles.name
                 setOnPreferenceChangeListener { _, newValue ->
-                    val titlesPref = TitlesPref.valueOf(newValue.toString())
+                    val titlesPref = TitleLanguagePreference.valueOf(newValue.toString())
                     KitsunePref.titles = titlesPref
 
                     // Title preference can be also changed without being logged in.
@@ -233,13 +232,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
             //---- Rating System
             findPreference<ListPreference>(R.string.preference_key_rating_system)?.apply {
-                entryValues = RatingSystem.values().reversed().map { it.name }.toTypedArray()
+                entryValues = RatingSystemPreference.values().reversed().map { it.name }.toTypedArray()
                 value = user?.ratingSystem?.name
                 setOnPreferenceChangeListener { _, newValue ->
                     updateUserIfChanged(
                         value,
                         newValue,
-                        User(user?.id, ratingSystem = RatingSystem.valueOf(newValue as String))
+                        User(user?.id, ratingSystem = RatingSystemPreference.valueOf(newValue as String))
                     )
                     true
                 }

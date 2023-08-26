@@ -2,21 +2,21 @@ package io.github.drumber.kitsune.ui.details
 
 import androidx.lifecycle.*
 import com.github.jasminb.jsonapi.JSONAPIDocument
-import io.github.drumber.kitsune.data.manager.LibraryManager
-import io.github.drumber.kitsune.data.manager.LibraryUpdateResponse
-import io.github.drumber.kitsune.data.model.library.LibraryEntry
-import io.github.drumber.kitsune.data.model.library.LibraryModification
-import io.github.drumber.kitsune.data.model.library.Status
-import io.github.drumber.kitsune.data.model.media.MediaAdapter
-import io.github.drumber.kitsune.data.model.user.Favorite
-import io.github.drumber.kitsune.data.model.user.User
-import io.github.drumber.kitsune.data.repository.UserRepository
-import io.github.drumber.kitsune.data.room.LibraryEntryDao
-import io.github.drumber.kitsune.data.service.Filter
-import io.github.drumber.kitsune.data.service.anime.AnimeService
-import io.github.drumber.kitsune.data.service.library.LibraryEntriesService
-import io.github.drumber.kitsune.data.service.manga.MangaService
-import io.github.drumber.kitsune.data.service.user.FavoriteService
+import io.github.drumber.kitsune.domain.manager.LibraryManager
+import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
+import io.github.drumber.kitsune.domain.model.library.LibraryEntry
+import io.github.drumber.kitsune.domain.model.library.LibraryModification
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
+import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.domain.model.infrastructure.user.Favorite
+import io.github.drumber.kitsune.domain.model.infrastructure.user.User
+import io.github.drumber.kitsune.domain.repository.UserRepository
+import io.github.drumber.kitsune.domain.room.LibraryEntryDao
+import io.github.drumber.kitsune.domain.service.Filter
+import io.github.drumber.kitsune.domain.service.anime.AnimeService
+import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
+import io.github.drumber.kitsune.domain.service.manga.MangaService
+import io.github.drumber.kitsune.domain.service.user.FavoriteService
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
@@ -187,7 +187,7 @@ class DetailsViewModel(
         }
     }
 
-    fun updateLibraryEntryStatus(status: Status) {
+    fun updateLibraryEntryStatus(status: LibraryStatus) {
         val userId = userRepository.user?.id ?: return
         val mediaAdapter = mediaAdapter.value ?: return
         val existingLibraryEntryId = libraryEntry.value?.id
