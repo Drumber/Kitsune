@@ -17,8 +17,7 @@ import kotlinx.parcelize.Parcelize
 data class LibraryEntry(
     @Id
     val id: String,
-    val createdAt: String?,
-    val updatedAt: String?,
+    var updatedAt: String?,
 
     val startedAt: String?,
     val finishedAt: String?,

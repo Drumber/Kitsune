@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.domain.room
+package io.github.drumber.kitsune.domain.database
 
 import androidx.room.TypeConverter
 import com.fasterxml.jackson.module.kotlin.readValue
