@@ -1,11 +1,12 @@
 package io.github.drumber.kitsune.domain.model.infrastructure.media
 
 import android.os.Parcelable
-import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
 import io.github.drumber.kitsune.domain.model.infrastructure.image.Image
+import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
 import io.github.drumber.kitsune.domain.model.infrastructure.media.mediarelationship.MediaRelationship
+import io.github.drumber.kitsune.domain.model.infrastructure.user.FavoriteItem
 
-sealed interface BaseMedia : Parcelable {
+sealed interface BaseMedia : FavoriteItem, Parcelable {
     val id: String
     val slug: String?
 

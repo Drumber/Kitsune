@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.domain.database
 import androidx.room.TypeConverter
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.di.createObjectMapper
-import io.github.drumber.kitsune.domain.model.RemoteKeyType
+import io.github.drumber.kitsune.domain.model.database.RemoteKeyType
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.infrastructure.library.ReactionSkip
 import io.github.drumber.kitsune.domain.model.infrastructure.media.AgeRating

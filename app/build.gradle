@@ -16,8 +16,8 @@ android {
         applicationId "io.github.drumber.kitsune"
         minSdk 21
         targetSdk 34
-        versionCode 17
-        versionName "1.7.8"
+        versionCode 18
+        versionName "1.8.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -190,10 +190,12 @@ dependencies {
     }
 
     // Tests
-    testImplementation 'junit:junit:4.+'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation "org.assertj:assertj-core:3.24.2"
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
     testImplementation "io.insert-koin:koin-test-junit4:$koin_version"
     testImplementation "org.mockito.kotlin:mockito-kotlin:5.1.0"
-    testImplementation("com.willowtreeapps.assertk:assertk:0.26.1")
+    testImplementation "net.datafaker:datafaker:2.0.1"
 }

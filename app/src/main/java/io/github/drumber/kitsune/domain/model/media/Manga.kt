@@ -17,6 +17,7 @@ import io.github.drumber.kitsune.domain.model.infrastructure.media.mediarelation
 import kotlinx.parcelize.Parcelize
 
 // TODO: delete this
+@Deprecated("Replaced with new model.")
 @Parcelize
 @Type("manga")
 data class Manga @Ignore constructor(

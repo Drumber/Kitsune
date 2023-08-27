@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.domain.paging
 
 import com.github.jasminb.jsonapi.JSONAPIDocument
-import io.github.drumber.kitsune.domain.model.library.LibraryEntry
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
 import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
 

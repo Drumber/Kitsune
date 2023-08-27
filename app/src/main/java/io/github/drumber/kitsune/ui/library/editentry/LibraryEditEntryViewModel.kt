@@ -1,13 +1,19 @@
 package io.github.drumber.kitsune.ui.library.editentry
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
+import io.github.drumber.kitsune.domain.database.LibraryEntryDao
+import io.github.drumber.kitsune.domain.database.LibraryEntryModificationDao
 import io.github.drumber.kitsune.domain.manager.LibraryManager
 import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
-import io.github.drumber.kitsune.domain.model.library.LibraryEntry
+import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
+import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.domain.model.library.LibraryModification
-import io.github.drumber.kitsune.domain.room.LibraryEntryDao
-import io.github.drumber.kitsune.domain.room.OfflineLibraryModificationDao
 import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.util.logE
@@ -17,7 +23,7 @@ import kotlinx.coroutines.launch
 class LibraryEditEntryViewModel(
     private val libraryManager: LibraryManager,
     private val libraryEntryDao: LibraryEntryDao,
-    private val libraryModificationDao: OfflineLibraryModificationDao,
+    private val libraryModificationDao: LibraryEntryModificationDao,
     private val libraryEntriesService: LibraryEntriesService
 ) : ViewModel() {
 
@@ -40,9 +46,9 @@ class LibraryEditEntryViewModel(
         val uneditedWrapper = uneditedLibraryEntryWrapper ?: return@map false
         val entry = uneditedWrapper.libraryEntry.copy()
         // apply old modifications
-        val oldModifiedEntry = uneditedWrapper.libraryModification?.applyToLibraryEntry(entry.copy()) ?: entry
+        val oldModifiedEntry = uneditedWrapper.libraryModification?.applyToLibraryEntry(entry.toLocalLibraryEntry()) ?: entry
         // apply new modifications
-        val newModifiedEntry = it.libraryModification?.applyToLibraryEntry(entry.copy()) ?: entry
+        val newModifiedEntry = it.libraryModification?.applyToLibraryEntry(entry.toLocalLibraryEntry()) ?: entry
         oldModifiedEntry != newModifiedEntry
     }
 
@@ -58,8 +64,8 @@ class LibraryEditEntryViewModel(
             _libraryEntry.postValue(libraryEntry)
 
             val libraryModification =
-                libraryModificationDao.getOfflineLibraryModification(libraryEntryId)
-                    ?: LibraryModification(libraryEntryId)
+                libraryModificationDao.getLibraryEntryModification(libraryEntryId)
+                    ?: LocalLibraryEntryModification.withIdAndNulls(libraryEntryId)
 
             val libraryEntryWrapper = LibraryEntryWrapper(libraryEntry, libraryModification)
             uneditedLibraryEntryWrapper = libraryEntryWrapper.copy()
@@ -71,7 +77,7 @@ class LibraryEditEntryViewModel(
 
     private suspend fun getLibraryEntry(libraryEntryId: String): LibraryEntry? {
         return try {
-            libraryEntryDao.getLibraryEntry(libraryEntryId)
+            libraryEntryDao.getLibraryEntry(libraryEntryId)?.toLibraryEntry()
                 ?: libraryEntriesService.getLibraryEntry(
                     libraryEntryId,
                     Filter().include("anime", "manga").options
@@ -82,7 +88,7 @@ class LibraryEditEntryViewModel(
         }
     }
 
-    fun setLibraryModification(libraryModification: LibraryModification) {
+    fun setLibraryModification(libraryModification: LocalLibraryEntryModification) {
         libraryEntryWrapper.value
             ?.copy(libraryModification = libraryModification)
             ?.let { updatedWrapper ->
@@ -90,7 +96,7 @@ class LibraryEditEntryViewModel(
             }
     }
 
-    fun updateLibraryEntry(block: (LibraryModification) -> LibraryModification) {
+    fun updateLibraryEntry(block: (LocalLibraryEntryModification) -> LocalLibraryEntryModification) {
         val updatedLibraryModification = libraryEntryWrapper.value?.libraryModification?.let(block)
         if (updatedLibraryModification != null) {
             setLibraryModification(updatedLibraryModification)
@@ -121,7 +127,7 @@ class LibraryEditEntryViewModel(
         _loadState.value = LoadState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                libraryManager.removeLibraryEntry(libraryEntry)
+                libraryManager.removeLibraryEntry(libraryEntry.toLocalLibraryEntry())
                 _loadState.postValue(LoadState.CloseDialog)
             } catch (e: Exception) {
                 logE("Failed to remove library entry.", e)

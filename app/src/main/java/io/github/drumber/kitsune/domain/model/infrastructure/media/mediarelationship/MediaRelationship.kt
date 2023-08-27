@@ -4,7 +4,7 @@ import android.os.Parcelable
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
-import io.github.drumber.kitsune.domain.model.media.Media
+import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -15,5 +15,5 @@ data class MediaRelationship(
     val role: MediaRelationshipRole?,
 
     @Relationship("destination")
-    val media: Media?
+    val media: BaseMedia?
 ) : Parcelable

@@ -1,20 +1,20 @@
-package io.github.drumber.kitsune.domain.room
+package io.github.drumber.kitsune.domain.database
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import io.github.drumber.kitsune.domain.model.RemoteKey
-import io.github.drumber.kitsune.domain.model.RemoteKeyType
+import io.github.drumber.kitsune.domain.model.database.RemoteKeyEntity
+import io.github.drumber.kitsune.domain.model.database.RemoteKeyType
 
 @Dao
 interface RemoteKeyDao {
 
     @Query("SELECT * FROM remote_keys WHERE resourceId = :resourceId AND remoteKeyType = :remoteKeyType")
-    suspend fun remoteKeyByResourceId(resourceId: String, remoteKeyType: RemoteKeyType): RemoteKey
+    suspend fun remoteKeyByResourceId(resourceId: String, remoteKeyType: RemoteKeyType): RemoteKeyEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertALl(key: List<RemoteKey>)
+    suspend fun insertALl(key: List<RemoteKeyEntity>)
 
     @Query("DELETE FROM remote_keys WHERE resourceId = :resourceId AND remoteKeyType = :remoteKeyType")
     suspend fun deleteByResourceId(resourceId: String, remoteKeyType: RemoteKeyType)

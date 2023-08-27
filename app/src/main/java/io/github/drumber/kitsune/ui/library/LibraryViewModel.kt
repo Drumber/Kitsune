@@ -11,19 +11,22 @@ import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import androidx.paging.map
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.domain.database.LibraryEntryModificationDao
 import io.github.drumber.kitsune.domain.manager.LibraryManager
 import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
-import io.github.drumber.kitsune.domain.model.library.LibraryEntry
+import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
+import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryFilter
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryUiModel
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.domain.model.library.LibraryModification
-import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import io.github.drumber.kitsune.domain.repository.LibraryEntriesRepository
 import io.github.drumber.kitsune.domain.repository.UserRepository
-import io.github.drumber.kitsune.domain.room.OfflineLibraryModificationDao
 import io.github.drumber.kitsune.domain.service.Filter
+import io.github.drumber.kitsune.exception.InvalidDataException
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +42,7 @@ class LibraryViewModel(
     val userRepository: UserRepository,
     private val libraryEntriesRepository: LibraryEntriesRepository,
     private val libraryManager: LibraryManager,
-    val offlineLibraryModificationDao: OfflineLibraryModificationDao
+    val libraryModificationDao: LibraryEntryModificationDao
 ) : ViewModel() {
 
     private val updateLock = Any()
@@ -116,7 +119,10 @@ class LibraryViewModel(
                     pagingData.map { entry ->
                         LibraryEntryWrapper(
                             entry,
-                            offlineLibraryModificationDao.getOfflineLibraryModification(entry.id)
+                            libraryModificationDao.getLibraryEntryModification(
+                                entry.id
+                                    ?: throw InvalidDataException("Library entry ID cannot be 'null'.")
+                            )
                         )
                     }
                 }
@@ -129,6 +135,7 @@ class LibraryViewModel(
                             after?.status == null -> null
                             before == null || before.status != after.status ->
                                 LibraryEntryUiModel.StatusSeparatorModel(after.status!!)
+
                             else -> null
                         }
                     }
@@ -147,6 +154,7 @@ class LibraryViewModel(
             )
         } else {
             libraryEntriesRepository.libraryEntries(Kitsu.DEFAULT_PAGE_SIZE_LIBRARY, filter)
+                .map { pagingSource -> pagingSource.map { it.toLibraryEntry() } }
         }
     }
 
@@ -217,7 +225,9 @@ class LibraryViewModel(
     }
 
     private fun updateLibraryProgress(libraryEntry: LibraryEntry, newProgress: Int?) {
-        val modification = LibraryModification(libraryEntry.id, progress = newProgress)
+        val modification = LocalLibraryEntryModification.withIdAndNulls(
+            libraryEntry.id ?: throw InvalidDataException("Library entry ID cannot be 'null'.")
+        ).copy(progress = newProgress)
 
         isUpdatingLibraryProgress.value = true
         viewModelScope.launch(Dispatchers.IO) {
@@ -235,10 +245,11 @@ class LibraryViewModel(
     var lastRatedLibraryEntry: LibraryEntry? = null
 
     fun updateRating(rating: Int?) {
-        val libraryEntry = lastRatedLibraryEntry ?: return
+        val libraryEntry = lastRatedLibraryEntry?.toLocalLibraryEntry() ?: return
 
         val updatedRating = rating ?: -1 // '-1' will be mapped to 'null' by the json serializer
-        val modification = LibraryModification(libraryEntry.id, ratingTwenty = updatedRating)
+        val modification = LocalLibraryEntryModification.withIdAndNulls(libraryEntry.id)
+            .copy(ratingTwenty = updatedRating)
 
         isUpdatingLibraryRating.value = true
         viewModelScope.launch(Dispatchers.IO) {
@@ -252,7 +263,7 @@ class LibraryViewModel(
         }
     }
 
-    private suspend fun updateLibraryEntry(modification: LibraryModification): LibraryUpdateResponse {
+    private suspend fun updateLibraryEntry(modification: LocalLibraryEntryModification): LibraryUpdateResponse {
         val response = libraryManager.updateLibraryEntry(modification)
 
         // temp fix for issue #6

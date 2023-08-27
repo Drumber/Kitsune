@@ -1,17 +1,23 @@
 package io.github.drumber.kitsune.ui.details
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.github.jasminb.jsonapi.JSONAPIDocument
+import io.github.drumber.kitsune.domain.database.LibraryEntryDao
 import io.github.drumber.kitsune.domain.manager.LibraryManager
 import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
-import io.github.drumber.kitsune.domain.model.library.LibraryEntry
-import io.github.drumber.kitsune.domain.model.library.LibraryModification
+import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
+import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.domain.model.infrastructure.user.Favorite
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
+import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.domain.repository.UserRepository
-import io.github.drumber.kitsune.domain.room.LibraryEntryDao
 import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.domain.service.anime.AnimeService
 import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
@@ -21,7 +27,11 @@ import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logW
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
 class DetailsViewModel(
@@ -132,7 +142,7 @@ class DetailsViewModel(
         // add local database as library entry source
         viewModelScope.launch(Dispatchers.Main) {
             _libraryEntry.addSource(libraryEntryDao.getLibraryEntryFromMediaLiveData(mediaAdapter.id)) {
-                _libraryEntry.value = it
+                _libraryEntry.value = it?.toLibraryEntry()
             }
         }
         val filter = Filter()
@@ -162,7 +172,7 @@ class DetailsViewModel(
                     )
                     withContext(Dispatchers.IO) {
                         _libraryEntry.postValue(null)
-                        libraryManager.mayRemoveSingleLibraryEntry(it)
+                        libraryManager.mayRemoveSingleLibraryEntry(it.toLocalLibraryEntry())
                     }
                 }
             }
@@ -203,7 +213,9 @@ class DetailsViewModel(
 
                     _libraryEntry.postValue(newLibraryEntry)
                 } else { // update existing library entry
-                    val modification = LibraryModification(existingLibraryEntryId, status = status)
+                    val modification =
+                        LocalLibraryEntryModification.withIdAndNulls(existingLibraryEntryId)
+                            .copy(status = status)
                     val response = libraryManager.updateLibraryEntry(modification)
 
                     if (response is LibraryUpdateResponse.Error) {
@@ -223,7 +235,7 @@ class DetailsViewModel(
         val libraryEntry = libraryEntry.value ?: return
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                libraryManager.removeLibraryEntry(libraryEntry)
+                libraryManager.removeLibraryEntry(libraryEntry.toLocalLibraryEntry())
                 _libraryEntry.postValue(null)
             } catch (e: Exception) {
                 logE("Failed to remove library entry.", e)

@@ -32,11 +32,11 @@ import com.google.android.material.internal.EdgeToEdgeUtils
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.addTransform
-import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
-import io.github.drumber.kitsune.domain.model.ui.library.getStringResId
-import io.github.drumber.kitsune.domain.model.media.Manga
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.databinding.FragmentEditLibraryEntryBinding
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
+import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
+import io.github.drumber.kitsune.domain.model.ui.library.getStringResId
+import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.library.RatingBottomSheet
 import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel.LoadState
 import io.github.drumber.kitsune.ui.widget.CustomNumberSpinner
@@ -352,7 +352,7 @@ class LibraryEditEntryFragment : DialogFragment() {
 
             (menuPrivacy.editText as? AutoCompleteTextView)?.setOnItemClickListener { _, _, position, _ ->
                 val isPrivate = position == 1
-                viewModel.updateLibraryEntry { it.copy(isPrivate = isPrivate) }
+                viewModel.updateLibraryEntry { it.copy(privateEntry = isPrivate) }
             }
 
             fieldStarted.editText?.setOnClickListener {

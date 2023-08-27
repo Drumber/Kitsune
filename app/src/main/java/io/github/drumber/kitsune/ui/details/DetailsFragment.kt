@@ -34,17 +34,18 @@ import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.constants.SortFilter
+import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.domain.model.MediaSelector
 import io.github.drumber.kitsune.domain.model.MediaType
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
+import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryAdapter
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.ui.library.getStringResId
-import io.github.drumber.kitsune.domain.model.media.Anime
 import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
 import io.github.drumber.kitsune.domain.service.Filter
-import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
 import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
@@ -67,7 +68,6 @@ import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import io.github.drumber.kitsune.util.logW
-import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.CopyOnWriteArrayList
 

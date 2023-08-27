@@ -6,10 +6,11 @@ import by.kirich1409.viewbindingdelegate.ViewBindingPropertyDelegate
 import com.algolia.instantsearch.core.InstantSearchTelemetry
 import com.chibatching.kotpref.Kotpref
 import com.chibatching.kotpref.livedata.asLiveData
+import io.github.drumber.kitsune.di.appModule
 import io.github.drumber.kitsune.domain.manager.GitHubUpdateChecker
 import io.github.drumber.kitsune.domain.repository.AuthRepository
 import io.github.drumber.kitsune.domain.repository.UserRepository
-import io.github.drumber.kitsune.di.appModule
+import io.github.drumber.kitsune.domain.room.ResourceDatabase
 import io.github.drumber.kitsune.notification.NotificationChannels
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
@@ -44,6 +45,8 @@ class KitsuneApplication : Application() {
             modules(appModule)
         }
 
+        //performMigrations()
+
         Kotpref.init(this)
 
         ViewBindingPropertyDelegate.strictMode = false
@@ -60,6 +63,13 @@ class KitsuneApplication : Application() {
         if (KitsunePref.checkForUpdatesOnStart) {
             checkForNewVersion()
         }
+    }
+
+    private fun performMigrations() {
+        // 1.8.0 - replaced ResourceDatabase with LocalDatabase
+        val resourceDatabase: ResourceDatabase = get()
+        resourceDatabase.clearAllTables()
+        resourceDatabase.close()
     }
 
     private fun initLoggedInUser() {

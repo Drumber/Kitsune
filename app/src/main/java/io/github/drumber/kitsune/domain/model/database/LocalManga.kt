@@ -2,7 +2,6 @@ package io.github.drumber.kitsune.domain.model.database
 
 import android.os.Parcelable
 import androidx.room.Embedded
-import androidx.room.Entity
 import androidx.room.PrimaryKey
 import io.github.drumber.kitsune.domain.model.infrastructure.media.AgeRating
 import io.github.drumber.kitsune.domain.model.infrastructure.media.MangaSubtype
@@ -12,7 +11,6 @@ import io.github.drumber.kitsune.domain.model.infrastructure.media.Titles
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity("manga")
 data class LocalManga(
     @PrimaryKey
     val id: String,

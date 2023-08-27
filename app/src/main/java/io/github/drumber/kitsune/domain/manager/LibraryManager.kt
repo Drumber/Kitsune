@@ -2,28 +2,38 @@ package io.github.drumber.kitsune.domain.manager
 
 import androidx.room.withTransaction
 import com.github.jasminb.jsonapi.JSONAPIDocument
-import io.github.drumber.kitsune.domain.model.library.LibraryEntry
-import io.github.drumber.kitsune.domain.model.library.LibraryModification
+import io.github.drumber.kitsune.domain.database.LocalDatabase
+import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
+import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntry
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
-import io.github.drumber.kitsune.domain.model.media.Anime
-import io.github.drumber.kitsune.domain.model.media.BaseMedia
-import io.github.drumber.kitsune.domain.model.media.Manga
+import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
+import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
+import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
-import io.github.drumber.kitsune.domain.room.ResourceDatabase
 import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.exception.InvalidDataException
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.util.*
+import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
+import io.github.drumber.kitsune.util.formatDate
+import io.github.drumber.kitsune.util.logD
+import io.github.drumber.kitsune.util.logE
+import io.github.drumber.kitsune.util.logI
+import io.github.drumber.kitsune.util.logW
+import io.github.drumber.kitsune.util.toDate
+import io.github.drumber.kitsune.util.todayUtcMillis
 import retrofit2.HttpException
 
 class LibraryManager(
     private val libraryEntriesService: LibraryEntriesService,
-    private val database: ResourceDatabase
+    private val database: LocalDatabase
 ) {
 
     private val libraryEntryDao = database.libraryEntryDao()
-    private val offlineLibraryModificationDao = database.offlineLibraryModificationDao()
+    private val libraryModificationDao = database.libraryEntryModificationDao()
 
     private val isOfflineCacheEnabled
         get() = KitsunePref.libraryOfflineSync
@@ -36,30 +46,30 @@ class LibraryManager(
 
         try {
             val offlineModifications =
-                offlineLibraryModificationDao.getAllOfflineLibraryModifications()
+                libraryModificationDao.getAllLibraryEntryModifications()
 
             logD("Synchronizing ${offlineModifications.size} offline modifications...")
 
             offlineModifications.forEach { libraryModification ->
-                val modifiedLibraryEntry = libraryModification.toLibraryEntry()
+                val modifiedLibraryEntry = libraryModification.toLocalLibraryEntry()
 
                 try {
                     // post library update to server
                     val responseLibraryEntry = libraryEntriesService.updateLibraryEntry(
                         modifiedLibraryEntry.id,
-                        JSONAPIDocument(modifiedLibraryEntry)
+                        JSONAPIDocument(modifiedLibraryEntry.toLibraryEntry())
                     ).get() ?: throw InvalidDataException("Received library entry is 'null'.")
 
                     logI("Successfully synchronized offline library modification, removing modification from database: ${libraryModification.id}")
                     // remove offline library modification from database
                     database.withTransaction {
-                        offlineLibraryModificationDao.deleteOfflineLibraryModification(
+                        libraryModificationDao.deleteLibraryEntryModification(
                             libraryModification
                         )
                     }
 
                     // update library entry in database
-                    updateLibraryEntryInDatabase(responseLibraryEntry)
+                    updateLibraryEntryInDatabase(responseLibraryEntry.toLocalLibraryEntry())
                 } catch (e: Exception) {
                     if (e is HttpException && e.code() == 404) {
                         // library entry was removed from the server, remove is also locally
@@ -86,24 +96,28 @@ class LibraryManager(
         media: BaseMedia,
         status: LibraryStatus = LibraryStatus.Planned
     ): LibraryEntry? {
-        val libraryEntry = LibraryEntry(status = status)
-        libraryEntry.user = User(id = userId)
-        when (media) {
-            is Anime -> libraryEntry.anime = media
-            is Manga -> libraryEntry.manga = media
+        var libraryEntry = LibraryEntry.withNulls().copy(
+            status = status,
+            user = User(id = userId)
+        )
+        libraryEntry = when (media) {
+            is Anime -> libraryEntry.copy(anime = media)
+            is Manga -> libraryEntry.copy(manga = media)
         }
 
         return try {
             val response = libraryEntriesService.postLibraryEntry(JSONAPIDocument(libraryEntry))
             val responseLibraryEntry = response.get()
                 ?: throw InvalidDataException("Response library entry is 'null'.")
+            val responseLibraryEntryId = responseLibraryEntry.id
+                ?: throw InvalidDataException("The ID of the response library entry is 'null'.")
 
             // fetch full library entry and add it to the db
-            val fullLibraryEntry = fetchFullLibraryEntry(responseLibraryEntry.id)
+            val fullLibraryEntry = fetchFullLibraryEntry(responseLibraryEntryId)
                 ?: throw InvalidDataException("Full library entry is 'null'.")
 
             database.withTransaction {
-                libraryEntryDao.insertSingle(fullLibraryEntry)
+                libraryEntryDao.insertSingle(fullLibraryEntry.toLocalLibraryEntry())
             }
 
             logI("Added new library entry to local database: ${fullLibraryEntry.id}")
@@ -115,12 +129,12 @@ class LibraryManager(
         }
     }
 
-    suspend fun updateLibraryEntry(libraryModification: LibraryModification): LibraryUpdateResponse {
+    suspend fun updateLibraryEntry(libraryModification: LocalLibraryEntryModification): LibraryUpdateResponse {
         var modification = libraryModification.applyFixes()
 
         // check if there is an existing library modification
         val existingModification =
-            offlineLibraryModificationDao.getOfflineLibraryModification(libraryModification.id)
+            libraryModificationDao.getLibraryEntryModification(libraryModification.id)
         if (existingModification != null) {
             // merge with changes from existing library modification
             modification = existingModification.mergeModificationFrom(libraryModification)
@@ -129,7 +143,7 @@ class LibraryManager(
         return updateLibraryEntryIntern(modification, existingModification != null)
     }
 
-    suspend fun removeLibraryEntry(libraryEntry: LibraryEntry) {
+    suspend fun removeLibraryEntry(libraryEntry: LocalLibraryEntry) {
         libraryEntriesService.deleteLibraryEntry(libraryEntry.id)
         // remove any offline modification and the library entry itself from database
         removeFromDatabaseIntern(libraryEntry)
@@ -138,7 +152,7 @@ class LibraryManager(
     /**
      * Check if library entry was deleted on the server. If so, remove it from local database.
      */
-    suspend fun mayRemoveSingleLibraryEntry(libraryEntry: LibraryEntry) {
+    suspend fun mayRemoveSingleLibraryEntry(libraryEntry: LocalLibraryEntry) {
         try {
             val response = libraryEntriesService.getLibraryEntry(
                 libraryEntry.id,
@@ -156,10 +170,10 @@ class LibraryManager(
         }
     }
 
-    private suspend fun removeFromDatabaseIntern(libraryEntry: LibraryEntry) {
+    private suspend fun removeFromDatabaseIntern(libraryEntry: LocalLibraryEntry) {
         database.withTransaction {
-            offlineLibraryModificationDao.getOfflineLibraryModification(libraryEntry.id)?.let {
-                offlineLibraryModificationDao.deleteOfflineLibraryModification(it)
+            libraryModificationDao.getLibraryEntryModification(libraryEntry.id)?.let {
+                libraryModificationDao.deleteLibraryEntryModification(it)
             }
             libraryEntryDao.delete(libraryEntry)
         }
@@ -167,16 +181,16 @@ class LibraryManager(
     }
 
     private suspend fun updateLibraryEntryIntern(
-        modification: LibraryModification,
+        modification: LocalLibraryEntryModification,
         isExistingModification: Boolean
     ): LibraryUpdateResponse {
-        val modifiedLibraryEntry = modification.toLibraryEntry()
+        val modifiedLibraryEntry = modification.toLocalLibraryEntry()
 
         val responseLibraryEntry = try {
             // post library update to server
             val response = libraryEntriesService.updateLibraryEntry(
                 modifiedLibraryEntry.id,
-                JSONAPIDocument(modifiedLibraryEntry)
+                JSONAPIDocument(modifiedLibraryEntry.toLibraryEntry())
             )
             response.get()
         } catch (e: Exception) {
@@ -200,23 +214,23 @@ class LibraryManager(
             // check if there was an existing library modification and remove it
             if (isExistingModification) {
                 database.withTransaction {
-                    offlineLibraryModificationDao.deleteOfflineLibraryModification(modification)
+                    libraryModificationDao.deleteLibraryEntryModification(modification)
                 }
                 logD("Removed existing offline library modification for ${modification.id}")
             }
 
-            updateLibraryEntryInDatabase(responseLibraryEntry)
+            updateLibraryEntryInDatabase(responseLibraryEntry.toLocalLibraryEntry())
 
             LibraryUpdateResponse.SyncedOnline
         } else { // update failed: cache modifications
             database.withTransaction {
                 if (isExistingModification) {
                     // update existing modification
-                    offlineLibraryModificationDao.updateOfflineLibraryModification(modification)
+                    libraryModificationDao.updateLibraryEntryModification(modification)
                     logD("Updated offline library modification: $modification")
                 } else {
                     // insert new modification
-                    offlineLibraryModificationDao.insertSingle(modification)
+                    libraryModificationDao.insertSingle(modification)
                     logD("Inserted new offline library modification: $modification")
                 }
             }
@@ -224,7 +238,7 @@ class LibraryManager(
         }
     }
 
-    private suspend fun updateLibraryEntryInDatabase(libraryEntry: LibraryEntry) {
+    private suspend fun updateLibraryEntryInDatabase(libraryEntry: LocalLibraryEntry) {
         val dbFullLibraryEntry = libraryEntryDao.getLibraryEntry(libraryEntry.id)
 
         // check if there is a full library entry in the database
@@ -247,7 +261,7 @@ class LibraryManager(
             if (fetchedFullLibraryEntry != null) {
                 // insert into database
                 database.withTransaction {
-                    libraryEntryDao.insertSingle(fetchedFullLibraryEntry)
+                    libraryEntryDao.insertSingle(fetchedFullLibraryEntry.toLocalLibraryEntry())
                 }
                 logD("Inserted library entry into database: ${fetchedFullLibraryEntry.id}")
             } else {
@@ -272,7 +286,7 @@ class LibraryManager(
     /**
      * Apply fixes to the library modification before submitting it to the server.
      */
-    private fun LibraryModification.applyFixes() = this.copy(
+    private fun LocalLibraryEntryModification.applyFixes() = this.copy(
         // Fix for setting startedAt date when user starts consuming the media.
         // startedAt is only set if status is CURRENT or COMPLETED, see here:
         // https://github.com/hummingbird-me/kitsu-server/blob/703726fc84a1a0172eae9a55c751ae6ffb1665b3/app/models/library_entry.rb#L204

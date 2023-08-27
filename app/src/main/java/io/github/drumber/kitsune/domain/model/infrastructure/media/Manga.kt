@@ -12,7 +12,7 @@ import kotlinx.parcelize.Parcelize
 @Type("manga")
 data class Manga(
     @Id
-    override val id: String,
+    override val id: String = "",
     override val slug: String?,
 
     override val description: String?,

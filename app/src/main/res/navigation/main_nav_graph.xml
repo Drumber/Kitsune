@@ -135,7 +135,7 @@
         android:label="EpisodesFragment" >
         <argument
             android:name="media"
-            app:argType="io.github.drumber.kitsune.domain.model.media.BaseMedia" />
+            app:argType="io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia" />
         <argument
             android:name="libraryEntryId"
             app:argType="string"

@@ -1,11 +1,15 @@
 package io.github.drumber.kitsune.ui.base
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.domain.model.MediaSelector
-import io.github.drumber.kitsune.domain.model.media.BaseMedia
+import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
 import io.github.drumber.kitsune.domain.service.Filter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest

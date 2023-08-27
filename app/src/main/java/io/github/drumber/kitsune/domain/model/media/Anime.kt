@@ -19,6 +19,7 @@ import io.github.drumber.kitsune.domain.model.infrastructure.production.AnimePro
 import kotlinx.parcelize.Parcelize
 
 // TODO: delete this
+@Deprecated("Replaced with new model.")
 @Parcelize
 @Type("anime")
 data class Anime @Ignore constructor(
