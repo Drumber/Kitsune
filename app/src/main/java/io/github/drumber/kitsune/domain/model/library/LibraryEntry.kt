@@ -19,6 +19,7 @@ import io.github.drumber.kitsune.util.network.NullableIntSerializer
 import kotlinx.parcelize.Parcelize
 
 // TODO: delete this
+@Deprecated("Replaced with new model.")
 @Parcelize
 //@Entity(tableName = "library_table")
 @Type("libraryEntries")

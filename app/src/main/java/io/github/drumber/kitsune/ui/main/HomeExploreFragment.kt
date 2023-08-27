@@ -11,14 +11,14 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.databinding.FragmentHomeExploreBinding
+import io.github.drumber.kitsune.databinding.SectionMainExploreBinding
 import io.github.drumber.kitsune.domain.model.MediaSelector
 import io.github.drumber.kitsune.domain.model.MediaType
-import io.github.drumber.kitsune.domain.model.media.BaseMedia
+import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
 import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.domain.paging.RequestType
 import io.github.drumber.kitsune.domain.service.Filter
-import io.github.drumber.kitsune.databinding.FragmentHomeExploreBinding
-import io.github.drumber.kitsune.databinding.SectionMainExploreBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.base.BaseFragment

@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.domain.model.database
 
 import android.os.Parcelable
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
@@ -12,7 +13,7 @@ import kotlinx.parcelize.Parcelize
 data class LocalLibraryEntry(
     @PrimaryKey
     val id: String,
-    var updatedAt: String?,
+    val updatedAt: String?,
 
     val startedAt: String?,
     val finishedAt: String?,
@@ -29,6 +30,8 @@ data class LocalLibraryEntry(
     val privateEntry: Boolean?,
     val reactionSkipped: ReactionSkip?,
 
-    val animeId: String?,
-    val mangaId: String?
+    @Embedded("anime_")
+    val anime: LocalAnime?,
+    @Embedded("manga_")
+    val manga: LocalManga?
 ) : Parcelable

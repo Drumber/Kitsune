@@ -1,11 +1,9 @@
 package io.github.drumber.kitsune.domain.room
 
-import androidx.room.*
+import androidx.room.DeleteTable
+import androidx.room.RenameColumn
+import androidx.room.RoomDatabase
 import androidx.room.migration.AutoMigrationSpec
-import io.github.drumber.kitsune.domain.database.Converters
-import io.github.drumber.kitsune.domain.model.RemoteKey
-import io.github.drumber.kitsune.domain.model.library.LibraryEntry
-import io.github.drumber.kitsune.domain.model.library.LibraryModification
 
 //@Database(
 //    entities = [LibraryEntry::class, RemoteKey::class, LibraryModification::class],
@@ -16,12 +14,8 @@ import io.github.drumber.kitsune.domain.model.library.LibraryModification
 //        AutoMigration(from = 25, to = 26, spec = ResourceDatabase.MigrationSpec_25_26::class)
 //    ]
 //)
-@TypeConverters(Converters::class)
+@Deprecated("ResourceDatabase is no longer used.", replaceWith = ReplaceWith("LocalDatabase"))
 abstract class ResourceDatabase : RoomDatabase() {
-
-    abstract fun libraryEntryDao(): LibraryEntryDao
-    abstract fun remoteKeys(): RemoteKeyDao
-    abstract fun offlineLibraryModificationDao(): OfflineLibraryModificationDao
 
     @DeleteTable(tableName = "offline_library_update")
     class MigrationSpec_24_25 : AutoMigrationSpec

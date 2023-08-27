@@ -32,12 +32,12 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.databinding.FragmentLibraryBinding
 import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
-import io.github.drumber.kitsune.databinding.FragmentLibraryBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.paging.LibraryEntriesAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
@@ -304,7 +304,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             }
         }
 
-        viewModel.offlineLibraryModificationDao.getAllOfflineLibraryModificationsLiveData()
+        viewModel.libraryModificationDao.getAllLibraryEntryModificationsLiveData()
             .observe(viewLifecycleOwner) {
                 viewModel.invalidatePagingSource()
                 offlineLibraryModificationsAmount = it.size
@@ -336,7 +336,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
     override fun onItemLongClicked(item: LibraryEntryWrapper) {
         val action =
             LibraryFragmentDirections.actionLibraryFragmentToLibraryEditEntryFragment(
-                item.libraryEntry.id,
+                item.libraryEntry.id ?: return,
                 RESULT_KEY_EDIT_ENTRY_UPDATED
             )
         findNavController().navigateSafe(R.id.library_fragment, action)

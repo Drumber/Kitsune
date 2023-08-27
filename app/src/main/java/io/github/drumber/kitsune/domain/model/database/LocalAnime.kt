@@ -2,7 +2,6 @@ package io.github.drumber.kitsune.domain.model.database
 
 import android.os.Parcelable
 import androidx.room.Embedded
-import androidx.room.Entity
 import androidx.room.PrimaryKey
 import io.github.drumber.kitsune.domain.model.infrastructure.media.AgeRating
 import io.github.drumber.kitsune.domain.model.infrastructure.media.AnimeSubtype
@@ -12,7 +11,6 @@ import io.github.drumber.kitsune.domain.model.infrastructure.media.Titles
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity("anime")
 data class LocalAnime(
     @PrimaryKey
     val id: String,
@@ -50,5 +48,5 @@ data class LocalAnime(
     val episodeCount: Int?,
     val episodeLength: Int?,
     val youtubeVideoId: String?,
-    val subtype: AnimeSubtype?,
+    val subtype: AnimeSubtype?
 ) : Parcelable

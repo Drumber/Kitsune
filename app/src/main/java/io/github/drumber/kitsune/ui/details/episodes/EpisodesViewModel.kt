@@ -10,20 +10,23 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.domain.database.LibraryEntryDao
+import io.github.drumber.kitsune.domain.database.LibraryEntryModificationDao
 import io.github.drumber.kitsune.domain.manager.LibraryManager
 import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
-import io.github.drumber.kitsune.domain.model.library.LibraryEntry
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.domain.model.library.LibraryModification
-import io.github.drumber.kitsune.domain.model.media.Anime
-import io.github.drumber.kitsune.domain.model.media.BaseMedia
-import io.github.drumber.kitsune.domain.model.media.Manga
+import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
+import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntry
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
+import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
+import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
+import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
 import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.MediaUnit
+import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.domain.repository.MediaUnitRepository
-import io.github.drumber.kitsune.domain.room.LibraryEntryDao
-import io.github.drumber.kitsune.domain.room.OfflineLibraryModificationDao
 import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
+import io.github.drumber.kitsune.exception.InvalidDataException
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -35,7 +38,7 @@ class EpisodesViewModel(
     private val mediaUnitRepository: MediaUnitRepository,
     libraryEntriesService: LibraryEntriesService,
     libraryEntryDao: LibraryEntryDao,
-    private val offlineLibraryModificationDao: OfflineLibraryModificationDao,
+    private val libraryModificationDao: LibraryEntryModificationDao,
     private val libraryManager: LibraryManager
 ) : ViewModel() {
 
@@ -62,7 +65,7 @@ class EpisodesViewModel(
 
                     if (entry != null) {
                         // add library entry to Room database
-                        libraryEntryDao.insertSingle(entry)
+                        libraryEntryDao.insertSingle(entry.toLocalLibraryEntry())
                         emitSource(libraryEntryDao.getLibraryEntryAsLiveData(id).mapToWrapper())
                     }
                 } catch (e: Exception) {
@@ -72,13 +75,13 @@ class EpisodesViewModel(
         }
     }
 
-    private fun LiveData<LibraryEntry?>.mapToWrapper() = this.switchMap { libraryEntry ->
+    private fun LiveData<LocalLibraryEntry?>.mapToWrapper() = this.switchMap { libraryEntry ->
         liveData(Dispatchers.IO) {
             if (libraryEntry != null) {
                 emit(
                     LibraryEntryWrapper(
-                        libraryEntry,
-                        offlineLibraryModificationDao.getOfflineLibraryModification(libraryEntry.id)
+                        libraryEntry.toLibraryEntry(),
+                        libraryModificationDao.getLibraryEntryModification(libraryEntry.id)
                     )
                 )
             } else {
@@ -107,7 +110,10 @@ class EpisodesViewModel(
             number.minus(1).coerceAtLeast(0)
         }
 
-        val modification = LibraryModification(libraryEntry.id, progress = progress)
+        val modification =
+            LocalLibraryEntryModification.withIdAndNulls(
+                libraryEntry.id ?: throw InvalidDataException("Library entry ID cannot be 'null'.")
+            ).copy(progress = progress)
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -129,6 +135,7 @@ class EpisodesViewModel(
                 filter.filter("media_id", media.id)
                 MediaUnitRepository.UnitType.Episode
             }
+
             is Manga -> {
                 filter.filter("manga_id", media.id)
                 MediaUnitRepository.UnitType.Chapter

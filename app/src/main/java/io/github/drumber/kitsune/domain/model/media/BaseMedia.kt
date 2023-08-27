@@ -11,8 +11,10 @@ import io.github.drumber.kitsune.domain.model.infrastructure.media.mediarelation
 import io.github.drumber.kitsune.domain.model.infrastructure.user.FavoriteItem
 
 // TODO: delete this
+@Deprecated("Replaced with new model.")
 sealed class BaseMedia : Media, FavoriteItem, Parcelable
 
+@Deprecated("Replaced with new model.")
 interface Media : Parcelable {
     val id: String
     val slug: String?

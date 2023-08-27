@@ -5,18 +5,18 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import io.github.drumber.kitsune.constants.Repository
-import io.github.drumber.kitsune.domain.model.library.LibraryEntry
+import io.github.drumber.kitsune.domain.database.LibraryEntryDao
+import io.github.drumber.kitsune.domain.database.LocalDatabase
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntry
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryFilter
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind
 import io.github.drumber.kitsune.domain.paging.LibraryEntriesPagingDataSource
 import io.github.drumber.kitsune.domain.paging.LibraryEntriesRemoteMediator
-import io.github.drumber.kitsune.domain.room.LibraryEntryDao
-import io.github.drumber.kitsune.domain.room.ResourceDatabase
 import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
 import java.util.concurrent.CopyOnWriteArrayList
 
-class LibraryEntriesRepository(private val service: LibraryEntriesService, private val db: ResourceDatabase) {
+class LibraryEntriesRepository(private val service: LibraryEntriesService, private val db: LocalDatabase) {
 
     @OptIn(ExperimentalPagingApi::class)
     fun libraryEntries(pageSize: Int, filter: LibraryEntryFilter) = Pager(
@@ -70,7 +70,7 @@ class LibraryEntriesRepository(private val service: LibraryEntriesService, priva
 
 }
 
-private fun LibraryEntryDao.getLibraryEntriesByFilter(filter: LibraryEntryFilter): PagingSource<Int, LibraryEntry> {
+private fun LibraryEntryDao.getLibraryEntriesByFilter(filter: LibraryEntryFilter): PagingSource<Int, LocalLibraryEntry> {
     val hasStatus = filter.libraryStatus.isNotEmpty()
     val kind = filter.kind
     return when {

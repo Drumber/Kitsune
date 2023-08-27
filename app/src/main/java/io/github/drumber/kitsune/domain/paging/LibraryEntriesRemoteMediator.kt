@@ -6,14 +6,15 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.domain.model.RemoteKey
-import io.github.drumber.kitsune.domain.model.RemoteKeyType
-import io.github.drumber.kitsune.domain.model.library.LibraryEntry
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryFilter
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind
+import io.github.drumber.kitsune.domain.database.LocalDatabase
+import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntry
+import io.github.drumber.kitsune.domain.model.database.RemoteKeyEntity
+import io.github.drumber.kitsune.domain.model.database.RemoteKeyType
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.toPage
-import io.github.drumber.kitsune.domain.room.ResourceDatabase
+import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryFilter
+import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind
 import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logD
@@ -22,10 +23,10 @@ import io.github.drumber.kitsune.util.logD
 class LibraryEntriesRemoteMediator(
     private val filter: LibraryEntryFilter,
     private val service: LibraryEntriesService,
-    private val database: ResourceDatabase,
-) : RemoteMediator<Int, LibraryEntry>() {
+    private val database: LocalDatabase,
+) : RemoteMediator<Int, LocalLibraryEntry>() {
     private val libraryEntryDao = database.libraryEntryDao()
-    private val remoteKeyDao = database.remoteKeys()
+    private val remoteKeyDao = database.remoteKeyDao()
 
     /**
      * Implementation based on android paging example from google code labs:
@@ -33,7 +34,7 @@ class LibraryEntriesRemoteMediator(
      */
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, LibraryEntry>
+        state: PagingState<Int, LocalLibraryEntry>
     ): MediatorResult {
         val pageSize = state.config.pageSize
         return try {
@@ -101,10 +102,11 @@ class LibraryEntriesRemoteMediator(
                     }
                 }
 
-                val data = response.get() ?: throw ReceivedDataException("Received data is 'null'.")
+                val data = response.get()?.map { it.toLocalLibraryEntry() }
+                    ?: throw ReceivedDataException("Received data is 'null'.")
 
                 val remoteKeys = data.map {
-                    RemoteKey(it.id, RemoteKeyType.LibraryEntry, page?.prev, page?.next)
+                    RemoteKeyEntity(it.id, RemoteKeyType.LibraryEntry, page?.prev, page?.next)
                 }
 
                 remoteKeyDao.insertALl(remoteKeys)
@@ -117,7 +119,7 @@ class LibraryEntriesRemoteMediator(
         }
     }
 
-    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, LibraryEntry>): RemoteKey? {
+    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, LocalLibraryEntry>): RemoteKeyEntity? {
         // Get the last page that was retrieved, that contained items.
         // From that last page, get the last item
         return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
@@ -127,7 +129,7 @@ class LibraryEntriesRemoteMediator(
             }
     }
 
-    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, LibraryEntry>): RemoteKey? {
+    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, LocalLibraryEntry>): RemoteKeyEntity? {
         // Get the first page that was retrieved, that contained items.
         // From that first page, get the first item
         return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
@@ -138,8 +140,8 @@ class LibraryEntriesRemoteMediator(
     }
 
     private suspend fun getRemoteKeyClosestToCurrentPosition(
-        state: PagingState<Int, LibraryEntry>
-    ): RemoteKey? {
+        state: PagingState<Int, LocalLibraryEntry>
+    ): RemoteKeyEntity? {
         // The paging library is trying to load data after the anchor position
         // Get the item closest to the anchor position
         return state.anchorPosition?.let { position ->

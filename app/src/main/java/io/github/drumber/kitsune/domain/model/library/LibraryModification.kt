@@ -6,6 +6,7 @@ import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStat
 import kotlinx.parcelize.Parcelize
 
 // TODO: delete this
+@Deprecated("Replaced with new model.")
 @Parcelize
 //@Entity(tableName = "offline_library_modification")
 data class LibraryModification(

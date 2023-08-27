@@ -6,26 +6,26 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.github.jasminb.jsonapi.ResourceConverter
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.BuildConfig
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
+import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
+import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
 import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
-import io.github.drumber.kitsune.domain.model.library.LibraryEntry
-import io.github.drumber.kitsune.domain.model.media.Anime
-import io.github.drumber.kitsune.domain.model.media.Manga
 import io.github.drumber.kitsune.domain.model.infrastructure.media.mediarelationship.MediaRelationship
-import io.github.drumber.kitsune.domain.model.infrastructure.production.AnimeProduction
-import io.github.drumber.kitsune.domain.model.infrastructure.production.Casting
-import io.github.drumber.kitsune.domain.model.infrastructure.production.Character
-import io.github.drumber.kitsune.domain.model.infrastructure.production.Producer
-import io.github.drumber.kitsune.domain.model.infrastructure.user.stats.Stats
 import io.github.drumber.kitsune.domain.model.infrastructure.media.streamer.Streamer
 import io.github.drumber.kitsune.domain.model.infrastructure.media.streamer.StreamingLink
 import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.Chapter
 import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.Episode
+import io.github.drumber.kitsune.domain.model.infrastructure.production.AnimeProduction
+import io.github.drumber.kitsune.domain.model.infrastructure.production.Casting
+import io.github.drumber.kitsune.domain.model.infrastructure.production.Character
+import io.github.drumber.kitsune.domain.model.infrastructure.production.Producer
 import io.github.drumber.kitsune.domain.model.infrastructure.user.Favorite
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
+import io.github.drumber.kitsune.domain.model.infrastructure.user.stats.Stats
 import io.github.drumber.kitsune.domain.service.anime.AnimeService
 import io.github.drumber.kitsune.domain.service.anime.EpisodesService
 import io.github.drumber.kitsune.domain.service.auth.AlgoliaKeyService
@@ -165,23 +165,24 @@ private fun createAuthService(objectMapper: ObjectMapper) = createService<AuthSe
     KITSU_OAUTH_URL
 )
 
-fun createObjectMapper(): ObjectMapper = jacksonObjectMapper()
-    .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+fun createObjectMapper(): ObjectMapper = jacksonMapperBuilder()
+    .serializationInclusion(JsonInclude.Include.NON_NULL)
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
     .configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, false)
-    .registerModule(
+    .addModule(
         SimpleModule().addDeserializer(
             Filter.Facet.Value::class.java,
             AlgoliaFacetValueDeserializer()
         )
     )
-    .registerModule(
+    .addModule(
         SimpleModule().addDeserializer(
             Filter.Numeric.Value::class.java,
             AlgoliaNumericValueDeserializer()
         )
     )
+    .build()
 
 private fun createConverterFactory(
     httpClient: OkHttpClient,

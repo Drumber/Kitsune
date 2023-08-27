@@ -1,10 +1,11 @@
 package io.github.drumber.kitsune.domain.model.infrastructure.algolia.search
 
+import io.github.drumber.kitsune.domain.mapper.toImage
+import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.infrastructure.media.AnimeSubtype
+import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
 import io.github.drumber.kitsune.domain.model.infrastructure.media.MangaSubtype
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Titles
-import io.github.drumber.kitsune.domain.model.media.Anime
-import io.github.drumber.kitsune.domain.model.media.Manga
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -25,7 +26,7 @@ fun MediaSearchResult.toMedia() = when (kind) {
         slug = slug,
         titles = titles,
         canonicalTitle = canonicalTitle,
-        posterImage = posterImage?.map(),
+        posterImage = posterImage?.toImage(),
         abbreviatedTitles = null,
         ageRating = null,
         ageRatingGuide = null,
@@ -58,7 +59,7 @@ fun MediaSearchResult.toMedia() = when (kind) {
         slug = slug,
         titles = titles,
         canonicalTitle = canonicalTitle,
-        posterImage = posterImage?.map(),
+        posterImage = posterImage?.toImage(),
         userCount = null,
         totalLength = null,
         tba = null,

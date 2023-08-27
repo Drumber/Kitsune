@@ -14,7 +14,7 @@ import kotlinx.parcelize.Parcelize
 @Type("anime")
 data class Anime(
     @Id
-    override val id: String,
+    override val id: String = "",
     override val slug: String?,
 
     override val description: String?,

@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.domain.service.manga
 
 import com.github.jasminb.jsonapi.JSONAPIDocument
-import io.github.drumber.kitsune.domain.model.media.Manga
+import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.QueryMap

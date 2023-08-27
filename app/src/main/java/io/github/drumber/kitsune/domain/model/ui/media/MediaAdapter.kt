@@ -3,13 +3,12 @@ package io.github.drumber.kitsune.domain.model.ui.media
 import android.content.Context
 import android.os.Parcelable
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
+import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
+import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
 import io.github.drumber.kitsune.domain.model.infrastructure.media.ReleaseStatus
 import io.github.drumber.kitsune.domain.model.infrastructure.media.mediarelationship.MediaRelationshipRole
 import io.github.drumber.kitsune.domain.model.infrastructure.production.AnimeProductionRole
-import io.github.drumber.kitsune.domain.model.media.Anime
-import io.github.drumber.kitsune.domain.model.media.BaseMedia
-import io.github.drumber.kitsune.domain.model.media.Manga
-import io.github.drumber.kitsune.domain.model.media.Media
 import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.util.TimeUtil
 import io.github.drumber.kitsune.util.extensions.format
@@ -29,7 +28,7 @@ class MediaAdapter(
 ) : Parcelable {
 
     companion object {
-        fun fromMedia(media: Media, ownRelationshipRole: MediaRelationshipRole? = null) = when (media) {
+        fun fromMedia(media: BaseMedia, ownRelationshipRole: MediaRelationshipRole? = null) = when (media) {
             is Anime -> MediaAdapter(media, ownRelationshipRole)
             is Manga -> MediaAdapter(media, ownRelationshipRole)
             else -> throw IllegalStateException("Unknown media subclass: ${media::class.java}")

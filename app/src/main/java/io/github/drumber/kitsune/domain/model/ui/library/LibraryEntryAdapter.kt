@@ -8,7 +8,7 @@ class LibraryEntryAdapter(private val wrapper: LibraryEntryWrapper) {
     private val libraryEntry get() = wrapper.libraryEntry
 
     val id: String
-        get() = libraryEntry.id
+        get() = libraryEntry.id!!
 
     val episodeCount: Int?
         get() = libraryEntry.anime?.episodeCount ?: libraryEntry.manga?.chapterCount

@@ -5,7 +5,7 @@ import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.domain.model.MediaSelector
 import io.github.drumber.kitsune.domain.model.MediaType
-import io.github.drumber.kitsune.domain.model.media.BaseMedia
+import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
 import io.github.drumber.kitsune.domain.repository.AnimeRepository
 import io.github.drumber.kitsune.domain.repository.MangaRepository
 import io.github.drumber.kitsune.ui.base.MediaCollectionViewModel
