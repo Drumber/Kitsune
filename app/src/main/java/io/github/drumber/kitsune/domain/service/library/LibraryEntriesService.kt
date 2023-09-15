@@ -21,12 +21,14 @@ interface LibraryEntriesService {
     @PATCH("library-entries/{id}")
     suspend fun updateLibraryEntry(
         @Path("id") id: String,
-        @Body libraryEntry: JSONAPIDocument<LibraryEntry>
+        @Body libraryEntry: JSONAPIDocument<LibraryEntry>,
+        @QueryMap filter: Map<String, String> = emptyMap()
     ): JSONAPIDocument<LibraryEntry>
 
     @POST("library-entries")
     suspend fun postLibraryEntry(
-        @Body libraryEntry: JSONAPIDocument<LibraryEntry>
+        @Body libraryEntry: JSONAPIDocument<LibraryEntry>,
+        @QueryMap filter: Map<String, String> = emptyMap()
     ): JSONAPIDocument<LibraryEntry>
 
     @DELETE("library-entries/{id}")

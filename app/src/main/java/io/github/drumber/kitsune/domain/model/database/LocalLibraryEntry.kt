@@ -24,7 +24,7 @@ data class LocalLibraryEntry(
     val reconsuming: Boolean?,
     val reconsumeCount: Int?,
     val volumesOwned: Int?,
-    val ratingTwenty: Int?, // set to '-1' to serialize to 'null'
+    val ratingTwenty: Int?,
 
     val notes: String?,
     val privateEntry: Boolean?,

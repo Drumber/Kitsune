@@ -28,8 +28,9 @@ data class LibraryEntry(
     val reconsuming: Boolean?,
     val reconsumeCount: Int?,
     val volumesOwned: Int?,
+    /** set ratingTwenty to '-1' to serialize to 'null' */
     @JsonSerialize(using = NullableIntSerializer::class)
-    val ratingTwenty: Int?, // set to '-1' to serialize to 'null'
+    val ratingTwenty: Int?,
 
     val notes: String?,
     @JsonProperty("private")
