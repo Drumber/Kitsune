@@ -27,6 +27,7 @@ import io.github.drumber.kitsune.util.toDate
 import io.github.drumber.kitsune.util.todayUtcMillis
 import retrofit2.HttpException
 
+@Deprecated("use the new LibraryManager instead")
 class LibraryManager(
     private val libraryEntriesService: LibraryEntriesService,
     private val database: LocalDatabase
@@ -63,7 +64,7 @@ class LibraryManager(
                     logI("Successfully synchronized offline library modification, removing modification from database: ${libraryModification.id}")
                     // remove offline library modification from database
                     database.withTransaction {
-                        libraryModificationDao.deleteLibraryEntryModification(
+                        libraryModificationDao.deleteSingle(
                             libraryModification
                         )
                     }
@@ -72,8 +73,8 @@ class LibraryManager(
                     updateLibraryEntryInDatabase(responseLibraryEntry.toLocalLibraryEntry())
                 } catch (e: Exception) {
                     if (e is HttpException && e.code() == 404) {
-                        // library entry was removed from the server, remove is also locally
-                        logW("Library entry was not found on the server. Removing it from the database: ${libraryModification.id}")
+                        // library entry was removed from the server, so we remove it from the local database, too
+                        logI("Library entry was not found on the server. Removing it from the database: ${libraryModification.id}")
                         removeFromDatabaseIntern(modifiedLibraryEntry)
                     } else {
                         logE("Failed to synchronize library entry ${libraryModification.id}", e)
@@ -173,7 +174,7 @@ class LibraryManager(
     private suspend fun removeFromDatabaseIntern(libraryEntry: LocalLibraryEntry) {
         database.withTransaction {
             libraryModificationDao.getLibraryEntryModification(libraryEntry.id)?.let {
-                libraryModificationDao.deleteLibraryEntryModification(it)
+                libraryModificationDao.deleteSingle(it)
             }
             libraryEntryDao.delete(libraryEntry)
         }
@@ -214,7 +215,7 @@ class LibraryManager(
             // check if there was an existing library modification and remove it
             if (isExistingModification) {
                 database.withTransaction {
-                    libraryModificationDao.deleteLibraryEntryModification(modification)
+                    libraryModificationDao.deleteSingle(modification)
                 }
                 logD("Removed existing offline library modification for ${modification.id}")
             }
@@ -226,7 +227,7 @@ class LibraryManager(
             database.withTransaction {
                 if (isExistingModification) {
                     // update existing modification
-                    libraryModificationDao.updateLibraryEntryModification(modification)
+                    libraryModificationDao.updateSingle(modification)
                     logD("Updated offline library modification: $modification")
                 } else {
                     // insert new modification
@@ -251,7 +252,7 @@ class LibraryManager(
 
             // update database entry
             database.withTransaction {
-                libraryEntryDao.updateLibraryEntry(modifiedFullLibraryEntry)
+                libraryEntryDao.updateSingle(modifiedFullLibraryEntry)
             }
             logD("Updated library entry in database: ${dbFullLibraryEntry.id}")
         } else {

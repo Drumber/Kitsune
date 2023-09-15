@@ -88,7 +88,7 @@ interface LibraryEntryDao {
     suspend fun insertSingle(libraryEntry: LocalLibraryEntry)
 
     @Update
-    suspend fun updateLibraryEntry(libraryEntry: LocalLibraryEntry)
+    suspend fun updateSingle(libraryEntry: LocalLibraryEntry)
 
     @Delete
     suspend fun delete(libraryEntry: LocalLibraryEntry)

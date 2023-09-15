@@ -25,12 +25,15 @@ interface LibraryEntryModificationDao {
     suspend fun insertSingle(libraryEntryModification: LocalLibraryEntryModification)
 
     @Update
-    suspend fun updateLibraryEntryModification(libraryEntryModification: LocalLibraryEntryModification)
+    suspend fun updateSingle(libraryEntryModification: LocalLibraryEntryModification)
 
     @Delete
-    suspend fun deleteLibraryEntryModification(libraryEntryModification: LocalLibraryEntryModification)
+    suspend fun deleteSingle(libraryEntryModification: LocalLibraryEntryModification)
+
+    @Query("DELETE FROM library_entries_modifications WHERE id = :id")
+    suspend fun deleteById(id: String)
 
     @Query("DELETE FROM library_entries_modifications")
-    suspend fun clearLibraryEntryModifications()
+    suspend fun clearAll()
 
 }

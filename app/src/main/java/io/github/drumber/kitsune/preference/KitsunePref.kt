@@ -13,11 +13,11 @@ import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.domain.model.FilterCollection
 import io.github.drumber.kitsune.domain.model.SearchParams
-import io.github.drumber.kitsune.domain.model.preference.StartPagePref
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.infrastructure.user.TitleLanguagePreference
 import io.github.drumber.kitsune.domain.model.preference.CategoryPrefWrapper
+import io.github.drumber.kitsune.domain.model.preference.StartPagePref
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind
-import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import io.github.drumber.kitsune.domain.repository.UserRepository
 import io.github.drumber.kitsune.util.logE
 import org.koin.core.component.KoinComponent
@@ -28,7 +28,7 @@ import kotlin.reflect.KProperty
 object KitsunePref : KotprefModel(), KoinComponent {
 
     override val commitAllPropertiesByDefault = true
-    override val kotprefName = context.getString(R.string.preference_file_key)
+    //override val kotprefName = context.getString(R.string.preference_file_key)
 
     private val userRepository: UserRepository by inject()
 
