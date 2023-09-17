@@ -5,11 +5,16 @@ import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModifica
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
+import io.github.drumber.kitsune.exception.NotFoundException
 import io.github.drumber.kitsune.utils.anime
 import io.github.drumber.kitsune.utils.libraryEntry
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import net.datafaker.Faker
+import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argThat
@@ -17,6 +22,7 @@ import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import retrofit2.HttpException
 import retrofit2.Response
 
 class LibraryEntryServiceClientTest {
@@ -28,7 +34,7 @@ class LibraryEntryServiceClientTest {
         // given
         val captor = argumentCaptor<JSONAPIDocument<LibraryEntry>>()
         val libraryEntriesService = mock<LibraryEntriesService> {
-            on(it.postLibraryEntry(any()))
+            on(it.postLibraryEntry(any(), any()))
                 .thenReturn(JSONAPIDocument())
         }
         val client = LibraryEntryServiceClient(libraryEntriesService)
@@ -40,7 +46,7 @@ class LibraryEntryServiceClientTest {
         client.postNewLibraryEntry(userId, media, status)
 
         // then
-        verify(libraryEntriesService).postLibraryEntry(captor.capture())
+        verify(libraryEntriesService).postLibraryEntry(captor.capture(), any())
         val libraryEntry = captor.lastValue.get()
         assertThat(libraryEntry).isNotNull
         assertThat(libraryEntry!!.user!!.id).isEqualTo(userId)
@@ -54,7 +60,7 @@ class LibraryEntryServiceClientTest {
         // given
         val captor = argumentCaptor<JSONAPIDocument<LibraryEntry>>()
         val libraryEntriesService = mock<LibraryEntriesService> {
-            on(it.updateLibraryEntry(any(), any()))
+            on(it.updateLibraryEntry(any(), any(), any()))
                 .thenReturn(JSONAPIDocument())
         }
         val client = LibraryEntryServiceClient(libraryEntriesService)
@@ -66,10 +72,37 @@ class LibraryEntryServiceClientTest {
         client.updateLibraryEntryWithModification(modification)
 
         // then
-        verify(libraryEntriesService).updateLibraryEntry(eq(modification.id), captor.capture())
+        verify(libraryEntriesService).updateLibraryEntry(eq(modification.id), captor.capture(), any())
         val libraryEntry = captor.lastValue.get()
         assertThat(libraryEntry).isNotNull
         assertThat(libraryEntry!!.status).isEqualTo(modification.status)
+    }
+
+    @Test
+    fun shouldThrowNotFoundOnUpdateDeletedLibraryEntryWithModification() = runTest {
+        // given
+        val libraryEntriesService = mock<LibraryEntriesService> {
+            on(it.updateLibraryEntry(any(), any(), any()))
+                .thenThrow(
+                    HttpException(
+                        Response.error<JSONAPIDocument<LibraryEntry>>(
+                            404,
+                            "".toResponseBody()
+                        )
+                    )
+                )
+        }
+        val client = LibraryEntryServiceClient(libraryEntriesService)
+        val modification = LocalLibraryEntryModification
+            .withIdAndNulls(faker.internet().uuid())
+            .copy(status = LibraryStatus.Completed)
+
+        // then
+        assertThatThrownBy {
+            // when
+            runBlocking { client.updateLibraryEntryWithModification(modification) }
+        }.isInstanceOf(NotFoundException::class.java)
+        verify(libraryEntriesService).updateLibraryEntry(eq(modification.id), any(), any())
     }
 
     @Test

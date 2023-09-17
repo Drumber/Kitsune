@@ -176,7 +176,7 @@ class LibraryManager(
             libraryModificationDao.getLibraryEntryModification(libraryEntry.id)?.let {
                 libraryModificationDao.deleteSingle(it)
             }
-            libraryEntryDao.delete(libraryEntry)
+            libraryEntryDao.deleteSingle(libraryEntry)
         }
         logI("Removed library entry from local database: ${libraryEntry.id}")
     }

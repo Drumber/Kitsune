@@ -15,6 +15,7 @@ import io.github.drumber.kitsune.domain.database.LibraryEntryModificationDao
 import io.github.drumber.kitsune.domain.manager.LibraryManager
 import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
 import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
+import io.github.drumber.kitsune.domain.mapper.toLibraryEntryModification
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntry
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
@@ -81,7 +82,9 @@ class EpisodesViewModel(
                 emit(
                     LibraryEntryWrapper(
                         libraryEntry.toLibraryEntry(),
-                        libraryModificationDao.getLibraryEntryModification(libraryEntry.id)
+                        libraryModificationDao
+                            .getLibraryEntryModification(libraryEntry.id)
+                            ?.toLibraryEntryModification()
                     )
                 )
             } else {

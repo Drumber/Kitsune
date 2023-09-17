@@ -12,6 +12,7 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ItemLibraryEntryBinding
 import io.github.drumber.kitsune.databinding.ItemLibraryStatusSeparatorBinding
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
+import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryAdapter
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryUiModel
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryUiModel.StatusSeparatorModel
@@ -107,7 +108,9 @@ class LibraryEntriesAdapter(
                 .into(binding.ivThumbnail)
 
             val isNotSynced = entryWrapper.libraryModification?.let { libraryModification ->
-                !libraryModification.isEqualToLibraryEntry(entry.toLocalLibraryEntry())
+                !libraryModification
+                    .toLocalLibraryEntryModification()
+                    .isEqualToLibraryEntry(entry.toLocalLibraryEntry())
             } ?: false
             binding.tvNotSynced.isVisible = isNotSynced
             binding.tvTitle.maxLines = if (isNotSynced) 2 else 3

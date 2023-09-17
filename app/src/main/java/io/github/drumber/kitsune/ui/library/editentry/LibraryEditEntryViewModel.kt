@@ -10,9 +10,12 @@ import io.github.drumber.kitsune.domain.database.LibraryEntryModificationDao
 import io.github.drumber.kitsune.domain.manager.LibraryManager
 import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
 import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
+import io.github.drumber.kitsune.domain.mapper.toLibraryEntryModification
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
+import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
+import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryModification
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
@@ -46,9 +49,15 @@ class LibraryEditEntryViewModel(
         val uneditedWrapper = uneditedLibraryEntryWrapper ?: return@map false
         val entry = uneditedWrapper.libraryEntry.copy()
         // apply old modifications
-        val oldModifiedEntry = uneditedWrapper.libraryModification?.applyToLibraryEntry(entry.toLocalLibraryEntry()) ?: entry
+        val oldModifiedEntry = uneditedWrapper.libraryModification
+            ?.toLocalLibraryEntryModification()
+            ?.applyToLibraryEntry(entry.toLocalLibraryEntry())
+            ?: entry
         // apply new modifications
-        val newModifiedEntry = it.libraryModification?.applyToLibraryEntry(entry.toLocalLibraryEntry()) ?: entry
+        val newModifiedEntry = it.libraryModification
+            ?.toLocalLibraryEntryModification()
+            ?.applyToLibraryEntry(entry.toLocalLibraryEntry())
+            ?: entry
         oldModifiedEntry != newModifiedEntry
     }
 
@@ -67,7 +76,7 @@ class LibraryEditEntryViewModel(
                 libraryModificationDao.getLibraryEntryModification(libraryEntryId)
                     ?: LocalLibraryEntryModification.withIdAndNulls(libraryEntryId)
 
-            val libraryEntryWrapper = LibraryEntryWrapper(libraryEntry, libraryModification)
+            val libraryEntryWrapper = LibraryEntryWrapper(libraryEntry, libraryModification.toLibraryEntryModification())
             uneditedLibraryEntryWrapper = libraryEntryWrapper.copy()
             _libraryEntryWrapper.postValue(libraryEntryWrapper)
         }.invokeOnCompletion {
@@ -88,7 +97,7 @@ class LibraryEditEntryViewModel(
         }
     }
 
-    fun setLibraryModification(libraryModification: LocalLibraryEntryModification) {
+    fun setLibraryModification(libraryModification: LibraryEntryModification) {
         libraryEntryWrapper.value
             ?.copy(libraryModification = libraryModification)
             ?.let { updatedWrapper ->
@@ -96,7 +105,7 @@ class LibraryEditEntryViewModel(
             }
     }
 
-    fun updateLibraryEntry(block: (LocalLibraryEntryModification) -> LocalLibraryEntryModification) {
+    fun updateLibraryEntry(block: (LibraryEntryModification) -> LibraryEntryModification) {
         val updatedLibraryModification = libraryEntryWrapper.value?.libraryModification?.let(block)
         if (updatedLibraryModification != null) {
             setLibraryModification(updatedLibraryModification)
@@ -109,7 +118,7 @@ class LibraryEditEntryViewModel(
         _loadState.value = LoadState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = libraryManager.updateLibraryEntry(libraryModification)
+                val response = libraryManager.updateLibraryEntry(libraryModification.toLocalLibraryEntryModification())
                 if (response !is LibraryUpdateResponse.Error) {
                     _loadState.postValue(LoadState.CloseDialog)
                 } else {

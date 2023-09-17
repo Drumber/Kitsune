@@ -11,6 +11,7 @@ import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
 import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
+import io.github.drumber.kitsune.exception.NotFoundException
 import io.github.drumber.kitsune.util.logE
 import retrofit2.HttpException
 
@@ -54,6 +55,17 @@ class LibraryEntryServiceClient(
                 libraryEntryModification.id,
                 JSONAPIDocument(libraryEntry)
             ).get()
+        } catch (e: HttpException) {
+            if (e.code() == 404)
+                throw NotFoundException(
+                    "Library entry with ID '${libraryEntryModification.id}' does not exist.",
+                    e
+                )
+            logE(
+                "Received HTTP exception while updating library entry with ID '${libraryEntryModification.id}'.",
+                e
+            )
+            null
         } catch (e: Exception) {
             logE("Failed to update library entry with ID '${libraryEntryModification.id}'.", e)
             null
