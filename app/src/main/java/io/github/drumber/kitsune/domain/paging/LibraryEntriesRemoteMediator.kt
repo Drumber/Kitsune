@@ -95,7 +95,7 @@ class LibraryEntriesRemoteMediator(
                             else -> libraryEntryDao.getAllLibraryEntryByStatus(targetStatus)
                         }
 
-                        libraryEntryDao.delete(libraryEntriesToBeCleared)
+                        libraryEntryDao.deleteAll(libraryEntriesToBeCleared)
                         libraryEntriesToBeCleared.forEach { libraryEntry ->
                             remoteKeyDao.deleteByResourceId(libraryEntry.id, RemoteKeyType.LibraryEntry)
                         }

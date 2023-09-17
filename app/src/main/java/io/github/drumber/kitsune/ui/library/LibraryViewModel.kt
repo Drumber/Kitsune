@@ -15,6 +15,7 @@ import io.github.drumber.kitsune.domain.database.LibraryEntryModificationDao
 import io.github.drumber.kitsune.domain.manager.LibraryManager
 import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
 import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
+import io.github.drumber.kitsune.domain.mapper.toLibraryEntryModification
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
@@ -122,7 +123,7 @@ class LibraryViewModel(
                             libraryModificationDao.getLibraryEntryModification(
                                 entry.id
                                     ?: throw InvalidDataException("Library entry ID cannot be 'null'.")
-                            )
+                            )?.toLibraryEntryModification()
                         )
                     }
                 }

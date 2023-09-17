@@ -1,15 +1,15 @@
 package io.github.drumber.kitsune.domain.manager.library
 
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
-import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntry
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
+import io.github.drumber.kitsune.exception.NotFoundException
+import io.github.drumber.kitsune.util.logE
 
 class LibraryManager(
     private val databaseClient: LibraryEntryDatabaseClient,
-    private val serviceClient: LibraryEntryServiceClient,
-    private val shouldStoreOfflineModifications: () -> Boolean
+    private val serviceClient: LibraryEntryServiceClient
 ) {
 
     suspend fun addNewLibraryEntry(
@@ -24,10 +24,10 @@ class LibraryManager(
         return true
     }
 
-    suspend fun removeLibraryEntry(libraryEntry: LocalLibraryEntry): Boolean {
-        val isDeleted = serviceClient.deleteLibraryEntry(libraryEntry.id)
+    suspend fun removeLibraryEntry(libraryEntryId: String): Boolean {
+        val isDeleted = serviceClient.deleteLibraryEntry(libraryEntryId)
         if (isDeleted) {
-            databaseClient.deleteLibraryEntryAndAnyModification(libraryEntry)
+            databaseClient.deleteLibraryEntryAndAnyModification(libraryEntryId)
             return true
         }
         return false
@@ -36,30 +36,46 @@ class LibraryManager(
     /**
      * Check if library entry was deleted on the server. If so, remove it from local database.
      */
-    suspend fun mayRemoveLibraryEntryLocally(libraryEntry: LocalLibraryEntry) {
-        if (!serviceClient.doesLibraryEntryExist(libraryEntry.id)) {
-            databaseClient.deleteLibraryEntryAndAnyModification(libraryEntry)
+    suspend fun mayRemoveLibraryEntryLocally(libraryEntryId: String) {
+        if (!serviceClient.doesLibraryEntryExist(libraryEntryId)) {
+            databaseClient.deleteLibraryEntryAndAnyModification(libraryEntryId)
         }
     }
 
     suspend fun synchronizeLocalModificationWithService(
         libraryEntryModification: LocalLibraryEntryModification
-    ): Boolean {
-        val libraryEntryResponse =
-            serviceClient.updateLibraryEntryWithModification(libraryEntryModification)
+    ): SynchronizationResult {
+        databaseClient.insertLibraryEntryModification(libraryEntryModification)
 
-        if (libraryEntryResponse == null && shouldStoreOfflineModifications()) {
-            databaseClient.insertLibraryEntryModification(libraryEntryModification)
-            return false
-        } else if (libraryEntryResponse == null) {
-            return false
-        }
+        val libraryEntryResponse = try {
+            serviceClient.updateLibraryEntryWithModification(libraryEntryModification)
+        } catch (e: NotFoundException) {
+            logE(
+                "Cannot synchronize local library entry modification for removed library entry.",
+                e
+            )
+            return SynchronizationResult.NOT_FOUND
+        } ?: return SynchronizationResult.FAILED
 
         databaseClient.updateLibraryEntryAndDeleteModification(
             libraryEntryResponse.toLocalLibraryEntry(),
             libraryEntryModification
         )
-        return true
+        return SynchronizationResult.SUCCESS
+    }
+
+    /**
+     * Synchronize all locally stored library entry modifications.
+     *
+     * @return Map containing the [SynchronizationResult] for each library entry modification.
+     */
+    suspend fun synchronizeStoredLocalModificationsWithService(): Map<String, SynchronizationResult> {
+        return databaseClient.getAllLocalLibraryModifications()
+            .associate { libraryEntryModification ->
+                libraryEntryModification.id to synchronizeLocalModificationWithService(
+                    libraryEntryModification
+                )
+            }
     }
 
 }

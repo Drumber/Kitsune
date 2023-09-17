@@ -1,14 +1,14 @@
 package io.github.drumber.kitsune.domain.model.ui.library
 
 import android.os.Parcelable
-import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class LibraryEntryWrapper(
     val libraryEntry: LibraryEntry,
-    val libraryModification: LocalLibraryEntryModification?
+    val libraryModification: LibraryEntryModification?,
+    val isSynchronizing: Boolean = false
 ) : LibraryEntryUiModel(), Parcelable {
 
     val progress

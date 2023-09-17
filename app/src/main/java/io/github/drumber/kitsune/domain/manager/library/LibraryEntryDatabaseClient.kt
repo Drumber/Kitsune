@@ -14,6 +14,10 @@ class LibraryEntryDatabaseClient(
     private val libraryEntryModificationDao
         get() = database.libraryEntryModificationDao()
 
+    suspend fun getAllLocalLibraryModifications(): List<LocalLibraryEntryModification> {
+        return libraryEntryModificationDao.getAllLibraryEntryModifications()
+    }
+
     suspend fun insertLibraryEntry(libraryEntry: LocalLibraryEntry) {
         libraryEntry.verifyIsValidLibraryEntry()
         libraryEntryDao.insertSingle(libraryEntry)
@@ -45,10 +49,10 @@ class LibraryEntryDatabaseClient(
         }
     }
 
-    suspend fun deleteLibraryEntryAndAnyModification(libraryEntry: LocalLibraryEntry) {
+    suspend fun deleteLibraryEntryAndAnyModification(libraryEntryId: String) {
         database.withTransaction {
-            libraryEntryDao.delete(libraryEntry)
-            libraryEntryModificationDao.deleteById(libraryEntry.id)
+            libraryEntryDao.deleteSingleById(libraryEntryId)
+            libraryEntryModificationDao.deleteSingleById(libraryEntryId)
         }
     }
 

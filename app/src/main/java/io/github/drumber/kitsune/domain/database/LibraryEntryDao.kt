@@ -91,10 +91,13 @@ interface LibraryEntryDao {
     suspend fun updateSingle(libraryEntry: LocalLibraryEntry)
 
     @Delete
-    suspend fun delete(libraryEntry: LocalLibraryEntry)
+    suspend fun deleteSingle(libraryEntry: LocalLibraryEntry)
+
+    @Query("DELETE FROM library_entries WHERE id = :id")
+    suspend fun deleteSingleById(id: String)
 
     @Delete
-    suspend fun delete(libraryEntries: List<LocalLibraryEntry>)
+    suspend fun deleteAll(libraryEntries: List<LocalLibraryEntry>)
 
     @Query("DELETE FROM library_entries")
     suspend fun clearLibraryEntries()

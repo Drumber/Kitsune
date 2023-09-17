@@ -31,7 +31,7 @@ interface LibraryEntryModificationDao {
     suspend fun deleteSingle(libraryEntryModification: LocalLibraryEntryModification)
 
     @Query("DELETE FROM library_entries_modifications WHERE id = :id")
-    suspend fun deleteById(id: String)
+    suspend fun deleteSingleById(id: String)
 
     @Query("DELETE FROM library_entries_modifications")
     suspend fun clearAll()

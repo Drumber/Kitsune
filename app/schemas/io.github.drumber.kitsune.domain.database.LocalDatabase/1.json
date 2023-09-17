@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "81680b3518791b34596ae795dd9f885d",
+    "identityHash": "9ffeea6c7e014697eeeb8de0dbec5a99",
     "entities": [
       {
         "tableName": "library_entries",
@@ -932,11 +932,17 @@
       },
       {
         "tableName": "library_entries_modifications",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `startedAt` TEXT, `finishedAt` TEXT, `status` INTEGER, `progress` INTEGER, `reconsumeCount` INTEGER, `volumesOwned` INTEGER, `ratingTwenty` INTEGER, `notes` TEXT, `privateEntry` INTEGER, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `state` TEXT NOT NULL, `startedAt` TEXT, `finishedAt` TEXT, `status` INTEGER, `progress` INTEGER, `reconsumeCount` INTEGER, `volumesOwned` INTEGER, `ratingTwenty` INTEGER, `notes` TEXT, `privateEntry` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "state",
+            "columnName": "state",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -1046,7 +1052,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '81680b3518791b34596ae795dd9f885d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9ffeea6c7e014697eeeb8de0dbec5a99')"
     ]
   }
 }
