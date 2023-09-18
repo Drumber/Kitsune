@@ -1,7 +1,9 @@
 package io.github.drumber.kitsune.domain.manager.library
 
-enum class SynchronizationResult {
-    SUCCESS,
-    FAILED,
-    NOT_FOUND
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
+
+sealed interface SynchronizationResult {
+    data class Success(val libraryEntry: LibraryEntry) : SynchronizationResult
+    data object Failed : SynchronizationResult
+    data object NotFound : SynchronizationResult
 }

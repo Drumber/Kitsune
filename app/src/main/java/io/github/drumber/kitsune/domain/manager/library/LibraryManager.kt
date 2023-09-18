@@ -1,9 +1,16 @@
 package io.github.drumber.kitsune.domain.manager.library
 
+import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult.Failed
+import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult.NotFound
+import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult.Success
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
+import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.NOT_SYNCHRONIZED
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.SYNCHRONIZING
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
+import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryModification
 import io.github.drumber.kitsune.exception.NotFoundException
 import io.github.drumber.kitsune.util.logE
 
@@ -42,11 +49,9 @@ class LibraryManager(
         }
     }
 
-    suspend fun synchronizeLocalModificationWithService(
+    private suspend fun pushLocalModificationToService(
         libraryEntryModification: LocalLibraryEntryModification
     ): SynchronizationResult {
-        databaseClient.insertLibraryEntryModification(libraryEntryModification)
-
         val libraryEntryResponse = try {
             serviceClient.updateLibraryEntryWithModification(libraryEntryModification)
         } catch (e: NotFoundException) {
@@ -54,14 +59,44 @@ class LibraryManager(
                 "Cannot synchronize local library entry modification for removed library entry.",
                 e
             )
-            return SynchronizationResult.NOT_FOUND
-        } ?: return SynchronizationResult.FAILED
+            return NotFound
+        } ?: return Failed
+        return Success(libraryEntryResponse)
+    }
 
-        databaseClient.updateLibraryEntryAndDeleteModification(
-            libraryEntryResponse.toLocalLibraryEntry(),
-            libraryEntryModification
-        )
-        return SynchronizationResult.SUCCESS
+    suspend fun updateLibraryEntry(
+        libraryEntryModification: LibraryEntryModification
+    ): SynchronizationResult {
+        return updateLibraryEntry(libraryEntryModification.toLocalLibraryEntryModification())
+    }
+
+    suspend fun updateLibraryEntry(
+        libraryEntryModification: LocalLibraryEntryModification
+    ): SynchronizationResult {
+        val localModification = libraryEntryModification.copy(state = SYNCHRONIZING)
+
+        databaseClient.insertLibraryEntryModification(localModification)
+        val syncResult = pushLocalModificationToService(localModification)
+        when (syncResult) {
+            is Success -> {
+                databaseClient.updateLibraryEntryAndDeleteModification(
+                    syncResult.libraryEntry.toLocalLibraryEntry(),
+                    localModification
+                )
+            }
+
+            is Failed -> {
+                databaseClient.insertLibraryEntryModification(
+                    localModification.copy(state = NOT_SYNCHRONIZED)
+                )
+            }
+
+            is NotFound -> {
+                databaseClient.deleteLibraryEntryAndAnyModification(localModification.id)
+            }
+        }
+
+        return syncResult
     }
 
     /**
@@ -69,10 +104,10 @@ class LibraryManager(
      *
      * @return Map containing the [SynchronizationResult] for each library entry modification.
      */
-    suspend fun synchronizeStoredLocalModificationsWithService(): Map<String, SynchronizationResult> {
+    suspend fun pushAllStoredLocalModificationsToService(): Map<String, SynchronizationResult> {
         return databaseClient.getAllLocalLibraryModifications()
             .associate { libraryEntryModification ->
-                libraryEntryModification.id to synchronizeLocalModificationWithService(
+                libraryEntryModification.id to updateLibraryEntry(
                     libraryEntryModification
                 )
             }
