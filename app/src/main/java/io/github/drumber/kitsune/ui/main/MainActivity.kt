@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.core.view.isVisible
 import androidx.core.view.iterator
 import androidx.lifecycle.Lifecycle
@@ -14,13 +15,15 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.databinding.ActivityMainBinding
 import io.github.drumber.kitsune.domain.model.preference.StartPagePref
 import io.github.drumber.kitsune.domain.model.preference.getDestinationId
 import io.github.drumber.kitsune.domain.repository.UserRepository
-import io.github.drumber.kitsune.databinding.ActivityMainBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
+import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
+import io.github.drumber.kitsune.ui.permissions.showNotificationPermissionRejectedDialog
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -88,7 +91,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
 
             // hide bottom navigation if the destination is not a main one
-            toggleBottomNavigation(!isDestinationOnMainNavGraph(destination), lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED))
+            toggleBottomNavigation(
+                !isDestinationOnMainNavGraph(destination),
+                lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
+            )
         }
 
         // override start fragment, but only on clean launch and when not launched by a deep link
@@ -101,6 +107,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 overrideStartDestination = KitsunePref.startFragment.getDestinationId()
             }
         }
+
+        requestRequiredPermissions()
     }
 
     override fun onStart() {
@@ -109,6 +117,19 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             navigateToStartFragment(it)
             overrideStartDestination = null
         }
+    }
+
+    private fun requestRequiredPermissions() {
+        val requestNotificationPermissionLauncher =
+            registerForActivityResult(RequestPermission()) { isGranted ->
+                if (isGranted) {
+                    KitsunePref.checkForUpdatesOnStart = true
+                } else {
+                    KitsunePref.checkForUpdatesOnStart = false
+                    showNotificationPermissionRejectedDialog()
+                }
+            }
+        requestNotificationPermission(requestNotificationPermissionLauncher)
     }
 
     private fun promptUserReLogin() {

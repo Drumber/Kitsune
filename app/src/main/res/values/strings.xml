@@ -39,6 +39,7 @@
     <string name="action_save_changes">Save Changes</string>
     <string name="action_remove">Remove</string>
     <string name="action_start">Start</string>
+    <string name="action_allow">Allow</string>
 
     <string name="hint_search">Search</string>
     <string name="hint_mark_watched">Mark as watched.</string>
@@ -47,6 +48,10 @@
     <string name="dialog_log_out_confirmation">Are you sure you want to log out?</string>
     <string name="dialog_remove_from_library_title">Remove from Library?</string>
     <string name="dialog_remove_from_library_msg">&lt;b>%s&lt;/b> will be removed from your library.</string>
+    <string name="dialog_notification_permission_rejected_title">Permission rejected</string>
+    <string name="dialog_notification_permission_rejected">You won\'t get notifications and won\'t be informed about app updates.</string>
+    <string name="dialog_request_notification_permission_title">Allow notifications</string>
+    <string name="dialog_request_notification_permission">Allow push notifications to get notified when a new app version is released.</string>
 
     <string name="error_resource_loading">Could not load data.</string>
     <string name="error_image_loading">Failed to load image.</string>
@@ -274,7 +279,9 @@
     <string name="info_update_no_new_version_available">No new version available.</string>
     <string name="info_update_failed">Failed to check for a new version.</string>
     <string name="info_logged_out_token_expired">Your access token has expired. Please log in again.</string>
+
     <string name="hint_rating">Rating</string>
+
     <string name="action_rate">Rate</string>
     <string name="action_update_rating">Update Rating</string>
     <string name="action_remove_rating">Remove Rating</string>
