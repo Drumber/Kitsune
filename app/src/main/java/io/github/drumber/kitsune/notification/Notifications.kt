@@ -1,10 +1,13 @@
 package io.github.drumber.kitsune.notification
 
+import android.Manifest
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import io.github.drumber.kitsune.R
@@ -34,6 +37,13 @@ object Notifications {
             .setAutoCancel(true)
             .build()
 
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
         NotificationManagerCompat.from(context).notify(NotificationChannels.ID_NEW_VERSION, notification)
     }
 
