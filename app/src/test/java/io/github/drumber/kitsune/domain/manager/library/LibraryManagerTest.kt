@@ -2,19 +2,26 @@ package io.github.drumber.kitsune.domain.manager.library
 
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.NOT_SYNCHRONIZED
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.SYNCHRONIZING
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
+import io.github.drumber.kitsune.exception.NotFoundException
 import io.github.drumber.kitsune.utils.anime
 import io.github.drumber.kitsune.utils.libraryEntry
+import io.github.drumber.kitsune.utils.useMockedAndroidLogger
 import kotlinx.coroutines.test.runTest
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.spy
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 class LibraryManagerTest {
 
@@ -151,7 +158,7 @@ class LibraryManagerTest {
     }
 
     @Test
-    fun shouldSynchroniseLocalModificationWithService() = runTest {
+    fun shouldUpdateLibraryEntry() = runTest {
         // given
         val libraryEntryModification = LocalLibraryEntryModification
             .withIdAndNulls(faker.internet().uuid())
@@ -169,20 +176,22 @@ class LibraryManagerTest {
         val manager = LibraryManager(databaseClient, serviceClient)
 
         // when
-        val result = manager.synchronizeLocalModificationWithService(libraryEntryModification)
+        val result = manager.updateLibraryEntry(libraryEntryModification)
 
         // then
-        verify(serviceClient).updateLibraryEntryWithModification(libraryEntryModification)
+        verify(serviceClient).updateLibraryEntryWithModification(
+            libraryEntryModification.copy(state = SYNCHRONIZING)
+        )
         verify(databaseClient).updateLibraryEntryAndDeleteModification(
             expectedLibraryEntry.toLocalLibraryEntry(),
-            libraryEntryModification
+            libraryEntryModification.copy(state = SYNCHRONIZING)
         )
         verify(databaseClient).insertLibraryEntryModification(any())
-        assertThat(result).isEqualTo(SynchronizationResult.SUCCESS)
+        assertThat(result).isInstanceOf(SynchronizationResult.Success::class.java)
     }
 
     @Test
-    fun shouldNotSynchroniseLocalModificationWithService() = runTest {
+    fun shouldFailOnUpdateLibraryEntry() = runTest {
         // given
         val libraryEntryModification = LocalLibraryEntryModification
             .withIdAndNulls(faker.internet().uuid())
@@ -194,21 +203,57 @@ class LibraryManagerTest {
         val databaseClient = mock<LibraryEntryDatabaseClient> {
             on(it.insertLibraryEntryModification(any())).thenReturn(Unit)
             on(it.updateLibraryEntryAndDeleteModification(any(), any())).thenReturn(Unit)
+            on(it.deleteLibraryEntryAndAnyModification(any())).thenReturn(Unit)
         }
         val manager = LibraryManager(databaseClient, serviceClient)
 
         // when
-        val result = manager.synchronizeLocalModificationWithService(libraryEntryModification)
+        val result = manager.updateLibraryEntry(libraryEntryModification)
 
         // then
-        verify(serviceClient).updateLibraryEntryWithModification(libraryEntryModification)
-        verify(databaseClient).insertLibraryEntryModification(any())
+        verify(serviceClient)
+            .updateLibraryEntryWithModification(libraryEntryModification.copy(state = SYNCHRONIZING))
+        verify(databaseClient)
+            .insertLibraryEntryModification(libraryEntryModification.copy(state = NOT_SYNCHRONIZED))
         verify(databaseClient, never()).updateLibraryEntryAndDeleteModification(any(), any())
-        assertThat(result).isEqualTo(SynchronizationResult.FAILED)
+        verify(databaseClient, never()).deleteLibraryEntryAndAnyModification(any())
+        assertThat(result).isInstanceOf(SynchronizationResult.Failed::class.java)
     }
 
     @Test
-    fun shouldSynchronizeStoredLocalModificationsWithService() = runTest {
+    fun shouldNotFoundOnUpdateLibraryEntry() = runTest {
+        // given
+        val libraryEntryModification = LocalLibraryEntryModification
+            .withIdAndNulls(faker.internet().uuid())
+            .copy(status = LibraryStatus.Completed)
+
+        val serviceClient = mock<LibraryEntryServiceClient> {
+            on(it.updateLibraryEntryWithModification(any()))
+                .doAnswer { throw NotFoundException() }
+        }
+        val databaseClient = mock<LibraryEntryDatabaseClient> {
+            on(it.insertLibraryEntryModification(any())).thenReturn(Unit)
+            on(it.updateLibraryEntryAndDeleteModification(any(), any())).thenReturn(Unit)
+        }
+        val manager = LibraryManager(databaseClient, serviceClient)
+
+        // when
+        val result = useMockedAndroidLogger {
+            manager.updateLibraryEntry(libraryEntryModification)
+        }
+
+        // then
+        verify(serviceClient)
+            .updateLibraryEntryWithModification(libraryEntryModification.copy(state = SYNCHRONIZING))
+        verify(databaseClient)
+            .insertLibraryEntryModification(libraryEntryModification.copy(state = SYNCHRONIZING))
+        verify(databaseClient, never()).updateLibraryEntryAndDeleteModification(any(), any())
+        verify(databaseClient).deleteLibraryEntryAndAnyModification(libraryEntryModification.id)
+        assertThat(result).isInstanceOf(SynchronizationResult.NotFound::class.java)
+    }
+
+    @Test
+    fun shouldPushAllStoredLocalModificationsToService() = runTest {
         // given
         val libraryEntryModifications = List(5) {
             LocalLibraryEntryModification
@@ -221,17 +266,21 @@ class LibraryManagerTest {
             on(it.getAllLocalLibraryModifications()).thenReturn(libraryEntryModifications)
         }
         val manager = spy(LibraryManager(databaseClient, serviceClient)) {
-            on(it.synchronizeLocalModificationWithService(any())).thenReturn(SynchronizationResult.SUCCESS)
+            doReturn(SynchronizationResult.Success(libraryEntry(faker)))
+                .whenever(it).updateLibraryEntry(any<LocalLibraryEntryModification>())
         }
 
         // when
-        val results = manager.synchronizeStoredLocalModificationsWithService()
+        val results = manager.pushAllStoredLocalModificationsToService()
 
         // then
-        verify(manager, times(libraryEntryModifications.size)).synchronizeLocalModificationWithService(any())
-        assertThat(results).containsOnlyKeys(libraryEntryModifications.map{ it.id })
+        verify(
+            manager,
+            times(libraryEntryModifications.size)
+        ).updateLibraryEntry(any<LocalLibraryEntryModification>())
+        assertThat(results).containsOnlyKeys(libraryEntryModifications.map { it.id })
         assertThat(results).allSatisfy { _, synchronizationResult ->
-            assertThat(synchronizationResult).isEqualTo(SynchronizationResult.SUCCESS)
+            assertThat(synchronizationResult).isInstanceOf(SynchronizationResult.Success::class.java)
         }
     }
 
