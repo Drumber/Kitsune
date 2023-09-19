@@ -7,10 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.domain.database.LibraryEntryDao
-import io.github.drumber.kitsune.domain.manager.LibraryManager
-import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
+import io.github.drumber.kitsune.domain.manager.library.LibraryManager
+import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult
 import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
-import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
@@ -165,14 +164,14 @@ class DetailsViewModel(
             } else if (libraryEntry.value != null) {
                 // library entry is not available on the server but it is in the local cache, was it deleted?
                 // -> local database cache is out of sync, remove entry from database
-                libraryEntry.value?.let {
+                libraryEntry.value?.let { libraryEntry ->
                     logD(
                         "There is no library entry on the server, but it exists in the local cache. " +
                                 "Removed it from local database..."
                     )
                     withContext(Dispatchers.IO) {
                         _libraryEntry.postValue(null)
-                        libraryManager.mayRemoveSingleLibraryEntry(it.toLocalLibraryEntry())
+                        libraryEntry.id?.let { libraryManager.mayRemoveLibraryEntryLocally(it) }
                     }
                 }
             }
@@ -205,7 +204,7 @@ class DetailsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (existingLibraryEntryId.isNullOrBlank()) { // post new library entry
-                    val newLibraryEntry = libraryManager.postNewLibraryEntry(
+                    val newLibraryEntry = libraryManager.addNewLibraryEntry(
                         userId,
                         mediaAdapter.media,
                         status
@@ -218,7 +217,7 @@ class DetailsViewModel(
                             .copy(status = status)
                     val response = libraryManager.updateLibraryEntry(modification)
 
-                    if (response is LibraryUpdateResponse.Error) {
+                    if (response is SynchronizationResult.Failed) {
                         throw response.exception
                     }
                 }
@@ -232,10 +231,10 @@ class DetailsViewModel(
     }
 
     fun removeLibraryEntry() {
-        val libraryEntry = libraryEntry.value ?: return
+        val libraryEntryId = libraryEntry.value?.id ?: return
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                libraryManager.removeLibraryEntry(libraryEntry.toLocalLibraryEntry())
+                libraryManager.removeLibraryEntry(libraryEntryId)
                 _libraryEntry.postValue(null)
             } catch (e: Exception) {
                 logE("Failed to remove library entry.", e)

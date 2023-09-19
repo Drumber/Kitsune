@@ -43,12 +43,12 @@ class LibraryManagerTest {
         val status = LibraryStatus.Planned
 
         // when
-        val isSuccess = manager.addNewLibraryEntry(userId, media, status)
+        val newLibraryEntry = manager.addNewLibraryEntry(userId, media, status)
 
         // then
         verify(serviceClient).postNewLibraryEntry(userId, media, status)
         verify(databaseClient).insertLibraryEntry(libraryEntry.toLocalLibraryEntry())
-        assertThat(isSuccess).isTrue
+        assertThat(newLibraryEntry).isNotNull
     }
 
     @Test
@@ -66,12 +66,12 @@ class LibraryManagerTest {
         val status = LibraryStatus.Planned
 
         // when
-        val isSuccess = manager.addNewLibraryEntry(userId, media, status)
+        val newLibraryEntry = manager.addNewLibraryEntry(userId, media, status)
 
         // then
         verify(serviceClient).postNewLibraryEntry(userId, media, status)
         verify(databaseClient, never()).insertLibraryEntry(any())
-        assertThat(isSuccess).isFalse
+        assertThat(newLibraryEntry).isNull()
     }
 
     @Test
@@ -208,7 +208,9 @@ class LibraryManagerTest {
         val manager = LibraryManager(databaseClient, serviceClient)
 
         // when
-        val result = manager.updateLibraryEntry(libraryEntryModification)
+        val result = useMockedAndroidLogger {
+            manager.updateLibraryEntry(libraryEntryModification)
+        }
 
         // then
         verify(serviceClient)
