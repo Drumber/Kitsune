@@ -16,7 +16,10 @@ import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
 import java.util.concurrent.CopyOnWriteArrayList
 
-class LibraryEntriesRepository(private val service: LibraryEntriesService, private val db: LocalDatabase) {
+class LibraryEntriesRepository(
+    private val service: LibraryEntriesService,
+    private val db: LocalDatabase
+) {
 
     @OptIn(ExperimentalPagingApi::class)
     fun libraryEntries(pageSize: Int, filter: LibraryEntryFilter) = Pager(
@@ -33,7 +36,12 @@ class LibraryEntriesRepository(private val service: LibraryEntriesService, priva
             pageSize = pageSize,
             maxSize = Repository.MAX_CACHED_ITEMS
         ),
-        pagingSourceFactory = { LibraryEntriesPagingDataSource(service, filter.pageLimit(pageSize)) }
+        pagingSourceFactory = {
+            LibraryEntriesPagingDataSource(
+                service,
+                filter.pageLimit(pageSize)
+            )
+        }
     ).flow
 
     private val invalidatingPagingSourceFactory = InvalidatingPagingSourceFactory {
@@ -70,7 +78,9 @@ class LibraryEntriesRepository(private val service: LibraryEntriesService, priva
 
 }
 
-private fun LibraryEntryDao.getLibraryEntriesByFilter(filter: LibraryEntryFilter): PagingSource<Int, LocalLibraryEntry> {
+private fun LibraryEntryDao.getLibraryEntriesByFilter(
+    filter: LibraryEntryFilter
+): PagingSource<Int, LocalLibraryEntry> {
     val hasStatus = filter.libraryStatus.isNotEmpty()
     val kind = filter.kind
     return when {

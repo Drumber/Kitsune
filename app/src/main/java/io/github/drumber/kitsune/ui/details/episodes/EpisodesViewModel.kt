@@ -12,8 +12,9 @@ import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.domain.database.LibraryEntryDao
 import io.github.drumber.kitsune.domain.database.LibraryEntryModificationDao
-import io.github.drumber.kitsune.domain.manager.LibraryManager
 import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
+import io.github.drumber.kitsune.domain.manager.library.LibraryManager
+import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult
 import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
 import io.github.drumber.kitsune.domain.mapper.toLibraryEntryModification
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
@@ -28,6 +29,7 @@ import io.github.drumber.kitsune.domain.repository.MediaUnitRepository
 import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.exception.InvalidDataException
+import io.github.drumber.kitsune.exception.NotFoundException
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -120,8 +122,15 @@ class EpisodesViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = libraryManager.updateLibraryEntry(modification)
+                val updateResult = libraryManager.updateLibraryEntry(modification)
                 withContext(Dispatchers.Main) {
+                    val response = when (updateResult) {
+                        is SynchronizationResult.Success -> LibraryUpdateResponse.SyncedOnline
+                        is SynchronizationResult.Failed -> LibraryUpdateResponse.Error(updateResult.exception)
+                        is SynchronizationResult.NotFound -> LibraryUpdateResponse.Error(
+                            NotFoundException("Library entry was not found.")
+                        )
+                    }
                     responseListener?.invoke(response)
                 }
             } catch (e: Exception) {

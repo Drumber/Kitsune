@@ -8,9 +8,11 @@ import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.NOT_SYNCHRONIZED
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.SYNCHRONIZING
+import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryModification
+import io.github.drumber.kitsune.exception.InvalidDataException
 import io.github.drumber.kitsune.exception.NotFoundException
 import io.github.drumber.kitsune.util.logE
 
@@ -23,12 +25,12 @@ class LibraryManager(
         userId: String,
         media: BaseMedia,
         status: LibraryStatus
-    ): Boolean {
+    ): LibraryEntry? {
         val libraryEntry = serviceClient.postNewLibraryEntry(userId, media, status)
-            ?: return false
-
-        databaseClient.insertLibraryEntry(libraryEntry.toLocalLibraryEntry())
-        return true
+        if (libraryEntry != null) {
+            databaseClient.insertLibraryEntry(libraryEntry.toLocalLibraryEntry())
+        }
+        return libraryEntry
     }
 
     suspend fun removeLibraryEntry(libraryEntryId: String): Boolean {
@@ -54,13 +56,20 @@ class LibraryManager(
     ): SynchronizationResult {
         val libraryEntryResponse = try {
             serviceClient.updateLibraryEntryWithModification(libraryEntryModification)
+                ?: throw InvalidDataException("Received library entry for ID '$libraryEntryModification.id' is 'null'.")
         } catch (e: NotFoundException) {
             logE(
                 "Cannot synchronize local library entry modification for removed library entry.",
                 e
             )
             return NotFound
-        } ?: return Failed
+        } catch (e: Exception) {
+            logE(
+                "Failed to push library entry modification for ID '$libraryEntryModification.id' to service.",
+                e
+            )
+            return Failed(e)
+        }
         return Success(libraryEntryResponse)
     }
 

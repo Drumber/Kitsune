@@ -4,6 +4,6 @@ import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntr
 
 sealed interface SynchronizationResult {
     data class Success(val libraryEntry: LibraryEntry) : SynchronizationResult
-    data object Failed : SynchronizationResult
+    data class Failed(val exception: Exception) : SynchronizationResult
     data object NotFound : SynchronizationResult
 }

@@ -12,8 +12,9 @@ import androidx.paging.insertSeparators
 import androidx.paging.map
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.domain.database.LibraryEntryModificationDao
-import io.github.drumber.kitsune.domain.manager.LibraryManager
 import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
+import io.github.drumber.kitsune.domain.manager.library.LibraryManager
+import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult
 import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
 import io.github.drumber.kitsune.domain.mapper.toLibraryEntryModification
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
@@ -28,6 +29,8 @@ import io.github.drumber.kitsune.domain.repository.LibraryEntriesRepository
 import io.github.drumber.kitsune.domain.repository.UserRepository
 import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.exception.InvalidDataException
+import io.github.drumber.kitsune.exception.NotFoundException
+import io.github.drumber.kitsune.exception.SynchronizationException
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
@@ -207,10 +210,21 @@ class LibraryViewModel(
     fun synchronizeOfflineLibraryUpdates() {
         isSyncingLibrary.value = true
         viewModelScope.launch(Dispatchers.IO) {
-            libraryManager.synchronizeLibrary {
-                responseListener?.invoke(it)
-                isSyncingLibrary.postValue(false)
+            val librarySyncResults = libraryManager.pushAllStoredLocalModificationsToService()
+            val failedCount = librarySyncResults.count {
+                it.value is SynchronizationResult.Failed
             }
+            if (failedCount > 0) {
+                responseListener?.invoke(
+                    LibraryUpdateResponse.Error(
+                        SynchronizationException("Failed to synchronize $failedCount library entries.")
+                    )
+                )
+            } else {
+                responseListener?.invoke(LibraryUpdateResponse.SyncedOnline)
+            }
+        }.invokeOnCompletion {
+            isSyncingLibrary.postValue(false)
         }
     }
 
@@ -264,26 +278,39 @@ class LibraryViewModel(
         }
     }
 
-    private suspend fun updateLibraryEntry(modification: LocalLibraryEntryModification): LibraryUpdateResponse {
-        val response = libraryManager.updateLibraryEntry(modification)
+    private suspend fun updateLibraryEntry(modification: LocalLibraryEntryModification) {
+        val updateResult = libraryManager.updateLibraryEntry(modification)
 
         // temp fix for issue #6
-        if (response is LibraryUpdateResponse.SyncedOnline && filterMediator.value?.isFilteredBySearchQuery() == true) {
+        if (updateResult is SynchronizationResult.Success && filterMediator.value?.isFilteredBySearchQuery() == true) {
             // trigger new search to show the updated data
             triggerAdapterUpdate()
         }
 
         withContext(Dispatchers.Main) {
-            responseListener?.invoke(response)
-            scrollToUpdatedEntry(response, modification.id)
+            when (updateResult) {
+                is SynchronizationResult.Success -> {
+                    responseListener?.invoke(LibraryUpdateResponse.SyncedOnline)
+                    scrollToUpdatedEntry(updateResult.libraryEntry.id)
+                }
+
+                is SynchronizationResult.Failed -> responseListener?.invoke(
+                    LibraryUpdateResponse.Error(
+                        updateResult.exception
+                    )
+                )
+
+                is SynchronizationResult.NotFound -> responseListener?.invoke(
+                    LibraryUpdateResponse.Error(
+                        NotFoundException("Library entry not found.")
+                    )
+                )
+            }
         }
-        return response
     }
 
-    private fun scrollToUpdatedEntry(response: LibraryUpdateResponse, libraryEntryId: String?) {
-        if (response is LibraryUpdateResponse.SyncedOnline) {
-            scrollToUpdatedEntryId = libraryEntryId
-        }
+    private fun scrollToUpdatedEntry(libraryEntryId: String?) {
+        scrollToUpdatedEntryId = libraryEntryId
     }
 
     /**

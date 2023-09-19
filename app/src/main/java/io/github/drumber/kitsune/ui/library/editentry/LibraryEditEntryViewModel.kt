@@ -7,8 +7,8 @@ import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.domain.database.LibraryEntryDao
 import io.github.drumber.kitsune.domain.database.LibraryEntryModificationDao
-import io.github.drumber.kitsune.domain.manager.LibraryManager
-import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
+import io.github.drumber.kitsune.domain.manager.library.LibraryManager
+import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult
 import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
 import io.github.drumber.kitsune.domain.mapper.toLibraryEntryModification
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
@@ -118,11 +118,11 @@ class LibraryEditEntryViewModel(
         _loadState.value = LoadState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = libraryManager.updateLibraryEntry(libraryModification.toLocalLibraryEntryModification())
-                if (response !is LibraryUpdateResponse.Error) {
+                val updateResult = libraryManager.updateLibraryEntry(libraryModification)
+                if (updateResult !is SynchronizationResult.Failed) {
                     _loadState.postValue(LoadState.CloseDialog)
                 } else {
-                    throw response.exception
+                    throw updateResult.exception
                 }
             } catch (e: Exception) {
                 logE("Failed to update library entry.", e)
@@ -132,11 +132,11 @@ class LibraryEditEntryViewModel(
     }
 
     fun removeLibraryEntry() {
-        val libraryEntry = libraryEntry.value ?: return
+        val libraryEntryId = libraryEntry.value?.id ?: return
         _loadState.value = LoadState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                libraryManager.removeLibraryEntry(libraryEntry.toLocalLibraryEntry())
+                libraryManager.removeLibraryEntry(libraryEntryId)
                 _loadState.postValue(LoadState.CloseDialog)
             } catch (e: Exception) {
                 logE("Failed to remove library entry.", e)
