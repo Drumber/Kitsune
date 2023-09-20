@@ -28,7 +28,7 @@ import kotlin.reflect.KProperty
 object KitsunePref : KotprefModel(), KoinComponent {
 
     override val commitAllPropertiesByDefault = true
-    //override val kotprefName = context.getString(R.string.preference_file_key)
+    override val kotprefName = context.getString(R.string.preference_file_key)
 
     private val userRepository: UserRepository by inject()
 
