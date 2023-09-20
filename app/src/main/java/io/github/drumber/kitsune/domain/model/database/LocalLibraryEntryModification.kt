@@ -55,21 +55,19 @@ data class LocalLibraryEntryModification(
     fun applyToLibraryEntry(
         libraryEntry: LocalLibraryEntry, ignoreBlankNotes: Boolean = true
     ): LocalLibraryEntry {
-//        status?.let { libraryEntry.status = it }
-//        progress?.let { libraryEntry.progress = it }
-//        volumesOwned?.let { libraryEntry.volumesOwned = it }
-//        reconsumeCount?.let { libraryEntry.reconsumeCount = it }
-//        notes?.let {
-//            if (!ignoreBlankNotes || libraryEntry.notes != null || it.isNotBlank()) {
-//                libraryEntry.notes = it
-//            }
-//        }
-//        isPrivate?.let { libraryEntry.privateEntry = it }
-//        startedAt?.let { libraryEntry.startedAt = it }
-//        finishedAt?.let { libraryEntry.finishedAt = it }
-//        ratingTwenty?.let { libraryEntry.ratingTwenty = it }
-
-        return libraryEntry
+        return libraryEntry.copy(
+            startedAt = startedAt ?: libraryEntry.startedAt,
+            finishedAt = finishedAt ?: libraryEntry.finishedAt,
+            status = status ?: libraryEntry.status,
+            progress = progress ?: libraryEntry.progress,
+            reconsumeCount = reconsumeCount ?: libraryEntry.reconsumeCount,
+            volumesOwned = volumesOwned ?: libraryEntry.volumesOwned,
+            ratingTwenty = ratingTwenty ?: libraryEntry.ratingTwenty,
+            notes = notes
+                ?.takeIf { !ignoreBlankNotes || libraryEntry.notes != null || it.isNotBlank() }
+                ?: libraryEntry.notes,
+            privateEntry = privateEntry ?: libraryEntry.privateEntry
+        )
     }
 
     fun mergeModificationFrom(other: LocalLibraryEntryModification) = LocalLibraryEntryModification(
@@ -86,7 +84,6 @@ data class LocalLibraryEntryModification(
     )
 
     fun toLocalLibraryEntry(ignoreBlankNotes: Boolean = true): LocalLibraryEntry {
-        // TODO: ignore blank notes
         return LocalLibraryEntry(
             id = id,
             updatedAt = null,
@@ -99,7 +96,7 @@ data class LocalLibraryEntryModification(
             reconsumeCount = reconsumeCount,
             volumesOwned = volumesOwned,
             ratingTwenty = ratingTwenty,
-            notes = notes,
+            notes = notes?.takeIf { !ignoreBlankNotes || it.isNotBlank() },
             privateEntry = privateEntry,
             reactionSkipped = null,
             anime = null,
@@ -108,9 +105,7 @@ data class LocalLibraryEntryModification(
     }
 
     fun isEqualToLibraryEntry(libraryEntry: LocalLibraryEntry): Boolean {
-        val tempEntry = libraryEntry.copy()
-        applyToLibraryEntry(tempEntry)
-        return tempEntry == libraryEntry
+        return libraryEntry == applyToLibraryEntry(libraryEntry)
     }
 
 }

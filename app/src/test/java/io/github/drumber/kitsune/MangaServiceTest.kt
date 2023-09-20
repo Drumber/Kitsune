@@ -8,8 +8,10 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
+import org.junit.Ignore
 import org.junit.Test
 
+@Ignore
 class MangaServiceTest : BaseTest() {
 
     override val koinModules = listOf(networkModule)

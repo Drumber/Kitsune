@@ -6,7 +6,7 @@ import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult.Su
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
-import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.NOT_SYNCHRONIZED
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.SYNCHRONIZING
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
@@ -51,28 +51,6 @@ class LibraryManager(
         }
     }
 
-    private suspend fun pushLocalModificationToService(
-        libraryEntryModification: LocalLibraryEntryModification
-    ): SynchronizationResult {
-        val libraryEntryResponse = try {
-            serviceClient.updateLibraryEntryWithModification(libraryEntryModification)
-                ?: throw InvalidDataException("Received library entry for ID '$libraryEntryModification.id' is 'null'.")
-        } catch (e: NotFoundException) {
-            logE(
-                "Cannot synchronize local library entry modification for removed library entry.",
-                e
-            )
-            return NotFound
-        } catch (e: Exception) {
-            logE(
-                "Failed to push library entry modification for ID '$libraryEntryModification.id' to service.",
-                e
-            )
-            return Failed(e)
-        }
-        return Success(libraryEntryResponse)
-    }
-
     suspend fun updateLibraryEntry(
         libraryEntryModification: LibraryEntryModification
     ): SynchronizationResult {
@@ -95,8 +73,8 @@ class LibraryManager(
             }
 
             is Failed -> {
-                databaseClient.insertLibraryEntryModification(
-                    localModification.copy(state = NOT_SYNCHRONIZED)
+                insertLocalModificationOrDeleteIfSameAsLibraryEntry(
+                    localModification.copy(state = LocalLibraryModificationState.NOT_SYNCHRONIZED)
                 )
             }
 
@@ -120,6 +98,39 @@ class LibraryManager(
                     libraryEntryModification
                 )
             }
+    }
+
+    private suspend fun pushLocalModificationToService(
+        libraryEntryModification: LocalLibraryEntryModification
+    ): SynchronizationResult {
+        val libraryEntryResponse = try {
+            serviceClient.updateLibraryEntryWithModification(libraryEntryModification)
+                ?: throw InvalidDataException("Received library entry for ID '${libraryEntryModification.id}' is 'null'.")
+        } catch (e: NotFoundException) {
+            logE(
+                "Cannot synchronize local library entry modification for removed library entry.",
+                e
+            )
+            return NotFound
+        } catch (e: Exception) {
+            logE(
+                "Failed to push library entry modification for ID '${libraryEntryModification.id}' to service.",
+                e
+            )
+            return Failed(e)
+        }
+        return Success(libraryEntryResponse)
+    }
+
+    private suspend fun insertLocalModificationOrDeleteIfSameAsLibraryEntry(
+        libraryEntryModification: LocalLibraryEntryModification
+    ) {
+        val libraryEntry = databaseClient.getLibraryEntry(libraryEntryModification.id)
+        if (libraryEntry != null && libraryEntryModification.isEqualToLibraryEntry(libraryEntry)) {
+            databaseClient.deleteLibraryEntryModification(libraryEntryModification)
+        } else {
+            databaseClient.insertLibraryEntryModification(libraryEntryModification)
+        }
     }
 
 }

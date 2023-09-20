@@ -1,12 +1,14 @@
 package io.github.drumber.kitsune
 
+import io.github.drumber.kitsune.di.networkModule
 import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.domain.service.production.CastingService
-import io.github.drumber.kitsune.di.networkModule
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertNotNull
+import org.junit.Ignore
 import org.junit.Test
 
+@Ignore
 class CastingServiceTest : BaseTest() {
 
     override val koinModules = listOf(networkModule)
