@@ -35,6 +35,7 @@ fun Activity.requestNotificationPermission(requestPermissionLauncher: ActivityRe
                 dialog.dismiss()
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
+            .show()
     } else {
         requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
