@@ -14,6 +14,8 @@ class LibraryEntryDatabaseClient(
     private val libraryEntryModificationDao
         get() = database.libraryEntryModificationDao()
 
+    suspend fun getLibraryEntry(id: String) = libraryEntryDao.getLibraryEntry(id)
+
     suspend fun getAllLocalLibraryModifications(): List<LocalLibraryEntryModification> {
         return libraryEntryModificationDao.getAllLibraryEntryModifications()
     }

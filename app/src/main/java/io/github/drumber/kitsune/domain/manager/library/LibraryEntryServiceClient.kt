@@ -53,7 +53,8 @@ class LibraryEntryServiceClient(
         return try {
             libraryEntriesService.updateLibraryEntry(
                 libraryEntryModification.id,
-                JSONAPIDocument(libraryEntry)
+                JSONAPIDocument(libraryEntry),
+                filterForFullLibraryEntry.options
             ).get()
         } catch (e: HttpException) {
             if (e.code() == 404)
