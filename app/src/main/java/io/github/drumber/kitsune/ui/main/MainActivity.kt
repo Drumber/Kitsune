@@ -36,6 +36,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private lateinit var navController: NavController
 
     private var overrideStartDestination: Int? = null
+    
+    private val navigationBarView: NavigationBarView
+        get() = binding.bottomNavigation
+            ?: binding.navigationRail
+            ?: error("There must exist a navigation bar view.")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
@@ -53,7 +58,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-        binding.bottomNavigation.apply {
+        navigationBarView.apply {
             setOnItemSelectedListener { item ->
                 viewModel.currentNavRootDestId = item.itemId
 
@@ -81,7 +86,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             // set the selected bottom navigation item
-            for (menuItem in binding.bottomNavigation.menu) {
+            for (menuItem in navigationBarView.menu) {
                 if (menuItem.itemId == destination.id) {
                     viewModel.currentNavRootDestId = menuItem.itemId
                 }
@@ -91,7 +96,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
 
             // hide bottom navigation if the destination is not a main one
-            toggleBottomNavigation(
+            toggleNavigationBarView(
                 !isDestinationOnMainNavGraph(destination),
                 lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
             )
@@ -175,28 +180,51 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         return destination.parent?.id == R.id.main_nav_graph
     }
 
-    private fun toggleBottomNavigation(hideBottomNav: Boolean, animate: Boolean = true) {
-        binding.bottomNavigation.apply {
-            if (hideBottomNav && this.isVisible) {
-                if (animate) {
-                    animate().translationY(this.height.toFloat())
-                        .withEndAction { this.isVisible = false }
-                        .duration =
-                        resources.getInteger(R.integer.bottom_navigation_animation_duration)
-                            .toLong()
-                } else {
-                    this.isVisible = false
-                }
-            } else if (!hideBottomNav && !this.isVisible) {
-                if (animate) {
-                    animate().translationY(0f)
-                        .withStartAction { this.isVisible = true }
-                        .duration =
-                        resources.getInteger(R.integer.bottom_navigation_animation_duration)
-                            .toLong()
-                } else {
-                    this.isVisible = true
-                }
+    private fun toggleNavigationBarView(hideNavigationBar: Boolean, animate: Boolean = true) {
+        if (!animate) {
+            navigationBarView.isVisible = !hideNavigationBar
+        } else {
+            when {
+                binding.bottomNavigation != null -> animateBottomNavigation(hideNavigationBar)
+                binding.navigationRail != null -> animateNavigationRail(hideNavigationBar)
+            }
+        }
+    }
+    
+    private fun animateBottomNavigation(slideDown: Boolean) {
+        binding.bottomNavigation?.apply {
+            if (slideDown) {
+                animate().translationY(this.height.toFloat())
+                    .withEndAction { this.isVisible = false }
+                    .duration =
+                    resources.getInteger(R.integer.bottom_navigation_animation_duration)
+                        .toLong()
+            } else {
+                animate().translationY(0f)
+                    .withStartAction { this.isVisible = true }
+                    .duration =
+                    resources.getInteger(R.integer.bottom_navigation_animation_duration)
+                        .toLong()
+            }
+        }
+    }
+
+    private fun animateNavigationRail(slideOut: Boolean) {
+        binding.navigationRail?.apply {
+            if (slideOut) {
+                // different direction depending on if rail is left or right aligned
+                val translationFactor = if (this.x == 0f) -1 else 1
+                animate().translationX(this.width.toFloat() * translationFactor)
+                    .withEndAction { this.isVisible = false }
+                    .duration =
+                    resources.getInteger(R.integer.navigation_rail_animation_duration)
+                        .toLong()
+            } else {
+                animate().translationX(0f)
+                    .withStartAction { this.isVisible = true }
+                    .duration =
+                    resources.getInteger(R.integer.navigation_rail_animation_duration)
+                        .toLong()
             }
         }
     }
