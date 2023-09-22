@@ -46,15 +46,17 @@ class LibraryEntryServiceClient(
     }
 
     suspend fun updateLibraryEntryWithModification(
-        libraryEntryModification: LocalLibraryEntryModification
+        libraryEntryModification: LocalLibraryEntryModification,
+        shouldFetchWithMedia: Boolean
     ): LibraryEntry? {
         val libraryEntry = libraryEntryModification.toLocalLibraryEntry().toLibraryEntry()
+        val filter = if (shouldFetchWithMedia) filterForFullLibraryEntry.options else emptyMap()
 
         return try {
             libraryEntriesService.updateLibraryEntry(
                 libraryEntryModification.id,
                 JSONAPIDocument(libraryEntry),
-                filterForFullLibraryEntry.options
+                filter
             ).get()
         } catch (e: HttpException) {
             if (e.code() == 404)

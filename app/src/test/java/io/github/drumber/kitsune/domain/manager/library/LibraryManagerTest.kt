@@ -167,7 +167,7 @@ class LibraryManagerTest {
             .copy(id = libraryEntryModification.id, status = libraryEntryModification.status)
 
         val serviceClient = mock<LibraryEntryServiceClient> {
-            on(it.updateLibraryEntryWithModification(any())).thenReturn(expectedLibraryEntry)
+            on(it.updateLibraryEntryWithModification(any(), any())).thenReturn(expectedLibraryEntry)
         }
         val databaseClient = mock<LibraryEntryDatabaseClient> {
             on(it.insertLibraryEntryModification(any())).thenReturn(Unit)
@@ -180,7 +180,8 @@ class LibraryManagerTest {
 
         // then
         verify(serviceClient).updateLibraryEntryWithModification(
-            libraryEntryModification.copy(state = SYNCHRONIZING)
+            libraryEntryModification.copy(state = SYNCHRONIZING),
+            true
         )
         verify(databaseClient).updateLibraryEntryAndDeleteModification(
             expectedLibraryEntry.toLocalLibraryEntry(),
@@ -198,7 +199,7 @@ class LibraryManagerTest {
             .copy(status = LibraryStatus.Completed)
 
         val serviceClient = mock<LibraryEntryServiceClient> {
-            on(it.updateLibraryEntryWithModification(any())).thenReturn(null)
+            on(it.updateLibraryEntryWithModification(any(), any())).thenReturn(null)
         }
         val databaseClient = mock<LibraryEntryDatabaseClient> {
             on(it.insertLibraryEntryModification(any())).thenReturn(Unit)
@@ -214,7 +215,10 @@ class LibraryManagerTest {
 
         // then
         verify(serviceClient)
-            .updateLibraryEntryWithModification(libraryEntryModification.copy(state = SYNCHRONIZING))
+            .updateLibraryEntryWithModification(
+                libraryEntryModification.copy(state = SYNCHRONIZING),
+                true
+            )
         verify(databaseClient)
             .insertLibraryEntryModification(libraryEntryModification.copy(state = NOT_SYNCHRONIZED))
         verify(databaseClient, never()).updateLibraryEntryAndDeleteModification(any(), any())
@@ -230,7 +234,7 @@ class LibraryManagerTest {
             .copy(status = LibraryStatus.Completed)
 
         val serviceClient = mock<LibraryEntryServiceClient> {
-            on(it.updateLibraryEntryWithModification(any()))
+            on(it.updateLibraryEntryWithModification(any(), any()))
                 .doAnswer { throw NotFoundException() }
         }
         val databaseClient = mock<LibraryEntryDatabaseClient> {
@@ -246,7 +250,10 @@ class LibraryManagerTest {
 
         // then
         verify(serviceClient)
-            .updateLibraryEntryWithModification(libraryEntryModification.copy(state = SYNCHRONIZING))
+            .updateLibraryEntryWithModification(
+                libraryEntryModification.copy(state = SYNCHRONIZING),
+                true
+            )
         verify(databaseClient)
             .insertLibraryEntryModification(libraryEntryModification.copy(state = SYNCHRONIZING))
         verify(databaseClient, never()).updateLibraryEntryAndDeleteModification(any(), any())

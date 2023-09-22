@@ -11,7 +11,6 @@ import io.github.drumber.kitsune.utils.libraryEntry
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import net.datafaker.Faker
-import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -69,7 +68,7 @@ class LibraryEntryServiceClientTest {
             .copy(status = LibraryStatus.Completed)
 
         // when
-        client.updateLibraryEntryWithModification(modification)
+        client.updateLibraryEntryWithModification(modification, true)
 
         // then
         verify(libraryEntriesService).updateLibraryEntry(eq(modification.id), captor.capture(), any())
@@ -100,7 +99,7 @@ class LibraryEntryServiceClientTest {
         // then
         assertThatThrownBy {
             // when
-            runBlocking { client.updateLibraryEntryWithModification(modification) }
+            runBlocking { client.updateLibraryEntryWithModification(modification, true) }
         }.isInstanceOf(NotFoundException::class.java)
         verify(libraryEntriesService).updateLibraryEntry(eq(modification.id), any(), any())
     }

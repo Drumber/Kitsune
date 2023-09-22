@@ -103,8 +103,13 @@ class LibraryManager(
     private suspend fun pushLocalModificationToService(
         libraryEntryModification: LocalLibraryEntryModification
     ): SynchronizationResult {
+        val shouldFetchFullLibraryEntry =
+            shouldUpdateIncludedMediaForLibraryEntry(libraryEntryModification.id)
         val libraryEntryResponse = try {
-            serviceClient.updateLibraryEntryWithModification(libraryEntryModification)
+            serviceClient.updateLibraryEntryWithModification(
+                libraryEntryModification,
+                shouldFetchFullLibraryEntry
+            )
                 ?: throw InvalidDataException("Received library entry for ID '${libraryEntryModification.id}' is 'null'.")
         } catch (e: NotFoundException) {
             logE(
@@ -131,6 +136,12 @@ class LibraryManager(
         } else {
             databaseClient.insertLibraryEntryModification(libraryEntryModification)
         }
+    }
+
+    private suspend fun shouldUpdateIncludedMediaForLibraryEntry(libraryEntryId: String): Boolean {
+        return databaseClient.getLibraryEntry(libraryEntryId)?.let {
+            it.anime == null || it.manga == null
+        } ?: true
     }
 
 }
