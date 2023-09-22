@@ -6,8 +6,11 @@ import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationS
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.SYNCHRONIZING
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import io.github.drumber.kitsune.exception.NotFoundException
+import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
+import io.github.drumber.kitsune.util.formatDate
 import io.github.drumber.kitsune.utils.anime
 import io.github.drumber.kitsune.utils.libraryEntry
+import io.github.drumber.kitsune.utils.localLibraryEntry
 import io.github.drumber.kitsune.utils.useMockedAndroidLogger
 import kotlinx.coroutines.test.runTest
 import net.datafaker.Faker
@@ -22,6 +25,8 @@ import org.mockito.kotlin.spy
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.time.Instant
+import java.util.Date
 
 class LibraryManagerTest {
 
@@ -189,6 +194,35 @@ class LibraryManagerTest {
         )
         verify(databaseClient).insertLibraryEntryModification(any())
         assertThat(result).isInstanceOf(SynchronizationResult.Success::class.java)
+    }
+
+    @Test
+    fun shouldNotOverwriteMoreRecentChangesOnUpdateLibraryEntry() = runTest {
+        // given
+        val now = Instant.now()
+        val libraryEntryModification = LocalLibraryEntryModification
+            .withIdAndNulls(faker.internet().uuid())
+        val libraryEntryFromService = libraryEntry(faker)
+            .copy(updatedAt = Date.from(now).formatDate(DATE_FORMAT_ISO))
+        val libraryEntryFromDb = localLibraryEntry(faker)
+            .copy(updatedAt = Date.from(now.plusMillis(1)).formatDate(DATE_FORMAT_ISO))
+
+        val serviceClient = mock<LibraryEntryServiceClient> {
+            on(it.updateLibraryEntryWithModification(any(), any()))
+                .thenReturn(libraryEntryFromService)
+        }
+        val databaseClient = mock<LibraryEntryDatabaseClient> {
+            on(it.insertLibraryEntryModification(any())).thenReturn(Unit)
+            on(it.updateLibraryEntryAndDeleteModification(any(), any())).thenReturn(Unit)
+            on(it.getLibraryEntry(any())).thenReturn(libraryEntryFromDb)
+        }
+        val manager = LibraryManager(databaseClient, serviceClient)
+
+        // when
+        manager.updateLibraryEntry(libraryEntryModification)
+
+        // then
+        verify(databaseClient, never()).updateLibraryEntryAndDeleteModification(any(), any())
     }
 
     @Test

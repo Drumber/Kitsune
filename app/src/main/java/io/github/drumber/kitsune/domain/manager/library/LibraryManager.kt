@@ -5,6 +5,7 @@ import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult.No
 import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult.Success
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntryModification
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntry
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.SYNCHRONIZING
@@ -14,7 +15,9 @@ import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryModification
 import io.github.drumber.kitsune.exception.InvalidDataException
 import io.github.drumber.kitsune.exception.NotFoundException
+import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
 import io.github.drumber.kitsune.util.logE
+import io.github.drumber.kitsune.util.toDate
 
 class LibraryManager(
     private val databaseClient: LibraryEntryDatabaseClient,
@@ -66,10 +69,13 @@ class LibraryManager(
         val syncResult = pushLocalModificationToService(localModification)
         when (syncResult) {
             is Success -> {
-                databaseClient.updateLibraryEntryAndDeleteModification(
-                    syncResult.libraryEntry.toLocalLibraryEntry(),
-                    localModification
-                )
+                val localLibraryEntry = syncResult.libraryEntry.toLocalLibraryEntry()
+                if (isLibraryEntryNotOlderThanInDatabase(localLibraryEntry)) {
+                    databaseClient.updateLibraryEntryAndDeleteModification(
+                        localLibraryEntry,
+                        localModification
+                    )
+                }
             }
 
             is Failed -> {
@@ -141,6 +147,14 @@ class LibraryManager(
     private suspend fun shouldUpdateIncludedMediaForLibraryEntry(libraryEntryId: String): Boolean {
         return databaseClient.getLibraryEntry(libraryEntryId)?.let {
             it.anime == null || it.manga == null
+        } ?: true
+    }
+
+    private suspend fun isLibraryEntryNotOlderThanInDatabase(libraryEntry: LocalLibraryEntry): Boolean {
+        return databaseClient.getLibraryEntry(libraryEntry.id)?.let { dbEntry ->
+            val dbUpdatedAt = dbEntry.updatedAt?.toDate(DATE_FORMAT_ISO) ?: return true
+            val thisUpdatedAt = libraryEntry.updatedAt?.toDate(DATE_FORMAT_ISO) ?: return true
+            thisUpdatedAt.timeInMillis >= dbUpdatedAt.timeInMillis
         } ?: true
     }
 
