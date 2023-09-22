@@ -8,12 +8,16 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState
 
 @Dao
 interface LibraryEntryModificationDao {
 
     @Query("SELECT * FROM library_entries_modifications")
     fun getAllLibraryEntryModificationsLiveData(): LiveData<List<LocalLibraryEntryModification>>
+
+    @Query("SELECT * FROM library_entries_modifications WHERE state = :state")
+    fun getLibraryEntryModificationsWithStateLiveData(state: LocalLibraryModificationState): LiveData<List<LocalLibraryEntryModification>>
 
     @Query("SELECT * FROM library_entries_modifications")
     suspend fun getAllLibraryEntryModifications(): List<LocalLibraryEntryModification>

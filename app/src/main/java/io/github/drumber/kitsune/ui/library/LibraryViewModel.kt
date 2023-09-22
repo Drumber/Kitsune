@@ -19,6 +19,8 @@ import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
 import io.github.drumber.kitsune.domain.mapper.toLibraryEntryModification
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.NOT_SYNCHRONIZED
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.SYNCHRONIZING
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryFilter
@@ -46,7 +48,7 @@ class LibraryViewModel(
     val userRepository: UserRepository,
     private val libraryEntriesRepository: LibraryEntriesRepository,
     private val libraryManager: LibraryManager,
-    val libraryModificationDao: LibraryEntryModificationDao
+    private val libraryModificationDao: LibraryEntryModificationDao
 ) : ViewModel() {
 
     private val updateLock = Any()
@@ -114,6 +116,9 @@ class LibraryViewModel(
         addSource(_searchQuery) { this.value = buildLibraryEntryFilter() }
     }
 
+    val notSynchronizedLibraryEntryModifications =
+        libraryModificationDao.getLibraryEntryModificationsWithStateLiveData(NOT_SYNCHRONIZED)
+
     val dataSource: Flow<PagingData<LibraryEntryUiModel>> = filterMediator.asFlow()
         .filterNotNull()
         .distinctUntilChanged()
@@ -121,12 +126,14 @@ class LibraryViewModel(
             handleLibraryEntriesDataSource(filter)
                 .map { pagingData ->
                     pagingData.map { entry ->
+                        val modification = libraryModificationDao.getLibraryEntryModification(
+                            entry.id
+                                ?: throw InvalidDataException("Library entry ID cannot be 'null'.")
+                        )
                         LibraryEntryWrapper(
                             entry,
-                            libraryModificationDao.getLibraryEntryModification(
-                                entry.id
-                                    ?: throw InvalidDataException("Library entry ID cannot be 'null'.")
-                            )?.toLibraryEntryModification()
+                            modification?.toLibraryEntryModification(),
+                            modification?.state == SYNCHRONIZING
                         )
                     }
                 }

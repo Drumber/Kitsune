@@ -283,7 +283,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             val isLoading = lastLoadState?.source?.refresh is LoadState.Loading
                     || lastLoadState?.mediator?.refresh is LoadState.Loading
 
-            val shouldScroll = !viewModel.scrollToUpdatedEntryId.isNullOrBlank() || viewModel.scrollToTopAfterSearch
+            val shouldScroll =
+                !viewModel.scrollToUpdatedEntryId.isNullOrBlank() || viewModel.scrollToTopAfterSearch
 
             if (!shouldScroll || isLoading) return@addOnPagesUpdatedListener
 
@@ -304,21 +305,20 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             }
         }
 
-        viewModel.libraryModificationDao.getAllLibraryEntryModificationsLiveData()
-            .observe(viewLifecycleOwner) {
-                viewModel.invalidatePagingSource()
-                offlineLibraryModificationsAmount = it.size
-                requireActivity().invalidateOptionsMenu()
+        viewModel.notSynchronizedLibraryEntryModifications.observe(viewLifecycleOwner) {
+            viewModel.invalidatePagingSource()
+            offlineLibraryModificationsAmount = it.size
+            requireActivity().invalidateOptionsMenu()
 
-                autoSyncDebouncer.debounce(viewLifecycleOwner.lifecycleScope) {
-                    // synchronize library if there are offline library updates and network is not metered
-                    val connectivityManager =
-                        requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-                    if (it.isNotEmpty() && !connectivityManager.isActiveNetworkMetered) {
-                        viewModel.synchronizeOfflineLibraryUpdates()
-                    }
+            autoSyncDebouncer.debounce(viewLifecycleOwner.lifecycleScope) {
+                // synchronize library if there are offline library updates and network is not metered
+                val connectivityManager =
+                    requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                if (it.isNotEmpty() && !connectivityManager.isActiveNetworkMetered) {
+                    viewModel.synchronizeOfflineLibraryUpdates()
                 }
             }
+        }
     }
 
     override fun onItemClicked(view: View, item: LibraryEntryWrapper) {
@@ -326,7 +326,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         if (media != null) {
             val mediaAdapter = MediaAdapter.fromMedia(media)
             val detailsTransitionName = getString(R.string.details_poster_transition_name)
-            val extras = FragmentNavigatorExtras(view.findViewById<View>(R.id.iv_thumbnail) to detailsTransitionName)
+            val extras =
+                FragmentNavigatorExtras(view.findViewById<View>(R.id.iv_thumbnail) to detailsTransitionName)
             val action =
                 LibraryFragmentDirections.actionLibraryFragmentToDetailsFragment(mediaAdapter)
             findNavController().navigateSafe(R.id.library_fragment, action, extras)

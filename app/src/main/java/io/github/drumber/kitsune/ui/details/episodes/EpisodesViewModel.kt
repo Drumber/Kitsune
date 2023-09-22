@@ -20,6 +20,7 @@ import io.github.drumber.kitsune.domain.mapper.toLibraryEntryModification
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntry
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.SYNCHRONIZING
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
@@ -81,12 +82,13 @@ class EpisodesViewModel(
     private fun LiveData<LocalLibraryEntry?>.mapToWrapper() = this.switchMap { libraryEntry ->
         liveData(Dispatchers.IO) {
             if (libraryEntry != null) {
+                val modification = libraryModificationDao
+                    .getLibraryEntryModification(libraryEntry.id)
                 emit(
                     LibraryEntryWrapper(
                         libraryEntry.toLibraryEntry(),
-                        libraryModificationDao
-                            .getLibraryEntryModification(libraryEntry.id)
-                            ?.toLibraryEntryModification()
+                        modification?.toLibraryEntryModification(),
+                        modification?.state == SYNCHRONIZING
                     )
                 )
             } else {

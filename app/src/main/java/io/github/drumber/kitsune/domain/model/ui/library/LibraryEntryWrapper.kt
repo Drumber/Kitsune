@@ -38,4 +38,9 @@ data class LibraryEntryWrapper(
     val notes
         get() = libraryModification?.notes ?: libraryEntry.notes
 
+    val isNotSynced
+        get() = !isSynchronizing &&
+                libraryModification != null &&
+                !libraryModification.isEqualToLibraryEntry(libraryEntry)
+
 }
