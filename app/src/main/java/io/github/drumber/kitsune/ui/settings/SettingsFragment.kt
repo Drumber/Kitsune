@@ -14,7 +14,6 @@ import androidx.preference.ListPreference
 import androidx.preference.ListPreference.SimpleSummaryProvider
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.BuildConfig
@@ -275,11 +274,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     true
                 }
                 requireUserLoggedIn(user) { Kitsu.USER_URL_PREFIX + it.text }
-            }
-
-            //---- Offline Library Updates
-            findPreference<SwitchPreferenceCompat>(R.string.preference_key_offline_library_updates)?.apply {
-                requireUserLoggedIn(user)
             }
         }
     }

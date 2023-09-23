@@ -56,11 +56,6 @@ object KitsunePref : KotprefModel(), KoinComponent {
 
     var startFragment by enumValuePref(StartPagePref.Home)
 
-    var libraryOfflineSync by booleanPref(
-        true,
-        key = R.string.preference_key_offline_library_updates
-    )
-
     var rememberSearchFilters by booleanPref(
         true,
         key = R.string.preference_key_remember_search_filters
