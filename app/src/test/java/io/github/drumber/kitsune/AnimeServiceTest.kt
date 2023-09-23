@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune
 
 import io.github.drumber.kitsune.di.networkModule
-import io.github.drumber.kitsune.domain.model.ui.media.en
+import io.github.drumber.kitsune.domain.model.infrastructure.media.en
 import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.domain.service.anime.AnimeService
 import kotlinx.coroutines.runBlocking

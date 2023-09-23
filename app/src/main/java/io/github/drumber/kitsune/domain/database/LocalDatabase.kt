@@ -11,7 +11,7 @@ import io.github.drumber.kitsune.domain.model.database.RemoteKeyEntity
     entities = [
         LocalLibraryEntry::class, LocalLibraryEntryModification::class, RemoteKeyEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

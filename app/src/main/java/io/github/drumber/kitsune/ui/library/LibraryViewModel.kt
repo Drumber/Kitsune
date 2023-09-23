@@ -37,6 +37,7 @@ import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
@@ -124,12 +125,12 @@ class LibraryViewModel(
         .distinctUntilChanged()
         .flatMapLatest { filter ->
             handleLibraryEntriesDataSource(filter)
-                .map { pagingData ->
+                .cachedIn(viewModelScope)
+                .combine(
+                    libraryModificationDao.getAllLibraryEntryModificationsLiveData().asFlow()
+                ) { pagingData, modifications ->
                     pagingData.map { entry ->
-                        val modification = libraryModificationDao.getLibraryEntryModification(
-                            entry.id
-                                ?: throw InvalidDataException("Library entry ID cannot be 'null'.")
-                        )
+                        val modification = modifications.find { it.id == entry.id }
                         LibraryEntryWrapper(
                             entry,
                             modification?.toLibraryEntryModification(),
@@ -150,8 +151,8 @@ class LibraryViewModel(
                             else -> null
                         }
                     }
-                }
-        }.cachedIn(viewModelScope)
+                }.cachedIn(viewModelScope)
+        }
 
     /**
      * If the search query is blank, request the remote mediator for data

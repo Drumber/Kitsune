@@ -13,6 +13,7 @@ data class LocalLibraryEntryModification(
     /** Corresponds to the library entry ID */
     @PrimaryKey val id: String,
 
+    val createTime: Long = System.currentTimeMillis(),
     val state: LocalLibraryModificationState = NOT_SYNCHRONIZED,
 
     val startedAt: String?,

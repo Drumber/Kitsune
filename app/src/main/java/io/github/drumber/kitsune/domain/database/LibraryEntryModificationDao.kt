@@ -37,6 +37,9 @@ interface LibraryEntryModificationDao {
     @Query("DELETE FROM library_entries_modifications WHERE id = :id")
     suspend fun deleteSingleById(id: String)
 
+    @Query("DELETE FROM library_entries_modifications WHERE id = :id AND createTime = :createTime")
+    suspend fun deleteSingleMatchingCreateTime(id: String, createTime: Long)
+
     @Query("DELETE FROM library_entries_modifications")
     suspend fun clearAll()
 

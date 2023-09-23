@@ -21,7 +21,7 @@ class LibraryEntryModificationMapperTest {
         // then
         assertThat(localLibraryEntryModification)
             .usingRecursiveComparison()
-            .ignoringFields("state")
+            .ignoringFields("state", "createTime")
             .isEqualTo(libraryEntryModification)
     }
 

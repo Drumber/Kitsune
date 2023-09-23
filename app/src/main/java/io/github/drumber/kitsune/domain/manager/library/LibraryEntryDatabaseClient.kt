@@ -47,7 +47,10 @@ class LibraryEntryDatabaseClient(
     ) {
         database.withTransaction {
             libraryEntryDao.updateSingle(libraryEntry)
-            libraryEntryModificationDao.deleteSingle(libraryEntryModification)
+            libraryEntryModificationDao.deleteSingleMatchingCreateTime(
+                libraryEntryModification.id,
+                libraryEntryModification.createTime
+            )
         }
     }
 
