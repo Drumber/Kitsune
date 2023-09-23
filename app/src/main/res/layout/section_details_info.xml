@@ -14,6 +14,7 @@
     </data>
 
     <TableLayout
+        android:id="@+id/table_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:stretchColumns="0,1">
@@ -39,8 +40,11 @@
             app:title="@{@string/data_title_japanese_romaji}"
             app:value="@{data.titleEnJp}" />
 
+        <!-- Other titles will be dynamically added in the code here -->
+
         <!-- Abbreviated Titles (Synonyms) -->
         <include
+            android:id="@+id/synonyms_row_layout"
             layout="@layout/item_details_info_row"
             app:isVisible="@{!TextUtils.isEmpty(data.abbreviatedTitles)}"
             app:title="@{@string/data_abbreviated_titles}"

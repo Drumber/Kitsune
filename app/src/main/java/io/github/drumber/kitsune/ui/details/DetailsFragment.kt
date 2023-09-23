@@ -12,6 +12,7 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.children
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
@@ -35,11 +36,14 @@ import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
+import io.github.drumber.kitsune.databinding.ItemDetailsInfoRowBinding
 import io.github.drumber.kitsune.domain.model.MediaSelector
 import io.github.drumber.kitsune.domain.model.MediaType
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
+import io.github.drumber.kitsune.domain.model.infrastructure.media.Titles
 import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
+import io.github.drumber.kitsune.domain.model.infrastructure.media.withoutCommonTitles
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryAdapter
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.domain.model.ui.library.getStringResId
@@ -69,6 +73,7 @@ import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import io.github.drumber.kitsune.util.logW
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.Locale
 import java.util.concurrent.CopyOnWriteArrayList
 
 class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
@@ -138,6 +143,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
         viewModel.mediaAdapter.observe(viewLifecycleOwner) { model ->
             binding.data = model
+            updateTitlesInDetailsTable(model.titles)
             showCategoryChips(model)
             showFranchise(model)
             showStreamingLinks(model)
@@ -314,6 +320,36 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                     R.string.action_add_to_favorites
             )
         }
+    }
+
+    private fun updateTitlesInDetailsTable(titles: Titles?) {
+        val identifierTag = "dynamic_title"
+        val tableLayout = binding.sectionDetailsInfo.tableLayout
+        // remove any previous added titles
+        tableLayout.apply {
+            children.filter { it.tag == identifierTag }.toList().forEach { removeView(it) }
+        }
+
+        // add a row for each title
+        val rowIndex = tableLayout.indexOfChild(binding.sectionDetailsInfo.synonymsRowLayout.root)
+            .coerceAtLeast(0)
+        titles?.withoutCommonTitles()
+            ?.filterValues { !it.isNullOrBlank() }
+            ?.mapKeys {
+                val locale = Locale.forLanguageTag(it.key.replace('_', '-'))
+                if (it.key.lowercase().split('_').toSet().size > 1)
+                    locale.displayName
+                else
+                    locale.displayLanguage
+            }
+            ?.toSortedMap(reverseOrder())
+            ?.forEach {
+                val rowBinding = ItemDetailsInfoRowBinding.inflate(layoutInflater)
+                rowBinding.title = it.key
+                rowBinding.value = it.value
+                rowBinding.root.tag = identifierTag
+                tableLayout.addView(rowBinding.root, rowIndex)
+            }
     }
 
     private fun showCategoryChips(mediaAdapter: MediaAdapter) {
