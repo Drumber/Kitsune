@@ -7,6 +7,9 @@ import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
 import io.github.drumber.kitsune.domain.model.infrastructure.media.ReleaseStatus
+import io.github.drumber.kitsune.domain.model.infrastructure.media.en
+import io.github.drumber.kitsune.domain.model.infrastructure.media.enJp
+import io.github.drumber.kitsune.domain.model.infrastructure.media.jaJp
 import io.github.drumber.kitsune.domain.model.infrastructure.media.mediarelationship.MediaRelationshipRole
 import io.github.drumber.kitsune.domain.model.infrastructure.production.AnimeProductionRole
 import io.github.drumber.kitsune.util.DataUtil
@@ -42,6 +45,12 @@ class MediaAdapter(
     val title get() = DataUtil.getTitle(media.titles, media.canonicalTitle)
 
     val titles get() = media.titles ?: emptyMap()
+
+    val titleEn get() = media.titles?.en
+
+    val titleEnJp get() = media.titles?.enJp
+
+    val titleJaJp get() = media.titles?.jaJp
 
     val abbreviatedTitles get() = media.abbreviatedTitles?.joinToString(", ")
 

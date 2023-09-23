@@ -21,23 +21,23 @@
         <!-- Title English -->
         <include
             layout="@layout/item_details_info_row"
-            app:isVisible="@{data.titles.en != null}"
+            app:isVisible="@{data.titleEn != null}"
             app:title="@{@string/data_title_english}"
-            app:value="@{data.titles.en}" />
+            app:value="@{data.titleEn}" />
 
         <!-- Title Japanese -->
         <include
             layout="@layout/item_details_info_row"
-            app:isVisible="@{data.titles.jaJp != null}"
+            app:isVisible="@{data.titleJaJp != null}"
             app:title="@{@string/data_title_japanese}"
-            app:value="@{data.titles.jaJp}" />
+            app:value="@{data.titleJaJp}" />
 
         <!-- Title Romaji -->
         <include
             layout="@layout/item_details_info_row"
-            app:isVisible="@{data.titles.enJp != null}"
+            app:isVisible="@{data.titleEnJp != null}"
             app:title="@{@string/data_title_japanese_romaji}"
-            app:value="@{data.titles.enJp}" />
+            app:value="@{data.titleEnJp}" />
 
         <!-- Abbreviated Titles (Synonyms) -->
         <include

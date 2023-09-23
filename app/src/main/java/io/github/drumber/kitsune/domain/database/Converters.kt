@@ -34,7 +34,7 @@ class Converters {
     }
 
     @TypeConverter
-    fun stringMapToString(map: Map<String, String>?): String? {
+    fun stringMapToString(map: Map<String, String?>?): String? {
         return if (map != null) {
             objectMapper.writeValueAsString(map)
         } else {
@@ -43,7 +43,7 @@ class Converters {
     }
 
     @TypeConverter
-    fun stringToStringMap(mapJson: String?): Map<String, String>? {
+    fun stringToStringMap(mapJson: String?): Map<String, String?>? {
         return if (mapJson != null) {
             objectMapper.readValue(mapJson)
         } else {

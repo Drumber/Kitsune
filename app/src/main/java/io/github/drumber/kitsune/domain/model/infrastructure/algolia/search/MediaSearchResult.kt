@@ -12,8 +12,8 @@ import kotlinx.serialization.Serializable
 data class MediaSearchResult(
     val id: Long,
     val kind: MediaSearchKind,
-    val subtype: String,
-    val slug: String,
+    val subtype: String? = null,
+    val slug: String? = null,
     val titles: Titles? = null,
     val canonicalTitle: String? = null,
     val posterImage: AlgoliaImage? = null
@@ -86,8 +86,8 @@ fun MediaSearchResult.toMedia() = when (kind) {
     )
 }
 
-private fun animeSubtypeFromString(subtype: String) = AnimeSubtype.values()
+private fun animeSubtypeFromString(subtype: String?) = AnimeSubtype.values()
     .find { it.name.equals(subtype, true) }
 
-private fun mangaSubtypeFromString(subtype: String) = MangaSubtype.values()
+private fun mangaSubtypeFromString(subtype: String?) = MangaSubtype.values()
     .find { it.name.equals(subtype, true) }
