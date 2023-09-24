@@ -64,6 +64,8 @@ class DetailsViewModel(
 
     var errorResponseListener: ((ErrorResponseType) -> Unit)? = null
 
+    var areAllTileLanguagesShown = false
+
     fun initFromDeepLink(isAnime: Boolean, slug: String) {
         val filter = Filter()
             .filter("slug", slug)

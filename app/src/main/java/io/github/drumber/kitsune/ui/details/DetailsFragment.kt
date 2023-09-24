@@ -4,6 +4,9 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -239,7 +242,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
 
         setFragmentResultListener(ManageLibraryBottomSheet.STATUS_REQUEST_KEY) { _, bundle ->
-            val libraryEntryStatus = bundle.get(ManageLibraryBottomSheet.BUNDLE_STATUS) as? LibraryStatus
+            val libraryEntryStatus =
+                bundle.get(ManageLibraryBottomSheet.BUNDLE_STATUS) as? LibraryStatus
             libraryEntryStatus?.let { viewModel.updateLibraryEntryStatus(it) }
         }
 
@@ -275,6 +279,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                             showSomethingWrongToast()
                         }
                     }
+
                     R.id.menu_favorite -> {
                         if (viewModel.isLoggedIn()) {
                             // update icon immediately before waiting for response
@@ -330,10 +335,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             children.filter { it.tag == identifierTag }.toList().forEach { removeView(it) }
         }
 
-        // add a row for each title
-        val rowIndex = tableLayout.indexOfChild(binding.sectionDetailsInfo.synonymsRowLayout.root)
-            .coerceAtLeast(0)
-        titles?.withoutCommonTitles()
+        // map language codes and sort them
+        val sortedTitles = titles?.withoutCommonTitles()
             ?.filterValues { !it.isNullOrBlank() }
             ?.mapKeys {
                 val locale = Locale.forLanguageTag(it.key.replace('_', '-'))
@@ -342,14 +345,60 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 else
                     locale.displayLanguage
             }
-            ?.toSortedMap(reverseOrder())
-            ?.forEach {
+            ?.toList()
+            ?.sortedByDescending { it.first }
+
+        if (sortedTitles.isNullOrEmpty()) return
+
+        val maxShownTitles = 3
+        val shouldLimitShownTitles = sortedTitles.size > maxShownTitles &&
+                !viewModel.areAllTileLanguagesShown
+        val rowIndex = tableLayout.indexOfChild(binding.sectionDetailsInfo.synonymsRowLayout.root)
+            .coerceAtLeast(0)
+        // add a row for each title
+        sortedTitles
+            .takeLast(if (shouldLimitShownTitles) maxShownTitles else Int.MAX_VALUE)
+            .forEach {
                 val rowBinding = ItemDetailsInfoRowBinding.inflate(layoutInflater)
-                rowBinding.title = it.key
-                rowBinding.value = it.value
+                rowBinding.title = it.first
+                rowBinding.value = it.second
                 rowBinding.root.tag = identifierTag
                 tableLayout.addView(rowBinding.root, rowIndex)
             }
+
+        // add 'show more' text to table
+        if (sortedTitles.size > maxShownTitles) {
+            val showMoreRow = createShowMoreTitlesRow()
+            showMoreRow.tag = identifierTag
+            val viewIndex =
+                tableLayout.indexOfChild(binding.sectionDetailsInfo.synonymsRowLayout.root)
+                    .coerceAtLeast(0)
+            tableLayout.addView(showMoreRow, viewIndex)
+        }
+    }
+
+    private fun createShowMoreTitlesRow(): View {
+        val rowBinding = ItemDetailsInfoRowBinding.inflate(layoutInflater)
+        val text = getString(
+            if (viewModel.areAllTileLanguagesShown)
+                R.string.action_show_less
+            else
+                R.string.action_show_more
+        )
+        rowBinding.title = SpannableString(text).apply {
+            setSpan(
+                ForegroundColorSpan(requireActivity().theme.getColor(R.attr.colorPrimary)),
+                0,
+                text.length,
+                SpannableString.SPAN_INCLUSIVE_EXCLUSIVE
+            )
+            setSpan(UnderlineSpan(), 0, text.length, SpannableString.SPAN_INCLUSIVE_EXCLUSIVE)
+        }
+        rowBinding.tvTitle.setOnClickListener {
+            viewModel.areAllTileLanguagesShown = !viewModel.areAllTileLanguagesShown
+            updateTitlesInDetailsTable(viewModel.mediaAdapter.value?.titles)
+        }
+        return rowBinding.root
     }
 
     private fun showCategoryChips(mediaAdapter: MediaAdapter) {
@@ -422,12 +471,13 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
         if (binding.rvStreamer.adapter !is StreamingLinkAdapter) {
             val glide = Glide.with(this)
-            val adapter = StreamingLinkAdapter(CopyOnWriteArrayList(data), glide) { _, streamingLink ->
-                streamingLink.url?.let { url ->
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                    startActivity(intent)
+            val adapter =
+                StreamingLinkAdapter(CopyOnWriteArrayList(data), glide) { _, streamingLink ->
+                    streamingLink.url?.let { url ->
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        startActivity(intent)
+                    }
                 }
-            }
             binding.rvStreamer.adapter = adapter
         } else {
             val adapter = binding.rvStreamer.adapter as StreamingLinkAdapter
@@ -547,7 +597,12 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }.show()
     }
 
-    private fun openImageViewer(imageUrl: String, title: String?, thumbnailUrl: String?, sharedElement: View?) {
+    private fun openImageViewer(
+        imageUrl: String,
+        title: String?,
+        thumbnailUrl: String?,
+        sharedElement: View?
+    ) {
         val transitionName = sharedElement?.let { ViewCompat.getTransitionName(it) }
         val action = DetailsFragmentDirections.actionDetailsFragmentToPhotoViewActivity(
             imageUrl,
@@ -556,7 +611,11 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             transitionName
         )
         val options = if (sharedElement != null && transitionName != null) {
-            ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), sharedElement, transitionName)
+            ActivityOptionsCompat.makeSceneTransitionAnimation(
+                requireActivity(),
+                sharedElement,
+                transitionName
+            )
         } else {
             null
         }

@@ -6,10 +6,10 @@
     <data>
         <variable
             name="title"
-            type="String" />
+            type="CharSequence" />
         <variable
             name="value"
-            type="String" />
+            type="CharSequence" />
         <variable
             name="icon"
             type="android.graphics.drawable.Drawable" />
@@ -37,6 +37,7 @@
                 tools:src="@drawable/ic_favorite_24" />
 
             <TextView
+                android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{title}"
