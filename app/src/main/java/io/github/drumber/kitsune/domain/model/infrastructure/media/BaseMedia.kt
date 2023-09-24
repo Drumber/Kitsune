@@ -1,6 +1,10 @@
 package io.github.drumber.kitsune.domain.model.infrastructure.media
 
 import android.os.Parcelable
+import io.github.drumber.kitsune.domain.model.common.media.AgeRating
+import io.github.drumber.kitsune.domain.model.common.media.RatingFrequencies
+import io.github.drumber.kitsune.domain.model.common.media.ReleaseStatus
+import io.github.drumber.kitsune.domain.model.common.media.Titles
 import io.github.drumber.kitsune.domain.model.infrastructure.image.Image
 import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
 import io.github.drumber.kitsune.domain.model.infrastructure.media.mediarelationship.MediaRelationship

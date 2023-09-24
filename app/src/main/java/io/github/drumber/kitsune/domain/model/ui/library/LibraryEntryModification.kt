@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.domain.model.ui.library
 
 import android.os.Parcelable
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
-import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
+import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

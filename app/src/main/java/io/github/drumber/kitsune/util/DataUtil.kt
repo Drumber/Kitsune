@@ -2,10 +2,10 @@ package io.github.drumber.kitsune.util
 
 import android.content.Context
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Titles
-import io.github.drumber.kitsune.domain.model.infrastructure.media.en
-import io.github.drumber.kitsune.domain.model.infrastructure.media.enJp
-import io.github.drumber.kitsune.domain.model.infrastructure.media.jaJp
+import io.github.drumber.kitsune.domain.model.common.media.Titles
+import io.github.drumber.kitsune.domain.model.common.media.en
+import io.github.drumber.kitsune.domain.model.common.media.enJp
+import io.github.drumber.kitsune.domain.model.common.media.jaJp
 import io.github.drumber.kitsune.domain.model.infrastructure.user.TitleLanguagePreference
 import io.github.drumber.kitsune.preference.KitsunePref
 import java.text.SimpleDateFormat

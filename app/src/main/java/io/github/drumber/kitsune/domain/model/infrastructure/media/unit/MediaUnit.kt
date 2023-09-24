@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.domain.model.infrastructure.media.unit
 
 import android.os.Parcelable
 import io.github.drumber.kitsune.domain.model.infrastructure.image.Image
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Titles
+import io.github.drumber.kitsune.domain.model.common.media.Titles
 
 interface MediaUnit : Parcelable {
     val id: String?

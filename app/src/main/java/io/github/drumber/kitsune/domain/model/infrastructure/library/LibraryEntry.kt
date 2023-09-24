@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
+import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
+import io.github.drumber.kitsune.domain.model.common.library.ReactionSkip
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User

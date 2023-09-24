@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.domain.Result
 import io.github.drumber.kitsune.domain.repository.UserRepository
+import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -28,7 +29,7 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
             val result = userRepository.login(username, password)
 
             if(result is Result.Error) {
-                result.exception.printStackTrace()
+                logE("Failed to login to Kitsu.io.", result.exception)
             }
 
             withContext(Dispatchers.Main) {

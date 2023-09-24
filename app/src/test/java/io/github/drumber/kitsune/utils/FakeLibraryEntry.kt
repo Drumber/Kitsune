@@ -1,14 +1,14 @@
 package io.github.drumber.kitsune.utils
 
+import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
+import io.github.drumber.kitsune.domain.model.common.library.ReactionSkip
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntry
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
-import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
-import io.github.drumber.kitsune.domain.model.infrastructure.library.ReactionSkip
 import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
 import net.datafaker.Faker
 
 fun libraryEntry(faker: Faker, hasAnime: Boolean = faker.bool().bool()) = LibraryEntry(
-    id = faker.internet().uuid(),
+    id = faker.number().positive().toString(),
     updatedAt = faker.date().birthday(DATE_FORMAT_ISO),
     startedAt = faker.date().birthday(DATE_FORMAT_ISO),
     finishedAt = faker.date().birthday(DATE_FORMAT_ISO),
@@ -28,7 +28,7 @@ fun libraryEntry(faker: Faker, hasAnime: Boolean = faker.bool().bool()) = Librar
 )
 
 fun localLibraryEntry(faker: Faker, hasAnime: Boolean = faker.bool().bool()) = LocalLibraryEntry(
-    id = faker.internet().uuid(),
+    id = faker.number().positive().toString(),
     updatedAt = faker.date().birthday(DATE_FORMAT_ISO),
     startedAt = faker.date().birthday(DATE_FORMAT_ISO),
     finishedAt = faker.date().birthday(DATE_FORMAT_ISO),

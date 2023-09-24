@@ -13,7 +13,7 @@ import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.domain.model.FilterCollection
 import io.github.drumber.kitsune.domain.model.SearchParams
-import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
+import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.infrastructure.user.TitleLanguagePreference
 import io.github.drumber.kitsune.domain.model.preference.CategoryPrefWrapper
 import io.github.drumber.kitsune.domain.model.preference.StartPagePref

@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.domain.model.ui.library
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
+import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.service.Filter
 
 data class LibraryEntryFilter(

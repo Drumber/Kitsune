@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
 import androidx.room.*
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntry
-import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
+import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 
 @Dao
 interface LibraryEntryDao {

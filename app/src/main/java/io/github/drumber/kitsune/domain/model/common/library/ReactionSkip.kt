@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.domain.model.infrastructure.library
+package io.github.drumber.kitsune.domain.model.common.library
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

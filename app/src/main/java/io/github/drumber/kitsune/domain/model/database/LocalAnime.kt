@@ -3,11 +3,11 @@ package io.github.drumber.kitsune.domain.model.database
 import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.PrimaryKey
-import io.github.drumber.kitsune.domain.model.infrastructure.media.AgeRating
-import io.github.drumber.kitsune.domain.model.infrastructure.media.AnimeSubtype
-import io.github.drumber.kitsune.domain.model.infrastructure.media.RatingFrequencies
-import io.github.drumber.kitsune.domain.model.infrastructure.media.ReleaseStatus
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Titles
+import io.github.drumber.kitsune.domain.model.common.media.AgeRating
+import io.github.drumber.kitsune.domain.model.common.media.AnimeSubtype
+import io.github.drumber.kitsune.domain.model.common.media.RatingFrequencies
+import io.github.drumber.kitsune.domain.model.common.media.ReleaseStatus
+import io.github.drumber.kitsune.domain.model.common.media.Titles
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

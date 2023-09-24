@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.domain.model.infrastructure.media.unit
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Type
 import io.github.drumber.kitsune.domain.model.infrastructure.image.Image
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Titles
+import io.github.drumber.kitsune.domain.model.common.media.Titles
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

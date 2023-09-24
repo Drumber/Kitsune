@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.domain.model.infrastructure.media
+package io.github.drumber.kitsune.domain.model.common.media
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

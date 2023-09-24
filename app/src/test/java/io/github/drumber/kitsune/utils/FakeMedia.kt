@@ -1,22 +1,22 @@
 package io.github.drumber.kitsune.utils
 
+import io.github.drumber.kitsune.domain.model.common.media.AgeRating
+import io.github.drumber.kitsune.domain.model.common.media.AnimeSubtype
+import io.github.drumber.kitsune.domain.model.common.media.MangaSubtype
+import io.github.drumber.kitsune.domain.model.common.media.RatingFrequencies
+import io.github.drumber.kitsune.domain.model.common.media.ReleaseStatus
+import io.github.drumber.kitsune.domain.model.common.media.Titles
 import io.github.drumber.kitsune.domain.model.database.LocalAnime
 import io.github.drumber.kitsune.domain.model.database.LocalManga
-import io.github.drumber.kitsune.domain.model.infrastructure.media.AgeRating
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
-import io.github.drumber.kitsune.domain.model.infrastructure.media.AnimeSubtype
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
-import io.github.drumber.kitsune.domain.model.infrastructure.media.MangaSubtype
-import io.github.drumber.kitsune.domain.model.infrastructure.media.RatingFrequencies
-import io.github.drumber.kitsune.domain.model.infrastructure.media.ReleaseStatus
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Titles
 import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
 import net.datafaker.Faker
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 fun anime(faker: Faker) = Anime(
-    id = faker.internet().uuid(),
+    id = faker.number().positive().toString(),
     slug = faker.internet().slug(),
     description = faker.text().text(),
     titles = titles(),
@@ -50,7 +50,7 @@ fun anime(faker: Faker) = Anime(
 )
 
 fun localAnime(faker: Faker) = LocalAnime(
-    id = faker.internet().uuid(),
+    id = faker.number().positive().toString(),
     slug = faker.internet().slug(),
     description = faker.text().text(),
     titles = titles(),
@@ -80,7 +80,7 @@ fun localAnime(faker: Faker) = LocalAnime(
 )
 
 fun manga(faker: Faker) = Manga(
-    id = faker.internet().uuid(),
+    id = faker.number().positive().toString(),
     slug = faker.internet().slug(),
     description = faker.text().text(),
     titles = titles(),
@@ -112,7 +112,7 @@ fun manga(faker: Faker) = Manga(
 )
 
 fun localManga(faker: Faker) = LocalManga(
-    id = faker.internet().uuid(),
+    id = faker.number().positive().toString(),
     slug = faker.internet().slug(),
     description = faker.text().text(),
     titles = titles(),

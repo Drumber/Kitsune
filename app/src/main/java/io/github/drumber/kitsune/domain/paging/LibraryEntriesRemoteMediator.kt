@@ -11,7 +11,7 @@ import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntry
 import io.github.drumber.kitsune.domain.model.database.RemoteKeyEntity
 import io.github.drumber.kitsune.domain.model.database.RemoteKeyType
-import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
+import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.toPage
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryFilter
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind

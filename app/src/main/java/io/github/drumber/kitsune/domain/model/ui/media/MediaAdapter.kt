@@ -6,10 +6,10 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
-import io.github.drumber.kitsune.domain.model.infrastructure.media.ReleaseStatus
-import io.github.drumber.kitsune.domain.model.infrastructure.media.en
-import io.github.drumber.kitsune.domain.model.infrastructure.media.enJp
-import io.github.drumber.kitsune.domain.model.infrastructure.media.jaJp
+import io.github.drumber.kitsune.domain.model.common.media.ReleaseStatus
+import io.github.drumber.kitsune.domain.model.common.media.en
+import io.github.drumber.kitsune.domain.model.common.media.enJp
+import io.github.drumber.kitsune.domain.model.common.media.jaJp
 import io.github.drumber.kitsune.domain.model.infrastructure.media.mediarelationship.MediaRelationshipRole
 import io.github.drumber.kitsune.domain.model.infrastructure.production.AnimeProductionRole
 import io.github.drumber.kitsune.util.DataUtil

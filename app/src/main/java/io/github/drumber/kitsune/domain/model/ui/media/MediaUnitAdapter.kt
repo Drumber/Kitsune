@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.domain.model.ui.media
 import android.content.Context
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.domain.model.infrastructure.image.Image
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Titles
+import io.github.drumber.kitsune.domain.model.common.media.Titles
 import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.Chapter
 import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.Episode
 import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.MediaUnit

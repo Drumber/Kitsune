@@ -42,11 +42,11 @@ import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.databinding.ItemDetailsInfoRowBinding
 import io.github.drumber.kitsune.domain.model.MediaSelector
 import io.github.drumber.kitsune.domain.model.MediaType
-import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus
+import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Titles
+import io.github.drumber.kitsune.domain.model.common.media.Titles
 import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
-import io.github.drumber.kitsune.domain.model.infrastructure.media.withoutCommonTitles
+import io.github.drumber.kitsune.domain.model.common.media.withoutCommonTitles
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryAdapter
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.domain.model.ui.library.getStringResId

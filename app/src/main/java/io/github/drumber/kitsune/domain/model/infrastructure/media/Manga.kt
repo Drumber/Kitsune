@@ -3,6 +3,11 @@ package io.github.drumber.kitsune.domain.model.infrastructure.media
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
+import io.github.drumber.kitsune.domain.model.common.media.AgeRating
+import io.github.drumber.kitsune.domain.model.common.media.MangaSubtype
+import io.github.drumber.kitsune.domain.model.common.media.RatingFrequencies
+import io.github.drumber.kitsune.domain.model.common.media.ReleaseStatus
+import io.github.drumber.kitsune.domain.model.common.media.Titles
 import io.github.drumber.kitsune.domain.model.infrastructure.image.Image
 import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
 import io.github.drumber.kitsune.domain.model.infrastructure.media.mediarelationship.MediaRelationship
