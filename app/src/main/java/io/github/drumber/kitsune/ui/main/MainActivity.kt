@@ -3,8 +3,12 @@ package io.github.drumber.kitsune.ui.main
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.iterator
+import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -12,7 +16,9 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.navigationrail.NavigationRailView
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ActivityMainBinding
@@ -59,6 +65,14 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         navigationBarView.apply {
+            ViewCompat.setOnApplyWindowInsetsListener(this) { _, windowInsets ->
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val consumedInsets = binding.bottomNavigation?.applyWindowInsets(insets)
+                    ?: binding.navigationRail?.applyWindowInsets(insets)
+                    ?: Insets.of(0, 0, 0, 0)
+                windowInsets.inset(consumedInsets)
+            }
+
             setOnItemSelectedListener { item ->
                 viewModel.currentNavRootDestId = item.itemId
 
@@ -213,7 +227,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         binding.navigationRail?.apply {
             if (slideOut) {
                 // different direction depending on if rail is left or right aligned
-                val translationFactor = if (this.x == 0f) -1 else 1
+                val isRtl = ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL
+                val translationFactor = if (isRtl) 1 else -1
                 animate().translationX(this.width.toFloat() * translationFactor)
                     .withEndAction { this.isVisible = false }
                     .duration =
@@ -227,6 +242,22 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                         .toLong()
             }
         }
+    }
+
+    private fun BottomNavigationView.applyWindowInsets(insets: Insets): Insets {
+        updatePadding(left = insets.left, right = insets.right, bottom = insets.bottom)
+        return Insets.of(0, 0, 0, insets.bottom)
+    }
+
+    private fun NavigationRailView.applyWindowInsets(insets: Insets): Insets {
+        val isNavRailHidden = navController.currentDestination
+            ?.let { !isDestinationOnMainNavGraph(it) } ?: false
+        if (isNavRailHidden) return Insets.of(0, 0, 0, 0)
+        val isRtl = ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL
+        val left = if (!isRtl) insets.left else 0
+        val right = if (isRtl) insets.right else 0
+        updatePadding(left =left, top = insets.top, right = right, bottom = insets.bottom)
+        return Insets.of(left, 0, right, 0)
     }
 
     companion object {
