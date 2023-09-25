@@ -38,7 +38,6 @@ import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
-import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.paging.LibraryEntriesAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
@@ -50,6 +49,9 @@ import io.github.drumber.kitsune.util.extensions.showErrorSnackback
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
@@ -132,8 +134,13 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             }
         }
 
-        viewModel.isUpdatingOrSyncingLibrary.observe(viewLifecycleOwner) {
-            binding.progressIndicator.isVisible = it
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.state
+                .map { it.isLibraryUpdateOperationInProgress }
+                .distinctUntilChanged()
+                .collectLatest {
+                    binding.progressIndicator.isVisible = it
+                }
         }
 
         setFragmentResultListener(RESULT_KEY_RATING) { _, bundle ->
@@ -156,24 +163,34 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
     }
 
     private fun initFilterChips() {
-        viewModel.filter.observe(viewLifecycleOwner) { filter ->
-            binding.chipMediaKind.setText(
-                when (filter.kind) {
-                    LibraryEntryKind.Anime -> R.string.anime
-                    LibraryEntryKind.Manga -> R.string.manga
-                    else -> R.string.library_kind_all
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.state
+                .map { it.filter.kind }
+                .distinctUntilChanged()
+                .collectLatest { kind ->
+                    binding.chipMediaKind.setText(
+                        when (kind) {
+                            LibraryEntryKind.Anime -> R.string.anime
+                            LibraryEntryKind.Manga -> R.string.manga
+                            else -> R.string.library_kind_all
+                        }
+                    )
                 }
-            )
+        }
 
-            filter.libraryStatus.apply {
-                binding.apply {
-                    chipCurrent.isChecked = contains(LibraryStatus.Current)
-                    chipPlanned.isChecked = contains(LibraryStatus.Planned)
-                    chipCompleted.isChecked = contains(LibraryStatus.Completed)
-                    chipOnHold.isChecked = contains(LibraryStatus.OnHold)
-                    chipDropped.isChecked = contains(LibraryStatus.Dropped)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.state
+                .map { it.filter.libraryStatus }
+                .distinctUntilChanged()
+                .collectLatest { status ->
+                    binding.apply {
+                        chipCurrent.isChecked = status.contains(LibraryStatus.Current)
+                        chipPlanned.isChecked = status.contains(LibraryStatus.Planned)
+                        chipCompleted.isChecked = status.contains(LibraryStatus.Completed)
+                        chipOnHold.isChecked = status.contains(LibraryStatus.OnHold)
+                        chipDropped.isChecked = status.contains(LibraryStatus.Dropped)
+                    }
                 }
-            }
         }
 
         binding.apply {
@@ -188,7 +205,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
     private fun Chip.initStatusClickListener(status: LibraryStatus) {
         setOnClickListener {
-            val statusList = KitsunePref.libraryEntryStatus.toMutableList()
+            val statusList = viewModel.state.value.filter.libraryStatus.toMutableList()
             if (statusList.contains(status)) {
                 statusList.remove(status)
             } else {
@@ -201,7 +218,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
     private fun showMediaSelectorDialog() {
         val items = listOf(R.string.library_kind_all, R.string.anime, R.string.manga)
             .map { getString(it) }.toTypedArray()
-        val prevSelected = KitsunePref.libraryEntryKind.ordinal
+        val prevSelected = viewModel.state.value.filter.kind.ordinal
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.title_media_type)
             .setSingleChoiceItems(items, prevSelected) { dialog, which ->
@@ -271,8 +288,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
         viewModel.doRefreshListener = { adapter.refresh() }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-            viewModel.dataSource.collectLatest {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.pagingDataFlow.collectLatest {
                 adapter.submitData(it)
             }
         }
@@ -371,8 +388,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
         searchView.queryHint = getString(R.string.hint_search)
 
-        val searchQueryText = viewModel.searchQuery
-        if (!searchQueryText.isNullOrBlank()) {
+        val searchQueryText = viewModel.state.value.filter.searchQuery
+        if (searchQueryText.isNotBlank()) {
             // restore previous search view state
             menuItem.expandActionView()
             searchView.post {
@@ -383,7 +400,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 searchDebouncer.debounce(lifecycleScope) {
-                    viewModel.searchLibrary(query)
+                    viewModel.searchLibrary(query ?: "")
                 }
                 return false
             }
@@ -393,7 +410,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
                     // empty search queries triggered on collapse will be ignored
                     if (!searchView.isIconified) {
                         searchDebouncer.debounce(lifecycleScope) {
-                            viewModel.searchLibrary(newText)
+                            viewModel.searchLibrary(newText ?: "")
                         }
                     }
                 }
@@ -407,7 +424,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             }
 
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-                viewModel.searchLibrary(null)
+                viewModel.searchLibrary("")
                 binding.rvLibraryEntries.apply {
                     post {
                         scrollToPosition(0)

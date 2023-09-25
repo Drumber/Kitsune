@@ -1,8 +1,5 @@
 package io.github.drumber.kitsune.ui.library
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
@@ -18,11 +15,11 @@ import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult
 import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
 import io.github.drumber.kitsune.domain.mapper.toLibraryEntryModification
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
+import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.NOT_SYNCHRONIZED
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.SYNCHRONIZING
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
-import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryFilter
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryUiModel
@@ -34,16 +31,27 @@ import io.github.drumber.kitsune.exception.InvalidDataException
 import io.github.drumber.kitsune.exception.NotFoundException
 import io.github.drumber.kitsune.exception.SynchronizationException
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.ui.library.InternalAction.LibraryUpdateOperationEnd
+import io.github.drumber.kitsune.ui.library.InternalAction.LibraryUpdateOperationStart
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.atomic.AtomicInteger
 
 class LibraryViewModel(
     val userRepository: UserRepository,
@@ -52,21 +60,13 @@ class LibraryViewModel(
     private val libraryModificationDao: LibraryEntryModificationDao
 ) : ViewModel() {
 
-    private val updateLock = Any()
+    val state: StateFlow<UiState>
 
-    var responseListener: ((LibraryUpdateResponse) -> Unit)? = null
-    var doRefreshListener: (() -> Unit)? = null
+    val pagingDataFlow: Flow<PagingData<LibraryEntryUiModel>>
 
-    private val _filter = MutableLiveData(
-        LibraryEntryFilter(
-            KitsunePref.libraryEntryKind,
-            KitsunePref.libraryEntryStatus,
-        )
-    )
-    val filter get() = _filter as LiveData<LibraryEntryFilter>
+    val acceptAction: (UiAction) -> Unit
 
-    private val _searchQuery = MutableLiveData<String?>()
-    val searchQuery get() = _searchQuery.value
+    private val internalAcceptAction: (InternalAction) -> Unit
 
     var scrollToTopAfterSearch = false
 
@@ -76,126 +76,166 @@ class LibraryViewModel(
     var scrollToUpdatedEntryId: String? = null
         private set
 
-    private val isSyncingLibrary = MutableLiveData(false)
-
-    private val isUpdatingLibraryProgress = MutableLiveData(false)
-
-    private val isUpdatingLibraryRating = MutableLiveData(false)
-
-    private val _isUpdatingOrSyncingLibrary = MediatorLiveData<Boolean>()
-    val isUpdatingOrSyncingLibrary: LiveData<Boolean>
-        get() = _isUpdatingOrSyncingLibrary
-
-    init {
-        // merge multiple live data states into single isUpdatingOrSyncingLibrary live data
-        _isUpdatingOrSyncingLibrary.combine(
-            isSyncingLibrary,
-            isUpdatingLibraryProgress,
-            isUpdatingLibraryRating
-        )
-    }
-
-    /**
-     * Combines multiple live data sources representing a boolean state into this mediator live data.
-     * The combined state is the result of an OR operation on every given source live data.
-     */
-    private fun MediatorLiveData<Boolean>.combine(vararg sources: LiveData<Boolean>) {
-        sources.forEach { source ->
-            addSource(source) {
-                synchronized(updateLock) {
-                    this.value = sources
-                        .map { it.value ?: false }
-                        .reduce { state, element -> state || element }
-                }
-            }
-        }
-    }
-
-    private val filterMediator = MediatorLiveData<LibraryEntryFilter?>().apply {
-        addSource(userRepository.userLiveData) { this.value = buildLibraryEntryFilter() }
-        addSource(filter) { this.value = buildLibraryEntryFilter() }
-        addSource(_searchQuery) { this.value = buildLibraryEntryFilter() }
-    }
+    var responseListener: ((LibraryUpdateResponse) -> Unit)? = null
+    var doRefreshListener: (() -> Unit)? = null
 
     val notSynchronizedLibraryEntryModifications =
         libraryModificationDao.getLibraryEntryModificationsWithStateLiveData(NOT_SYNCHRONIZED)
 
-    val dataSource: Flow<PagingData<LibraryEntryUiModel>> = filterMediator.asFlow()
-        .filterNotNull()
-        .distinctUntilChanged()
-        .flatMapLatest { filter ->
-            handleLibraryEntriesDataSource(filter)
-                .cachedIn(viewModelScope)
-                .combine(
-                    libraryModificationDao.getAllLibraryEntryModificationsLiveData().asFlow()
-                ) { pagingData, modifications ->
-                    pagingData.map { entry ->
-                        val modification = modifications.find { it.id == entry.id }
-                        LibraryEntryWrapper(
-                            entry,
-                            modification?.toLibraryEntryModification(),
-                            modification?.state == SYNCHRONIZING
-                        )
+    init {
+        val initialFilter = FilterState(
+            KitsunePref.libraryEntryKind,
+            KitsunePref.libraryEntryStatus,
+        )
+        val actionStateFlow = MutableSharedFlow<UiAction>()
+        val searches = actionStateFlow
+            .filterIsInstance<UiAction.Filter>()
+            .distinctUntilChanged()
+            .onStart { emit(UiAction.Filter(filter = initialFilter)) }
+        val queriesScrolled = actionStateFlow
+            .filterIsInstance<UiAction.Scroll>()
+            .distinctUntilChanged()
+            .shareIn(
+                scope = viewModelScope,
+                replay = 1,
+                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000)
+            )
+            .onStart { emit(UiAction.Scroll(initialFilter)) }
+
+        val libraryUpdateOperationsCounter = AtomicInteger(0)
+        val internalActionStateFlow = MutableSharedFlow<InternalAction>()
+        val internalActionState = internalActionStateFlow
+            .onEach { action ->
+                when (action) {
+                    is LibraryUpdateOperationStart -> libraryUpdateOperationsCounter.incrementAndGet()
+                    is LibraryUpdateOperationEnd -> libraryUpdateOperationsCounter.decrementAndGet()
+                }
+            }
+            .map {
+                InternalState(
+                    libraryOperationsCount = libraryUpdateOperationsCounter.get()
+                )
+            }
+            .distinctUntilChanged()
+            .onStart { emit(InternalState(libraryUpdateOperationsCounter.get())) }
+
+        val libraryEntryModificationsFlow =
+            libraryModificationDao.getAllLibraryEntryModificationsLiveData()
+                .asFlow()
+                .shareIn(
+                    scope = viewModelScope,
+                    replay = 1,
+                    started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000)
+                )
+                .onStart { emit(emptyList()) }
+
+        pagingDataFlow = searches
+            .mapNotNull { createLibraryEntryFilter(it.filter) }
+            .flatMapLatest { getPagingLibraryEntriesFlow(it) }
+            .cachedIn(viewModelScope)
+            // combine with local library entry modifications
+            .combine(libraryEntryModificationsFlow, ::Pair)
+            .map { (pagingData, modifications) ->
+                pagingData.map { model ->
+                    when (model) {
+                        !is LibraryEntryWrapper -> model
+                        else -> modifications
+                            .find { it.id == model.libraryEntry.id }
+                            ?.let {
+                                model.copy(
+                                    libraryModification = it.toLibraryEntryModification(),
+                                    isSynchronizing = it.state == SYNCHRONIZING
+                                )
+                            } ?: model
                     }
                 }
-                .map {
-                    it.insertSeparators { before: LibraryEntryWrapper?, after: LibraryEntryWrapper? ->
-                        // do not insert separators if currently searching
-                        if (!searchQuery.isNullOrBlank()) return@insertSeparators null
+            }
 
-                        when {
-                            after?.status == null -> null
-                            before == null || before.status != after.status ->
-                                LibraryEntryUiModel.StatusSeparatorModel(after.status!!)
+        state = combine(
+            searches,
+            queriesScrolled,
+            internalActionState
+        ) { search, scroll, internalState ->
+            UiState(
+                filter = search.filter,
+                lastFilterScrolled = scroll.currentFilter,
+                hasNotScrolledForCurrentFilter = search.filter != scroll.currentFilter,
+                isLibraryUpdateOperationInProgress = internalState.libraryOperationsCount != 0
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
+            initialValue = UiState(initialFilter, initialFilter)
+        )
 
-                            else -> null
-                        }
-                    }
-                }.cachedIn(viewModelScope)
+        acceptAction = { action ->
+            viewModelScope.launch { actionStateFlow.emit(action) }
         }
 
-    /**
-     * If the search query is blank, request the remote mediator for data
-     * otherwise search the library online.
-     */
-    private fun handleLibraryEntriesDataSource(filter: LibraryEntryFilter): Flow<PagingData<LibraryEntry>> {
-        return if (filter.isFilteredBySearchQuery()) {
+        internalAcceptAction = { action ->
+            viewModelScope.launch { internalActionStateFlow.emit(action) }
+        }
+    }
+
+    private fun getPagingLibraryEntriesFlow(
+        filter: LibraryEntryFilter
+    ): Flow<PagingData<LibraryEntryUiModel>> {
+        val pagingDataFlow = if (filter.isFilteredBySearchQuery()) {
+            // if filter contains a search query, then search directly using the paging source
             libraryEntriesRepository.searchLibraryEntries(
                 Kitsu.DEFAULT_PAGE_SIZE_LIBRARY,
                 filter.buildFilter()
             )
         } else {
+            // otherwise use the paging source supplied by Room
             libraryEntriesRepository.libraryEntries(Kitsu.DEFAULT_PAGE_SIZE_LIBRARY, filter)
                 .map { pagingSource -> pagingSource.map { it.toLibraryEntry() } }
         }
+        return pagingDataFlow
+            .map { pagingData ->
+                pagingData.map { LibraryEntryWrapper(it, null, false) }
+            }
+            .map {
+                it.insertSeparators { before: LibraryEntryWrapper?, after: LibraryEntryWrapper? ->
+                    // do not insert separators if currently searching
+                    if (filter.isFilteredBySearchQuery()) return@insertSeparators null
+
+                    when {
+                        after?.status == null -> null
+                        before == null || before.status != after.status ->
+                            LibraryEntryUiModel.StatusSeparatorModel(after.status!!)
+
+                        else -> null
+                    }
+                }
+            }
     }
 
-    private fun buildLibraryEntryFilter(): LibraryEntryFilter? {
+    private fun createLibraryEntryFilter(filter: FilterState): LibraryEntryFilter? {
         return userRepository.user?.id?.let { userId ->
             val requestFilter = Filter()
                 .filter("user_id", userId)
                 .sort("status", "-progressed_at")
                 .include("anime", "manga")
 
-            // if the search query is not blank, add it to the filter and we will later search for the given query
-            val searchQueryText = searchQuery
-            if (!searchQueryText.isNullOrBlank()) {
-                requestFilter.filter("title", searchQueryText)
+            // if the search query is not blank, add it to the filter and we will search for the given query
+            if (filter.searchQuery.isNotBlank()) {
+                requestFilter.filter("title", filter.searchQuery)
             }
 
-            filter.value?.copy(initialFilter = requestFilter)
-                ?: LibraryEntryFilter(
-                    KitsunePref.libraryEntryKind,
-                    KitsunePref.libraryEntryStatus,
-                    requestFilter
-                )
+            LibraryEntryFilter(
+                kind = filter.kind,
+                libraryStatus = filter.libraryStatus,
+                initialFilter = requestFilter
+            )
         }
     }
 
-    fun searchLibrary(searchQueryText: String?) {
-        if ((searchQuery ?: "").trim() != (searchQueryText ?: "").trim()) {
+    fun searchLibrary(searchQueryText: String) {
+        val currentFilter = state.value.filter
+        if (currentFilter.searchQuery.trim() != searchQueryText.trim()) {
             scrollToTopAfterSearch = true
-            _searchQuery.postValue(searchQueryText)
+            acceptAction(UiAction.Filter(currentFilter.copy(searchQuery = searchQueryText)))
         }
     }
 
@@ -205,18 +245,20 @@ class LibraryViewModel(
 
     fun setLibraryEntryKind(kind: LibraryEntryKind) {
         KitsunePref.libraryEntryKind = kind
-        _filter.value = LibraryEntryFilter(kind, KitsunePref.libraryEntryStatus)
+        val currentFilter = state.value.filter
+        acceptAction(UiAction.Filter(currentFilter.copy(kind = kind)))
     }
 
     fun setLibraryEntryStatus(status: List<LibraryStatus>) {
         // clear status filter if all filters are selected
         val statusFilter = if (status.size == 5) emptyList() else status
         KitsunePref.libraryEntryStatus = statusFilter
-        _filter.value = LibraryEntryFilter(KitsunePref.libraryEntryKind, statusFilter)
+        val currentFilter = state.value.filter
+        acceptAction(UiAction.Filter(currentFilter.copy(libraryStatus = statusFilter)))
     }
 
     fun synchronizeOfflineLibraryUpdates() {
-        isSyncingLibrary.value = true
+        internalAcceptAction(LibraryUpdateOperationStart)
         viewModelScope.launch(Dispatchers.IO) {
             val librarySyncResults = libraryManager.pushAllStoredLocalModificationsToService()
             val failedCount = librarySyncResults.count {
@@ -232,7 +274,7 @@ class LibraryViewModel(
                 responseListener?.invoke(LibraryUpdateResponse.SyncedOnline)
             }
         }.invokeOnCompletion {
-            isSyncingLibrary.postValue(false)
+            internalAcceptAction(LibraryUpdateOperationEnd)
         }
     }
 
@@ -252,14 +294,11 @@ class LibraryViewModel(
             libraryEntry.id ?: throw InvalidDataException("Library entry ID cannot be 'null'.")
         ).copy(progress = newProgress)
 
-        isUpdatingLibraryProgress.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 updateLibraryEntry(modification)
             } catch (e: Exception) {
                 logE("Failed to update library entry progress.", e)
-            } finally {
-                isUpdatingLibraryProgress.postValue(false)
             }
         }
     }
@@ -274,23 +313,25 @@ class LibraryViewModel(
         val modification = LocalLibraryEntryModification.withIdAndNulls(libraryEntry.id)
             .copy(ratingTwenty = updatedRating)
 
-        isUpdatingLibraryRating.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 updateLibraryEntry(modification)
             } catch (e: Exception) {
                 logE("Failed to update library entry rating.")
-            } finally {
-                isUpdatingLibraryRating.postValue(false)
             }
         }
     }
 
     private suspend fun updateLibraryEntry(modification: LocalLibraryEntryModification) {
-        val updateResult = libraryManager.updateLibraryEntry(modification)
+        internalAcceptAction(LibraryUpdateOperationStart)
+        val updateResult = try {
+            libraryManager.updateLibraryEntry(modification)
+        } finally {
+            internalAcceptAction(LibraryUpdateOperationEnd)
+        }
 
         // temp fix for issue #6
-        if (updateResult is SynchronizationResult.Success && filterMediator.value?.isFilteredBySearchQuery() == true) {
+        if (updateResult is SynchronizationResult.Success && state.value.filter.searchQuery.isNotBlank()) {
             // trigger new search to show the updated data
             triggerAdapterUpdate()
         }
@@ -331,5 +372,31 @@ class LibraryViewModel(
     fun triggerAdapterUpdate() {
         doRefreshListener?.invoke()
     }
-
 }
+
+sealed class UiAction {
+    data class Filter(val filter: FilterState) : UiAction()
+    data class Scroll(val currentFilter: FilterState) : UiAction()
+}
+
+data class UiState(
+    val filter: FilterState,
+    val lastFilterScrolled: FilterState,
+    val hasNotScrolledForCurrentFilter: Boolean = false,
+    val isLibraryUpdateOperationInProgress: Boolean = false
+)
+
+data class FilterState(
+    val kind: LibraryEntryKind = LibraryEntryKind.All,
+    val libraryStatus: List<LibraryStatus> = emptyList(),
+    val searchQuery: String = "",
+)
+
+private sealed class InternalAction {
+    data object LibraryUpdateOperationStart : InternalAction()
+    data object LibraryUpdateOperationEnd : InternalAction()
+}
+
+private data class InternalState(
+    val libraryOperationsCount: Int
+)
