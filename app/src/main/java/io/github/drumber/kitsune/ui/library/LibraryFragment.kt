@@ -49,6 +49,7 @@ import io.github.drumber.kitsune.util.extensions.showErrorSnackback
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -274,6 +275,37 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
                 footer = ResourceLoadStateAdapter(adapter)
             )
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    if (dy != 0) {
+                        val currentFilter = viewModel.state.value.filter
+                        viewModel.acceptAction(UiAction.Scroll(currentFilter))
+                    }
+                }
+            })
+
+            val notLoading = adapter.loadStateFlow
+                .map { it.mediator?.refresh is LoadState.NotLoading || it.source.refresh is LoadState.NotLoading }
+                .distinctUntilChanged()
+
+            val hasNotScrolledForCurrentFilter = viewModel.state
+                .map { it.hasNotScrolledForCurrentFilter }
+                .distinctUntilChanged()
+
+
+            val shouldScrollToTop = combine(
+                notLoading,
+                hasNotScrolledForCurrentFilter,
+                Boolean::and
+            ).distinctUntilChanged()
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                shouldScrollToTop.collect { shouldScroll ->
+                    if (shouldScroll)
+                        scrollToPosition(0)
+                }
+            }
         }
 
         binding.swipeRefreshLayout.apply {
@@ -301,23 +333,15 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
                     || lastLoadState?.mediator?.refresh is LoadState.Loading
 
             val shouldScroll =
-                !viewModel.scrollToUpdatedEntryId.isNullOrBlank() || viewModel.scrollToTopAfterSearch
+                !viewModel.scrollToUpdatedEntryId.isNullOrBlank()
 
             if (!shouldScroll || isLoading) return@addOnPagesUpdatedListener
-
-            // check if we only need to scroll to the top (on search)
-            if (viewModel.scrollToTopAfterSearch) {
-                viewModel.scrollToTopAfterSearch = false
-                binding.rvLibraryEntries.scrollToPosition(0)
-                return@addOnPagesUpdatedListener
-            }
-            // ... else we need to scroll to a specific library entry (on update)
 
             val indexOfUpdatedEntry = adapter.snapshot()
                 .indexOfFirst { (it as? LibraryEntryWrapper)?.libraryEntry?.id == viewModel.scrollToUpdatedEntryId }
 
             if (indexOfUpdatedEntry != -1) {
-                binding.rvLibraryEntries.scrollToPosition(indexOfUpdatedEntry)
+                 binding.rvLibraryEntries.scrollToPosition(indexOfUpdatedEntry)
                 viewModel.hasScrolledToUpdatedEntry()
             }
         }

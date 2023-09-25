@@ -57,7 +57,7 @@ class LibraryViewModel(
     val userRepository: UserRepository,
     private val libraryEntriesRepository: LibraryEntriesRepository,
     private val libraryManager: LibraryManager,
-    private val libraryModificationDao: LibraryEntryModificationDao
+    libraryModificationDao: LibraryEntryModificationDao
 ) : ViewModel() {
 
     val state: StateFlow<UiState>
@@ -68,10 +68,8 @@ class LibraryViewModel(
 
     private val internalAcceptAction: (InternalAction) -> Unit
 
-    var scrollToTopAfterSearch = false
-
     /**
-     * The ID of the last updated entry the fragment should scroll to.
+     * The ID of the last updated entry the recycler view should scroll to.
      */
     var scrollToUpdatedEntryId: String? = null
         private set
@@ -234,7 +232,6 @@ class LibraryViewModel(
     fun searchLibrary(searchQueryText: String) {
         val currentFilter = state.value.filter
         if (currentFilter.searchQuery.trim() != searchQueryText.trim()) {
-            scrollToTopAfterSearch = true
             acceptAction(UiAction.Filter(currentFilter.copy(searchQuery = searchQueryText)))
         }
     }
