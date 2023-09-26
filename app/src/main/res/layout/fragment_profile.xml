@@ -29,16 +29,11 @@
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:contentScrim="?attr/colorSurface"
-                app:scrimAnimationDuration="300"
-                app:scrimVisibleHeightTrigger="120dp"
-                app:titleCollapseMode="scale"
-                app:titleEnabled="true"
-                app:title="@{user.name ?? @string/not_logged_in}"
-                tools:expandedTitleMarginStart="@dimen/profile_text_offset_expanded"
-                app:expandedTitleTextAppearance="@style/TextAppearance.Kitsune.CollapsingToolbar.Expanded"
+                app:expandedTitleTextColor="@color/white"
                 app:expandedTitleGravity="center_vertical"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                tools:expandedTitleMarginStart="@dimen/profile_text_offset_expanded"
+                style="@style/Widget.Material3.CollapsingToolbar.Large">
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -54,7 +49,7 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="?actionBarSize"
                         android:layout_gravity="top"
                         android:background="@drawable/top_edge_fade" />
 
@@ -72,9 +67,12 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
+                    android:background="@android:color/transparent"
+                    app:title="@{user.name ?? @string/not_logged_in}"
                     app:layout_collapseMode="pin"
                     app:menu="@menu/profile_menu"
-                    app:titleMarginStart="@dimen/profile_text_offset_collapsed" />
+                    app:titleMarginStart="@dimen/profile_text_offset_collapsed"
+                    tools:title="Some Username"/>
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 

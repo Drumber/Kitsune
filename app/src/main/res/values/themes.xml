@@ -129,11 +129,6 @@
         <item name="shapeAppearance">@style/ShapeAppearance.Kitsune.LargeComponent</item>
     </style>
 
-    <style name="TextAppearance.Kitsune.CollapsingToolbar.Expanded" parent="TextAppearance.Design.CollapsingToolbar.Expanded">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">28sp</item>
-    </style>
-
     <style name="TextAppearance.Kitsune.SubtypeBadge" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">12sp</item>

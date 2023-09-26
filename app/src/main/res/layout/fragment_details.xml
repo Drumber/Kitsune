@@ -37,36 +37,35 @@
                 <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:id="@+id/collapsing_toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:contentScrim="?attr/colorSurface"
-                    app:expandedTitleGravity="bottom"
-                    app:expandedTitleTextAppearance="@style/TextAppearance.Kitsune.CollapsingToolbar.Expanded"
+                    android:layout_height="175dp"
+                    app:expandedTitleTextColor="@color/white"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed"
                     app:maxLines="3"
                     app:scrimAnimationDuration="300"
-                    app:scrimVisibleHeightTrigger="150dp">
+                    app:scrimVisibleHeightTrigger="150dp"
+                    style="@style/Widget.Material3.CollapsingToolbar.Large">
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         app:layout_collapseMode="parallax"
                         app:layout_collapseParallaxMultiplier="0.7">
 
                         <ImageView
                             android:id="@+id/iv_cover"
                             android:layout_width="match_parent"
-                            android:layout_height="200dp"
+                            android:layout_height="match_parent"
                             android:contentDescription="@null" />
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="100dp"
+                            android:layout_height="125dp"
                             android:layout_gravity="bottom"
                             android:background="@drawable/bottom_edge_fade" />
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="100dp"
+                            android:layout_height="?actionBarSize"
                             android:layout_gravity="top"
                             android:background="@drawable/top_edge_fade" />
 
@@ -76,6 +75,7 @@
                         android:id="@+id/toolbar"
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
+                        android:background="@android:color/transparent"
                         app:layout_collapseMode="pin"
                         app:menu="@menu/details_menu"
                         app:navigationContentDescription="@string/action_back"
