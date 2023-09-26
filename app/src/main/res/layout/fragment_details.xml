@@ -160,7 +160,7 @@
 
                             <Button
                                 android:id="@+id/btn_edit_library_entry"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/library_action_edit"
@@ -218,7 +218,7 @@
 
                     <Button
                         android:id="@+id/btn_media_units"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@{data.isAnime() ? @string/title_episodes : @string/title_chapters}"
@@ -226,7 +226,7 @@
 
                     <Button
                         android:id="@+id/btn_characters"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"

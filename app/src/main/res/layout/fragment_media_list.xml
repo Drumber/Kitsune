@@ -24,7 +24,7 @@
                 app:navigationIcon="@drawable/ic_arrow_back_24"
                 app:navigationContentDescription="@string/action_back"
                 app:layout_scrollFlags="scroll|enterAlways|snap"
-                style="@style/Widget.MaterialComponents.Toolbar.Surface" />
+                style="@style/Widget.Material3.Toolbar.Surface" />
 
         </com.google.android.material.appbar.AppBarLayout>
 

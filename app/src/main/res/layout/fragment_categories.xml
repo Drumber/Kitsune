@@ -18,7 +18,7 @@
             app:navigationIcon="@drawable/ic_close_24"
             app:navigationContentDescription="@string/action_close"
             app:layout_scrollFlags="noScroll"
-            style="@style/Widget.MaterialComponents.Toolbar.Surface" />
+            style="@style/Widget.Material3.Toolbar.Surface" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

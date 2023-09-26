@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:text="@string/action_read_more"
             android:layout_gravity="end"
-            style="@style/Widget.MaterialComponents.Button.TextButton" />
+            style="@style/Widget.Material3.Button.TextButton" />
 
     </LinearLayout>
 

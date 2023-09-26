@@ -14,7 +14,7 @@
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.AppBarLayout.Surface"
+            style="@style/Widget.Material3.AppBarLayout"
             app:liftOnScroll="true">
 
             <FrameLayout
