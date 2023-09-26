@@ -43,8 +43,7 @@
                     android:layout_height="wrap_content"
                     app:closeIcon="@drawable/ic_arrow_drop_down_24"
                     app:closeIconEnabled="true"
-                    android:text="@string/library_kind_all"
-                    style="@style/Widget.Material3.Chip.Filter"/>
+                    android:text="@string/library_kind_all"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_current"
