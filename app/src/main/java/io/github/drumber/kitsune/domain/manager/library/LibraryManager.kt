@@ -5,19 +5,21 @@ import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult.No
 import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult.Success
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntryModification
+import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntry
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.SYNCHRONIZING
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
-import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryModification
 import io.github.drumber.kitsune.exception.InvalidDataException
 import io.github.drumber.kitsune.exception.NotFoundException
 import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
+import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.toDate
+import kotlinx.coroutines.CancellationException
 
 class LibraryManager(
     private val databaseClient: LibraryEntryDatabaseClient,
@@ -123,6 +125,9 @@ class LibraryManager(
                 e
             )
             return NotFound
+        } catch (e: CancellationException) {
+            logD("Update request for library entry with ID '${libraryEntryModification.id}' was cancelled.", e)
+            throw e
         } catch (e: Exception) {
             logE(
                 "Failed to push library entry modification for ID '${libraryEntryModification.id}' to service.",

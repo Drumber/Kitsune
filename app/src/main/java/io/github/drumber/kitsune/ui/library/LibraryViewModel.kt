@@ -34,7 +34,10 @@ import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.library.InternalAction.LibraryUpdateOperationEnd
 import io.github.drumber.kitsune.ui.library.InternalAction.LibraryUpdateOperationStart
 import io.github.drumber.kitsune.util.logE
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -51,6 +54,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 class LibraryViewModel(
@@ -79,6 +83,8 @@ class LibraryViewModel(
 
     val notSynchronizedLibraryEntryModifications =
         libraryModificationDao.getLibraryEntryModificationsWithStateLiveData(NOT_SYNCHRONIZED)
+
+    private val libraryProgressUpdateJobs = ConcurrentHashMap<String, Job>()
 
     init {
         val initialFilter = FilterState(
@@ -291,11 +297,22 @@ class LibraryViewModel(
             libraryEntry.id ?: throw InvalidDataException("Library entry ID cannot be 'null'.")
         ).copy(progress = newProgress)
 
-        viewModelScope.launch(Dispatchers.IO) {
+        val ongoingJob = libraryProgressUpdateJobs[modification.id]
+        val job = viewModelScope.launch(Dispatchers.IO) {
+            ongoingJob?.cancelAndJoin() // wait until ongoing update call is cancelled
             try {
                 updateLibraryEntry(modification)
+            } catch (e: CancellationException) {
+                // request was cancelled by a subsequent update call
+                return@launch
             } catch (e: Exception) {
                 logE("Failed to update library entry progress.", e)
+            }
+        }
+        libraryProgressUpdateJobs[modification.id] = job
+        job.invokeOnCompletion {
+            if (libraryProgressUpdateJobs[modification.id] == job) {
+                libraryProgressUpdateJobs.remove(modification.id)
             }
         }
     }

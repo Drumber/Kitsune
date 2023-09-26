@@ -2,9 +2,9 @@ package io.github.drumber.kitsune.domain.manager.library
 
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
+import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
-import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
@@ -13,6 +13,7 @@ import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.exception.NotFoundException
 import io.github.drumber.kitsune.util.logE
+import kotlinx.coroutines.CancellationException
 import retrofit2.HttpException
 
 class LibraryEntryServiceClient(
@@ -69,6 +70,8 @@ class LibraryEntryServiceClient(
                 e
             )
             null
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             logE("Failed to update library entry with ID '${libraryEntryModification.id}'.", e)
             null
