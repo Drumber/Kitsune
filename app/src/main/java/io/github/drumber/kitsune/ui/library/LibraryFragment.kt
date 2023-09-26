@@ -21,6 +21,7 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.algolia.instantsearch.core.searcher.Debouncer
 import com.bumptech.glide.Glide
@@ -275,6 +276,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
                 footer = ResourceLoadStateAdapter(adapter)
             )
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            // disable change animation to prevent "blinking"
+            (itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.RequestManager
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
-import io.github.drumber.kitsune.domain.model.infrastructure.algolia.search.MediaSearchResult
-import io.github.drumber.kitsune.domain.mapper.toMedia
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
+import io.github.drumber.kitsune.domain.mapper.toMedia
+import io.github.drumber.kitsune.domain.model.infrastructure.algolia.search.MediaSearchResult
+import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener

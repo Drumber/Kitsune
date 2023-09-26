@@ -25,13 +25,16 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentFilterFacetBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.search.SearchViewModel
-import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.*
+import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.Error
+import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.Initialized
+import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotAvailable
+import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotInitialized
 import io.github.drumber.kitsune.ui.search.categories.CategoriesDialogFragment
 import io.github.drumber.kitsune.ui.widget.ExpandableLayout
 import io.github.drumber.kitsune.ui.widget.algolia.IntNumberRangeView
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class FacetFragment : Fragment(R.layout.fragment_filter_facet),
     NavigationBarView.OnItemReselectedListener {
@@ -40,7 +43,7 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
 
     private val connection = ConnectionHandler()
 
-    private val viewModel: SearchViewModel by sharedViewModel()
+    private val viewModel: SearchViewModel by activityViewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
