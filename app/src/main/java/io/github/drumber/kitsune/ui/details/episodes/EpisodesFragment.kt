@@ -25,6 +25,7 @@ import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.util.extensions.showErrorSnackback
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
@@ -74,7 +75,7 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.dataSource.collectLatest { data ->
                 adapter.submitData(data)
             }

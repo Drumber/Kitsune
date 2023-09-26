@@ -50,18 +50,19 @@ abstract class BaseCollectionFragment(@LayoutRes contentLayoutId: Int) :
                 val cellWidth = resources.getDimension(KitsunePref.mediaItemSize.widthRes) +
                         2 * resources.getDimension(R.dimen.media_item_margin)
                 val spanCount = floor(width / cellWidth).toInt()
-                gridLayout.spanCount = max(2, spanCount) // set new span count with minimum 2 columns
+                gridLayout.spanCount =
+                    max(2, spanCount) // set new span count with minimum 2 columns
             }
         }
     }
 
     fun setRecyclerViewAdapter(adapter: RecyclerView.Adapter<*>) {
         val oldAdapter = recyclerView.adapter
-        if(oldAdapter is PagingDataAdapter<*, *>) {
+        if (oldAdapter is PagingDataAdapter<*, *>) {
             oldAdapter.removeLoadStateListener(loadStateListener)
         }
 
-        recyclerView.adapter = if(adapter is PagingDataAdapter<*, *>) {
+        recyclerView.adapter = if (adapter is PagingDataAdapter<*, *>) {
             adapter.addLoadStateListener(loadStateListener)
 
             (recyclerView.layoutManager as? GridLayoutManager)?.let { gridLayout ->
@@ -87,7 +88,7 @@ abstract class BaseCollectionFragment(@LayoutRes contentLayoutId: Int) :
     }
 
     private val loadStateListener: (CombinedLoadStates) -> Unit = { loadState ->
-        if(view?.parent != null) {
+        if (view?.parent != null) {
             recyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
             resourceLoadingBinding?.apply {
                 root.isVisible = loadState.source.refresh !is LoadState.NotLoading
@@ -115,7 +116,9 @@ abstract class BaseCollectionFragment(@LayoutRes contentLayoutId: Int) :
 
     override fun onDestroyView() {
         super.onDestroyView()
-        (recyclerView.adapter as? PagingDataAdapter<*, *>)?.removeLoadStateListener(loadStateListener)
+        (recyclerView.adapter as? PagingDataAdapter<*, *>)?.removeLoadStateListener(
+            loadStateListener
+        )
         recyclerView.adapter = null
     }
 

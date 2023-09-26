@@ -1,7 +1,6 @@
 package io.github.drumber.kitsune.ui.medialist
 
 import androidx.paging.PagingData
-import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.domain.model.MediaSelector
 import io.github.drumber.kitsune.domain.model.MediaType
@@ -32,9 +31,5 @@ class MediaListViewModel(
                 requestType
             ) as Flow<PagingData<BaseMedia>>
         }
-    }
-
-    override fun getStoredMediaSelector(): MediaSelector {
-        return Defaults.DEFAULT_MEDIA_SELECTOR
     }
 }

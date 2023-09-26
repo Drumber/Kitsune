@@ -10,9 +10,10 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.databinding.FragmentMediaListBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
+import io.github.drumber.kitsune.domain.model.MediaType
+import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.base.MediaCollectionFragment
 import io.github.drumber.kitsune.ui.base.MediaCollectionViewModel
 import io.github.drumber.kitsune.util.extensions.navigateSafe
@@ -33,7 +34,7 @@ class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) 
     override val recyclerView: RecyclerView
         get() = binding.rvMedia
 
-    override val resourceLoadingBinding: LayoutResourceLoadingBinding?
+    override val resourceLoadingBinding: LayoutResourceLoadingBinding
         get() = binding.layoutLoading
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -66,4 +67,7 @@ class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) 
         }
     }
 
+    override fun getMediaType(): MediaType {
+        return args.mediaSelector.mediaType
+    }
 }

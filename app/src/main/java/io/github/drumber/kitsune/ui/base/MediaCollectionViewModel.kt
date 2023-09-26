@@ -1,9 +1,6 @@
 package io.github.drumber.kitsune.ui.base
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -12,25 +9,42 @@ import io.github.drumber.kitsune.domain.model.MediaSelector
 import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
 import io.github.drumber.kitsune.domain.service.Filter
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 abstract class MediaCollectionViewModel : ViewModel() {
 
-    private val _mediaSelector = MutableLiveData(getStoredMediaSelector())
+    private val mediaSelectorFlow: StateFlow<MediaSelector?>
 
-    val mediaSelector: LiveData<MediaSelector>
-        get() = _mediaSelector
+    val setMediaSelector: (MediaSelector) -> Unit
 
-    open fun setMediaSelector(mediaSelector: MediaSelector) {
-        if (_mediaSelector.value != mediaSelector) {
-            _mediaSelector.value = mediaSelector
+    init {
+        val mutableMediaSelectorFlow = MutableSharedFlow<MediaSelector>()
+
+        mediaSelectorFlow = mutableMediaSelectorFlow
+            .distinctUntilChanged()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
+                initialValue = null
+            )
+
+        setMediaSelector = { mediaSelector ->
+            viewModelScope.launch {
+                mutableMediaSelectorFlow.emit(mediaSelector)
+            }
         }
     }
 
-    val currentMediaSelector: MediaSelector
-        get() = mediaSelector.value ?: getStoredMediaSelector()
-
-    val dataSource: Flow<PagingData<BaseMedia>> = mediaSelector.asFlow()
+    val dataSource: Flow<PagingData<out BaseMedia>> = mediaSelectorFlow
+        .filterNotNull()
+        .distinctUntilChanged()
         .flatMapLatest { selector ->
             // copy the filter and limit the fields of the response model to only the required ones
             val mediaSelector = with(selector) {
@@ -43,7 +57,5 @@ abstract class MediaCollectionViewModel : ViewModel() {
         }.cachedIn(viewModelScope)
 
     abstract fun getData(mediaSelector: MediaSelector): Flow<PagingData<BaseMedia>>
-
-    abstract fun getStoredMediaSelector(): MediaSelector
 
 }

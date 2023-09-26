@@ -25,11 +25,11 @@ import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
-import io.github.drumber.kitsune.domain.model.infrastructure.algolia.search.MediaSearchResult
-import io.github.drumber.kitsune.domain.mapper.toMedia
 import io.github.drumber.kitsune.databinding.FragmentSearchBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
+import io.github.drumber.kitsune.domain.mapper.toMedia
+import io.github.drumber.kitsune.domain.model.infrastructure.algolia.search.MediaSearchResult
+import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.paging.MediaSearchPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
@@ -37,6 +37,7 @@ import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.*
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.lang.ref.WeakReference
 
@@ -74,7 +75,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
         setRecyclerViewAdapter(adapter)
         recyclerView.itemAnimator = null
 
-        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.searchResultSource.collectLatest {
                 adapter.submitData(it)
             }

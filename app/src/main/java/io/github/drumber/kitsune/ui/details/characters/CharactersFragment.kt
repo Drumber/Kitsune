@@ -22,6 +22,7 @@ import io.github.drumber.kitsune.util.extensions.openCharacterOnMAL
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters),
@@ -81,7 +82,7 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters),
         }
         setRecyclerViewAdapter(adapter)
 
-        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.dataSource.collectLatest { data ->
                 adapter.submitData(data)
             }
