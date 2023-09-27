@@ -16,7 +16,10 @@ fun Context.isNotificationPermissionGranted(): Boolean {
     ) == PackageManager.PERMISSION_GRANTED
 }
 
-fun Activity.requestNotificationPermission(requestPermissionLauncher: ActivityResultLauncher<String>) {
+fun Activity.requestNotificationPermission(
+    requestPermissionLauncher: ActivityResultLauncher<String>,
+    onRationaleDialogDismiss: (() -> Unit)? = null
+) {
     if (isNotificationPermissionGranted()) return
 
     if (
@@ -30,6 +33,7 @@ fun Activity.requestNotificationPermission(requestPermissionLauncher: ActivityRe
             .setMessage(R.string.dialog_request_notification_permission)
             .setNegativeButton(R.string.action_cancel) { dialog, _ ->
                 dialog.dismiss()
+                onRationaleDialogDismiss?.invoke()
             }
             .setPositiveButton(R.string.action_allow) { dialog, _ ->
                 dialog.dismiss()

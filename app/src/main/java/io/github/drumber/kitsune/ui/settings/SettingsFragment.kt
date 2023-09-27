@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
@@ -46,6 +47,31 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private val updateChecker: GitHubUpdateChecker by inject()
 
+    // this result listener will be called on requesting notification permission after the
+    // 'check for updates on launch' permission was changed and notification permission is not granted
+    private lateinit var requestNotificationPermissionLauncher: ActivityResultLauncher<String>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requestNotificationPermissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+                val preference =
+                    findPreference<SwitchPreferenceCompat>(R.string.preference_key_check_for_updates_on_start)
+                if (isGranted) {
+                    preference?.isChecked = true
+                    KitsunePref.flagUserDeniedNotificationPermission = false
+                } else {
+                    preference?.isChecked = false
+                    KitsunePref.flagUserDeniedNotificationPermission = true
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.error_requires_notification_permission,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+    }
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.sharedPreferencesName = getString(R.string.preference_file_key)
         setPreferencesFromResource(R.xml.app_preferences, rootKey)
@@ -73,19 +99,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         //---- Check for Updates on Launch
         findPreference<SwitchPreferenceCompat>(R.string.preference_key_check_for_updates_on_start)
-            ?.setOnPreferenceChangeListener { preference, newValue ->
+            ?.setOnPreferenceChangeListener { _, newValue ->
                 if (newValue as Boolean && !requireContext().isNotificationPermissionGranted()) {
-                    val requestNotificationPermissionLauncher =
-                        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-                            if (isGranted) {
-                                (preference as SwitchPreferenceCompat).isChecked = true
-                                KitsunePref.flagUserDeniedNotificationPermission = false
-                            } else {
-                                (preference as SwitchPreferenceCompat).isChecked = false
-                                KitsunePref.flagUserDeniedNotificationPermission = true
-
-                            }
-                        }
                     requireActivity().requestNotificationPermission(
                         requestNotificationPermissionLauncher
                     )

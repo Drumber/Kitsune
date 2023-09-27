@@ -153,7 +153,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                         showNotificationPermissionRejectedDialog()
                     }
                 }
-            requestNotificationPermission(requestNotificationPermissionLauncher)
+            requestNotificationPermission(requestNotificationPermissionLauncher) {
+                KitsunePref.flagUserDeniedNotificationPermission = true
+            }
         }
     }
 

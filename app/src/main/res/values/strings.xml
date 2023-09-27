@@ -71,6 +71,7 @@
     <string name="error_library_update_not_found">The library entry does not exist.</string>
     <string name="error_library_add_failed">Failed to add to your library.</string>
     <string name="error_library_delete_failed">Failed to delete library entry.</string>
+    <string name="error_requires_notification_permission">Notification permission is required.</string>
 
     <string name="menu_filter">Filter</string>
     <string name="sort_popularity_asc">Least Popular</string>
