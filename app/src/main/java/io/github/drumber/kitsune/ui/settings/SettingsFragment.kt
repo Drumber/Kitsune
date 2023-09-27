@@ -32,6 +32,7 @@ import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.permissions.isNotificationPermissionGranted
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
+import io.github.drumber.kitsune.util.extensions.openUrl
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import kotlinx.coroutines.launch
@@ -146,7 +147,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         savedInstanceState: Bundle?
     ): RecyclerView {
         val recyclerView = super.onCreateRecyclerView(inflater, parent, savedInstanceState)
-        recyclerView.initPaddingWindowInsetsListener(bottom = true)
+        recyclerView.initPaddingWindowInsetsListener(bottom = true, consume = false)
         return recyclerView
     }
 
@@ -160,7 +161,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
         lifecycleScope.launch {
             when (val result = updateChecker.checkForUpdates()) {
                 is GitHubUpdateChecker.UpdateCheckerResult.NewVersion -> {
-                    Notifications.showNewVersion(requireContext(), result.release)
+                    val release = result.release
+                    Notifications.showNewVersion(requireContext(), release)
+
+                    val message = getString(
+                        R.string.info_update_new_version_available_text,
+                        release.version
+                    )
+                    Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.action_view) { openUrl(release.url) }
+                        .apply {
+                            this.view.initMarginWindowInsetsListener(bottom = true, consume = false)
+                        }
+                        .show()
                 }
 
                 is GitHubUpdateChecker.UpdateCheckerResult.NoNewVersion -> {

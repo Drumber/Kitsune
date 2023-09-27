@@ -66,6 +66,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         navController = navHostFragment.navController
         navigationBarView.apply {
             ViewCompat.setOnApplyWindowInsetsListener(this) { _, windowInsets ->
+                if (!isNavigationBarViewVisible())
+                    return@setOnApplyWindowInsetsListener windowInsets
                 val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
                 val consumedInsets = binding.bottomNavigation?.applyWindowInsets(insets)
                     ?: binding.navigationRail?.applyWindowInsets(insets)
@@ -198,6 +200,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         return destination.parent?.id == R.id.main_nav_graph
     }
 
+    private fun isNavigationBarViewVisible(): Boolean {
+        return navController.currentDestination
+            ?.let { isDestinationOnMainNavGraph(it) } ?: true
+    }
+
     private fun toggleNavigationBarView(hideNavigationBar: Boolean, animate: Boolean = true) {
         if (!animate) {
             navigationBarView.isVisible = !hideNavigationBar
@@ -254,9 +261,6 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     }
 
     private fun NavigationRailView.applyWindowInsets(insets: Insets): Insets {
-        val isNavRailHidden = navController.currentDestination
-            ?.let { !isDestinationOnMainNavGraph(it) } ?: false
-        if (isNavRailHidden) return Insets.of(0, 0, 0, 0)
         val isRtl = ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL
         val left = if (!isRtl) insets.left else 0
         val right = if (isRtl) insets.right else 0

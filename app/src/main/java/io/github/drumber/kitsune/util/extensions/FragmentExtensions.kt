@@ -50,8 +50,12 @@ fun Fragment.startUrlShareIntent(url: String, title: String? = null) {
     startActivity(shareIntent)
 }
 
+fun Fragment.openUrl(url: String) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    startActivity(intent)
+}
+
 fun Fragment.openCharacterOnMAL(malId: Int) {
     val malCharacterUrl = "https://myanimelist.net/character/$malId"
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(malCharacterUrl))
-    startActivity(intent)
+    openUrl(malCharacterUrl)
 }

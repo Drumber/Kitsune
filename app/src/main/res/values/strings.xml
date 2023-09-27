@@ -24,6 +24,7 @@
     <string name="action_read_less">Read less</string>
     <string name="action_show_more">Show more</string>
     <string name="action_show_less">Show less</string>
+    <string name="action_view">View</string>
     <string name="action_back">Back</string>
     <string name="action_close">Close</string>
     <string name="action_log_out">Log out</string>
@@ -40,10 +41,14 @@
     <string name="action_remove">Remove</string>
     <string name="action_start">Start</string>
     <string name="action_allow">Allow</string>
+    <string name="action_rate">Rate</string>
+    <string name="action_update_rating">Update Rating</string>
+    <string name="action_remove_rating">Remove Rating</string>
 
     <string name="hint_search">Search</string>
     <string name="hint_mark_watched">Mark as watched.</string>
     <string name="hint_mark_not_watched">Mark as not watched.</string>
+    <string name="hint_rating">Rating</string>
 
     <string name="dialog_log_out_confirmation">Are you sure you want to log out?</string>
     <string name="dialog_remove_from_library_title">Remove from Library?</string>
@@ -281,12 +286,6 @@
     <string name="info_update_no_new_version_available">No new version available.</string>
     <string name="info_update_failed">Failed to check for a new version.</string>
     <string name="info_logged_out_token_expired">Your access token has expired. Please log in again.</string>
-
-    <string name="hint_rating">Rating</string>
-
-    <string name="action_rate">Rate</string>
-    <string name="action_update_rating">Update Rating</string>
-    <string name="action_remove_rating">Remove Rating</string>
 
     <string name="filter_kind">Kind</string>
     <string name="filter_year">Year</string>
