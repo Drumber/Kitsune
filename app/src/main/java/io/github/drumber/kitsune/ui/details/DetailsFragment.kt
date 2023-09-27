@@ -45,6 +45,7 @@ import io.github.drumber.kitsune.domain.model.MediaSelector
 import io.github.drumber.kitsune.domain.model.MediaType
 import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.common.media.Titles
+import io.github.drumber.kitsune.domain.model.common.media.en
 import io.github.drumber.kitsune.domain.model.common.media.withoutCommonTitles
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
@@ -353,6 +354,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         // map language codes and sort them
         val sortedTitles = titles?.withoutCommonTitles()
             ?.filterValues { !it.isNullOrBlank() }
+            ?.filterNot { it.key == "en_us" && it.value == titles.en }
             ?.mapKeys {
                 val locale = Locale.forLanguageTag(it.key.replace('_', '-'))
                 if (it.key.lowercase().split('_').toSet().size > 1)
