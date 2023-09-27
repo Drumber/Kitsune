@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import com.chibatching.kotpref.livedata.asLiveData
+import com.google.android.material.color.DynamicColors
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.preference.KitsunePref
@@ -35,6 +36,10 @@ abstract class BaseActivity(
             // apply app theme
             appliedTheme = KitsunePref.appTheme
             setTheme(appliedTheme.themeRes)
+            // TODO: add preference for toggling dynamic color theme on Android 12+
+            if (DynamicColors.isDynamicColorAvailable()) {
+                DynamicColors.applyToActivityIfAvailable(this)
+            }
         }
 
         super.onCreate(savedInstanceState)
