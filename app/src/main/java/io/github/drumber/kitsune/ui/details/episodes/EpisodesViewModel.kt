@@ -12,7 +12,6 @@ import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.domain.database.LibraryEntryDao
 import io.github.drumber.kitsune.domain.database.LibraryEntryModificationDao
-import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
 import io.github.drumber.kitsune.domain.manager.library.LibraryManager
 import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult
 import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
@@ -30,13 +29,13 @@ import io.github.drumber.kitsune.domain.repository.MediaUnitRepository
 import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.exception.InvalidDataException
-import io.github.drumber.kitsune.exception.NotFoundException
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class EpisodesViewModel(
     private val mediaUnitRepository: MediaUnitRepository,
@@ -46,7 +45,9 @@ class EpisodesViewModel(
     private val libraryManager: LibraryManager
 ) : ViewModel() {
 
-    var responseListener: ((LibraryUpdateResponse) -> Unit)? = null
+    private val acceptLibraryUpdateResult: (SynchronizationResult) -> Unit
+
+    val libraryUpdateResultFlow: Flow<SynchronizationResult>
 
     private val media = MutableLiveData<BaseMedia>()
 
@@ -76,6 +77,15 @@ class EpisodesViewModel(
                     logE("Failed to fetch library entry for id '$id'.", e)
                 }
             }
+        }
+    }
+
+    init {
+        val mutableLibraryUpdateResultFlow = MutableSharedFlow<SynchronizationResult>()
+        libraryUpdateResultFlow = mutableLibraryUpdateResultFlow.asSharedFlow()
+
+        acceptLibraryUpdateResult = {
+            viewModelScope.launch { mutableLibraryUpdateResultFlow.emit(it) }
         }
     }
 
@@ -123,21 +133,13 @@ class EpisodesViewModel(
             ).copy(progress = progress)
 
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val updateResult = libraryManager.updateLibraryEntry(modification)
-                withContext(Dispatchers.Main) {
-                    val response = when (updateResult) {
-                        is SynchronizationResult.Success -> LibraryUpdateResponse.SyncedOnline
-                        is SynchronizationResult.Failed -> LibraryUpdateResponse.Error(updateResult.exception)
-                        is SynchronizationResult.NotFound -> LibraryUpdateResponse.Error(
-                            NotFoundException("Library entry was not found.")
-                        )
-                    }
-                    responseListener?.invoke(response)
-                }
+            val updateResult = try {
+                libraryManager.updateLibraryEntry(modification)
             } catch (e: Exception) {
                 logE("Failed to update progress.", e)
+                SynchronizationResult.Failed(e)
             }
+            acceptLibraryUpdateResult(updateResult)
         }
     }
 

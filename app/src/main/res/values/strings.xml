@@ -62,6 +62,10 @@
     <string name="error_requires_external_storage_permission">Require permission to write to external storage.</string>
     <string name="error_search_provider_unavailable">Search Provider unavailable.</string>
     <string name="error_library_update_failed">Failed to update library entry.</string>
+    <string name="error_library_update_failed_multiple">Failed to update %d library entries.</string>
+    <string name="error_library_update_not_found">The library entry does not exist.</string>
+    <string name="error_library_add_failed">Failed to add to your library.</string>
+    <string name="error_library_delete_failed">Failed to delete library entry.</string>
 
     <string name="menu_filter">Filter</string>
     <string name="sort_popularity_asc">Least Popular</string>

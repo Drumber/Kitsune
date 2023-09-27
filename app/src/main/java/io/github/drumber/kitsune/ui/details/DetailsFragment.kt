@@ -19,6 +19,7 @@ import androidx.core.view.children
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.ActivityNavigatorExtras
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
@@ -43,10 +44,10 @@ import io.github.drumber.kitsune.databinding.ItemDetailsInfoRowBinding
 import io.github.drumber.kitsune.domain.model.MediaSelector
 import io.github.drumber.kitsune.domain.model.MediaType
 import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.common.media.Titles
-import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
 import io.github.drumber.kitsune.domain.model.common.media.withoutCommonTitles
+import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
+import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryAdapter
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.domain.model.ui.library.getStringResId
@@ -58,7 +59,9 @@ import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
 import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
-import io.github.drumber.kitsune.ui.details.DetailsViewModel.ErrorResponseType
+import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
+import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
+import io.github.drumber.kitsune.ui.details.LibraryChangeResult.LibraryUpdateResult
 import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle.applyStyle
@@ -75,6 +78,10 @@ import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import io.github.drumber.kitsune.util.logW
+import io.github.drumber.kitsune.util.ui.showSnackbar
+import io.github.drumber.kitsune.util.ui.showSnackbarOnFailure
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 import java.util.concurrent.CopyOnWriteArrayList
@@ -232,13 +239,21 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             btnEditLibraryEntry.setOnClickListener { showEditLibraryEntryFragment() }
         }
 
-        viewModel.errorResponseListener = { type ->
-            val stringRes = when (type) {
-                ErrorResponseType.LibraryUpdateFailed -> R.string.error_library_update_failed
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.libraryChangeResultFlow.collectLatest {
+                when (it) {
+                    is LibraryUpdateResult -> it.result.showSnackbarOnFailure(binding.btnManageLibrary)
+                    is AddNewLibraryEntryFailed -> showSnackbar(
+                        binding.btnManageLibrary,
+                        R.string.error_library_add_failed
+                    )
+
+                    is DeleteLibraryEntryFailed -> showSnackbar(
+                        binding.btnManageLibrary,
+                        R.string.error_library_delete_failed
+                    )
+                }
             }
-            Snackbar.make(binding.btnManageLibrary, stringRes, Snackbar.LENGTH_LONG)
-                .apply { view.initMarginWindowInsetsListener(left = true, right = true) }
-                .show()
         }
 
         setFragmentResultListener(ManageLibraryBottomSheet.STATUS_REQUEST_KEY) { _, bundle ->

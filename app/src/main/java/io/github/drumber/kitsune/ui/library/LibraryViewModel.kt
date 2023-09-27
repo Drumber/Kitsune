@@ -9,7 +9,6 @@ import androidx.paging.insertSeparators
 import androidx.paging.map
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.domain.database.LibraryEntryModificationDao
-import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
 import io.github.drumber.kitsune.domain.manager.library.LibraryManager
 import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult
 import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
@@ -28,11 +27,11 @@ import io.github.drumber.kitsune.domain.repository.LibraryEntriesRepository
 import io.github.drumber.kitsune.domain.repository.UserRepository
 import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.exception.InvalidDataException
-import io.github.drumber.kitsune.exception.NotFoundException
-import io.github.drumber.kitsune.exception.SynchronizationException
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.library.InternalAction.LibraryUpdateOperationEnd
 import io.github.drumber.kitsune.ui.library.InternalAction.LibraryUpdateOperationStart
+import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibrarySynchronizationResult
+import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibraryUpdateResult
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -53,7 +52,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -70,7 +68,7 @@ class LibraryViewModel(
 
     val acceptAction: (UiAction) -> Unit
 
-    private val internalAcceptAction: (InternalAction) -> Unit
+    private val acceptInternalAction: (InternalAction) -> Unit
 
     /**
      * The ID of the last updated entry the recycler view should scroll to.
@@ -78,8 +76,9 @@ class LibraryViewModel(
     var scrollToUpdatedEntryId: String? = null
         private set
 
-    var responseListener: ((LibraryUpdateResponse) -> Unit)? = null
     var doRefreshListener: (() -> Unit)? = null
+
+    val libraryChangeResultFlow: Flow<LibraryChangeResult>
 
     val notSynchronizedLibraryEntryModifications =
         libraryModificationDao.getLibraryEntryModificationsWithStateLiveData(NOT_SYNCHRONIZED)
@@ -107,12 +106,13 @@ class LibraryViewModel(
             .onStart { emit(UiAction.Scroll(initialFilter)) }
 
         val libraryUpdateOperationsCounter = AtomicInteger(0)
-        val internalActionStateFlow = MutableSharedFlow<InternalAction>()
-        val internalActionState = internalActionStateFlow
+        val internalActionFlow = MutableSharedFlow<InternalAction>()
+        val internalActionState = internalActionFlow
             .onEach { action ->
                 when (action) {
                     is LibraryUpdateOperationStart -> libraryUpdateOperationsCounter.incrementAndGet()
                     is LibraryUpdateOperationEnd -> libraryUpdateOperationsCounter.decrementAndGet()
+                    else -> {}
                 }
             }
             .map {
@@ -122,6 +122,17 @@ class LibraryViewModel(
             }
             .distinctUntilChanged()
             .onStart { emit(InternalState(libraryUpdateOperationsCounter.get())) }
+        libraryChangeResultFlow = internalActionFlow
+            .mapNotNull {
+                when (it) {
+                    is InternalAction.LibraryUpdateResult -> LibraryUpdateResult(it.result)
+                    is InternalAction.LibrarySynchronizationResult -> LibrarySynchronizationResult(
+                        it.results
+                    )
+
+                    else -> null
+                }
+            }
 
         val libraryEntryModificationsFlow =
             libraryModificationDao.getAllLibraryEntryModificationsLiveData()
@@ -176,8 +187,8 @@ class LibraryViewModel(
             viewModelScope.launch { actionStateFlow.emit(action) }
         }
 
-        internalAcceptAction = { action ->
-            viewModelScope.launch { internalActionStateFlow.emit(action) }
+        acceptInternalAction = { action ->
+            viewModelScope.launch { internalActionFlow.emit(action) }
         }
     }
 
@@ -261,23 +272,12 @@ class LibraryViewModel(
     }
 
     fun synchronizeOfflineLibraryUpdates() {
-        internalAcceptAction(LibraryUpdateOperationStart)
+        acceptInternalAction(LibraryUpdateOperationStart)
         viewModelScope.launch(Dispatchers.IO) {
             val librarySyncResults = libraryManager.pushAllStoredLocalModificationsToService()
-            val failedCount = librarySyncResults.count {
-                it.value is SynchronizationResult.Failed
-            }
-            if (failedCount > 0) {
-                responseListener?.invoke(
-                    LibraryUpdateResponse.Error(
-                        SynchronizationException("Failed to synchronize $failedCount library entries.")
-                    )
-                )
-            } else {
-                responseListener?.invoke(LibraryUpdateResponse.SyncedOnline)
-            }
+            acceptInternalAction(InternalAction.LibrarySynchronizationResult(librarySyncResults.values.toList()))
         }.invokeOnCompletion {
-            internalAcceptAction(LibraryUpdateOperationEnd)
+            acceptInternalAction(LibraryUpdateOperationEnd)
         }
     }
 
@@ -337,38 +337,21 @@ class LibraryViewModel(
     }
 
     private suspend fun updateLibraryEntry(modification: LocalLibraryEntryModification) {
-        internalAcceptAction(LibraryUpdateOperationStart)
+        acceptInternalAction(LibraryUpdateOperationStart)
         val updateResult = try {
             libraryManager.updateLibraryEntry(modification)
         } finally {
-            internalAcceptAction(LibraryUpdateOperationEnd)
+            acceptInternalAction(LibraryUpdateOperationEnd)
+        }
+        acceptInternalAction(InternalAction.LibraryUpdateResult(updateResult))
+
+        if (updateResult is SynchronizationResult.Success) {
+            scrollToUpdatedEntry(updateResult.libraryEntry.id)
         }
 
-        // temp fix for issue #6
         if (updateResult is SynchronizationResult.Success && state.value.filter.searchQuery.isNotBlank()) {
             // trigger new search to show the updated data
             triggerAdapterUpdate()
-        }
-
-        withContext(Dispatchers.Main) {
-            when (updateResult) {
-                is SynchronizationResult.Success -> {
-                    responseListener?.invoke(LibraryUpdateResponse.SyncedOnline)
-                    scrollToUpdatedEntry(updateResult.libraryEntry.id)
-                }
-
-                is SynchronizationResult.Failed -> responseListener?.invoke(
-                    LibraryUpdateResponse.Error(
-                        updateResult.exception
-                    )
-                )
-
-                is SynchronizationResult.NotFound -> responseListener?.invoke(
-                    LibraryUpdateResponse.Error(
-                        NotFoundException("Library entry not found.")
-                    )
-                )
-            }
         }
     }
 
@@ -406,9 +389,18 @@ data class FilterState(
     val searchQuery: String = "",
 )
 
+sealed class LibraryChangeResult {
+    data class LibraryUpdateResult(val result: SynchronizationResult) : LibraryChangeResult()
+    data class LibrarySynchronizationResult(val results: List<SynchronizationResult>) :
+        LibraryChangeResult()
+}
+
 private sealed class InternalAction {
     data object LibraryUpdateOperationStart : InternalAction()
     data object LibraryUpdateOperationEnd : InternalAction()
+    data class LibraryUpdateResult(val result: SynchronizationResult) : InternalAction()
+    data class LibrarySynchronizationResult(val results: List<SynchronizationResult>) :
+        InternalAction()
 }
 
 private data class InternalState(

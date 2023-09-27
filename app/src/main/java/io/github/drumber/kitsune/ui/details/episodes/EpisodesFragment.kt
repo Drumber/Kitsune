@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentMediaListBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
-import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
 import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.MediaUnit
@@ -22,8 +21,8 @@ import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.domain.model.ui.media.MediaUnitAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
-import io.github.drumber.kitsune.util.extensions.showErrorSnackback
 import io.github.drumber.kitsune.util.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.showSnackbarOnFailure
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -59,14 +58,19 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
             setNavigationOnClickListener { findNavController().navigateUp() }
         }
 
-        viewModel.responseListener = { response ->
-            if (response is LibraryUpdateResponse.Error) {
-                response.exception.showErrorSnackback(binding.rvMedia)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.libraryUpdateResultFlow.collectLatest {
+                it.showSnackbarOnFailure(binding.rvMedia)
             }
         }
 
         val resourceAdapter = MediaAdapter.fromMedia(args.media)
-        val adapter = MediaUnitPagingAdapter(Glide.with(this), resourceAdapter.posterImage, args.libraryEntryId != null, this)
+        val adapter = MediaUnitPagingAdapter(
+            Glide.with(this),
+            resourceAdapter.posterImage,
+            args.libraryEntryId != null,
+            this
+        )
         setRecyclerViewAdapter(adapter)
 
         viewModel.libraryEntryWrapper.observe(viewLifecycleOwner) {
@@ -90,7 +94,9 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
     private fun showDetailsBottomSheet(mediaUnit: MediaUnit) {
         val sheetMediaUnit = MediaUnitDetailsBottomSheet()
         sheetMediaUnit.arguments = bundleOf(
-            MediaUnitDetailsBottomSheet.BUNDLE_MEDIA_UNIT_ADAPTER to MediaUnitAdapter.fromMediaUnit(mediaUnit),
+            MediaUnitDetailsBottomSheet.BUNDLE_MEDIA_UNIT_ADAPTER to MediaUnitAdapter.fromMediaUnit(
+                mediaUnit
+            ),
             MediaUnitDetailsBottomSheet.BUNDLE_THUMBNAIL to MediaAdapter.fromMedia(args.media).posterImage
         )
         sheetMediaUnit.show(parentFragmentManager, MediaUnitDetailsBottomSheet.TAG)
@@ -107,11 +113,6 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
     override fun onNavigationItemReselected(item: MenuItem) {
         super.onNavigationItemReselected(item)
         binding.appBarLayout.setExpanded(true)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewModel.responseListener = null
     }
 
 }

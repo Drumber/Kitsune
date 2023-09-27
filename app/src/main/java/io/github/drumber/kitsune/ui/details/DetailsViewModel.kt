@@ -10,9 +10,9 @@ import io.github.drumber.kitsune.domain.database.LibraryEntryDao
 import io.github.drumber.kitsune.domain.manager.library.LibraryManager
 import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult
 import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
+import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
-import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.infrastructure.user.Favorite
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
 import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
@@ -23,12 +23,18 @@ import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.domain.service.manga.MangaService
 import io.github.drumber.kitsune.domain.service.user.FavoriteService
 import io.github.drumber.kitsune.exception.ReceivedDataException
+import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
+import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
+import io.github.drumber.kitsune.ui.details.LibraryChangeResult.LibraryUpdateResult
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logW
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -62,9 +68,26 @@ class DetailsViewModel(
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
-    var errorResponseListener: ((ErrorResponseType) -> Unit)? = null
+    private val acceptInternalAction: (InternalAction) -> Unit
+
+    val libraryChangeResultFlow: Flow<LibraryChangeResult>
 
     var areAllTileLanguagesShown = false
+
+    init {
+        val internalActionFlow = MutableSharedFlow<InternalAction>()
+        libraryChangeResultFlow = internalActionFlow.mapNotNull { action ->
+            when (action) {
+                is InternalAction.LibraryUpdateResult -> LibraryUpdateResult(action.result)
+                is InternalAction.AddNewLibraryEntryFailed -> AddNewLibraryEntryFailed
+                is InternalAction.DeleteLibraryEntryFailed -> DeleteLibraryEntryFailed
+            }
+        }
+
+        acceptInternalAction = { action ->
+            viewModelScope.launch { internalActionFlow.emit(action) }
+        }
+    }
 
     fun initFromDeepLink(isAnime: Boolean, slug: String) {
         val filter = Filter()
@@ -204,29 +227,27 @@ class DetailsViewModel(
         val existingLibraryEntryId = libraryEntry.value?.id
 
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                if (existingLibraryEntryId.isNullOrBlank()) { // post new library entry
+            if (existingLibraryEntryId.isNullOrBlank()) { // post new library entry
+                try {
                     val newLibraryEntry = libraryManager.addNewLibraryEntry(
                         userId,
                         mediaAdapter.media,
                         status
                     ) ?: throw Exception("Failed to post new library entry.")
-
                     _libraryEntry.postValue(newLibraryEntry)
-                } else { // update existing library entry
-                    val modification =
-                        LocalLibraryEntryModification.withIdAndNulls(existingLibraryEntryId)
-                            .copy(status = status)
-                    val response = libraryManager.updateLibraryEntry(modification)
-
-                    if (response is SynchronizationResult.Failed) {
-                        throw response.exception
-                    }
+                } catch (e: Exception) {
+                    logE("Failed to add new library entry.", e)
+                    acceptInternalAction(InternalAction.AddNewLibraryEntryFailed)
                 }
-            } catch (e: Exception) {
-                logE("Failed to update library status.", e)
-                withContext(Dispatchers.Main) {
-                    errorResponseListener?.invoke(ErrorResponseType.LibraryUpdateFailed)
+            } else { // update existing library entry
+                val modification = LocalLibraryEntryModification
+                    .withIdAndNulls(existingLibraryEntryId)
+                    .copy(status = status)
+                try {
+                    val result = libraryManager.updateLibraryEntry(modification)
+                    acceptInternalAction(InternalAction.LibraryUpdateResult(result))
+                } catch (e: Exception) {
+                    logE("Error while updating library entry.", e)
                 }
             }
         }
@@ -235,14 +256,16 @@ class DetailsViewModel(
     fun removeLibraryEntry() {
         val libraryEntryId = libraryEntry.value?.id ?: return
         viewModelScope.launch(Dispatchers.IO) {
-            try {
+            val isDeleted = try {
                 libraryManager.removeLibraryEntry(libraryEntryId)
-                _libraryEntry.postValue(null)
             } catch (e: Exception) {
                 logE("Failed to remove library entry.", e)
-                withContext(Dispatchers.Main) {
-                    errorResponseListener?.invoke(ErrorResponseType.LibraryUpdateFailed)
-                }
+                false
+            }
+            if (isDeleted) {
+                _libraryEntry.postValue(null)
+            } else {
+                acceptInternalAction(InternalAction.DeleteLibraryEntryFailed)
             }
         }
     }
@@ -278,9 +301,16 @@ class DetailsViewModel(
             }
         }
     }
+}
 
-    enum class ErrorResponseType {
-        LibraryUpdateFailed
-    }
+sealed class LibraryChangeResult {
+    data class LibraryUpdateResult(val result: SynchronizationResult) : LibraryChangeResult()
+    data object AddNewLibraryEntryFailed : LibraryChangeResult()
+    data object DeleteLibraryEntryFailed : LibraryChangeResult()
+}
 
+private sealed class InternalAction {
+    data class LibraryUpdateResult(val result: SynchronizationResult) : InternalAction()
+    data object AddNewLibraryEntryFailed : InternalAction()
+    data object DeleteLibraryEntryFailed : InternalAction()
 }

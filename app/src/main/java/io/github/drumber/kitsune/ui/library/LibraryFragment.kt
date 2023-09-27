@@ -34,7 +34,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentLibraryBinding
-import io.github.drumber.kitsune.domain.manager.LibraryUpdateResponse
 import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
@@ -43,12 +42,15 @@ import io.github.drumber.kitsune.ui.adapter.paging.LibraryEntriesAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
+import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibrarySynchronizationResult
+import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibraryUpdateResult
 import io.github.drumber.kitsune.util.RatingSystemUtil
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
-import io.github.drumber.kitsune.util.extensions.showErrorSnackback
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.showSnackbarOnAnyFailure
+import io.github.drumber.kitsune.util.ui.showSnackbarOnFailure
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -130,9 +132,12 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
             }
         }
 
-        viewModel.responseListener = { response ->
-            if (response is LibraryUpdateResponse.Error) {
-                response.exception.showErrorSnackback(binding.rvLibraryEntries)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.libraryChangeResultFlow.collectLatest {
+                when (it) {
+                    is LibraryUpdateResult -> it.result.showSnackbarOnFailure(binding.rvLibraryEntries)
+                    is LibrarySynchronizationResult -> it.results.showSnackbarOnAnyFailure(binding.rvLibraryEntries)
+                }
             }
         }
 
@@ -344,7 +349,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
                 .indexOfFirst { (it as? LibraryEntryWrapper)?.libraryEntry?.id == viewModel.scrollToUpdatedEntryId }
 
             if (indexOfUpdatedEntry != -1) {
-                 binding.rvLibraryEntries.scrollToPosition(indexOfUpdatedEntry)
+                binding.rvLibraryEntries.scrollToPosition(indexOfUpdatedEntry)
                 viewModel.hasScrolledToUpdatedEntry()
             }
         }
@@ -507,7 +512,6 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
     }
 
     override fun onDestroyView() {
-        viewModel.responseListener = null
         viewModel.doRefreshListener = null
         (requireActivity() as AppCompatActivity).setSupportActionBar(null)
         super.onDestroyView()
