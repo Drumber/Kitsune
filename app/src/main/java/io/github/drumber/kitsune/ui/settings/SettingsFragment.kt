@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +15,7 @@ import androidx.preference.ListPreference
 import androidx.preference.ListPreference.SimpleSummaryProvider
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.BuildConfig
@@ -28,6 +30,8 @@ import io.github.drumber.kitsune.domain.model.infrastructure.user.User
 import io.github.drumber.kitsune.domain.model.preference.StartPagePref
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.ui.permissions.isNotificationPermissionGranted
+import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import kotlinx.coroutines.launch
@@ -65,6 +69,29 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 true
             }
         }
+
+        //---- Check for Updates on Launch
+        findPreference<SwitchPreferenceCompat>(R.string.preference_key_check_for_updates_on_start)
+            ?.setOnPreferenceChangeListener { preference, newValue ->
+                if (newValue as Boolean && !requireContext().isNotificationPermissionGranted()) {
+                    val requestNotificationPermissionLauncher =
+                        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+                            if (isGranted) {
+                                (preference as SwitchPreferenceCompat).isChecked = true
+                                KitsunePref.flagUserDeniedNotificationPermission = false
+                            } else {
+                                (preference as SwitchPreferenceCompat).isChecked = false
+                                KitsunePref.flagUserDeniedNotificationPermission = true
+
+                            }
+                        }
+                    requireActivity().requestNotificationPermission(
+                        requestNotificationPermissionLauncher
+                    )
+                    return@setOnPreferenceChangeListener false
+                }
+                true
+            }
 
         //---- App Logs
         findPreference<Preference>(R.string.preference_key_app_logs)?.setOnPreferenceClickListener {

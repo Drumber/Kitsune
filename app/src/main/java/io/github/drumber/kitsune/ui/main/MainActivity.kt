@@ -139,16 +139,20 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     }
 
     private fun requestRequiredPermissions() {
-        val requestNotificationPermissionLauncher =
-            registerForActivityResult(RequestPermission()) { isGranted ->
-                if (isGranted) {
-                    KitsunePref.checkForUpdatesOnStart = true
-                } else {
-                    KitsunePref.checkForUpdatesOnStart = false
-                    showNotificationPermissionRejectedDialog()
+        if (!KitsunePref.flagUserDeniedNotificationPermission) {
+            val requestNotificationPermissionLauncher =
+                registerForActivityResult(RequestPermission()) { isGranted ->
+                    if (isGranted) {
+                        KitsunePref.checkForUpdatesOnStart = true
+                        KitsunePref.flagUserDeniedNotificationPermission = false
+                    } else {
+                        KitsunePref.checkForUpdatesOnStart = false
+                        KitsunePref.flagUserDeniedNotificationPermission = true
+                        showNotificationPermissionRejectedDialog()
+                    }
                 }
-            }
-        requestNotificationPermission(requestNotificationPermissionLauncher)
+            requestNotificationPermission(requestNotificationPermissionLauncher)
+        }
     }
 
     private fun promptUserReLogin() {

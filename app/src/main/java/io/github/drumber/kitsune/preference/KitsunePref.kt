@@ -105,6 +105,9 @@ object KitsunePref : KotprefModel(), KoinComponent {
         get() = ::libraryEntryStatusJson.fromJsonString(emptyList())
 
 
+    var flagUserDeniedNotificationPermission by booleanPref(false)
+
+
     private fun Any.toJsonString(): String {
         val objectMapper: ObjectMapper = get()
         return objectMapper.writeValueAsString(this)
