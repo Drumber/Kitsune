@@ -50,7 +50,6 @@ import io.github.drumber.kitsune.domain.model.common.media.withoutCommonTitles
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryAdapter
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.domain.model.ui.library.getStringResId
 import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
@@ -192,14 +191,14 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             }
         }
 
-        viewModel.libraryEntry.observe(viewLifecycleOwner) { libraryEntry ->
-            val isManga = libraryEntry?.manga != null
+        viewModel.libraryEntryWrapper.observe(viewLifecycleOwner) { libraryEntryWrapper ->
+            val isManga = libraryEntryWrapper?.libraryEntry?.manga != null
                     || viewModel.mediaAdapter.value?.isAnime() == false
-            if (libraryEntry != null) {
-                libraryEntry.status?.let { status ->
+            if (libraryEntryWrapper != null) {
+                libraryEntryWrapper.status?.let { status ->
                     binding.btnManageLibrary.setText(status.getStringResId(!isManga))
                 } ?: binding.btnManageLibrary.setText(R.string.library_action_add)
-                binding.libraryEntry = LibraryEntryAdapter(LibraryEntryWrapper(libraryEntry, null))
+                binding.libraryEntry = LibraryEntryAdapter(libraryEntryWrapper)
             } else {
                 // reset to defaults
                 binding.btnManageLibrary.setText(R.string.library_action_add)
@@ -221,7 +220,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             btnManageLibrary.setOnClickListener { showManageLibraryBottomSheet() }
             btnMediaUnits.setOnClickListener {
                 val media = viewModel.mediaAdapter.value?.media ?: return@setOnClickListener
-                val libraryEntry = viewModel.libraryEntry.value
+                val libraryEntry = viewModel.libraryEntryWrapper.value?.libraryEntry
                 val action = DetailsFragmentDirections.actionDetailsFragmentToEpisodesFragment(
                     media,
                     libraryEntry?.id
@@ -582,7 +581,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 val bundle = bundleOf(
                     ManageLibraryBottomSheet.BUNDLE_TITLE to mediaAdapter.title,
                     ManageLibraryBottomSheet.BUNDLE_IS_ANIME to mediaAdapter.isAnime(),
-                    ManageLibraryBottomSheet.BUNDLE_EXISTS_IN_LIBRARY to (viewModel.libraryEntry.value != null)
+                    ManageLibraryBottomSheet.BUNDLE_EXISTS_IN_LIBRARY to (viewModel.libraryEntryWrapper.value != null)
                 )
                 sheetManageLibrary.arguments = bundle
                 sheetManageLibrary.show(parentFragmentManager, ManageLibraryBottomSheet.TAG)
@@ -594,7 +593,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
     private fun showEditLibraryEntryFragment() {
         if (!viewModel.isLoggedIn()) return
-        val entryId = viewModel.libraryEntry.value?.id ?: return
+        val entryId = viewModel.libraryEntryWrapper.value?.libraryEntry?.id ?: return
         val action =
             DetailsFragmentDirections.actionDetailsFragmentToLibraryEditEntryFragment(entryId)
         findNavController().navigateSafe(R.id.details_fragment, action)

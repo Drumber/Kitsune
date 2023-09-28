@@ -6,15 +6,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.jasminb.jsonapi.JSONAPIDocument
-import io.github.drumber.kitsune.domain.database.LibraryEntryDao
+import io.github.drumber.kitsune.domain.database.LibraryEntryWithModificationDao
 import io.github.drumber.kitsune.domain.manager.library.LibraryManager
 import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult
 import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
+import io.github.drumber.kitsune.domain.mapper.toLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
-import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.SYNCHRONIZING
 import io.github.drumber.kitsune.domain.model.infrastructure.user.Favorite
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
+import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.domain.repository.UserRepository
 import io.github.drumber.kitsune.domain.service.Filter
@@ -42,7 +44,7 @@ import retrofit2.HttpException
 class DetailsViewModel(
     private val userRepository: UserRepository,
     private val libraryEntriesService: LibraryEntriesService,
-    private val libraryEntryDao: LibraryEntryDao,
+    private val libraryEntryWithModificationDao: LibraryEntryWithModificationDao,
     private val libraryManager: LibraryManager,
     private val animeService: AnimeService,
     private val mangaService: MangaService,
@@ -56,9 +58,9 @@ class DetailsViewModel(
         get() = _mediaAdapter
 
     /** Combines local cached and fetched library entry. */
-    private val _libraryEntry = MediatorLiveData<LibraryEntry?>()
-    val libraryEntry: LiveData<LibraryEntry?>
-        get() = _libraryEntry
+    private val _libraryEntryWrapper = MediatorLiveData<LibraryEntryWrapper?>()
+    val libraryEntryWrapper: LiveData<LibraryEntryWrapper?>
+        get() = _libraryEntryWrapper
 
     private val _favorite = MutableLiveData<Favorite?>()
     val favorite: LiveData<Favorite?>
@@ -165,8 +167,14 @@ class DetailsViewModel(
 
         // add local database as library entry source
         viewModelScope.launch(Dispatchers.Main) {
-            _libraryEntry.addSource(libraryEntryDao.getLibraryEntryFromMediaLiveData(mediaAdapter.id)) {
-                _libraryEntry.value = it?.toLibraryEntry()
+            _libraryEntryWrapper.addSource(libraryEntryWithModificationDao.getLibraryEntryWithModificationFromMediaLiveData(mediaAdapter.id)) {
+                _libraryEntryWrapper.value = it?.let { entryWithModification ->
+                    LibraryEntryWrapper(
+                        entryWithModification.libraryEntry.toLibraryEntry(),
+                        entryWithModification.libraryEntryModification?.toLibraryEntryModification(),
+                        entryWithModification.libraryEntryModification?.state == SYNCHRONIZING
+                    )
+                }
             }
         }
         val filter = Filter()
@@ -185,18 +193,20 @@ class DetailsViewModel(
             val libraryEntries = libraryEntriesService.allLibraryEntries(filter.options).get()
             if (!libraryEntries.isNullOrEmpty()) {
                 // post fetched library entry that is possibly more up-to-date than the local cached one
-                _libraryEntry.postValue(libraryEntries[0])
-            } else if (libraryEntry.value != null) {
+                _libraryEntryWrapper.postValue(
+                    LibraryEntryWrapper(libraryEntries[0], null)
+                )
+            } else if (libraryEntryWrapper.value != null) {
                 // library entry is not available on the server but it is in the local cache, was it deleted?
                 // -> local database cache is out of sync, remove entry from database
-                libraryEntry.value?.let { libraryEntry ->
+                libraryEntryWrapper.value?.let { libraryEntry ->
                     logD(
                         "There is no library entry on the server, but it exists in the local cache. " +
                                 "Removed it from local database..."
                     )
                     withContext(Dispatchers.IO) {
-                        _libraryEntry.postValue(null)
-                        libraryEntry.id?.let { libraryManager.mayRemoveLibraryEntryLocally(it) }
+                        _libraryEntryWrapper.postValue(null)
+                        libraryEntry.libraryEntry.id?.let { libraryManager.mayRemoveLibraryEntryLocally(it) }
                     }
                 }
             }
@@ -224,7 +234,7 @@ class DetailsViewModel(
     fun updateLibraryEntryStatus(status: LibraryStatus) {
         val userId = userRepository.user?.id ?: return
         val mediaAdapter = mediaAdapter.value ?: return
-        val existingLibraryEntryId = libraryEntry.value?.id
+        val existingLibraryEntryId = libraryEntryWrapper.value?.libraryEntry?.id
 
         viewModelScope.launch(Dispatchers.IO) {
             if (existingLibraryEntryId.isNullOrBlank()) { // post new library entry
@@ -234,7 +244,9 @@ class DetailsViewModel(
                         mediaAdapter.media,
                         status
                     ) ?: throw Exception("Failed to post new library entry.")
-                    _libraryEntry.postValue(newLibraryEntry)
+                    _libraryEntryWrapper.postValue(
+                        LibraryEntryWrapper(newLibraryEntry, null)
+                    )
                 } catch (e: Exception) {
                     logE("Failed to add new library entry.", e)
                     acceptInternalAction(InternalAction.AddNewLibraryEntryFailed)
@@ -254,7 +266,7 @@ class DetailsViewModel(
     }
 
     fun removeLibraryEntry() {
-        val libraryEntryId = libraryEntry.value?.id ?: return
+        val libraryEntryId = libraryEntryWrapper.value?.libraryEntry?.id ?: return
         viewModelScope.launch(Dispatchers.IO) {
             val isDeleted = try {
                 libraryManager.removeLibraryEntry(libraryEntryId)
@@ -263,7 +275,7 @@ class DetailsViewModel(
                 false
             }
             if (isDeleted) {
-                _libraryEntry.postValue(null)
+                _libraryEntryWrapper.postValue(null)
             } else {
                 acceptInternalAction(InternalAction.DeleteLibraryEntryFailed)
             }
