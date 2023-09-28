@@ -46,7 +46,14 @@
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                     android:text="@string/preference_app_theme" />
 
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch_dynamic_color"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/preference_dynamic_color_theme" />
+
                 <LinearLayout
+                    android:id="@+id/layout_theme_cards_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"

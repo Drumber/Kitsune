@@ -8,6 +8,7 @@
     <!-- Preference Keys -->
     <string name="preference_key_fragment_appearance">fragment_appearance</string>
     <string name="preference_key_app_theme">app_theme</string>
+    <string name="preference_key_dynamic_color_theme">dynamic_color_theme</string>
     <string name="preference_key_dark_mode">dark_mode</string>
     <string name="preference_key_start_fragment">start_fragment</string>
     <string name="preference_key_language">language</string>
