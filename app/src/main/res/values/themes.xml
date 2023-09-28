@@ -236,6 +236,12 @@
 
     <style name="Theme.Kitsune.PreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
         <item name="android:layout">@layout/fragment_preference</item>
+        <!-- use Material 3 switch -->
+        <item name="switchPreferenceCompatStyle">@style/Preference.SwitchPreferenceCompat.Material3</item>
+    </style>
+
+    <style name="Preference.SwitchPreferenceCompat.Material3" parent="@style/Preference.SwitchPreferenceCompat.Material">
+        <item name="widgetLayout">@layout/custom_preference_switch</item>
     </style>
 
     <style name="ShapeAppearance.Kitsune.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
