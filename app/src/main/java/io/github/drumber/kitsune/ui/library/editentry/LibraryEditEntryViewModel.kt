@@ -14,6 +14,7 @@ import io.github.drumber.kitsune.domain.mapper.toLibraryEntryModification
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
+import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.SYNCHRONIZING
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryModification
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
@@ -76,7 +77,11 @@ class LibraryEditEntryViewModel(
                 libraryModificationDao.getLibraryEntryModification(libraryEntryId)
                     ?: LocalLibraryEntryModification.withIdAndNulls(libraryEntryId)
 
-            val libraryEntryWrapper = LibraryEntryWrapper(libraryEntry, libraryModification.toLibraryEntryModification())
+            val libraryEntryWrapper = LibraryEntryWrapper(
+                libraryEntry,
+                libraryModification.toLibraryEntryModification(),
+                libraryModification.state == SYNCHRONIZING
+            )
             uneditedLibraryEntryWrapper = libraryEntryWrapper.copy()
             _libraryEntryWrapper.postValue(libraryEntryWrapper)
         }.invokeOnCompletion {
@@ -118,11 +123,10 @@ class LibraryEditEntryViewModel(
         _loadState.value = LoadState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val updateResult = libraryManager.updateLibraryEntry(libraryModification)
-                if (updateResult !is SynchronizationResult.Failed) {
-                    _loadState.postValue(LoadState.CloseDialog)
-                } else {
-                    throw updateResult.exception
+                when (libraryManager.updateLibraryEntry(libraryModification)) {
+                    is SynchronizationResult.Success -> _loadState.postValue(LoadState.CloseDialog)
+                    is SynchronizationResult.Failed -> _loadState.postValue(LoadState.Error)
+                    is SynchronizationResult.NotFound -> _loadState.postValue(LoadState.CloseDialog)
                 }
             } catch (e: Exception) {
                 logE("Failed to update library entry.", e)
