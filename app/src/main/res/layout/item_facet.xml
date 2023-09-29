@@ -5,9 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?attr/listPreferredItemHeightSmall"
-    android:layout_marginBottom="0.5dp"
     app:cardCornerRadius="0dp"
-    tools:layout_height="50dp">
+    style="@style/Widget.Kitsune.CardView.Surface">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

@@ -162,8 +162,8 @@
         <item name="android:paddingBottom">@dimen/icon_button_padding</item>
     </style>
 
-    <style name="Widget.Kitsune.Button.Surface" parent="Widget.Material3.Button">
-        <item name="backgroundTint">@color/button_surface_color_selector</item>
+    <style name="Widget.Kitsune.CardView.Surface" parent="Widget.Material3.CardView.Outlined">
+        <item name="strokeWidth">0dp</item>
     </style>
     
     <style name="Widget.Kitsune.TextInputLayout.Dense.ExposedDropdownMenu" parent="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">

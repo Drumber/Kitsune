@@ -12,7 +12,6 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
-            style="@style/Widget.Material3.Toolbar.Surface"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:layout_scrollFlags="noScroll"
@@ -119,8 +118,8 @@
                 android:id="@+id/card_categories"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/listPreferredItemHeightSmall"
-                android:layout_marginBottom="0.5dp"
-                app:cardCornerRadius="0dp">
+                app:cardCornerRadius="0dp"
+                style="@style/Widget.Kitsune.CardView.Surface">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -210,15 +209,23 @@
                     tools:itemCount="5"
                     tools:listitem="@layout/item_facet" />
 
-                <Button
-                    android:id="@+id/btn_expand_subtype"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:background="@drawable/bottom_edge_fade"
-                    android:textAllCaps="false"
-                    tools:text="@string/action_show_more"
-                    style="@style/Widget.Kitsune.Button.Surface" />
+                    android:paddingTop="10dp"
+                    android:background="@drawable/bottom_edge_fade_surface">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_expand_subtype"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cornerRadius="0dp"
+                        android:textAllCaps="false"
+                        tools:text="@string/action_show_more"
+                        style="?attr/borderlessButtonStyle" />
+
+                </FrameLayout>
 
             </io.github.drumber.kitsune.ui.widget.ExpandableLayout>
 
@@ -247,15 +254,24 @@
                     tools:itemCount="5"
                     tools:listitem="@layout/item_facet" />
 
-                <Button
-                    android:id="@+id/btn_expand_streamers"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:background="@drawable/bottom_edge_fade"
-                    android:textAllCaps="false"
-                    tools:text="@string/action_show_more"
-                    style="@style/Widget.Kitsune.Button.Surface" />
+                    android:paddingTop="10dp"
+                    android:background="@drawable/bottom_edge_fade_surface">
+
+                    <Button
+                        android:id="@+id/btn_expand_streamers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cornerRadius="0dp"
+                        android:background="@drawable/bottom_edge_fade"
+                        android:textAllCaps="false"
+                        tools:text="@string/action_show_more"
+                        style="?attr/borderlessButtonStyle" />
+
+                </FrameLayout>
 
             </io.github.drumber.kitsune.ui.widget.ExpandableLayout>
 
