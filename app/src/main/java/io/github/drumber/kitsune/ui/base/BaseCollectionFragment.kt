@@ -18,7 +18,6 @@ import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.widget.LoadStateSpanSizeLookup
-import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import kotlin.math.floor
 import kotlin.math.max
 
@@ -36,8 +35,6 @@ abstract class BaseCollectionFragment(@LayoutRes contentLayoutId: Int) :
 
         initRecyclerView(recyclerView)
         resourceLoadingBinding?.btnRetry?.setOnClickListener(this)
-
-        recyclerView.initMarginWindowInsetsListener(left = true, right = true, consume = false)
     }
 
     protected open fun initRecyclerView(recyclerView: RecyclerView) {

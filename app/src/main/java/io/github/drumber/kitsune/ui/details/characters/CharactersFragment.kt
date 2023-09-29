@@ -19,6 +19,7 @@ import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.ui.adapter.paging.CharacterPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.util.extensions.openCharacterOnMAL
+import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
@@ -53,7 +54,18 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters),
             setNavigationOnClickListener { findNavController().navigateUp() }
         }
 
-        binding.languageWrapper.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
+        binding.rvMedia.initMarginWindowInsetsListener(
+            left = true,
+            right = true,
+            bottom = true,
+            consume = false
+        )
+
+        binding.languageWrapper.initPaddingWindowInsetsListener(
+            left = true,
+            right = true,
+            consume = false
+        )
 
         binding.autoCompleteTextView.onItemClickListener = this
 

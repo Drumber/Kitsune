@@ -21,6 +21,7 @@ import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.domain.model.ui.media.MediaUnitAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
+import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbarOnFailure
 import kotlinx.coroutines.flow.collectLatest
@@ -57,6 +58,13 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
             )
             setNavigationOnClickListener { findNavController().navigateUp() }
         }
+
+        binding.rvMedia.initMarginWindowInsetsListener(
+            left = true,
+            right = true,
+            bottom = true,
+            consume = false
+        )
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.libraryUpdateResultFlow.collectLatest {
