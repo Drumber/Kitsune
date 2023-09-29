@@ -3,19 +3,19 @@ package io.github.drumber.kitsune.ui.settings
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentAppLogsBinding
 import io.github.drumber.kitsune.util.LogCatReader
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
-import io.github.drumber.kitsune.util.logI
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
@@ -31,7 +31,12 @@ class AppLogsFragment : Fragment(R.layout.fragment_app_logs) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.toolbar.initWindowInsetsListener(consume = false)
-        binding.nestedScrollView.initPaddingWindowInsetsListener(left = true, right = true, bottom = true, consume = false)
+        binding.nestedScrollView.initPaddingWindowInsetsListener(
+            left = true,
+            right = true,
+            bottom = true,
+            consume = false
+        )
 
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
@@ -73,12 +78,21 @@ class AppLogsFragment : Fragment(R.layout.fragment_app_logs) {
         lifecycleScope.launch {
             LogCatReader.writeAppLogsToFile(logFile)
 
-            val contentUri = FileProvider.getUriForFile(requireContext(), "io.github.drumber.kitsune.fileprovider", logFile)
+            val contentUri = FileProvider.getUriForFile(
+                requireContext(),
+                "${BuildConfig.APPLICATION_ID}.fileprovider",
+                logFile
+            )
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/*"
                 putExtra(Intent.EXTRA_STREAM, contentUri)
             }
-            startActivity(Intent.createChooser(shareIntent, getText(R.string.action_share_app_logs)))
+            startActivity(
+                Intent.createChooser(
+                    shareIntent,
+                    getText(R.string.action_share_app_logs)
+                )
+            )
         }
     }
 

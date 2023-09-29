@@ -341,7 +341,7 @@
             app:finalXPosition="@dimen/profile_picture_x_offset_collapsed"
             app:finalYPosition="@dimen/profile_picture_y_offset_collapsed"
             app:finalToolbarHeight="?attr/actionBarSize"
-            app:layout_behavior=".ui.widget.ProfilePictureBehavior" />
+            app:layout_behavior="io.github.drumber.kitsune.ui.widget.ProfilePictureBehavior" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
