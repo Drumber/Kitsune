@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="io.github.drumber.kitsune.util.BindingAdapter" />
         <import type="androidx.core.content.ContextCompat" />
         <variable
             name="entry"
@@ -70,12 +71,12 @@
                         app:icon="@{entry.hasRating ? @drawable/ic_star_24 : @drawable/ic_star_outline_24}"
                         app:iconGravity="end"
                         android:text="@{entry.rating}"
+                        app:iconPadding="@{entry.hasRating ? @dimen/icon_button_padding : @dimen/zero_dp}"
                         tools:icon="@drawable/ic_star_24"
                         tools:text="5"
-                        android:tooltipText="@string/hint_rating"
-                        tools:targetApi="o"
+                        app:tooltip="@{@string/hint_rating}"
                         app:activated="@{entry.hasRating}"
-                        style="@style/Widget.Kitsune.Button.IconText" />
+                        style="?attr/materialIconButtonStyle" />
 
                 </LinearLayout>
 
@@ -126,18 +127,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:padding="1dp"
                     android:background="@drawable/rectangle_background">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_watched_removed"
                         android:layout_width="48dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="36dp"
                         android:enabled="@{entry.hasStartedWatching}"
                         app:icon="@drawable/ic_remove_24"
                         app:iconGravity="textStart"
-                        android:tooltipText="@string/hint_mark_not_watched"
-                        tools:targetApi="o"
-                        style="@style/Widget.Kitsune.Button.IconOnly.NoBackground" />
+                        app:tooltip="@{@string/hint_mark_not_watched}"
+                        app:cornerRadius="5dp"
+                        style="@style/Widget.Kitsune.Button.IconButton.Dense" />
 
                     <View
                         android:layout_width="1dp"
@@ -148,13 +150,13 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_watched_add"
                         android:layout_width="48dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="36dp"
                         android:enabled="@{entry.canWatchEpisode}"
                         app:icon="@drawable/ic_add_24"
                         app:iconGravity="textStart"
-                        android:tooltipText="@string/hint_mark_watched"
-                        tools:targetApi="o"
-                        style="@style/Widget.Kitsune.Button.IconOnly.NoBackground" />
+                        app:tooltip="@{@string/hint_mark_watched}"
+                        app:cornerRadius="5dp"
+                        style="@style/Widget.Kitsune.Button.IconButton.Dense" />
 
                 </LinearLayout>
 

@@ -151,64 +151,15 @@
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
-    <style name="Widget.Kitsune.Chip.Selectable" parent="Base.Widget.Material3.Chip">
-        <item name="android:textColor">@color/mtrl_choice_chip_text_color</item>
-        <item name="chipBackgroundColor">@color/mtrl_choice_chip_background_color</item>
-        <item name="rippleColor">@color/chip_selectable_ripple_color</item>
-        <item name="closeIconTint">@color/mtrl_choice_chip_text_color</item>
-    </style>
-
-    <style name="Widget.Kitsune.Button.IconOnly" parent="Widget.Material3.Button">
-        <item name="iconPadding">0dp</item>
+    <style name="Widget.Kitsune.Button.IconButton.Dense" parent="Widget.Material3.Button.IconButton">
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
         <item name="android:paddingLeft">@dimen/icon_button_padding</item>
         <item name="android:paddingRight">@dimen/icon_button_padding</item>
-        <item name="android:minWidth">@dimen/icon_button_size</item>
-        <item name="android:minHeight">@dimen/icon_button_size</item>
-    </style>
-
-    <style name="Widget.Kitsune.Button.IconOnly.Outlined" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="iconPadding">0dp</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="android:paddingLeft">@dimen/icon_button_padding</item>
-        <item name="android:paddingRight">@dimen/icon_button_padding</item>
-        <item name="android:minWidth">@dimen/icon_button_size</item>
-        <item name="android:minHeight">@dimen/icon_button_size</item>
-    </style>
-
-    <style name="Widget.Kitsune.Button.IconOnly.NoBackground" parent="Widget.Material3.Button.TextButton">
-        <item name="iconPadding">0dp</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="android:paddingLeft">@dimen/icon_button_padding</item>
-        <item name="android:paddingRight">@dimen/icon_button_padding</item>
-        <item name="android:minWidth">@dimen/icon_button_size</item>
-        <item name="android:minHeight">@dimen/icon_button_size</item>
-    </style>
-
-    <style name="Widget.Kitsune.Button.IconRound" parent="@style/Widget.Kitsune.Button.IconOnly.Outlined">
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Kitsune.Button.Circle</item>
-        <item name="strokeWidth">0dp</item>
-        <item name="strokeColor">@android:color/transparent</item>
-        <item name="iconTint">?attr/colorControlNormal</item>
-    </style>
-
-    <style name="Widget.Kitsune.Button.IconText" parent="Widget.Material3.Button.TextButton">
-        <item name="iconPadding">0dp</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="android:paddingLeft">@dimen/icon_button_padding</item>
-        <item name="android:paddingRight">@dimen/icon_button_padding</item>
-        <item name="android:minWidth">@dimen/icon_button_size</item>
-        <item name="android:minHeight">@dimen/icon_button_size</item>
-        <item name="android:textColor">@color/button_text_color_selector</item>
-        <item name="iconTint">@color/button_text_color_selector</item>
-    </style>
-
-    <style name="Widget.Kitsune.Button.IconText.Inactive" parent="Widget.Kitsune.Button.IconText">
-        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:paddingTop">@dimen/icon_button_padding</item>
+        <item name="android:paddingBottom">@dimen/icon_button_padding</item>
     </style>
 
     <style name="Widget.Kitsune.Button.Surface" parent="Widget.Material3.Button">

@@ -162,8 +162,8 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
                 val badgeDrawable = BadgeDrawable.create(requireContext()).apply {
                     isVisible = filterCount > 0
                     number = filterCount
-                    verticalOffset = 30
-                    horizontalOffset = 30
+                    verticalOffset = 90
+                    horizontalOffset = 90
                 }
                 BadgeUtils.attachBadgeDrawable(badgeDrawable, binding.btnFilter)
             }

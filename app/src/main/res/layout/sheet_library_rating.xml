@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="io.github.drumber.kitsune.util.BindingAdapter" />
         <variable
             name="title"
             type="String" />
@@ -39,9 +40,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     app:icon="@drawable/ic_delete_24"
-                    android:tooltipText="@string/action_remove_rating"
-                    tools:targetApi="o"
-                    style="@style/Widget.Kitsune.Button.IconRound" />
+                    app:tooltip="@{@string/action_remove_rating}"
+                    app:iconTint="?attr/colorControlNormal"
+                    style="?attr/materialIconButtonStyle" />
 
             </LinearLayout>
 
