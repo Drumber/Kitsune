@@ -43,6 +43,7 @@ import io.github.drumber.kitsune.util.deserializer.AlgoliaNumericValueDeserializ
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptor
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptorDummy
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptorImpl
+import io.github.drumber.kitsune.util.network.UserAgentInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
@@ -137,7 +138,8 @@ val networkModule = module {
 }
 
 private fun createHttpClientBuilder() = OkHttpClient.Builder()
-    .apply { if (BuildConfig.DEBUG) addInterceptor(createHttpLoggingInterceptor()) }
+    .addNetworkInterceptor(createUserAgentInterceptor())
+    .apply { if (BuildConfig.DEBUG) addNetworkInterceptor(createHttpLoggingInterceptor()) }
     .connectTimeout(30, TimeUnit.SECONDS)
     .readTimeout(60, TimeUnit.SECONDS)
     .writeTimeout(60, TimeUnit.SECONDS)
@@ -151,6 +153,9 @@ private fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
     level = HttpLoggingInterceptor.Level.BASIC
     redactHeader("Authorization")
 }
+
+private fun createUserAgentInterceptor() =
+    UserAgentInterceptor("Kitsune/${BuildConfig.VERSION_NAME}")
 
 private fun Scope.createAuthenticationInterceptor() = try {
     AuthenticationInterceptorImpl(get())
