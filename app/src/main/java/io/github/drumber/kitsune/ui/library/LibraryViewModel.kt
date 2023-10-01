@@ -52,6 +52,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -351,7 +352,9 @@ class LibraryViewModel(
 
         if (updateResult is SynchronizationResult.Success && state.value.filter.searchQuery.isNotBlank()) {
             // trigger new search to show the updated data
-            triggerAdapterUpdate()
+            withContext(Dispatchers.Main) {
+                triggerAdapterUpdate()
+            }
         }
     }
 

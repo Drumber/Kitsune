@@ -65,8 +65,9 @@ class LibraryEntryServiceClient(
                     "Library entry with ID '${libraryEntryModification.id}' does not exist.",
                     e
                 )
+            val errorResponseBody = e.response()?.errorBody()?.string()
             logE(
-                "Received HTTP exception while updating library entry with ID '${libraryEntryModification.id}'.",
+                "Received HTTP exception while updating library entry with ID '${libraryEntryModification.id}'. Response body is: $errorResponseBody",
                 e
             )
             null
