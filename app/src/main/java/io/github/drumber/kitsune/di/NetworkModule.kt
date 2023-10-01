@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.di
 
+import android.os.Parcelable
 import com.algolia.search.model.filter.Filter
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -38,6 +39,7 @@ import io.github.drumber.kitsune.domain.service.manga.MangaService
 import io.github.drumber.kitsune.domain.service.production.CastingService
 import io.github.drumber.kitsune.domain.service.user.FavoriteService
 import io.github.drumber.kitsune.domain.service.user.UserService
+import io.github.drumber.kitsune.util.IgnoreParcelablePropertyMixin
 import io.github.drumber.kitsune.util.deserializer.AlgoliaFacetValueDeserializer
 import io.github.drumber.kitsune.util.deserializer.AlgoliaNumericValueDeserializer
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptor
@@ -178,6 +180,7 @@ fun createObjectMapper(): ObjectMapper = jacksonMapperBuilder()
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
     .configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, false)
+    .addMixIn(Parcelable::class.java, IgnoreParcelablePropertyMixin::class.java)
     .addModule(
         SimpleModule().addDeserializer(
             Filter.Facet.Value::class.java,
