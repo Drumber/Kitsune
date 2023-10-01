@@ -137,9 +137,12 @@ val networkModule = module {
     }
 }
 
-private fun createHttpClientBuilder() = OkHttpClient.Builder()
+private fun createHttpClientBuilder(addLoggingInterceptor: Boolean = true) = OkHttpClient.Builder()
     .addNetworkInterceptor(createUserAgentInterceptor())
-    .apply { if (BuildConfig.DEBUG) addNetworkInterceptor(createHttpLoggingInterceptor()) }
+    .apply {
+        if (addLoggingInterceptor && BuildConfig.DEBUG)
+            addNetworkInterceptor(createHttpLoggingInterceptor())
+    }
     .connectTimeout(30, TimeUnit.SECONDS)
     .readTimeout(60, TimeUnit.SECONDS)
     .writeTimeout(60, TimeUnit.SECONDS)
@@ -165,7 +168,7 @@ private fun Scope.createAuthenticationInterceptor() = try {
 }
 
 private fun createAuthService(objectMapper: ObjectMapper) = createService<AuthService>(
-    createHttpClientBuilder().build(),
+    createHttpClientBuilder(false).build(),
     objectMapper,
     KITSU_OAUTH_URL
 )
