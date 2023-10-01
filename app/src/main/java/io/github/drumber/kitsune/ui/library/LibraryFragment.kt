@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuProvider
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.isEmpty
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
@@ -355,6 +356,9 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
         }
 
         viewModel.notSynchronizedLibraryEntryModifications.observe(viewLifecycleOwner) {
+            if (!viewModel.userRepository.hasUser)
+                return@observe
+
             viewModel.invalidatePagingSource()
             offlineLibraryModificationsAmount = it.size
             requireActivity().invalidateOptionsMenu()
@@ -468,6 +472,9 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
     }
 
     override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
+        if (!viewModel.userRepository.hasUser)
+            return
+
         inflater.inflate(R.menu.library_menu, menu)
         menu.findItem(R.id.menu_synchronize).isVisible = offlineLibraryModificationsAmount > 0
 
@@ -476,6 +483,9 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
     @ExperimentalBadgeUtils
     override fun onPrepareMenu(menu: Menu) {
+        if (menu.isEmpty())
+            return
+
         BadgeUtils.detachBadgeDrawable(
             offlineLibraryUpdateBadge,
             binding.toolbar,
