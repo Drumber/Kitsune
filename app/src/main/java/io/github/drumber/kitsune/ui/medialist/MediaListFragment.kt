@@ -51,8 +51,9 @@ class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) 
 
         viewModel.setMediaSelector(args.mediaSelector)
 
+        binding.collapsingToolbar.initWindowInsetsListener(consume = false)
         binding.toolbar.apply {
-            initWindowInsetsListener(false)
+            initWindowInsetsListener(consume = false)
             title = args.title
             setNavigationOnClickListener { findNavController().navigateUp() }
         }

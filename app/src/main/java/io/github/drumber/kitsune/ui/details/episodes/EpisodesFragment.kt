@@ -48,8 +48,9 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
         viewModel.setMedia(args.media)
         args.libraryEntryId?.let { viewModel.setLibraryEntryId(it) }
 
+        binding.collapsingToolbar.initWindowInsetsListener(consume = false)
         binding.toolbar.apply {
-            initWindowInsetsListener(false)
+            initWindowInsetsListener(consume = false)
             title = getString(
                 when (args.media) {
                     is Anime -> R.string.title_episodes
