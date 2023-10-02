@@ -11,6 +11,7 @@ import androidx.core.view.marginRight
 import androidx.core.view.marginTop
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
+import com.google.android.material.appbar.CollapsingToolbarLayout
 
 fun Toolbar.initWindowInsetsListener(consume: Boolean = true) {
     val initialHeight = this.layoutParams.height
@@ -22,7 +23,21 @@ fun Toolbar.initWindowInsetsListener(consume: Boolean = true) {
             right = insets.right
         )
         view.layoutParams.height = initialHeight + insets.top
-        if(consume) WindowInsetsCompat.CONSUMED else windowInsets
+        if (consume) WindowInsetsCompat.CONSUMED else windowInsets
+    }
+}
+
+fun CollapsingToolbarLayout.initWindowInsetsListener(consume: Boolean = true) {
+    val defaultTitleMarginStart = this.expandedTitleMarginStart
+    val defaultTitleMarginEnd = this.expandedTitleMarginStart
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
+        val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+        val isRtl = ViewCompat.getLayoutDirection(view) == ViewCompat.LAYOUT_DIRECTION_RTL
+        this.expandedTitleMarginStart =
+            defaultTitleMarginStart + if (isRtl) insets.right else insets.left
+        this.expandedTitleMarginEnd =
+            defaultTitleMarginEnd + if (isRtl) insets.left else insets.right
+        if (consume) WindowInsetsCompat.CONSUMED else windowInsets
     }
 }
 
@@ -47,7 +62,7 @@ fun View.initPaddingWindowInsetsListener(
             right = if (right) insets.right + initialRight else paddingRight,
             bottom = if (bottom) insets.bottom + initialBottom else paddingBottom
         )
-        if(consume) WindowInsetsCompat.CONSUMED else windowInsets
+        if (consume) WindowInsetsCompat.CONSUMED else windowInsets
     }
 }
 
@@ -72,6 +87,6 @@ fun View.initMarginWindowInsetsListener(
             if (right) rightMargin = insets.right + initialRight
             if (bottom) bottomMargin = insets.bottom + initialBottom
         }
-        if(consume) WindowInsetsCompat.CONSUMED else windowInsets
+        if (consume) WindowInsetsCompat.CONSUMED else windowInsets
     }
 }

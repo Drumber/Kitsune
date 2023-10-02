@@ -118,8 +118,12 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        super.onNavigationItemReselected(item)
-        binding.appBarLayout.setExpanded(true)
+        if (recyclerView.canScrollVertically(-1)) {
+            super.onNavigationItemReselected(item)
+            binding.appBarLayout.setExpanded(true)
+        } else {
+            findNavController().navigateUp()
+        }
     }
 
 }

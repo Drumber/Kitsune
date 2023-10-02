@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
@@ -294,17 +293,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 true
             }
 
-            val defaultTitleMarginStart = collapsingToolbar.expandedTitleMarginStart
-            val defaultTitleMarginEnd = collapsingToolbar.expandedTitleMarginStart
-            ViewCompat.setOnApplyWindowInsetsListener(collapsingToolbar) { view, windowInsets ->
-                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-                val isRtl = ViewCompat.getLayoutDirection(view) == ViewCompat.LAYOUT_DIRECTION_RTL
-                collapsingToolbar.expandedTitleMarginStart =
-                    defaultTitleMarginStart + if (isRtl) insets.right else insets.left
-                collapsingToolbar.expandedTitleMarginEnd =
-                    defaultTitleMarginEnd + if (isRtl) insets.left else insets.right
-                windowInsets
-            }
+            collapsingToolbar.initWindowInsetsListener(consume = false)
             toolbar.initWindowInsetsListener(consume = false)
         }
     }

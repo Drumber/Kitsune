@@ -2,11 +2,10 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginHorizontal="10dp"
     android:layout_marginVertical="5dp"
-    app:cardElevation="2dp">
+    style="?attr/materialCardViewOutlinedStyle">
     
     <RelativeLayout
         android:layout_width="match_parent"
