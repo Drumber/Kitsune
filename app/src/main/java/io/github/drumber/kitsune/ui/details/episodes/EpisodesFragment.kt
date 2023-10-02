@@ -62,7 +62,6 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
         binding.rvMedia.initMarginWindowInsetsListener(
             left = true,
             right = true,
-            bottom = true,
             consume = false
         )
 

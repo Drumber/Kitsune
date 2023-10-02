@@ -15,9 +15,7 @@
         android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.profile.ProfileFragment"
-        android:orientation="vertical"
-        android:gravity="center">
+        tools:context=".ui.main.MainActivity">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar_layout"
@@ -28,38 +26,35 @@
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:expandedTitleTextColor="@color/white"
-                app:expandedTitleGravity="center_vertical"
+                android:layout_height="?attr/collapsingToolbarLayoutLargeSize"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                tools:expandedTitleMarginStart="@dimen/profile_text_offset_expanded"
                 style="@style/Widget.Material3.CollapsingToolbar.Large">
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom">
+                    android:layout_height="match_parent"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="0.7">
 
                     <ImageView
                         android:id="@+id/iv_cover"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/cover_placeholder"
+                        android:src="?attr/colorSurface"
                         android:contentDescription="@null" />
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="?actionBarSize"
-                        android:layout_gravity="top"
-                        android:background="@drawable/top_edge_fade" />
+                        android:layout_height="80dp"
+                        android:layout_gravity="bottom"
+                        android:background="@drawable/bottom_edge_fade_surface" />
 
-                    <FrameLayout
-                        android:id="@+id/cover_spacer"
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/profile_picture_expanded"
-                        android:visibility="invisible"
-                        android:layout_marginTop="@dimen/profile_picture_offset_expanded"
-                        android:layout_marginBottom="20dp" />
+                        android:layout_height="80dp"
+                        android:layout_marginTop="-15dp"
+                        android:layout_gravity="top"
+                        android:background="@drawable/top_edge_fade_surface" />
 
                 </FrameLayout>
 
@@ -68,10 +63,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:background="@android:color/transparent"
+                    app:logo="@drawable/profile_picture_placeholder"
+                    app:logoScaleType="centerCrop"
+                    app:logoAdjustViewBounds="true"
                     app:title="@{user.name ?? @string/not_logged_in}"
                     app:layout_collapseMode="pin"
                     app:menu="@menu/profile_menu"
-                    app:titleMarginStart="@dimen/profile_text_offset_collapsed"
+                    app:titleMarginStart="10dp"
                     tools:title="Some Username"/>
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -324,22 +322,6 @@
             </androidx.core.widget.NestedScrollView>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/iv_profile_image"
-            android:layout_width="@dimen/profile_picture_expanded"
-            android:layout_height="@dimen/profile_picture_expanded"
-            android:layout_gravity="top|start"
-            android:layout_marginTop="@dimen/profile_picture_offset_expanded"
-            android:layout_marginStart="@dimen/profile_picture_offset_expanded"
-            android:elevation="4dp"
-            android:src="@drawable/profile_picture_placeholder"
-            android:transitionName="@string/profile_picture_transition_name"
-            app:finalHeight="@dimen/profile_picture_collapsed"
-            app:finalXPosition="@dimen/profile_picture_x_offset_collapsed"
-            app:finalYPosition="@dimen/profile_picture_y_offset_collapsed"
-            app:finalToolbarHeight="?attr/actionBarSize"
-            app:layout_behavior="io.github.drumber.kitsune.ui.widget.ProfilePictureBehavior" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

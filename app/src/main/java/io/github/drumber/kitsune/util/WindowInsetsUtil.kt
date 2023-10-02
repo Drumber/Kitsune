@@ -3,7 +3,14 @@ package io.github.drumber.kitsune.util
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.*
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.marginBottom
+import androidx.core.view.marginLeft
+import androidx.core.view.marginRight
+import androidx.core.view.marginTop
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 
 fun Toolbar.initWindowInsetsListener(consume: Boolean = true) {
     val initialHeight = this.layoutParams.height

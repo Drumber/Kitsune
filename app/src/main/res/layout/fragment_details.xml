@@ -21,7 +21,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.details.DetailsFragment">
+        tools:context=".ui.main.MainActivity">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/coordinator_layout"
@@ -38,11 +38,8 @@
                     android:id="@+id/collapsing_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="175dp"
-                    app:expandedTitleTextColor="@color/white"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed"
                     app:maxLines="3"
-                    app:scrimAnimationDuration="300"
-                    app:scrimVisibleHeightTrigger="150dp"
                     style="@style/Widget.Material3.CollapsingToolbar.Large">
 
                     <FrameLayout
@@ -61,13 +58,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="125dp"
                             android:layout_gravity="bottom"
-                            android:background="@drawable/bottom_edge_fade" />
+                            android:background="@drawable/bottom_edge_fade_surface" />
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="?actionBarSize"
+                            android:layout_height="80dp"
+                            android:layout_marginTop="-15dp"
                             android:layout_gravity="top"
-                            android:background="@drawable/top_edge_fade" />
+                            android:background="@drawable/top_edge_fade_surface" />
 
                     </FrameLayout>
 

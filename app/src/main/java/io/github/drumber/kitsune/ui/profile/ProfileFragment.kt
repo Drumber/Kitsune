@@ -1,15 +1,19 @@
 package io.github.drumber.kitsune.ui.profile
 
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.annotation.StringRes
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.children
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.navigation.ActivityNavigatorExtras
@@ -17,9 +21,12 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
@@ -41,20 +48,15 @@ import io.github.drumber.kitsune.ui.adapter.MediaViewHolder
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
-import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
-import io.github.drumber.kitsune.ui.widget.ProfilePictureBehavior
 import io.github.drumber.kitsune.ui.widget.chart.PieChartStyle
-import io.github.drumber.kitsune.util.extensions.clearLightStatusBar
-import io.github.drumber.kitsune.util.extensions.isLightStatusBar
-import io.github.drumber.kitsune.util.extensions.isNightMode
+import io.github.drumber.kitsune.util.extensions.getColor
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openCharacterOnMAL
 import io.github.drumber.kitsune.util.extensions.recyclerView
 import io.github.drumber.kitsune.util.extensions.setAppTheme
-import io.github.drumber.kitsune.util.extensions.setLightStatusBar
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
-import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
+import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import io.github.drumber.kitsune.util.network.ResponseData
@@ -62,7 +64,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.math.round
 
-class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
+class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
+    NavigationBarView.OnItemReselectedListener {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
@@ -82,15 +85,14 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
-        updateOptionsMenu()
 
-        if (context?.isNightMode() == false) {
-            activity?.clearLightStatusBar()
-        }
+        initToolbar()
+        updateOptionsMenu()
 
         viewModel.userModel.observe(viewLifecycleOwner) { user ->
             updateUser(user)
             updateOptionsMenu()
+            binding.swipeRefreshLayout.isEnabled = user != null
         }
 
         viewModel.fullUserModel.observe(viewLifecycleOwner) { fullUser ->
@@ -111,60 +113,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                 startActivity(intent)
             }
 
-            toolbar.setOnMenuItemClickListener { item ->
-                when (item.itemId) {
-                    R.id.menu_settings -> {
-                        val action = ProfileFragmentDirections
-                            .actionProfileFragmentToSettingsNavGraph()
-                        findNavController().navigate(action)
-                    }
-                    R.id.menu_share_profile_url -> {
-                        val user = viewModel.userModel.value
-                        val profileId = user?.slug ?: user?.id
-                        if (profileId != null) {
-                            val url = Kitsu.USER_URL_PREFIX + profileId
-                            startUrlShareIntent(url)
-                        } else {
-                            showSomethingWrongToast()
-                        }
-                    }
-                    R.id.menu_log_out -> {
-                        showLogOutConfirmationDialog()
-                    }
-                }
-                true
-            }
-
-            appBarLayout.addOnOffsetChangedListener(
-                FadingToolbarOffsetListener(
-                    requireActivity(),
-                    toolbar
-                )
-            )
-
-            ViewCompat.setOnApplyWindowInsetsListener(collapsingToolbar) { _, windowInsets ->
-                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-                collapsingToolbar.expandedTitleMarginStart = insets.left +
-                        resources.getDimensionPixelSize(R.dimen.profile_text_offset_expanded)
-                windowInsets
-            }
-            coverSpacer.initMarginWindowInsetsListener(
-                left = true,
-                top = true,
-                right = true,
-                consume = false
-            )
-            toolbar.initWindowInsetsListener(consume = false)
-
-            ViewCompat.setOnApplyWindowInsetsListener(ivProfileImage) { _, windowInsets ->
-                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-                val params = ivProfileImage.layoutParams as CoordinatorLayout.LayoutParams
-                val behavior = params.behavior as ProfilePictureBehavior
-                behavior.offsetX = insets.left.toFloat()
-                behavior.offsetY = insets.top.toFloat()
-                windowInsets
-            }
-
             swipeRefreshLayout.initPaddingWindowInsetsListener(
                 left = true,
                 right = true,
@@ -176,15 +124,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
                 setOnRefreshListener {
                     viewModel.refreshUser()
                 }
-            }
-
-            ivProfileImage.setOnClickListener {
-                val avatarImgUrl = (viewModel.fullUserModel.value?.data?.avatar
-                    ?: viewModel.userModel.value?.avatar)?.originalOrDown()
-                    ?: return@setOnClickListener
-                val title = (viewModel.fullUserModel.value?.data?.name
-                    ?: viewModel.userModel.value?.name)?.let { "$it Avatar" }
-                openImageViewer(avatarImgUrl, title, null, ivProfileImage)
             }
 
             ivCover.setOnClickListener {
@@ -200,6 +139,60 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         initStatsViewPager()
     }
 
+    private fun initToolbar() {
+        binding.apply {
+            val defaultTitleMarginStart = collapsingToolbar.expandedTitleMarginStart
+            val defaultTitleMarginEnd = collapsingToolbar.expandedTitleMarginStart
+            ViewCompat.setOnApplyWindowInsetsListener(collapsingToolbar) { view, windowInsets ->
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val isRtl = ViewCompat.getLayoutDirection(view) == ViewCompat.LAYOUT_DIRECTION_RTL
+                collapsingToolbar.expandedTitleMarginStart =
+                    defaultTitleMarginStart + if (isRtl) insets.right else insets.left
+                collapsingToolbar.expandedTitleMarginEnd =
+                    defaultTitleMarginEnd + if (isRtl) insets.left else insets.right
+                windowInsets
+            }
+
+            toolbar.initWindowInsetsListener(consume = false)
+            toolbar.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.menu_settings -> {
+                        val action = ProfileFragmentDirections
+                            .actionProfileFragmentToSettingsNavGraph()
+                        findNavController().navigate(action)
+                    }
+
+                    R.id.menu_share_profile_url -> {
+                        val user = viewModel.userModel.value
+                        val profileId = user?.slug ?: user?.id
+                        if (profileId != null) {
+                            val url = Kitsu.USER_URL_PREFIX + profileId
+                            startUrlShareIntent(url)
+                        } else {
+                            showSomethingWrongToast()
+                        }
+                    }
+
+                    R.id.menu_log_out -> {
+                        showLogOutConfirmationDialog()
+                    }
+                }
+                true
+            }
+        }
+    }
+
+    private fun setToolbarLogoClickListener() {
+        binding.toolbar.children.firstOrNull { it is ImageView }?.setOnClickListener { logoView ->
+            val avatarImgUrl = (viewModel.fullUserModel.value?.data?.avatar
+                ?: viewModel.userModel.value?.avatar)?.originalOrDown()
+                ?: return@setOnClickListener
+            val title = (viewModel.fullUserModel.value?.data?.name
+                ?: viewModel.userModel.value?.name)?.let { "$it Avatar" }
+            openImageViewer(avatarImgUrl, title, null, logoView)
+        }
+    }
+
     private fun updateUser(user: User?) {
         binding.user = user
         binding.invalidateAll()
@@ -208,12 +201,24 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
 
         glide.load(user?.avatar?.originalOrDown())
             .dontAnimate()
+            .circleCrop()
+            .override(45.toPx())
             .placeholder(R.drawable.profile_picture_placeholder)
-            .into(binding.ivProfileImage)
+            .into(object : CustomTarget<Drawable>() {
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable>?
+                ) {
+                    binding.toolbar.logo = resource
+                    setToolbarLogoClickListener()
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {}
+            })
 
         glide.load(user?.coverImage?.originalOrDown())
             .centerCrop()
-            .placeholder(R.drawable.cover_placeholder)
+            .placeholder(ColorDrawable(requireContext().theme.getColor(R.attr.colorSurface)))
             .into(binding.ivCover)
 
         user?.favorites?.let { updateFavoritesData(it) }
@@ -386,7 +391,12 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         }
     }
 
-    private fun openImageViewer(imageUrl: String, title: String?, thumbnailUrl: String?, sharedElement: View?) {
+    private fun openImageViewer(
+        imageUrl: String,
+        title: String?,
+        thumbnailUrl: String?,
+        sharedElement: View?
+    ) {
         val transitionName = sharedElement?.let { ViewCompat.getTransitionName(it) }
         val action = ProfileFragmentDirections.actionProfileFragmentToPhotoViewActivity(
             imageUrl,
@@ -395,7 +405,11 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
             transitionName
         )
         val options = if (sharedElement != null && transitionName != null) {
-            ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), sharedElement, transitionName)
+            ActivityOptionsCompat.makeSceneTransitionAnimation(
+                requireActivity(),
+                sharedElement,
+                transitionName
+            )
         } else {
             null
         }
@@ -425,11 +439,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        if (activity?.isLightStatusBar() == false && context?.isNightMode() == false) {
-            activity?.setLightStatusBar()
-        }
+    override fun onNavigationItemReselected(item: MenuItem) {
+        binding.nsvContent.smoothScrollTo(0, 0)
     }
 
     override fun onDestroyView() {

@@ -62,16 +62,11 @@ import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.LibraryUpdateResult
-import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle.applyStyle
 import io.github.drumber.kitsune.ui.widget.chart.StepAxisValueFormatter
-import io.github.drumber.kitsune.util.extensions.clearLightStatusBar
 import io.github.drumber.kitsune.util.extensions.getColor
-import io.github.drumber.kitsune.util.extensions.isLightStatusBar
-import io.github.drumber.kitsune.util.extensions.isNightMode
 import io.github.drumber.kitsune.util.extensions.navigateSafe
-import io.github.drumber.kitsune.util.extensions.setLightStatusBar
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
@@ -123,12 +118,6 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
-        if (context?.isNightMode() == false) {
-            activity?.clearLightStatusBar()
-        }
-
-        initAppBar()
-
         if (args.model != null) {
             viewModel.initMediaAdapter(args.model!!)
         } else if (!args.type.isNullOrBlank() && !args.slug.isNullOrBlank()) {
@@ -150,6 +139,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             showSomethingWrongToast()
             goBack()
         }
+
+        initAppBar()
 
         viewModel.mediaAdapter.observe(viewLifecycleOwner) { model ->
             binding.data = model
@@ -272,13 +263,6 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
     private fun initAppBar() {
         binding.apply {
-            appBarLayout.addOnOffsetChangedListener(
-                FadingToolbarOffsetListener(
-                    requireActivity(),
-                    toolbar
-                )
-            )
-
             toolbar.setNavigationOnClickListener { goBack() }
             toolbar.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
@@ -649,13 +633,6 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             binding.appBarLayout.setExpanded(true)
         } else {
             goBack()
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        if (activity?.isLightStatusBar() == false && context?.isNightMode() == false) {
-            activity?.setLightStatusBar()
         }
     }
 

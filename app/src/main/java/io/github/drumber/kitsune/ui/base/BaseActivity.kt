@@ -19,7 +19,7 @@ import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.main.MainActivity
 import io.github.drumber.kitsune.util.extensions.clearLightNavigationBar
-import io.github.drumber.kitsune.util.extensions.setStatusBarColor
+import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
 
 abstract class BaseActivity(
     @LayoutRes contentLayoutId: Int,
@@ -87,7 +87,7 @@ abstract class BaseActivity(
         WindowCompat.setDecorFitsSystemWindows(window, false)
         if (!updateSystemUiColors) return
 
-        setStatusBarColor(ContextCompat.getColor(this, R.color.translucent_status_bar))
+        setStatusBarColorRes(android.R.color.transparent)
         if (Build.VERSION.SDK_INT >= 27) {
             window.navigationBarColor = ContextCompat.getColor(this, android.R.color.transparent)
         }

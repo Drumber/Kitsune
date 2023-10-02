@@ -57,7 +57,6 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters),
         binding.rvMedia.initMarginWindowInsetsListener(
             left = true,
             right = true,
-            bottom = true,
             consume = false
         )
 

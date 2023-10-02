@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -24,7 +25,7 @@ import com.google.android.material.slider.RangeSlider
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentFilterFacetBinding
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.base.BaseFragment
+import io.github.drumber.kitsune.ui.main.FragmentDecorationPreference
 import io.github.drumber.kitsune.ui.search.SearchViewModel
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.Error
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.Initialized
@@ -37,8 +38,11 @@ import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
-class FacetFragment : BaseFragment(R.layout.fragment_filter_facet, true),
+class FacetFragment : Fragment(R.layout.fragment_filter_facet),
+    FragmentDecorationPreference,
     NavigationBarView.OnItemReselectedListener {
+
+    override val hasTransparentStatusBar = true
 
     private val binding: FragmentFilterFacetBinding by viewBinding()
 

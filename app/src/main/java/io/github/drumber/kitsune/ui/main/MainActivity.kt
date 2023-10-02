@@ -9,6 +9,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.iterator
 import androidx.core.view.updatePadding
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -30,6 +33,7 @@ import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
 import io.github.drumber.kitsune.ui.permissions.showNotificationPermissionRejectedDialog
+import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -42,7 +46,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private lateinit var navController: NavController
 
     private var overrideStartDestination: Int? = null
-    
+
     private val navigationBarView: NavigationBarView
         get() = binding.bottomNavigation
             ?: binding.navigationRail
@@ -63,6 +67,25 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navHostFragment.childFragmentManager.registerFragmentLifecycleCallbacks(object :
+            FragmentLifecycleCallbacks() {
+            private fun updateDecorationForFragment(fragment: Fragment) {
+                var statusBarColorRes = android.R.color.transparent
+                if (fragment is FragmentDecorationPreference && !fragment.hasTransparentStatusBar) {
+                    statusBarColorRes = R.color.translucent_status_bar
+                }
+                setStatusBarColorRes(statusBarColorRes)
+            }
+
+            override fun onFragmentStarted(fm: FragmentManager, f: Fragment) {
+                updateDecorationForFragment(f)
+            }
+
+            override fun onFragmentDetached(fm: FragmentManager, f: Fragment) {
+                fm.fragments.lastOrNull()?.let { updateDecorationForFragment(it) }
+            }
+        }, true)
+
         navController = navHostFragment.navController
         navigationBarView.apply {
             ViewCompat.setOnApplyWindowInsetsListener(this) { _, windowInsets ->
@@ -217,7 +240,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
         }
     }
-    
+
     private fun animateBottomNavigation(slideDown: Boolean) {
         binding.bottomNavigation?.apply {
             if (slideDown) {
@@ -266,7 +289,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         val isRtl = ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL
         val left = if (!isRtl) insets.left else 0
         val right = if (isRtl) insets.right else 0
-        updatePadding(left =left, top = insets.top, right = right, bottom = insets.bottom)
+        updatePadding(left = left, top = insets.top, right = right, bottom = insets.bottom)
         return Insets.of(left, 0, right, 0)
     }
 
@@ -276,4 +299,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         const val SHORTCUT_SETTINGS = "io.github.drumber.kitsune.SETTINGS"
     }
 
+}
+
+interface FragmentDecorationPreference {
+    val hasTransparentStatusBar: Boolean
+        get() = true
 }
