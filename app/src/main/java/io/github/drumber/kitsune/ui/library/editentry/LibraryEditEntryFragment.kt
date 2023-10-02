@@ -1,13 +1,10 @@
 package io.github.drumber.kitsune.ui.library.editentry
 
-import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.widget.TooltipCompat
@@ -17,7 +14,6 @@ import androidx.core.text.htmlEncode
 import androidx.core.text.parseAsHtml
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
@@ -28,7 +24,6 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.internal.EdgeToEdgeUtils
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.addTransform
@@ -37,17 +32,27 @@ import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
 import io.github.drumber.kitsune.domain.model.ui.library.getStringResId
 import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.ui.base.BaseDialogFragment
 import io.github.drumber.kitsune.ui.library.RatingBottomSheet
 import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel.LoadState
 import io.github.drumber.kitsune.ui.widget.CustomNumberSpinner
-import io.github.drumber.kitsune.util.*
+import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
+import io.github.drumber.kitsune.util.DateValidatorPointBetween
+import io.github.drumber.kitsune.util.RatingSystemUtil
 import io.github.drumber.kitsune.util.RatingSystemUtil.formatRatingTwenty
 import io.github.drumber.kitsune.util.extensions.getResourceId
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setMaxLinesFitHeight
+import io.github.drumber.kitsune.util.formatDate
+import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
+import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.initWindowInsetsListener
+import io.github.drumber.kitsune.util.stripTimeUtcMillis
+import io.github.drumber.kitsune.util.toDate
+import io.github.drumber.kitsune.util.todayUtcMillis
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LibraryEditEntryFragment : DialogFragment() {
+class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_library_entry) {
 
     private val args: LibraryEditEntryFragmentArgs by navArgs()
 
@@ -70,29 +75,6 @@ class LibraryEditEntryFragment : DialogFragment() {
         LibraryStatus.OnHold,
         LibraryStatus.Dropped
     )
-
-    override fun getTheme(): Int {
-        val typedValue = TypedValue()
-        requireActivity().theme.resolveAttribute(R.attr.fullScreenDialogTheme, typedValue, true)
-        return typedValue.data
-    }
-
-    @SuppressLint("RestrictedApi")
-    override fun onStart() {
-        super.onStart()
-
-        dialog?.window?.apply {
-            setLayout(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-
-            addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            attributes?.dimAmount = 0.8f
-            setWindowAnimations(R.style.Theme_Kitsune_Slide)
-            EdgeToEdgeUtils.applyEdgeToEdge(this, true)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

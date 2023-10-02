@@ -20,13 +20,13 @@
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
-                style="@style/Widget.Material3.Toolbar.Surface"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_scrollFlags="noScroll"
                 app:navigationContentDescription="@string/action_close"
                 app:navigationIcon="@drawable/ic_close_24"
-                app:title="@string/title_edit_library_entry" />
+                app:title="@string/title_edit_library_entry"
+                style="@style/Widget.Material3.Toolbar" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -418,7 +418,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         app:cardCornerRadius="0dp"
-        app:cardElevation="2dp">
+        style="?attr/materialCardViewFilledStyle">
 
         <LinearLayout
             android:id="@+id/layout_bottom_bar"
