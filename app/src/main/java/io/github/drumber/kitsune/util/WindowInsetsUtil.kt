@@ -28,10 +28,13 @@ fun Toolbar.initWindowInsetsListener(consume: Boolean = true) {
 }
 
 fun CollapsingToolbarLayout.initWindowInsetsListener(consume: Boolean = true) {
+    val initialHeight = this.layoutParams.height
     val defaultTitleMarginStart = this.expandedTitleMarginStart
     val defaultTitleMarginEnd = this.expandedTitleMarginStart
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
         val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+        view.layoutParams.height = initialHeight + insets.top
+
         val isRtl = ViewCompat.getLayoutDirection(view) == ViewCompat.LAYOUT_DIRECTION_RTL
         this.expandedTitleMarginStart =
             defaultTitleMarginStart + if (isRtl) insets.right else insets.left

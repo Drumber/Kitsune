@@ -167,6 +167,12 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
                 }
                 true
             }
+
+            // disable SwipeRefreshLayout when content is scrolled,
+            // otherwise it interferes with the CollapsingToolbarLayout
+            appBarLayout.addOnOffsetChangedListener { _, verticalOffset ->
+                swipeRefreshLayout.isEnabled = verticalOffset == 0 || swipeRefreshLayout.isRefreshing
+            }
         }
     }
 
