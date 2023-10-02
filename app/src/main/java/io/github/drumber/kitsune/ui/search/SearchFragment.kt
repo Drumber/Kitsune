@@ -33,6 +33,7 @@ import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.paging.MediaSearchPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
+import io.github.drumber.kitsune.ui.main.FragmentDecorationPreference
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.*
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
@@ -42,8 +43,11 @@ import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import java.lang.ref.WeakReference
 
 class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
+    FragmentDecorationPreference,
     OnItemClickListener<MediaSearchResult>,
     NavigationBarView.OnItemReselectedListener {
+
+    override val hasTransparentStatusBar = false
 
     private val binding: FragmentSearchBinding by viewBinding()
 

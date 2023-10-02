@@ -1,24 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.settings.ThemePreferenceFragment">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.main.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:liftOnScroll="true">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            style="?attr/collapsingToolbarLayoutLargeStyle"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:title="@string/nav_appearance"
-            app:navigationIcon="@drawable/ic_arrow_back_24"
-            app:navigationContentDescription="@string/action_back"
-            style="@style/Widget.Material3.Toolbar.Surface" />
+            android:layout_height="?attr/collapsingToolbarLayoutLargeSize"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                style="@style/Widget.Material3.Toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:navigationContentDescription="@string/action_back"
+                app:navigationIcon="@drawable/ic_arrow_back_24"
+                app:title="@string/nav_appearance"
+                app:layout_collapseMode="pin"/>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -26,25 +37,26 @@
         android:id="@+id/nsv_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            app:cardElevation="4dp">
+            style="?attr/materialCardViewOutlinedStyle">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/card_inner_padding"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/card_inner_padding">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                    android:text="@string/preference_app_theme" />
+                    android:text="@string/preference_app_theme"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch_dynamic_color"
@@ -56,9 +68,9 @@
                     android:id="@+id/layout_theme_cards_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginTop="10dp"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/card_theme_default"
@@ -66,28 +78,28 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
+                        android:checkable="true"
                         android:clickable="true"
                         android:focusable="true"
-                        android:checkable="true"
-                        app:strokeWidth="1dp"
+                        app:cardCornerRadius="5dp"
                         app:strokeColor="@color/card_stroke_color"
-                        app:cardCornerRadius="5dp">
+                        app:strokeWidth="1dp">
 
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:contentDescription="@null"
                             android:scaleType="fitXY"
-                            android:src="@drawable/ic_theme_card_default"
-                            android:contentDescription="@null" />
+                            android:src="@drawable/ic_theme_card_default" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
                             android:layout_gravity="bottom|end"
+                            android:layout_margin="10dp"
+                            android:text="@string/preference_app_theme_default"
                             android:textColor="@android:color/darker_gray"
-                            android:textSize="12sp"
-                            android:text="@string/preference_app_theme_default" />
+                            android:textSize="12sp" />
 
                     </com.google.android.material.card.MaterialCardView>
 
@@ -97,28 +109,28 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
+                        android:checkable="true"
                         android:clickable="true"
                         android:focusable="true"
-                        android:checkable="true"
-                        app:strokeWidth="1dp"
+                        app:cardCornerRadius="5dp"
                         app:strokeColor="@color/card_stroke_color"
-                        app:cardCornerRadius="5dp">
+                        app:strokeWidth="1dp">
 
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:contentDescription="@null"
                             android:scaleType="fitXY"
-                            android:src="@drawable/ic_theme_card_purple"
-                            android:contentDescription="@null" />
+                            android:src="@drawable/ic_theme_card_purple" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
                             android:layout_gravity="bottom|end"
+                            android:layout_margin="10dp"
+                            android:text="@string/preference_app_theme_purple"
                             android:textColor="@android:color/darker_gray"
-                            android:textSize="12sp"
-                            android:text="@string/preference_app_theme_purple" />
+                            android:textSize="12sp" />
 
                     </com.google.android.material.card.MaterialCardView>
 
@@ -134,8 +146,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                    android:text="@string/preference_dark_mode" />
+                    android:text="@string/preference_dark_mode"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
                 <RadioGroup
                     android:id="@+id/radio_group_dark_mode"
@@ -154,8 +166,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                    android:text="@string/preference_media_item_size" />
+                    android:text="@string/preference_media_item_size"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
                 <RadioGroup
                     android:id="@+id/radio_group_media_item_size"
@@ -164,9 +176,9 @@
 
                     <RadioButton
                         android:id="@+id/rbtn_small"
+                        style="@style/Widget.AppCompat.CompoundButton.RadioButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/Widget.AppCompat.CompoundButton.RadioButton"
                         android:text="@string/option_small" />
 
                     <RadioButton

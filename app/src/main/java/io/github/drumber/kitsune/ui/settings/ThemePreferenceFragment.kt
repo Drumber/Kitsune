@@ -27,9 +27,15 @@ class ThemePreferenceFragment : Fragment(R.layout.fragment_theme_preference) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
+            collapsingToolbar.initWindowInsetsListener(consume = false)
             toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
             toolbar.initWindowInsetsListener(consume = false)
-            nsvContent.initPaddingWindowInsetsListener(left = true, right = true, bottom = true)
+            nsvContent.initPaddingWindowInsetsListener(
+                left = true,
+                right = true,
+                bottom = true,
+                consume = false
+            )
         }
 
         initDynamicColorSwitch()
