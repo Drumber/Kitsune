@@ -116,7 +116,7 @@
         <item name="android:windowIsFloating">false</item>
     </style>
 
-    <style name="ThemeOverlay.Kitsune.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+    <style name="ThemeOverlay.Kitsune.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
         <item name="bottomSheetStyle">@style/ModalBottomSheet</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
@@ -191,7 +191,7 @@
         <item name="widgetLayout">@layout/custom_preference_switch</item>
     </style>
 
-    <style name="ShapeAppearance.Kitsune.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+    <style name="ShapeAppearance.Kitsune.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">12dp</item>
     </style>

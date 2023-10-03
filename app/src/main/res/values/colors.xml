@@ -1,36 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#312631</color>
-
-    <color name="orange_900">#bc3d2c</color>
-    <color name="orange_800">#d64a35</color>
-    <color name="orange_700">#e4503a</color>
-    <color name="orange_600">#f3563f</color>
-    <color name="orange_500">#fe5c43</color>
-    <color name="orange_400">#fd745c</color>
-    <color name="orange_300">#fc8d78</color>
-
-    <color name="yellow_900">#ed8b48</color>
-    <color name="yellow_800">#f7af55</color>
-    <color name="yellow_700">#fdc55c</color>
-    <color name="yellow_600">#ffdb64</color>
-    <color name="yellow_500">#fee561</color>
-    <color name="yellow_400">#ffea75</color>
-    
-    <!-- Purple Theme Colors -->
-    <color name="dark_purple">#161116</color>
-    <color name="dark_purple_lighter">#221B22</color>
-    <color name="purple_900">#332532</color>
-    <color name="purple_800">#433140</color>
-    <color name="purple_700">#533c4c</color>
-    <color name="purple_600">#63485a</color>
-    <color name="purple_500">#6f5064</color>
-    <color name="purple_400">#836a7a</color>
-    <color name="purple_300">#988591</color>
-    <color name="purple_200">#b4a8b0</color>
-    <color name="purple_100">#d2cbcf</color>
-
-    <color name="foreground">#000000</color>
+    <color name="ic_shortcut_fill">#6f5064</color>
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

@@ -61,9 +61,6 @@
         <item name="colorSurfaceInverse">@color/md_purple_theme_dark_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_purple_theme_dark_inversePrimary</item>
 
-        <item name="colorPlaceholderGradientStart">@color/purple_500</item>
-        <item name="colorPlaceholderGradientEnd">@color/purple_600</item>
-
         <item name="fullScreenDialogTheme">@style/Theme.Kitsune.FullScreenDialog.Purple</item>
     </style>
 
