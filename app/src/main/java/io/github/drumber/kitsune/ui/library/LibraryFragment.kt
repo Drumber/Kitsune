@@ -146,7 +146,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
                 .map { it.isLibraryUpdateOperationInProgress }
                 .distinctUntilChanged()
                 .collectLatest {
-                    binding.progressIndicator.isVisible = it
+                    binding.progressIndicator.visibility = if (it) View.VISIBLE else View.INVISIBLE
                 }
         }
 

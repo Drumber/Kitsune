@@ -116,7 +116,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="10dp"
-                                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                                    android:textAppearance="?attr/textAppearanceHeadlineSmall"
                                     android:text="@string/title_about_me" />
 
                                 <TextView
@@ -201,7 +201,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/title_favorite_anime"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                                android:textAppearance="?attr/textAppearanceHeadlineSmall"
                                 android:layout_marginBottom="10dp" />
 
                             <androidx.recyclerview.widget.RecyclerView
@@ -230,7 +230,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/title_favorite_manga"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                                android:textAppearance="?attr/textAppearanceHeadlineSmall"
                                 android:layout_marginBottom="10dp" />
 
                             <androidx.recyclerview.widget.RecyclerView
@@ -259,7 +259,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/title_favorite_characters"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                                android:textAppearance="?attr/textAppearanceHeadlineSmall"
                                 android:layout_marginBottom="10dp" />
 
                             <androidx.recyclerview.widget.RecyclerView
@@ -294,13 +294,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                                android:textAppearance="?attr/textAppearanceHeadlineSmall"
                                 android:text="@string/profile_not_logged_in_title" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                                android:textAppearance="?attr/textAppearanceBodyMedium"
                                 android:text="@string/profile_not_logged_in_text" />
 
                             <Button

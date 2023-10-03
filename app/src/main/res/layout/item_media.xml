@@ -27,7 +27,7 @@
             android:transitionName="@{@string/unique_poster_transition_name(data.id)}"
             android:clickable="true"
             android:focusable="true"
-            app:cardElevation="4dp">
+            style="@style/Widget.Kitsune.CardView.Surface">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -72,6 +72,7 @@
                     app:cardElevation="0dp"
                     app:shapeAppearance="@style/ShapeAppearance.Kitsune.SubtypeBadge"
                     app:isVisible="@{!TextUtils.isEmpty(overlayTagText)}"
+                    style="@style/Widget.Kitsune.CardView.Surface"
                     tools:ignore="RelativeOverlap,RtlHardcoded">
 
                     <com.google.android.material.textview.MaterialTextView

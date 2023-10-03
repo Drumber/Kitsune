@@ -2,7 +2,6 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginHorizontal="10dp"
     android:layout_marginVertical="5dp"
@@ -35,7 +34,7 @@
                 android:id="@+id/tv_episode_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textAppearance="?attr/textAppearanceTitleLarge"
                 android:layout_marginBottom="8dp"
                 android:maxLines="2"
                 android:ellipsize="end"
@@ -45,10 +44,10 @@
                 android:id="@+id/tv_episode_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textAppearance="?attr/textAppearanceLabelLarge"
                 android:maxLines="2"
                 android:ellipsize="end"
-                tools:text="Some Episode Title" />
+                tools:text="Episode 1" />
 
         </LinearLayout>
 

@@ -69,7 +69,7 @@
                             android:layout_height="wrap_content"
                             android:paddingBottom="5dp"
                             android:ellipsize="end"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
                             tools:text="Some Media Title - That can be long" />
 
                         <TextView

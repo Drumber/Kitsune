@@ -129,13 +129,13 @@
         <item name="shapeAppearance">@style/ShapeAppearance.Kitsune.LargeComponent</item>
     </style>
 
-    <style name="TextAppearance.Kitsune.SubtypeBadge" parent="TextAppearance.MaterialComponents.Caption">
+    <style name="TextAppearance.Kitsune.SubtypeBadge" parent="TextAppearance.Material3.LabelMedium">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">12sp</item>
     </style>
 
     <style name="Widget.Kitsune.TextView.BottomSheetTitle" parent="Widget.AppCompat.TextView">
-        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Headline6</item>
+        <item name="android:textAppearance">?attr/textAppearanceTitleMedium</item>
         <item name="android:textSize">18sp</item>
         <item name="android:layout_marginBottom">20dp</item>
         <item name="android:maxLines">2</item>

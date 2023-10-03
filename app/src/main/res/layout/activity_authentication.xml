@@ -54,7 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/title_login"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                    android:textAppearance="?attr/textAppearanceHeadlineMedium"
                     android:textColor="?attr/colorSecondary"
                     android:layout_marginBottom="24dp" />
 
@@ -118,7 +118,7 @@
                 android:id="@+id/tv_create_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceBody2"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:text="@string/login_no_account"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"

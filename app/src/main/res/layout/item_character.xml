@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:ellipsize="end"
                 android:textIsSelectable="true"
                 tools:text="Character Name" />
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:ellipsize="end"
                 android:textIsSelectable="true"
                 tools:text="Actor Name" />

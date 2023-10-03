@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:text="@string/title_description"
             android:layout_marginBottom="10dp"
-            style="@style/TextAppearance.MaterialComponents.Headline6" />
+            style="?attr/textAppearanceHeadlineSmall" />
 
         <at.blogc.android.views.ExpandableTextView
             android:id="@+id/tv_description"

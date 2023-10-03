@@ -93,7 +93,7 @@
             android:indeterminate="true"
             app:hideAnimationBehavior="outward"
             app:trackThickness="1dp"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:layout_gravity="bottom"
             app:layout_collapseMode="pin"/>
 

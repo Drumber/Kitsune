@@ -57,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/preference_app_theme"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                    android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch_dynamic_color"
@@ -148,7 +148,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/preference_dark_mode"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                    android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
                 <RadioGroup
                     android:id="@+id/radio_group_dark_mode"
@@ -168,7 +168,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/preference_media_item_size"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                    android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
                 <RadioGroup
                     android:id="@+id/radio_group_media_item_size"

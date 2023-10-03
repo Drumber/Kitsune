@@ -25,7 +25,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             tools:text="Trending This Week"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <ImageView
             android:id="@+id/iv_arrow"

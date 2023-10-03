@@ -18,10 +18,11 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardElevation="4dp"
         android:clickable="true"
         android:focusable="true"
-        android:layout_margin="5dp">
+        android:layout_margin="5dp"
+        app:cardElevation="1dp"
+        style="?attr/materialCardViewOutlinedStyle">
         
         <RelativeLayout
             android:layout_width="match_parent"
@@ -40,11 +41,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:orientation="vertical"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
-                android:layout_toEndOf="@id/iv_thumbnail"
-                android:padding="10dp">
+                android:layout_toEndOf="@id/iv_thumbnail">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -55,7 +56,9 @@
                         android:id="@+id/tv_title"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                        android:paddingBottom="5dp"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:textSize="18sp"
                         android:layout_weight="1"
                         android:ellipsize="end"
                         android:maxLines="3"
@@ -83,6 +86,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="@{data.publishingYear + ` • ` + data.subtype}"
@@ -92,7 +96,9 @@
                     android:id="@+id/tv_not_synced"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:drawableLeftCompat="@drawable/ic_cloud_off_24"
+                    android:paddingTop="4dp"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    app:drawableLeftCompat="@drawable/ic_cloud_off_16"
                     android:drawablePadding="10dp"
                     android:text="@string/library_not_synchronized"
                     android:visibility="gone"

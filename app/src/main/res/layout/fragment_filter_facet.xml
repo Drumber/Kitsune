@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="@string/filter_kind"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_kind"
@@ -64,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/filter_year"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+                    android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
                 <TextView
                     android:id="@+id/tv_year_value"
@@ -92,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/filter_avg_rating"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+                    android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
                 <TextView
                     android:id="@+id/tv_avg_rating_value"
@@ -114,7 +114,7 @@
                 android:padding="10dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/title_categories"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_categories"
@@ -138,7 +138,7 @@
                         android:layout_marginEnd="16dp"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
                         android:textSize="16sp"
                         android:text="@string/filter_select_categories" />
 
@@ -176,7 +176,7 @@
                 android:padding="10dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/filter_season"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_season"
@@ -193,7 +193,7 @@
                 android:padding="10dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/filter_subtype"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
             <io.github.drumber.kitsune.ui.widget.ExpandableLayout
                 android:id="@+id/wrapper_subtype"
@@ -238,7 +238,7 @@
                 android:padding="10dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/filter_streamers"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
             <io.github.drumber.kitsune.ui.widget.ExpandableLayout
                 android:id="@+id/wrapper_streamers"
@@ -284,7 +284,7 @@
                 android:padding="10dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/filter_age_rating"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_age_rating"

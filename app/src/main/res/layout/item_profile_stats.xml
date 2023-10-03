@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/no_data_available"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
                 android:visibility="gone"
                 tools:visibility="gone" />
 
@@ -46,7 +46,7 @@
                     android:id="@+id/tv_time_spent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                    android:textAppearance="?attr/textAppearanceTitleSmall"
                     tools:text="5.3 days spent watching anime." />
 
                 <TextView
