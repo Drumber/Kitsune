@@ -15,21 +15,23 @@
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.Material3.AppBarLayout"
+            android:fitsSystemWindows="true"
+            app:liftOnScrollTargetViewId="@id/nsv_content"
             app:liftOnScroll="true">
 
-            <FrameLayout
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_scrollFlags="scroll|snap"
+                app:titleCentered="true"
+                app:title="@string/app_name" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout_explore"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll|snap|enterAlways"
-                android:background="?attr/colorSurface">
-
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tab_layout_explore"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </FrameLayout>
+                style="@style/Widget.Material3.TabLayout.OnSurface" />
 
         </com.google.android.material.appbar.AppBarLayout>
 

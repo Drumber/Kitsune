@@ -6,12 +6,14 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentMainBinding
 import io.github.drumber.kitsune.util.extensions.recyclerView
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
+import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemReselectedListener {
@@ -24,9 +26,15 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
         super.onViewCreated(view, savedInstanceState)
         initExploreViewPager()
 
-        binding.tabLayoutExplore.initMarginWindowInsetsListener(
+        binding.appBarLayout.statusBarForeground =
+            MaterialShapeDrawable.createWithElevationOverlay(context)
+        binding.toolbar.initPaddingWindowInsetsListener(
             left = true,
-            top = true,
+            right = true,
+            consume = false
+        )
+        binding.tabLayoutExplore.initPaddingWindowInsetsListener(
+            left = true,
             right = true,
             consume = false
         )
@@ -48,6 +56,7 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
                 0 -> {
                     tab.text = getString(R.string.anime)
                 }
+
                 1 -> {
                     tab.text = getString(R.string.manga)
                 }
