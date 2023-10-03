@@ -40,10 +40,12 @@
     <color name="color_score">#1BBC9C</color>
 
     <!-- Preview colors for theme selector cards -->
-    <color name="theme_preview_default_light">@color/white</color>
-    <color name="theme_preview_default_dark">@color/black</color>
-    <color name="theme_preview_purple_light">@color/white</color>
-    <color name="theme_preview_purple_dark">@color/dark_purple_lighter</color>
+    <color name="theme_preview_default_light">@color/md_theme_light_primary</color>
+    <color name="theme_preview_default_dark">@color/md_theme_dark_primary</color>
+    <color name="theme_preview_default_text_color">@color/md_theme_light_onPrimary</color>
+    <color name="theme_preview_purple_light">@color/md_purple_theme_light_primary</color>
+    <color name="theme_preview_purple_dark">@color/md_purple_theme_dark_primary</color>
+    <color name="theme_preview_purple_text_color">@color/md_purple_theme_light_onPrimary</color>
 
     <color name="edge_fade_color">#BF000000</color>
     <color name="translucent_system_overlay">#4D000000</color>

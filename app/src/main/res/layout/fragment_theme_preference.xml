@@ -98,7 +98,7 @@
                             android:layout_gravity="bottom|end"
                             android:layout_margin="10dp"
                             android:text="@string/preference_app_theme_default"
-                            android:textColor="@android:color/darker_gray"
+                            android:textColor="@color/theme_preview_default_text_color"
                             android:textSize="12sp" />
 
                     </com.google.android.material.card.MaterialCardView>
@@ -129,7 +129,7 @@
                             android:layout_gravity="bottom|end"
                             android:layout_margin="10dp"
                             android:text="@string/preference_app_theme_purple"
-                            android:textColor="@android:color/darker_gray"
+                            android:textColor="@color/theme_preview_purple_text_color"
                             android:textSize="12sp" />
 
                     </com.google.android.material.card.MaterialCardView>
