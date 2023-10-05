@@ -21,15 +21,14 @@
             android:layout_height="?attr/actionBarSize"
             app:title="@string/nav_library"
             app:layout_scrollFlags="scroll|snap|enterAlways"
-            style="@style/Widget.Material3.Toolbar.Surface" />
+            style="@style/Widget.Material3.Toolbar" />
 
         <HorizontalScrollView
             android:id="@+id/scroll_view_filter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="none"
-            app:layout_scrollFlags="scroll|snap|enterAlways"
-            android:background="?attr/colorSurface">
+            app:layout_scrollFlags="scroll|snap|enterAlways">
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chip_group_filter"
