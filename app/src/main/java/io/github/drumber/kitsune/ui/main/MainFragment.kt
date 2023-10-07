@@ -14,13 +14,13 @@ import io.github.drumber.kitsune.util.extensions.recyclerView
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
-import org.koin.androidx.navigation.koinNavGraphViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemReselectedListener {
 
     private val binding: FragmentMainBinding by viewBinding()
 
-    private val viewModel: MainFragmentViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
+    private val viewModel: MainFragmentViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
