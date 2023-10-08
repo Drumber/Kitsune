@@ -1,7 +1,7 @@
-<center>
+<div align="center">
 <img src="./media/kitsune-logo.svg">
 <h1>Kitsune</h1>
-</center>
+</div>
 
 Unofficial android app for [Kitsu.io](https://kitsu.io). Discover new Anime and Manga and manage your Library.
 
