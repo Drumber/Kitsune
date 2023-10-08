@@ -1,0 +1,55 @@
+opt_out_usage
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  desc "Runs all the tests"
+  lane :test do
+    gradle(task: "test")
+  end
+
+  desc "Build debug and test APK for screenshots"
+  lane :build_and_screengrab do
+    build_android_app(
+      task: 'assemble',
+      build_type: 'Debug',
+      properties: {
+        'SCREENSHOT_MODE' => 'true'
+      }
+    )
+    build_android_app(
+      task: 'assemble',
+      build_type: 'AndroidTest'
+    )
+    do_screengrab()
+  end
+  
+  desc "Take screenshots"
+  lane :do_screengrab do
+    screengrab(
+      output_directory: 'fastlane/screenshots',
+      use_timestamp_suffix: false,
+      app_package_name: 'io.github.drumber.kitsune.debug',
+      tests_package_name: 'io.github.drumber.kitsune.debug.test',
+      use_tests_in_packages: 'io.github.drumber.kitsune.fastlane',
+      app_apk_path: 'app/build/outputs/apk/debug/app-debug.apk',
+      tests_apk_path: 'app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk',
+      reinstall_app: true,
+      clear_previous_screenshots: true
+    )
+  end
+end

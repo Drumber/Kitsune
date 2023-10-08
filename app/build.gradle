@@ -9,6 +9,8 @@ plugins {
     id 'com.mikepenz.aboutlibraries.plugin'
 }
 
+def screenshotMode = project.properties['SCREENSHOT_MODE'] ?: false
+
 android {
     compileSdk 34
 
@@ -21,7 +23,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "boolean", "SCREENSHOT_MODE_ENABLED", SCREENSHOT_MODE
+        buildConfigField "boolean", "SCREENSHOT_MODE_ENABLED", screenshotMode
     }
 
     ksp {
@@ -190,7 +192,7 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
 
     // Glide Transformations (only used for demo screenshots)
-    if (SCREENSHOT_MODE) {
+    if (screenshotMode) {
         debugImplementation 'jp.wasabeef:glide-transformations:4.3.0'
     }
 
@@ -199,10 +201,15 @@ dependencies {
     testImplementation "org.assertj:assertj-core:3.24.2"
     testImplementation 'com.tngtech.archunit:archunit-junit4:1.1.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.5'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3'
     testImplementation "io.insert-koin:koin-test-junit4:$koin_version"
     testImplementation "org.mockito.kotlin:mockito-kotlin:5.1.0"
     testImplementation "net.datafaker:datafaker:2.0.1"
+
+    // fastlane screengrab
+    androidTestImplementation 'tools.fastlane:screengrab:2.1.1'
 }

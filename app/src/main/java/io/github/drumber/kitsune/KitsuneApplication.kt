@@ -61,7 +61,7 @@ class KitsuneApplication : Application() {
 
         initLoggedInUser()
 
-        if (KitsunePref.checkForUpdatesOnStart) {
+        if (!BuildConfig.SCREENSHOT_MODE_ENABLED && KitsunePref.checkForUpdatesOnStart) {
             checkForNewVersion()
         }
     }

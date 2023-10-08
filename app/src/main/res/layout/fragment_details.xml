@@ -73,7 +73,6 @@
                         android:id="@+id/toolbar"
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
-                        android:background="@android:color/transparent"
                         app:layout_collapseMode="pin"
                         app:menu="@menu/details_menu"
                         app:navigationContentDescription="@string/action_back"
