@@ -222,6 +222,7 @@
                         android:id="@+id/btn_expand_subtype"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
                         app:cornerRadius="0dp"
                         android:textAllCaps="false"
                         tools:text="@string/action_show_more"
@@ -268,7 +269,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:cornerRadius="0dp"
-                        android:background="@drawable/bottom_edge_fade"
+                        android:background="@android:color/transparent"
                         android:textAllCaps="false"
                         tools:text="@string/action_show_more"
                         style="?attr/borderlessButtonStyle" />

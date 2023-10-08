@@ -435,6 +435,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
 
     override fun onNavigationItemReselected(item: MenuItem) {
         binding.nsvContent.smoothScrollTo(0, 0)
+        binding.appBarLayout.setExpanded(true)
     }
 
     override fun onDestroyView() {
