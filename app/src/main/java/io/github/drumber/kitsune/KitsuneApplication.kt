@@ -10,11 +10,12 @@ import io.github.drumber.kitsune.di.appModule
 import io.github.drumber.kitsune.domain.manager.GitHubUpdateChecker
 import io.github.drumber.kitsune.domain.repository.AuthRepository
 import io.github.drumber.kitsune.domain.repository.UserRepository
-import io.github.drumber.kitsune.domain.room.ResourceDatabase
 import io.github.drumber.kitsune.notification.NotificationChannels
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.logE
+import io.github.drumber.kitsune.util.logI
+import io.github.drumber.kitsune.util.logW
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -45,7 +46,7 @@ class KitsuneApplication : Application() {
             modules(appModule)
         }
 
-        //performMigrations()
+        performMigrations()
 
         Kotpref.init(this)
 
@@ -60,16 +61,30 @@ class KitsuneApplication : Application() {
 
         initLoggedInUser()
 
-        if (KitsunePref.checkForUpdatesOnStart) {
+        if (!BuildConfig.SCREENSHOT_MODE_ENABLED && KitsunePref.checkForUpdatesOnStart) {
             checkForNewVersion()
         }
     }
 
     private fun performMigrations() {
         // 1.8.0 - replaced ResourceDatabase with LocalDatabase
-        val resourceDatabase: ResourceDatabase = get()
-        resourceDatabase.clearAllTables()
-        resourceDatabase.close()
+        listOf("resources.db", "resources.db-shm", "resources.db-wal").forEach {
+            val databaseFile = getDatabasePath(it)
+            if (databaseFile.isFile) {
+                try {
+                    val isDeleted = databaseFile.delete()
+                    if (isDeleted)
+                        logI("[Migration-1.8.0] Deleted database file '${databaseFile.absolutePath}'.")
+                    else
+                        logW("[Migration-1.8.0] Failed to delete database file '${databaseFile.absolutePath}'.")
+                } catch (e: Exception) {
+                    logE(
+                        "[Migration-1.8.0] Error while deleting database file '${databaseFile.absolutePath}'.",
+                        e
+                    )
+                }
+            }
+        }
     }
 
     private fun initLoggedInUser() {

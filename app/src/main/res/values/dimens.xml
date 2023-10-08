@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="zero_dp">0dp</dimen>
+
     <!-- Media item card -->
     <dimen name="media_item_width_small">106dp</dimen>
     <dimen name="media_item_height_small">150dp</dimen>

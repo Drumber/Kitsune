@@ -3,12 +3,11 @@ package io.github.drumber.kitsune.ui.details.characters
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -19,14 +18,13 @@ import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.ui.adapter.paging.CharacterPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.util.extensions.openCharacterOnMAL
-import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters),
-    AdapterView.OnItemClickListener {
+class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters) {
 
     private val args: CharactersFragmentArgs by navArgs()
 
@@ -48,22 +46,37 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters),
             viewModel.retry(args.mediaId, args.isAnime)
         }
 
-        binding.toolbar.apply {
-            initWindowInsetsListener(false)
-            setNavigationOnClickListener { findNavController().navigateUp() }
+        binding.apply {
+            collapsingToolbar.initWindowInsetsListener(consume = false)
+            toolbar.initWindowInsetsListener(false)
+            toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+
+            rvMedia.initMarginWindowInsetsListener(
+                left = true,
+                right = true,
+                consume = false
+            )
         }
 
-        binding.languageWrapper.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
-
-        binding.autoCompleteTextView.onItemClickListener = this
+        val filterAdapter = CharacterFilterAdapter(false) { language ->
+            viewModel.setLanguage(language)
+        }
+        val pagingAdapter = CharacterPagingAdapter(Glide.with(this)) { _, character ->
+            character.malId?.let { malId ->
+                openCharacterOnMAL(malId)
+            }
+        }
+        val concatAdapter = ConcatAdapter(
+            filterAdapter,
+            pagingAdapter.applyLoadStateListenerWithLoadStateHeaderAndFooter()
+        )
+        setRecyclerViewAdapter(concatAdapter)
 
         viewModel.languages.observe(viewLifecycleOwner) { languages ->
-            binding.fieldLanguage.isVisible = languages.isNotEmpty()
-            val adapter = ArrayAdapter(requireContext(), R.layout.item_dropdown, languages)
-            binding.autoCompleteTextView.apply {
-                setAdapter(adapter)
-                setText(viewModel.selectedLanguage, false)
-            }
+            filterAdapter.isViewHolderVisible = languages.isNotEmpty()
+            filterAdapter.languages = languages
+            filterAdapter.selectedLanguage = viewModel.selectedLanguage
+            filterAdapter.notifyItemChanged()
         }
 
         viewModel.isLoadingLanguages.observe(viewLifecycleOwner) { isLoading ->
@@ -75,16 +88,9 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters),
             }
         }
 
-        val adapter = CharacterPagingAdapter(Glide.with(this)) { _, character ->
-            character.malId?.let { malId ->
-                openCharacterOnMAL(malId)
-            }
-        }
-        setRecyclerViewAdapter(adapter)
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.dataSource.collectLatest { data ->
-                adapter.submitData(data)
+                pagingAdapter.submitData(data)
             }
         }
     }
@@ -94,21 +100,12 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters),
             LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
     }
 
-    override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        val language = parent.getItemAtPosition(position) as String
-        viewModel.setLanguage(language)
-    }
-
     override fun onNavigationItemReselected(item: MenuItem) {
-        super.onNavigationItemReselected(item)
-        binding.appBarLayout.setExpanded(true)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding.autoCompleteTextView.apply {
-            onItemClickListener = null
-            setAdapter(null)
+        if (recyclerView.canScrollVertically(-1)) {
+            super.onNavigationItemReselected(item)
+            binding.appBarLayout.setExpanded(true)
+        } else {
+            findNavController().navigateUp()
         }
     }
 

@@ -17,6 +17,7 @@ import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.base.MediaCollectionFragment
 import io.github.drumber.kitsune.ui.base.MediaCollectionViewModel
 import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -42,10 +43,17 @@ class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) 
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
+        binding.rvMedia.initMarginWindowInsetsListener(
+            left = true,
+            right = true,
+            consume = false
+        )
+
         viewModel.setMediaSelector(args.mediaSelector)
 
+        binding.collapsingToolbar.initWindowInsetsListener(consume = false)
         binding.toolbar.apply {
-            initWindowInsetsListener(false)
+            initWindowInsetsListener(consume = false)
             title = args.title
             setNavigationOnClickListener { findNavController().navigateUp() }
         }

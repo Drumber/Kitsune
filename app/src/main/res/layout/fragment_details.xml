@@ -21,7 +21,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.details.DetailsFragment">
+        tools:context=".ui.main.MainActivity">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/coordinator_layout"
@@ -37,38 +37,35 @@
                 <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:id="@+id/collapsing_toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:contentScrim="?attr/colorSurface"
-                    app:expandedTitleGravity="bottom"
-                    app:expandedTitleTextAppearance="@style/TextAppearance.Kitsune.CollapsingToolbar.Expanded"
+                    android:layout_height="?attr/collapsingToolbarLayoutLargeSize"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed"
                     app:maxLines="3"
-                    app:scrimAnimationDuration="300"
-                    app:scrimVisibleHeightTrigger="150dp">
+                    style="@style/Widget.Material3.CollapsingToolbar.Large">
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         app:layout_collapseMode="parallax"
                         app:layout_collapseParallaxMultiplier="0.7">
 
                         <ImageView
                             android:id="@+id/iv_cover"
                             android:layout_width="match_parent"
-                            android:layout_height="200dp"
+                            android:layout_height="match_parent"
                             android:contentDescription="@null" />
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="100dp"
+                            android:layout_height="125dp"
                             android:layout_gravity="bottom"
-                            android:background="@drawable/bottom_edge_fade" />
+                            android:background="@drawable/bottom_edge_fade_surface" />
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="100dp"
+                            android:layout_height="80dp"
+                            android:layout_marginTop="-15dp"
                             android:layout_gravity="top"
-                            android:background="@drawable/top_edge_fade" />
+                            android:background="@drawable/top_edge_fade_surface" />
 
                     </FrameLayout>
 
@@ -160,7 +157,7 @@
 
                             <Button
                                 android:id="@+id/btn_edit_library_entry"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/library_action_edit"
@@ -207,7 +204,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
                             android:text="@string/title_details"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                            android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
                         <include
                             android:id="@+id/section_details_info"
@@ -218,7 +215,7 @@
 
                     <Button
                         android:id="@+id/btn_media_units"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@{data.isAnime() ? @string/title_episodes : @string/title_chapters}"
@@ -226,7 +223,7 @@
 
                     <Button
                         android:id="@+id/btn_characters"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -255,7 +252,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
                             android:text="@string/title_more_franchise"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                            android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_franchise"
@@ -283,7 +280,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
                             android:text="@string/title_streamer"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                            android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_streamer"
@@ -310,7 +307,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
                             android:text="@string/title_ratings"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                            android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
                         <com.github.mikephil.charting.charts.BarChart
                             android:id="@+id/chart_ratings"

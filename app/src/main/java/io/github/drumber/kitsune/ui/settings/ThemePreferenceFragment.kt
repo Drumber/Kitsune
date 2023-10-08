@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.chibatching.kotpref.livedata.asLiveData
+import com.google.android.material.color.DynamicColors
 import com.google.android.material.radiobutton.MaterialRadioButton
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.AppTheme
@@ -24,6 +26,35 @@ class ThemePreferenceFragment : Fragment(R.layout.fragment_theme_preference) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.apply {
+            collapsingToolbar.initWindowInsetsListener(consume = false)
+            toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+            toolbar.initWindowInsetsListener(consume = false)
+            nsvContent.initPaddingWindowInsetsListener(
+                left = true,
+                right = true,
+                bottom = true,
+                consume = false
+            )
+        }
+
+        initDynamicColorSwitch()
+        initThemePickerCards()
+        initDarkModeRadioGroup()
+        initMediaItemSizeRadioGroup()
+    }
+
+    private fun initDynamicColorSwitch() {
+        binding.switchDynamicColor.apply {
+            isVisible = DynamicColors.isDynamicColorAvailable()
+            isChecked = KitsunePref.useDynamicColorTheme
+            setOnCheckedChangeListener { _, isChecked ->
+                KitsunePref.useDynamicColorTheme = isChecked
+            }
+        }
+    }
+
+    private fun initThemePickerCards() {
         KitsunePref.asLiveData(KitsunePref::appTheme).observe(viewLifecycleOwner) { theme ->
             binding.apply {
                 cardThemeDefault.isChecked = theme == AppTheme.DEFAULT
@@ -32,9 +63,7 @@ class ThemePreferenceFragment : Fragment(R.layout.fragment_theme_preference) {
         }
 
         binding.apply {
-            toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-            toolbar.initWindowInsetsListener(consume = false)
-            nsvContent.initPaddingWindowInsetsListener(left = true, right = true, bottom = true)
+            layoutThemeCardsContainer.isVisible = !KitsunePref.useDynamicColorTheme
 
             cardThemeDefault.setOnClickListener {
                 KitsunePref.appTheme = AppTheme.DEFAULT
@@ -44,9 +73,6 @@ class ThemePreferenceFragment : Fragment(R.layout.fragment_theme_preference) {
                 KitsunePref.appTheme = AppTheme.PURPLE
             }
         }
-
-        initDarkModeRadioGroup()
-        initMediaItemSizeRadioGroup()
     }
 
     private fun initDarkModeRadioGroup() {

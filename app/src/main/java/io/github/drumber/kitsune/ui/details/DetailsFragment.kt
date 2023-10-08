@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
@@ -62,18 +61,14 @@ import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.LibraryUpdateResult
-import io.github.drumber.kitsune.ui.widget.FadingToolbarOffsetListener
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle.applyStyle
 import io.github.drumber.kitsune.ui.widget.chart.StepAxisValueFormatter
-import io.github.drumber.kitsune.util.extensions.clearLightStatusBar
 import io.github.drumber.kitsune.util.extensions.getColor
-import io.github.drumber.kitsune.util.extensions.isLightStatusBar
-import io.github.drumber.kitsune.util.extensions.isNightMode
 import io.github.drumber.kitsune.util.extensions.navigateSafe
-import io.github.drumber.kitsune.util.extensions.setLightStatusBar
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
+import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
@@ -123,12 +118,6 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
-        if (context?.isNightMode() == false) {
-            activity?.clearLightStatusBar()
-        }
-
-        initAppBar()
-
         if (args.model != null) {
             viewModel.initMediaAdapter(args.model!!)
         } else if (!args.type.isNullOrBlank() && !args.slug.isNullOrBlank()) {
@@ -151,6 +140,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             goBack()
         }
 
+        initAppBar()
+
         viewModel.mediaAdapter.observe(viewLifecycleOwner) { model ->
             binding.data = model
             updateTitlesInDetailsTable(model.titles)
@@ -167,7 +158,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 .into(binding.ivCover)
 
             glide.load(model.posterImage)
-                .addTransform(RoundedCorners(8))
+                .addTransform(RoundedCorners(8.toPx()))
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivThumbnail)
 
@@ -272,13 +263,6 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
     private fun initAppBar() {
         binding.apply {
-            appBarLayout.addOnOffsetChangedListener(
-                FadingToolbarOffsetListener(
-                    requireActivity(),
-                    toolbar
-                )
-            )
-
             toolbar.setNavigationOnClickListener { goBack() }
             toolbar.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
@@ -310,17 +294,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 true
             }
 
-            val defaultTitleMarginStart = collapsingToolbar.expandedTitleMarginStart
-            val defaultTitleMarginEnd = collapsingToolbar.expandedTitleMarginStart
-            ViewCompat.setOnApplyWindowInsetsListener(collapsingToolbar) { view, windowInsets ->
-                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-                val isRtl = ViewCompat.getLayoutDirection(view) == ViewCompat.LAYOUT_DIRECTION_RTL
-                collapsingToolbar.expandedTitleMarginStart =
-                    defaultTitleMarginStart + if (isRtl) insets.right else insets.left
-                collapsingToolbar.expandedTitleMarginEnd =
-                    defaultTitleMarginEnd + if (isRtl) insets.left else insets.right
-                windowInsets
-            }
+            collapsingToolbar.initWindowInsetsListener(consume = false)
             toolbar.initWindowInsetsListener(consume = false)
         }
     }
@@ -649,13 +623,6 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             binding.appBarLayout.setExpanded(true)
         } else {
             goBack()
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        if (activity?.isLightStatusBar() == false && context?.isNightMode() == false) {
-            activity?.setLightStatusBar()
         }
     }
 

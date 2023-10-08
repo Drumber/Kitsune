@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_margin="10dp"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:textAppearance="?attr/textAppearanceHeadlineSmall"
                     android:maxLines="3"
                     android:ellipsize="end"
                     android:textColor="@color/white"

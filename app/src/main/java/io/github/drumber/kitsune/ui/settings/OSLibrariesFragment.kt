@@ -16,6 +16,7 @@ class OSLibrariesFragment : Fragment(R.layout.fragment_os_libraries) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.collapsingToolbar.initWindowInsetsListener(consume = false)
         binding.toolbar.apply {
             initWindowInsetsListener(consume = false)
             setNavigationOnClickListener { findNavController().navigateUp() }

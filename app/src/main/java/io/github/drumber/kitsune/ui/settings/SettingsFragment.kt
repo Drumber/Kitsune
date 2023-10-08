@@ -15,7 +15,6 @@ import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.ListPreference.SimpleSummaryProvider
 import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -31,17 +30,19 @@ import io.github.drumber.kitsune.domain.model.infrastructure.user.User
 import io.github.drumber.kitsune.domain.model.preference.StartPagePref
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.ui.base.BasePreferenceFragment
 import io.github.drumber.kitsune.ui.permissions.isNotificationPermissionGranted
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
 import io.github.drumber.kitsune.util.extensions.openUrl
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.initWindowInsetsListener
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
-class SettingsFragment : PreferenceFragmentCompat() {
+class SettingsFragment : BasePreferenceFragment() {
 
     private val viewModel: SettingsViewModel by viewModel()
 
@@ -138,9 +139,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.initPaddingWindowInsetsListener(left = true, top = true, right = true, consume = false)
         val binding = FragmentPreferenceBinding.bind(view)
-        binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+        binding.apply {
+            collapsingToolbar.initWindowInsetsListener(consume = false)
+            toolbar.initWindowInsetsListener(consume = false)
+            toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+        }
 
         viewModel.errorMessageListener = {
             Snackbar.make(view, "Error: ${it.getMessage(requireContext())}", Snackbar.LENGTH_LONG)
@@ -162,7 +166,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
         savedInstanceState: Bundle?
     ): RecyclerView {
         val recyclerView = super.onCreateRecyclerView(inflater, parent, savedInstanceState)
-        recyclerView.initPaddingWindowInsetsListener(bottom = true, consume = false)
+        recyclerView.initPaddingWindowInsetsListener(
+            left = true,
+            right = true,
+            bottom = true,
+            consume = false
+        )
         return recyclerView
     }
 

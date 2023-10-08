@@ -48,6 +48,7 @@ import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibraryUpdateRes
 import io.github.drumber.kitsune.util.RatingSystemUtil
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
+import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbarOnAnyFailure
@@ -59,7 +60,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
+class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     MenuProvider,
     LibraryEntriesAdapter.LibraryEntryActionListener,
     NavigationBarView.OnItemReselectedListener {
@@ -96,6 +97,25 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
 
         binding.apply {
             toolbar.initWindowInsetsListener(consume = false)
+            scrollViewFilter.initPaddingWindowInsetsListener(
+                left = true,
+                right = true,
+                consume = false
+            )
+            var isStatusBarTransparent = true
+            appBarLayout.addOnOffsetChangedListener { _, verticalOffset ->
+                val shouldSetStatusBarTransparent = verticalOffset == 0
+                if (isStatusBarTransparent == shouldSetStatusBarTransparent)
+                    return@addOnOffsetChangedListener
+                requireActivity().setStatusBarColorRes(
+                    if (shouldSetStatusBarTransparent)
+                        android.R.color.transparent
+                    else
+                        R.color.translucent_status_bar
+                )
+                isStatusBarTransparent = shouldSetStatusBarTransparent
+            }
+
             swipeRefreshLayout.initPaddingWindowInsetsListener(
                 left = true,
                 right = true,
@@ -147,7 +167,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, false),
                 .map { it.isLibraryUpdateOperationInProgress }
                 .distinctUntilChanged()
                 .collectLatest {
-                    binding.progressIndicator.isVisible = it
+                    binding.progressIndicator.visibility = if (it) View.VISIBLE else View.INVISIBLE
                 }
         }
 

@@ -4,12 +4,14 @@
     android:key="@string/preference_file_key">
 
     <PreferenceCategory
-        android:title="@string/preference_category_ui">
+        android:title="@string/preference_category_ui"
+        app:iconSpaceReserved="false">
 
         <Preference
             android:key="@string/preference_key_fragment_appearance"
             android:title="@string/nav_appearance"
-            android:summary="@string/preference_appearance_description" />
+            android:summary="@string/preference_appearance_description"
+            app:iconSpaceReserved="false" />
 
 <!--        <ListPreference-->
 <!--            android:key="@string/preference_key_language"-->
@@ -20,67 +22,80 @@
         <ListPreference
             android:key="@string/preference_key_start_fragment"
             android:title="@string/preference_start_fragment"
-            android:entries="@array/preference_start_fragment_entries" />
+            android:entries="@array/preference_start_fragment_entries"
+            app:iconSpaceReserved="false" />
 
         <ListPreference
             android:key="@string/preference_key_titles"
             android:title="@string/preference_titles"
             android:summary="@string/preference_titles_description"
-            android:entries="@array/preference_titles_values"/>
+            android:entries="@array/preference_titles_values"
+            app:iconSpaceReserved="false" />
 
         <ListPreference
             android:key="@string/preference_key_country"
-            android:title="@string/preference_country" />
+            android:title="@string/preference_country"
+            app:iconSpaceReserved="false" />
 
         <ListPreference
             android:key="@string/preference_key_sfw_filter"
             android:title="@string/preference_adult_content"
-            android:entries="@array/preference_sfw_filter_values" />
+            android:entries="@array/preference_sfw_filter_values"
+            app:iconSpaceReserved="false" />
 
         <ListPreference
             android:key="@string/preference_key_rating_system"
             android:title="@string/preference_rating_system"
-            android:entries="@array/preference_rating_system_values" />
+            android:entries="@array/preference_rating_system_values"
+            app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/preference_category_account">
+        android:title="@string/preference_category_account"
+        app:iconSpaceReserved="false">
 
         <EditTextPreference
             android:key="@string/preference_key_display_name"
-            android:title="@string/preference_display_name" />
+            android:title="@string/preference_display_name"
+            app:iconSpaceReserved="false" />
 
         <EditTextPreference
             android:key="@string/preference_key_profile_url"
-            android:title="@string/preference_profile_url" />
+            android:title="@string/preference_profile_url"
+            app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/preference_category_advanced">
+        android:title="@string/preference_category_advanced"
+        app:iconSpaceReserved="false">
 
         <SwitchPreferenceCompat
             android:key="@string/preference_key_remember_search_filters"
             android:title="@string/preference_remember_search_filters"
             android:summary="@string/preference_remember_search_filters_description"
-            android:defaultValue="true" />
+            android:defaultValue="true"
+            app:iconSpaceReserved="false" />
 
         <SwitchPreferenceCompat
             android:key="@string/preference_key_check_for_updates_on_start"
             android:title="@string/preference_check_for_updates"
             android:summary="@string/preference_check_for_updates_description"
-            android:defaultValue="true" />
+            android:defaultValue="true"
+            app:iconSpaceReserved="false" />
 
         <Preference
             android:key="@string/preference_key_app_logs"
             android:title="@string/preference_app_logs"
-            android:summary="@string/preference_app_logs_description" />
+            android:summary="@string/preference_app_logs_description"
+            app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/preference_category_about">
+        android:title="@string/preference_category_about"
+        app:iconSpaceReserved="false">
 
         <Preference
             android:key="@string/preference_key_app_version"

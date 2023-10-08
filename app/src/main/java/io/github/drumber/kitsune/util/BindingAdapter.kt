@@ -12,6 +12,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.databinding.BindingAdapter
 import at.blogc.android.views.ExpandableTextView
 import com.bumptech.glide.Glide
+import com.google.android.material.button.MaterialButton
 import io.github.drumber.kitsune.R
 
 object BindingAdapter {
@@ -73,6 +74,12 @@ object BindingAdapter {
     @BindingAdapter("tooltip")
     fun tooltip(view: View, text: String) {
         TooltipCompat.setTooltipText(view, text)
+    }
+
+    @JvmStatic
+    @BindingAdapter("iconPadding")
+    fun iconPadding(button: MaterialButton, padding: Float) {
+        button.iconPadding = padding.toInt()
     }
 
 }

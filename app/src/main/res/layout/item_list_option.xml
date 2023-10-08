@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textAppearance="?attr/textAppearanceTitleSmall"
                 android:text="@{title}"
                 tools:text="Favorite" />
 
@@ -64,7 +64,7 @@
                 app:isVisible="@{subtitle != null}"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textAppearance="?attr/textAppearanceBodySmall"
                 android:text="@{subtitle}"
                 tools:text="Some subtitle" />
 

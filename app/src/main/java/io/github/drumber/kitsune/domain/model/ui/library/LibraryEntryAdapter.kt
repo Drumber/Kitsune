@@ -14,13 +14,13 @@ class LibraryEntryAdapter(private val wrapper: LibraryEntryWrapper) {
         get() = libraryEntry.anime?.episodeCount ?: libraryEntry.manga?.chapterCount
 
     val episodes: String
-        get() = episodeCount?.toString() ?: "?"
+        get() = episodeCount?.toString() ?: "∞"
 
     val progressCount: Int?
         get() = wrapper.progress
 
     val progress: String
-        get() = progressCount?.toString() ?: "?"
+        get() = progressCount?.toString() ?: "-"
 
     val hasEpisodesCount: Boolean
         get() = episodeCount != null
@@ -29,7 +29,7 @@ class LibraryEntryAdapter(private val wrapper: LibraryEntryWrapper) {
         get() = progressCount?.equals(0) == false
 
     val hasStartedWatchingOrIsCurrent: Boolean
-        get() = hasStartedWatching || libraryEntry.status == LibraryStatus.Current
+        get() = hasStartedWatching || wrapper.status == LibraryStatus.Current
 
     val canWatchEpisode: Boolean
         get() = progressCount != episodeCount
@@ -38,6 +38,6 @@ class LibraryEntryAdapter(private val wrapper: LibraryEntryWrapper) {
         get() = wrapper.ratingTwenty?.formatRatingTwenty()
 
     val hasRating: Boolean
-        get() = libraryEntry.ratingTwenty != null
+        get() = wrapper.ratingTwenty != null
 
 }

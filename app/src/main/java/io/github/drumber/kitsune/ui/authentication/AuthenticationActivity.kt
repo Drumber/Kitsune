@@ -103,7 +103,7 @@ class AuthenticationActivity : BaseActivity(R.layout.activity_authentication, fa
         binding.apply {
             tvCreateAccount.movementMethod = LinkMovementMethod.getInstance()
 
-            btnBack.setOnClickListener {
+            toolbar.setNavigationOnClickListener {
                 setResult(Activity.RESULT_CANCELED)
                 finish()
             }

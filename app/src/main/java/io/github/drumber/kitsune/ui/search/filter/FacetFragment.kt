@@ -19,11 +19,13 @@ import com.algolia.instantsearch.android.list.autoScrollToStart
 import com.algolia.instantsearch.core.connection.ConnectionHandler
 import com.algolia.instantsearch.filter.facet.connectView
 import com.algolia.instantsearch.filter.range.connectView
+import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.slider.RangeSlider
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentFilterFacetBinding
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.ui.main.FragmentDecorationPreference
 import io.github.drumber.kitsune.ui.search.SearchViewModel
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.Error
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.Initialized
@@ -37,7 +39,10 @@ import io.github.drumber.kitsune.util.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class FacetFragment : Fragment(R.layout.fragment_filter_facet),
+    FragmentDecorationPreference,
     NavigationBarView.OnItemReselectedListener {
+
+    override val hasTransparentStatusBar = true
 
     private val binding: FragmentFilterFacetBinding by viewBinding()
 
@@ -54,7 +59,11 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
             setOnMenuItemClickListener { onMenuItemClicked(it) }
         }
 
-        binding.nsvContent.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
+        binding.nsvContent.initPaddingWindowInsetsListener(
+            left = true,
+            right = true,
+            consume = false
+        )
 
         viewModel.filterFacets.observe(viewLifecycleOwner) { filterFacets ->
             createFilterViews(filterFacets)
@@ -92,6 +101,7 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
                 viewModel.clearSearchFilter()
                 true
             }
+
             else -> false
         }
     }
@@ -128,7 +138,10 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
     private fun createFilterViews(filterFacets: SearchViewModel.FilterFacets) {
         val adapterKind = FacetListAdapter(FilterFacetListViewHolder.Factory)
         binding.rvKind.initAdapter(adapterKind, binding.tvKind)
-        connection += filterFacets.kindConnector.connectView(adapterKind, filterFacets.kindPresenter)
+        connection += filterFacets.kindConnector.connectView(
+            adapterKind,
+            filterFacets.kindPresenter
+        )
 
         val yearView = IntNumberRangeView(binding.sliderYear, lifecycleScope)
         binding.sliderYear.attachTextView(binding.tvYearValue)
@@ -140,26 +153,40 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
 
         val adapterSeason = FacetListAdapter(FilterFacetListViewHolder.Factory)
         binding.rvSeason.initAdapter(adapterSeason, binding.tvSeason)
-        connection += filterFacets.seasonConnector.connectView(adapterSeason, filterFacets.seasonPresenter)
+        connection += filterFacets.seasonConnector.connectView(
+            adapterSeason,
+            filterFacets.seasonPresenter
+        )
 
         val adapterSubtype = FacetListAdapter(FilterFacetListViewHolder.Factory)
         binding.rvSubtype.initAdapter(adapterSubtype, binding.tvSubtype)
         binding.wrapperSubtype.connectButton(binding.btnExpandSubtype)
-        connection += filterFacets.subtypeConnector.connectView(adapterSubtype, filterFacets.subtypePresenter)
+        connection += filterFacets.subtypeConnector.connectView(
+            adapterSubtype,
+            filterFacets.subtypePresenter
+        )
 
         val adapterStreamers = FacetListAdapter(FilterFacetListViewHolder.Factory)
         binding.rvStreamers.initAdapter(adapterStreamers, binding.tvStreamers)
         binding.wrapperStreamers.connectButton(binding.btnExpandStreamers)
-        connection += filterFacets.streamersConnector.connectView(adapterStreamers, filterFacets.streamersPresenter)
+        connection += filterFacets.streamersConnector.connectView(
+            adapterStreamers,
+            filterFacets.streamersPresenter
+        )
 
         val adapterAgeRating = FacetListAdapter(FilterFacetListViewHolder.Factory)
         binding.rvAgeRating.initAdapter(adapterAgeRating, binding.tvAgeRating)
-        connection += filterFacets.ageRatingConnector.connectView(adapterAgeRating, filterFacets.ageRatingPresenter)
+        connection += filterFacets.ageRatingConnector.connectView(
+            adapterAgeRating,
+            filterFacets.ageRatingPresenter
+        )
     }
 
     private fun RecyclerView.initAdapter(adapter: RecyclerView.Adapter<*>, label: View? = null) {
         this.adapter = adapter
         layoutManager = LinearLayoutManager(requireContext())
+        val divider = MaterialDividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)
+        addItemDecoration(divider)
         autoScrollToStart(adapter)
         if (label != null) {
             adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {

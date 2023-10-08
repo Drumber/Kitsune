@@ -18,7 +18,6 @@ import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.widget.LoadStateSpanSizeLookup
-import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import kotlin.math.floor
 import kotlin.math.max
 
@@ -36,8 +35,6 @@ abstract class BaseCollectionFragment(@LayoutRes contentLayoutId: Int) :
 
         initRecyclerView(recyclerView)
         resourceLoadingBinding?.btnRetry?.setOnClickListener(this)
-
-        recyclerView.initMarginWindowInsetsListener(left = true, right = true, consume = false)
     }
 
     protected open fun initRecyclerView(recyclerView: RecyclerView) {
@@ -57,26 +54,37 @@ abstract class BaseCollectionFragment(@LayoutRes contentLayoutId: Int) :
     }
 
     fun setRecyclerViewAdapter(adapter: RecyclerView.Adapter<*>) {
-        val oldAdapter = recyclerView.adapter
-        if (oldAdapter is PagingDataAdapter<*, *>) {
-            oldAdapter.removeLoadStateListener(loadStateListener)
+        recyclerView.adapter?.let { oldAdapter ->
+            removeLoadStateListenerFromAdapter(oldAdapter)
         }
 
         recyclerView.adapter = if (adapter is PagingDataAdapter<*, *>) {
-            adapter.addLoadStateListener(loadStateListener)
-
             (recyclerView.layoutManager as? GridLayoutManager)?.let { gridLayout ->
                 // this will make sure to display header and footer with full width
                 gridLayout.spanSizeLookup = LoadStateSpanSizeLookup(adapter, gridLayout.spanCount)
             }
-
-            adapter.withLoadStateHeaderAndFooter(
-                header = ResourceLoadStateAdapter(adapter),
-                footer = ResourceLoadStateAdapter(adapter)
-            )
+            
+            adapter.applyLoadStateListenerWithLoadStateHeaderAndFooter()
         } else {
             adapter
         }
+    }
+
+    fun removeLoadStateListenerFromAdapter(adapter: RecyclerView.Adapter<*>) {
+        if (adapter is PagingDataAdapter<*, *>) {
+            adapter.removeLoadStateListener(loadStateListener)
+        } else if (adapter is ConcatAdapter) {
+            adapter.adapters.forEach { removeLoadStateListenerFromAdapter(it) }
+        }
+    }
+
+    fun PagingDataAdapter<*, *>.applyLoadStateListenerWithLoadStateHeaderAndFooter(): ConcatAdapter {
+        this.addLoadStateListener(loadStateListener)
+
+        return this.withLoadStateHeaderAndFooter(
+            header = ResourceLoadStateAdapter(this),
+            footer = ResourceLoadStateAdapter(this)
+        )
     }
 
     /** Triggered when clicking on retry button. */

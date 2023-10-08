@@ -7,6 +7,7 @@
     tools:context=".ui.medialist.MediaListFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -16,45 +17,24 @@
             android:layout_height="wrap_content"
             app:liftOnScroll="true">
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:title="@string/title_characters"
-                app:navigationIcon="@drawable/ic_arrow_back_24"
-                app:navigationContentDescription="@string/action_back"
-                app:layout_scrollFlags="scroll|enterAlways|snap"
-                style="@style/Widget.MaterialComponents.Toolbar.Surface" />
+                android:layout_height="?attr/collapsingToolbarLayoutLargeSize"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                style="?attr/collapsingToolbarLayoutLargeStyle">
 
-            <FrameLayout
-                android:id="@+id/language_wrapper"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll|enterAlways|snap"
-                android:background="?attr/colorSurface">
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:title="@string/title_characters"
+                    app:navigationIcon="@drawable/ic_arrow_back_24"
+                    app:navigationContentDescription="@string/action_back"
+                    app:layout_collapseMode="pin"
+                    style="@style/Widget.Material3.Toolbar" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/field_language"
-                    android:layout_width="wrap_content"
-                    android:visibility="gone"
-                    tools:visibility="visible"
-                    android:layout_height="36dp"
-                    android:layout_gravity="end"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginHorizontal="5dp"
-                    app:hintEnabled="false"
-                    style="@style/Widget.Kitsune.TextInputLayout.Dense.ExposedDropdownMenu">
-
-                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                        android:id="@+id/auto_complete_text_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:minHeight="0dp"
-                        android:inputType="none" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </FrameLayout>
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
 

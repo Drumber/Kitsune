@@ -2,30 +2,41 @@
     <!-- Base application theme. -->
     <style name="Theme.Kitsune.DayNight" parent="Theme.Kitsune" />
 
-    <style name="Theme.Kitsune" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/orange_400</item>
-        <item name="colorPrimaryVariant">@color/orange_700</item>
-        <item name="colorSecondary">@color/yellow_700</item>
-        <item name="colorSecondaryVariant">@color/yellow_500</item>
+    <style name="Theme.Kitsune" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/md_theme_light_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/md_theme_light_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/md_theme_light_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/md_theme_light_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_light_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/md_theme_light_tertiary</item>
+        <item name="colorOnTertiary">@color/md_theme_light_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/md_theme_light_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/md_theme_light_onTertiaryContainer</item>
+        <item name="colorError">@color/md_theme_light_error</item>
+        <item name="colorErrorContainer">@color/md_theme_light_errorContainer</item>
+        <item name="colorOnError">@color/md_theme_light_onError</item>
+        <item name="colorOnErrorContainer">@color/md_theme_light_onErrorContainer</item>
+        <item name="android:colorBackground">@color/md_theme_light_background</item>
+        <item name="colorOnBackground">@color/md_theme_light_onBackground</item>
+        <item name="colorSurface">@color/md_theme_light_surface</item>
+        <item name="colorOnSurface">@color/md_theme_light_onSurface</item>
+        <item name="colorSurfaceVariant">@color/md_theme_light_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_light_onSurfaceVariant</item>
+        <item name="colorOutline">@color/md_theme_light_outline</item>
+        <item name="colorOnSurfaceInverse">@color/md_theme_light_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
 
-        <item name="colorOnPrimary">@color/black</item>
-        <item name="colorOnSecondary">@color/black</item>
-
-        <item name="colorSurface">@color/white</item>
-        <item name="android:colorBackground">?attr/colorSurface</item>
-        <item name="colorOnBackground">@color/foreground</item>
-        <item name="colorOnSurface">@color/foreground</item>
-
-        <item name="android:statusBarColor">?colorSurface</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:windowBackground">?android:colorBackground</item>
 
         <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
         <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
-
-        <item name="colorPrimaryDark">?colorPrimaryVariant</item>
-        <item name="colorAccent">?colorSecondary</item>
 
         <item name="colorPlaceholderGradientStart">?colorPrimary</item>
         <item name="colorPlaceholderGradientEnd">?colorPrimaryDark</item>
@@ -36,11 +47,32 @@
     </style>
     
     <style name="Theme.Kitsune.DayNight.Purple" parent="Theme.Kitsune.DayNight">
-        <item name="colorSurface">@color/white</item>
-        <item name="colorPrimary">@color/purple_400</item>
-        <item name="colorPrimaryVariant">@color/purple_500</item>
-        <item name="colorSecondary">@color/orange_400</item>
-        <item name="colorSecondaryVariant">@color/orange_700</item>
+        <item name="colorPrimary">@color/md_purple_theme_light_primary</item>
+        <item name="colorOnPrimary">@color/md_purple_theme_light_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/md_purple_theme_light_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/md_purple_theme_light_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/md_purple_theme_light_secondary</item>
+        <item name="colorOnSecondary">@color/md_purple_theme_light_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/md_purple_theme_light_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/md_purple_theme_light_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/md_purple_theme_light_tertiary</item>
+        <item name="colorOnTertiary">@color/md_purple_theme_light_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/md_purple_theme_light_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/md_purple_theme_light_onTertiaryContainer</item>
+        <item name="colorError">@color/md_purple_theme_light_error</item>
+        <item name="colorErrorContainer">@color/md_purple_theme_light_errorContainer</item>
+        <item name="colorOnError">@color/md_purple_theme_light_onError</item>
+        <item name="colorOnErrorContainer">@color/md_purple_theme_light_onErrorContainer</item>
+        <item name="android:colorBackground">@color/md_purple_theme_light_background</item>
+        <item name="colorOnBackground">@color/md_purple_theme_light_onBackground</item>
+        <item name="colorSurface">@color/md_purple_theme_light_surface</item>
+        <item name="colorOnSurface">@color/md_purple_theme_light_onSurface</item>
+        <item name="colorSurfaceVariant">@color/md_purple_theme_light_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/md_purple_theme_light_onSurfaceVariant</item>
+        <item name="colorOutline">@color/md_purple_theme_light_outline</item>
+        <item name="colorOnSurfaceInverse">@color/md_purple_theme_light_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/md_purple_theme_light_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/md_purple_theme_light_inversePrimary</item>
 
         <item name="colorPlaceholderGradientStart">?colorPrimary</item>
         <item name="colorPlaceholderGradientEnd">?colorPrimaryVariant</item>
@@ -84,7 +116,7 @@
         <item name="android:windowIsFloating">false</item>
     </style>
 
-    <style name="ThemeOverlay.Kitsune.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+    <style name="ThemeOverlay.Kitsune.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
         <item name="bottomSheetStyle">@style/ModalBottomSheet</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
@@ -93,26 +125,17 @@
         <item name="paddingRightSystemWindowInsets">false</item>
     </style>
 
-    <style name="ModalBottomSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
+    <style name="ModalBottomSheet" parent="Widget.Material3.BottomSheet.Modal">
         <item name="shapeAppearance">@style/ShapeAppearance.Kitsune.LargeComponent</item>
     </style>
 
-    <style name="TextAppearance.Kitsune.CollapsingToolbar.Expanded" parent="TextAppearance.Design.CollapsingToolbar.Expanded">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">28sp</item>
-    </style>
-
-    <style name="TextAppearance.Kitsune.SubtypeBadge" parent="TextAppearance.MaterialComponents.Caption">
+    <style name="TextAppearance.Kitsune.SubtypeBadge" parent="TextAppearance.Material3.LabelMedium">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="TextAppearance.Kitsune.TabLayout" parent="TextAppearance.MaterialComponents.Button">
-        <item name="textAllCaps">false</item>
-    </style>
-
-    <style name="Widget.Kitsune.TextView.BottomSheetTitle" parent="Widget.MaterialComponents.TextView">
-        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Headline6</item>
+    <style name="Widget.Kitsune.TextView.BottomSheetTitle" parent="Widget.AppCompat.TextView">
+        <item name="android:textAppearance">?attr/textAppearanceTitleMedium</item>
         <item name="android:textSize">18sp</item>
         <item name="android:layout_marginBottom">20dp</item>
         <item name="android:maxLines">2</item>
@@ -124,71 +147,22 @@
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
-    <style name="Widget.Kitsune.Chip.Selectable" parent="Base.Widget.MaterialComponents.Chip">
-        <item name="android:textColor">@color/mtrl_choice_chip_text_color</item>
-        <item name="chipBackgroundColor">@color/mtrl_choice_chip_background_color</item>
-        <item name="rippleColor">@color/chip_selectable_ripple_color</item>
-        <item name="closeIconTint">@color/mtrl_choice_chip_text_color</item>
-    </style>
-
-    <style name="Widget.Kitsune.Button.IconOnly" parent="Widget.MaterialComponents.Button">
-        <item name="iconPadding">0dp</item>
+    <style name="Widget.Kitsune.Button.IconButton.Dense" parent="Widget.Material3.Button.IconButton">
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
         <item name="android:paddingLeft">@dimen/icon_button_padding</item>
         <item name="android:paddingRight">@dimen/icon_button_padding</item>
-        <item name="android:minWidth">@dimen/icon_button_size</item>
-        <item name="android:minHeight">@dimen/icon_button_size</item>
+        <item name="android:paddingTop">@dimen/icon_button_padding</item>
+        <item name="android:paddingBottom">@dimen/icon_button_padding</item>
     </style>
 
-    <style name="Widget.Kitsune.Button.IconOnly.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="iconPadding">0dp</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="android:paddingLeft">@dimen/icon_button_padding</item>
-        <item name="android:paddingRight">@dimen/icon_button_padding</item>
-        <item name="android:minWidth">@dimen/icon_button_size</item>
-        <item name="android:minHeight">@dimen/icon_button_size</item>
-    </style>
-
-    <style name="Widget.Kitsune.Button.IconOnly.NoBackground" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="iconPadding">0dp</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="android:paddingLeft">@dimen/icon_button_padding</item>
-        <item name="android:paddingRight">@dimen/icon_button_padding</item>
-        <item name="android:minWidth">@dimen/icon_button_size</item>
-        <item name="android:minHeight">@dimen/icon_button_size</item>
-    </style>
-
-    <style name="Widget.Kitsune.Button.IconRound" parent="@style/Widget.Kitsune.Button.IconOnly.Outlined">
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Kitsune.Button.Circle</item>
+    <style name="Widget.Kitsune.CardView.Surface" parent="Widget.Material3.CardView.Outlined">
         <item name="strokeWidth">0dp</item>
-        <item name="strokeColor">@android:color/transparent</item>
-        <item name="iconTint">?attr/colorControlNormal</item>
-    </style>
-
-    <style name="Widget.Kitsune.Button.IconText" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="iconPadding">0dp</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="android:paddingLeft">@dimen/icon_button_padding</item>
-        <item name="android:paddingRight">@dimen/icon_button_padding</item>
-        <item name="android:minWidth">@dimen/icon_button_size</item>
-        <item name="android:minHeight">@dimen/icon_button_size</item>
-        <item name="android:textColor">@color/button_text_color_selector</item>
-        <item name="iconTint">@color/button_text_color_selector</item>
-    </style>
-
-    <style name="Widget.Kitsune.Button.IconText.Inactive" parent="Widget.Kitsune.Button.IconText">
-        <item name="android:textColor">?attr/colorOnSurface</item>
-    </style>
-
-    <style name="Widget.Kitsune.Button.Surface" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">@color/button_surface_color_selector</item>
     </style>
     
-    <style name="Widget.Kitsune.TextInputLayout.Dense.ExposedDropdownMenu" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
+    <style name="Widget.Kitsune.TextInputLayout.Dense.ExposedDropdownMenu" parent="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
         <item name="materialThemeOverlay">@style/ThemeOverlay.Kitsune.AutoCompleteTextView.Dense</item>
     </style>
 
@@ -196,7 +170,7 @@
         <item name="autoCompleteTextViewStyle">@style/Widget.Kitsune.AutoCompleteTextView.Dense</item>
     </style>
 
-    <style name="Widget.Kitsune.AutoCompleteTextView.Dense" parent="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox.Dense">
+    <style name="Widget.Kitsune.AutoCompleteTextView.Dense" parent="@style/Widget.Material3.AutoCompleteTextView.OutlinedBox.Dense">
         <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">0dp</item>
     </style>
@@ -209,9 +183,15 @@
 
     <style name="Theme.Kitsune.PreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
         <item name="android:layout">@layout/fragment_preference</item>
+        <!-- use Material 3 switch -->
+        <item name="switchPreferenceCompatStyle">@style/Preference.SwitchPreferenceCompat.Material3</item>
     </style>
 
-    <style name="ShapeAppearance.Kitsune.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+    <style name="Preference.SwitchPreferenceCompat.Material3" parent="@style/Preference.SwitchPreferenceCompat.Material">
+        <item name="widgetLayout">@layout/custom_preference_switch</item>
+    </style>
+
+    <style name="ShapeAppearance.Kitsune.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">12dp</item>
     </style>

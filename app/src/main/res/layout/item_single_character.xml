@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_character"
     android:layout_width="@dimen/media_item_width_small"
@@ -8,7 +7,7 @@
     android:layout_margin="@dimen/media_item_margin"
     android:clickable="true"
     android:focusable="true"
-    app:cardElevation="4dp">
+    style="@style/Widget.Kitsune.CardView.Surface">
     
     <RelativeLayout
         android:layout_width="match_parent"

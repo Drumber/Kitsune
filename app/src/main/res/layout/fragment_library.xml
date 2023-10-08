@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.library.LibraryFragment"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,6 +12,7 @@
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:liftOnScrollTargetViewId="@id/rv_library_entries"
         app:liftOnScroll="true">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -19,15 +21,14 @@
             android:layout_height="?attr/actionBarSize"
             app:title="@string/nav_library"
             app:layout_scrollFlags="scroll|snap|enterAlways"
-            style="@style/Widget.MaterialComponents.Toolbar.Surface" />
+            style="@style/Widget.Material3.Toolbar" />
 
         <HorizontalScrollView
             android:id="@+id/scroll_view_filter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="none"
-            app:layout_scrollFlags="scroll|snap|enterAlways"
-            android:background="?attr/colorSurface">
+            app:layout_scrollFlags="scroll|snap|enterAlways">
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chip_group_filter"
@@ -50,35 +51,35 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/library_status_watching"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"/>
+                    style="@style/Widget.Material3.Chip.Filter"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_planned"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/library_status_planned"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"/>
+                    style="@style/Widget.Material3.Chip.Filter"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_completed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/library_status_completed"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"/>
+                    style="@style/Widget.Material3.Chip.Filter"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_on_hold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/library_status_on_hold"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"/>
+                    style="@style/Widget.Material3.Chip.Filter"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_dropped"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/library_status_dropped"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"/>
+                    style="@style/Widget.Material3.Chip.Filter"/>
 
             </com.google.android.material.chip.ChipGroup>
 
@@ -91,7 +92,7 @@
             android:indeterminate="true"
             app:hideAnimationBehavior="outward"
             app:trackThickness="1dp"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:layout_gravity="bottom"
             app:layout_collapseMode="pin"/>
 

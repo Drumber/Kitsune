@@ -7,6 +7,7 @@
     tools:context=".ui.search.SearchFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipChildren="false">
@@ -34,11 +35,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    app:cardElevation="4dp">
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardCornerRadius="50dp"
+                    app:cardElevation="6dp"
+                    style="@style/Widget.Material3.CardView.Elevated">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:padding="2dp"
                         android:clipToPadding="false"
                         android:clipChildren="false"
                         android:orientation="horizontal">
@@ -49,9 +55,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             app:icon="@drawable/ic_search_24"
+                            app:iconTint="?attr/colorControlNormal"
                             android:layout_gravity="center"
                             android:contentDescription="@string/hint_search"
-                            style="@style/Widget.Kitsune.Button.IconRound" />
+                            style="?attr/materialIconButtonStyle" />
 
                         <androidx.appcompat.widget.SearchView
                             android:id="@+id/search_view"
@@ -68,9 +75,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
                             app:icon="@drawable/ic_filter_24"
+                            app:iconTint="?attr/colorControlNormal"
                             android:layout_gravity="center"
                             android:contentDescription="@string/title_filter"
-                            style="@style/Widget.Kitsune.Button.IconRound" />
+                            style="?attr/materialIconButtonStyle" />
 
                     </LinearLayout>
 

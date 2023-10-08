@@ -77,6 +77,9 @@ fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
 
+# Ruby bundler
+/.bundle/
+
 # Version control
 vcs.xml
 
@@ -89,3 +92,4 @@ lint/tmp/
 
 # Android Profiling
 *.hprof
+

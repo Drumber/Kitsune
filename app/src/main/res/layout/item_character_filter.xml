@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingHorizontal="10dp"
+    android:paddingVertical="5dp">
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        app:closeIcon="@drawable/ic_arrow_drop_down_24"
+        app:closeIconEnabled="true"
+        tools:text="Japanese"/>
+
+</FrameLayout>

@@ -21,6 +21,7 @@ import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.domain.model.ui.media.MediaUnitAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
+import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbarOnFailure
 import kotlinx.coroutines.flow.collectLatest
@@ -47,8 +48,9 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
         viewModel.setMedia(args.media)
         args.libraryEntryId?.let { viewModel.setLibraryEntryId(it) }
 
+        binding.collapsingToolbar.initWindowInsetsListener(consume = false)
         binding.toolbar.apply {
-            initWindowInsetsListener(false)
+            initWindowInsetsListener(consume = false)
             title = getString(
                 when (args.media) {
                     is Anime -> R.string.title_episodes
@@ -57,6 +59,12 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
             )
             setNavigationOnClickListener { findNavController().navigateUp() }
         }
+
+        binding.rvMedia.initMarginWindowInsetsListener(
+            left = true,
+            right = true,
+            consume = false
+        )
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.libraryUpdateResultFlow.collectLatest {
@@ -111,8 +119,12 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        super.onNavigationItemReselected(item)
-        binding.appBarLayout.setExpanded(true)
+        if (recyclerView.canScrollVertically(-1)) {
+            super.onNavigationItemReselected(item)
+            binding.appBarLayout.setExpanded(true)
+        } else {
+            findNavController().navigateUp()
+        }
     }
 
 }

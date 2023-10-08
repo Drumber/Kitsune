@@ -15,56 +15,47 @@
         android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.profile.ProfileFragment"
-        android:orientation="vertical"
-        android:gravity="center">
+        tools:context=".ui.main.MainActivity">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:liftOnScrollTargetViewId="@id/nsv_content"
             app:liftOnScroll="true">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:contentScrim="?attr/colorSurface"
-                app:scrimAnimationDuration="300"
-                app:scrimVisibleHeightTrigger="120dp"
-                app:titleCollapseMode="scale"
-                app:titleEnabled="true"
-                app:title="@{user.name ?? @string/not_logged_in}"
-                tools:expandedTitleMarginStart="@dimen/profile_text_offset_expanded"
-                app:expandedTitleTextAppearance="@style/TextAppearance.Kitsune.CollapsingToolbar.Expanded"
-                app:expandedTitleGravity="center_vertical"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                android:layout_height="?attr/collapsingToolbarLayoutLargeSize"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                style="@style/Widget.Material3.CollapsingToolbar.Large">
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom">
+                    android:layout_height="match_parent"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="0.7">
 
                     <ImageView
                         android:id="@+id/iv_cover"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/cover_placeholder"
+                        android:src="?attr/colorSurface"
                         android:contentDescription="@null" />
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_gravity="top"
-                        android:background="@drawable/top_edge_fade" />
+                        android:layout_height="80dp"
+                        android:layout_gravity="bottom"
+                        android:background="@drawable/bottom_edge_fade_surface" />
 
-                    <FrameLayout
-                        android:id="@+id/cover_spacer"
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/profile_picture_expanded"
-                        android:visibility="invisible"
-                        android:layout_marginTop="@dimen/profile_picture_offset_expanded"
-                        android:layout_marginBottom="20dp" />
+                        android:layout_height="80dp"
+                        android:layout_marginTop="-15dp"
+                        android:layout_gravity="top"
+                        android:background="@drawable/top_edge_fade_surface" />
 
                 </FrameLayout>
 
@@ -72,9 +63,15 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
+                    android:background="@android:color/transparent"
+                    app:logo="@drawable/profile_picture_placeholder"
+                    app:logoScaleType="centerCrop"
+                    app:logoAdjustViewBounds="true"
+                    app:title="@{user.name ?? @string/not_logged_in}"
                     app:layout_collapseMode="pin"
                     app:menu="@menu/profile_menu"
-                    app:titleMarginStart="@dimen/profile_text_offset_collapsed" />
+                    app:titleMarginStart="10dp"
+                    tools:title="Some Username"/>
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -107,9 +104,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
-                            app:strokeWidth="1dp"
-                            app:strokeColor="@color/card_stroke_color"
-                            app:cardElevation="0dp">
+                            style="?attr/materialCardViewOutlinedStyle">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -121,7 +116,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="10dp"
-                                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                                    android:textAppearance="?attr/textAppearanceHeadlineSmall"
                                     android:text="@string/title_about_me" />
 
                                 <TextView
@@ -171,7 +166,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
-                            app:cardElevation="2dp">
+                            style="?attr/materialCardViewOutlinedStyle">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -182,13 +177,12 @@
                                     android:id="@+id/tab_layout_stats"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    app:tabTextAppearance="@style/TextAppearance.Kitsune.TabLayout" />
+                                    style="@style/Widget.Material3.TabLayout.OnSurface" />
 
                                 <androidx.viewpager2.widget.ViewPager2
                                     android:id="@+id/view_pager_stats"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:padding="@dimen/card_inner_padding" />
+                                    android:layout_height="wrap_content" />
 
                             </LinearLayout>
 
@@ -207,7 +201,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/title_favorite_anime"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                                android:textAppearance="?attr/textAppearanceHeadlineSmall"
                                 android:layout_marginBottom="10dp" />
 
                             <androidx.recyclerview.widget.RecyclerView
@@ -236,7 +230,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/title_favorite_manga"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                                android:textAppearance="?attr/textAppearanceHeadlineSmall"
                                 android:layout_marginBottom="10dp" />
 
                             <androidx.recyclerview.widget.RecyclerView
@@ -265,7 +259,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/title_favorite_characters"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                                android:textAppearance="?attr/textAppearanceHeadlineSmall"
                                 android:layout_marginBottom="10dp" />
 
                             <androidx.recyclerview.widget.RecyclerView
@@ -300,13 +294,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                                android:textAppearance="?attr/textAppearanceHeadlineSmall"
                                 android:text="@string/profile_not_logged_in_title" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                                android:textAppearance="?attr/textAppearanceBodyMedium"
                                 android:text="@string/profile_not_logged_in_text" />
 
                             <Button
@@ -326,22 +320,6 @@
             </androidx.core.widget.NestedScrollView>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/iv_profile_image"
-            android:layout_width="@dimen/profile_picture_expanded"
-            android:layout_height="@dimen/profile_picture_expanded"
-            android:layout_gravity="top|start"
-            android:layout_marginTop="@dimen/profile_picture_offset_expanded"
-            android:layout_marginStart="@dimen/profile_picture_offset_expanded"
-            android:elevation="4dp"
-            android:src="@drawable/profile_picture_placeholder"
-            android:transitionName="@string/profile_picture_transition_name"
-            app:finalHeight="@dimen/profile_picture_collapsed"
-            app:finalXPosition="@dimen/profile_picture_x_offset_collapsed"
-            app:finalYPosition="@dimen/profile_picture_y_offset_collapsed"
-            app:finalToolbarHeight="?attr/actionBarSize"
-            app:layout_behavior="io.github.drumber.kitsune.ui.widget.ProfilePictureBehavior" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

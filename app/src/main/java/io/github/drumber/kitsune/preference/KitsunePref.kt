@@ -47,12 +47,17 @@ object KitsunePref : KotprefModel(), KoinComponent {
 
     var appTheme by enumValuePref(AppTheme.DEFAULT)
 
+    var useDynamicColorTheme by booleanPref(
+        false,
+        key = R.string.preference_key_dynamic_color_theme
+    )
+
     var darkMode by stringPref(
         AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM.toString(),
         key = R.string.preference_key_dark_mode
     )
 
-    var mediaItemSize by enumOrdinalPref(MediaItemSize.LARGE)
+    var mediaItemSize by enumOrdinalPref(MediaItemSize.MEDIUM)
 
     var startFragment by enumValuePref(StartPagePref.Home)
 

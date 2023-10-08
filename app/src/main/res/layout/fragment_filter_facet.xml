@@ -2,17 +2,18 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:liftOnScroll="true">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
-            style="@style/Widget.MaterialComponents.Toolbar.Surface"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:layout_scrollFlags="noScroll"
@@ -41,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="@string/filter_kind"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_kind"
@@ -63,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/filter_year"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+                    android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
                 <TextView
                     android:id="@+id/tv_year_value"
@@ -91,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/filter_avg_rating"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+                    android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
                 <TextView
                     android:id="@+id/tv_avg_rating_value"
@@ -113,14 +114,14 @@
                 android:padding="10dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/title_categories"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_categories"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/listPreferredItemHeightSmall"
-                android:layout_marginBottom="0.5dp"
-                app:cardCornerRadius="0dp">
+                app:cardCornerRadius="0dp"
+                style="@style/Widget.Kitsune.CardView.Surface">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -137,7 +138,7 @@
                         android:layout_marginEnd="16dp"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
                         android:textSize="16sp"
                         android:text="@string/filter_select_categories" />
 
@@ -175,7 +176,7 @@
                 android:padding="10dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/filter_season"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_season"
@@ -192,7 +193,7 @@
                 android:padding="10dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/filter_subtype"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
             <io.github.drumber.kitsune.ui.widget.ExpandableLayout
                 android:id="@+id/wrapper_subtype"
@@ -210,15 +211,24 @@
                     tools:itemCount="5"
                     tools:listitem="@layout/item_facet" />
 
-                <Button
-                    android:id="@+id/btn_expand_subtype"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:background="@drawable/bottom_edge_fade"
-                    android:textAllCaps="false"
-                    tools:text="@string/action_show_more"
-                    style="@style/Widget.Kitsune.Button.Surface" />
+                    android:paddingTop="10dp"
+                    android:background="@drawable/bottom_edge_fade_surface">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_expand_subtype"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        app:cornerRadius="0dp"
+                        android:textAllCaps="false"
+                        tools:text="@string/action_show_more"
+                        style="?attr/borderlessButtonStyle" />
+
+                </FrameLayout>
 
             </io.github.drumber.kitsune.ui.widget.ExpandableLayout>
 
@@ -229,7 +239,7 @@
                 android:padding="10dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/filter_streamers"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
             <io.github.drumber.kitsune.ui.widget.ExpandableLayout
                 android:id="@+id/wrapper_streamers"
@@ -247,15 +257,24 @@
                     tools:itemCount="5"
                     tools:listitem="@layout/item_facet" />
 
-                <Button
-                    android:id="@+id/btn_expand_streamers"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:background="@drawable/bottom_edge_fade"
-                    android:textAllCaps="false"
-                    tools:text="@string/action_show_more"
-                    style="@style/Widget.Kitsune.Button.Surface" />
+                    android:paddingTop="10dp"
+                    android:background="@drawable/bottom_edge_fade_surface">
+
+                    <Button
+                        android:id="@+id/btn_expand_streamers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cornerRadius="0dp"
+                        android:background="@android:color/transparent"
+                        android:textAllCaps="false"
+                        tools:text="@string/action_show_more"
+                        style="?attr/borderlessButtonStyle" />
+
+                </FrameLayout>
 
             </io.github.drumber.kitsune.ui.widget.ExpandableLayout>
 
@@ -266,7 +285,7 @@
                 android:padding="10dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/filter_age_rating"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_age_rating"

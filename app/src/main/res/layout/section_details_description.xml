@@ -19,20 +19,20 @@
             android:layout_height="wrap_content"
             android:text="@string/title_description"
             android:layout_marginBottom="10dp"
-            style="@style/TextAppearance.MaterialComponents.Headline6" />
+            style="?attr/textAppearanceHeadlineSmall" />
 
         <at.blogc.android.views.ExpandableTextView
             android:id="@+id/tv_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:scrollbars="none"
             tools:text="@tools:sample/lorem/random"
             android:text="@{data.description}"
             android:maxLines="5"
             android:ellipsize="end"
             app:actionButton="@{btnExpandCollapse}"
             app:animation_duration="200"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textIsSelectable="true" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_expand_collapse"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:text="@string/action_read_more"
             android:layout_gravity="end"
-            style="@style/Widget.MaterialComponents.Button.TextButton" />
+            style="@style/Widget.Material3.Button.TextButton" />
 
     </LinearLayout>
 

@@ -13,12 +13,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import com.chibatching.kotpref.livedata.asLiveData
+import com.google.android.material.color.DynamicColors
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.main.MainActivity
 import io.github.drumber.kitsune.util.extensions.clearLightNavigationBar
-import io.github.drumber.kitsune.util.extensions.setStatusBarColor
+import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
 
 abstract class BaseActivity(
     @LayoutRes contentLayoutId: Int,
@@ -28,6 +29,7 @@ abstract class BaseActivity(
 ) : AppCompatActivity(contentLayoutId) {
 
     private lateinit var appliedTheme: AppTheme
+    private var isDynamicColorsApplied = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
@@ -35,11 +37,18 @@ abstract class BaseActivity(
             // apply app theme
             appliedTheme = KitsunePref.appTheme
             setTheme(appliedTheme.themeRes)
+            if (DynamicColors.isDynamicColorAvailable() && KitsunePref.useDynamicColorTheme) {
+                DynamicColors.applyToActivityIfAvailable(this)
+                isDynamicColorsApplied = true
+            }
         }
 
         super.onCreate(savedInstanceState)
 
         KitsunePref.asLiveData(KitsunePref::appTheme).observe(this) {
+            checkAppTheme()
+        }
+        KitsunePref.asLiveData(KitsunePref::useDynamicColorTheme).observe(this) {
             checkAppTheme()
         }
 
@@ -49,7 +58,7 @@ abstract class BaseActivity(
         // set app bar color in recent apps overview
         setAppTaskColor(typedValue.data)
 
-        if(edgeToEdge) {
+        if (edgeToEdge) {
             initEdgeToEdge()
         } else {
             clearLightNavigationBar()
@@ -68,7 +77,8 @@ abstract class BaseActivity(
     }
 
     private fun checkAppTheme() {
-        if (setAppTheme && appliedTheme != KitsunePref.appTheme) {
+        if (!setAppTheme) return
+        if (appliedTheme != KitsunePref.appTheme || isDynamicColorsApplied != KitsunePref.useDynamicColorTheme) {
             recreate()
         }
     }
@@ -77,8 +87,8 @@ abstract class BaseActivity(
         WindowCompat.setDecorFitsSystemWindows(window, false)
         if (!updateSystemUiColors) return
 
-        setStatusBarColor(ContextCompat.getColor(this, R.color.translucent_status_bar))
-        if(Build.VERSION.SDK_INT >= 27) {
+        setStatusBarColorRes(android.R.color.transparent)
+        if (Build.VERSION.SDK_INT >= 27) {
             window.navigationBarColor = ContextCompat.getColor(this, android.R.color.transparent)
         }
     }
@@ -102,7 +112,13 @@ abstract class BaseActivity(
         // change the color of the task description, but keep the label and app icon
         appTask?.taskInfo?.taskDescription?.let {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                setTaskDescription(ActivityManager.TaskDescription(it.label, R.mipmap.ic_launcher, color))
+                setTaskDescription(
+                    ActivityManager.TaskDescription(
+                        it.label,
+                        R.mipmap.ic_launcher,
+                        color
+                    )
+                )
             } else {
                 val icon = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
                 setTaskDescription(ActivityManager.TaskDescription(it.label, icon, color))
