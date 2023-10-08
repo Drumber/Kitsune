@@ -39,13 +39,13 @@ Build debug and test APK for screenshots
 
 Take screenshots
 
-### android do_frame_screenshots
+### android process_screenshots
 
 ```sh
-[bundle exec] fastlane android do_frame_screenshots
+[bundle exec] fastlane android process_screenshots
 ```
 
-Add a device frame to the screenshots
+Add a device frame to the screenshots and copy them to the media folder
 
 ----
 

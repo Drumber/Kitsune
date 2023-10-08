@@ -92,14 +92,14 @@ class CaptureScreenshots : KoinComponent {
         UiThreadStatement.runOnUiThread {
             KitsunePref.appTheme = AppTheme.PURPLE
         }
-        takeHomeScreenshots("dark_purple_")
+        takeHomeScreenshots("dark_purple")
 
         // Purple theme with Light Mode
         UiThreadStatement.runOnUiThread {
             KitsunePref.darkMode = AppCompatDelegate.MODE_NIGHT_NO.toString()
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
-        takeHomeScreenshots("light_purple_")
+        takeHomeScreenshots("light_purple")
 
         IdlingRegistry.getInstance().unregister(idlingResource)
     }
