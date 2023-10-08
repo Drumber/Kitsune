@@ -68,6 +68,7 @@ import io.github.drumber.kitsune.util.extensions.getColor
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
+import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
@@ -157,7 +158,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 .into(binding.ivCover)
 
             glide.load(model.posterImage)
-                .addTransform(RoundedCorners(8))
+                .addTransform(RoundedCorners(8.toPx()))
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivThumbnail)
 
