@@ -41,7 +41,6 @@
                         android:id="@+id/iv_cover"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="?attr/colorSurface"
                         android:contentDescription="@null" />
 
                     <View
@@ -65,7 +64,6 @@
                     android:layout_height="?attr/actionBarSize"
                     android:background="@android:color/transparent"
                     app:logo="@drawable/profile_picture_placeholder"
-                    app:logoScaleType="centerCrop"
                     app:logoAdjustViewBounds="true"
                     app:title="@{user.name ?? @string/not_logged_in}"
                     app:layout_collapseMode="pin"
