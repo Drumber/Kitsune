@@ -1,6 +1,8 @@
 package io.github.drumber.kitsune.ui.main
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.core.graphics.Insets
@@ -13,12 +15,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.map
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.navigationrail.NavigationRailView
@@ -27,12 +34,14 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ActivityMainBinding
 import io.github.drumber.kitsune.domain.model.preference.StartPagePref
 import io.github.drumber.kitsune.domain.model.preference.getDestinationId
+import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
 import io.github.drumber.kitsune.domain.repository.UserRepository
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
 import io.github.drumber.kitsune.ui.permissions.showNotificationPermissionRejectedDialog
+import io.github.drumber.kitsune.util.RoundBitmapDrawable
 import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -121,6 +130,31 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 // navigate to the target destination
                 NavigationUI.onNavDestinationSelected(item, navController)
             }
+
+
+            userRepository.userLiveData
+                .map { it?.avatar?.originalOrDown() }
+                .distinctUntilChanged()
+                .observe(this@MainActivity) { avatarUrl ->
+                    if (avatarUrl.isNullOrBlank()) {
+                        menu.findItem(R.id.profile_fragment).setIcon(R.drawable.selector_profile)
+                        return@observe
+                    }
+                    Glide.with(this)
+                        .asBitmap()
+                        .load(avatarUrl)
+                        .dontAnimate()
+                        .into(object : CustomTarget<Bitmap>() {
+                            override fun onResourceReady(
+                                resource: Bitmap,
+                                transition: Transition<in Bitmap>?
+                            ) {
+                                menu.findItem(R.id.profile_fragment).icon = RoundBitmapDrawable(resource)
+                            }
+
+                            override fun onLoadCleared(placeholder: Drawable?) {}
+                        })
+                }
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
