@@ -152,6 +152,7 @@ private fun createHttpClientBuilder(addLoggingInterceptor: Boolean = true) = OkH
 private fun createHttpClient(authenticationInterceptor: AuthenticationInterceptor) =
     createHttpClientBuilder()
         .addInterceptor(authenticationInterceptor)
+        .authenticator(authenticationInterceptor)
         .build()
 
 private fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
