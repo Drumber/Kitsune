@@ -108,6 +108,10 @@
         <item name="postSplashScreenTheme">@style/Theme.Kitsune.DayNight</item>
     </style>
 
+    <style name="Theme.Kitsune.FullScreenDialog.Dynamic" parent="ThemeOverlay.Material3.DynamicColors.DayNight">
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
     <style name="Theme.Kitsune.FullScreenDialog" parent="Theme.Kitsune.DayNight">
         <item name="android:windowIsFloating">false</item>
     </style>

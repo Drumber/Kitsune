@@ -8,7 +8,9 @@ import android.view.WindowManager
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.view.WindowCompat
+import com.google.android.material.color.DynamicColors
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.preference.KitsunePref
 
 abstract class BaseDialogFragment(
     @LayoutRes layoutRes: Int,
@@ -36,6 +38,8 @@ abstract class BaseDialogFragment(
     }
 
     override fun getTheme(): Int {
+        if (KitsunePref.useDynamicColorTheme && DynamicColors.isDynamicColorAvailable())
+            return R.style.Theme_Kitsune_FullScreenDialog_Dynamic
         val typedValue = TypedValue()
         requireActivity().theme.resolveAttribute(R.attr.fullScreenDialogTheme, typedValue, true)
         return typedValue.data
