@@ -294,9 +294,20 @@ class LibraryViewModel(
     }
 
     private fun updateLibraryProgress(libraryEntry: LibraryEntry, newProgress: Int?) {
+        // set status to 'current' when starting consuming library entry
+        val newStatus = if (
+            newProgress == 1 &&
+            libraryEntry.status != LibraryStatus.Current &&
+            (libraryEntry.progress ?: 0) == 0
+        ) {
+            LibraryStatus.Current
+        } else {
+            null
+        }
+
         val modification = LocalLibraryEntryModification.withIdAndNulls(
             libraryEntry.id ?: throw InvalidDataException("Library entry ID cannot be 'null'.")
-        ).copy(progress = newProgress)
+        ).copy(progress = newProgress, status = newStatus)
 
         val ongoingJob = libraryProgressUpdateJobs[modification.id]
         val job = viewModelScope.launch(Dispatchers.IO) {
