@@ -94,10 +94,10 @@ class AuthenticationActivity : BaseActivity(R.layout.activity_authentication, fa
                 }
                 false
             }
+        }
 
-            login.setOnClickListener {
-                viewModel.login(username.text(), password.text())
-            }
+        login.setOnClickListener {
+            viewModel.login(username.text(), password.text())
         }
 
         binding.apply {

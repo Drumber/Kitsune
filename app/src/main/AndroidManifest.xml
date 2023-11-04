@@ -47,6 +47,7 @@
         <activity
             android:name=".ui.authentication.AuthenticationActivity"
             android:exported="true"
+            android:windowSoftInputMode="adjustResize"
             android:label="@string/title_authentication" />
 
         <provider
