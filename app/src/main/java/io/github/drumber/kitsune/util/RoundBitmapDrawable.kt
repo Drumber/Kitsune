@@ -100,7 +100,8 @@ class RoundBitmapDrawable(private val bitmap: Bitmap) : Drawable() {
     override fun onStateChange(state: IntArray): Boolean {
         val tint = tint ?: return false
         val stateColor = tint.getColorForState(state, tint.defaultColor)
-        val isSelected = stateColor != tint.defaultColor
+        val isSelected = stateColor != tint.defaultColor &&
+                state.any { it == android.R.attr.state_selected }
         if (this.isSelected != isSelected) {
             this.isSelected = isSelected
             invalidateSelf()
