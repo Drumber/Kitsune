@@ -16,7 +16,8 @@ import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.util.TimeUtil
 import io.github.drumber.kitsune.util.extensions.format
 import io.github.drumber.kitsune.util.formatDate
-import io.github.drumber.kitsune.util.toDate
+import io.github.drumber.kitsune.util.parseDate
+import io.github.drumber.kitsune.util.toCalendar
 import kotlinx.parcelize.Parcelize
 import java.util.Calendar
 
@@ -82,11 +83,11 @@ class MediaAdapter(
 
     val publishingYear: String
         get() = if (!media.startDate.isNullOrBlank()) {
-            media.startDate!!.toDate().get(Calendar.YEAR).toString()
+            media.startDate!!.parseDate()?.toCalendar()?.get(Calendar.YEAR)?.toString() ?: "-"
         } else "-"
 
     fun season(context: Context): String {
-        val date = media.startDate?.toDate()
+        val date = media.startDate?.parseDate()?.toCalendar()
         val stringRes = when (date?.get(Calendar.MONTH)?.plus(1)) {
             in arrayOf(12, 1, 2) -> R.string.season_winter
             in 3..5 -> R.string.season_spring
@@ -99,7 +100,7 @@ class MediaAdapter(
 
     val seasonYear: String
         get() {
-            val date = media.startDate?.toDate()
+            val date = media.startDate?.parseDate()?.toCalendar()
             return date?.let {
                 val year = date.get(Calendar.YEAR)
                 val month = date.get(Calendar.MONTH) + 1
@@ -122,7 +123,7 @@ class MediaAdapter(
 
     private fun formatDate(dateString: String?): String {
         return if (!dateString.isNullOrBlank()) {
-            dateString.toDate().formatDate()
+            dateString.parseDate()?.formatDate() ?: ""
         } else {
             ""
         }

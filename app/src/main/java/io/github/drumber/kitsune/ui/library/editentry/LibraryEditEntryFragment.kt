@@ -44,12 +44,14 @@ import io.github.drumber.kitsune.util.extensions.getResourceId
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setMaxLinesFitHeight
 import io.github.drumber.kitsune.util.formatDate
+import io.github.drumber.kitsune.util.formatUtcDate
+import io.github.drumber.kitsune.util.getLocalCalendar
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
+import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.stripTimeUtcMillis
 import io.github.drumber.kitsune.util.toDate
-import io.github.drumber.kitsune.util.todayUtcMillis
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_library_entry) {
@@ -243,11 +245,11 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
                     setText(currValue, false)
                 }
 
-                val startedText = wrapper.startedAt?.toDate(DATE_FORMAT_ISO)?.formatDate()
+                val startedText = wrapper.startedAt?.parseUtcDate()?.formatDate()
                     ?: getString(R.string.library_edit_no_date_set)
                 fieldStarted.editText?.setText(startedText)
 
-                val finishedText = wrapper.finishedAt?.toDate(DATE_FORMAT_ISO)?.formatDate()
+                val finishedText = wrapper.finishedAt?.parseUtcDate()?.formatDate()
                     ?: getString(R.string.library_edit_no_date_set)
                 fieldFinished.editText?.setText(finishedText)
 
@@ -299,8 +301,7 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
                         it.copy(
                             progress = value,
                             status = LibraryStatus.Completed,
-                            finishedAt = wrapper?.finishedAt ?: todayUtcMillis().toDate()
-                                .formatDate(DATE_FORMAT_ISO)
+                            finishedAt = wrapper?.finishedAt ?: getLocalCalendar().formatUtcDate()
                         )
                     }
                 } else {
@@ -339,10 +340,10 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
 
             fieldStarted.editText?.setOnClickListener {
                 val wrapper = viewModel.libraryEntryWrapper.value
-                val selection = wrapper?.startedAt?.toDate(DATE_FORMAT_ISO)?.timeInMillis
+                val selection = wrapper?.startedAt?.parseUtcDate()?.time
                     ?.stripTimeUtcMillis() ?: MaterialDatePicker.todayInUtcMilliseconds()
 
-                val validator = wrapper?.finishedAt?.toDate(DATE_FORMAT_ISO)?.timeInMillis
+                val validator = wrapper?.finishedAt?.parseUtcDate()?.time
                     ?.stripTimeUtcMillis()?.let {
                         DateValidatorPointBackward.before(it)
                     } ?: DateValidatorPointBackward.now()
@@ -364,10 +365,10 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
 
             fieldFinished.editText?.setOnClickListener {
                 val wrapper = viewModel.libraryEntryWrapper.value
-                val selection = wrapper?.finishedAt?.toDate(DATE_FORMAT_ISO)?.timeInMillis
+                val selection = wrapper?.finishedAt?.parseUtcDate()?.time
                     ?.stripTimeUtcMillis() ?: MaterialDatePicker.todayInUtcMilliseconds()
 
-                val validator = wrapper?.startedAt?.toDate(DATE_FORMAT_ISO)?.timeInMillis
+                val validator = wrapper?.startedAt?.parseUtcDate()?.time
                     ?.stripTimeUtcMillis()?.let {
                         DateValidatorPointBetween.nowAndFrom(it)
                     } ?: DateValidatorPointBackward.now()

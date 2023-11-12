@@ -15,10 +15,9 @@ import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryModification
 import io.github.drumber.kitsune.exception.InvalidDataException
 import io.github.drumber.kitsune.exception.NotFoundException
-import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
-import io.github.drumber.kitsune.util.toDate
+import io.github.drumber.kitsune.util.parseUtcDate
 import kotlinx.coroutines.CancellationException
 
 class LibraryManager(
@@ -157,9 +156,9 @@ class LibraryManager(
 
     private suspend fun isLibraryEntryNotOlderThanInDatabase(libraryEntry: LocalLibraryEntry): Boolean {
         return databaseClient.getLibraryEntry(libraryEntry.id)?.let { dbEntry ->
-            val dbUpdatedAt = dbEntry.updatedAt?.toDate(DATE_FORMAT_ISO) ?: return true
-            val thisUpdatedAt = libraryEntry.updatedAt?.toDate(DATE_FORMAT_ISO) ?: return true
-            thisUpdatedAt.timeInMillis >= dbUpdatedAt.timeInMillis
+            val dbUpdatedAt = dbEntry.updatedAt?.parseUtcDate() ?: return true
+            val thisUpdatedAt = libraryEntry.updatedAt?.parseUtcDate() ?: return true
+            thisUpdatedAt.time >= dbUpdatedAt.time
         } ?: true
     }
 

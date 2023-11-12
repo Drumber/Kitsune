@@ -2,14 +2,14 @@ package io.github.drumber.kitsune.domain.model.ui.media
 
 import android.content.Context
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.domain.model.infrastructure.image.Image
 import io.github.drumber.kitsune.domain.model.common.media.Titles
+import io.github.drumber.kitsune.domain.model.infrastructure.image.Image
 import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.Chapter
 import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.Episode
 import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.MediaUnit
 import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.util.formatDate
-import io.github.drumber.kitsune.util.toDate
+import io.github.drumber.kitsune.util.parseDate
 import kotlinx.parcelize.Parcelize
 import java.text.SimpleDateFormat
 
@@ -50,7 +50,7 @@ class MediaUnitAdapter(
                 is Chapter -> unit.published
                 else -> null
             }
-            return dateText?.toDate()?.formatDate(SimpleDateFormat.SHORT)
+            return dateText?.parseDate()?.formatDate(SimpleDateFormat.SHORT)
         }
 
     fun length(context: Context): String? {

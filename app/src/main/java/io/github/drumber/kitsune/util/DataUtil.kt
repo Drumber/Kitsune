@@ -14,7 +14,7 @@ import java.util.Calendar
 object DataUtil {
 
     @JvmStatic
-    fun formatDate(dateString: String?) = dateString?.toDate()?.formatDate(SimpleDateFormat.LONG)
+    fun formatDate(dateString: String?) = dateString?.parseDate()?.formatDate(SimpleDateFormat.LONG)
 
     @JvmStatic
     fun getGenderString(gender: String?, context: Context): String {
@@ -28,11 +28,10 @@ object DataUtil {
 
     @JvmStatic
     fun formatUserJoinDate(joinDate: String?, context: Context): String? {
-        return joinDate?.let { dateString ->
-            val dateJoined = dateString.toDate()
-            val diffMillis = Calendar.getInstance().timeInMillis - dateJoined.timeInMillis
+        return joinDate?.parseDate()?.let { dateJoined ->
+            val diffMillis = Calendar.getInstance().timeInMillis - dateJoined.time
             val differenceString = TimeUtil.roundTime(diffMillis / 1000, context)
-            "${formatDate(dateString)} " +
+            "${dateJoined.formatDate(SimpleDateFormat.LONG)} " +
                     "(${context.getString(R.string.profile_data_join_date_ago, differenceString)})"
         }
     }
