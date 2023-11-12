@@ -32,6 +32,8 @@ import io.github.drumber.kitsune.ui.library.InternalAction.LibraryUpdateOperatio
 import io.github.drumber.kitsune.ui.library.InternalAction.LibraryUpdateOperationStart
 import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibrarySynchronizationResult
 import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibraryUpdateResult
+import io.github.drumber.kitsune.util.formatUtcDate
+import io.github.drumber.kitsune.util.getLocalCalendar
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -294,20 +296,20 @@ class LibraryViewModel(
     }
 
     private fun updateLibraryProgress(libraryEntry: LibraryEntry, newProgress: Int?) {
-        // set status to 'current' when starting consuming library entry
-        val newStatus = if (
+        // set startedAt date when starting consuming library entry
+        val startedAt = if (
+            libraryEntry.startedAt.isNullOrBlank() &&
             newProgress == 1 &&
-            libraryEntry.status != LibraryStatus.Current &&
             (libraryEntry.progress ?: 0) == 0
         ) {
-            LibraryStatus.Current
+            getLocalCalendar().formatUtcDate()
         } else {
             null
         }
 
         val modification = LocalLibraryEntryModification.withIdAndNulls(
             libraryEntry.id ?: throw InvalidDataException("Library entry ID cannot be 'null'.")
-        ).copy(progress = newProgress, status = newStatus)
+        ).copy(progress = newProgress, startedAt = startedAt)
 
         val ongoingJob = libraryProgressUpdateJobs[modification.id]
         val job = viewModelScope.launch(Dispatchers.IO) {
