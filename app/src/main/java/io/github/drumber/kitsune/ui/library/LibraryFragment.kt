@@ -69,6 +69,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
     private val viewModel: LibraryViewModel by viewModel()
 
+    private var isStatusBarTransparent = false
+
     private var offlineLibraryModificationsAmount = 0
     private lateinit var offlineLibraryUpdateBadge: BadgeDrawable
 
@@ -102,18 +104,11 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
                 right = true,
                 consume = false
             )
-            var isStatusBarTransparent = true
             appBarLayout.addOnOffsetChangedListener { _, verticalOffset ->
-                val shouldSetStatusBarTransparent = verticalOffset == 0
+                val shouldSetStatusBarTransparent = verticalOffset >= -30
                 if (isStatusBarTransparent == shouldSetStatusBarTransparent)
                     return@addOnOffsetChangedListener
-                requireActivity().setStatusBarColorRes(
-                    if (shouldSetStatusBarTransparent)
-                        android.R.color.transparent
-                    else
-                        R.color.translucent_status_bar
-                )
-                isStatusBarTransparent = shouldSetStatusBarTransparent
+                setStatusBarTransparent(shouldSetStatusBarTransparent)
             }
 
             swipeRefreshLayout.initPaddingWindowInsetsListener(
@@ -188,6 +183,11 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
         initFilterChips()
         initRecyclerView()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setStatusBarTransparent(isStatusBarTransparent)
     }
 
     private fun initFilterChips() {
@@ -539,6 +539,16 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     override fun onNavigationItemReselected(item: MenuItem) {
         binding.rvLibraryEntries.smoothScrollToPosition(0)
         binding.appBarLayout.setExpanded(true)
+    }
+
+    private fun setStatusBarTransparent(setTransparent: Boolean) {
+        requireActivity().setStatusBarColorRes(
+            if (setTransparent)
+                android.R.color.transparent
+            else
+                R.color.translucent_status_bar
+        )
+        isStatusBarTransparent = setTransparent
     }
 
     override fun onDestroyView() {
