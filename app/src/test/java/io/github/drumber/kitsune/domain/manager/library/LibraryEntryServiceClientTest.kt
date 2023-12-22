@@ -6,8 +6,8 @@ import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntr
 import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.exception.NotFoundException
-import io.github.drumber.kitsune.utils.anime
-import io.github.drumber.kitsune.utils.libraryEntry
+import io.github.drumber.kitsune.testutils.anime
+import io.github.drumber.kitsune.testutils.libraryEntry
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import net.datafaker.Faker

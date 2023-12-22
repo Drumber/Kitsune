@@ -8,10 +8,10 @@ import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.exception.NotFoundException
 import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
 import io.github.drumber.kitsune.util.formatDate
-import io.github.drumber.kitsune.utils.anime
-import io.github.drumber.kitsune.utils.libraryEntry
-import io.github.drumber.kitsune.utils.localLibraryEntry
-import io.github.drumber.kitsune.utils.useMockedAndroidLogger
+import io.github.drumber.kitsune.testutils.anime
+import io.github.drumber.kitsune.testutils.libraryEntry
+import io.github.drumber.kitsune.testutils.localLibraryEntry
+import io.github.drumber.kitsune.testutils.useMockedAndroidLogger
 import kotlinx.coroutines.test.runTest
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat

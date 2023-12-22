@@ -3,6 +3,7 @@ package io.github.drumber.kitsune
 import io.github.drumber.kitsune.di.networkModule
 import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.domain.service.user.UserService
+import io.github.drumber.kitsune.testutils.noOpAuthenticatorInterceptor
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertNotNull
 import org.junit.Ignore
@@ -11,7 +12,7 @@ import org.junit.Test
 @Ignore
 class UserServiceTest : BaseTest() {
 
-    override val koinModules = listOf(networkModule)
+    override val koinModules = listOf(networkModule, noOpAuthenticatorInterceptor)
 
     @Test
     fun fetchUser() = runBlocking {

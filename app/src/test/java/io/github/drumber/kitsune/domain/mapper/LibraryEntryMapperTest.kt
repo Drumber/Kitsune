@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.domain.mapper
 
-import io.github.drumber.kitsune.utils.libraryEntry
-import io.github.drumber.kitsune.utils.localLibraryEntry
+import io.github.drumber.kitsune.testutils.libraryEntry
+import io.github.drumber.kitsune.testutils.localLibraryEntry
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test

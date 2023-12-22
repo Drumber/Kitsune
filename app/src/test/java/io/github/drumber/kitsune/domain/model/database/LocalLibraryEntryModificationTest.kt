@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.domain.model.database
 
-import io.github.drumber.kitsune.utils.localLibraryEntry
-import io.github.drumber.kitsune.utils.localLibraryEntryModification
+import io.github.drumber.kitsune.testutils.localLibraryEntry
+import io.github.drumber.kitsune.testutils.localLibraryEntryModification
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test

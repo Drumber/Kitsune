@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.domain.manager.library
 
 import io.github.drumber.kitsune.domain.database.LibraryEntryDao
 import io.github.drumber.kitsune.domain.database.LocalDatabase
-import io.github.drumber.kitsune.utils.localLibraryEntry
+import io.github.drumber.kitsune.testutils.localLibraryEntry
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import net.datafaker.Faker

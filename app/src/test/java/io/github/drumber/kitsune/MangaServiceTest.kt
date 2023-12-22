@@ -4,6 +4,7 @@ import io.github.drumber.kitsune.di.networkModule
 import io.github.drumber.kitsune.domain.model.common.media.en
 import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.domain.service.manga.MangaService
+import io.github.drumber.kitsune.testutils.noOpAuthenticatorInterceptor
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -14,7 +15,7 @@ import org.junit.Test
 @Ignore
 class MangaServiceTest : BaseTest() {
 
-    override val koinModules = listOf(networkModule)
+    override val koinModules = listOf(networkModule, noOpAuthenticatorInterceptor)
 
     @Test
     fun fetchAllManga() = runBlocking {

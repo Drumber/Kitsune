@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.utils
+package io.github.drumber.kitsune.testutils
 
 import android.util.Log
 import org.mockito.Mockito

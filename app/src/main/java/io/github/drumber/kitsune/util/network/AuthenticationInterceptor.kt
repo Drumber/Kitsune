@@ -62,13 +62,3 @@ class AuthenticationInterceptorImpl(private val authRepository: AuthRepository) 
     private val Response.responseCount: Int
         get() = generateSequence(this) { it.priorResponse }.count()
 }
-
-/**
- * Dummy implementation **only for test cases**.
- */
-class AuthenticationInterceptorDummy : AuthenticationInterceptor,
-    Authenticator by Authenticator.NONE {
-    override fun intercept(chain: Interceptor.Chain): Response {
-        return chain.proceed(chain.request())
-    }
-}

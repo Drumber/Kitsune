@@ -11,6 +11,8 @@ import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.github.jasminb.jsonapi.ResourceConverter
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.BuildConfig
+import io.github.drumber.kitsune.constants.GitHub
+import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
@@ -43,29 +45,23 @@ import io.github.drumber.kitsune.util.IgnoreParcelablePropertyMixin
 import io.github.drumber.kitsune.util.deserializer.AlgoliaFacetValueDeserializer
 import io.github.drumber.kitsune.util.deserializer.AlgoliaNumericValueDeserializer
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptor
-import io.github.drumber.kitsune.util.network.AuthenticationInterceptorDummy
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptorImpl
 import io.github.drumber.kitsune.util.network.UserAgentInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.named
-import org.koin.core.scope.Scope
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import java.util.concurrent.TimeUnit
-
-const val KITSU_API_URL = "https://kitsu.io/api/edge/"
-const val KITSU_OAUTH_URL = "https://kitsu.io/api/oauth/"
-const val GITHUB_API_URL = "https://api.github.com/repos/drumber/kitsune/"
 
 val networkModule = module {
     single { createHttpClient(get()) }
     single(named("unauthenticated")) { createHttpClientBuilder().build() }
     single { createObjectMapper() }
     factory { createAuthService(get()) }
-    factory { createAuthenticationInterceptor() }
+    factory<AuthenticationInterceptor> { AuthenticationInterceptorImpl(get()) }
     factory {
         createService<AnimeService>(
             get(), get(),
@@ -134,7 +130,7 @@ val networkModule = module {
         createService<GitHubApiService>(
             get(named("unauthenticated")),
             get(),
-            GITHUB_API_URL
+            GitHub.API_URL
         )
     }
 }
@@ -163,17 +159,10 @@ private fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
 private fun createUserAgentInterceptor() =
     UserAgentInterceptor("Kitsune/${BuildConfig.VERSION_NAME}")
 
-private fun Scope.createAuthenticationInterceptor() = try {
-    AuthenticationInterceptorImpl(get())
-} catch (t: Throwable) {
-    // return dummy implementation if auth repository is not available (e.g. during unit test)
-    AuthenticationInterceptorDummy()
-}
-
 private fun createAuthService(objectMapper: ObjectMapper) = createService<AuthService>(
     createHttpClientBuilder(false).build(),
     objectMapper,
-    KITSU_OAUTH_URL
+    Kitsu.OAUTH_URL
 )
 
 fun createObjectMapper(): ObjectMapper = jacksonMapperBuilder()
@@ -213,7 +202,7 @@ private inline fun <reified T> createService(
     httpClient: OkHttpClient,
     objectMapper: ObjectMapper,
     vararg classes: Class<*>,
-    baseUrl: String = KITSU_API_URL
+    baseUrl: String = Kitsu.API_URL
 ): T {
     return Retrofit.Builder()
         .baseUrl(baseUrl)
@@ -227,7 +216,7 @@ private inline fun <reified T> createService(
 private inline fun <reified T> createService(
     httpClient: OkHttpClient,
     objectMapper: ObjectMapper,
-    baseUrl: String = KITSU_API_URL
+    baseUrl: String = Kitsu.API_URL
 ): T {
     return Retrofit.Builder()
         .baseUrl(baseUrl)

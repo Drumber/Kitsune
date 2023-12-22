@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.utils
+package io.github.drumber.kitsune.testutils
 
 import io.github.drumber.kitsune.domain.model.common.media.AgeRating
 import io.github.drumber.kitsune.domain.model.common.media.AnimeSubtype

@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.utils
+package io.github.drumber.kitsune.testutils
 
 import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification

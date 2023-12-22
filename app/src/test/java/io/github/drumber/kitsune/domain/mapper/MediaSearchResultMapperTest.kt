@@ -10,7 +10,7 @@ import io.github.drumber.kitsune.domain.model.infrastructure.image.Dimension
 import io.github.drumber.kitsune.domain.model.infrastructure.image.Dimensions
 import io.github.drumber.kitsune.domain.model.infrastructure.image.Image
 import io.github.drumber.kitsune.domain.model.infrastructure.image.ImageMeta
-import io.github.drumber.kitsune.utils.anime
+import io.github.drumber.kitsune.testutils.anime
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test

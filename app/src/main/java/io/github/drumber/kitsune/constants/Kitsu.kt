@@ -11,9 +11,11 @@ object Kitsu {
     const val CLIENT_SECRET = "54d7307928f63414defd96399fc31ba847961ceaecef3a5fd93144e960c0e151"
     const val ALGOLIA_APP_ID = "AWQO5J657S"
 
+    const val API_URL = "https://kitsu.io/api/edge/"
+    const val OAUTH_URL = "https://kitsu.io/api/oauth/"
     const val BASE_URL = "https://kitsu.io"
     const val USER_URL_PREFIX = "$BASE_URL/users/"
     const val ANIME_URL_PREFIX = "$BASE_URL/anime/"
-    const val MANGA_URL_PREFIX = "$BASE_URL/manga/"
 
+    const val MANGA_URL_PREFIX = "$BASE_URL/manga/"
 }
