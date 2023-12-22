@@ -28,14 +28,14 @@ class AuthPreferences(context: Context, private val objectMapper: ObjectMapper) 
     fun storeAccessToken(accessToken: AccessToken) {
         logD("Converting access token to json and storing it in encrypted shared preferences.")
         val jsonString = objectMapper.writeValueAsString(accessToken)
-        sharedPreferences.edit {
+        sharedPreferences.edit(commit = true) {
             putString(KEY_ACCESS_TOKEN, jsonString)
         }
     }
 
     fun clearAccessToken() {
         logD("Deleting access token from encrypted shared preferences.")
-        sharedPreferences.edit {
+        sharedPreferences.edit(commit = true) {
             remove(KEY_ACCESS_TOKEN)
         }
     }

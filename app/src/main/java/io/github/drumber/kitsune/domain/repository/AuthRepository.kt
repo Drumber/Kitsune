@@ -8,7 +8,8 @@ import io.github.drumber.kitsune.exception.AccessTokenRefreshException
 import io.github.drumber.kitsune.preference.AuthPreferences
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
-import io.github.drumber.kitsune.util.logI
+import kotlinx.coroutines.sync.Mutex
+import retrofit2.HttpException
 
 class AuthRepository(
     private val service: AuthService,
@@ -37,6 +38,8 @@ class AuthRepository(
                 }
             }
         } ?: false
+
+    private val mutex = Mutex()
 
     init {
         accessToken = authPreferences.getStoredAccessToken()
@@ -68,18 +71,23 @@ class AuthRepository(
     suspend fun refreshAccessToken(refreshToken: String): Result<AccessToken> {
         logD("Refreshing access token...")
         val result = try {
+            mutex.lock()
             val token = service.refreshToken(refreshToken = refreshToken)
             Result.Success(token)
         } catch (e: Exception) {
             logE("Error while refreshing access token.", e)
+            if (e is HttpException) {
+                logD("Error response body is: ${e.response()?.errorBody()?.string()}")
+            }
             Result.Error(e)
+        } finally {
+            mutex.unlock()
         }
 
         if (result is Result.Success) {
             setLoggedInToken(result.data)
             logD("Successfully refreshed access token.")
         } else if (result is Result.Error) {
-            logI("Failed to refresh access token. Trigger log out...")
             return Result.Error(AccessTokenRefreshException("Failed to refresh access token.", result.exception))
         }
 

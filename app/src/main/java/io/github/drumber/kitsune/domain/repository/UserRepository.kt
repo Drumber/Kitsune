@@ -75,6 +75,7 @@ class UserRepository(
         val refreshResult = authRepository.refreshAccessTokenIfExpired()
 
         if (refreshResult is Result.Error && refreshResult.exception is AccessTokenRefreshException) {
+            logI("Failed to refresh access token. Trigger log out...")
             // failed to automatically refresh access token; log out and notify user about re-login
             logOut()
             userReLoginPrompt.postValue(true)

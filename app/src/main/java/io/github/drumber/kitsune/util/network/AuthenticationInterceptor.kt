@@ -2,6 +2,8 @@ package io.github.drumber.kitsune.util.network
 
 import io.github.drumber.kitsune.domain.Result
 import io.github.drumber.kitsune.domain.repository.AuthRepository
+import io.github.drumber.kitsune.util.logD
+import io.github.drumber.kitsune.util.logI
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Interceptor
@@ -30,13 +32,28 @@ class AuthenticationInterceptorImpl(private val authRepository: AuthRepository) 
     override fun authenticate(route: Route?, response: Response): Request? {
         if (response.responseCount > 3) return null
 
-        val refreshToken = authRepository.accessToken?.refreshToken
-        if (!authRepository.isLoggedIn || refreshToken == null) return null
+        val localAccessTokenHolder = authRepository.accessToken
+        val localAccessToken = localAccessTokenHolder?.accessToken
+        val localRefreshToken = localAccessTokenHolder?.refreshToken
+        if (!authRepository.isLoggedIn || localAccessToken == null || localRefreshToken == null) return null
 
-        val refreshResponse = runBlocking { authRepository.refreshAccessToken(refreshToken) }
-        if (refreshResponse !is Result.Success) return null
+        // check if the token from the request differs from the local stored access token
+        val isTokenAlreadyRefreshed = response.request
+            .header("Authorization")
+            ?.endsWith(localAccessToken) == false
 
-        val accessToken = refreshResponse.data.accessToken ?: return null
+        val accessToken = if (isTokenAlreadyRefreshed) {
+            logD("Local access token was changed during this request. Do not refresh access token and retry with changed access token.")
+            localAccessToken
+        } else {
+            logI("Refreshing access token because of a 401 Unauthorized response.")
+            val refreshResponse = runBlocking {
+                authRepository.refreshAccessToken(localRefreshToken)
+            }
+            if (refreshResponse !is Result.Success) return null
+            refreshResponse.data.accessToken ?: return null
+        }
+
         return response.request.newBuilder()
             .header("Authorization", "Bearer $accessToken")
             .build()
