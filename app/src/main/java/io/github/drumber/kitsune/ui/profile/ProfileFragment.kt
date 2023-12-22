@@ -25,6 +25,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.elevation.SurfaceColors
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.R
@@ -48,7 +49,6 @@ import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.widget.chart.PieChartStyle
-import io.github.drumber.kitsune.util.extensions.getColor
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openCharacterOnMAL
 import io.github.drumber.kitsune.util.extensions.recyclerView
@@ -206,7 +206,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
 
         glide.load(user?.coverImage?.originalOrDown())
             .centerCrop()
-            .placeholder(ColorDrawable(requireContext().theme.getColor(R.attr.colorSurface)))
+            .placeholder(ColorDrawable(SurfaceColors.SURFACE_0.getColor(requireContext())))
             .into(binding.ivCover)
 
         user?.favorites?.let { updateFavoritesData(it) }

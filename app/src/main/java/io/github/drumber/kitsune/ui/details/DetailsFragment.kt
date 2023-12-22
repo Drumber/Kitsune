@@ -30,6 +30,7 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.google.android.material.chip.Chip
+import com.google.android.material.elevation.SurfaceColors
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialContainerTransform
@@ -98,7 +99,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             drawingViewId = R.id.nav_host_fragment
             duration = resources.getInteger(R.integer.material_motion_duration_short_2).toLong()
             scrimColor = Color.TRANSPARENT
-            setAllContainerColors(requireContext().theme.getColor(R.attr.colorSurface))
+            setAllContainerColors(SurfaceColors.SURFACE_0.getColor(requireContext()))
         }
         sharedElementEnterTransition = transition
         sharedElementReturnTransition = transition

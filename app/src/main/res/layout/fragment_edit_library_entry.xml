@@ -420,7 +420,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         app:cardCornerRadius="0dp"
-        style="?attr/materialCardViewFilledStyle">
+        style="?attr/materialCardViewFilledStyle"
+        app:cardBackgroundColor="?attr/colorSurfaceContainer">
 
         <LinearLayout
             android:id="@+id/layout_bottom_bar"

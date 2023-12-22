@@ -18,10 +18,6 @@
         <item name="colorErrorContainer">@color/md_theme_dark_errorContainer</item>
         <item name="colorOnError">@color/md_theme_dark_onError</item>
         <item name="colorOnErrorContainer">@color/md_theme_dark_onErrorContainer</item>
-        <item name="android:colorBackground">@color/md_theme_dark_background</item>
-        <item name="colorOnBackground">@color/md_theme_dark_onBackground</item>
-        <item name="colorSurface">@color/md_theme_dark_surface</item>
-        <item name="colorOnSurface">@color/md_theme_dark_onSurface</item>
         <item name="colorSurfaceVariant">@color/md_theme_dark_surfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/md_theme_dark_onSurfaceVariant</item>
         <item name="colorOutline">@color/md_theme_dark_outline</item>
@@ -50,10 +46,6 @@
         <item name="colorErrorContainer">@color/md_purple_theme_dark_errorContainer</item>
         <item name="colorOnError">@color/md_purple_theme_dark_onError</item>
         <item name="colorOnErrorContainer">@color/md_purple_theme_dark_onErrorContainer</item>
-        <item name="android:colorBackground">@color/md_purple_theme_dark_background</item>
-        <item name="colorOnBackground">@color/md_purple_theme_dark_onBackground</item>
-        <item name="colorSurface">@color/md_purple_theme_dark_surface</item>
-        <item name="colorOnSurface">@color/md_purple_theme_dark_onSurface</item>
         <item name="colorSurfaceVariant">@color/md_purple_theme_dark_surfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/md_purple_theme_dark_onSurfaceVariant</item>
         <item name="colorOutline">@color/md_purple_theme_dark_outline</item>
