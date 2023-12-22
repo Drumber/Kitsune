@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.Window
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import com.chibatching.kotpref.livedata.asLiveData
 import com.google.android.material.color.DynamicColors
+import com.google.android.material.elevation.SurfaceColors
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.preference.KitsunePref
@@ -52,11 +52,8 @@ abstract class BaseActivity(
             checkAppTheme()
         }
 
-        // get surface color
-        val typedValue = TypedValue()
-        theme.resolveAttribute(R.attr.colorSurface, typedValue, true)
         // set app bar color in recent apps overview
-        setAppTaskColor(typedValue.data)
+        setAppTaskColor(SurfaceColors.SURFACE_0.getColor(this))
 
         if (edgeToEdge) {
             initEdgeToEdge()
@@ -111,18 +108,24 @@ abstract class BaseActivity(
         }
         // change the color of the task description, but keep the label and app icon
         appTask?.taskInfo?.taskDescription?.let {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                setTaskDescription(
-                    ActivityManager.TaskDescription(
-                        it.label,
-                        R.mipmap.ic_launcher,
-                        color
-                    )
+            val taskDescription = when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> ActivityManager.TaskDescription.Builder()
+                    .setPrimaryColor(color)
+                    .build()
+
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.P -> ActivityManager.TaskDescription(
+                    it.label,
+                    R.mipmap.ic_launcher,
+                    color
                 )
-            } else {
-                val icon = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
-                setTaskDescription(ActivityManager.TaskDescription(it.label, icon, color))
+
+                else -> ActivityManager.TaskDescription(
+                    it.label,
+                    BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher),
+                    color
+                )
             }
+            setTaskDescription(taskDescription)
         }
     }
 
