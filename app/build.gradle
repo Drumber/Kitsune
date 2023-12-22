@@ -208,7 +208,7 @@ dependencies {
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3'
     testImplementation "io.insert-koin:koin-test-junit4:$koin_version"
     testImplementation 'org.mockito.kotlin:mockito-kotlin:5.2.1'
-    testImplementation 'net.datafaker:datafaker:2.0.2'
+    testImplementation 'net.datafaker:datafaker:2.0.1'
 
     // fastlane screengrab
     androidTestImplementation 'tools.fastlane:screengrab:2.1.1'
