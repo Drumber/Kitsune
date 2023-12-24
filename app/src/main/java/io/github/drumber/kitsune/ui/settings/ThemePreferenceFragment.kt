@@ -41,6 +41,7 @@ class ThemePreferenceFragment : Fragment(R.layout.fragment_theme_preference) {
         initDynamicColorSwitch()
         initThemePickerCards()
         initDarkModeRadioGroup()
+        initOledBlackModeSwitch()
         initMediaItemSizeRadioGroup()
     }
 
@@ -96,6 +97,16 @@ class ThemePreferenceFragment : Fragment(R.layout.fragment_theme_preference) {
             binding.radioGroupDarkMode.addView(radioBtn)
         }
         (binding.radioGroupDarkMode.getChildAt(currentValueIndex) as RadioButton).isChecked = true
+    }
+
+    private fun initOledBlackModeSwitch() {
+        binding.switchOledBlackMode.apply {
+            isVisible = !KitsunePref.useDynamicColorTheme
+            isChecked = KitsunePref.oledBlackMode
+            setOnCheckedChangeListener { _, isChecked ->
+                KitsunePref.oledBlackMode = isChecked
+            }
+        }
     }
 
     private fun initMediaItemSizeRadioGroup() {

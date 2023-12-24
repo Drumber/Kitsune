@@ -3,28 +3,52 @@
     <style name="Theme.Kitsune.DayNight" parent="Theme.Kitsune" />
 
     <style name="Theme.Kitsune" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/md_theme_light_primary</item>
-        <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/md_theme_light_onPrimaryContainer</item>
-        <item name="colorSecondary">@color/md_theme_light_secondary</item>
-        <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
-        <item name="colorSecondaryContainer">@color/md_theme_light_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/md_theme_light_onSecondaryContainer</item>
-        <item name="colorTertiary">@color/md_theme_light_tertiary</item>
-        <item name="colorOnTertiary">@color/md_theme_light_onTertiary</item>
-        <item name="colorTertiaryContainer">@color/md_theme_light_tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/md_theme_light_onTertiaryContainer</item>
-        <item name="colorError">@color/md_theme_light_error</item>
-        <item name="colorErrorContainer">@color/md_theme_light_errorContainer</item>
-        <item name="colorOnError">@color/md_theme_light_onError</item>
-        <item name="colorOnErrorContainer">@color/md_theme_light_onErrorContainer</item>
-        <item name="colorSurfaceVariant">@color/md_theme_light_surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/md_theme_light_onSurfaceVariant</item>
-        <item name="colorOutline">@color/md_theme_light_outline</item>
-        <item name="colorOnSurfaceInverse">@color/md_theme_light_inverseOnSurface</item>
-        <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
+        <item name="colorPrimary">@color/md_theme_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/md_theme_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/md_theme_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/md_theme_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/md_theme_tertiary</item>
+        <item name="colorOnTertiary">@color/md_theme_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/md_theme_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/md_theme_onTertiaryContainer</item>
+        <item name="colorError">@color/md_theme_error</item>
+        <item name="colorOnError">@color/md_theme_onError</item>
+        <item name="colorErrorContainer">@color/md_theme_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/md_theme_onErrorContainer</item>
+        <item name="android:colorBackground">@color/md_theme_background</item>
+        <item name="colorOnBackground">@color/md_theme_onBackground</item>
+        <item name="colorSurface">@color/md_theme_surface</item>
+        <item name="colorOnSurface">@color/md_theme_onSurface</item>
+        <item name="colorSurfaceVariant">@color/md_theme_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_onSurfaceVariant</item>
+        <item name="colorOutline">@color/md_theme_outline</item>
+        <item name="colorOutlineVariant">@color/md_theme_outlineVariant</item>
+        <item name="colorSurfaceInverse">@color/md_theme_inverseSurface</item>
+        <item name="colorOnSurfaceInverse">@color/md_theme_inverseOnSurface</item>
+        <item name="colorPrimaryInverse">@color/md_theme_inversePrimary</item>
+        <item name="colorPrimaryFixed">@color/md_theme_primaryFixed</item>
+        <item name="colorOnPrimaryFixed">@color/md_theme_onPrimaryFixed</item>
+        <item name="colorPrimaryFixedDim">@color/md_theme_primaryFixedDim</item>
+        <item name="colorOnPrimaryFixedVariant">@color/md_theme_onPrimaryFixedVariant</item>
+        <item name="colorSecondaryFixed">@color/md_theme_secondaryFixed</item>
+        <item name="colorOnSecondaryFixed">@color/md_theme_onSecondaryFixed</item>
+        <item name="colorSecondaryFixedDim">@color/md_theme_secondaryFixedDim</item>
+        <item name="colorOnSecondaryFixedVariant">@color/md_theme_onSecondaryFixedVariant</item>
+        <item name="colorTertiaryFixed">@color/md_theme_tertiaryFixed</item>
+        <item name="colorOnTertiaryFixed">@color/md_theme_onTertiaryFixed</item>
+        <item name="colorTertiaryFixedDim">@color/md_theme_tertiaryFixedDim</item>
+        <item name="colorOnTertiaryFixedVariant">@color/md_theme_onTertiaryFixedVariant</item>
+        <item name="colorSurfaceDim">@color/md_theme_surfaceDim</item>
+        <item name="colorSurfaceBright">@color/md_theme_surfaceBright</item>
+        <item name="colorSurfaceContainerLowest">@color/md_theme_surfaceContainerLowest</item>
+        <item name="colorSurfaceContainerLow">@color/md_theme_surfaceContainerLow</item>
+        <item name="colorSurfaceContainer">@color/md_theme_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/md_theme_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/md_theme_surfaceContainerHighest</item>
 
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
@@ -41,35 +65,68 @@
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Kitsune.BottomSheetDialog</item>
         <item name="fullScreenDialogTheme">@style/Theme.Kitsune.FullScreenDialog</item>
     </style>
-    
+
     <style name="Theme.Kitsune.DayNight.Purple" parent="Theme.Kitsune.DayNight">
-        <item name="colorPrimary">@color/md_purple_theme_light_primary</item>
-        <item name="colorOnPrimary">@color/md_purple_theme_light_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/md_purple_theme_light_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/md_purple_theme_light_onPrimaryContainer</item>
-        <item name="colorSecondary">@color/md_purple_theme_light_secondary</item>
-        <item name="colorOnSecondary">@color/md_purple_theme_light_onSecondary</item>
-        <item name="colorSecondaryContainer">@color/md_purple_theme_light_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/md_purple_theme_light_onSecondaryContainer</item>
-        <item name="colorTertiary">@color/md_purple_theme_light_tertiary</item>
-        <item name="colorOnTertiary">@color/md_purple_theme_light_onTertiary</item>
-        <item name="colorTertiaryContainer">@color/md_purple_theme_light_tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/md_purple_theme_light_onTertiaryContainer</item>
-        <item name="colorError">@color/md_purple_theme_light_error</item>
-        <item name="colorErrorContainer">@color/md_purple_theme_light_errorContainer</item>
-        <item name="colorOnError">@color/md_purple_theme_light_onError</item>
-        <item name="colorOnErrorContainer">@color/md_purple_theme_light_onErrorContainer</item>
-        <item name="colorSurfaceVariant">@color/md_purple_theme_light_surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/md_purple_theme_light_onSurfaceVariant</item>
-        <item name="colorOutline">@color/md_purple_theme_light_outline</item>
-        <item name="colorOnSurfaceInverse">@color/md_purple_theme_light_inverseOnSurface</item>
-        <item name="colorSurfaceInverse">@color/md_purple_theme_light_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/md_purple_theme_light_inversePrimary</item>
+        <item name="colorPrimary">@color/md_purple_theme_primary</item>
+        <item name="colorOnPrimary">@color/md_purple_theme_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/md_purple_theme_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/md_purple_theme_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/md_purple_theme_secondary</item>
+        <item name="colorOnSecondary">@color/md_purple_theme_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/md_purple_theme_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/md_purple_theme_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/md_purple_theme_tertiary</item>
+        <item name="colorOnTertiary">@color/md_purple_theme_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/md_purple_theme_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/md_purple_theme_onTertiaryContainer</item>
+        <item name="colorError">@color/md_purple_theme_error</item>
+        <item name="colorOnError">@color/md_purple_theme_onError</item>
+        <item name="colorErrorContainer">@color/md_purple_theme_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/md_purple_theme_onErrorContainer</item>
+        <item name="android:colorBackground">@color/md_purple_theme_background</item>
+        <item name="colorOnBackground">@color/md_purple_theme_onBackground</item>
+        <item name="colorSurface">@color/md_purple_theme_surface</item>
+        <item name="colorOnSurface">@color/md_purple_theme_onSurface</item>
+        <item name="colorSurfaceVariant">@color/md_purple_theme_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/md_purple_theme_onSurfaceVariant</item>
+        <item name="colorOutline">@color/md_purple_theme_outline</item>
+        <item name="colorOutlineVariant">@color/md_purple_theme_outlineVariant</item>
+        <item name="colorSurfaceInverse">@color/md_purple_theme_inverseSurface</item>
+        <item name="colorOnSurfaceInverse">@color/md_purple_theme_inverseOnSurface</item>
+        <item name="colorPrimaryInverse">@color/md_purple_theme_inversePrimary</item>
+        <item name="colorPrimaryFixed">@color/md_purple_theme_primaryFixed</item>
+        <item name="colorOnPrimaryFixed">@color/md_purple_theme_onPrimaryFixed</item>
+        <item name="colorPrimaryFixedDim">@color/md_purple_theme_primaryFixedDim</item>
+        <item name="colorOnPrimaryFixedVariant">@color/md_purple_theme_onPrimaryFixedVariant</item>
+        <item name="colorSecondaryFixed">@color/md_purple_theme_secondaryFixed</item>
+        <item name="colorOnSecondaryFixed">@color/md_purple_theme_onSecondaryFixed</item>
+        <item name="colorSecondaryFixedDim">@color/md_purple_theme_secondaryFixedDim</item>
+        <item name="colorOnSecondaryFixedVariant">@color/md_purple_theme_onSecondaryFixedVariant</item>
+        <item name="colorTertiaryFixed">@color/md_purple_theme_tertiaryFixed</item>
+        <item name="colorOnTertiaryFixed">@color/md_purple_theme_onTertiaryFixed</item>
+        <item name="colorTertiaryFixedDim">@color/md_purple_theme_tertiaryFixedDim</item>
+        <item name="colorOnTertiaryFixedVariant">@color/md_purple_theme_onTertiaryFixedVariant</item>
+        <item name="colorSurfaceDim">@color/md_purple_theme_surfaceDim</item>
+        <item name="colorSurfaceBright">@color/md_purple_theme_surfaceBright</item>
+        <item name="colorSurfaceContainerLowest">@color/md_purple_theme_surfaceContainerLowest</item>
+        <item name="colorSurfaceContainerLow">@color/md_purple_theme_surfaceContainerLow</item>
+        <item name="colorSurfaceContainer">@color/md_purple_theme_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/md_purple_theme_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/md_purple_theme_surfaceContainerHighest</item>
 
         <item name="colorPlaceholderGradientStart">?colorPrimary</item>
         <item name="colorPlaceholderGradientEnd">?colorPrimaryVariant</item>
 
         <item name="fullScreenDialogTheme">@style/Theme.Kitsune.FullScreenDialog.Purple</item>
+    </style>
+
+    <style name="Theme.Kitsune.DayNight.Black">
+        <item name="fullScreenDialogTheme">@style/Theme.Kitsune.FullScreenDialog.Black</item>
+        <!-- effects only night mode -->
+    </style>
+
+    <style name="Theme.Kitsune.DayNight.Purple.Black">
+        <!-- effects only night mode -->
     </style>
 
     <!-- FullScreen theme -->
@@ -108,8 +165,14 @@
         <item name="android:windowIsFloating">false</item>
     </style>
 
+    <style name="Theme.Kitsune.FullScreenDialog.Black" parent="Theme.Kitsune.DayNight.Black">
+    </style>
+
     <style name="Theme.Kitsune.FullScreenDialog.Purple" parent="Theme.Kitsune.DayNight.Purple">
         <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <style name="Theme.Kitsune.FullScreenDialog.Purple.Black" parent="Theme.Kitsune.DayNight.Purple.Black">
     </style>
 
     <style name="ThemeOverlay.Kitsune.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
@@ -123,86 +186,6 @@
 
     <style name="ModalBottomSheet" parent="Widget.Material3.BottomSheet.Modal">
         <item name="shapeAppearance">@style/ShapeAppearance.Kitsune.LargeComponent</item>
-    </style>
-
-    <style name="TextAppearance.Kitsune.SubtypeBadge" parent="TextAppearance.Material3.LabelMedium">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="Widget.Kitsune.TextView.BottomSheetTitle" parent="Widget.AppCompat.TextView">
-        <item name="android:textAppearance">?attr/textAppearanceTitleMedium</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:layout_marginBottom">20dp</item>
-        <item name="android:maxLines">2</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
-    <style name="Theme.Kitsune.Slide">
-        <item name="android:windowEnterAnimation">@anim/slide_up</item>
-        <item name="android:windowExitAnimation">@anim/slide_down</item>
-    </style>
-
-    <style name="Widget.Kitsune.Button.IconButton.Dense" parent="Widget.Material3.Button.IconButton">
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="android:insetLeft">0dp</item>
-        <item name="android:insetRight">0dp</item>
-        <item name="android:paddingLeft">@dimen/icon_button_padding</item>
-        <item name="android:paddingRight">@dimen/icon_button_padding</item>
-        <item name="android:paddingTop">@dimen/icon_button_padding</item>
-        <item name="android:paddingBottom">@dimen/icon_button_padding</item>
-    </style>
-
-    <style name="Widget.Kitsune.CardView.Surface" parent="Widget.Material3.CardView.Outlined">
-        <item name="strokeWidth">0dp</item>
-    </style>
-    
-    <style name="Widget.Kitsune.TextInputLayout.Dense.ExposedDropdownMenu" parent="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.Kitsune.AutoCompleteTextView.Dense</item>
-    </style>
-
-    <style name="ThemeOverlay.Kitsune.AutoCompleteTextView.Dense" parent="@style/ThemeOverlay.MaterialComponents.AutoCompleteTextView.OutlinedBox.Dense">
-        <item name="autoCompleteTextViewStyle">@style/Widget.Kitsune.AutoCompleteTextView.Dense</item>
-    </style>
-
-    <style name="Widget.Kitsune.AutoCompleteTextView.Dense" parent="@style/Widget.Material3.AutoCompleteTextView.OutlinedBox.Dense">
-        <item name="android:paddingTop">0dp</item>
-        <item name="android:paddingBottom">0dp</item>
-    </style>
-
-    <!-- SearchView Style -->
-    <style name="Widget.Kitsune.SearchView" parent="@style/Widget.AppCompat.SearchView">
-        <item name="iconifiedByDefault">false</item>
-        <item name="queryBackground">@android:color/transparent</item>
-    </style>
-
-    <style name="Theme.Kitsune.PreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
-        <item name="android:layout">@layout/fragment_preference</item>
-        <!-- use Material 3 switch -->
-        <item name="switchPreferenceCompatStyle">@style/Preference.SwitchPreferenceCompat.Material3</item>
-    </style>
-
-    <style name="Preference.SwitchPreferenceCompat.Material3" parent="@style/Preference.SwitchPreferenceCompat.Material">
-        <item name="widgetLayout">@layout/custom_preference_switch</item>
-    </style>
-
-    <style name="ShapeAppearance.Kitsune.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">12dp</item>
-    </style>
-
-    <style name="ShapeAppearanceOverlay.Kitsune.Button.Circle" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
-    </style>
-
-    <style name="ShapeAppearance.Kitsune.SubtypeBadge" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeBottomLeft">4dp</item>
-        <item name="cornerSizeTopLeft">0dp</item>
-        <item name="cornerSizeTopRight">0dp</item>
-        <item name="cornerSizeBottomRight">0dp</item>
     </style>
 
 </resources>

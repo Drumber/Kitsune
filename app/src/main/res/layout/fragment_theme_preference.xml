@@ -157,6 +157,12 @@
                     <!-- Populated in code -->
                 </RadioGroup>
 
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch_oled_black_mode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/preference_oled_black_mode" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

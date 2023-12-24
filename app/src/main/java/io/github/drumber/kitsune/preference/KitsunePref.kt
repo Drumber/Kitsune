@@ -57,6 +57,11 @@ object KitsunePref : KotprefModel(), KoinComponent {
         key = R.string.preference_key_dark_mode
     )
 
+    var oledBlackMode by booleanPref(
+        false,
+        key = R.string.preference_key_oled_black_mode
+    )
+
     var mediaItemSize by enumOrdinalPref(MediaItemSize.MEDIUM)
 
     var startFragment by enumValuePref(StartPagePref.Home)

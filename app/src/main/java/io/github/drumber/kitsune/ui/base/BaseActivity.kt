@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.Window
 import androidx.annotation.LayoutRes
+import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
@@ -15,7 +16,6 @@ import com.chibatching.kotpref.livedata.asLiveData
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.elevation.SurfaceColors
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.main.MainActivity
 import io.github.drumber.kitsune.util.extensions.clearLightNavigationBar
@@ -28,15 +28,16 @@ abstract class BaseActivity(
     private val setAppTheme: Boolean = true
 ) : AppCompatActivity(contentLayoutId) {
 
-    private lateinit var appliedTheme: AppTheme
+    @StyleRes
+    private var appliedThemeRes: Int = -1
     private var isDynamicColorsApplied = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
         if (setAppTheme) {
             // apply app theme
-            appliedTheme = KitsunePref.appTheme
-            setTheme(appliedTheme.themeRes)
+            appliedThemeRes = getThemeResFromPreference()
+            setTheme(appliedThemeRes)
             if (DynamicColors.isDynamicColorAvailable() && KitsunePref.useDynamicColorTheme) {
                 DynamicColors.applyToActivityIfAvailable(this)
                 isDynamicColorsApplied = true
@@ -46,6 +47,9 @@ abstract class BaseActivity(
         super.onCreate(savedInstanceState)
 
         KitsunePref.asLiveData(KitsunePref::appTheme).observe(this) {
+            checkAppTheme()
+        }
+        KitsunePref.asLiveData(KitsunePref::oledBlackMode).observe(this) {
             checkAppTheme()
         }
         KitsunePref.asLiveData(KitsunePref::useDynamicColorTheme).observe(this) {
@@ -75,9 +79,19 @@ abstract class BaseActivity(
 
     private fun checkAppTheme() {
         if (!setAppTheme) return
-        if (appliedTheme != KitsunePref.appTheme || isDynamicColorsApplied != KitsunePref.useDynamicColorTheme) {
+        if (appliedThemeRes != getThemeResFromPreference()
+            || isDynamicColorsApplied != KitsunePref.useDynamicColorTheme
+        ) {
             recreate()
         }
+    }
+
+    private fun getThemeResFromPreference(): Int {
+        val appTheme = KitsunePref.appTheme
+        return if (KitsunePref.oledBlackMode)
+            appTheme.blackThemeRes
+        else
+            appTheme.themeRes
     }
 
     private fun initEdgeToEdge() {
