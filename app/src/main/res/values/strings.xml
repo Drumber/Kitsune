@@ -203,14 +203,14 @@
         <item>Medium</item>
         <item>Large</item>
     </string-array>
-    <string name="preference_start_fragment">Default Start Page</string>
+    <string name="preference_start_fragment">Default Page</string>
     <string-array name="preference_start_fragment_entries">
         <item>Home</item>
         <item>Search</item>
         <item>Library</item>
         <item>Profile</item>
     </string-array>
-    <string name="preference_start_fragment_description">The Start Page is set to %s.</string>
+    <string name="preference_start_fragment_description">The default page is set to %s.</string>
     <string name="preference_language">Language</string>
     <string name="preference_display_name">Display Name</string>
     <string name="preference_profile_url">Profile URL</string>

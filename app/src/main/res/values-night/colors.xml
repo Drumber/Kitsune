@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- M3 Default Dark Theme Colors -->
-    <color name="md_theme_primary">@color/md_theme_dark_primary</color>
+    <color name="md_theme_primary">#FFB4A7</color>
     <color name="md_theme_onPrimary">#561E15</color>
     <color name="md_theme_primaryContainer">#733429</color>
     <color name="md_theme_onPrimaryContainer">#FFDAD4</color>
@@ -144,7 +144,7 @@
     <color name="md_theme_surfaceContainerHighest_highContrast">#3D3230</color>
     
     <!-- M3 Purple Dark Theme Colors -->
-    <color name="md_purple_theme_primary">@color/md_purple_theme_dark_primary</color>
+    <color name="md_purple_theme_primary">#EDB4EB</color>
     <color name="md_purple_theme_onPrimary">#4A204D</color>
     <color name="md_purple_theme_primaryContainer">#633664</color>
     <color name="md_purple_theme_onPrimaryContainer">#FFD6FB</color>

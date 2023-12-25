@@ -10,21 +10,12 @@
     <color name="color_heart">#E74C3C</color>
     <color name="color_score">#1BBC9C</color>
 
-    <!-- Preview colors for theme selector cards -->
-    <color name="theme_preview_default_light">@color/md_theme_light_primary</color>
-    <color name="theme_preview_default_dark">@color/md_theme_dark_primary</color>
-    <color name="theme_preview_default_text_color">@color/md_theme_onPrimary</color>
-    <color name="theme_preview_purple_light">@color/md_purple_theme_light_primary</color>
-    <color name="theme_preview_purple_dark">@color/md_purple_theme_dark_primary</color>
-    <color name="theme_preview_purple_text_color">@color/md_purple_theme_onPrimary</color>
-
     <color name="edge_fade_color">#BF000000</color>
     <color name="translucent_system_overlay">#4D000000</color>
 
     <!-- M3 Default Theme Colors -->
-    <color name="md_theme_light_primary">#904B3F</color>
-    <color name="md_theme_dark_primary">#FFB4A7</color>
-    <color name="md_theme_primary">@color/md_theme_light_primary</color>
+    <color name="seed">#e23300</color>
+    <color name="md_theme_primary">#904B3F</color>
     <color name="md_theme_onPrimary">#FFFFFF</color>
     <color name="md_theme_primaryContainer">#FFDAD4</color>
     <color name="md_theme_onPrimaryContainer">#3A0A04</color>
@@ -168,9 +159,7 @@
 
     <!-- M3 Purple Theme Colors -->
     <color name="purple_seed">#503d4f</color>
-    <color name="md_purple_theme_light_primary">#7D4E7E</color>
-    <color name="md_purple_theme_dark_primary">#EDB4EB</color>
-    <color name="md_purple_theme_primary">@color/md_purple_theme_light_primary</color>
+    <color name="md_purple_theme_primary">#7D4E7E</color>
     <color name="md_purple_theme_onPrimary">#FFFFFF</color>
     <color name="md_purple_theme_primaryContainer">#FFD6FB</color>
     <color name="md_purple_theme_onPrimaryContainer">#320936</color>

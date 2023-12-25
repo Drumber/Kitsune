@@ -6,6 +6,7 @@ import androidx.preference.ListPreference
 import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.color.DynamicColors
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BasePreferenceFragment
@@ -21,6 +22,19 @@ class AppearanceFragment : BasePreferenceFragment(R.string.nav_appearance) {
             isVisible = DynamicColors.isDynamicColorAvailable()
             setOnPreferenceChangeListener { _, newValue ->
                 KitsunePref.useDynamicColorTheme = newValue as Boolean
+                true
+            }
+        }
+
+        //---- App Theme
+        findPreference<ThemePickerPreference>(R.string.preference_key_app_theme)?.apply {
+            isEnabled = !KitsunePref.useDynamicColorTheme
+            val themeEntries = getThemePreferenceEntries()
+            setThemeEntries(themeEntries)
+            setSelectedTheme(KitsunePref.appTheme.toThemeEntry())
+            setOnPreferenceChangeListener { _, newValue ->
+                val themeIndex = themeEntries.indexOf(newValue as ThemePickerPreference.ThemeEntry)
+                KitsunePref.appTheme = AppTheme.entries[themeIndex]
                 true
             }
         }
@@ -53,6 +67,26 @@ class AppearanceFragment : BasePreferenceFragment(R.string.nav_appearance) {
                 true
             }
         }
+    }
+
+    private fun getThemePreferenceEntries(): List<ThemePickerPreference.ThemeEntry> {
+        return AppTheme.entries.map { it.toThemeEntry() }
+    }
+
+    private fun AppTheme.toThemeEntry() = when (this) {
+        AppTheme.DEFAULT -> ThemePickerPreference.ThemeEntry(
+            name = R.string.preference_app_theme_default,
+            primaryColor = R.color.md_theme_primary,
+            secondaryColor = R.color.md_theme_secondary,
+            surfaceColor = R.color.md_theme_surface
+        )
+
+        AppTheme.PURPLE -> ThemePickerPreference.ThemeEntry(
+            name = R.string.preference_app_theme_purple,
+            primaryColor = R.color.md_purple_theme_primary,
+            secondaryColor = R.color.md_purple_theme_secondary,
+            surfaceColor = R.color.md_purple_theme_surface
+        )
     }
 
 }

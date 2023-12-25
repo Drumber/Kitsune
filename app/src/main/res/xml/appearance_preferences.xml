@@ -10,6 +10,8 @@
         app:iconSpaceReserved="false" />
 
     <io.github.drumber.kitsune.ui.settings.ThemePickerPreference
+        android:key="@string/preference_key_app_theme"
+        android:title="@string/preference_app_theme"
         android:selectable="false"
         android:layout="@layout/layout_theme_picker_preference" />
 
