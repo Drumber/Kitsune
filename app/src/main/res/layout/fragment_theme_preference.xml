@@ -185,20 +185,17 @@
                         android:id="@+id/rbtn_small"
                         style="@style/Widget.AppCompat.CompoundButton.RadioButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/option_small" />
+                        android:layout_height="wrap_content" />
 
                     <RadioButton
                         android:id="@+id/rbtn_medium"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/option_medium" />
+                        android:layout_height="wrap_content" />
 
                     <RadioButton
                         android:id="@+id/rbtn_large"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/option_large" />
+                        android:layout_height="wrap_content" />
 
                 </RadioGroup>
 

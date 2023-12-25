@@ -1,9 +1,7 @@
 package io.github.drumber.kitsune.ui.settings
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -16,7 +14,6 @@ import androidx.preference.ListPreference
 import androidx.preference.ListPreference.SimpleSummaryProvider
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
@@ -35,8 +32,6 @@ import io.github.drumber.kitsune.ui.permissions.isNotificationPermissionGranted
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
 import io.github.drumber.kitsune.util.extensions.openUrl
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
-import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.initWindowInsetsListener
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -80,14 +75,14 @@ class SettingsFragment : BasePreferenceFragment() {
         //---- Appearance
         findPreference<Preference>(R.string.preference_key_fragment_appearance)?.setOnPreferenceClickListener {
             val action =
-                SettingsFragmentDirections.actionSettingsFragmentToThemePreferenceFragment()
+                SettingsFragmentDirections.actionSettingsFragmentToAppearanceFragment()
             findNavController().navigate(action)
             true
         }
 
         //---- Start Fragment
         findPreference<ListPreference>(R.string.preference_key_start_fragment)?.apply {
-            entryValues = StartPagePref.values().map { it.name }.toTypedArray()
+            entryValues = StartPagePref.entries.map { it.name }.toTypedArray()
             value = KitsunePref.startFragment.name
             setSummaryProvider {
                 getString(R.string.preference_start_fragment_description, entry)
@@ -140,11 +135,6 @@ class SettingsFragment : BasePreferenceFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentPreferenceBinding.bind(view)
-        binding.apply {
-            collapsingToolbar.initWindowInsetsListener(consume = false)
-            toolbar.initWindowInsetsListener(consume = false)
-            toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-        }
 
         viewModel.errorMessageListener = {
             Snackbar.make(view, "Error: ${it.getMessage(requireContext())}", Snackbar.LENGTH_LONG)
@@ -158,21 +148,6 @@ class SettingsFragment : BasePreferenceFragment() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.loadingOverlay.isVisible = isLoading
         }
-    }
-
-    override fun onCreateRecyclerView(
-        inflater: LayoutInflater,
-        parent: ViewGroup,
-        savedInstanceState: Bundle?
-    ): RecyclerView {
-        val recyclerView = super.onCreateRecyclerView(inflater, parent, savedInstanceState)
-        recyclerView.initPaddingWindowInsetsListener(
-            left = true,
-            right = true,
-            bottom = true,
-            consume = false
-        )
-        return recyclerView
     }
 
     private fun checkForNewVersion() {
@@ -223,7 +198,7 @@ class SettingsFragment : BasePreferenceFragment() {
         viewModel.userModel.observe(this) { user ->
             //---- Title Language Preference
             findPreference<ListPreference>(R.string.preference_key_titles)?.apply {
-                entryValues = TitleLanguagePreference.values().map { it.name }.toTypedArray()
+                entryValues = TitleLanguagePreference.entries.map { it.name }.toTypedArray()
                 setDefaultValue(KitsunePref.titles.name)
                 value = KitsunePref.titles.name
                 setOnPreferenceChangeListener { _, newValue ->
@@ -271,7 +246,7 @@ class SettingsFragment : BasePreferenceFragment() {
             //---- Adult Content
             findPreference<ListPreference>(R.string.preference_key_sfw_filter)?.apply {
                 value = user?.sfwFilterPreference?.name
-                entryValues = SfwFilterPreference.values().map { it.name }.toTypedArray()
+                entryValues = SfwFilterPreference.entries.map { it.name }.toTypedArray()
                 setOnPreferenceChangeListener { _, newValue ->
                     if (user == null) return@setOnPreferenceChangeListener false
                     updateUserIfChanged(
@@ -301,7 +276,7 @@ class SettingsFragment : BasePreferenceFragment() {
             //---- Rating System
             findPreference<ListPreference>(R.string.preference_key_rating_system)?.apply {
                 entryValues =
-                    RatingSystemPreference.values().reversed().map { it.name }.toTypedArray()
+                    RatingSystemPreference.entries.reversed().map { it.name }.toTypedArray()
                 value = user?.ratingSystem?.name
                 setOnPreferenceChangeListener { _, newValue ->
                     if (user == null) return@setOnPreferenceChangeListener false
@@ -362,10 +337,6 @@ class SettingsFragment : BasePreferenceFragment() {
         } else {
             null
         }
-    }
-
-    private fun <T : Preference> findPreference(@StringRes preferenceKey: Int): T? {
-        return findPreference(getString(preferenceKey))
     }
 
     override fun onDestroyView() {

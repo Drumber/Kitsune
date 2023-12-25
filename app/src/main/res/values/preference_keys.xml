@@ -11,6 +11,7 @@
     <string name="preference_key_dynamic_color_theme">dynamic_color_theme</string>
     <string name="preference_key_dark_mode">dark_mode</string>
     <string name="preference_key_oled_black_mode">oled_black_mode</string>
+    <string name="preference_key_media_item_size">media_item_size</string>
     <string name="preference_key_start_fragment">start_fragment</string>
     <string name="preference_key_language">language</string>
     <string name="preference_key_remember_search_filters">remember_search_filters</string>

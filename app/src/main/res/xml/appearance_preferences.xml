@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:key="@string/preference_file_key">
+
+    <SwitchPreferenceCompat
+        android:key="@string/preference_key_dynamic_color_theme"
+        android:title="@string/preference_dynamic_color_theme"
+        android:summary="@string/preference_dynamic_color_theme_description"
+        app:iconSpaceReserved="false" />
+
+    <io.github.drumber.kitsune.ui.settings.ThemePickerPreference
+        android:selectable="false"
+        android:layout="@layout/layout_theme_picker_preference" />
+
+    <ListPreference
+        android:key="@string/preference_key_dark_mode"
+        android:title="@string/preference_dark_mode"
+        android:entries="@array/preference_dark_mode_entries"
+        android:entryValues="@array/preference_dark_mode_values"
+        app:useSimpleSummaryProvider="true"
+        app:iconSpaceReserved="false" />
+
+    <SwitchPreferenceCompat
+        android:key="@string/preference_key_oled_black_mode"
+        android:title="@string/preference_oled_black_mode"
+        android:summary="@string/preference_oled_black_mode_description"
+        app:iconSpaceReserved="false" />
+
+    <ListPreference
+        android:key="@string/preference_key_media_item_size"
+        android:title="@string/preference_media_item_size"
+        android:entries="@array/preference_media_item_size_entries"
+        app:useSimpleSummaryProvider="true"
+        app:iconSpaceReserved="false" />
+
+</PreferenceScreen>

@@ -10,20 +10,15 @@
         android:name="io.github.drumber.kitsune.ui.settings.SettingsFragment"
         android:label="SettingsFragment">
         <action
-            android:id="@+id/action_settingsFragment_to_themePreferenceFragment"
-            app:destination="@id/themePreferenceFragment" />
-        <action
             android:id="@+id/action_settingsFragment_to_appLogsFragment"
             app:destination="@id/appLogsFragment" />
         <action
             android:id="@+id/action_settingsFragment_to_librariesFragment"
             app:destination="@id/osLibrariesFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_appearanceFragment"
+            app:destination="@id/appearanceFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/themePreferenceFragment"
-        android:name="io.github.drumber.kitsune.ui.settings.ThemePreferenceFragment"
-        android:label="fragment_theme_preference"
-        tools:layout="@layout/fragment_theme_preference" />
     <fragment
         android:id="@+id/appLogsFragment"
         android:name="io.github.drumber.kitsune.ui.settings.AppLogsFragment"
@@ -33,4 +28,8 @@
         android:id="@+id/osLibrariesFragment"
         android:name="io.github.drumber.kitsune.ui.settings.OSLibrariesFragment"
         android:label="OSLibrariesFragment" />
+    <fragment
+        android:id="@+id/appearanceFragment"
+        android:name="io.github.drumber.kitsune.ui.settings.AppearanceFragment"
+        android:label="AppearanceFragment" />
 </navigation>
