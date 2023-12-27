@@ -87,6 +87,20 @@ class AppearanceFragment : BasePreferenceFragment(R.string.nav_appearance) {
             secondaryColor = R.color.md_purple_theme_secondary,
             surfaceColor = R.color.md_purple_theme_surface
         )
+        
+        AppTheme.BLUE -> ThemePickerPreference.ThemeEntry(
+            name = R.string.preference_app_theme_blue,
+            primaryColor = R.color.md_blue_theme_primary,
+            secondaryColor = R.color.md_blue_theme_secondary,
+            surfaceColor = R.color.md_blue_theme_surface
+        )
+
+        AppTheme.GREEN -> ThemePickerPreference.ThemeEntry(
+            name = R.string.preference_app_theme_green,
+            primaryColor = R.color.md_green_theme_primary,
+            secondaryColor = R.color.md_green_theme_secondary,
+            surfaceColor = R.color.md_green_theme_surface
+        )
     }
 
 }

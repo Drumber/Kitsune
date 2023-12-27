@@ -197,6 +197,8 @@
     <string name="preference_dynamic_color_theme_description">Adapt to the system theme.</string>
     <string name="preference_app_theme_default">Default</string>
     <string name="preference_app_theme_purple">Purple</string>
+    <string name="preference_app_theme_blue">Blue</string>
+    <string name="preference_app_theme_green">Green</string>
     <string name="preference_media_item_size">Poster Image Size</string>
     <string-array name="preference_media_item_size_entries">
         <item>Small</item>
