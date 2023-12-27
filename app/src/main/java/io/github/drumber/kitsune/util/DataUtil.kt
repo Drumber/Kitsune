@@ -19,8 +19,8 @@ object DataUtil {
     @JvmStatic
     fun getGenderString(gender: String?, context: Context): String {
         return when (gender) {
-            "male" -> context.getString(R.string.gender_male)
-            "female" -> context.getString(R.string.gender_female)
+            "male" -> context.getString(R.string.profile_gender_male)
+            "female" -> context.getString(R.string.profile_gender_female)
             "secret", null -> context.getString(R.string.profile_data_private)
             else -> gender
         }

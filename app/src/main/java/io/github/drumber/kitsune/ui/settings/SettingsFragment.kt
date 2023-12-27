@@ -312,7 +312,12 @@ class SettingsFragment : BasePreferenceFragment() {
                     updateUserIfChanged(text, newValue, User(user.id, slug = newValue as String))
                     true
                 }
-                requireUserLoggedIn(user) { Kitsu.USER_URL_PREFIX + it.text }
+                requireUserLoggedIn(user) {
+                    if (!it.text.isNullOrBlank())
+                        Kitsu.USER_URL_PREFIX + it.text
+                    else
+                        getString(R.string.preference_profile_url_not_set)
+                }
             }
         }
     }

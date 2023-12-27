@@ -38,6 +38,8 @@
     <string name="action_save_in_gallery">Save in Gallery</string>
     <string name="action_open_in_browser">Open in Browser</string>
     <string name="action_save_changes">Save Changes</string>
+    <string name="action_edit_profile">Edit Profile</string>
+    <string name="action_update_profile">Update Profile</string>
     <string name="action_remove">Remove</string>
     <string name="action_start">Start</string>
     <string name="action_allow">Allow</string>
@@ -101,6 +103,7 @@
     <string name="title_chapters">Chapters</string>
     <string name="title_characters">Characters</string>
     <string name="title_edit_library_entry">Edit Library Entry</string>
+    <string name="title_edit_profile">Edit Profile</string>
 
     <string name="no_information">Unknown</string>
     <string name="no_data_available">No Data available</string>
@@ -216,6 +219,7 @@
     <string name="preference_language">Language</string>
     <string name="preference_display_name">Display Name</string>
     <string name="preference_profile_url">Profile URL</string>
+    <string name="preference_profile_url_not_set">No profile URL set.</string>
     <string name="preference_country">Country</string>
     <string name="preference_country_summary">Country is set to %s</string>
     <string name="preference_country_summary_non">No country specified.</string>
@@ -323,8 +327,18 @@
     <string name="profile_data_join_date">Join Date</string>
     <string name="profile_data_join_date_ago">%s ago</string>
     <string name="profile_data_private">It\'s a secret.</string>
-    <string name="gender_male">Male</string>
-    <string name="gender_female">Female</string>
+    <string name="profile_gender_male">Male</string>
+    <string name="profile_gender_female">Female</string>
+    <string name="profile_gender_custom">Custom</string>
+    <string name="profile_gender_custom_hint">Define your gender</string>
+    <string name="profile_data_waifu">Waifu</string>
+    <string name="profile_waifu_or_husbando">Waifu or Husbando</string>
+    <string name="profile_find_waifu">Find your special someone</string>
+    <string-array name="profile_waifu_options">
+        <item>Waifu</item>
+        <item>Husbando</item>
+    </string-array>
+    <string name="profile_data_bio">Bio</string>
 
     <string name="notification_updates">Application Updates</string>
 

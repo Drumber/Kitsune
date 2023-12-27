@@ -150,6 +150,12 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
                         findNavController().navigate(action)
                     }
 
+                    R.id.menu_edit_profile -> {
+                        val action = ProfileFragmentDirections
+                            .actionProfileFragmentToEditProfileFragment()
+                        findNavController().navigateSafe(R.id.profile_fragment, action)
+                    }
+
                     R.id.menu_share_profile_url -> {
                         val user = viewModel.userModel.value
                         val profileId = user?.slug ?: user?.id
@@ -374,6 +380,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
     private fun updateOptionsMenu() {
         val isLoggedIn = viewModel.userModel.value != null
         binding.toolbar.menu.apply {
+            findItem(R.id.menu_edit_profile).isVisible = isLoggedIn
             findItem(R.id.menu_log_out).isVisible = isLoggedIn
             findItem(R.id.menu_share_profile_url).isVisible = isLoggedIn
         }

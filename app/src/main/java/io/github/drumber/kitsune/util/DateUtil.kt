@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.util
 
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -14,7 +15,11 @@ fun String.parseDate(
 ): Date? {
     val dateFormat = SimpleDateFormat(format, Locale.getDefault())
     dateFormat.timeZone = timeZoneOfDateString
-    return dateFormat.parse(this)
+    return try {
+        dateFormat.parse(this)
+    } catch (e: ParseException) {
+        null
+    }
 }
 
 fun String.parseUtcDate(format: String = DATE_FORMAT_ISO) =

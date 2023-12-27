@@ -51,6 +51,9 @@
         <action
             android:id="@+id/action_profile_fragment_to_settings_nav_graph"
             app:destination="@id/settings_nav_graph" />
+        <action
+            android:id="@+id/action_profile_fragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/details_fragment"
@@ -216,4 +219,8 @@
             app:argType="io.github.drumber.kitsune.domain.model.infrastructure.user.RatingSystemPreference" />
     </dialog>
     <include app:graph="@navigation/settings_nav_graph" />
+    <dialog
+        android:id="@+id/editProfileFragment"
+        android:name="io.github.drumber.kitsune.ui.profile.editprofile.EditProfileFragment"
+        android:label="EditProfileFragment" />
 </navigation>

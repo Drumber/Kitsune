@@ -140,7 +140,7 @@
                                         layout="@layout/item_details_info_row"
                                         app:icon="@{@drawable/ic_location_24}"
                                         app:title="@{@string/profile_data_location}"
-                                        app:value="@{user.location ?? @string/profile_data_private}" />
+                                        app:value="@{!TextUtils.isEmpty(user.location) ? user.location : @string/profile_data_private}" />
 
                                     <include
                                         layout="@layout/item_details_info_row"
