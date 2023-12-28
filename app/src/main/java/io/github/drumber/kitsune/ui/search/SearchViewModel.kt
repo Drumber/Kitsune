@@ -1,6 +1,10 @@
 package io.github.drumber.kitsune.ui.search
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.algolia.instantsearch.android.paging3.Paginator
@@ -28,6 +32,7 @@ import com.algolia.search.model.response.ResponseSearch
 import com.algolia.search.model.search.Query
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.Repository
+import io.github.drumber.kitsune.domain.manager.SearchProvider
 import io.github.drumber.kitsune.domain.model.FilterCollection
 import io.github.drumber.kitsune.domain.model.infrastructure.algolia.SearchType
 import io.github.drumber.kitsune.domain.model.infrastructure.algolia.search.MediaSearchResult
@@ -43,7 +48,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
-import java.util.*
+import java.util.Calendar
 
 class SearchViewModel(
     algoliaKeyRepository: AlgoliaKeyRepository

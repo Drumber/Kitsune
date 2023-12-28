@@ -9,14 +9,22 @@ import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.algolia.instantsearch.android.searchbox.SearchBoxViewEditText
+import com.algolia.instantsearch.core.connection.ConnectionHandler
+import com.algolia.instantsearch.core.hits.connectHitsView
+import com.algolia.instantsearch.searchbox.connectView
+import com.algolia.search.helper.deserialize
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentEditProfileBinding
+import io.github.drumber.kitsune.domain.model.infrastructure.algolia.search.CharacterSearchResult
 import io.github.drumber.kitsune.ui.base.BaseDialogFragment
 import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.util.formatDate
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
+import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import io.github.drumber.kitsune.util.parseDate
 import io.github.drumber.kitsune.util.toDate
@@ -30,6 +38,8 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
     private val binding get() = _binding!!
 
     private val viewModel: EditProfileViewModel by viewModel()
+
+    private val connectionHandler = ConnectionHandler()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -135,6 +145,12 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
                 )
             }
 
+            fieldSearchWaifu.editText?.setOnClickListener {
+                viewModel.initSearchClient()
+                characterSearchView.clearText()
+                characterSearchView.show()
+            }
+
             fieldBio.editText?.apply {
                 setText(viewModel.profileState.about)
                 doAfterTextChanged {
@@ -189,6 +205,28 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
                 }
             }
         }
+
+        initSearchView()
+    }
+
+    private fun initSearchView() {
+        val adapter = CharacterSearchResultAdapter()
+        binding.rvCharacterResults.apply {
+            initPaddingWindowInsetsListener(left = true, right = true, bottom = true, consume = false)
+            this.adapter = adapter
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.searchBoxConnectorFlow.collectLatest { searchBox ->
+                connectionHandler.clear()
+                val searchBoxView = SearchBoxViewEditText(binding.characterSearchView.editText)
+                connectionHandler += searchBox.connectView(searchBoxView)
+                connectionHandler += searchBox.searcher.connectHitsView(adapter) { response ->
+                    response.hits.deserialize(CharacterSearchResult.serializer())
+                }
+            }
+        }
     }
 
     private fun openDatePicker(selectedDate: Long, title: String, action: (Long) -> Unit) {
@@ -204,5 +242,6 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        connectionHandler.clear()
     }
 }

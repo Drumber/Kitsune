@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.search
+package io.github.drumber.kitsune.domain.manager
 
 import com.algolia.instantsearch.searcher.hits.HitsSearcher
 import com.algolia.search.client.ClientSearch
@@ -31,7 +31,7 @@ class SearchProvider(
     suspend fun createSearchClient(
         searchType: SearchType,
         query: Query,
-        createdListener: SearcherCreatedListener
+        createdListener: suspend (HitsSearcher) -> Unit
     ) {
         searcherIndex?.cancel() // cancel any previous created searcher
         isInitialized = false
@@ -50,7 +50,9 @@ class SearchProvider(
         searcherIndex = searcher
 
         isInitialized = true
-        createdListener.onSearcherCreated(searcher)
+        withContext(Dispatchers.Main) {
+            createdListener(searcher)
+        }
     }
 
     private suspend fun getAlgoliaKeysAsync() = withContext(Dispatchers.IO) {
@@ -68,8 +70,4 @@ class SearchProvider(
         searcherIndex?.cancel()
     }
 
-}
-
-fun interface SearcherCreatedListener {
-    fun onSearcherCreated(searcher: HitsSearcher)
 }

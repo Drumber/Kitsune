@@ -2,8 +2,21 @@ package io.github.drumber.kitsune.ui.profile.editprofile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.algolia.instantsearch.core.connection.ConnectionHandler
+import com.algolia.instantsearch.searchbox.SearchBoxConnector
+import com.algolia.search.dsl.attributesToHighlight
+import com.algolia.search.dsl.attributesToRetrieve
+import com.algolia.search.dsl.query
+import com.algolia.search.dsl.responseFields
+import com.algolia.search.model.response.ResponseSearch
+import com.algolia.search.model.search.Query
+import com.algolia.search.model.search.RemoveStopWords
+import com.algolia.search.model.search.RemoveWordIfNoResults
 import com.github.jasminb.jsonapi.JSONAPIDocument
+import io.github.drumber.kitsune.domain.manager.SearchProvider
+import io.github.drumber.kitsune.domain.model.infrastructure.algolia.SearchType
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
+import io.github.drumber.kitsune.domain.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.domain.repository.UserRepository
 import io.github.drumber.kitsune.domain.service.user.UserService
 import io.github.drumber.kitsune.exception.ReceivedDataException
@@ -13,6 +26,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -20,6 +34,7 @@ import kotlinx.coroutines.launch
 
 class EditProfileViewModel(
     private val userRepository: UserRepository,
+    algoliaKeyRepository: AlgoliaKeyRepository,
     private val service: UserService
 ) : ViewModel() {
 
@@ -34,6 +49,12 @@ class EditProfileViewModel(
     val acceptChanges: (ProfileState) -> Unit
 
     private val acceptLoadingState: (LoadingState) -> Unit
+
+    private val searchProvider: SearchProvider
+    private val connectionHandler = ConnectionHandler()
+    private val _searchBoxConnectorFlow = MutableSharedFlow<SearchBoxConnector<ResponseSearch>>(1)
+    val searchBoxConnectorFlow
+        get() = _searchBoxConnectorFlow.asSharedFlow()
 
     init {
         val user = userRepository.user
@@ -72,6 +93,8 @@ class EditProfileViewModel(
         acceptLoadingState = { loadingState ->
             viewModelScope.launch { _loadingStateFlow.emit(loadingState) }
         }
+
+        searchProvider = SearchProvider(algoliaKeyRepository)
     }
 
     fun hasUser() = userRepository.hasUser
@@ -108,6 +131,41 @@ class EditProfileViewModel(
         }
     }
 
+    fun initSearchClient() {
+        if (searchProvider.isInitialized) return
+        val characterSearchQuery = query {
+            attributesToRetrieve {
+                +"id"
+                +"slug"
+                +"canonicalName"
+                +"image"
+                +"primaryMedia"
+            }
+            responseFields {
+                +Hits
+            }
+            attributesToHighlight {  }
+            removeStopWords = RemoveStopWords.False
+            removeWordsIfNoResults = RemoveWordIfNoResults.AllOptional
+        }
+        createSearchClient(characterSearchQuery)
+    }
+
+    private fun createSearchClient(query: Query) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                searchProvider.createSearchClient(SearchType.Characters, query) { searcher ->
+                    connectionHandler.clear()
+                    val searchBoxConnector = SearchBoxConnector(searcher)
+                    connectionHandler += searchBoxConnector
+                    _searchBoxConnectorFlow.emit(searchBoxConnector)
+                }
+            } catch (e: Exception) {
+                logE("Failed to create search client.", e)
+            }
+        }
+    }
+
     private fun User.getGenderWithoutCustomGender(): String? {
         return when (gender) {
             null, "", "male", "female", "secret" -> gender
@@ -120,6 +178,12 @@ class EditProfileViewModel(
             "male", "female", "secret" -> null
             else -> gender
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        connectionHandler.clear()
+        searchProvider.cancel()
     }
 }
 

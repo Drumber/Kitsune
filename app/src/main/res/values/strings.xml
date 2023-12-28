@@ -48,6 +48,7 @@
     <string name="action_remove_rating">Remove Rating</string>
 
     <string name="hint_search">Search</string>
+    <string name="hint_search_characters">Search characters</string>
     <string name="hint_mark_watched">Mark as watched.</string>
     <string name="hint_mark_not_watched">Mark as not watched.</string>
     <string name="hint_rating">Rating</string>

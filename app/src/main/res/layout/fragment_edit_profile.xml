@@ -100,37 +100,41 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-<!--            <com.google.android.material.textfield.TextInputLayout-->
-<!--                android:id="@+id/menu_waifu"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="18dp"-->
-<!--                android:hint="@string/profile_waifu_or_husbando"-->
-<!--                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/menu_waifu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:hint="@string/profile_waifu_or_husbando"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-<!--                <AutoCompleteTextView-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:inputType="none"-->
-<!--                    app:simpleItems="@array/profile_waifu_options"-->
-<!--                    tools:ignore="LabelFor" />-->
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    app:simpleItems="@array/profile_waifu_options"
+                    tools:ignore="LabelFor" />
 
-<!--            </com.google.android.material.textfield.TextInputLayout>-->
+            </com.google.android.material.textfield.TextInputLayout>
 
-<!--            <com.google.android.material.textfield.TextInputLayout-->
-<!--                android:id="@+id/field_search_waifu"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="2dp"-->
-<!--                android:hint="@string/profile_find_waifu"-->
-<!--                app:endIconMode="clear_text">-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/field_search_waifu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:hint="@string/profile_find_waifu"
+                app:endIconDrawable="@drawable/ic_search_24"
+                app:endIconMode="custom"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-<!--                <com.google.android.material.textfield.TextInputEditText-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:inputType="none"/>-->
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:inputType="none"
+                    tools:ignore="LabelFor" />
 
-<!--            </com.google.android.material.textfield.TextInputLayout>-->
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/field_bio"
@@ -159,6 +163,20 @@
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.search.SearchView
+        android:id="@+id/character_search_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:hint="@string/hint_search_characters">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_character_results"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false" />
+
+    </com.google.android.material.search.SearchView>
 
     <FrameLayout
         android:id="@+id/layout_loading"

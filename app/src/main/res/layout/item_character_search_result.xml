@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:padding="12dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_character"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        tools:src="@drawable/profile_picture_placeholder" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
+        android:layout_marginHorizontal="18dp"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/iv_character"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:ellipsize="end"
+            tools:text="Character Name"/>
+
+        <TextView
+            android:id="@+id/tv_media"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:maxLines="1"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:ellipsize="end"
+            tools:text="Media"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
