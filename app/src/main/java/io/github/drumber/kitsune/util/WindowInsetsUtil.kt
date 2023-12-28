@@ -16,7 +16,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 fun Toolbar.initWindowInsetsListener(consume: Boolean = true) {
     val initialHeight = this.layoutParams.height
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
-        val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+        val insets = windowInsets.getSystemBarsAndCutoutInsets()
         view.updatePadding(
             top = insets.top,
             left = insets.left,
@@ -33,7 +33,7 @@ fun CollapsingToolbarLayout.initWindowInsetsListener(consume: Boolean = true) {
     val defaultTitleMarginEnd = this.expandedTitleMarginStart
     val defaultScrimVisibleHeightTrigger = this.scrimVisibleHeightTrigger
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
-        val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+        val insets = windowInsets.getSystemBarsAndCutoutInsets()
         view.layoutParams.height = initialHeight + insets.top
         this.scrimVisibleHeightTrigger = defaultScrimVisibleHeightTrigger + insets.top
 
@@ -60,7 +60,7 @@ fun View.initPaddingWindowInsetsListener(
         paddingBottom
     )
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
-        val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+        val insets = windowInsets.getSystemBarsAndCutoutInsets()
         view.updatePadding(
             left = if (left) insets.left + initialLeft else paddingLeft,
             top = if (top) insets.top + initialTop else paddingTop,
@@ -85,7 +85,7 @@ fun View.initMarginWindowInsetsListener(
         marginBottom
     )
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
-        val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+        val insets = windowInsets.getSystemBarsAndCutoutInsets()
         view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             if (left) leftMargin = insets.left + initialLeft
             if (top) topMargin = insets.top + initialTop
@@ -95,3 +95,7 @@ fun View.initMarginWindowInsetsListener(
         if (consume) WindowInsetsCompat.CONSUMED else windowInsets
     }
 }
+
+fun WindowInsetsCompat.getSystemBarsAndCutoutInsets() = getInsets(
+    WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+)

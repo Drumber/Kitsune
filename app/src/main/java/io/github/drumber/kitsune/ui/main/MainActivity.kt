@@ -7,7 +7,6 @@ import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.iterator
 import androidx.core.view.updatePadding
@@ -43,6 +42,7 @@ import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
 import io.github.drumber.kitsune.ui.permissions.showNotificationPermissionRejectedDialog
 import io.github.drumber.kitsune.util.RoundBitmapDrawable
 import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
+import io.github.drumber.kitsune.util.getSystemBarsAndCutoutInsets
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -95,18 +95,21 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
         }, true)
 
+        ViewCompat.setOnApplyWindowInsetsListener(binding.navHostFragment) { _, windowInsets ->
+            if (!isNavigationBarViewVisible())
+                return@setOnApplyWindowInsetsListener windowInsets
+
+            val insets = windowInsets.getSystemBarsAndCutoutInsets()
+            val consumedInsets = binding.bottomNavigation?.applyWindowInsets(insets)
+                ?: binding.navigationRail?.applyWindowInsets(insets)
+                ?: Insets.of(0, 0, 0, 0)
+            // consume insets used by the navigation bar view
+            // and propagate the remaining inset space to child fragments
+            windowInsets.inset(consumedInsets)
+        }
+
         navController = navHostFragment.navController
         navigationBarView.apply {
-            ViewCompat.setOnApplyWindowInsetsListener(this) { _, windowInsets ->
-                if (!isNavigationBarViewVisible())
-                    return@setOnApplyWindowInsetsListener windowInsets
-                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-                val consumedInsets = binding.bottomNavigation?.applyWindowInsets(insets)
-                    ?: binding.navigationRail?.applyWindowInsets(insets)
-                    ?: Insets.of(0, 0, 0, 0)
-                windowInsets.inset(consumedInsets)
-            }
-
             setOnItemSelectedListener { item ->
                 viewModel.currentNavRootDestId = item.itemId
 
@@ -149,7 +152,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                                 resource: Bitmap,
                                 transition: Transition<in Bitmap>?
                             ) {
-                                menu.findItem(R.id.profile_fragment).icon = RoundBitmapDrawable(resource)
+                                menu.findItem(R.id.profile_fragment).icon =
+                                    RoundBitmapDrawable(resource)
                             }
 
                             override fun onLoadCleared(placeholder: Drawable?) {}
