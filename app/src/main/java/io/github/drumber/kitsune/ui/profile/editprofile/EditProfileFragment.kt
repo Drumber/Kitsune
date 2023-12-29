@@ -1,10 +1,15 @@
 package io.github.drumber.kitsune.ui.profile.editprofile
 
+import android.net.Uri
 import android.os.Bundle
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
 import androidx.core.widget.doAfterTextChanged
@@ -16,6 +21,7 @@ import com.algolia.instantsearch.core.connection.ConnectionHandler
 import com.algolia.instantsearch.core.hits.connectHitsView
 import com.algolia.instantsearch.searchbox.connectView
 import com.algolia.search.helper.deserialize
+import com.bumptech.glide.Glide
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import io.github.drumber.kitsune.R
@@ -28,6 +34,7 @@ import io.github.drumber.kitsune.util.formatDate
 import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
+import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.parseDate
 import io.github.drumber.kitsune.util.toDate
 import kotlinx.coroutines.flow.collectLatest
@@ -42,6 +49,25 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
     private val viewModel: EditProfileViewModel by viewModel()
 
     private val connectionHandler = ConnectionHandler()
+
+    private lateinit var pickImage: ActivityResultLauncher<PickVisualMediaRequest>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        pickImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                val imageState = viewModel.profileImageState
+                val newImageState = when (viewModel.currentImagePickerType) {
+                    ImagePickerType.AVATAR -> imageState.copy(selectedAvatarUri = uri)
+                    ImagePickerType.COVER -> imageState.copy(selectedCoverUri = uri)
+                    else -> imageState
+                }
+                viewModel.acceptProfileImageChanges(newImageState)
+            }
+            viewModel.currentImagePickerType = null
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,10 +98,18 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
         binding.apply {
             toolbar.setNavigationOnClickListener { dismiss() }
 
+            cardAvatar.setOnClickListener {
+                openImagePicker(ImagePickerType.AVATAR)
+            }
+
+            cardCover.setOnClickListener {
+                openImagePicker(ImagePickerType.COVER)
+            }
+
             fieldLocation.editText?.apply {
                 setText(viewModel.profileState.location)
                 doAfterTextChanged {
-                    viewModel.acceptChanges(
+                    viewModel.acceptProfileChanges(
                         viewModel.profileState.copy(
                             location = it?.trim().toString()
                         )
@@ -89,7 +123,7 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
 
                 openDatePicker(selectedDate, getString(R.string.profile_data_birthday)) { date ->
                     val dateString = date.toDate().formatDate("yyyy-MM-dd")
-                    viewModel.acceptChanges(
+                    viewModel.acceptProfileChanges(
                         viewModel.profileState.copy(birthday = dateString)
                     )
                 }
@@ -98,7 +132,7 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
                 if (viewModel.profileState.birthday.isEmpty()) {
                     fieldBirthday.editText?.performClick()
                 } else {
-                    viewModel.acceptChanges(
+                    viewModel.acceptProfileChanges(
                         viewModel.profileState.copy(birthday = "")
                     )
                 }
@@ -124,8 +158,9 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
                         2 -> "female"
                         else -> "custom"
                     }
-                    val customGender = if (gender != "custom") "" else viewModel.profileState.customGender
-                    viewModel.acceptChanges(
+                    val customGender =
+                        if (gender != "custom") "" else viewModel.profileState.customGender
+                    viewModel.acceptProfileChanges(
                         viewModel.profileState.copy(
                             gender = gender,
                             customGender = customGender
@@ -142,7 +177,7 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
 
             fieldCustomGender.editText?.setText(viewModel.profileState.customGender)
             fieldCustomGender.editText?.doAfterTextChanged {
-                viewModel.acceptChanges(
+                viewModel.acceptProfileChanges(
                     viewModel.profileState.copy(customGender = it?.trim().toString())
                 )
             }
@@ -158,7 +193,7 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
 
                 setOnItemClickListener { _, _, position, _ ->
                     val waifuOrHusbando = waifuItems[position]
-                    viewModel.acceptChanges(
+                    viewModel.acceptProfileChanges(
                         viewModel.profileState.copy(waifuOrHusbando = waifuOrHusbando)
                     )
                 }
@@ -171,7 +206,7 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
             }
             fieldSearchWaifu.setEndIconOnClickListener {
                 if (viewModel.profileState.character != null) {
-                    viewModel.acceptChanges(
+                    viewModel.acceptProfileChanges(
                         viewModel.profileState.copy(character = null)
                     )
                 } else {
@@ -182,14 +217,14 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
             fieldBio.editText?.apply {
                 setText(viewModel.profileState.about)
                 doAfterTextChanged {
-                    viewModel.acceptChanges(
+                    viewModel.acceptProfileChanges(
                         viewModel.profileState.copy(about = it?.trim().toString())
                     )
                 }
             }
 
             btnUpdateProfile.setOnClickListener {
-                viewModel.updateUserProfile()
+                viewModel.updateUserProfile(createUserImageUpload())
             }
         }
 
@@ -225,6 +260,25 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.profileImageStateFlow.collectLatest { profileImageState ->
+
+                val avatarImage = profileImageState.selectedAvatarUri
+                    ?: profileImageState.currentAvatarUrl
+                Glide.with(this@EditProfileFragment)
+                    .load(avatarImage)
+                    .placeholder(R.drawable.profile_picture_placeholder)
+                    .into(binding.ivAvatar)
+
+                val coverImage = profileImageState.selectedCoverUri
+                    ?: profileImageState.currentCoverUrl
+                Glide.with(this@EditProfileFragment)
+                    .load(coverImage)
+                    .placeholder(R.drawable.cover_placeholder)
+                    .into(binding.ivCover)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.canUpdateProfileFlow.collectLatest { canUpdate ->
                 binding.btnUpdateProfile.isEnabled = canUpdate
             }
@@ -251,14 +305,20 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
 
     private fun initSearchView() {
         val adapter = CharacterSearchResultAdapter {
-            viewModel.acceptChanges(viewModel.profileState.copy(character = it.toCharacter()))
+            viewModel.acceptProfileChanges(viewModel.profileState.copy(character = it.toCharacter()))
             binding.characterSearchView.hide()
         }
 
         binding.rvCharacterResults.apply {
-            initPaddingWindowInsetsListener(left = true, right = true, bottom = true, consume = false)
+            initPaddingWindowInsetsListener(
+                left = true,
+                right = true,
+                bottom = true,
+                consume = false
+            )
             this.adapter = adapter
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
 
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
@@ -293,6 +353,49 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
 
         datePicker.addOnPositiveButtonClickListener(action)
         datePicker.show(parentFragmentManager, "DATE_PICKER")
+    }
+
+    private fun openImagePicker(type: ImagePickerType) {
+        viewModel.currentImagePickerType = type
+        pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    private fun createUserImageUpload(): ProfileImageContainer? {
+        val imageState = viewModel.profileImageState
+        val avatarUri = imageState.selectedAvatarUri
+        val coverUri = imageState.selectedCoverUri
+        if (avatarUri == null && coverUri == null) {
+            return null
+        }
+
+        val profileImages = ProfileImageContainer(
+            avatar = avatarUri?.let { getBase64ImageFrom(it) },
+            coverImage = coverUri?.let { getBase64ImageFrom(it)  }
+        )
+
+        if (profileImages.avatar == null && profileImages.coverImage == null) {
+            return null
+        }
+        return profileImages
+    }
+
+    private fun getBase64ImageFrom(uri: Uri): String? {
+        val inputStream = requireContext().contentResolver.openInputStream(uri) ?: return null
+
+        // get mime type from image (default to jpeg)
+        val mimeType = requireContext().contentResolver.getType(uri) ?: "image/jpeg"
+
+        return try {
+            inputStream.use { stream ->
+                val bytes = stream.readBytes()
+                Base64.encodeToString(bytes, Base64.DEFAULT)
+            }.let { base64 ->
+                "data:$mimeType;base64,$base64"
+            }
+        } catch (e: Exception) {
+            logE("Error while encoding image to Base64 from uri: $uri", e)
+            null
+        }
     }
 
     override fun onDestroyView() {

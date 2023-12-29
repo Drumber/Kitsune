@@ -35,6 +35,41 @@
             android:layout_margin="10dp"
             android:orientation="vertical">
 
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_cover"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                style="@style/Widget.Kitsune.CardView.Surface">
+
+                <ImageView
+                    android:id="@+id/iv_cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/profile_cover_image_description"
+                    tools:src="@drawable/cover_placeholder" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_avatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="-50dp"
+                android:layout_marginBottom="32dp"
+                app:cardCornerRadius="100dp"
+                app:strokeColor="?attr/colorSurface"
+                app:strokeWidth="2dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/iv_avatar"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:contentDescription="@string/profile_avatar_image_description"
+                    tools:src="@drawable/profile_picture_placeholder" />
+
+            </com.google.android.material.card.MaterialCardView>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/field_location"
                 android:layout_width="match_parent"

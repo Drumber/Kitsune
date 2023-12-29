@@ -337,6 +337,8 @@
     <string name="profile_waifu_or_husbando">Waifu or Husbando</string>
     <string name="profile_find_waifu">Find your special someone</string>
     <string name="profile_data_bio">Bio</string>
+    <string name="profile_cover_image_description">Cover image</string>
+    <string name="profile_avatar_image_description">Profile picture</string>
 
     <string name="notification_updates">Application Updates</string>
 

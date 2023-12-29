@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.ui.profile.editprofile
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.algolia.instantsearch.core.connection.ConnectionHandler
@@ -17,8 +18,11 @@ import io.github.drumber.kitsune.domain.manager.SearchProvider
 import io.github.drumber.kitsune.domain.model.infrastructure.algolia.SearchType
 import io.github.drumber.kitsune.domain.model.infrastructure.production.Character
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
+import io.github.drumber.kitsune.domain.model.infrastructure.user.UserImageUpload
+import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
 import io.github.drumber.kitsune.domain.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.domain.repository.UserRepository
+import io.github.drumber.kitsune.domain.service.user.UserImageUploadService
 import io.github.drumber.kitsune.domain.service.user.UserService
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logD
@@ -29,26 +33,32 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class EditProfileViewModel(
     private val userRepository: UserRepository,
     algoliaKeyRepository: AlgoliaKeyRepository,
-    private val service: UserService
+    private val service: UserService,
+    private val imageUploadService: UserImageUploadService
 ) : ViewModel() {
 
     val loadingStateFlow: StateFlow<LoadingState>
 
     val profileStateFlow: StateFlow<ProfileState>
+    val profileImageStateFlow: StateFlow<ProfileImageState>
     val canUpdateProfileFlow: Flow<Boolean>
 
     val profileState
         get() = profileStateFlow.value
 
-    val acceptChanges: (ProfileState) -> Unit
+    val profileImageState
+        get() = profileImageStateFlow.value
+
+    val acceptProfileChanges: (ProfileState) -> Unit
+    val acceptProfileImageChanges: (ProfileImageState) -> Unit
 
     private val acceptLoadingState: (LoadingState) -> Unit
 
@@ -57,6 +67,8 @@ class EditProfileViewModel(
     private val _searchBoxConnectorFlow = MutableSharedFlow<SearchBoxConnector<ResponseSearch>>(1)
     val searchBoxConnectorFlow
         get() = _searchBoxConnectorFlow.asSharedFlow()
+
+    var currentImagePickerType: ImagePickerType? = null
 
     init {
         val user = userRepository.user
@@ -71,6 +83,11 @@ class EditProfileViewModel(
             about = user?.about ?: ""
         )
 
+        val initialProfileImageState = ProfileImageState(
+            currentAvatarUrl = user?.avatar?.originalOrDown(),
+            currentCoverUrl = user?.coverImage?.originalOrDown()
+        )
+
         val _profileStateFlow = MutableSharedFlow<ProfileState>()
         profileStateFlow = _profileStateFlow
             .distinctUntilChanged()
@@ -79,10 +96,29 @@ class EditProfileViewModel(
                 started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
                 initialValue = initialProfileState
             )
-        canUpdateProfileFlow = profileStateFlow.map { it != initialProfileState }
 
-        acceptChanges = { changes ->
+        val _profileImageStateFlow = MutableSharedFlow<ProfileImageState>()
+        profileImageStateFlow = _profileImageStateFlow
+            .distinctUntilChanged()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
+                initialValue = initialProfileImageState
+            )
+
+        acceptProfileChanges = { changes ->
             viewModelScope.launch { _profileStateFlow.emit(changes) }
+        }
+
+        acceptProfileImageChanges = { changes ->
+            viewModelScope.launch { _profileImageStateFlow.emit(changes) }
+        }
+
+        canUpdateProfileFlow = combine(
+            profileStateFlow,
+            profileImageStateFlow
+        ) { profileState, profileImageState ->
+            profileState != initialProfileState || profileImageState != initialProfileImageState
         }
 
         val _loadingStateFlow = MutableSharedFlow<LoadingState>()
@@ -102,7 +138,7 @@ class EditProfileViewModel(
 
     fun hasUser() = userRepository.hasUser
 
-    fun updateUserProfile() {
+    fun updateUserProfile(profileImages: ProfileImageContainer?) {
         val user = userRepository.user ?: return
         val changes = profileState
         val waifu = if (changes.character != null && changes.waifuOrHusbando.isNotBlank()) {
@@ -131,6 +167,21 @@ class EditProfileViewModel(
                     val responseWaifu = service.deleteWaifuRelationship(user.id).execute()
                     if (!responseWaifu.isSuccessful) {
                         throw ReceivedDataException("Failed to delete waifu relationship.")
+                    }
+                }
+
+                if (profileImages != null) {
+                    logD("Updating user image(s).")
+                    val body = UserImageUpload(
+                        id = user.id,
+                        avatar = profileImages.avatar,
+                        coverImage = profileImages.coverImage
+                    )
+
+                    val response =
+                        imageUploadService.updateUserImage(user.id, JSONAPIDocument(body)).execute()
+                    if (!response.isSuccessful) {
+                        throw ReceivedDataException("Failed to update user image.")
                     }
                 }
 
@@ -221,9 +272,25 @@ data class ProfileState(
     val about: String
 )
 
+data class ProfileImageState(
+    val currentAvatarUrl: String?,
+    val currentCoverUrl: String?,
+    val selectedAvatarUri: Uri? = null,
+    val selectedCoverUri: Uri? = null
+)
+
+data class ProfileImageContainer(
+    val avatar: String?,
+    val coverImage: String?
+)
+
 sealed class LoadingState {
     data object NotLoading : LoadingState()
     data object Loading : LoadingState()
     data object Success : LoadingState()
     data class Error(val exception: Exception) : LoadingState()
+}
+
+enum class ImagePickerType {
+    AVATAR, COVER
 }

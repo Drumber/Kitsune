@@ -28,6 +28,7 @@ import io.github.drumber.kitsune.domain.model.infrastructure.production.Characte
 import io.github.drumber.kitsune.domain.model.infrastructure.production.Producer
 import io.github.drumber.kitsune.domain.model.infrastructure.user.Favorite
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
+import io.github.drumber.kitsune.domain.model.infrastructure.user.UserImageUpload
 import io.github.drumber.kitsune.domain.model.infrastructure.user.stats.Stats
 import io.github.drumber.kitsune.domain.service.anime.AnimeService
 import io.github.drumber.kitsune.domain.service.anime.EpisodesService
@@ -40,6 +41,7 @@ import io.github.drumber.kitsune.domain.service.manga.ChaptersService
 import io.github.drumber.kitsune.domain.service.manga.MangaService
 import io.github.drumber.kitsune.domain.service.production.CastingService
 import io.github.drumber.kitsune.domain.service.user.FavoriteService
+import io.github.drumber.kitsune.domain.service.user.UserImageUploadService
 import io.github.drumber.kitsune.domain.service.user.UserService
 import io.github.drumber.kitsune.util.IgnoreParcelablePropertyMixin
 import io.github.drumber.kitsune.util.json.AlgoliaFacetValueDeserializer
@@ -97,6 +99,13 @@ val networkModule = module {
             Anime::class.java,
             Manga::class.java,
             Character::class.java
+        )
+    }
+    factory {
+        createService<UserImageUploadService>(
+            get(),
+            get(),
+            UserImageUpload::class.java
         )
     }
     factory {
