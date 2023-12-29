@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.domain.manager
 
 import com.algolia.instantsearch.searcher.hits.HitsSearcher
+import com.algolia.instantsearch.searcher.hits.SearchForQuery
 import com.algolia.search.client.ClientSearch
 import com.algolia.search.logging.LogLevel
 import com.algolia.search.model.APIKey
@@ -31,6 +32,7 @@ class SearchProvider(
     suspend fun createSearchClient(
         searchType: SearchType,
         query: Query,
+        triggerSearchFor: SearchForQuery = SearchForQuery.All,
         createdListener: suspend (HitsSearcher) -> Unit
     ) {
         searcherIndex?.cancel() // cancel any previous created searcher
@@ -45,7 +47,10 @@ class SearchProvider(
         val logLevel = if (BuildConfig.DEBUG) LogLevel.All else LogLevel.None
         val client = ClientSearch(ApplicationID(Kitsu.ALGOLIA_APP_ID), APIKey(apiKey), logLevel)
 
-        val searcher = HitsSearcher(client, IndexName(apiIndex), query)
+        val searcher = HitsSearcher(
+            client, IndexName(apiIndex), query,
+            triggerSearchFor = triggerSearchFor
+        )
         clientSearch = client
         searcherIndex = searcher
 

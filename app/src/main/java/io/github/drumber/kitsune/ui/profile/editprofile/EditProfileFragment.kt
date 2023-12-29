@@ -10,6 +10,7 @@ import androidx.core.view.postDelayed
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.algolia.instantsearch.android.searchbox.SearchBoxViewEditText
 import com.algolia.instantsearch.core.connection.ConnectionHandler
 import com.algolia.instantsearch.core.hits.connectHitsView
@@ -258,6 +259,18 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
             initPaddingWindowInsetsListener(left = true, right = true, bottom = true, consume = false)
             this.adapter = adapter
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        }
+
+        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onChanged() {
+                binding.rvCharacterResults.scrollToPosition(0)
+            }
+        })
+
+        binding.characterSearchView.editText.doAfterTextChanged { text ->
+            if (text.isNullOrBlank()) {
+                adapter.setHits(emptyList())
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {

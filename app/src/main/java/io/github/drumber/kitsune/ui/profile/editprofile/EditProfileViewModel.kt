@@ -174,7 +174,11 @@ class EditProfileViewModel(
     private fun createSearchClient(query: Query) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                searchProvider.createSearchClient(SearchType.Characters, query) { searcher ->
+                searchProvider.createSearchClient(
+                    SearchType.Characters,
+                    query,
+                    triggerSearchFor = { !it.query.isNullOrBlank() }
+                ) { searcher ->
                     connectionHandler.clear()
                     val searchBoxConnector = SearchBoxConnector(searcher)
                     connectionHandler += searchBoxConnector
