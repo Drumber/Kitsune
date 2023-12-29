@@ -154,6 +154,13 @@
                                         app:title="@{@string/profile_data_join_date}"
                                         app:value="@{DataUtil.formatUserJoinDate(user.createdAt, context) ?? @string/profile_data_private}" />
 
+                                    <include
+                                        layout="@layout/item_details_info_row"
+                                        android:id="@+id/layout_waifu_row"
+                                        app:isVisible="@{user.waifu != null}"
+                                        app:title="@{user.waifuOrHusbando}"
+                                        app:value="@{user.waifu.name}" />
+
                                 </TableLayout>
 
                             </LinearLayout>

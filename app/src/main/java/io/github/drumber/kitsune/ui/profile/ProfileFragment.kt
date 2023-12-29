@@ -1,6 +1,8 @@
 package io.github.drumber.kitsune.ui.profile
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -133,6 +135,15 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
                     ?: viewModel.userModel.value?.name)?.let { "$it Cover" }
                 openImageViewer(coverImgUrl, title, null, ivCover)
             }
+
+            layoutWaifuRow.ivIcon.setOnClickListener {
+                val waifu = viewModel.fullUserModel.value?.data?.waifu
+                    ?: viewModel.userModel.value?.waifu
+                    ?: return@setOnClickListener
+                val imageUrl = waifu.image?.originalOrDown() ?: return@setOnClickListener
+                val title = waifu.name ?: getString(R.string.profile_data_waifu)
+                openImageViewer(imageUrl, title, null, layoutWaifuRow.ivIcon)
+            }
         }
 
         initStatsViewPager()
@@ -214,6 +225,23 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
             .centerCrop()
             .placeholder(ColorDrawable(SurfaceColors.SURFACE_0.getColor(requireContext())))
             .into(binding.ivCover)
+
+        user?.waifu?.let { waifu ->
+            glide.asBitmap()
+                .load(waifu.image?.originalOrDown())
+                .circleCrop()
+                .dontAnimate()
+                .into(object : CustomTarget<Bitmap>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        binding.layoutWaifuRow.icon = BitmapDrawable(resources, resource)
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {}
+                })
+        }
 
         user?.favorites?.let { updateFavoritesData(it) }
     }
