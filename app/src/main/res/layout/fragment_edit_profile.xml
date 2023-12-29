@@ -48,6 +48,15 @@
                     android:contentDescription="@string/profile_cover_image_description"
                     tools:src="@drawable/cover_placeholder" />
 
+                <ImageView
+                    android:id="@+id/iv_cover_add_image"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_add_a_photo_24"
+                    android:layout_gravity="center"
+                    app:tint="?attr/colorOnPrimary"
+                    android:contentDescription="@null" />
+
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -204,7 +213,8 @@
         android:id="@+id/character_search_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:hint="@string/hint_search_characters">
+        android:hint="@string/hint_search_characters"
+        tools:visibility="gone">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_character_results"

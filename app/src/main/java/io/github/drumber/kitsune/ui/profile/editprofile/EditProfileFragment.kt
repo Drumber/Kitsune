@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.ComponentDialog
+import androidx.activity.addCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,6 +25,7 @@ import com.algolia.instantsearch.searchbox.connectView
 import com.algolia.search.helper.deserialize
 import com.bumptech.glide.Glide
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.search.SearchView
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentEditProfileBinding
@@ -31,7 +34,6 @@ import io.github.drumber.kitsune.domain.model.infrastructure.algolia.search.Char
 import io.github.drumber.kitsune.ui.base.BaseDialogFragment
 import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.util.formatDate
-import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.initWindowInsetsListener
 import io.github.drumber.kitsune.util.logE
@@ -77,7 +79,7 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
         _binding = FragmentEditProfileBinding.inflate(inflater, container, false)
 
         binding.toolbar.initWindowInsetsListener(consume = false)
-        binding.nestedScrollView.initMarginWindowInsetsListener(
+        binding.nestedScrollView.initPaddingWindowInsetsListener(
             left = true,
             right = true,
             bottom = true,
@@ -261,7 +263,6 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.profileImageStateFlow.collectLatest { profileImageState ->
-
                 val avatarImage = profileImageState.selectedAvatarUri
                     ?: profileImageState.currentAvatarUrl
                 Glide.with(this@EditProfileFragment)
@@ -275,6 +276,8 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
                     .load(coverImage)
                     .placeholder(R.drawable.cover_placeholder)
                     .into(binding.ivCover)
+
+                binding.ivCoverAddImage.isVisible = coverImage == null
             }
         }
 
@@ -333,6 +336,17 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
             }
         }
 
+        val backPressedCallback = (dialog as ComponentDialog).onBackPressedDispatcher
+            .addCallback(this) {
+                binding.characterSearchView.hide()
+                isEnabled = false
+            }
+
+        binding.characterSearchView.addTransitionListener { _, _, newState ->
+            backPressedCallback.isEnabled = newState == SearchView.TransitionState.SHOWN ||
+                    newState == SearchView.TransitionState.SHOWING
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.searchBoxConnectorFlow.collectLatest { searchBox ->
                 connectionHandler.clear()
@@ -370,7 +384,7 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
 
         val profileImages = ProfileImageContainer(
             avatar = avatarUri?.let { getBase64ImageFrom(it) },
-            coverImage = coverUri?.let { getBase64ImageFrom(it)  }
+            coverImage = coverUri?.let { getBase64ImageFrom(it) }
         )
 
         if (profileImages.avatar == null && profileImages.coverImage == null) {
