@@ -12,7 +12,7 @@
         android:layout_height="50dp"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
-        tools:src="@drawable/profile_picture_placeholder" />
+        tools:src="@drawable/character_placeholder" />
 
     <LinearLayout
         android:layout_width="match_parent"

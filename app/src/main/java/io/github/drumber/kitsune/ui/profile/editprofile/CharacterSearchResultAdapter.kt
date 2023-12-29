@@ -54,7 +54,7 @@ class CharacterSearchResultAdapter(private val onCharacterClicked: (CharacterSea
 
                 Glide.with(root)
                     .load(character.image?.toImage()?.originalOrDown())
-                    .placeholder(R.drawable.ic_insert_photo_48)
+                    .placeholder(R.drawable.character_placeholder)
                     .into(ivCharacter)
 
                 root.setOnClickListener {
