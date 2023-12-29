@@ -42,8 +42,8 @@ import io.github.drumber.kitsune.domain.service.production.CastingService
 import io.github.drumber.kitsune.domain.service.user.FavoriteService
 import io.github.drumber.kitsune.domain.service.user.UserService
 import io.github.drumber.kitsune.util.IgnoreParcelablePropertyMixin
-import io.github.drumber.kitsune.util.deserializer.AlgoliaFacetValueDeserializer
-import io.github.drumber.kitsune.util.deserializer.AlgoliaNumericValueDeserializer
+import io.github.drumber.kitsune.util.json.AlgoliaFacetValueDeserializer
+import io.github.drumber.kitsune.util.json.AlgoliaNumericValueDeserializer
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptor
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptorImpl
 import io.github.drumber.kitsune.util.network.UserAgentInterceptor

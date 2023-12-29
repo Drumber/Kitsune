@@ -12,7 +12,7 @@ import io.github.drumber.kitsune.domain.mapper.toImage
 import io.github.drumber.kitsune.domain.model.infrastructure.algolia.search.CharacterSearchResult
 import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
 
-class CharacterSearchResultAdapter :
+class CharacterSearchResultAdapter(private val onCharacterClicked: (CharacterSearchResult) -> Unit) :
     RecyclerView.Adapter<CharacterSearchResultAdapter.CharacterSearchResultViewHolder>(),
     HitsView<CharacterSearchResult> {
 
@@ -43,7 +43,7 @@ class CharacterSearchResultAdapter :
         notifyDataSetChanged()
     }
 
-    class CharacterSearchResultViewHolder(private val binding: ItemCharacterSearchResultBinding) :
+    inner class CharacterSearchResultViewHolder(private val binding: ItemCharacterSearchResultBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(character: CharacterSearchResult) {
@@ -58,7 +58,7 @@ class CharacterSearchResultAdapter :
                     .into(ivCharacter)
 
                 root.setOnClickListener {
-
+                    onCharacterClicked(character)
                 }
             }
         }

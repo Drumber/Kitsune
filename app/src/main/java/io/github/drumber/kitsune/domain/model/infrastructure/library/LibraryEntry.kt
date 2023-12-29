@@ -11,7 +11,7 @@ import io.github.drumber.kitsune.domain.model.common.library.ReactionSkip
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
-import io.github.drumber.kitsune.util.network.NullableIntSerializer
+import io.github.drumber.kitsune.util.json.NullableIntSerializer
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

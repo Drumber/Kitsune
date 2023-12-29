@@ -2,6 +2,8 @@ package io.github.drumber.kitsune.domain.service.user
 
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
+import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.http.*
 
 interface UserService {
@@ -22,5 +24,10 @@ interface UserService {
         @Path("id") id: String,
         @Body user: JSONAPIDocument<User>
     ): JSONAPIDocument<User>
+
+    @DELETE("users/{id}/relationships/waifu")
+    fun deleteWaifuRelationship(
+        @Path("id") id: String
+    ): Call<ResponseBody>
 
 }

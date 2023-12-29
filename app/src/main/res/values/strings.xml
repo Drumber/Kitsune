@@ -333,12 +333,9 @@
     <string name="profile_gender_custom">Custom</string>
     <string name="profile_gender_custom_hint">Define your gender</string>
     <string name="profile_data_waifu">Waifu</string>
+    <string name="profile_data_husbando">Husbando</string>
     <string name="profile_waifu_or_husbando">Waifu or Husbando</string>
     <string name="profile_find_waifu">Find your special someone</string>
-    <string-array name="profile_waifu_options">
-        <item>Waifu</item>
-        <item>Husbando</item>
-    </string-array>
     <string name="profile_data_bio">Bio</string>
 
     <string name="notification_updates">Application Updates</string>

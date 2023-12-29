@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.util.network
+package io.github.drumber.kitsune.util.json
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.JsonSerializer
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 /**
  * [JsonSerializer] that serializes `-1` to `null`.
  */
-class NullableIntSerializer: JsonSerializer<Int?>() {
+class NullableIntSerializer : JsonSerializer<Int?>() {
 
     override fun serialize(value: Int?, gen: JsonGenerator, serializers: SerializerProvider) {
         if (value != null && value == -1) {

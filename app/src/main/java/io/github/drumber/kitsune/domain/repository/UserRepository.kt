@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.domain.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.domain.Result
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
 import io.github.drumber.kitsune.domain.service.Filter
@@ -44,7 +45,10 @@ class UserRepository(
     }
 
     private suspend fun requestUser(): Result<User> {
-        val filter = Filter().filter("self", "true")
+        val filter = Filter()
+            .filter("self", "true")
+            .include("waifu")
+            .fields("characters", *Defaults.MINIMUM_CHARACTER_FIELDS)
         return try {
             val userModel = service.allUsers(filter.options).get()?.firstOrNull()
                 ?: throw ReceivedDataException("Received invalid user data.")

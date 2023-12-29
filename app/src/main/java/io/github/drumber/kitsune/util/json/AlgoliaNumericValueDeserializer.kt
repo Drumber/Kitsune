@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.util.deserializer
+package io.github.drumber.kitsune.util.json
 
 import com.algolia.search.model.filter.Filter.Numeric.Value
 import com.fasterxml.jackson.core.JsonParseException

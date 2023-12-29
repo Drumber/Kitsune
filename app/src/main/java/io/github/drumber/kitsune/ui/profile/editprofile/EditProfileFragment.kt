@@ -19,6 +19,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentEditProfileBinding
+import io.github.drumber.kitsune.domain.mapper.toCharacter
 import io.github.drumber.kitsune.domain.model.infrastructure.algolia.search.CharacterSearchResult
 import io.github.drumber.kitsune.ui.base.BaseDialogFragment
 import io.github.drumber.kitsune.util.DataUtil
@@ -145,10 +146,36 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
                 )
             }
 
+            (menuWaifu.editText as? MaterialAutoCompleteTextView)?.apply {
+                val waifuItems = arrayOf(
+                    "",
+                    getString(R.string.profile_data_waifu),
+                    getString(R.string.profile_data_husbando)
+                )
+                setSimpleItems(waifuItems)
+                setText(viewModel.profileState.waifuOrHusbando, false)
+
+                setOnItemClickListener { _, _, position, _ ->
+                    val waifuOrHusbando = waifuItems[position]
+                    viewModel.acceptChanges(
+                        viewModel.profileState.copy(waifuOrHusbando = waifuOrHusbando)
+                    )
+                }
+            }
+
             fieldSearchWaifu.editText?.setOnClickListener {
                 viewModel.initSearchClient()
                 characterSearchView.clearText()
                 characterSearchView.show()
+            }
+            fieldSearchWaifu.setEndIconOnClickListener {
+                if (viewModel.profileState.character != null) {
+                    viewModel.acceptChanges(
+                        viewModel.profileState.copy(character = null)
+                    )
+                } else {
+                    fieldSearchWaifu.editText?.performClick()
+                }
             }
 
             fieldBio.editText?.apply {
@@ -180,6 +207,18 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
                     )
 
                     fieldCustomGender.isVisible = profileState.gender == "custom"
+
+                    fieldSearchWaifu.apply {
+                        isVisible = profileState.waifuOrHusbando.isNotBlank()
+                        editText?.setText(profileState.character?.name)
+                        setEndIconDrawable(
+                            if (profileState.character == null) {
+                                R.drawable.ic_search_24
+                            } else {
+                                R.drawable.ic_heart_broken_24
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -210,7 +249,11 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
     }
 
     private fun initSearchView() {
-        val adapter = CharacterSearchResultAdapter()
+        val adapter = CharacterSearchResultAdapter {
+            viewModel.acceptChanges(viewModel.profileState.copy(character = it.toCharacter()))
+            binding.characterSearchView.hide()
+        }
+
         binding.rvCharacterResults.apply {
             initPaddingWindowInsetsListener(left = true, right = true, bottom = true, consume = false)
             this.adapter = adapter

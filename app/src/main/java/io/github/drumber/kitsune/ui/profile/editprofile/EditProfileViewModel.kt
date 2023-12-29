@@ -15,11 +15,13 @@ import com.algolia.search.model.search.RemoveWordIfNoResults
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.domain.manager.SearchProvider
 import io.github.drumber.kitsune.domain.model.infrastructure.algolia.SearchType
+import io.github.drumber.kitsune.domain.model.infrastructure.production.Character
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
 import io.github.drumber.kitsune.domain.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.domain.repository.UserRepository
 import io.github.drumber.kitsune.domain.service.user.UserService
 import io.github.drumber.kitsune.exception.ReceivedDataException
+import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -65,6 +67,7 @@ class EditProfileViewModel(
             gender = user?.getGenderWithoutCustomGender() ?: "",
             customGender = user?.getCustomGenderOrNull() ?: "",
             waifuOrHusbando = user?.waifuOrHusbando ?: "",
+            character = user?.waifu,
             about = user?.about ?: ""
         )
 
@@ -102,13 +105,20 @@ class EditProfileViewModel(
     fun updateUserProfile() {
         val user = userRepository.user ?: return
         val changes = profileState
+        val waifu = if (changes.character != null && changes.waifuOrHusbando.isNotBlank()) {
+            Character(id = changes.character.id.toString(), null, null, null, null, null)
+        } else {
+            null
+        }
+
         val updatedUserModel = User(
             id = user.id,
             location = changes.location,
             birthday = changes.birthday,
             gender = if (changes.gender == "custom") changes.customGender else changes.gender,
             waifuOrHusbando = changes.waifuOrHusbando,
-            about = changes.about
+            about = changes.about,
+            waifu = waifu
         )
 
         if (user.id.isNullOrBlank()) return
@@ -116,10 +126,20 @@ class EditProfileViewModel(
         acceptLoadingState(LoadingState.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                if (user.waifu != null && waifu == null) {
+                    logD("Deleting waifu relationship.")
+                    val responseWaifu = service.deleteWaifuRelationship(user.id).execute()
+                    if (!responseWaifu.isSuccessful) {
+                        throw ReceivedDataException("Failed to delete waifu relationship.")
+                    }
+                }
+
                 val response = service.updateUser(user.id, JSONAPIDocument(updatedUserModel))
 
                 if (response.get() != null) {
-                    userRepository.updateUserModel(updatedUserModel)
+                    // request full user model to update local cached model
+                    userRepository.updateUserCache()
+
                     acceptLoadingState(LoadingState.Success)
                 } else {
                     throw ReceivedDataException("Received user data is null.")
@@ -144,7 +164,7 @@ class EditProfileViewModel(
             responseFields {
                 +Hits
             }
-            attributesToHighlight {  }
+            attributesToHighlight { }
             removeStopWords = RemoveStopWords.False
             removeWordsIfNoResults = RemoveWordIfNoResults.AllOptional
         }
@@ -193,6 +213,7 @@ data class ProfileState(
     val gender: String,
     val customGender: String,
     val waifuOrHusbando: String,
+    val character: Character?,
     val about: String
 )
 
