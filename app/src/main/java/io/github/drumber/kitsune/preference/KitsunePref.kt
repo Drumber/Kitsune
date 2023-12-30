@@ -9,10 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.AppTheme
-import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.domain.model.FilterCollection
-import io.github.drumber.kitsune.domain.model.SearchParams
 import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.infrastructure.user.TitleLanguagePreference
 import io.github.drumber.kitsune.domain.model.preference.CategoryPrefWrapper
@@ -80,15 +78,6 @@ object KitsunePref : KotprefModel(), KoinComponent {
         true,
         key = R.string.preference_key_check_for_updates_on_start
     )
-
-
-    private var searchParamsJson by stringPref(Defaults.DEFAULT_SEARCH_PARAMS.toJsonString())
-
-    var searchParams: SearchParams
-        set(value) {
-            searchParamsJson = value.toJsonString()
-        }
-        get() = ::searchParamsJson.fromJsonString(Defaults.DEFAULT_SEARCH_PARAMS)
 
 
     private var searchFiltersJson by stringPref("{}")
