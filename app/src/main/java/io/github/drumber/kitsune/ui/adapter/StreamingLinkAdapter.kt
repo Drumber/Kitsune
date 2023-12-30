@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.StreamingLogo
-import io.github.drumber.kitsune.domain.model.infrastructure.media.streamer.StreamingLink
 import io.github.drumber.kitsune.databinding.ItemStreamerBinding
+import io.github.drumber.kitsune.domain.model.infrastructure.media.streamer.StreamingLink
 import java.util.concurrent.CopyOnWriteArrayList
 
 class StreamingLinkAdapter(
@@ -48,7 +48,7 @@ class StreamingLinkAdapter(
 
         fun bind(streamingLink: StreamingLink) {
             val logo = streamingLink.streamer?.siteName?.let { siteName ->
-                StreamingLogo.values().find { it.name.equals(siteName, true) }?.drawable
+                StreamingLogo.entries.find { it.name.equals(siteName, true) }?.drawable
             }
             glide.load(logo)
                 .centerInside()

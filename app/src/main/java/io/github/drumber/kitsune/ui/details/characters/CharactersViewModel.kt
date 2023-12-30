@@ -1,6 +1,10 @@
 package io.github.drumber.kitsune.ui.details.characters
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Kitsu
@@ -31,7 +35,7 @@ class CharactersViewModel(
     var selectedLanguage: String? = null
         private set
 
-    private val _isLoadingLanguages = MutableLiveData<Boolean>(false)
+    private val _isLoadingLanguages = MutableLiveData(false)
     val isLoadingLanguages: LiveData<Boolean>
         get() = _isLoadingLanguages
 

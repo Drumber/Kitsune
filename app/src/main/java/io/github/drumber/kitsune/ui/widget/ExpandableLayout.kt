@@ -13,7 +13,10 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.ui.widget.ExpandableLayout.State.*
+import io.github.drumber.kitsune.ui.widget.ExpandableLayout.State.COLLAPSED
+import io.github.drumber.kitsune.ui.widget.ExpandableLayout.State.COLLAPSING
+import io.github.drumber.kitsune.ui.widget.ExpandableLayout.State.EXPANDED
+import io.github.drumber.kitsune.ui.widget.ExpandableLayout.State.EXPANDING
 import kotlin.math.round
 
 /**
@@ -71,7 +74,7 @@ class ExpandableLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         }
     }
 
-    override fun onSaveInstanceState(): Parcelable? {
+    override fun onSaveInstanceState(): Parcelable {
         val superState = super.onSaveInstanceState()
         expansion = if (isExpanded()) 1f else 0f
         return bundleOf(
@@ -82,7 +85,7 @@ class ExpandableLayout @JvmOverloads constructor(context: Context, attrs: Attrib
 
     override fun onRestoreInstanceState(state: Parcelable?) {
         if (state == null) {
-            return super.onRestoreInstanceState(state)
+            return super.onRestoreInstanceState(null)
         }
 
         val bundle = state as Bundle

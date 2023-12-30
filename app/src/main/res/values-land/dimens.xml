@@ -1,5 +1,3 @@
 <resources>
-    <dimen name="profile_text_offset_collapsed">55dp</dimen>
-
     <dimen name="activity_horizontal_margin">48dp</dimen>
 </resources>

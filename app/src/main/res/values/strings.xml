@@ -76,7 +76,6 @@
     <string name="error_library_delete_failed">Failed to delete library entry.</string>
     <string name="error_requires_notification_permission">Notification permission is required.</string>
 
-    <string name="menu_filter">Filter</string>
     <string name="sort_popularity_asc">Least Popular</string>
     <string name="sort_popularity_desc">Most Popular</string>
     <string name="sort_average_rating_asc">Worst Rated</string>
@@ -85,7 +84,6 @@
     <string name="sort_release_date_desc">Latest</string>
 
     <string name="title_media_type">Media Type</string>
-    <string name="title_sort">Sort by</string>
     <string name="title_categories">Categories</string>
     <string name="title_filter">Filter</string>
     <string name="title_description">Description</string>

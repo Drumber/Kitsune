@@ -69,7 +69,7 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
             createFilterViews(filterFacets)
         }
 
-        binding.layoutSearchProviderStatus.btnRetry.setOnClickListener {
+        binding.layoutSearchProviderStatus.btnRetrySearchProvider.setOnClickListener {
             viewModel.initializeSearchClient()
         }
 
@@ -78,9 +78,9 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
                 nsvContent.isVisible = status == Initialized
                 layoutSearchProviderStatus.apply {
                     root.isVisible = status != Initialized
-                    btnRetry.isVisible = status == Error || status == NotAvailable
-                    tvStatus.isVisible = btnRetry.isVisible
-                    progressBar.isVisible = status == NotInitialized
+                    btnRetrySearchProvider.isVisible = status == Error || status == NotAvailable
+                    tvStatus.isVisible = btnRetrySearchProvider.isVisible
+                    progressBarSearchProvider.isVisible = status == NotInitialized
                 }
             }
         }

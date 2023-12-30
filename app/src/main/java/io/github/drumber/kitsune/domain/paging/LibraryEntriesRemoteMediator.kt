@@ -8,10 +8,10 @@ import androidx.room.withTransaction
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.domain.database.LocalDatabase
 import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
+import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntry
 import io.github.drumber.kitsune.domain.model.database.RemoteKeyEntity
 import io.github.drumber.kitsune.domain.model.database.RemoteKeyType
-import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.toPage
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryFilter
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind
@@ -86,7 +86,7 @@ class LibraryEntriesRemoteMediator(
                     else {
                         logD("Clearing filtered library entries and corresponding remote keys from database.")
                         // if no status filter is selected, we target all status types
-                        val targetStatus = filter.libraryStatus.ifEmpty { LibraryStatus.values().toList() }
+                        val targetStatus = filter.libraryStatus.ifEmpty { LibraryStatus.entries }
 
                         // clear all library entries in database with the selected kind and status
                         val libraryEntriesToBeCleared = when (filter.kind) {

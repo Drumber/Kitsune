@@ -33,7 +33,7 @@ fun TextView.setMaxLinesFitHeight() {
 /**
  * Format double using default locale format.
  */
-fun Double.format() = NumberFormat.getInstance().format(this)
+fun Double.format(): String = NumberFormat.getInstance().format(this)
 
 fun Int.toDp() = (this / Resources.getSystem().displayMetrics.density).toInt()
 

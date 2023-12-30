@@ -251,7 +251,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
             .setTitle(R.string.title_media_type)
             .setSingleChoiceItems(items, prevSelected) { dialog, which ->
                 if (which != prevSelected) {
-                    val kind = LibraryEntryKind.values()[which]
+                    val kind = LibraryEntryKind.entries[which]
                     viewModel.setLibraryEntryKind(kind)
                 }
                 dialog.dismiss()

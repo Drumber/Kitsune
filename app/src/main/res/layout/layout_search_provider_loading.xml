@@ -14,13 +14,13 @@
         android:text="@string/error_search_provider_unavailable" />
 
     <ProgressBar
-        android:id="@+id/progress_bar"
+        android:id="@+id/progress_bar_search_provider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
     <Button
-        android:id="@+id/btn_retry"
+        android:id="@+id/btn_retry_search_provider"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

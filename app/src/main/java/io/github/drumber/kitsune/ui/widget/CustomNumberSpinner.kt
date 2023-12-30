@@ -43,7 +43,7 @@ class CustomNumberSpinner @JvmOverloads constructor(context: Context, attrs: Att
                 minValue = a.getInt(R.styleable.CustomNumberSpinner_minValue, 0)
 
                 suffixMode =
-                    SuffixMode.values()[a.getInt(R.styleable.CustomNumberSpinner_suffixMode, 0)]
+                    SuffixMode.entries[a.getInt(R.styleable.CustomNumberSpinner_suffixMode, 0)]
                 tvSuffix.isVisible = suffixMode != SuffixMode.Disabled
                 customSuffixText = a.getString(R.styleable.CustomNumberSpinner_suffixText)
                 updateSuffixText()

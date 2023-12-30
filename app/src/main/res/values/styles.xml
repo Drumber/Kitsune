@@ -33,19 +33,6 @@
         <item name="strokeWidth">0dp</item>
     </style>
 
-    <style name="Widget.Kitsune.TextInputLayout.Dense.ExposedDropdownMenu" parent="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.Kitsune.AutoCompleteTextView.Dense</item>
-    </style>
-
-    <style name="ThemeOverlay.Kitsune.AutoCompleteTextView.Dense" parent="@style/ThemeOverlay.MaterialComponents.AutoCompleteTextView.OutlinedBox.Dense">
-        <item name="autoCompleteTextViewStyle">@style/Widget.Kitsune.AutoCompleteTextView.Dense</item>
-    </style>
-
-    <style name="Widget.Kitsune.AutoCompleteTextView.Dense" parent="@style/Widget.Material3.AutoCompleteTextView.OutlinedBox.Dense">
-        <item name="android:paddingTop">0dp</item>
-        <item name="android:paddingBottom">0dp</item>
-    </style>
-
     <!-- SearchView Style -->
     <style name="Widget.Kitsune.SearchView" parent="@style/Widget.AppCompat.SearchView">
         <item name="iconifiedByDefault">false</item>
@@ -65,11 +52,6 @@
     <style name="ShapeAppearance.Kitsune.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">12dp</item>
-    </style>
-
-    <style name="ShapeAppearanceOverlay.Kitsune.Button.Circle" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
     </style>
 
     <style name="ShapeAppearance.Kitsune.SubtypeBadge" parent="">

@@ -134,7 +134,7 @@ class CategoriesDialogFragment : BaseDialogFragment(R.layout.fragment_categories
             parentNode.children.forEach {
                 val found = selectTreeNodeForCategory(it, categoryId)
                 if (found != null) {
-                    return node
+                    return found
                 }
             }
             null

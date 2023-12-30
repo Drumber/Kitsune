@@ -143,16 +143,16 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
     }
 
     private fun initSearchProviderStatusLayout() {
-        binding.layoutSearchProviderStatus.btnRetry.setOnClickListener {
+        binding.layoutSearchProviderStatus.btnRetrySearchProvider.setOnClickListener {
             viewModel.initializeSearchClient()
         }
 
         viewModel.searchClientStatus.observe(viewLifecycleOwner) { status ->
             binding.layoutSearchProviderStatus.apply {
                 root.isVisible = status != Initialized
-                btnRetry.isVisible = status == Error || status == NotAvailable
-                tvStatus.isVisible = btnRetry.isVisible
-                progressBar.isVisible = status == NotInitialized
+                btnRetrySearchProvider.isVisible = status == Error || status == NotAvailable
+                tvStatus.isVisible = btnRetrySearchProvider.isVisible
+                progressBarSearchProvider.isVisible = status == NotInitialized
             }
         }
     }
@@ -204,6 +204,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
     }
 
     companion object {
+        @SuppressLint("NonConstantResourceId")
         const val TAG_SEARCH_FOCUSED = R.drawable.ic_search_24
     }
 

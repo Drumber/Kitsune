@@ -38,13 +38,6 @@
     <dimen name="details_rating_chart_full_threshold">400dp</dimen>
 
     <!-- Profile Fragment -->
-    <dimen name="profile_picture_expanded">75dp</dimen>
-    <dimen name="profile_picture_collapsed">10dp</dimen>
-    <dimen name="profile_picture_offset_expanded">10dp</dimen>
-    <dimen name="profile_picture_x_offset_collapsed">12dp</dimen>
-    <dimen name="profile_picture_y_offset_collapsed">10dp</dimen>
-    <dimen name="profile_text_offset_expanded">100dp</dimen>
-    <dimen name="profile_text_offset_collapsed">45dp</dimen>
     <dimen name="profile_pie_chart_height">300dp</dimen>
 
     <!-- Icon Button -->

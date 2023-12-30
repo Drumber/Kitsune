@@ -33,7 +33,7 @@ class GitHubUpdateChecker(private val service: GitHubApiService) {
     }
 
     sealed class UpdateCheckerResult {
-        object NoNewVersion : UpdateCheckerResult()
+        data object NoNewVersion : UpdateCheckerResult()
         data class NewVersion(val release: GitHubRelease) : UpdateCheckerResult()
         data class Failed(val exception: Exception) : UpdateCheckerResult()
     }

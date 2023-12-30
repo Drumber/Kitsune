@@ -2,7 +2,12 @@ package io.github.drumber.kitsune.domain.database
 
 import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
 import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntry
 
@@ -10,7 +15,7 @@ import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntry
 interface LibraryEntryDao {
 
     companion object {
-        /** Order by status orderId (see [io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryStatus]) and update time */
+        /** Order by status orderId (see [LibraryStatus]) and update time */
         const val ORDER_BY_STATUS = "ORDER BY status, DATETIME(updatedAt) DESC"
     }
 

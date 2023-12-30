@@ -75,8 +75,8 @@ fun MediaSearchResult.toMedia() = when (kind) {
     )
 }
 
-private fun animeSubtypeFromString(subtype: String?) = AnimeSubtype.values()
+private fun animeSubtypeFromString(subtype: String?) = AnimeSubtype.entries
     .find { it.name.equals(subtype, true) }
 
-private fun mangaSubtypeFromString(subtype: String?) = MangaSubtype.values()
+private fun mangaSubtypeFromString(subtype: String?) = MangaSubtype.entries
     .find { it.name.equals(subtype, true) }

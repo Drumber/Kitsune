@@ -3,13 +3,13 @@ package io.github.drumber.kitsune.domain.database
 import androidx.room.TypeConverter
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.di.createObjectMapper
-import io.github.drumber.kitsune.domain.model.database.RemoteKeyType
 import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.common.library.ReactionSkip
 import io.github.drumber.kitsune.domain.model.common.media.AgeRating
 import io.github.drumber.kitsune.domain.model.common.media.AnimeSubtype
 import io.github.drumber.kitsune.domain.model.common.media.MangaSubtype
 import io.github.drumber.kitsune.domain.model.common.media.ReleaseStatus
+import io.github.drumber.kitsune.domain.model.database.RemoteKeyType
 
 class Converters {
 
@@ -131,8 +131,7 @@ class Converters {
     @TypeConverter
     fun orderIdToLibraryStatus(orderId: Int?): LibraryStatus? {
         return if (orderId != null) {
-            LibraryStatus.values()
-                .find { it.orderId == orderId }
+            LibraryStatus.entries.find { it.orderId == orderId }
         } else {
             null
         }

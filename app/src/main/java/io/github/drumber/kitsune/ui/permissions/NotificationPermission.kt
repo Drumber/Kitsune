@@ -1,21 +1,30 @@
 package io.github.drumber.kitsune.ui.permissions
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.drumber.kitsune.R
 
 fun Context.isNotificationPermissionGranted(): Boolean {
-    return ActivityCompat.checkSelfPermission(
-        this,
-        Manifest.permission.POST_NOTIFICATIONS
-    ) == PackageManager.PERMISSION_GRANTED
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
+    } else {
+        // no need to request permission on android versions below 33
+        true
+    }
 }
 
+@SuppressLint("InlinedApi")
 fun Activity.requestNotificationPermission(
     requestPermissionLauncher: ActivityResultLauncher<String>,
     onRationaleDialogDismiss: (() -> Unit)? = null
@@ -45,7 +54,7 @@ fun Activity.requestNotificationPermission(
     }
 }
 
-fun Context.showNotificationPermissionRejectedDialog() = MaterialAlertDialogBuilder(this)
+fun Context.showNotificationPermissionRejectedDialog(): AlertDialog = MaterialAlertDialogBuilder(this)
     .setTitle(R.string.dialog_notification_permission_rejected_title)
     .setMessage(R.string.dialog_notification_permission_rejected)
     .setPositiveButton(R.string.action_ok) { dialog, _ ->
