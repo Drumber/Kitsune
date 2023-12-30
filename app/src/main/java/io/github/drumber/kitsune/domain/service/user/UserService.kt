@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.domain.service.user
 
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
+import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLink
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -29,5 +30,11 @@ interface UserService {
     fun deleteWaifuRelationship(
         @Path("id") id: String
     ): Call<ResponseBody>
+
+    @GET("users/{id}/profile-links")
+    suspend fun getProfileLinksForUser(
+        @Path("id") id: String,
+        @QueryMap filter: Map<String, String> = emptyMap()
+    ): JSONAPIDocument<List<ProfileLink>>
 
 }

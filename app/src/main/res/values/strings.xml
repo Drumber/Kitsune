@@ -40,12 +40,18 @@
     <string name="action_save_changes">Save Changes</string>
     <string name="action_edit_profile">Edit Profile</string>
     <string name="action_update_profile">Update Profile</string>
+    <string name="action_add">Add</string>
     <string name="action_remove">Remove</string>
+    <string name="action_update">Update</string>
     <string name="action_start">Start</string>
     <string name="action_allow">Allow</string>
     <string name="action_rate">Rate</string>
     <string name="action_update_rating">Update Rating</string>
     <string name="action_remove_rating">Remove Rating</string>
+    <string name="action_add_profile_link">Add Profile Link</string>
+    <string name="action_edit_profile_link">Edit Profile Link</string>
+    <string name="action_select_profile_link_site">Select a Site</string>
+    <string name="action_delete_profile_link">Delete Profile Link</string>
 
     <string name="hint_search">Search</string>
     <string name="hint_search_characters">Search characters</string>
@@ -339,6 +345,7 @@
     <string name="profile_data_bio">Bio</string>
     <string name="profile_cover_image_description">Cover image</string>
     <string name="profile_avatar_image_description">Profile picture</string>
+    <string name="profile_link_url">URL or Username</string>
 
     <string name="notification_updates">Application Updates</string>
 

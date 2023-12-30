@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.ui.profile.editprofile
 
 import android.net.Uri
+import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.algolia.instantsearch.core.connection.ConnectionHandler
@@ -19,9 +20,13 @@ import io.github.drumber.kitsune.domain.model.infrastructure.algolia.SearchType
 import io.github.drumber.kitsune.domain.model.infrastructure.production.Character
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
 import io.github.drumber.kitsune.domain.model.infrastructure.user.UserImageUpload
+import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLink
+import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLinkSite
 import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
 import io.github.drumber.kitsune.domain.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.domain.repository.UserRepository
+import io.github.drumber.kitsune.domain.service.Filter
+import io.github.drumber.kitsune.domain.service.user.ProfileLinkService
 import io.github.drumber.kitsune.domain.service.user.UserImageUploadService
 import io.github.drumber.kitsune.domain.service.user.UserService
 import io.github.drumber.kitsune.exception.ReceivedDataException
@@ -30,26 +35,43 @@ import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.parcelize.Parcelize
 
 class EditProfileViewModel(
     private val userRepository: UserRepository,
     algoliaKeyRepository: AlgoliaKeyRepository,
     private val service: UserService,
-    private val imageUploadService: UserImageUploadService
+    private val imageUploadService: UserImageUploadService,
+    private val profileLinkService: ProfileLinkService
 ) : ViewModel() {
 
     val loadingStateFlow: StateFlow<LoadingState>
 
     val profileStateFlow: StateFlow<ProfileState>
     val profileImageStateFlow: StateFlow<ProfileImageState>
+    val profileLinkEntriesFlow: StateFlow<List<ProfileLinkEntry>>
     val canUpdateProfileFlow: Flow<Boolean>
+
+    private val initialProfileLinksFlow = MutableSharedFlow<List<ProfileLinkEntry>>(1)
+    private val _profileLinkSitesFlow = MutableSharedFlow<List<ProfileLinkSite>>(1)
+    private val _profileLinkSitesLoadStateFlow = MutableStateFlow(false)
+
+    val profileLinkSitesFlow
+        get() = _profileLinkSitesFlow.asSharedFlow()
+
+    val profileLinkSitesLoadStateFlow: StateFlow<Boolean>
+        get() = _profileLinkSitesLoadStateFlow.asStateFlow()
 
     val profileState
         get() = profileStateFlow.value
@@ -57,8 +79,15 @@ class EditProfileViewModel(
     val profileImageState
         get() = profileImageStateFlow.value
 
+    val profileLinkEntries
+        get() = profileLinkEntriesFlow.value
+
+    val profileLinkSites
+        get() = _profileLinkSitesFlow.replayCache.firstOrNull()
+
     val acceptProfileChanges: (ProfileState) -> Unit
     val acceptProfileImageChanges: (ProfileImageState) -> Unit
+    val acceptProfileLinkAction: (ProfileLinkAction) -> Unit
 
     private val acceptLoadingState: (LoadingState) -> Unit
 
@@ -106,6 +135,15 @@ class EditProfileViewModel(
                 initialValue = initialProfileImageState
             )
 
+        val _profileLinkEntriesStateFlow = MutableSharedFlow<List<ProfileLinkEntry>>()
+        profileLinkEntriesFlow = _profileLinkEntriesStateFlow
+            .distinctUntilChanged()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
+                initialValue = emptyList()
+            )
+
         acceptProfileChanges = { changes ->
             viewModelScope.launch { _profileStateFlow.emit(changes) }
         }
@@ -114,11 +152,30 @@ class EditProfileViewModel(
             viewModelScope.launch { _profileImageStateFlow.emit(changes) }
         }
 
+        acceptProfileLinkAction = { action ->
+            val updatedProfileLinkEntries = when (action) {
+                is ProfileLinkAction.Edit -> {
+                    val entry = action.profileLinkEntry
+                    profileLinkEntries.filter { it.site != entry.site } + entry
+                }
+
+                is ProfileLinkAction.Delete -> profileLinkEntries.filter { it.site != action.profileLinkEntry.site }
+            }
+
+            viewModelScope.launch {
+                _profileLinkEntriesStateFlow.emit(updatedProfileLinkEntries)
+            }
+        }
+
         canUpdateProfileFlow = combine(
             profileStateFlow,
-            profileImageStateFlow
-        ) { profileState, profileImageState ->
-            profileState != initialProfileState || profileImageState != initialProfileImageState
+            profileImageStateFlow,
+            profileLinkEntriesFlow,
+            initialProfileLinksFlow
+        ) { profileState, profileImageState, profileLinkEntries, initialProfileLinkEntries ->
+            profileState != initialProfileState
+                    || profileImageState != initialProfileImageState
+                    || profileLinkEntries.toSet() != initialProfileLinkEntries.toSet()
         }
 
         val _loadingStateFlow = MutableSharedFlow<LoadingState>()
@@ -134,6 +191,13 @@ class EditProfileViewModel(
         }
 
         searchProvider = SearchProvider(algoliaKeyRepository)
+
+        user?.id?.let { initProfileLinks(it) }
+
+        viewModelScope.launch {
+            val initialProfileLinks = initialProfileLinksFlow.first()
+            _profileLinkEntriesStateFlow.emit(initialProfileLinks + profileLinkEntries)
+        }
     }
 
     fun hasUser() = userRepository.hasUser
@@ -163,34 +227,20 @@ class EditProfileViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (user.waifu != null && waifu == null) {
-                    logD("Deleting waifu relationship.")
-                    val responseWaifu = service.deleteWaifuRelationship(user.id).execute()
-                    if (!responseWaifu.isSuccessful) {
-                        throw ReceivedDataException("Failed to delete waifu relationship.")
-                    }
+                    deleteWaifuRelationship(user.id)
                 }
 
                 if (profileImages != null) {
-                    logD("Updating user image(s).")
-                    val body = UserImageUpload(
-                        id = user.id,
-                        avatar = profileImages.avatar,
-                        coverImage = profileImages.coverImage
-                    )
-
-                    val response =
-                        imageUploadService.updateUserImage(user.id, JSONAPIDocument(body)).execute()
-                    if (!response.isSuccessful) {
-                        throw ReceivedDataException("Failed to update user image.")
-                    }
+                    uploadUserImages(user.id, profileImages)
                 }
+
+                updateProfileLinks(user.id)
 
                 val response = service.updateUser(user.id, JSONAPIDocument(updatedUserModel))
 
                 if (response.get() != null) {
                     // request full user model to update local cached model
                     userRepository.updateUserCache()
-
                     acceptLoadingState(LoadingState.Success)
                 } else {
                     throw ReceivedDataException("Received user data is null.")
@@ -200,6 +250,112 @@ class EditProfileViewModel(
                 acceptLoadingState(LoadingState.Error(e))
             }
         }
+    }
+
+    private fun deleteWaifuRelationship(userId: String) {
+        logD("Deleting waifu relationship.")
+        val responseWaifu = service.deleteWaifuRelationship(userId).execute()
+        if (!responseWaifu.isSuccessful) {
+            throw ReceivedDataException("Failed to delete waifu relationship.")
+        }
+    }
+
+    private fun uploadUserImages(useId: String, profileImages: ProfileImageContainer) {
+        logD("Updating user image(s).")
+        val body = UserImageUpload(
+            id = useId,
+            avatar = profileImages.avatar,
+            coverImage = profileImages.coverImage
+        )
+
+        val response = imageUploadService.updateUserImage(useId, JSONAPIDocument(body)).execute()
+        if (!response.isSuccessful) {
+            throw ReceivedDataException("Failed to update user image.")
+        }
+    }
+
+    private suspend fun updateProfileLinks(userId: String) {
+        val initialProfileLinks = initialProfileLinksFlow.replayCache.firstOrNull() ?: emptyList()
+
+        val newProfileLinks = profileLinkEntries.filter { newEntry ->
+            initialProfileLinks.none { it.site.id == newEntry.site.id }
+        }.map { newEntry ->
+            buildProfileLink(
+                profileLinkId = null,
+                url = newEntry.url,
+                profileLinkSiteId = newEntry.site.id,
+                userId = userId
+            )
+        }
+
+        val updatedProfileLinks = profileLinkEntries.filter { newEntry ->
+            newEntry.id != null && initialProfileLinks.none { it == newEntry }
+        }.map { newEntry ->
+            buildProfileLink(
+                profileLinkId = newEntry.id,
+                url = newEntry.url,
+                profileLinkSiteId = newEntry.site.id,
+                userId = userId
+            )
+        }
+
+        val deletedProfileLinks = initialProfileLinks.filter { initialEntry ->
+            initialEntry.id != null && profileLinkEntries.none { it.id == initialEntry.id }
+        }
+
+        withContext(Dispatchers.IO) {
+            newProfileLinks.forEach { profileLink ->
+                try {
+                    val response = profileLinkService.createProfileLink(profileLink)
+                    if (response.get() == null) {
+                        throw ReceivedDataException("Received response is null.")
+                    }
+                } catch (e: Exception) {
+                    logE("Failed to create profile link.", e)
+                }
+            }
+
+            updatedProfileLinks.forEach { profileLink ->
+                try {
+                    val response = profileLinkService.updateProfileLink(
+                        profileLink.id ?: return@forEach,
+                        profileLink
+                    )
+                    if (response.get() == null) {
+                        throw ReceivedDataException("Received response is null.")
+                    }
+                } catch (e: Exception) {
+                    logE("Failed to update profile link.", e)
+                }
+            }
+
+            deletedProfileLinks.forEach { profileLink ->
+                try {
+                    val response = profileLinkService.deleteProfileLink(
+                        profileLink.id ?: return@forEach
+                    ).execute()
+                    if (!response.isSuccessful) {
+                        throw ReceivedDataException("Failed to delete profile link.")
+                    }
+                } catch (e: Exception) {
+                    logE("Failed to delete profile link.", e)
+                }
+            }
+        }
+    }
+
+    private fun buildProfileLink(
+        profileLinkId: String?,
+        url: String?,
+        profileLinkSiteId: String?,
+        userId: String
+    ): ProfileLink {
+        return ProfileLink(
+            id = profileLinkId,
+            url = url,
+            profileLinkSite = ProfileLinkSite(id = profileLinkSiteId, name = null),
+            user = User(id = userId)
+        )
     }
 
     fun initSearchClient() {
@@ -238,6 +394,51 @@ class EditProfileViewModel(
             } catch (e: Exception) {
                 logE("Failed to create search client.", e)
             }
+        }
+    }
+
+    private fun initProfileLinks(userId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            acceptLoadingState(LoadingState.Loading)
+            val userProfileLinks = fetchUserProfileLinks(userId).mapNotNull { profileLink ->
+                val url = profileLink.url ?: return@mapNotNull null
+                val site = profileLink.profileLinkSite ?: return@mapNotNull null
+                ProfileLinkEntry(profileLink.id, url, site)
+            }
+            initialProfileLinksFlow.emit(userProfileLinks)
+            acceptLoadingState(LoadingState.NotLoading)
+        }
+    }
+
+    private suspend fun fetchUserProfileLinks(userId: String): List<ProfileLink> {
+        return try {
+            val filter = Filter()
+                .limit(50)
+                .include("profileLinkSite")
+            service.getProfileLinksForUser(userId, filter.options).get() ?: emptyList()
+        } catch (e: Exception) {
+            logE("Failed to fetch profile links for user.", e)
+            emptyList()
+        }
+    }
+
+    fun loadProfileLinkSites() {
+        if (!profileLinkSites.isNullOrEmpty()) return
+        viewModelScope.launch(Dispatchers.IO) {
+            _profileLinkSitesLoadStateFlow.emit(true)
+            val profileLinkSites = fetchProfileLinkSites()
+            _profileLinkSitesFlow.emit(profileLinkSites)
+            _profileLinkSitesLoadStateFlow.emit(false)
+        }
+    }
+
+    private suspend fun fetchProfileLinkSites(): List<ProfileLinkSite> {
+        return try {
+            val filter = Filter().pageLimit(50)
+            profileLinkService.allProfileLinkSites(filter.options).get() ?: emptyList()
+        } catch (e: Exception) {
+            logE("Failed to fetch profile link sites.", e)
+            emptyList()
         }
     }
 
@@ -283,6 +484,18 @@ data class ProfileImageContainer(
     val avatar: String?,
     val coverImage: String?
 )
+
+@Parcelize
+data class ProfileLinkEntry(
+    val id: String? = null,
+    val url: String,
+    val site: ProfileLinkSite
+) : Parcelable
+
+sealed class ProfileLinkAction {
+    data class Edit(val profileLinkEntry: ProfileLinkEntry) : ProfileLinkAction()
+    data class Delete(val profileLinkEntry: ProfileLinkEntry) : ProfileLinkAction()
+}
 
 sealed class LoadingState {
     data object NotLoading : LoadingState()

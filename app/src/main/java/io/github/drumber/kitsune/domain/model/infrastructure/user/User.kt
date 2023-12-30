@@ -6,6 +6,7 @@ import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
 import io.github.drumber.kitsune.domain.model.infrastructure.image.Image
 import io.github.drumber.kitsune.domain.model.infrastructure.production.Character
+import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLink
 import io.github.drumber.kitsune.domain.model.infrastructure.user.stats.Stats
 import kotlinx.parcelize.Parcelize
 
@@ -70,6 +71,8 @@ data class User(
     @Relationship("favorites")
     val favorites: List<Favorite>? = null,
     @Relationship("waifu")
-    val waifu: Character? = null
+    val waifu: Character? = null,
+    @Relationship("profileLinks")
+    val profileLinks: List<ProfileLink>? = null,
 ) : Parcelable
 

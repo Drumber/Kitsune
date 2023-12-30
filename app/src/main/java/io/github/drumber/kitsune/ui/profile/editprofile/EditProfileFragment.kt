@@ -12,6 +12,8 @@ import androidx.activity.addCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.os.BundleCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
 import androidx.core.widget.doAfterTextChanged
@@ -29,17 +31,20 @@ import com.google.android.material.search.SearchView
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentEditProfileBinding
+import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
 import io.github.drumber.kitsune.domain.mapper.toCharacter
 import io.github.drumber.kitsune.domain.model.infrastructure.algolia.search.CharacterSearchResult
+import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLinkSite
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BaseDialogFragment
 import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.util.formatDate
-import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.parseDate
 import io.github.drumber.kitsune.util.toDate
+import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
+import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -94,6 +99,45 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        childFragmentManager.setFragmentResultListener(
+            SelectProfileLinkSiteBottomSheet.PROFILE_SITE_SELECTED_REQUEST_KEY,
+            this
+        ) { _, bundle ->
+            val linkSite = BundleCompat.getParcelable(
+                bundle,
+                SelectProfileLinkSiteBottomSheet.BUNDLE_PROFILE_LINK_SITE,
+                ProfileLinkSite::class.java
+            ) ?: return@setFragmentResultListener
+
+            openEditProfileLinkBottomSheet(ProfileLinkEntry(null, "", linkSite), true)
+        }
+
+        childFragmentManager.setFragmentResultListener(
+            EditProfileLinkBottomSheet.PROFILE_SUCCESS_REQUEST_KEY,
+            this
+        ) { _, bundle ->
+            val profileLinkEntry = BundleCompat.getParcelable(
+                bundle,
+                EditProfileLinkBottomSheet.BUNDLE_PROFILE_LINK_ENTRY,
+                ProfileLinkEntry::class.java
+            ) ?: return@setFragmentResultListener
+
+            viewModel.acceptProfileLinkAction(ProfileLinkAction.Edit(profileLinkEntry))
+        }
+
+        childFragmentManager.setFragmentResultListener(
+            EditProfileLinkBottomSheet.PROFILE_DELETE_REQUEST_KEY,
+            this
+        ) { _, bundle ->
+            val profileLinkEntry = BundleCompat.getParcelable(
+                bundle,
+                EditProfileLinkBottomSheet.BUNDLE_PROFILE_LINK_ENTRY,
+                ProfileLinkEntry::class.java
+            ) ?: return@setFragmentResultListener
+
+            viewModel.acceptProfileLinkAction(ProfileLinkAction.Delete(profileLinkEntry))
+        }
+
         binding.apply {
             toolbar.setNavigationOnClickListener { dismiss() }
 
@@ -104,6 +148,8 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
             cardCover.setOnClickListener {
                 openImagePicker(ImagePickerType.COVER)
             }
+
+            chipAddProfileLink.setOnClickListener { openSelectProfileLinkSiteBottomSheet() }
 
             fieldLocation.editText?.apply {
                 setText(viewModel.profileState.location)
@@ -279,6 +325,31 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.profileLinkEntriesFlow.collectLatest { profileLinks ->
+                val indexOfAddChip = binding.chipGroupProfileLinks
+                    .indexOfChild(binding.chipAddProfileLink)
+                if (indexOfAddChip != -1) {
+                    binding.chipGroupProfileLinks.removeViews(0, indexOfAddChip)
+                }
+
+                profileLinks.sortedByDescending { it.site.id }.forEach { link ->
+                    val chipBinding = ItemProfileSiteChipBinding.inflate(
+                        layoutInflater,
+                        binding.chipGroupProfileLinks,
+                        false
+                    )
+                    val chip = chipBinding.root
+                    chip.text = link.site.name
+                    chip.setChipIconResource(getProfileSiteLogoResourceId(link.site.name))
+                    chip.setOnClickListener {
+                        openEditProfileLinkBottomSheet(link, false)
+                    }
+                    binding.chipGroupProfileLinks.addView(chip, 0)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.canUpdateProfileFlow.collectLatest { canUpdate ->
                 binding.btnUpdateProfile.isEnabled = canUpdate
             }
@@ -354,6 +425,24 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
                 }
             }
         }
+    }
+
+    private fun openSelectProfileLinkSiteBottomSheet() {
+        val bottomSheet = SelectProfileLinkSiteBottomSheet()
+        bottomSheet.show(childFragmentManager, SelectProfileLinkSiteBottomSheet.TAG)
+    }
+
+    private fun openEditProfileLinkBottomSheet(
+        profileLinkEntry: ProfileLinkEntry,
+        isCreatingNew: Boolean
+    ) {
+        val bottomSheet = EditProfileLinkBottomSheet().apply {
+            arguments = bundleOf(
+                EditProfileLinkBottomSheet.BUNDLE_IS_CREATING_NEW to isCreatingNew,
+                EditProfileLinkBottomSheet.BUNDLE_PROFILE_LINK_ENTRY to profileLinkEntry
+            )
+        }
+        bottomSheet.show(childFragmentManager, EditProfileLinkBottomSheet.TAG)
     }
 
     private fun openDatePicker(selectedDate: Long, title: String, action: (Long) -> Unit) {

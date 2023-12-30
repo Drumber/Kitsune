@@ -79,6 +79,24 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_profile_links"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                app:chipSpacingVertical="5dp">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_add_profile_link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="false"
+                    android:text="@string/action_add_profile_link"
+                    app:chipIcon="@drawable/ic_add_24"
+                    style="@style/Widget.Material3.Chip.Assist"/>
+
+            </com.google.android.material.chip.ChipGroup>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/field_location"
                 android:layout_width="match_parent"

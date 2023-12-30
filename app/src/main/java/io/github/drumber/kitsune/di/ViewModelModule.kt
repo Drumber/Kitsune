@@ -28,7 +28,7 @@ val viewModelModule = module {
     viewModel { LibraryEditEntryViewModel(get(), get(), get(), get()) }
     viewModel { LoginViewModel(get()) }
     viewModel { ProfileViewModel(get(), get()) }
-    viewModel { EditProfileViewModel(get(), get(), get(), get()) }
+    viewModel { EditProfileViewModel(get(), get(), get(), get(), get()) }
     viewModel { DetailsViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { EpisodesViewModel(get(), get(), get(), get(), get()) }
     viewModel { CharactersViewModel(get(), get()) }

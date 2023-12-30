@@ -29,6 +29,8 @@ import io.github.drumber.kitsune.domain.model.infrastructure.production.Producer
 import io.github.drumber.kitsune.domain.model.infrastructure.user.Favorite
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
 import io.github.drumber.kitsune.domain.model.infrastructure.user.UserImageUpload
+import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLink
+import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLinkSite
 import io.github.drumber.kitsune.domain.model.infrastructure.user.stats.Stats
 import io.github.drumber.kitsune.domain.service.anime.AnimeService
 import io.github.drumber.kitsune.domain.service.anime.EpisodesService
@@ -41,11 +43,12 @@ import io.github.drumber.kitsune.domain.service.manga.ChaptersService
 import io.github.drumber.kitsune.domain.service.manga.MangaService
 import io.github.drumber.kitsune.domain.service.production.CastingService
 import io.github.drumber.kitsune.domain.service.user.FavoriteService
+import io.github.drumber.kitsune.domain.service.user.ProfileLinkService
 import io.github.drumber.kitsune.domain.service.user.UserImageUploadService
 import io.github.drumber.kitsune.domain.service.user.UserService
-import io.github.drumber.kitsune.util.json.IgnoreParcelablePropertyMixin
 import io.github.drumber.kitsune.util.json.AlgoliaFacetValueDeserializer
 import io.github.drumber.kitsune.util.json.AlgoliaNumericValueDeserializer
+import io.github.drumber.kitsune.util.json.IgnoreParcelablePropertyMixin
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptor
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptorImpl
 import io.github.drumber.kitsune.util.network.UserAgentInterceptor
@@ -106,6 +109,15 @@ val networkModule = module {
             get(),
             get(),
             UserImageUpload::class.java
+        )
+    }
+    factory {
+        createService<ProfileLinkService>(
+            get(),
+            get(),
+            ProfileLink::class.java,
+            ProfileLinkSite::class.java,
+            User::class.java
         )
     }
     factory {
