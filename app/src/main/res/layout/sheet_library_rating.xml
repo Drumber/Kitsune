@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="io.github.drumber.kitsune.util.BindingAdapter" />
+        <import type="io.github.drumber.kitsune.util.ui.BindingAdapter" />
         <variable
             name="title"
             type="String" />

@@ -35,8 +35,8 @@ import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BaseDialogFragment
 import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.util.formatDate
-import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.parseDate
 import io.github.drumber.kitsune.util.toDate

@@ -37,7 +37,7 @@ import io.github.drumber.kitsune.ui.library.RatingBottomSheet
 import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel.LoadState
 import io.github.drumber.kitsune.ui.widget.CustomNumberSpinner
 import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
-import io.github.drumber.kitsune.util.DateValidatorPointBetween
+import io.github.drumber.kitsune.util.ui.DateValidatorPointBetween
 import io.github.drumber.kitsune.util.RatingSystemUtil
 import io.github.drumber.kitsune.util.RatingSystemUtil.formatRatingTwenty
 import io.github.drumber.kitsune.util.extensions.getResourceId
@@ -46,9 +46,9 @@ import io.github.drumber.kitsune.util.extensions.setMaxLinesFitHeight
 import io.github.drumber.kitsune.util.formatDate
 import io.github.drumber.kitsune.util.formatUtcDate
 import io.github.drumber.kitsune.util.getLocalCalendar
-import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
-import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.stripTimeUtcMillis
 import io.github.drumber.kitsune.util.toDate

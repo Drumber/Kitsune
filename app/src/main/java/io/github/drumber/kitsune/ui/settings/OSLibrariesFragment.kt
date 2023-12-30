@@ -8,7 +8,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.mikepenz.aboutlibraries.LibsBuilder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentOsLibrariesBinding
-import io.github.drumber.kitsune.util.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 
 class OSLibrariesFragment : Fragment(R.layout.fragment_os_libraries) {
 

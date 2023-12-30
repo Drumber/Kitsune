@@ -5,7 +5,6 @@ import androidx.annotation.StringRes
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult
-import io.github.drumber.kitsune.util.initMarginWindowInsetsListener
 
 fun showSnackbar(
     parent: View,

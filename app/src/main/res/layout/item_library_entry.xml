@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="io.github.drumber.kitsune.util.BindingAdapter" />
+        <import type="io.github.drumber.kitsune.util.ui.BindingAdapter" />
         <import type="androidx.core.content.ContextCompat" />
         <variable
             name="entry"

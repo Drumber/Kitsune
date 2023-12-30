@@ -34,8 +34,8 @@ import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.No
 import io.github.drumber.kitsune.ui.search.categories.CategoriesDialogFragment
 import io.github.drumber.kitsune.ui.widget.ExpandableLayout
 import io.github.drumber.kitsune.ui.widget.algolia.IntNumberRangeView
-import io.github.drumber.kitsune.util.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class FacetFragment : Fragment(R.layout.fragment_filter_facet),

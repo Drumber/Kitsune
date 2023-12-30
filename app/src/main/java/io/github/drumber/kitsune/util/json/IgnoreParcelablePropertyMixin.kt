@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.util
+package io.github.drumber.kitsune.util.json
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 

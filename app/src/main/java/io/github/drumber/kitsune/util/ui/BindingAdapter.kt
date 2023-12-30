@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.util
+package io.github.drumber.kitsune.util.ui
 
 import android.content.Intent
 import android.net.Uri
