@@ -93,6 +93,10 @@ class SettingsFragment : BasePreferenceFragment() {
             }
         }
 
+        //---- Force legacy image picker
+        findPreference<SwitchPreferenceCompat>(R.string.preference_key_force_legacy_image_picker)?.isVisible =
+            ActivityResultContracts.PickVisualMedia.isPhotoPickerAvailable(requireContext())
+
         //---- Check for Updates on Launch
         findPreference<SwitchPreferenceCompat>(R.string.preference_key_check_for_updates_on_start)
             ?.setOnPreferenceChangeListener { _, newValue ->

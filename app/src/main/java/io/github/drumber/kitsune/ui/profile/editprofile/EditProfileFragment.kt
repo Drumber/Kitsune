@@ -31,6 +31,7 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentEditProfileBinding
 import io.github.drumber.kitsune.domain.mapper.toCharacter
 import io.github.drumber.kitsune.domain.model.infrastructure.algolia.search.CharacterSearchResult
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BaseDialogFragment
 import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.util.formatDate
@@ -53,21 +54,17 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
     private val connectionHandler = ConnectionHandler()
 
     private lateinit var pickImage: ActivityResultLauncher<PickVisualMediaRequest>
+    private lateinit var legacyGetContent: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         pickImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            if (uri != null) {
-                val imageState = viewModel.profileImageState
-                val newImageState = when (viewModel.currentImagePickerType) {
-                    ImagePickerType.AVATAR -> imageState.copy(selectedAvatarUri = uri)
-                    ImagePickerType.COVER -> imageState.copy(selectedCoverUri = uri)
-                    else -> imageState
-                }
-                viewModel.acceptProfileImageChanges(newImageState)
-            }
-            viewModel.currentImagePickerType = null
+            onImageUriSelected(uri)
+        }
+
+        legacyGetContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            onImageUriSelected(uri)
         }
     }
 
@@ -337,7 +334,7 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
         }
 
         val backPressedCallback = (dialog as ComponentDialog).onBackPressedDispatcher
-            .addCallback(this) {
+            .addCallback(this, false) {
                 binding.characterSearchView.hide()
                 isEnabled = false
             }
@@ -371,7 +368,27 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
 
     private fun openImagePicker(type: ImagePickerType) {
         viewModel.currentImagePickerType = type
-        pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+
+        if (!KitsunePref.forceLegacyImagePicker
+            && ActivityResultContracts.PickVisualMedia.isPhotoPickerAvailable(requireContext())
+        ) {
+            pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        } else {
+            legacyGetContent.launch("image/*")
+        }
+    }
+
+    private fun onImageUriSelected(uri: Uri?) {
+        if (uri != null) {
+            val imageState = viewModel.profileImageState
+            val newImageState = when (viewModel.currentImagePickerType) {
+                ImagePickerType.AVATAR -> imageState.copy(selectedAvatarUri = uri)
+                ImagePickerType.COVER -> imageState.copy(selectedCoverUri = uri)
+                else -> imageState
+            }
+            viewModel.acceptProfileImageChanges(newImageState)
+        }
+        viewModel.currentImagePickerType = null
     }
 
     private fun createUserImageUpload(): ProfileImageContainer? {

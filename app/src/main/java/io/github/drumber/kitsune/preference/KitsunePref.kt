@@ -71,6 +71,11 @@ object KitsunePref : KotprefModel(), KoinComponent {
         key = R.string.preference_key_remember_search_filters
     )
 
+    var forceLegacyImagePicker by booleanPref(
+        false,
+        key = R.string.preference_key_force_legacy_image_picker
+    )
+
     var checkForUpdatesOnStart by booleanPref(
         true,
         key = R.string.preference_key_check_for_updates_on_start

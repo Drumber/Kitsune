@@ -40,14 +40,17 @@ class AppearanceFragment : BasePreferenceFragment(R.string.nav_appearance) {
         }
 
         //---- Dark Mode
-        findPreference<ListPreference>(R.string.preference_key_dark_mode)
-            ?.setOnPreferenceChangeListener { _, newValue ->
+        findPreference<ListPreference>(R.string.preference_key_dark_mode)?.apply {
+            value = KitsunePref.darkMode
+            setOnPreferenceChangeListener { _, newValue ->
                 if (KitsunePref.darkMode != newValue) {
                     KitsunePref.darkMode = newValue as String
                     AppCompatDelegate.setDefaultNightMode(newValue.toInt())
                 }
                 true
             }
+        }
+
 
         //---- OLED Black Mode
         findPreference<SwitchPreferenceCompat>(R.string.preference_key_oled_black_mode)?.apply {

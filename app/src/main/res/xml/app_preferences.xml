@@ -79,6 +79,13 @@
             app:iconSpaceReserved="false" />
 
         <SwitchPreferenceCompat
+            android:key="@string/preference_key_force_legacy_image_picker"
+            android:title="@string/preference_force_legacy_image_picker"
+            android:summary="@string/preference_force_legacy_image_picker_description"
+            android:defaultValue="false"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
             android:key="@string/preference_key_check_for_updates_on_start"
             android:title="@string/preference_check_for_updates"
             android:summary="@string/preference_check_for_updates_description"
