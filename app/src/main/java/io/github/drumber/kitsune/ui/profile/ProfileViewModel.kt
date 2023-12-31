@@ -3,7 +3,6 @@ package io.github.drumber.kitsune.ui.profile
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
@@ -27,7 +26,7 @@ class ProfileViewModel(
     val userModel: LiveData<User?> = userRepository.userLiveData
 
     // full user model including stats and favorites
-    val fullUserModel: LiveData<ResponseData<User>> = userModel.distinctUntilChanged().switchMap {
+    val fullUserModel: LiveData<ResponseData<User>> = userModel.switchMap {
         it?.id?.let { userId ->
             liveData(context = Dispatchers.IO) {
                 val response = try {
@@ -67,7 +66,7 @@ class ProfileViewModel(
     companion object {
         val FULL_USER_FILTER
             get() = Filter()
-                .include("stats", "favorites.item", "waifu")
+                .include("stats", "favorites.item", "waifu", "profileLinks.profileLinkSite")
                 .fields("media", *Defaults.MINIMUM_COLLECTION_FIELDS)
                 .fields("characters", *Defaults.MINIMUM_CHARACTER_FIELDS)
     }

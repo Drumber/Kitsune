@@ -34,11 +34,13 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
+import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
 import io.github.drumber.kitsune.domain.model.infrastructure.production.Character
 import io.github.drumber.kitsune.domain.model.infrastructure.user.Favorite
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
+import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLink
 import io.github.drumber.kitsune.domain.model.infrastructure.user.stats.Stats
 import io.github.drumber.kitsune.domain.model.infrastructure.user.stats.StatsData
 import io.github.drumber.kitsune.domain.model.infrastructure.user.stats.StatsKind
@@ -53,14 +55,16 @@ import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.widget.chart.PieChartStyle
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openCharacterOnMAL
+import io.github.drumber.kitsune.util.extensions.openUrl
 import io.github.drumber.kitsune.util.extensions.recyclerView
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.extensions.toPx
+import io.github.drumber.kitsune.util.network.ResponseData
+import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
-import io.github.drumber.kitsune.util.network.ResponseData
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.math.round
@@ -99,6 +103,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
         viewModel.fullUserModel.observe(viewLifecycleOwner) { fullUser ->
             if (fullUser is ResponseData.Success) {
                 updateUser(fullUser.data)
+                updateProfileLinks(fullUser.data.profileLinks ?: emptyList())
             }
         }
 
@@ -329,6 +334,24 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
 
         val adapter = binding.viewPagerStats.adapter as ProfileStatsAdapter
         adapter.updateCategoryData(position, set)
+    }
+
+    private fun updateProfileLinks(profileLinks: List<ProfileLink>) {
+        binding.scrollViewProfileLinks.isVisible = profileLinks.isNotEmpty()
+        binding.chipGroupProfileLinks.apply {
+            removeAllViews()
+
+            profileLinks.sortedBy { it.profileLinkSite?.id }.forEach { profileLink ->
+                val profileLinkBinding = ItemProfileSiteChipBinding.inflate(layoutInflater, this, true)
+                val chip = profileLinkBinding.root
+                val siteName = profileLink.profileLinkSite?.name
+                chip.text = siteName
+                chip.setChipIconResource(getProfileSiteLogoResourceId(siteName))
+                chip.setOnClickListener {
+                    profileLink.url?.let { url -> openUrl(url) }
+                }
+            }
+        }
     }
 
     private fun updateFavoritesData(favorites: List<Favorite>) {
