@@ -1,7 +1,6 @@
 package io.github.drumber.kitsune.util.extensions
 
 import android.content.res.Resources
-import android.widget.TextView
 import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -21,13 +20,6 @@ fun SwipeRefreshLayout.setAppTheme() {
         ElevationOverlayProvider(context).compositeOverlayWithThemeSurfaceColorIfNeeded(8.0f)
     )
     setColorSchemeColors(context.theme.getColor(R.attr.colorPrimary))
-}
-
-fun TextView.setMaxLinesFitHeight() {
-    post {
-        val maxLines = (height / (lineHeight + lineSpacingExtra)).toInt()
-        setMaxLines(maxLines)
-    }
 }
 
 /**
