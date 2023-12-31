@@ -38,6 +38,11 @@ class EditProfileLinkBottomSheet : BottomSheetDialogFragment() {
             )
         } ?: return
 
+        fun isConfirmButtonEnabled(): Boolean {
+            val text = binding.fieldUrl.editText?.text?.toString()
+            return !text.isNullOrBlank() && text != profileLinkEntry.url
+        }
+
         binding.apply {
             profileLinkEntry.site.name?.let { siteName ->
                 ivLogo.setImageResource(getProfileSiteLogoResourceId(siteName))
@@ -45,18 +50,18 @@ class EditProfileLinkBottomSheet : BottomSheetDialogFragment() {
             }
 
             fieldUrl.editText?.setText(profileLinkEntry.url)
-            fieldUrl.editText?.doOnTextChanged { text, _, _, _ ->
-                btnConfirm.isEnabled = !text.isNullOrBlank()
+            fieldUrl.editText?.doOnTextChanged { _, _, _, _ ->
+                btnConfirm.isEnabled = isConfirmButtonEnabled()
             }
 
-            btnDelete.setOnClickListener { view ->
+            btnDelete.setOnClickListener {
                 setFragmentResult(
                     PROFILE_DELETE_REQUEST_KEY,
                     bundleOf(BUNDLE_PROFILE_LINK_ENTRY to profileLinkEntry)
                 )
                 dismiss()
             }
-            btnConfirm.isEnabled = fieldUrl.editText?.text?.isNotBlank() == true
+            btnConfirm.isEnabled = isConfirmButtonEnabled()
             btnCancel.setOnClickListener { dismiss() }
             btnConfirm.setOnClickListener {
                 val text = fieldUrl.editText?.text?.toString()

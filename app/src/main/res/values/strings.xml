@@ -72,6 +72,11 @@
     <string name="error_nothing_found">Nothing found.</string>
     <string name="error_invalid_user">Invalid User. Are you logged in?</string>
     <string name="error_user_update_failed">Failed to update user data.</string>
+    <string name="error_user_delete_waifu_failed">Failed to delete Waifu/Husbando.</string>
+    <string name="error_user_update_image_failed">Failed to update profile image or cover.</string>
+    <string name="error_user_create_profile_link_failed">Failed to create profile link for %s.</string>
+    <string name="error_user_update_profile_link_failed">Failed to update profile link for %s.</string>
+    <string name="error_user_delete_profile_link_failed">Failed to delete profile link for %s.</string>
     <string name="error_something_wrong">Oops, something went wrong!</string>
     <string name="error_requires_external_storage_permission">Require permission to write to external storage.</string>
     <string name="error_search_provider_unavailable">Search Provider unavailable.</string>

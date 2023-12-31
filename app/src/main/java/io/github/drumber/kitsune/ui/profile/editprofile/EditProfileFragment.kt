@@ -359,12 +359,18 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
             viewModel.loadingStateFlow.collectLatest { loadingState ->
                 binding.layoutLoading.isVisible = loadingState is LoadingState.Loading
 
-                if (loadingState is LoadingState.Error) {
-                    Toast.makeText(
-                        requireContext(),
-                        R.string.error_user_update_failed,
-                        Toast.LENGTH_LONG
-                    ).show()
+                if (loadingState is LoadingState.Error && !loadingState.isConsumed) {
+                    loadingState.isConsumed = true
+
+                    if (loadingState.exception is ProfileUpdateException) {
+                        showErrorToUser(loadingState.exception)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            R.string.error_user_update_failed,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 } else if (loadingState is LoadingState.Success) {
                     dismiss()
                 }
@@ -516,6 +522,42 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
             logE("Error while encoding image to Base64 from uri: $uri", e)
             null
         }
+    }
+
+    private fun showErrorToUser(profileUpdateException: ProfileUpdateException) {
+        val message = when (profileUpdateException) {
+            is ProfileUpdateException.ProfileDataError -> when (profileUpdateException.type) {
+                ProfileDataErrorType.UpdateProfile -> getString(R.string.error_user_update_failed)
+                ProfileDataErrorType.DeleteWaifu -> getString(R.string.error_user_delete_waifu_failed)
+            }
+
+            is ProfileUpdateException.ProfileImageError -> getString(R.string.error_user_update_image_failed)
+
+            is ProfileUpdateException.ProfileLinkError -> {
+                val siteName = viewModel.profileLinkSites
+                    ?.find { it.id == profileUpdateException.profileLink.profileLinkSite?.id }?.name
+                    ?: profileUpdateException.profileLink.url
+
+                when (profileUpdateException.operation) {
+                    ProfileLinkOperation.Create -> getString(
+                        R.string.error_user_create_profile_link_failed,
+                        siteName
+                    )
+
+                    ProfileLinkOperation.Update -> getString(
+                        R.string.error_user_update_profile_link_failed,
+                        siteName
+                    )
+
+                    ProfileLinkOperation.Delete -> getString(
+                        R.string.error_user_delete_profile_link_failed,
+                        siteName
+                    )
+                }
+            }
+        }
+
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 
     override fun onDestroyView() {

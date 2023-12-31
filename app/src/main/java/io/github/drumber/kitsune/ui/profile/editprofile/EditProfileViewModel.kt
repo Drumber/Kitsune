@@ -243,7 +243,7 @@ class EditProfileViewModel(
                     userRepository.updateUserCache()
                     acceptLoadingState(LoadingState.Success)
                 } else {
-                    throw ReceivedDataException("Received user data is null.")
+                    throw ProfileUpdateException.ProfileDataError(ProfileDataErrorType.UpdateProfile)
                 }
             } catch (e: Exception) {
                 logE("Failed to update user profile.", e)
@@ -256,7 +256,7 @@ class EditProfileViewModel(
         logD("Deleting waifu relationship.")
         val responseWaifu = service.deleteWaifuRelationship(userId).execute()
         if (!responseWaifu.isSuccessful) {
-            throw ReceivedDataException("Failed to delete waifu relationship.")
+            throw ProfileUpdateException.ProfileDataError(ProfileDataErrorType.DeleteWaifu)
         }
     }
 
@@ -270,7 +270,7 @@ class EditProfileViewModel(
 
         val response = imageUploadService.updateUserImage(useId, JSONAPIDocument(body)).execute()
         if (!response.isSuccessful) {
-            throw ReceivedDataException("Failed to update user image.")
+            throw ProfileUpdateException.ProfileImageError()
         }
     }
 
@@ -301,6 +301,13 @@ class EditProfileViewModel(
 
         val deletedProfileLinks = initialProfileLinks.filter { initialEntry ->
             initialEntry.id != null && profileLinkEntries.none { it.id == initialEntry.id }
+        }.map { entryToDelete ->
+            buildProfileLink(
+                profileLinkId = entryToDelete.id,
+                url = entryToDelete.url,
+                profileLinkSiteId = entryToDelete.site.id,
+                userId = userId
+            )
         }
 
         withContext(Dispatchers.IO) {
@@ -311,7 +318,11 @@ class EditProfileViewModel(
                         throw ReceivedDataException("Received response is null.")
                     }
                 } catch (e: Exception) {
-                    logE("Failed to create profile link.", e)
+                    logE("Failed to create profile link $profileLink.", e)
+                    throw ProfileUpdateException.ProfileLinkError(
+                        ProfileLinkOperation.Create,
+                        profileLink
+                    )
                 }
             }
 
@@ -325,7 +336,11 @@ class EditProfileViewModel(
                         throw ReceivedDataException("Received response is null.")
                     }
                 } catch (e: Exception) {
-                    logE("Failed to update profile link.", e)
+                    logE("Failed to update profile link $profileLink.", e)
+                    throw ProfileUpdateException.ProfileLinkError(
+                        ProfileLinkOperation.Update,
+                        profileLink
+                    )
                 }
             }
 
@@ -338,7 +353,11 @@ class EditProfileViewModel(
                         throw ReceivedDataException("Failed to delete profile link.")
                     }
                 } catch (e: Exception) {
-                    logE("Failed to delete profile link.", e)
+                    logE("Failed to delete profile link $profileLink.", e)
+                    throw ProfileUpdateException.ProfileLinkError(
+                        ProfileLinkOperation.Delete,
+                        profileLink
+                    )
                 }
             }
         }
@@ -501,7 +520,32 @@ sealed class LoadingState {
     data object NotLoading : LoadingState()
     data object Loading : LoadingState()
     data object Success : LoadingState()
-    data class Error(val exception: Exception) : LoadingState()
+    data class Error(val exception: Exception, var isConsumed: Boolean = false) : LoadingState()
+}
+
+sealed class ProfileUpdateException : Exception() {
+    class ProfileDataError(val type: ProfileDataErrorType) : ProfileUpdateException() {
+        override val message: String
+            get() = "Failed to update profile data. Type: $type"
+    }
+
+    class ProfileImageError : ProfileUpdateException()
+
+    class ProfileLinkError(
+        val operation: ProfileLinkOperation,
+        val profileLink: ProfileLink
+    ) : ProfileUpdateException() {
+        override val message: String
+            get() = "Failed to $operation profile link $profileLink."
+    }
+}
+
+enum class ProfileDataErrorType {
+    UpdateProfile, DeleteWaifu
+}
+
+enum class ProfileLinkOperation {
+    Create, Update, Delete
 }
 
 enum class ImagePickerType {
