@@ -534,9 +534,10 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
             is ProfileUpdateException.ProfileImageError -> getString(R.string.error_user_update_image_failed)
 
             is ProfileUpdateException.ProfileLinkError -> {
-                val siteName = viewModel.profileLinkSites
-                    ?.find { it.id == profileUpdateException.profileLink.profileLinkSite?.id }?.name
-                    ?: profileUpdateException.profileLink.url
+                val siteName = profileUpdateException.profileLinkEntry.site.name
+                    ?: viewModel.profileLinkSites
+                        ?.find { it.id == profileUpdateException.profileLinkEntry.site.id }?.name
+                    ?: profileUpdateException.profileLinkEntry.url
 
                 when (profileUpdateException.operation) {
                     ProfileLinkOperation.Create -> getString(

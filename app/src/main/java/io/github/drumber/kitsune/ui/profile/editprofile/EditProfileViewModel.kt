@@ -155,7 +155,11 @@ class EditProfileViewModel(
         acceptProfileLinkAction = { action ->
             val updatedProfileLinkEntries = when (action) {
                 is ProfileLinkAction.Edit -> {
-                    val entry = action.profileLinkEntry
+                    val initialEntry = initialProfileLinksFlow.replayCache.firstOrNull()
+                        ?.firstOrNull { it.site.id == action.profileLinkEntry.site.id }
+
+                    val entry = initialEntry?.copy(url = action.profileLinkEntry.url)
+                        ?: action.profileLinkEntry
                     profileLinkEntries.filter { it.site != entry.site } + entry
                 }
 
@@ -274,107 +278,145 @@ class EditProfileViewModel(
         }
     }
 
-    private suspend fun updateProfileLinks(userId: String) {
+    private suspend fun updateProfileLinks(userId: String) = withContext(Dispatchers.IO) {
         val initialProfileLinks = initialProfileLinksFlow.replayCache.firstOrNull() ?: emptyList()
 
         val newProfileLinks = profileLinkEntries.filter { newEntry ->
             initialProfileLinks.none { it.site.id == newEntry.site.id }
-        }.map { newEntry ->
-            buildProfileLink(
-                profileLinkId = null,
-                url = newEntry.url,
-                profileLinkSiteId = newEntry.site.id,
-                userId = userId
-            )
         }
 
         val updatedProfileLinks = profileLinkEntries.filter { newEntry ->
             newEntry.id != null && initialProfileLinks.none { it == newEntry }
-        }.map { newEntry ->
-            buildProfileLink(
-                profileLinkId = newEntry.id,
-                url = newEntry.url,
-                profileLinkSiteId = newEntry.site.id,
-                userId = userId
-            )
         }
 
         val deletedProfileLinks = initialProfileLinks.filter { initialEntry ->
-            initialEntry.id != null && profileLinkEntries.none { it.id == initialEntry.id }
-        }.map { entryToDelete ->
-            buildProfileLink(
-                profileLinkId = entryToDelete.id,
-                url = entryToDelete.url,
-                profileLinkSiteId = entryToDelete.site.id,
-                userId = userId
-            )
+            initialEntry.id != null && profileLinkEntries.none { it.site.id == initialEntry.site.id }
         }
 
-        withContext(Dispatchers.IO) {
-            newProfileLinks.forEach { profileLink ->
-                try {
-                    val response = profileLinkService.createProfileLink(profileLink)
-                    if (response.get() == null) {
-                        throw ReceivedDataException("Received response is null.")
-                    }
-                } catch (e: Exception) {
-                    logE("Failed to create profile link $profileLink.", e)
-                    throw ProfileUpdateException.ProfileLinkError(
-                        ProfileLinkOperation.Create,
-                        profileLink
-                    )
-                }
+        newProfileLinks.forEach { profileLinkEntry ->
+            try {
+                val createdProfileLink = createProfileLink(profileLinkEntry, userId)
+                    ?: throw ReceivedDataException("Received response is null.")
+                addOrUpdateInitialProfileLink(profileLinkEntry, createdProfileLink)
+            } catch (e: Exception) {
+                logE("Failed to create profile link $profileLinkEntry.", e)
+                throw ProfileUpdateException.ProfileLinkError(
+                    ProfileLinkOperation.Create,
+                    profileLinkEntry
+                )
             }
+        }
 
-            updatedProfileLinks.forEach { profileLink ->
-                try {
-                    val response = profileLinkService.updateProfileLink(
-                        profileLink.id ?: return@forEach,
-                        profileLink
-                    )
-                    if (response.get() == null) {
-                        throw ReceivedDataException("Received response is null.")
-                    }
-                } catch (e: Exception) {
-                    logE("Failed to update profile link $profileLink.", e)
-                    throw ProfileUpdateException.ProfileLinkError(
-                        ProfileLinkOperation.Update,
-                        profileLink
-                    )
-                }
+        updatedProfileLinks.forEach { profileLinkEntry ->
+            try {
+                val updatedProfileLink = updateProfileLink(profileLinkEntry, userId)
+                    ?: throw ReceivedDataException("Received response is null.")
+                addOrUpdateInitialProfileLink(profileLinkEntry, updatedProfileLink)
+            } catch (e: Exception) {
+                logE("Failed to update profile link $profileLinkEntry.", e)
+                throw ProfileUpdateException.ProfileLinkError(
+                    ProfileLinkOperation.Update,
+                    profileLinkEntry
+                )
             }
+        }
 
-            deletedProfileLinks.forEach { profileLink ->
-                try {
-                    val response = profileLinkService.deleteProfileLink(
-                        profileLink.id ?: return@forEach
-                    ).execute()
-                    if (!response.isSuccessful) {
-                        throw ReceivedDataException("Failed to delete profile link.")
-                    }
-                } catch (e: Exception) {
-                    logE("Failed to delete profile link $profileLink.", e)
-                    throw ProfileUpdateException.ProfileLinkError(
-                        ProfileLinkOperation.Delete,
-                        profileLink
-                    )
+        deletedProfileLinks.forEach { profileLinkEntry ->
+            try {
+                val response = profileLinkService.deleteProfileLink(profileLinkEntry.id!!)
+                    .execute()
+                if (!response.isSuccessful) {
+                    throw ReceivedDataException("Failed to delete profile link.")
                 }
+                removeFromInitialProfileLinks(profileLinkEntry)
+            } catch (e: Exception) {
+                logE("Failed to delete profile link $profileLinkEntry.", e)
+                throw ProfileUpdateException.ProfileLinkError(
+                    ProfileLinkOperation.Delete,
+                    profileLinkEntry
+                )
             }
         }
     }
 
-    private fun buildProfileLink(
-        profileLinkId: String?,
-        url: String?,
-        profileLinkSiteId: String?,
+    private suspend fun createProfileLink(
+        profileLinkEntry: ProfileLinkEntry,
         userId: String
-    ): ProfileLink {
-        return ProfileLink(
-            id = profileLinkId,
-            url = url,
-            profileLinkSite = ProfileLinkSite(id = profileLinkSiteId, name = null),
-            user = User(id = userId)
+    ): ProfileLink? {
+        return profileLinkService.createProfileLink(
+            ProfileLink(
+                id = null,
+                url = profileLinkEntry.url,
+                profileLinkSite = ProfileLinkSite(
+                    id = profileLinkEntry.site.id,
+                    name = null
+                ),
+                user = User(id = userId)
+            )
+        ).get()
+    }
+
+    private suspend fun updateProfileLink(
+        profileLinkEntry: ProfileLinkEntry,
+        userId: String
+    ): ProfileLink? {
+        return profileLinkService.updateProfileLink(
+            profileLinkEntry.id!!,
+            ProfileLink(
+                id = profileLinkEntry.id,
+                url = profileLinkEntry.url,
+                profileLinkSite = null,
+                user = User(id = userId)
+            )
+        ).get()
+    }
+
+    private fun addOrUpdateInitialProfileLink(
+        localProfileLinkEntry: ProfileLinkEntry,
+        remoteProfileLink: ProfileLink
+    ) {
+        val initialProfileLinkEntry = initialProfileLinksFlow.replayCache.firstOrNull()
+            ?.find { it.id == remoteProfileLink.id || it.site.id == remoteProfileLink.profileLinkSite?.id }
+
+        val updatedProfileLinkEntry = when (initialProfileLinkEntry) {
+            // add new profile link entry to initialProfileLinks
+            null -> localProfileLinkEntry.copy(
+                id = remoteProfileLink.id,
+                url = remoteProfileLink.url ?: localProfileLinkEntry.url,
+                site = remoteProfileLink.profileLinkSite ?: localProfileLinkEntry.site
+            )
+
+            // update initialProfileLinkEntry with remoteProfileLink
+            else -> initialProfileLinkEntry.copy(
+                id = remoteProfileLink.id,
+                url = remoteProfileLink.url ?: localProfileLinkEntry.url
+            )
+        }
+        val initialProfileLinksWithoutEntry = getInitialProfileLinksWithout(remoteProfileLink)
+
+        viewModelScope.launch {
+            initialProfileLinksFlow.emit(initialProfileLinksWithoutEntry + updatedProfileLinkEntry)
+        }
+    }
+
+    private fun removeFromInitialProfileLinks(profileLinkEntry: ProfileLinkEntry) {
+        val initialProfileLinksWithoutEntry = getInitialProfileLinksWithout(
+            ProfileLink(
+                id = profileLinkEntry.id,
+                url = profileLinkEntry.url,
+                profileLinkSite = profileLinkEntry.site,
+                user = null
+            )
         )
+        viewModelScope.launch {
+            initialProfileLinksFlow.emit(initialProfileLinksWithoutEntry)
+        }
+    }
+
+    private fun getInitialProfileLinksWithout(profileLink: ProfileLink): List<ProfileLinkEntry> {
+        return initialProfileLinksFlow.replayCache.firstOrNull()
+            ?.filterNot { it.id == profileLink.id || it.site.id == profileLink.profileLinkSite?.id }
+            ?: emptyList()
     }
 
     fun initSearchClient() {
@@ -533,10 +575,10 @@ sealed class ProfileUpdateException : Exception() {
 
     class ProfileLinkError(
         val operation: ProfileLinkOperation,
-        val profileLink: ProfileLink
+        val profileLinkEntry: ProfileLinkEntry
     ) : ProfileUpdateException() {
         override val message: String
-            get() = "Failed to $operation profile link $profileLink."
+            get() = "Failed to $operation profile link $profileLinkEntry."
     }
 }
 
