@@ -341,8 +341,12 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
         binding.chipGroupProfileLinks.apply {
             removeAllViews()
 
-            profileLinks.sortedBy { it.profileLinkSite?.id }.forEach { profileLink ->
-                val profileLinkBinding = ItemProfileSiteChipBinding.inflate(layoutInflater, this, true)
+            profileLinks.sortedBy { it.profileLinkSite?.id?.toIntOrNull() }.forEach { profileLink ->
+                val profileLinkBinding = ItemProfileSiteChipBinding.inflate(
+                    layoutInflater,
+                    this,
+                    true
+                )
                 val chip = profileLinkBinding.root
                 val siteName = profileLink.profileLinkSite?.name
                 chip.text = siteName

@@ -332,7 +332,7 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
                     binding.chipGroupProfileLinks.removeViews(0, indexOfAddChip)
                 }
 
-                profileLinks.sortedByDescending { it.site.id }.forEach { link ->
+                profileLinks.sortedByDescending { it.site.id?.toIntOrNull() }.forEach { link ->
                     val chipBinding = ItemProfileSiteChipBinding.inflate(
                         layoutInflater,
                         binding.chipGroupProfileLinks,
