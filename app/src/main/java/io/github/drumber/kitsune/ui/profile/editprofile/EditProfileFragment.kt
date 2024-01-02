@@ -6,6 +6,7 @@ import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentDialog
 import androidx.activity.addCallback
@@ -14,8 +15,11 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.BundleCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
+import androidx.core.view.updatePadding
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,6 +47,7 @@ import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.parseDate
 import io.github.drumber.kitsune.util.toDate
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
+import io.github.drumber.kitsune.util.ui.getSystemBarsAndCutoutInsets
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
@@ -73,6 +78,11 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
         }
     }
 
+    override fun onStart() {
+        requireDialog().window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        super.onStart()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -91,6 +101,23 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
         if (!viewModel.hasUser()) {
             Toast.makeText(requireContext(), R.string.error_invalid_user, Toast.LENGTH_LONG).show()
             dismiss()
+        }
+
+        val initialPaddingBottom = binding.root.paddingBottom
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+            if (imeVisible) {
+                val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+                val systemBarsBottom = insets.getSystemBarsAndCutoutInsets().bottom
+                // subtract padding from system bars since it's already applied to the nested scroll view
+                val paddingBottom = imeHeight - systemBarsBottom
+                view.updatePadding(bottom = initialPaddingBottom + paddingBottom)
+                binding.nestedScrollView.scrollBy(0, paddingBottom)
+            } else {
+                view.updatePadding(bottom = initialPaddingBottom)
+                binding.nestedScrollView.scrollBy(0, -initialPaddingBottom)
+            }
+            insets
         }
 
         return binding.root
