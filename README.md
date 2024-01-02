@@ -23,6 +23,22 @@ Unofficial android app for [Kitsu.io](https://kitsu.io). Discover new Anime and 
 [Download latest app release on GitHub.](https://github.com/Drumber/Kitsune/releases/latest)
 > Requires Android 8.0 or higher.
 
+## Bug reports, Feature requests and Contribution
+> Please be aware of the [Code of Conduct](CODE_OF_CONDUCT.md) in place.
+
+<details><summary>Report a bug or request a new feature</summary>
+
+  - Please check out [existing issues](https://github.com/Drumber/Kitsune/issues?q=is%3Aissue) first to avoid duplicates.
+  - [Open a new issue](https://github.com/Drumber/Kitsune/issues/new/choose)
+
+</details>
+
+<details><summary>Contribute to Kitsune</summary>
+
+  - See [Contributing](CONTRIBUTING.md) for more details.
+
+</details>
+
 ## Screenshots
 <img src="./media/light_home_screen_framed.png" width="250"> <img src="./media/dark_home_screen_framed.png" width="250"> <img src="./media/dark_purple_home_screen_framed.png" width="250">
 
