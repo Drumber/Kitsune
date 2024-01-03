@@ -15,11 +15,8 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.BundleCompat
 import androidx.core.os.bundleOf
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
-import androidx.core.view.updatePadding
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,7 +44,7 @@ import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.parseDate
 import io.github.drumber.kitsune.util.toDate
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
-import io.github.drumber.kitsune.util.ui.getSystemBarsAndCutoutInsets
+import io.github.drumber.kitsune.util.ui.initImePaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
@@ -104,20 +101,7 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
             dismiss()
         }
 
-        val initialPaddingBottom = binding.root.paddingBottom
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
-            val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
-            val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
-            val systemBarsBottom = insets.getSystemBarsAndCutoutInsets().bottom
-            // subtract padding from system bars since it's already applied to the nested scroll view
-            val paddingBottom = imeHeight - systemBarsBottom
-            if (imeVisible) {
-                view.updatePadding(bottom = initialPaddingBottom + paddingBottom)
-            } else {
-                view.updatePadding(bottom = initialPaddingBottom)
-            }
-            insets
-        }
+        binding.root.initImePaddingWindowInsetsListener()
 
         return binding.root
     }

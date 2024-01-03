@@ -96,6 +96,27 @@ fun View.initMarginWindowInsetsListener(
     }
 }
 
+fun View.initImePaddingWindowInsetsListener(subtractSystemBarInset: Boolean = true) {
+    val initialPaddingBottom = paddingBottom
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+        val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+        val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+
+        val paddingBottom = if (subtractSystemBarInset) {
+            val systemBarsBottom = insets.getSystemBarsAndCutoutInsets().bottom
+            imeHeight - systemBarsBottom
+        } else {
+            imeHeight
+        }
+        if (imeVisible) {
+            view.updatePadding(bottom = initialPaddingBottom + paddingBottom)
+        } else {
+            view.updatePadding(bottom = initialPaddingBottom)
+        }
+        insets
+    }
+}
+
 fun WindowInsetsCompat.getSystemBarsAndCutoutInsets() = getInsets(
     WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
 )

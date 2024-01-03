@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.widget.TooltipCompat
@@ -48,6 +49,7 @@ import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.stripTimeUtcMillis
 import io.github.drumber.kitsune.util.toDate
 import io.github.drumber.kitsune.util.ui.DateValidatorPointBetween
+import io.github.drumber.kitsune.util.ui.initImePaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
@@ -77,6 +79,11 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
         LibraryStatus.Dropped
     )
 
+    override fun onStart() {
+        requireDialog().window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        super.onStart()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -97,6 +104,8 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
             bottom = true,
             consume = false
         )
+
+        binding.root.initImePaddingWindowInsetsListener()
 
         return binding.root
     }
