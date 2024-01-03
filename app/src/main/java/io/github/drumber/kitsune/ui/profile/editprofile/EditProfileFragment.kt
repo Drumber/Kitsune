@@ -48,6 +48,7 @@ import io.github.drumber.kitsune.util.parseDate
 import io.github.drumber.kitsune.util.toDate
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
 import io.github.drumber.kitsune.util.ui.getSystemBarsAndCutoutInsets
+import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
@@ -91,7 +92,7 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
         _binding = FragmentEditProfileBinding.inflate(inflater, container, false)
 
         binding.toolbar.initWindowInsetsListener(consume = false)
-        binding.nestedScrollView.initPaddingWindowInsetsListener(
+        binding.nestedScrollView.initMarginWindowInsetsListener(
             left = true,
             right = true,
             bottom = true,
@@ -106,16 +107,14 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
         val initialPaddingBottom = binding.root.paddingBottom
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
             val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+            val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+            val systemBarsBottom = insets.getSystemBarsAndCutoutInsets().bottom
+            // subtract padding from system bars since it's already applied to the nested scroll view
+            val paddingBottom = imeHeight - systemBarsBottom
             if (imeVisible) {
-                val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
-                val systemBarsBottom = insets.getSystemBarsAndCutoutInsets().bottom
-                // subtract padding from system bars since it's already applied to the nested scroll view
-                val paddingBottom = imeHeight - systemBarsBottom
                 view.updatePadding(bottom = initialPaddingBottom + paddingBottom)
-                binding.nestedScrollView.scrollBy(0, paddingBottom)
             } else {
                 view.updatePadding(bottom = initialPaddingBottom)
-                binding.nestedScrollView.scrollBy(0, -initialPaddingBottom)
             }
             insets
         }
