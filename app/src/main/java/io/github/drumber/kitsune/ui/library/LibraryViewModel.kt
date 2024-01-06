@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.TerminalSeparatorType
 import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import androidx.paging.map
@@ -214,7 +215,7 @@ class LibraryViewModel(
                 pagingData.map { LibraryEntryWrapper(it, null, false) }
             }
             .map {
-                it.insertSeparators { before: LibraryEntryWrapper?, after: LibraryEntryWrapper? ->
+                it.insertSeparators(TerminalSeparatorType.SOURCE_COMPLETE) { before: LibraryEntryWrapper?, after: LibraryEntryWrapper? ->
                     // do not insert separators if currently searching
                     if (filter.isFilteredBySearchQuery()) return@insertSeparators null
 
