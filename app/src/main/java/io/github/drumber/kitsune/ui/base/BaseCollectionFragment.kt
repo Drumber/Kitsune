@@ -40,16 +40,17 @@ abstract class BaseCollectionFragment(@LayoutRes contentLayoutId: Int) :
     protected open fun initRecyclerView(recyclerView: RecyclerView) {
         val gridLayout = GridLayoutManager(requireContext(), 2)
         recyclerView.layoutManager = gridLayout
-        recyclerView.post {
-            if (isAdded) {
-                // calculate span count in relation to the recycler view width
-                val width = recyclerView.width
-                val cellWidth = resources.getDimension(KitsunePref.mediaItemSize.widthRes) +
-                        2 * resources.getDimension(R.dimen.media_item_margin)
-                val spanCount = floor(width / cellWidth).toInt()
-                gridLayout.spanCount =
-                    max(2, spanCount) // set new span count with minimum 2 columns
-            }
+
+        recyclerView.addOnLayoutChangeListener { _, left, _, right, _, oldLeft, _, oldRight, _ ->
+            val width = right - left
+            val oldWidth = oldRight - oldLeft
+            if (width == oldWidth || !isAdded) return@addOnLayoutChangeListener
+
+            val cellWidth = resources.getDimension(KitsunePref.mediaItemSize.widthRes) +
+                    2 * resources.getDimension(R.dimen.media_item_margin)
+            val spanCount = floor(width / cellWidth).toInt()
+            // set new span count with minimum 2 columns
+            gridLayout.spanCount = max(2, spanCount)
         }
     }
 
@@ -63,7 +64,7 @@ abstract class BaseCollectionFragment(@LayoutRes contentLayoutId: Int) :
                 // this will make sure to display header and footer with full width
                 gridLayout.spanSizeLookup = LoadStateSpanSizeLookup(adapter, gridLayout.spanCount)
             }
-            
+
             adapter.applyLoadStateListenerWithLoadStateHeaderAndFooter()
         } else {
             adapter
