@@ -122,7 +122,7 @@ class EditProfileViewModel(
             .distinctUntilChanged()
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
+                started = SharingStarted.Lazily,
                 initialValue = initialProfileState
             )
 
@@ -131,7 +131,7 @@ class EditProfileViewModel(
             .distinctUntilChanged()
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
+                started = SharingStarted.Lazily,
                 initialValue = initialProfileImageState
             )
 
@@ -140,7 +140,7 @@ class EditProfileViewModel(
             .distinctUntilChanged()
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
+                started = SharingStarted.Lazily,
                 initialValue = emptyList()
             )
 
@@ -187,7 +187,7 @@ class EditProfileViewModel(
             .distinctUntilChanged()
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
+                started = SharingStarted.Lazily,
                 initialValue = LoadingState.NotLoading
             )
         acceptLoadingState = { loadingState ->

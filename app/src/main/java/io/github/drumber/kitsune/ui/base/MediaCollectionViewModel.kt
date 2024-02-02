@@ -31,7 +31,7 @@ abstract class MediaCollectionViewModel : ViewModel() {
             .distinctUntilChanged()
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
+                started = SharingStarted.Lazily,
                 initialValue = null
             )
 

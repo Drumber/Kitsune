@@ -102,11 +102,6 @@ class LibraryViewModel(
         val queriesScrolled = actionStateFlow
             .filterIsInstance<UiAction.Scroll>()
             .distinctUntilChanged()
-            .shareIn(
-                scope = viewModelScope,
-                replay = 1,
-                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000)
-            )
             .onStart { emit(UiAction.Scroll(initialFilter)) }
 
         val libraryUpdateOperationsCounter = AtomicInteger(0)
@@ -144,7 +139,7 @@ class LibraryViewModel(
                 .shareIn(
                     scope = viewModelScope,
                     replay = 1,
-                    started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000)
+                    started = SharingStarted.Lazily
                 )
                 .onStart { emit(emptyList()) }
 
@@ -183,7 +178,7 @@ class LibraryViewModel(
             )
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
+            started = SharingStarted.Lazily,
             initialValue = UiState(initialFilter, initialFilter)
         )
 
