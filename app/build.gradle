@@ -84,7 +84,7 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.2.1'
 
     // Lifecycle
-    def lifecycle_version = "2.6.2"
+    def lifecycle_version = "2.7.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
 
@@ -126,8 +126,9 @@ dependencies {
     implementation 'com.github.jasminb:jsonapi-converter:0.13'
 
     // Jackson
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.0'
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.16.0"
+    def jackson_version = "2.16.1"
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
