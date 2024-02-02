@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -106,8 +105,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
         }
 
         binding.searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
-            binding.btnSearch.icon = AppCompatResources.getDrawable(
-                requireContext(),
+            binding.btnSearch.setImageResource(
                 if (hasFocus) R.drawable.ic_arrow_back_24 else R.drawable.ic_search_24
             )
             binding.searchView.setTag(TAG_SEARCH_FOCUSED, hasFocus)
@@ -166,8 +164,6 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
                 val badgeDrawable = BadgeDrawable.create(requireContext()).apply {
                     isVisible = filterCount > 0
                     number = filterCount
-                    verticalOffset = 90
-                    horizontalOffset = 90
                 }
                 BadgeUtils.attachBadgeDrawable(badgeDrawable, binding.btnFilter)
             }

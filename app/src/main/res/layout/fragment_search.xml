@@ -49,16 +49,17 @@
                         android:clipChildren="false"
                         android:orientation="horizontal">
 
-                        <com.google.android.material.button.MaterialButton
+                        <ImageButton
                             android:id="@+id/btn_search"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            app:icon="@drawable/ic_search_24"
-                            app:iconTint="?attr/colorControlNormal"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="16dp"
+                            android:src="@drawable/ic_search_24"
+                            app:tint="?attr/colorControlNormal"
+                            android:background="?attr/selectableItemBackgroundBorderless"
                             android:layout_gravity="center"
                             android:contentDescription="@string/hint_search"
-                            style="?attr/materialIconButtonStyle" />
+                            style="@style/Widget.Material3.Button.IconButton" />
 
                         <androidx.appcompat.widget.SearchView
                             android:id="@+id/search_view"
@@ -69,13 +70,14 @@
                             app:searchIcon="@null"
                             style="@style/Widget.Kitsune.SearchView" />
 
-                        <com.google.android.material.button.MaterialButton
+                        <ImageButton
                             android:id="@+id/btn_filter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="6dp"
-                            app:icon="@drawable/ic_filter_24"
-                            app:iconTint="?attr/colorControlNormal"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginEnd="16dp"
+                            android:src="@drawable/ic_filter_24"
+                            app:tint="?attr/colorControlNormal"
+                            android:background="?attr/selectableItemBackgroundBorderless"
                             android:layout_gravity="center"
                             android:contentDescription="@string/title_filter"
                             style="?attr/materialIconButtonStyle" />
