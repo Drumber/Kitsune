@@ -17,7 +17,6 @@ import com.algolia.instantsearch.core.selectable.list.SelectionMode
 import com.algolia.instantsearch.filter.facet.DefaultFacetListPresenter
 import com.algolia.instantsearch.filter.facet.FacetListConnector
 import com.algolia.instantsearch.filter.facet.FacetSortCriterion
-import com.algolia.instantsearch.filter.range.FilterRangeConnector
 import com.algolia.instantsearch.filter.state.FilterState
 import com.algolia.instantsearch.filter.state.Filters
 import com.algolia.instantsearch.filter.state.groupOr
@@ -41,7 +40,8 @@ import io.github.drumber.kitsune.domain.model.toFilterCollection
 import io.github.drumber.kitsune.domain.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.util.algolia.SeasonListPresenter
+import io.github.drumber.kitsune.ui.widget.algolia.range.CustomFilterRangeConnector
+import io.github.drumber.kitsune.ui.widget.algolia.SeasonListPresenter
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logI
 import kotlinx.coroutines.flow.flatMapLatest
@@ -221,14 +221,14 @@ class SearchViewModel(
         ).bind()
         val kindPresenter = DefaultFacetListPresenter(limit = 2)
 
-        val yearConnector = FilterRangeConnector(
+        val yearConnector = CustomFilterRangeConnector(
             filterState = filterState,
             attribute = Attribute("year"),
             range = minYear..maxYear,
             bounds = minYear..maxYear
         ).bind()
 
-        val avgRatingConnector = FilterRangeConnector(
+        val avgRatingConnector = CustomFilterRangeConnector(
             filterState = filterState,
             attribute = Attribute("averageRating"),
             range = 5..100,

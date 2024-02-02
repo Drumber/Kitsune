@@ -1,37 +1,33 @@
-package io.github.drumber.kitsune.ui.widget.algolia
+package io.github.drumber.kitsune.ui.widget.algolia.range
 
 import com.algolia.instantsearch.core.Callback
-import com.algolia.instantsearch.core.number.range.NumberRangeView
 import com.algolia.instantsearch.core.number.range.Range
-import com.algolia.instantsearch.core.searcher.Debouncer
 import com.google.android.material.slider.RangeSlider
-import kotlinx.coroutines.CoroutineScope
 
 class IntNumberRangeView(
-    private val slider: RangeSlider,
-    coroutineScope: CoroutineScope,
-    debounceMillis: Long = 300L
-) : NumberRangeView<Int> {
+    private val slider: RangeSlider
+) : CustomNumberRangeView<Int> {
 
-    override var onRangeChanged: Callback<Range<Int>>? = null
+    override var onRangeChanged: Callback<Range<Int>?>? = null
 
     private var range: Range<Int>? = null
     private var bounds: Range<Int>? = null
 
-    private val debouncer = Debouncer(debounceMillis)
-
     init {
         slider.stepSize = 1f
-        slider.addOnChangeListener { slider, _, fromUser ->
-            if (!fromUser) return@addOnChangeListener
-            debouncer.debounce(coroutineScope) {
+        slider.addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
+            override fun onStartTrackingTouch(slider: RangeSlider) {}
+
+            override fun onStopTrackingTouch(slider: RangeSlider) {
                 val valueMin = slider.values[0].toInt()
                 val valueMax = slider.values[1].toInt()
-                if (range?.min != valueMin || range?.max != valueMax) {
+                if (valueMin == bounds?.min && valueMax == bounds?.max) {
+                    onRangeChanged?.invoke(null)
+                } else if (range?.min != valueMin || range?.max != valueMax) {
                     onRangeChanged?.invoke(Range(valueMin..valueMax))
                 }
             }
-        }
+        })
     }
 
     override fun setRange(range: Range<Int>?) {

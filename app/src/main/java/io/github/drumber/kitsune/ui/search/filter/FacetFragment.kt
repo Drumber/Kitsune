@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +17,6 @@ import com.algolia.instantsearch.android.filter.facet.FacetListAdapter
 import com.algolia.instantsearch.android.list.autoScrollToStart
 import com.algolia.instantsearch.core.connection.ConnectionHandler
 import com.algolia.instantsearch.filter.facet.connectView
-import com.algolia.instantsearch.filter.range.connectView
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.slider.RangeSlider
@@ -33,7 +31,8 @@ import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.No
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotInitialized
 import io.github.drumber.kitsune.ui.search.categories.CategoriesDialogFragment
 import io.github.drumber.kitsune.ui.widget.ExpandableLayout
-import io.github.drumber.kitsune.ui.widget.algolia.IntNumberRangeView
+import io.github.drumber.kitsune.ui.widget.algolia.range.IntNumberRangeView
+import io.github.drumber.kitsune.ui.widget.algolia.range.connectView
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
@@ -143,11 +142,11 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
             filterFacets.kindPresenter
         )
 
-        val yearView = IntNumberRangeView(binding.sliderYear, lifecycleScope)
+        val yearView = IntNumberRangeView(binding.sliderYear)
         binding.sliderYear.attachTextView(binding.tvYearValue)
         connection += filterFacets.yearConnector.connectView(yearView)
 
-        val avgRatingView = IntNumberRangeView(binding.sliderAvgRating, lifecycleScope)
+        val avgRatingView = IntNumberRangeView(binding.sliderAvgRating)
         binding.sliderAvgRating.attachTextView(binding.tvAvgRatingValue, "%d%% - %d%%")
         connection += filterFacets.avgRatingConnector.connectView(avgRatingView)
 
