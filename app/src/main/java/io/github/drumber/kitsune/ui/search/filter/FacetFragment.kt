@@ -143,11 +143,18 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
         )
 
         val yearView = IntNumberRangeView(binding.sliderYear)
-        binding.sliderYear.attachTextView(binding.tvYearValue)
+        binding.sliderYear.attachTextView(binding.tvYearValue) { min, max ->
+            when (max) {
+                SearchViewModel.maxYear -> "$min - ∞"
+                else -> "$min - $max"
+            }
+        }
         connection += filterFacets.yearConnector.connectView(yearView)
 
         val avgRatingView = IntNumberRangeView(binding.sliderAvgRating)
-        binding.sliderAvgRating.attachTextView(binding.tvAvgRatingValue, "%d%% - %d%%")
+        binding.sliderAvgRating.attachTextView(binding.tvAvgRatingValue) { min, max ->
+            "$min% - $max%"
+        }
         connection += filterFacets.avgRatingConnector.connectView(avgRatingView)
 
         val adapterSeason = FacetListAdapter(FilterFacetListViewHolder.Factory)
@@ -213,11 +220,11 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
         }
     }
 
-    private fun RangeSlider.attachTextView(textView: TextView, format: String = "%d - %d") {
+    private fun RangeSlider.attachTextView(textView: TextView, getText: (min: Int, max: Int) -> String) {
         val updateText = { slider: RangeSlider ->
             val valueMin = slider.values[0].toInt()
             val valueMax = slider.values[1].toInt()
-            textView.text = format.format(valueMin, valueMax)
+            textView.text = getText(valueMin, valueMax)
         }
         addOnChangeListener { slider, _, _ ->
             updateText(slider)
