@@ -74,7 +74,7 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
 
     // Navigation
-    def nav_version = "2.7.6"
+    def nav_version = "2.7.7"
     def fragment_version = "1.6.2"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
@@ -185,12 +185,12 @@ dependencies {
     implementation "app.futured.hauler:databinding:$hauler_version"
 
     // AboutLibraries
-    def aboutLibraries_version = "10.9.2"
+    def aboutLibraries_version = "10.10.0"
     implementation "com.mikepenz:aboutlibraries-core:$aboutLibraries_version"
     implementation "com.mikepenz:aboutlibraries:$aboutLibraries_version"
 
     // LeakCanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.13'
 
     // Glide Transformations (only used for demo screenshots)
     if (screenshotMode) {
@@ -199,7 +199,7 @@ dependencies {
 
     // Tests
     testImplementation 'junit:junit:4.13.2'
-    testImplementation "org.assertj:assertj-core:3.24.2"
+    testImplementation "org.assertj:assertj-core:3.25.3"
     testImplementation 'com.tngtech.archunit:archunit-junit4:1.2.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.5'

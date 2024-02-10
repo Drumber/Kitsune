@@ -23,11 +23,11 @@ class LocalLibraryEntryModificationTest {
         // then
         assertThat(libraryEntryWithModifications)
             .usingRecursiveComparison()
-            .comparingOnlyFields("id", "anime", "manga", "user")
+            .comparingOnlyFields("id", "anime", "manga")
             .isEqualTo(libraryEntry)
         assertThat(libraryEntryWithModifications)
             .usingRecursiveComparison()
-            .ignoringFields("id", "anime", "manga", "user")
+            .ignoringFields("id", "anime", "manga")
             .isNotEqualTo(libraryEntry)
     }
 
