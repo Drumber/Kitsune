@@ -119,7 +119,8 @@ class SettingsFragment : BasePreferenceFragment() {
         //---- App Version
         val appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
         findPreference<Preference>(R.string.preference_key_app_version)?.apply {
-            summary = appVersion
+            summary = appVersion + System.lineSeparator() +
+                    getString(R.string.preference_app_version_description)
             setOnPreferenceClickListener {
                 checkForNewVersion()
                 true
