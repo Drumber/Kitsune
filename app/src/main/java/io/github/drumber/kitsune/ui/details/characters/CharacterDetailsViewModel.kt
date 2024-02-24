@@ -10,7 +10,9 @@ import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class CharacterDetailsViewModel(private val service: CharacterService) : ViewModel() {
@@ -20,15 +22,27 @@ class CharacterDetailsViewModel(private val service: CharacterService) : ViewMod
     val characterFlow
         get() = _characterFlow.asSharedFlow()
 
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState
+        get() = _uiState.asStateFlow()
+
     fun initCharacter(character: Character) {
         if (_characterFlow.replayCache.isNotEmpty() && _characterFlow.replayCache.firstOrNull()?.id == character.id) return
 
         viewModelScope.launch(Dispatchers.IO) {
             _characterFlow.emit(character)
             // fetch full character model
-            character.id?.let { id -> fetchCharacterData(id) }?.let { character ->
-                _characterFlow.emit(character)
+            val characterId = character.id ?: return@launch
+            _uiState.emit(UiState(isLoading = true))
+            val fullCharacter =  try {
+                fetchCharacterData(characterId)
+            } finally {
+                _uiState.emit(UiState(isLoading = false))
             }
+            if (fullCharacter != null) {
+                _characterFlow.emit(fullCharacter)
+            }
+            _uiState.emit(UiState(hasMediaCharacters = fullCharacter?.mediaCharacters?.isNotEmpty() == true))
         }
     }
 
@@ -46,3 +60,8 @@ class CharacterDetailsViewModel(private val service: CharacterService) : ViewMod
     }
 
 }
+
+data class UiState(
+    val isLoading: Boolean = false,
+    val hasMediaCharacters: Boolean = false
+)

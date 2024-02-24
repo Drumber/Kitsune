@@ -75,6 +75,15 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.uiState.collectLatest { state ->
+                binding.progressBar.isVisible = state.isLoading
+                binding.loadingWrapper.isVisible = state.isLoading || !state.hasMediaCharacters
+                binding.tvNoData.isVisible = !state.isLoading && !state.hasMediaCharacters
+                binding.rvMediaCharacters.isVisible = !state.isLoading && state.hasMediaCharacters
+            }
+        }
+
         binding.ivCharacter.setOnClickListener {
             val fullCharacter = viewModel.characterFlow.replayCache.lastOrNull()
                 ?: return@setOnClickListener

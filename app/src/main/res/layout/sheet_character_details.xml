@@ -119,32 +119,43 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/title_character_appearances"
+                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_media_characters"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical"
-                app:isVisible="@{character.mediaCharacters != null &amp;&amp; !character.mediaCharacters.empty}">
+                android:nestedScrollingEnabled="false"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:paddingVertical="5dp"
+                android:requiresFadingEdge="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-                <TextView
+            <FrameLayout
+                android:id="@+id/loading_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/media_item_height_small">
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/title_character_appearances"
-                    android:textAppearance="?attr/textAppearanceHeadlineSmall" />
+                    android:layout_gravity="center"/>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_media_characters"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tv_no_data"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    android:clipToPadding="false"
-                    android:orientation="horizontal"
-                    android:paddingVertical="5dp"
-                    android:requiresFadingEdge="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                    android:layout_gravity="center"
+                    android:text="@string/no_data_available" />
 
-            </LinearLayout>
+            </FrameLayout>
 
             <Button
                 android:id="@+id/btn_open_on_mal"
