@@ -43,7 +43,7 @@ class CharacterMapperTest {
 
         // then
         assertThat(character).usingRecursiveComparison()
-            .ignoringFields("name", "description", "malId")
+            .ignoringFields("name", "description", "malId", "names", "otherNames", "mediaCharacters")
             .withEqualsForFields({ a, b -> a.toString() == b.toString() }, "id")
             .isEqualTo(characterSearchResult)
     }

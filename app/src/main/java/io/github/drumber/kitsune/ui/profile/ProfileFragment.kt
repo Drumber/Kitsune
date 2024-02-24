@@ -35,9 +35,9 @@ import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
 import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
+import io.github.drumber.kitsune.domain.model.infrastructure.character.Character
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
-import io.github.drumber.kitsune.domain.model.infrastructure.production.Character
 import io.github.drumber.kitsune.domain.model.infrastructure.user.Favorite
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
 import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLink
@@ -52,9 +52,9 @@ import io.github.drumber.kitsune.ui.adapter.MediaViewHolder
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
+import io.github.drumber.kitsune.ui.details.photoview.PhotoViewActivityDirections
 import io.github.drumber.kitsune.ui.widget.chart.PieChartStyle
 import io.github.drumber.kitsune.util.extensions.navigateSafe
-import io.github.drumber.kitsune.util.extensions.openCharacterOnMAL
 import io.github.drumber.kitsune.util.extensions.openUrl
 import io.github.drumber.kitsune.util.extensions.recyclerView
 import io.github.drumber.kitsune.util.extensions.setAppTheme
@@ -427,9 +427,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
     }
 
     private fun onFavoriteCharacterItemClicked(character: Character) {
-        character.malId?.let { malId ->
-            openCharacterOnMAL(malId)
-        }
+        val action = ProfileFragmentDirections.actionProfileFragmentToCharacterDetailsBottomSheet(character)
+        findNavController().navigateSafe(R.id.profile_fragment, action)
     }
 
     private fun updateOptionsMenu() {
@@ -448,7 +447,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
         sharedElement: View?
     ) {
         val transitionName = sharedElement?.let { ViewCompat.getTransitionName(it) }
-        val action = ProfileFragmentDirections.actionProfileFragmentToPhotoViewActivity(
+        val action = PhotoViewActivityDirections.actionGlobalPhotoViewActivity(
             imageUrl,
             title,
             thumbnailUrl,

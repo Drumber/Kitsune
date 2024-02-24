@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.domain.model.infrastructure.production.Casting
-import io.github.drumber.kitsune.domain.model.infrastructure.production.Character
 import io.github.drumber.kitsune.databinding.ItemCharacterBinding
+import io.github.drumber.kitsune.domain.model.infrastructure.character.Character
+import io.github.drumber.kitsune.domain.model.infrastructure.production.Casting
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 
 class CharacterPagingAdapter(

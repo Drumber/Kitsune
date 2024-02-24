@@ -4,6 +4,7 @@ import android.os.Parcelable
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
+import io.github.drumber.kitsune.domain.model.infrastructure.character.Character
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

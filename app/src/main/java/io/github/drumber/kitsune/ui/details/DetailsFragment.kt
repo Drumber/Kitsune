@@ -62,24 +62,25 @@ import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.LibraryUpdateResult
+import io.github.drumber.kitsune.ui.details.photoview.PhotoViewActivityDirections
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle.applyStyle
 import io.github.drumber.kitsune.ui.widget.chart.StepAxisValueFormatter
+import io.github.drumber.kitsune.util.DataUtil.mapLanguageCodesToDisplayName
 import io.github.drumber.kitsune.util.extensions.getColor
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.extensions.toPx
+import io.github.drumber.kitsune.util.logW
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
-import io.github.drumber.kitsune.util.logW
 import io.github.drumber.kitsune.util.ui.showSnackbar
 import io.github.drumber.kitsune.util.ui.showSnackbarOnFailure
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.Locale
 import java.util.concurrent.CopyOnWriteArrayList
 
 class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
@@ -329,13 +330,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         val sortedTitles = titles?.withoutCommonTitles()
             ?.filterValues { !it.isNullOrBlank() }
             ?.filterNot { it.key == "en_us" && it.value == titles.en }
-            ?.mapKeys {
-                val locale = Locale.forLanguageTag(it.key.replace('_', '-'))
-                if (it.key.lowercase().split('_').toSet().size > 1)
-                    locale.displayName
-                else
-                    locale.displayLanguage
-            }
+            ?.mapLanguageCodesToDisplayName()
             ?.toList()
             ?.sortedByDescending { it.first }
 
@@ -349,10 +344,10 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         // add a row for each title
         sortedTitles
             .takeLast(if (shouldLimitShownTitles) maxShownTitles else Int.MAX_VALUE)
-            .forEach {
+            .forEach { (language, title) ->
                 val rowBinding = ItemDetailsInfoRowBinding.inflate(layoutInflater)
-                rowBinding.title = it.first
-                rowBinding.value = it.second
+                rowBinding.title = language
+                rowBinding.value = title
                 rowBinding.root.tag = identifierTag
                 tableLayout.addView(rowBinding.root, rowIndex)
             }
@@ -595,7 +590,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         sharedElement: View?
     ) {
         val transitionName = sharedElement?.let { ViewCompat.getTransitionName(it) }
-        val action = DetailsFragmentDirections.actionDetailsFragmentToPhotoViewActivity(
+        val action = PhotoViewActivityDirections.actionGlobalPhotoViewActivity(
             imageUrl,
             title,
             thumbnailUrl,

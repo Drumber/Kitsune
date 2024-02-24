@@ -13,6 +13,8 @@ import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.constants.GitHub
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.domain.model.infrastructure.character.Character
+import io.github.drumber.kitsune.domain.model.infrastructure.character.MediaCharacter
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
@@ -24,7 +26,6 @@ import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.Chapter
 import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.Episode
 import io.github.drumber.kitsune.domain.model.infrastructure.production.AnimeProduction
 import io.github.drumber.kitsune.domain.model.infrastructure.production.Casting
-import io.github.drumber.kitsune.domain.model.infrastructure.production.Character
 import io.github.drumber.kitsune.domain.model.infrastructure.production.Producer
 import io.github.drumber.kitsune.domain.model.infrastructure.user.Favorite
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
@@ -37,6 +38,7 @@ import io.github.drumber.kitsune.domain.service.anime.EpisodesService
 import io.github.drumber.kitsune.domain.service.auth.AlgoliaKeyService
 import io.github.drumber.kitsune.domain.service.auth.AuthService
 import io.github.drumber.kitsune.domain.service.category.CategoryService
+import io.github.drumber.kitsune.domain.service.character.CharacterService
 import io.github.drumber.kitsune.domain.service.github.GitHubApiService
 import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.domain.service.manga.ChaptersService
@@ -144,6 +146,16 @@ val networkModule = module {
             get(),
             Casting::class.java,
             Character::class.java
+        )
+    }
+    factory {
+        createService<CharacterService>(
+            get(),
+            get(),
+            Character::class.java,
+            MediaCharacter::class.java,
+            Anime::class.java,
+            Manga::class.java
         )
     }
     factory { createService<AlgoliaKeyService>(get(), get()) }

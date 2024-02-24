@@ -17,7 +17,7 @@ import com.algolia.search.model.search.RemoveWordIfNoResults
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.domain.manager.SearchProvider
 import io.github.drumber.kitsune.domain.model.infrastructure.algolia.SearchType
-import io.github.drumber.kitsune.domain.model.infrastructure.production.Character
+import io.github.drumber.kitsune.domain.model.infrastructure.character.Character
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
 import io.github.drumber.kitsune.domain.model.infrastructure.user.UserImageUpload
 import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLink
@@ -210,7 +210,7 @@ class EditProfileViewModel(
         val user = userRepository.user ?: return
         val changes = profileState
         val waifu = if (changes.character != null && changes.waifuOrHusbando.isNotBlank()) {
-            Character(id = changes.character.id.toString(), null, null, null, null, null)
+            Character(id = changes.character.id.toString(), null, null, null, null, null, null, null)
         } else {
             null
         }

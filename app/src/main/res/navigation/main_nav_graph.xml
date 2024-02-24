@@ -46,14 +46,14 @@
             app:destination="@id/details_fragment"
             app:launchSingleTop="true" />
         <action
-            android:id="@+id/action_profile_fragment_to_photo_view_activity"
-            app:destination="@id/photo_view_activity" />
-        <action
             android:id="@+id/action_profile_fragment_to_settings_nav_graph"
             app:destination="@id/settings_nav_graph" />
         <action
             android:id="@+id/action_profile_fragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_profile_fragment_to_characterDetailsBottomSheet"
+            app:destination="@id/characterDetailsBottomSheet" />
     </fragment>
     <fragment
         android:id="@+id/details_fragment"
@@ -77,9 +77,6 @@
         <action
             android:id="@+id/action_details_fragment_to_characters_fragment"
             app:destination="@id/characters_fragment" />
-        <action
-            android:id="@+id/action_details_fragment_to_photoViewActivity"
-            app:destination="@id/photo_view_activity" />
         <action
             android:id="@+id/action_details_fragment_to_libraryEditEntryFragment"
             app:destination="@id/libraryEditEntryFragment" />
@@ -143,9 +140,6 @@
             android:name="libraryEntryId"
             app:argType="string"
             app:nullable="true" />
-        <action
-            android:id="@+id/action_episodes_fragment_to_photo_view_activity"
-            app:destination="@id/photo_view_activity" />
     </fragment>
     <fragment
         android:id="@+id/characters_fragment"
@@ -157,6 +151,9 @@
         <argument
             android:name="isAnime"
             app:argType="boolean" />
+        <action
+            android:id="@+id/action_characters_fragment_to_characterDetailsBottomSheet"
+            app:destination="@id/characterDetailsBottomSheet" />
     </fragment>
     <activity
         android:id="@+id/photo_view_activity"
@@ -223,4 +220,18 @@
         android:id="@+id/editProfileFragment"
         android:name="io.github.drumber.kitsune.ui.profile.editprofile.EditProfileFragment"
         android:label="EditProfileFragment" />
+    <dialog
+        android:id="@+id/characterDetailsBottomSheet"
+        android:name="io.github.drumber.kitsune.ui.details.characters.CharacterDetailsBottomSheet"
+        android:label="CharacterDetailsBottomSheet" >
+        <argument
+            android:name="character"
+            app:argType="io.github.drumber.kitsune.domain.model.infrastructure.character.Character" />
+        <action
+            android:id="@+id/action_characterDetailsBottomSheet_to_details_fragment"
+            app:destination="@id/details_fragment" />
+    </dialog>
+    <action
+        android:id="@+id/action_global_photo_view_activity"
+        app:destination="@id/photo_view_activity" />
 </navigation>

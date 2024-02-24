@@ -5,13 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.domain.model.ui.media.MediaUnitAdapter
 import io.github.drumber.kitsune.databinding.SheetMediaUnitDetailsBinding
+import io.github.drumber.kitsune.domain.model.ui.media.MediaUnitAdapter
 import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
 import io.github.drumber.kitsune.domain.model.ui.media.smallOrHigher
+import io.github.drumber.kitsune.ui.details.photoview.PhotoViewActivityDirections
 
 class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {
 
@@ -37,7 +38,7 @@ class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {
         binding.ivThumbnail.setOnClickListener {
             mediaUnit?.thumbnail?.originalOrDown()?.let { imageUrl ->
                 val title = mediaUnit.title(requireContext())
-                val action = EpisodesFragmentDirections.actionEpisodesFragmentToPhotoViewActivity(imageUrl, title, thumbnailUrl)
+                val action = PhotoViewActivityDirections.actionGlobalPhotoViewActivity(imageUrl, title, thumbnailUrl)
                 findNavController().navigate(action)
             }
         }

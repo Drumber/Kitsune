@@ -37,6 +37,7 @@
     <string name="action_synchronize">Synchronize</string>
     <string name="action_save_in_gallery">Save in Gallery</string>
     <string name="action_open_in_browser">Open in Browser</string>
+    <string name="action_open_on_mal">Open on MyAnimeList.net</string>
     <string name="action_save_changes">Save Changes</string>
     <string name="action_edit_profile">Edit Profile</string>
     <string name="action_update_profile">Update Profile</string>
@@ -95,6 +96,7 @@
     <string name="sort_release_date_desc">Latest</string>
 
     <string name="title_media_type">Media Type</string>
+    <string name="title_character_appearances">Character Appearances</string>
     <string name="title_categories">Categories</string>
     <string name="title_filter">Filter</string>
     <string name="title_description">Description</string>
@@ -125,6 +127,11 @@
     <string name="status_unreleased">Unreleased</string>
     <string name="status_upcoming">Upcoming</string>
 
+    <string name="character_role_main">Main</string>
+    <string name="character_role_supporting">Supporting</string>
+    <string name="character_role_recurring">Recurring</string>
+    <string name="character_role_cameo">Cameo</string>
+
     <string name="library_status_watching">Watching</string>
     <string name="library_status_planned">Want to Watch</string>
     <string name="library_status_completed">Completed</string>
@@ -146,6 +153,7 @@
     <string name="data_title_japanese">Japanese</string>
     <string name="data_title_japanese_romaji">Japanese (Romaji)</string>
     <string name="data_abbreviated_titles">Synonyms</string>
+    <string name="data_other_names">Also known as</string>
     <string name="data_title_type">Type</string>
     <string name="data_title_status">Status</string>
     <string name="data_title_aired">Aired</string>

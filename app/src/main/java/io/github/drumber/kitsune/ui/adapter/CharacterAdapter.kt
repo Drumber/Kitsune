@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.domain.model.infrastructure.production.Character
 import io.github.drumber.kitsune.databinding.ItemSingleCharacterBinding
+import io.github.drumber.kitsune.domain.model.infrastructure.character.Character
 import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -32,7 +32,7 @@ class CharacterAdapter(
 
     override fun getItemCount() = dataSet.size
 
-    inner class SingleCharacterViewHolder(val binding: ItemSingleCharacterBinding) :
+    inner class SingleCharacterViewHolder(private val binding: ItemSingleCharacterBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(character: Character) {

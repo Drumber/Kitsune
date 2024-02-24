@@ -5,7 +5,7 @@ import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
 import io.github.drumber.kitsune.domain.model.infrastructure.image.Image
-import io.github.drumber.kitsune.domain.model.infrastructure.production.Character
+import io.github.drumber.kitsune.domain.model.infrastructure.character.Character
 import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLink
 import io.github.drumber.kitsune.domain.model.infrastructure.user.stats.Stats
 import kotlinx.parcelize.Parcelize

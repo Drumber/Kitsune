@@ -17,7 +17,7 @@ import io.github.drumber.kitsune.databinding.FragmentCharactersBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.ui.adapter.paging.CharacterPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
-import io.github.drumber.kitsune.util.extensions.openCharacterOnMAL
+import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
@@ -62,9 +62,8 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters) 
             viewModel.setLanguage(language)
         }
         val pagingAdapter = CharacterPagingAdapter(Glide.with(this)) { _, character ->
-            character.malId?.let { malId ->
-                openCharacterOnMAL(malId)
-            }
+            val action = CharactersFragmentDirections.actionCharactersFragmentToCharacterDetailsBottomSheet(character)
+            findNavController().navigateSafe(R.id.characters_fragment, action)
         }
         val concatAdapter = ConcatAdapter(
             filterAdapter,

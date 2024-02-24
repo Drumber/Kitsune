@@ -10,6 +10,7 @@ import io.github.drumber.kitsune.domain.model.infrastructure.user.TitleLanguageP
 import io.github.drumber.kitsune.preference.KitsunePref
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 object DataUtil {
 
@@ -45,6 +46,17 @@ object DataUtil {
                 ?: canonical.nb() ?: title?.en.nb() ?: title?.jaJp
             TitleLanguagePreference.English -> title?.en.nb()
                 ?: canonical.nb() ?: title?.enJp.nb() ?: title?.jaJp
+        }
+    }
+
+    @JvmStatic
+    fun <T> Map<String, T>.mapLanguageCodesToDisplayName(includeCountry: Boolean = true): Map<String, T> {
+        return mapKeys {
+            val locale = Locale.forLanguageTag(it.key.replace('_', '-'))
+            if (includeCountry && it.key.lowercase().split('_').toSet().size > 1)
+                locale.displayName
+            else
+                locale.displayLanguage
         }
     }
 
