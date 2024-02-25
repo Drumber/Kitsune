@@ -33,7 +33,7 @@ val viewModelModule = module {
     viewModel { DetailsViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { EpisodesViewModel(get(), get(), get(), get(), get()) }
     viewModel { CharactersViewModel(get(), get()) }
-    viewModel { CharacterDetailsViewModel(get()) }
+    viewModel { CharacterDetailsViewModel(get(), get(), get()) }
     viewModel { SettingsViewModel(get(), get()) }
     viewModel { AppLogsViewModel() }
 }

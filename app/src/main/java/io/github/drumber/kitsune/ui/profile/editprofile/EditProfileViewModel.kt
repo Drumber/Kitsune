@@ -210,7 +210,7 @@ class EditProfileViewModel(
         val user = userRepository.user ?: return
         val changes = profileState
         val waifu = if (changes.character != null && changes.waifuOrHusbando.isNotBlank()) {
-            Character(id = changes.character.id.toString(), null, null, null, null, null, null, null)
+            Character(id = changes.character.id.toString())
         } else {
             null
         }

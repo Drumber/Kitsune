@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -77,10 +78,27 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
-                binding.progressBar.isVisible = state.isLoading
-                binding.loadingWrapper.isVisible = state.isLoading || !state.hasMediaCharacters
-                binding.tvNoData.isVisible = !state.isLoading && !state.hasMediaCharacters
-                binding.rvMediaCharacters.isVisible = !state.isLoading && state.hasMediaCharacters
+                val isLoading = state.isLoadingMediaCharacters
+                binding.progressBar.isVisible = isLoading
+                binding.loadingWrapper.isVisible = isLoading || !state.hasMediaCharacters
+                binding.tvNoData.isVisible = !isLoading && !state.hasMediaCharacters
+                binding.rvMediaCharacters.isVisible = !isLoading && state.hasMediaCharacters
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.favoriteFlow.collectLatest { favorite ->
+                binding.btnFavorite.setIconResource(
+                    if (favorite != null) R.drawable.ic_favorite_24
+                    else R.drawable.ic_favorite_border_24
+                )
+                TooltipCompat.setTooltipText(
+                    binding.btnFavorite,
+                    getString(
+                        if (favorite != null) R.string.action_remove_from_favorites
+                        else R.string.action_add_to_favorites
+                    )
+                )
             }
         }
 
@@ -105,7 +123,7 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
         }
 
         binding.btnFavorite.setOnClickListener {
-            // TODO: implement add to favorites/remove from favorites
+            viewModel.toggleFavorite()
         }
     }
 

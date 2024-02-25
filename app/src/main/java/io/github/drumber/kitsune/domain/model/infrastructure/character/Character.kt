@@ -13,13 +13,13 @@ import kotlinx.parcelize.Parcelize
 data class Character(
     @Id
     val id: String?,
-    val slug: String?,
-    val name: String?,
-    val names: Titles?,
-    val otherNames: List<String>?,
-    val malId: Int?,
-    val description: String?,
-    val image: Image?,
+    val slug: String? = null,
+    val name: String? = null,
+    val names: Titles? = null,
+    val otherNames: List<String>? = null,
+    val malId: Int? = null,
+    val description: String? = null,
+    val image: Image? = null,
 
     @Relationship("mediaCharacters")
     val mediaCharacters: List<MediaCharacter>? = null
