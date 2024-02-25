@@ -11,15 +11,12 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityOptionsCompat
 import androidx.core.os.bundleOf
-import androidx.core.view.ViewCompat
 import androidx.core.view.children
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.ActivityNavigatorExtras
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -62,13 +59,13 @@ import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.LibraryUpdateResult
-import io.github.drumber.kitsune.ui.details.photoview.PhotoViewActivityDirections
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle
 import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle.applyStyle
 import io.github.drumber.kitsune.ui.widget.chart.StepAxisValueFormatter
 import io.github.drumber.kitsune.util.DataUtil.mapLanguageCodesToDisplayName
 import io.github.drumber.kitsune.util.extensions.getColor
 import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.extensions.toPx
@@ -170,7 +167,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             viewModel.mediaAdapter.value?.let { mediaAdapter ->
                 val title = mediaAdapter.title
                 mediaAdapter.media.posterImage?.originalOrDown()?.let { imageUrl ->
-                    openImageViewer(imageUrl, title, mediaAdapter.posterImage, binding.ivThumbnail)
+                    openPhotoViewActivity(imageUrl, title, mediaAdapter.posterImage, binding.ivThumbnail)
                 }
             }
         }
@@ -179,7 +176,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             viewModel.mediaAdapter.value?.let { mediaAdapter ->
                 val title = mediaAdapter.title
                 mediaAdapter.media.coverImage?.originalOrDown()?.let { imageUrl ->
-                    openImageViewer(imageUrl, title, mediaAdapter.coverImage, binding.ivCover)
+                    openPhotoViewActivity(imageUrl, title, mediaAdapter.coverImage, binding.ivCover)
                 }
             }
         }
@@ -581,32 +578,6 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 startActivity(intent)
             }
         }.show()
-    }
-
-    private fun openImageViewer(
-        imageUrl: String,
-        title: String?,
-        thumbnailUrl: String?,
-        sharedElement: View?
-    ) {
-        val transitionName = sharedElement?.let { ViewCompat.getTransitionName(it) }
-        val action = PhotoViewActivityDirections.actionGlobalPhotoViewActivity(
-            imageUrl,
-            title,
-            thumbnailUrl,
-            transitionName
-        )
-        val options = if (sharedElement != null && transitionName != null) {
-            ActivityOptionsCompat.makeSceneTransitionAnimation(
-                requireActivity(),
-                sharedElement,
-                transitionName
-            )
-        } else {
-            null
-        }
-        val extras = ActivityNavigatorExtras(options)
-        findNavController().navigate(action, extras)
     }
 
     private fun goBack() {

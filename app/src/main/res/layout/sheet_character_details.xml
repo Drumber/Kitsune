@@ -24,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp">
+                android:layout_marginVertical="10dp">
 
                 <TextView
                     android:layout_width="0dp"
@@ -57,6 +57,7 @@
                     android:scaleType="fitCenter"
                     android:adjustViewBounds="true"
                     android:src="@drawable/ic_insert_photo_48"
+                    android:transitionName="@string/character_picture_transition_name"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"/>
 
@@ -79,7 +80,7 @@
 
                         <include
                             layout="@layout/item_details_info_row"
-                            app:isVisible="@{!character.otherNames.empty}"
+                            app:isVisible="@{character.otherNames != null &amp;&amp; !character.otherNames.empty}"
                             app:title="@{@string/data_other_names}"
                             app:value='@{character.otherNames != null ? TextUtils.join(", ", character.otherNames) : ""}' />
 
@@ -122,6 +123,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:text="@string/title_character_appearances"
                 android:textAppearance="?attr/textAppearanceHeadlineSmall" />

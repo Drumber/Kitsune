@@ -12,12 +12,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.StringRes
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.view.ViewCompat
 import androidx.core.view.children
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
-import androidx.navigation.ActivityNavigatorExtras
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -52,9 +49,9 @@ import io.github.drumber.kitsune.ui.adapter.MediaViewHolder
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
-import io.github.drumber.kitsune.ui.details.photoview.PhotoViewActivityDirections
 import io.github.drumber.kitsune.ui.widget.chart.PieChartStyle
 import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.openUrl
 import io.github.drumber.kitsune.util.extensions.recyclerView
 import io.github.drumber.kitsune.util.extensions.setAppTheme
@@ -138,7 +135,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
                     ?: return@setOnClickListener
                 val title = (viewModel.fullUserModel.value?.data?.name
                     ?: viewModel.userModel.value?.name)?.let { "$it Cover" }
-                openImageViewer(coverImgUrl, title, null, ivCover)
+                openPhotoViewActivity(coverImgUrl, title, null, ivCover)
             }
 
             layoutWaifuRow.ivIcon.setOnClickListener {
@@ -147,7 +144,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
                     ?: return@setOnClickListener
                 val imageUrl = waifu.image?.originalOrDown() ?: return@setOnClickListener
                 val title = waifu.name ?: getString(R.string.profile_data_waifu)
-                openImageViewer(imageUrl, title, null, layoutWaifuRow.ivIcon)
+                openPhotoViewActivity(imageUrl, title, null, layoutWaifuRow.ivIcon)
             }
         }
 
@@ -199,7 +196,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
                 ?: return@setOnClickListener
             val title = (viewModel.fullUserModel.value?.data?.name
                 ?: viewModel.userModel.value?.name)?.let { "$it Avatar" }
-            openImageViewer(avatarImgUrl, title, null, logoView)
+            openPhotoViewActivity(avatarImgUrl, title, null, logoView)
         }
     }
 
@@ -438,32 +435,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
             findItem(R.id.menu_log_out).isVisible = isLoggedIn
             findItem(R.id.menu_share_profile_url).isVisible = isLoggedIn
         }
-    }
-
-    private fun openImageViewer(
-        imageUrl: String,
-        title: String?,
-        thumbnailUrl: String?,
-        sharedElement: View?
-    ) {
-        val transitionName = sharedElement?.let { ViewCompat.getTransitionName(it) }
-        val action = PhotoViewActivityDirections.actionGlobalPhotoViewActivity(
-            imageUrl,
-            title,
-            thumbnailUrl,
-            transitionName
-        )
-        val options = if (sharedElement != null && transitionName != null) {
-            ActivityOptionsCompat.makeSceneTransitionAnimation(
-                requireActivity(),
-                sharedElement,
-                transitionName
-            )
-        } else {
-            null
-        }
-        val extras = ActivityNavigatorExtras(options)
-        findNavController().navigate(action, extras)
     }
 
     private fun showLogOutConfirmationDialog() {

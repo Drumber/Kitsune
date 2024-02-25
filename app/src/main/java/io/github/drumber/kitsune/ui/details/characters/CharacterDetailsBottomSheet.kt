@@ -22,10 +22,10 @@ import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
 import io.github.drumber.kitsune.domain.model.ui.media.smallOrHigher
 import io.github.drumber.kitsune.ui.adapter.MediaCharacterAdapter
-import io.github.drumber.kitsune.ui.details.photoview.PhotoViewActivityDirections
 import io.github.drumber.kitsune.util.DataUtil.mapLanguageCodesToDisplayName
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openCharacterOnMAL
+import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.toPx
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -89,12 +89,12 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
                 ?: return@setOnClickListener
 
             fullCharacter.image?.originalOrDown()?.let { imageUrl ->
-                val action = PhotoViewActivityDirections.actionGlobalPhotoViewActivity(
+                openPhotoViewActivity(
                     imageUrl,
                     fullCharacter.name,
-                    fullCharacter.image.smallOrHigher()
+                    fullCharacter.image.smallOrHigher(),
+                    binding.ivCharacter
                 )
-                findNavController().navigate(action)
             }
         }
 
