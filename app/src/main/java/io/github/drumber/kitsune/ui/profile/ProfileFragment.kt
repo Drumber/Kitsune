@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.StringRes
@@ -138,14 +139,16 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
                 openPhotoViewActivity(coverImgUrl, title, null, ivCover)
             }
 
-            layoutWaifuRow.ivIcon.setOnClickListener {
-                val waifu = viewModel.fullUserModel.value?.data?.waifu
-                    ?: viewModel.userModel.value?.waifu
-                    ?: return@setOnClickListener
-                val imageUrl = waifu.image?.originalOrDown() ?: return@setOnClickListener
-                val title = waifu.name ?: getString(R.string.profile_data_waifu)
-                openPhotoViewActivity(imageUrl, title, null, layoutWaifuRow.ivIcon)
+            val onWaifuClicked: OnClickListener = object : OnClickListener {
+                override fun onClick(v: View?) {
+                    val waifu = viewModel.fullUserModel.value?.data?.waifu
+                        ?: viewModel.userModel.value?.waifu
+                        ?: return
+                    openCharacterDetailsBottomSheet(waifu)
+                }
             }
+            layoutWaifuRow.root.setOnClickListener(onWaifuClicked)
+            layoutWaifuRow.tvValue.setOnClickListener(onWaifuClicked)
         }
 
         initStatsViewPager()
@@ -405,7 +408,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
                 CopyOnWriteArrayList(data),
                 glide,
             ) { _, character ->
-                onFavoriteCharacterItemClicked(character)
+                openCharacterDetailsBottomSheet(character)
             }
             recyclerView.adapter = adapter
         } else {
@@ -423,7 +426,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
         findNavController().navigateSafe(R.id.profile_fragment, action, extras)
     }
 
-    private fun onFavoriteCharacterItemClicked(character: Character) {
+    private fun openCharacterDetailsBottomSheet(character: Character) {
         val action = ProfileFragmentDirections.actionProfileFragmentToCharacterDetailsBottomSheet(character)
         findNavController().navigateSafe(R.id.profile_fragment, action)
     }
