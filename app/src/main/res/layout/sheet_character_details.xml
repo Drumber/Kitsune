@@ -10,166 +10,173 @@
             type="io.github.drumber.kitsune.domain.model.infrastructure.character.Character" />
     </data>
 
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:padding="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@{character.name}"
+                style="@style/Widget.Kitsune.TextView.BottomSheetTitle"
+                tools:text="Character Name"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                app:icon="@drawable/ic_favorite_border_24"
+                app:tooltip="@{@string/action_add_to_favorites}"
+                app:iconTint="?attr/colorControlNormal"
+                style="?attr/materialIconButtonStyle" />
+
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginVertical="10dp">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dp">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@{character.name}"
-                    style="@style/Widget.Kitsune.TextView.BottomSheetTitle"
-                    tools:text="Character Name"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_favorite"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    app:icon="@drawable/ic_favorite_border_24"
-                    app:tooltip="@{@string/action_add_to_favorites}"
-                    app:iconTint="?attr/colorControlNormal"
-                    style="?attr/materialIconButtonStyle" />
+                    <ImageView
+                        android:id="@+id/iv_character"
+                        android:layout_width="@dimen/media_item_width_small"
+                        android:layout_height="wrap_content"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ic_insert_photo_48"
+                        android:transitionName="@string/character_picture_transition_name"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"/>
 
-            </LinearLayout>
-            
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@id/iv_character"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true">
 
-                <ImageView
-                    android:id="@+id/iv_character"
-                    android:layout_width="@dimen/media_item_width_small"
-                    android:layout_height="wrap_content"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/ic_insert_photo_48"
-                    android:transitionName="@string/character_picture_transition_name"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"/>
+                        <TableLayout
+                            android:id="@+id/table_names"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:stretchColumns="0,1">
+
+                            <!-- Names will be dynamically added in code -->
+
+                            <include
+                                layout="@layout/item_details_info_row"
+                                app:isVisible="@{character.otherNames != null &amp;&amp; !character.otherNames.empty}"
+                                app:title="@{@string/data_other_names}"
+                                app:value='@{character.otherNames != null ? TextUtils.join(", ", character.otherNames) : ""}' />
+
+                        </TableLayout>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_toEndOf="@id/iv_character"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true">
+                    android:layout_marginTop="20dp"
+                    app:isVisible="@{!TextUtils.isEmpty(character.description)}">
 
-                    <TableLayout
-                        android:id="@+id/table_names"
+                    <at.blogc.android.views.ExpandableTextView
+                        android:id="@+id/tv_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:stretchColumns="0,1">
+                        android:scrollbars="none"
+                        android:text="@{character.description}"
+                        android:maxLines="5"
+                        android:ellipsize="end"
+                        app:actionButton="@{btnExpandCollapse}"
+                        app:animation_duration="200"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        tools:text="@tools:sample/lorem/random" />
 
-                        <!-- Names will be dynamically added in code -->
-
-                        <include
-                            layout="@layout/item_details_info_row"
-                            app:isVisible="@{character.otherNames != null &amp;&amp; !character.otherNames.empty}"
-                            app:title="@{@string/data_other_names}"
-                            app:value='@{character.otherNames != null ? TextUtils.join(", ", character.otherNames) : ""}' />
-
-                    </TableLayout>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_expand_collapse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/action_read_more"
+                        android:layout_gravity="end"
+                        style="@style/Widget.Material3.Button.TextButton" />
 
                 </LinearLayout>
 
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="20dp"
-                app:isVisible="@{!TextUtils.isEmpty(character.description)}">
-
-                <at.blogc.android.views.ExpandableTextView
-                    android:id="@+id/tv_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="none"
-                    android:text="@{character.description}"
-                    android:maxLines="5"
-                    android:ellipsize="end"
-                    app:actionButton="@{btnExpandCollapse}"
-                    app:animation_duration="200"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    tools:text="@tools:sample/lorem/random" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_expand_collapse"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/action_read_more"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/title_character_appearances"
+                    android:textAppearance="?attr/textAppearanceHeadlineSmall" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_media_characters"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:paddingVertical="5dp"
+                    android:requiresFadingEdge="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                <FrameLayout
+                    android:id="@+id/loading_wrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/media_item_height_small">
+
+                    <ProgressBar
+                        android:id="@+id/progress_bar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/tv_no_data"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/no_data_available" />
+
+                </FrameLayout>
+
+                <Button
+                    android:id="@+id/btn_open_on_mal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:layout_gravity="end"
-                    style="@style/Widget.Material3.Button.TextButton" />
+                    android:text="@string/action_open_on_mal"
+                    app:icon="@drawable/ic_open_in_new_24"
+                    style="@style/Widget.Material3.Button.TextButton.Icon" />
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:text="@string/title_character_appearances"
-                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
+        </androidx.core.widget.NestedScrollView>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_media_characters"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                android:clipToPadding="false"
-                android:orientation="horizontal"
-                android:paddingVertical="5dp"
-                android:requiresFadingEdge="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-            <FrameLayout
-                android:id="@+id/loading_wrapper"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/media_item_height_small">
-
-                <ProgressBar
-                    android:id="@+id/progress_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"/>
-
-                <TextView
-                    android:id="@+id/tv_no_data"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/no_data_available" />
-
-            </FrameLayout>
-
-            <Button
-                android:id="@+id/btn_open_on_mal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_gravity="end"
-                android:text="@string/action_open_on_mal"
-                app:icon="@drawable/ic_open_in_new_24"
-                style="@style/Widget.Material3.Button.TextButton.Icon" />
-
-        </LinearLayout>
-
-    </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
 </layout>
