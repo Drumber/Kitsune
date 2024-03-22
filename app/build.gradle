@@ -92,8 +92,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.11.0'
 
     // Kotlin coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0'
 
     // Paging
     implementation 'androidx.paging:paging-runtime-ktx:3.2.1'
@@ -126,7 +126,7 @@ dependencies {
     implementation 'com.github.jasminb:jsonapi-converter:0.13'
 
     // Jackson
-    def jackson_version = "2.16.1"
+    def jackson_version = "2.17.0"
     implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
 
@@ -185,7 +185,7 @@ dependencies {
     implementation "app.futured.hauler:databinding:$hauler_version"
 
     // AboutLibraries
-    def aboutLibraries_version = "10.10.0"
+    def aboutLibraries_version = "11.1.0"
     implementation "com.mikepenz:aboutlibraries-core:$aboutLibraries_version"
     implementation "com.mikepenz:aboutlibraries:$aboutLibraries_version"
 
@@ -206,7 +206,7 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.5.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0'
     testImplementation "io.insert-koin:koin-test-junit4:$koin_version"
     testImplementation 'org.mockito.kotlin:mockito-kotlin:5.2.1'
     testImplementation 'net.datafaker:datafaker:2.0.1'
