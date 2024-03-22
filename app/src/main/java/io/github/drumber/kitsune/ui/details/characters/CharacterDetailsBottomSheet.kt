@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.ui.details.characters
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,8 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat.AnimationCallback
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -88,10 +91,20 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.favoriteFlow.collectLatest { favorite ->
-                binding.btnFavorite.setIconResource(
-                    if (favorite != null) R.drawable.ic_favorite_24
-                    else R.drawable.ic_favorite_border_24
-                )
+                val icon = binding.btnFavorite.icon
+                if (favorite != null && icon is AnimatedVectorDrawableCompat) {
+                    icon.registerAnimationCallback(object : AnimationCallback() {
+                        override fun onAnimationEnd(drawable: Drawable?) {
+                            binding.btnFavorite.setIconResource(R.drawable.ic_favorite_24)
+                        }
+                    })
+                } else {
+                    binding.btnFavorite.setIconResource(
+                        if (favorite != null) R.drawable.ic_favorite_24
+                        else R.drawable.ic_favorite_border_24
+                    )
+                }
+
                 TooltipCompat.setTooltipText(
                     binding.btnFavorite,
                     getString(
@@ -123,7 +136,24 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
         }
 
         binding.btnFavorite.setOnClickListener {
-            viewModel.toggleFavorite()
+            val addToFavorite = viewModel.toggleFavorite()
+            if (addToFavorite) {
+                AnimatedVectorDrawableCompat.create(requireContext(), R.drawable.animated_favorite)
+                    ?.apply {
+                        binding.btnFavorite.icon = this
+                        registerAnimationCallback(object : AnimationCallback() {
+                            var originalTintColor = binding.btnFavorite.iconTint
+                            override fun onAnimationStart(drawable: Drawable?) {
+                                binding.btnFavorite.iconTint = null
+                            }
+
+                            override fun onAnimationEnd(drawable: Drawable?) {
+                                binding.btnFavorite.iconTint = originalTintColor
+                            }
+                        })
+                        start()
+                    }
+            }
         }
     }
 

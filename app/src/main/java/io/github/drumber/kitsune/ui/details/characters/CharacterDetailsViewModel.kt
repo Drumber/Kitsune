@@ -102,17 +102,19 @@ class CharacterDetailsViewModel(
         }
     }
 
-    fun toggleFavorite() {
-        val characterId = characterFlow.replayCache.firstOrNull()?.id ?: return
-        val userId = userRepository.user?.id ?: return
+    fun toggleFavorite(): Boolean {
+        val characterId = characterFlow.replayCache.firstOrNull()?.id ?: return false
+        val userId = userRepository.user?.id ?: return false
         val favorite = favoriteFlow.replayCache.firstOrNull()
 
         viewModelScope.launch(Dispatchers.IO) {
             if (favorite == null) {
-                val addedFavorite = addToFavorites(userId, characterId) ?: return@launch
+                val addedFavorite = addToFavorites(userId, characterId)
+                    ?: return@launch _favoriteFlow.emit(null)
                 _favoriteFlow.emit(addedFavorite)
             } else {
-                val favoriteId = favorite.id ?: return@launch
+                val favoriteId = favorite.id
+                    ?: return@launch _favoriteFlow.emit(favorite)
                 if (removeFromFavorites(favoriteId)) {
                     _favoriteFlow.emit(null)
                 }
@@ -121,6 +123,7 @@ class CharacterDetailsViewModel(
             // trigger user model update to show updated favorites on the profile fragment
             userRepository.user?.let { userRepository.updateUserModel(it) }
         }
+        return favorite == null
     }
 
     private suspend fun addToFavorites(userId: String, characterId: String): Favorite? {
