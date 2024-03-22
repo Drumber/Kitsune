@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.ui.details
 
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
@@ -20,6 +21,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -167,7 +170,12 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             viewModel.mediaAdapter.value?.let { mediaAdapter ->
                 val title = mediaAdapter.title
                 mediaAdapter.media.posterImage?.originalOrDown()?.let { imageUrl ->
-                    openPhotoViewActivity(imageUrl, title, mediaAdapter.posterImage, binding.ivThumbnail)
+                    openPhotoViewActivity(
+                        imageUrl,
+                        title,
+                        mediaAdapter.posterImage,
+                        binding.ivThumbnail
+                    )
                 }
             }
         }
@@ -282,7 +290,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                         if (viewModel.isLoggedIn()) {
                             // update icon immediately before waiting for response
                             val willBeFavorite = viewModel.favorite.value == null
-                            updateFavoriteIcon(willBeFavorite)
+                            updateFavoriteIcon(willBeFavorite, true)
                             // send update to server
                             viewModel.toggleFavorite()
                         } else {
@@ -298,21 +306,35 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
     }
 
-    private fun updateFavoriteIcon(isFavorite: Boolean) {
-        binding.toolbar.menu.findItem(R.id.menu_favorite).apply {
-            setIcon(
-                if (isFavorite)
-                    R.drawable.ic_favorite_24
-                else
-                    R.drawable.ic_favorite_border_24
-            )
-            setTitle(
-                if (isFavorite)
-                    R.string.action_remove_from_favorites
-                else
-                    R.string.action_add_to_favorites
+    private fun updateFavoriteIcon(isFavorite: Boolean, isUserAction: Boolean = false) {
+        val menuItem = binding.toolbar.menu.findItem(R.id.menu_favorite)
+
+        if (isFavorite && isUserAction) {
+            AnimatedVectorDrawableCompat.create(
+                requireContext(),
+                R.drawable.animated_favorite
+            )?.apply {
+                menuItem.icon = this
+                registerAnimationCallback(object : Animatable2Compat.AnimationCallback() {
+                    override fun onAnimationEnd(drawable: Drawable?) {
+                        menuItem.setIcon(R.drawable.ic_favorite_24)
+                    }
+                })
+                start()
+            }
+        } else if (menuItem.icon !is AnimatedVectorDrawableCompat || !isFavorite) {
+            menuItem.setIcon(
+                if (isFavorite) R.drawable.ic_favorite_24
+                else R.drawable.ic_favorite_border_24
             )
         }
+
+        menuItem.setTitle(
+            if (isFavorite)
+                R.string.action_remove_from_favorites
+            else
+                R.string.action_add_to_favorites
+        )
     }
 
     private fun updateTitlesInDetailsTable(titles: Titles?) {
