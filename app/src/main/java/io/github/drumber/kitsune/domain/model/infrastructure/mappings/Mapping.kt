@@ -15,6 +15,7 @@ data class Mapping(
 ) : Parcelable
 
 fun Mapping.getSiteName() = when (externalSite) {
+    "kitsu/anime", "kitsu/manga" -> "Kitsu"
     "anidb" -> "AniDB"
     "anilist", "anilist/anime", "anilist/manga" -> "AniList"
     "myanimelist", "myanimelist/anime", "myanimelist/manga" -> "MyAnimeList"
@@ -25,6 +26,8 @@ fun Mapping.getSiteName() = when (externalSite) {
 }
 
 fun Mapping.getExternalUrl() = when (externalSite) {
+    "kitsu/anime" -> "https://kitsu.io/anime/$externalId"
+    "kitsu/manga" -> "https://kitsu.io/manga/$externalId"
     "anidb" -> "https://anidb.net/anime/$externalId"
     "anilist/anime" -> "https://anilist.co/anime/$externalId"
     "anilist/manga" -> "https://anilist.co/manga/$externalId"

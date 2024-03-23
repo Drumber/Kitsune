@@ -252,8 +252,15 @@ class DetailsViewModel(
                     mappingService.getAnimeMappings(mediaAdapter.id).get()
                 } else {
                     mappingService.getMangaMappings(mediaAdapter.id).get()
-                }
-                MediaMappingsSate.Success(mappings ?: emptyList())
+                } ?: emptyList()
+
+                val mappingsWithKitsu = mappings + Mapping(
+                    id = null,
+                    externalSite = "kitsu/" + if (mediaAdapter.isAnime()) "anime" else "manga",
+                    externalId = mediaAdapter.media.slug ?: mediaAdapter.media.id
+                )
+
+                MediaMappingsSate.Success(mappingsWithKitsu)
             } catch (e: Exception) {
                 logE("Failed to load mappings.", e)
                 MediaMappingsSate.Error(e.message ?: "Failed to load mappings.")
