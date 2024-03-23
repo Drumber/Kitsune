@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.databinding.SheetMediaMappingsBinding
+import io.github.drumber.kitsune.domain.model.infrastructure.mappings.getExternalUrl
 import io.github.drumber.kitsune.ui.adapter.MediaMappingsAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -41,8 +42,11 @@ class MediaMappingsBottomSheet : BottomSheetDialogFragment() {
                 binding.listMediaMappings.isVisible = state is MediaMappingsSate.Success
 
                 if (state is MediaMappingsSate.Success) {
+                    val mappings = state.mappings
+                        .distinctBy { it.getExternalUrl() ?: it.externalSite }
+                        .sortedBy { it.externalSite }
                     adapter.dataSource.clear()
-                    adapter.dataSource.addAll(state.mappings.sortedBy { it.externalSite })
+                    adapter.dataSource.addAll(mappings)
                     adapter.notifyDataSetChanged()
                 }
             }
