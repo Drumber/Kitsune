@@ -297,6 +297,12 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                             showLogInSnackbar()
                         }
                     }
+
+                    R.id.menu_open_external -> {
+                        viewModel.loadMappingsIfNotAlreadyLoaded()
+                        val mappingsBottomSheet = MediaMappingsBottomSheet()
+                        mappingsBottomSheet.show(childFragmentManager, MediaMappingsBottomSheet.TAG)
+                    }
                 }
                 true
             }

@@ -30,6 +30,8 @@
     <string name="action_log_out">Log out</string>
     <string name="action_share_profile_url">Share Profile</string>
     <string name="action_share">Share</string>
+    <string name="action_open_external">Open on an external site</string>
+    <string name="action_open_external_short">External sites</string>
     <string name="action_share_app_logs">Share Logs</string>
     <string name="action_add_to_favorites">Add to favorites</string>
     <string name="action_remove_from_favorites">Remove from favorites</string>
@@ -70,6 +72,7 @@
 
     <string name="error_resource_loading">Could not load data.</string>
     <string name="error_image_loading">Failed to load image.</string>
+    <string name="error_mapping_loading">Failed to load mappings for external sites.</string>
     <string name="error_nothing_found">Nothing found.</string>
     <string name="error_invalid_user">Invalid User. Are you logged in?</string>
     <string name="error_user_update_failed">Failed to update user data.</string>

@@ -14,6 +14,7 @@ import io.github.drumber.kitsune.domain.mapper.toLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
 import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.SYNCHRONIZING
+import io.github.drumber.kitsune.domain.model.infrastructure.mappings.Mapping
 import io.github.drumber.kitsune.domain.model.infrastructure.user.Favorite
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
@@ -23,6 +24,7 @@ import io.github.drumber.kitsune.domain.service.Filter
 import io.github.drumber.kitsune.domain.service.anime.AnimeService
 import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.domain.service.manga.MangaService
+import io.github.drumber.kitsune.domain.service.mappings.MappingService
 import io.github.drumber.kitsune.domain.service.user.FavoriteService
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
@@ -36,6 +38,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -48,7 +52,8 @@ class DetailsViewModel(
     private val libraryManager: LibraryManager,
     private val animeService: AnimeService,
     private val mangaService: MangaService,
-    private val favoriteService: FavoriteService
+    private val favoriteService: FavoriteService,
+    private val mappingService: MappingService
 ) : ViewModel() {
 
     fun isLoggedIn() = userRepository.hasUser
@@ -65,6 +70,10 @@ class DetailsViewModel(
     private val _favorite = MutableLiveData<Favorite?>()
     val favorite: LiveData<Favorite?>
         get() = _favorite
+
+    private val _mappingsSate = MutableStateFlow<MediaMappingsSate>(MediaMappingsSate.Initial)
+    val mappingsSate
+        get() = _mappingsSate.asStateFlow()
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean>
@@ -231,6 +240,29 @@ class DetailsViewModel(
         }
     }
 
+    fun loadMappingsIfNotAlreadyLoaded() {
+        if (_mappingsSate.value != MediaMappingsSate.Initial) return
+        val mediaAdapter = mediaAdapter.value ?: return
+
+        viewModelScope.launch(Dispatchers.IO) {
+            _mappingsSate.value = MediaMappingsSate.Loading
+
+            val mappingsState = try {
+                val mappings = if (mediaAdapter.isAnime()) {
+                    mappingService.getAnimeMappings(mediaAdapter.id).get()
+                } else {
+                    mappingService.getMangaMappings(mediaAdapter.id).get()
+                }
+                MediaMappingsSate.Success(mappings ?: emptyList())
+            } catch (e: Exception) {
+                logE("Failed to load mappings.", e)
+                MediaMappingsSate.Error(e.message ?: "Failed to load mappings.")
+            }
+
+            _mappingsSate.value = mappingsState
+        }
+    }
+
     fun updateLibraryEntryStatus(status: LibraryStatus) {
         val userId = userRepository.user?.id ?: return
         val mediaAdapter = mediaAdapter.value ?: return
@@ -325,4 +357,11 @@ private sealed class InternalAction {
     data class LibraryUpdateResult(val result: SynchronizationResult) : InternalAction()
     data object AddNewLibraryEntryFailed : InternalAction()
     data object DeleteLibraryEntryFailed : InternalAction()
+}
+
+sealed class MediaMappingsSate {
+    data object Initial : MediaMappingsSate()
+    data object Loading : MediaMappingsSate()
+    data class Success(val mappings: List<Mapping>) : MediaMappingsSate()
+    data class Error(val message: String) : MediaMappingsSate()
 }

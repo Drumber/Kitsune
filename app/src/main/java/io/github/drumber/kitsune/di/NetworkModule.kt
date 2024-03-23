@@ -16,6 +16,7 @@ import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.domain.model.infrastructure.character.Character
 import io.github.drumber.kitsune.domain.model.infrastructure.character.MediaCharacter
 import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
+import io.github.drumber.kitsune.domain.model.infrastructure.mappings.Mapping
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
 import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
@@ -43,6 +44,7 @@ import io.github.drumber.kitsune.domain.service.github.GitHubApiService
 import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.domain.service.manga.ChaptersService
 import io.github.drumber.kitsune.domain.service.manga.MangaService
+import io.github.drumber.kitsune.domain.service.mappings.MappingService
 import io.github.drumber.kitsune.domain.service.production.CastingService
 import io.github.drumber.kitsune.domain.service.user.FavoriteService
 import io.github.drumber.kitsune.domain.service.user.ProfileLinkService
@@ -156,6 +158,13 @@ val networkModule = module {
             MediaCharacter::class.java,
             Anime::class.java,
             Manga::class.java
+        )
+    }
+    factory {
+        createService<MappingService>(
+            get(),
+            get(),
+            Mapping::class.java
         )
     }
     factory { createService<AlgoliaKeyService>(get(), get()) }

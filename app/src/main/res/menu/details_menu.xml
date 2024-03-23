@@ -12,6 +12,12 @@
         android:id="@+id/menu_share_media"
         android:title="@string/action_share"
         android:icon="@drawable/ic_share_24"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_open_external"
+        android:title="@string/action_open_external_short"
+        android:icon="@drawable/ic_open_in_new_24"
+        app:showAsAction="never" />
 
 </menu>

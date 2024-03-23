@@ -8,6 +8,7 @@
     <style name="Widget.Kitsune.TextView.BottomSheetTitle" parent="Widget.AppCompat.TextView">
         <item name="android:textAppearance">?attr/textAppearanceTitleMedium</item>
         <item name="android:textSize">18sp</item>
+        <item name="android:layout_marginTop">20dp</item>
         <item name="android:layout_marginBottom">20dp</item>
         <item name="android:maxLines">2</item>
         <item name="android:ellipsize">end</item>
