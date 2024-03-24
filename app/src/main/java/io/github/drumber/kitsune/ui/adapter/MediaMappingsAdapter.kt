@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.ui.adapter
 
+import android.app.SearchManager
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -54,13 +55,26 @@ class MediaMappingsAdapter(
         }
 
         binding.root.setOnClickListener {
-            val url = mapping.getExternalUrl()  ?: return@setOnClickListener
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            try {
-                context.startActivity(intent)
-            } catch (e: Exception) {
-                logE("Failed to open URL: $url", e)
-                context.showSomethingWrongToast()
+            val url = mapping.getExternalUrl()
+            if (url != null) {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                try {
+                    context.startActivity(intent)
+                } catch (e: Exception) {
+                    logE("Failed to open URL: $url", e)
+                    context.showSomethingWrongToast()
+                }
+            } else {
+                // do a web search
+                val query = "${mapping.externalSite} ${mapping.externalId}"
+                val intent = Intent(Intent.ACTION_WEB_SEARCH)
+                intent.putExtra(SearchManager.QUERY, query)
+                try {
+                    context.startActivity(intent)
+                } catch (e: Exception) {
+                    logE("Failed to do a web search for: $query", e)
+                    context.showSomethingWrongToast()
+                }
             }
         }
 
