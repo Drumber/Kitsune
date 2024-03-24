@@ -53,14 +53,18 @@ platform :android do
     )
   end
 
-  desc "Add a device frame to the screenshots and copy them to the media folder"
+  desc "Add a device frame to the screenshots and copy them to the phoneScreenshots and media folders"
   lane :process_screenshots do
     frameit(
       path: 'fastlane/screenshots'
     )
   	copy_artifacts(
-	  target_path: "media",
-	  artifacts: ["fastlane/screenshots/en-US/images/phoneScreenshots/*_framed.png"]
-	)
+      target_path: "media",
+      artifacts: ["fastlane/screenshots/en-US/images/phoneScreenshots/*_framed.png"]
+	  )
+	  copy_artifacts(
+      target_path: "fastlane/metadata/android/en-US/images/phoneScreenshots",
+      artifacts: ["fastlane/screenshots/en-US/images/phoneScreenshots/*_framed.png"]
+    )
   end
 end
