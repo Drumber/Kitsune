@@ -21,6 +21,7 @@ fun Mapping.getSiteName() = when (externalSite) {
     "myanimelist", "myanimelist/anime", "myanimelist/manga" -> "MyAnimeList"
     "thetvdb", "thetvdb/season", "thetvdb/series" -> "TheTVDB"
     "trakt" -> "Trakt"
+    "hulu" -> "Hulu"
     "mangaupdates" -> "Baka-Updates Manga"
     else -> null
 }
@@ -37,7 +38,7 @@ fun Mapping.getExternalUrl() = when (externalSite) {
     "thetvdb/series" -> "https://thetvdb.com/dereferrer/series/$externalId"
     "thetvdb" -> "https://thetvdb.com/dereferrer/series/${externalId?.replace(Regex("/.*"), "")}"
     "trakt" -> "https://trakt.tv/shows/$externalId"
-    "hulu" -> "https://www.hulu.com/series/$externalId"
+    "hulu" -> "https://hulu.jp/series/$externalId"
     "mangaupdates" -> "https://www.mangaupdates.com/series/$externalId"
     else -> null
 }
