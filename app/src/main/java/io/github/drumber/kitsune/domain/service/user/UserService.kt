@@ -3,9 +3,13 @@ package io.github.drumber.kitsune.domain.service.user
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.domain.model.infrastructure.user.User
 import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLink
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.PATCH
+import retrofit2.http.Path
+import retrofit2.http.QueryMap
 
 interface UserService {
 
@@ -27,9 +31,9 @@ interface UserService {
     ): JSONAPIDocument<User>
 
     @DELETE("users/{id}/relationships/waifu")
-    fun deleteWaifuRelationship(
+    suspend fun deleteWaifuRelationship(
         @Path("id") id: String
-    ): Call<ResponseBody>
+    ): Response<Unit>
 
     @GET("users/{id}/profile-links")
     suspend fun getProfileLinksForUser(

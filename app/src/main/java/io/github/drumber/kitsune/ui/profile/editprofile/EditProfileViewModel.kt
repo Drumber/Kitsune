@@ -256,15 +256,15 @@ class EditProfileViewModel(
         }
     }
 
-    private fun deleteWaifuRelationship(userId: String) {
+    private suspend fun deleteWaifuRelationship(userId: String) {
         logD("Deleting waifu relationship.")
-        val responseWaifu = service.deleteWaifuRelationship(userId).execute()
+        val responseWaifu = service.deleteWaifuRelationship(userId)
         if (!responseWaifu.isSuccessful) {
             throw ProfileUpdateException.ProfileDataError(ProfileDataErrorType.DeleteWaifu)
         }
     }
 
-    private fun uploadUserImages(useId: String, profileImages: ProfileImageContainer) {
+    private suspend fun uploadUserImages(useId: String, profileImages: ProfileImageContainer) {
         logD("Updating user image(s).")
         val body = UserImageUpload(
             id = useId,
@@ -272,7 +272,7 @@ class EditProfileViewModel(
             coverImage = profileImages.coverImage
         )
 
-        val response = imageUploadService.updateUserImage(useId, JSONAPIDocument(body)).execute()
+        val response = imageUploadService.updateUserImage(useId, JSONAPIDocument(body))
         if (!response.isSuccessful) {
             throw ProfileUpdateException.ProfileImageError()
         }
@@ -324,7 +324,6 @@ class EditProfileViewModel(
         deletedProfileLinks.forEach { profileLinkEntry ->
             try {
                 val response = profileLinkService.deleteProfileLink(profileLinkEntry.id!!)
-                    .execute()
                 if (!response.isSuccessful) {
                     throw ReceivedDataException("Failed to delete profile link.")
                 }

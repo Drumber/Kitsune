@@ -2,16 +2,17 @@ package io.github.drumber.kitsune.domain.service.user
 
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.domain.model.infrastructure.user.UserImageUpload
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.PATCH
+import retrofit2.http.Path
 
 interface UserImageUploadService {
 
     @PATCH("users/{id}")
-    fun updateUserImage(
+    suspend fun updateUserImage(
         @Path("id") id: String,
         @Body user: JSONAPIDocument<UserImageUpload>
-    ): Call<ResponseBody>
+    ): Response<Unit>
 
 }

@@ -340,7 +340,7 @@ class DetailsViewModel(
             } else {
                 val favoriteId = favorite.id ?: return@launch
                 try {
-                    val response = favoriteService.deleteFavorite(favoriteId).execute()
+                    val response = favoriteService.deleteFavorite(favoriteId)
                     if (response.isSuccessful) {
                         _favorite.postValue(null)
                     } else {

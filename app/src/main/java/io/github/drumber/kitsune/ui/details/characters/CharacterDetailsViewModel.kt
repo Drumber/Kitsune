@@ -136,9 +136,9 @@ class CharacterDetailsViewModel(
         }
     }
 
-    private fun removeFromFavorites(favoriteId: String): Boolean {
+    private suspend fun removeFromFavorites(favoriteId: String): Boolean {
         return try {
-            val response = favoriteService.deleteFavorite(favoriteId).execute()
+            val response = favoriteService.deleteFavorite(favoriteId)
             response.isSuccessful
         } catch (e: Exception) {
             logE("Failed to delete favorite.", e)
