@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="20dp"
         android:text="@string/action_open_external"
         style="@style/Widget.Kitsune.TextView.BottomSheetTitle" />
 
