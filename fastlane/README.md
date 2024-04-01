@@ -45,7 +45,7 @@ Take screenshots
 [bundle exec] fastlane android process_screenshots
 ```
 
-Add a device frame to the screenshots and copy them to the media folder
+Add a device frame to the screenshots and copy them to the phoneScreenshots and media folders
 
 ----
 
