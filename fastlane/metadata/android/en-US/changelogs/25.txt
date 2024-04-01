@@ -1,0 +1,6 @@
+* Added character details bottom sheet
+* Added external site links to anime and manga details
+* Added heart animation when favoriting a character or anime/manga
+* Minor improvements and other changes
+* Exclude access token preference from auto backups
+* Updated dependencies
