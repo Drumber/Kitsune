@@ -92,8 +92,17 @@ dependencies {
     implementation 'com.google.android.material:material:1.11.0'
 
     // Kotlin coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0'
+    def coroutines_version = "1.7.3"
+    implementation('org.jetbrains.kotlinx:kotlinx-coroutines-core') {
+        version {
+            strictly "$coroutines_version"
+        }
+    }
+    implementation('org.jetbrains.kotlinx:kotlinx-coroutines-android') {
+        version {
+            strictly "$coroutines_version"
+        }
+    }
 
     // Paging
     implementation 'androidx.paging:paging-runtime-ktx:3.2.1'
@@ -206,7 +215,7 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.5.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0'
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
     testImplementation "io.insert-koin:koin-test-junit4:$koin_version"
     testImplementation 'org.mockito.kotlin:mockito-kotlin:5.3.1'
     testImplementation 'net.datafaker:datafaker:2.0.1'
