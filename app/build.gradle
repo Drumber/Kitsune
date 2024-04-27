@@ -64,6 +64,11 @@ android {
     namespace 'io.github.drumber.kitsune'
 }
 
+aboutLibraries {
+    // Remove the "generated" timestamp to allow for reproducible builds
+    excludeFields = ["generated"]
+}
+
 dependencies {
     // Android core and support libs
     implementation 'androidx.core:core-ktx:1.13.0'
