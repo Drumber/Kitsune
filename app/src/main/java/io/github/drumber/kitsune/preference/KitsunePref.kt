@@ -74,8 +74,9 @@ object KitsunePref : KotprefModel(), KoinComponent {
         key = R.string.preference_key_force_legacy_image_picker
     )
 
+    // TODO: ask the user at the first start whether he wants to enable the update checker
     var checkForUpdatesOnStart by booleanPref(
-        true,
+        false,
         key = R.string.preference_key_check_for_updates_on_start
     )
 
