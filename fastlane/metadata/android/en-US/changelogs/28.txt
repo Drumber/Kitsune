@@ -1,0 +1,12 @@
+New changes:
+* Disabled update checker by default
+* Fixed visible list refreshing when navigating back to the library
+* Updated dependencies
+
+Changes from v1.10.3:
+* Added character details bottom sheet
+* Added external site links to anime and manga details
+* Added heart animation when favoriting a character or anime/manga
+* Minor improvements and other changes
+* Exclude access token preference from auto backups
+* Updated dependencies
