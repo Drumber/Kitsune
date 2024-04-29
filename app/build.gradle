@@ -18,8 +18,8 @@ android {
         applicationId "io.github.drumber.kitsune"
         minSdk 26
         targetSdk 34
-        versionCode 26
-        versionName "1.10.4"
+        versionCode 27
+        versionName "1.10.4-1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
