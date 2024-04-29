@@ -54,7 +54,6 @@ class SettingsFragment : BasePreferenceFragment() {
                 val preference =
                     findPreference<SwitchPreferenceCompat>(R.string.preference_key_check_for_updates_on_start)
                 if (isGranted) {
-                    preference?.isChecked = true
                     KitsunePref.flagUserDeniedNotificationPermission = false
                 } else {
                     preference?.isChecked = false

@@ -89,7 +89,7 @@
             android:key="@string/preference_key_check_for_updates_on_start"
             android:title="@string/preference_check_for_updates"
             android:summary="@string/preference_check_for_updates_description"
-            android:defaultValue="true"
+            android:defaultValue="false"
             app:iconSpaceReserved="false" />
 
         <Preference

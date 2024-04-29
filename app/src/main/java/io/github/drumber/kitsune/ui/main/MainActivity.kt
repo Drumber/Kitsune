@@ -40,8 +40,8 @@ import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
 import io.github.drumber.kitsune.ui.permissions.showNotificationPermissionRejectedDialog
-import io.github.drumber.kitsune.util.ui.RoundBitmapDrawable
 import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
+import io.github.drumber.kitsune.util.ui.RoundBitmapDrawable
 import io.github.drumber.kitsune.util.ui.getSystemBarsAndCutoutInsets
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -206,7 +206,6 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             val requestNotificationPermissionLauncher =
                 registerForActivityResult(RequestPermission()) { isGranted ->
                     if (isGranted) {
-                        KitsunePref.checkForUpdatesOnStart = true
                         KitsunePref.flagUserDeniedNotificationPermission = false
                     } else {
                         KitsunePref.checkForUpdatesOnStart = false
