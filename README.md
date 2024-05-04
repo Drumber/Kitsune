@@ -13,15 +13,20 @@ Unofficial android app for [Kitsu.io](https://kitsu.io). Discover new Anime and 
 - Light, Purple and Dark app theme
 - Material 3 Design
 
-#### Not yet implemented
+#### Missing features
 - Reactions/Comments
 - Global message feed and announcements
 - Groups
 - Search for other users
 
 ## Download
-[Download latest app release on GitHub.](https://github.com/Drumber/Kitsune/releases/latest)
 > Requires Android 8.0 or higher.
+
+Kitsune is available for download on GitHub and F-Droid.
+
+[Download latest app release on GitHub.](https://github.com/Drumber/Kitsune/releases/latest)
+
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="75">](https://f-droid.org/packages/io.github.drumber.kitsune/)
 
 ## Bug reports, Feature requests and Contribution
 > Please be aware of the [Code of Conduct](CODE_OF_CONDUCT.md) in place.
