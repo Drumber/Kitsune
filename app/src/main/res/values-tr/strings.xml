@@ -53,22 +53,22 @@
     <string name="action_remove_rating">Puanı Kaldır</string>
     <string name="action_add_profile_link">Profile Link Ekle</string>
     <string name="action_edit_profile_link">Profil Linkini Düzenle</string>
-    <string name="action_select_profile_link_site">Select a Site</string>
-    <string name="action_delete_profile_link">Delete Profile Link</string>
+    <string name="action_select_profile_link_site">Siteyi Seç</string>
+    <string name="action_delete_profile_link">Profil Linkini Sil</string>
 
-    <string name="hint_search">Search</string>
-    <string name="hint_search_characters">Search characters</string>
-    <string name="hint_mark_watched">Mark as watched.</string>
-    <string name="hint_mark_not_watched">Mark as not watched.</string>
-    <string name="hint_rating">Rating</string>
+    <string name="hint_search">Ara</string>
+    <string name="hint_search_characters">Karakteri ara</string>
+    <string name="hint_mark_watched">İzlenildi olarak işaretle.</string>
+    <string name="hint_mark_not_watched">İzlenilmedi olarak işaretle.</string>
+    <string name="hint_rating">Puanla</string>
 
-    <string name="dialog_log_out_confirmation">Are you sure you want to log out?</string>
-    <string name="dialog_remove_from_library_title">Remove from Library?</string>
-    <string name="dialog_remove_from_library_msg">&lt;b>%s&lt;/b> will be removed from your library.</string>
-    <string name="dialog_notification_permission_rejected_title">Permission rejected</string>
-    <string name="dialog_notification_permission_rejected">You won\'t get notifications and won\'t be informed about app updates.</string>
-    <string name="dialog_request_notification_permission_title">Allow notifications</string>
-    <string name="dialog_request_notification_permission">Allow push notifications to get notified when a new app version is released.</string>
+    <string name="dialog_log_out_confirmation">Çıkış yapmak istediğine emin misin?</string>
+    <string name="dialog_remove_from_library_title">Kütüphaneden kaldır?</string>
+    <string name="dialog_remove_from_library_msg">&lt;b>%s&lt;/b> kütüphaneden kaldırılacak.</string>
+    <string name="dialog_notification_permission_rejected_title">İzin verilmedi</string>
+    <string name="dialog_notification_permission_rejected">Bildirim almayacak ve uygulama güncellemeleri hakkında bilgilendirilmeyeceksiniz.</string>
+    <string name="dialog_request_notification_permission_title">Bildirimlere izin ver</string>
+    <string name="dialog_request_notification_permission">Yeni bir uygulama sürümü yayınlandığında bildirim almak için bildirimlere izin ver.</string>
 
     <string name="error_resource_loading">Could not load data.</string>
     <string name="error_image_loading">Failed to load image.</string>
