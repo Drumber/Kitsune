@@ -166,17 +166,17 @@
     <string name="data_title_age_rating">Puan</string>
     <string name="data_title_serialization">Serileştirme</string>
     <string name="data_title_chapters">Bölümler</string>
-    <string name="data_title_volumes">Volumes</string>
-    <string name="data_title_episodes">Episodes</string>
-    <string name="data_title_length">Length</string>
-    <string name="data_title_producers">Producers</string>
-    <string name="data_title_licensors">Licensors</string>
-    <string name="data_title_studios">Studios</string>
+    <string name="data_title_volumes">Ciltler</string>
+    <string name="data_title_episodes">Sezonlar</string>
+    <string name="data_title_length">Uzunluk</string>
+    <string name="data_title_producers">Yapımcıları</string>
+    <string name="data_title_licensors">Lisans Sahipleri</string>
+    <string name="data_title_studios">Stüdyolar</string>
 
-    <string name="season_winter">Winter</string>
-    <string name="season_spring">Spring</string>
-    <string name="season_summer">Summer</string>
-    <string name="season_fall">Fall</string>
+    <string name="season_winter">Kış</string>
+    <string name="season_spring">İlkbahar</string>
+    <string name="season_summer">Yaz</string>
+    <string name="season_fall">Sonbahar</string>
 
     <string name="relationship_sequel">Sequel</string>
     <string name="relationship_prequel">Prequel</string>
