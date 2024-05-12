@@ -1,0 +1,414 @@
+<resources>
+    <string name="app_name" translatable="false">Kitsune</string>
+    <string name="github_repo_url" translatable="false">https://github.com/Drumber/Kitsune</string>
+
+    <!-- Navigation Titles -->
+    <string name="nav_home">Home</string>
+    <string name="nav_search">Search</string>
+    <string name="nav_library">Library</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_appearance">Appearance</string>
+    <string name="nav_app_logs">Application Logs</string>
+    <string name="nav_os_libraries">Open Source Libraries</string>
+
+    <string name="anime">Anime</string>
+    <string name="manga">Manga</string>
+
+    <string name="action_retry">Retry</string>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_reset_filter">Reset filter</string>
+    <string name="action_unselect_all">Unselect all</string>
+    <string name="action_read_more">Read more</string>
+    <string name="action_read_less">Read less</string>
+    <string name="action_show_more">Show more</string>
+    <string name="action_show_less">Show less</string>
+    <string name="action_view">View</string>
+    <string name="action_back">Back</string>
+    <string name="action_close">Close</string>
+    <string name="action_log_out">Log out</string>
+    <string name="action_share_profile_url">Share Profile</string>
+    <string name="action_share">Share</string>
+    <string name="action_open_external">Open on an external site</string>
+    <string name="action_open_external_short">External sites</string>
+    <string name="action_share_app_logs">Share Logs</string>
+    <string name="action_add_to_favorites">Add to favorites</string>
+    <string name="action_remove_from_favorites">Remove from favorites</string>
+    <string name="action_dismiss">Dismiss</string>
+    <string name="action_synchronize">Synchronize</string>
+    <string name="action_save_in_gallery">Save in Gallery</string>
+    <string name="action_open_in_browser">Open in Browser</string>
+    <string name="action_open_on_mal">Open on MyAnimeList.net</string>
+    <string name="action_save_changes">Save Changes</string>
+    <string name="action_edit_profile">Edit Profile</string>
+    <string name="action_update_profile">Update Profile</string>
+    <string name="action_add">Add</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_update">Update</string>
+    <string name="action_start">Start</string>
+    <string name="action_allow">Allow</string>
+    <string name="action_rate">Rate</string>
+    <string name="action_update_rating">Update Rating</string>
+    <string name="action_remove_rating">Remove Rating</string>
+    <string name="action_add_profile_link">Add Profile Link</string>
+    <string name="action_edit_profile_link">Edit Profile Link</string>
+    <string name="action_select_profile_link_site">Select a Site</string>
+    <string name="action_delete_profile_link">Delete Profile Link</string>
+
+    <string name="hint_search">Search</string>
+    <string name="hint_search_characters">Search characters</string>
+    <string name="hint_mark_watched">Mark as watched.</string>
+    <string name="hint_mark_not_watched">Mark as not watched.</string>
+    <string name="hint_rating">Rating</string>
+
+    <string name="dialog_log_out_confirmation">Are you sure you want to log out?</string>
+    <string name="dialog_remove_from_library_title">Remove from Library?</string>
+    <string name="dialog_remove_from_library_msg">&lt;b>%s&lt;/b> will be removed from your library.</string>
+    <string name="dialog_notification_permission_rejected_title">Permission rejected</string>
+    <string name="dialog_notification_permission_rejected">You won\'t get notifications and won\'t be informed about app updates.</string>
+    <string name="dialog_request_notification_permission_title">Allow notifications</string>
+    <string name="dialog_request_notification_permission">Allow push notifications to get notified when a new app version is released.</string>
+
+    <string name="error_resource_loading">Could not load data.</string>
+    <string name="error_image_loading">Failed to load image.</string>
+    <string name="error_mapping_loading">Failed to load mappings for external sites.</string>
+    <string name="error_nothing_found">Nothing found.</string>
+    <string name="error_invalid_user">Invalid User. Are you logged in?</string>
+    <string name="error_user_update_failed">Failed to update user data.</string>
+    <string name="error_user_delete_waifu_failed">Failed to delete Waifu/Husbando.</string>
+    <string name="error_user_update_image_failed">Failed to update profile image or cover.</string>
+    <string name="error_user_create_profile_link_failed">Failed to create profile link for %s.</string>
+    <string name="error_user_update_profile_link_failed">Failed to update profile link for %s.</string>
+    <string name="error_user_delete_profile_link_failed">Failed to delete profile link for %s.</string>
+    <string name="error_something_wrong">Oops, something went wrong!</string>
+    <string name="error_requires_external_storage_permission">Require permission to write to external storage.</string>
+    <string name="error_search_provider_unavailable">Search Provider unavailable.</string>
+    <string name="error_library_update_failed">Failed to update library entry.</string>
+    <string name="error_library_update_failed_multiple">Failed to update %d library entries.</string>
+    <string name="error_library_update_not_found">The library entry does not exist.</string>
+    <string name="error_library_add_failed">Failed to add to your library.</string>
+    <string name="error_library_delete_failed">Failed to delete library entry.</string>
+    <string name="error_requires_notification_permission">Notification permission is required.</string>
+
+    <string name="sort_popularity_asc">Least Popular</string>
+    <string name="sort_popularity_desc">Most Popular</string>
+    <string name="sort_average_rating_asc">Worst Rated</string>
+    <string name="sort_average_rating_desc">Best Rated</string>
+    <string name="sort_release_date_asc">Oldest</string>
+    <string name="sort_release_date_desc">Latest</string>
+
+    <string name="title_media_type">Media Type</string>
+    <string name="title_character_appearances">Character Appearances</string>
+    <string name="title_categories">Categories</string>
+    <string name="title_filter">Filter</string>
+    <string name="title_description">Description</string>
+    <string name="title_details">Details</string>
+    <string name="title_streamer">Streaming Links</string>
+    <string name="title_ratings">Ratings</string>
+    <string name="title_more_franchise">More from this Series</string>
+    <string name="title_favorite_anime">Favorite Anime</string>
+    <string name="title_favorite_manga">Favorite Manga</string>
+    <string name="title_favorite_characters">Favorite Characters</string>
+    <string name="title_authentication">Authentication</string>
+    <string name="title_login">Log in to your Kitsu account</string>
+    <string name="title_play_trailer">Play Trailer</string>
+    <string name="title_about_me">About Me</string>
+    <string name="title_episodes">Episodes</string>
+    <string name="title_chapters">Chapters</string>
+    <string name="title_characters">Characters</string>
+    <string name="title_edit_library_entry">Edit Library Entry</string>
+    <string name="title_edit_profile">Edit Profile</string>
+
+    <string name="no_information">Unknown</string>
+    <string name="no_data_available">No Data available</string>
+
+    <string name="status_current">Currently Airing</string>
+    <string name="status_current_manga">Publishing</string>
+    <string name="status_finished">Finished</string>
+    <string name="status_tba">TBA</string>
+    <string name="status_unreleased">Unreleased</string>
+    <string name="status_upcoming">Upcoming</string>
+
+    <string name="character_role_main">Main</string>
+    <string name="character_role_supporting">Supporting</string>
+    <string name="character_role_recurring">Recurring</string>
+    <string name="character_role_cameo">Cameo</string>
+
+    <string name="library_status_watching">Watching</string>
+    <string name="library_status_planned">Want to Watch</string>
+    <string name="library_status_completed">Completed</string>
+    <string name="library_status_on_hold">On Hold</string>
+    <string name="library_status_dropped">Dropped</string>
+    <string name="library_status_reading">Reading</string>
+    <string name="library_status_planned_manga">Want to Read</string>
+    <string name="library_action_remove">Remove from Library</string>
+    <string name="library_action_add">Add to Library</string>
+    <string name="library_action_edit">Edit Library Entry</string>
+
+    <string name="data_rank">Rank #%d</string>
+    <string name="data_popularity">Popularity #%d</string>
+    <string name="data_kitsu_score">Kitsu Score %s%%</string>
+    <string name="data_length_total">%s total</string>
+    <string name="data_length_each">%d minutes each</string>
+
+    <string name="data_title_english">English</string>
+    <string name="data_title_japanese">Japanese</string>
+    <string name="data_title_japanese_romaji">Japanese (Romaji)</string>
+    <string name="data_abbreviated_titles">Synonyms</string>
+    <string name="data_other_names">Also known as</string>
+    <string name="data_title_type">Type</string>
+    <string name="data_title_status">Status</string>
+    <string name="data_title_aired">Aired</string>
+    <string name="data_title_published">Published</string>
+    <string name="data_title_tba">Expected</string>
+    <string name="data_title_season">Season</string>
+    <string name="data_title_age_rating">Rating</string>
+    <string name="data_title_serialization">Serialization</string>
+    <string name="data_title_chapters">Chapters</string>
+    <string name="data_title_volumes">Volumes</string>
+    <string name="data_title_episodes">Episodes</string>
+    <string name="data_title_length">Length</string>
+    <string name="data_title_producers">Producers</string>
+    <string name="data_title_licensors">Licensors</string>
+    <string name="data_title_studios">Studios</string>
+
+    <string name="season_winter">Winter</string>
+    <string name="season_spring">Spring</string>
+    <string name="season_summer">Summer</string>
+    <string name="season_fall">Fall</string>
+
+    <string name="relationship_sequel">Sequel</string>
+    <string name="relationship_prequel">Prequel</string>
+    <string name="relationship_alternative_setting">Alt. setting</string>
+    <string name="relationship_alternative_version">Alt. version</string>
+    <string name="relationship_side_story">Side story</string>
+    <string name="relationship_parent_story">Parent story</string>
+    <string name="relationship_summary">Summary</string>
+    <string name="relationship_full_story">Full story</string>
+    <string name="relationship_spinoff">Spin-off</string>
+    <string name="relationship_adaptation">Adaptation</string>
+    <string name="relationship_character">Character</string>
+    <string name="relationship_other">Other</string>
+
+    <string name="section_trending">Trending This Week</string>
+    <string name="section_top_airing_anime">Top Airing Anime</string>
+    <string name="section_top_upcoming_anime">Top Upcoming Anime</string>
+    <string name="section_highest_rated_anime">Highest Rated Anime</string>
+    <string name="section_most_popular_anime">Most Popular Anime</string>
+    <string name="section_top_airing_manga">Top Publishing Manga</string>
+    <string name="section_top_upcoming_manga">Top Upcoming Manga</string>
+    <string name="section_highest_rated_manga">Highest Rated Manga</string>
+    <string name="section_most_popular_manga">Most Popular Manga</string>
+
+    <string name="preference_category_ui">User Interface</string>
+    <string name="preference_category_account">Account</string>
+    <string name="preference_category_advanced">Advanced</string>
+    <string name="preference_category_about">About</string>
+
+    <string name="preference_appearance_description">Change the theme and toggle dark mode.</string>
+    <string name="preference_dark_mode">Dark Mode</string>
+    <string-array name="preference_dark_mode_entries">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>Follow System</item>
+        <item>Battery Saver</item>
+    </string-array>
+    <string name="preference_oled_black_mode">OLED Black</string>
+    <string name="preference_oled_black_mode_description">Use a black background in dark mode.</string>
+    <string name="preference_app_theme">Theme</string>
+    <string name="preference_dynamic_color_theme">Use Dynamic Color</string>
+    <string name="preference_dynamic_color_theme_description">Adapt to the system theme.</string>
+    <string name="preference_app_theme_default">Default</string>
+    <string name="preference_app_theme_purple">Purple</string>
+    <string name="preference_app_theme_blue">Blue</string>
+    <string name="preference_app_theme_green">Green</string>
+    <string name="preference_media_item_size">Poster Image Size</string>
+    <string-array name="preference_media_item_size_entries">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+    </string-array>
+    <string name="preference_start_fragment">Default Page</string>
+    <string-array name="preference_start_fragment_entries">
+        <item>Home</item>
+        <item>Search</item>
+        <item>Library</item>
+        <item>Profile</item>
+    </string-array>
+    <string name="preference_start_fragment_description">The default page is set to %s.</string>
+    <string name="preference_language">Language</string>
+    <string name="preference_display_name">Display Name</string>
+    <string name="preference_profile_url">Profile URL</string>
+    <string name="preference_profile_url_not_set">No profile URL set.</string>
+    <string name="preference_country">Country</string>
+    <string name="preference_country_summary">Country is set to %s</string>
+    <string name="preference_country_summary_non">No country specified.</string>
+    <string name="preference_titles">Titles</string>
+    <string name="preference_titles_description">Define how media titles will be displayed.</string>
+    <string-array name="preference_titles_values">
+        <item>Canonical</item>
+        <item>Romanized</item>
+        <item>English</item>
+    </string-array>
+    <string name="preference_adult_content">Adult Content</string>
+    <string name="preference_adult_content_description_sfw">Media with R18+ age rating will be hidden.</string>
+    <string name="preference_adult_content_description_sometimes">Media with R18+ age rating will be visible, but posts tagged NSFW will be hidden in the global feed.</string>
+    <string name="preference_adult_content_description_everywhere">Media with R18+ age rating will be visible everywhere.</string>
+    <string-array name="preference_sfw_filter_values">
+        <item>Hide all Adult Content</item>
+        <item>Limit to Following Feed</item>
+        <item>Adult Content Everywhere</item>
+    </string-array>
+    <string name="preference_rating_system">Rating System</string>
+    <string-array name="preference_rating_system_values">
+        <item>Simple</item>
+        <item>Regular</item>
+        <item>Advanced</item>
+    </string-array>
+    <string name="preference_remember_search_filters">Remember Search Filters</string>
+    <string name="preference_remember_search_filters_description">Apply the last used search filters after an app restart.</string>
+    <string name="preference_force_legacy_image_picker">Force legacy Photo Picker</string>
+    <string name="preference_force_legacy_image_picker_description">Use the system file picker instead of the new photo picker.</string>
+    <string name="preference_check_for_updates">Check for Updates on Launch</string>
+    <string name="preference_check_for_updates_description">Check for a new app version on every launch.</string>
+    <string name="preference_app_logs">@string/nav_app_logs</string>
+    <string name="preference_app_logs_description">See and share the application log messages.</string>
+    <string name="preference_app_version">Version Info</string>
+    <string name="preference_app_version_description">Click to check for updates.</string>
+    <string name="preference_github_repo">GitHub Repository</string>
+    <string name="preference_open_source_libraries">@string/nav_os_libraries</string>
+    <string name="preference_open_source_libraries_description">A list of all used open source libraries.</string>
+
+    <string name="preference_not_logged_in">You must be logged in to edit this setting.</string>
+    <string name="app_logs_no_data">No logs available.</string>
+
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_log_in">Log in</string>
+    <string name="action_log_in_to_kitsu">Log in to Kitsu</string>
+    <string name="invalid_username">Not a valid email address</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="status_logging_in">Logging in…</string>
+    <string name="logged_in_success">Logged in as %s.</string>
+    <string name="login_no_account">Don\'t have an account? Create one on <a href="https://kitsu.io">kitsu.io</a>.</string>
+    <string name="not_logged_in">Not logged in</string>
+
+    <string name="library_not_started">Not Started</string>
+    <string name="library_not_rated">Not Rated</string>
+    <string name="library_not_logged_in_title">Log in to access your library</string>
+    <string name="library_not_logged_in_text">Log in to your Kitsu Account to manage your library and get access to all features.</string>
+    <string name="library_kind_all">All</string>
+    <string name="library_not_synchronized">Not Synced</string>
+
+    <string name="library_edit_status">Library Status</string>
+    <string name="library_edit_progress">Progress</string>
+    <string name="library_edit_volumes">Volumes</string>
+    <string name="library_edit_rating">Rating</string>
+    <string name="library_edit_rewatch_count">Rewatch Count</string>
+    <string name="library_edit_reread_count">Reread Count</string>
+    <string name="library_edit_start_rewatch">Start Rewatch</string>
+    <string name="library_edit_start_reread">Start Reread</string>
+    <string name="library_edit_privacy">Privacy</string>
+    <string name="library_edit_privacy_public">Public</string>
+    <string name="library_edit_privacy_private">Private</string>
+    <string name="library_edit_started">Started</string>
+    <string name="library_edit_finished">Finished</string>
+    <string name="library_edit_no_date_set">No Date set</string>
+    <string name="library_edit_notes">Personal Notes</string>
+
+    <string name="info_log_in_required">Log in to access all features.</string>
+    <string name="info_image_saved_in_gallery">Successfully saved image in gallery.</string>
+    <string name="info_update_checking_new_version">Checking for a new version…</string>
+    <string name="info_update_new_version_available">New version available.</string>
+    <string name="info_update_new_version_available_text">Version %s of Kitsune is available.</string>
+    <string name="info_update_no_new_version_available">No new version available.</string>
+    <string name="info_update_failed">Failed to check for a new version.</string>
+    <string name="info_logged_out_token_expired">Your access token has expired. Please log in again.</string>
+
+    <string name="filter_kind">Kind</string>
+    <string name="filter_year">Year</string>
+    <string name="filter_avg_rating">Average Rating</string>
+    <string name="filter_select_categories">Select Categories</string>
+    <string name="filter_season">Season</string>
+    <string name="filter_subtype">Subtype</string>
+    <string name="filter_streamers">Streamers</string>
+    <string name="filter_age_rating">Age Rating</string>
+
+    <string name="profile_not_logged_in_title">Nothing to see here!</string>
+    <string name="profile_not_logged_in_text">Log in to your Kitsu Account or create a new Account to get access to all features.</string>
+
+    <string name="profile_anime_stats">Anime Stats</string>
+    <string name="profile_manga_stats">Manga Stats</string>
+    <string name="profile_stats_anime_watch_time">%s spent watching anime.</string>
+    <string name="profile_stats_manga_chapters_read">%d chapters read.</string>
+    <string name="profile_stats_time_spent_total">%s in total.</string>
+    <string name="profile_stats_completed">%d completed. More than &lt;b>%d%%&lt;/b> of users.</string>
+    <string name="profile_data_gender">Gender</string>
+    <string name="profile_data_location">Location</string>
+    <string name="profile_data_birthday">Birthday</string>
+    <string name="profile_data_join_date">Join Date</string>
+    <string name="profile_data_join_date_ago">%s ago</string>
+    <string name="profile_data_private">It\'s a secret.</string>
+    <string name="profile_gender_male">Male</string>
+    <string name="profile_gender_female">Female</string>
+    <string name="profile_gender_custom">Custom</string>
+    <string name="profile_gender_custom_hint">Define your gender</string>
+    <string name="profile_data_waifu">Waifu</string>
+    <string name="profile_data_husbando">Husbando</string>
+    <string name="profile_waifu_or_husbando">Waifu or Husbando</string>
+    <string name="profile_find_waifu">Find your special someone</string>
+    <string name="profile_data_bio">Bio</string>
+    <string name="profile_cover_image_description">Cover image</string>
+    <string name="profile_avatar_image_description">Profile picture</string>
+    <string name="profile_link_url">URL or Username</string>
+
+    <string name="notification_updates">Application Updates</string>
+
+    <string name="unit_episode">Episode %d</string>
+    <string name="unit_chapter">Chapter %d</string>
+
+    <!-- Unit Plurals -->
+    <plurals name="unit_pages">
+        <item quantity="one">%s Page</item>
+        <item quantity="other">%s Pages</item>
+    </plurals>
+
+    <!-- Duration Plurals -->
+    <plurals name="duration_seconds">
+        <item quantity="one">%s second</item>
+        <item quantity="other">%s seconds</item>
+    </plurals>
+
+    <plurals name="duration_minutes">
+        <item quantity="one">%s minute</item>
+        <item quantity="other">%s minutes</item>
+    </plurals>
+
+    <plurals name="duration_hours">
+        <item quantity="one">%s hour</item>
+        <item quantity="other">%s hours</item>
+    </plurals>
+
+    <plurals name="duration_days">
+        <item quantity="one">%s day</item>
+        <item quantity="other">%s days</item>
+    </plurals>
+
+    <plurals name="duration_months">
+        <item quantity="one">%s month</item>
+        <item quantity="other">%s months</item>
+    </plurals>
+
+    <plurals name="duration_years">
+        <item quantity="one">%s year</item>
+        <item quantity="other">%s years</item>
+    </plurals>
+
+    <!-- Transition names -->
+    <string name="unique_poster_transition_name" translatable="false">media_item_poster_%1$s</string>
+    <string name="details_poster_transition_name" translatable="false">media_details_poster</string>
+    <string name="character_picture_transition_name" translatable="false">character_picture</string>
+
+</resources>
