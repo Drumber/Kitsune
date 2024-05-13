@@ -178,107 +178,107 @@
     <string name="season_summer">Yaz</string>
     <string name="season_fall">Sonbahar</string>
 
-    <string name="relationship_sequel">Sequel</string>
-    <string name="relationship_prequel">Prequel</string>
-    <string name="relationship_alternative_setting">Alt. setting</string>
-    <string name="relationship_alternative_version">Alt. version</string>
-    <string name="relationship_side_story">Side story</string>
-    <string name="relationship_parent_story">Parent story</string>
-    <string name="relationship_summary">Summary</string>
-    <string name="relationship_full_story">Full story</string>
-    <string name="relationship_spinoff">Spin-off</string>
-    <string name="relationship_adaptation">Adaptation</string>
-    <string name="relationship_character">Character</string>
-    <string name="relationship_other">Other</string>
+    <string name="relationship_sequel">Devamı</string>
+    <string name="relationship_prequel">Öncesi</string>
+    <string name="relationship_alternative_setting">Alt. ayarlar</string>
+    <string name="relationship_alternative_version">Alt. versiyon</string>
+    <string name="relationship_side_story">Yan hikaye</string>
+    <string name="relationship_parent_story">Ebeveyn hikayesi</string>
+    <string name="relationship_summary">Özet</string>
+    <string name="relationship_full_story">Bütün hikaye</string>
+    <string name="relationship_spinoff">Yan ürün</string>
+    <string name="relationship_adaptation">Adaptasyon</string>
+    <string name="relationship_character">Karakter</string>
+    <string name="relationship_other">Diğer</string>
 
-    <string name="section_trending">Trending This Week</string>
-    <string name="section_top_airing_anime">Top Airing Anime</string>
-    <string name="section_top_upcoming_anime">Top Upcoming Anime</string>
-    <string name="section_highest_rated_anime">Highest Rated Anime</string>
-    <string name="section_most_popular_anime">Most Popular Anime</string>
-    <string name="section_top_airing_manga">Top Publishing Manga</string>
-    <string name="section_top_upcoming_manga">Top Upcoming Manga</string>
-    <string name="section_highest_rated_manga">Highest Rated Manga</string>
-    <string name="section_most_popular_manga">Most Popular Manga</string>
+    <string name="section_trending">Haftanın Trendleri</string>
+    <string name="section_top_airing_anime">En Çok Gösterilen Anime</string>
+    <string name="section_top_upcoming_anime">Gelecek En İyi Anime</string>
+    <string name="section_highest_rated_anime">En Yüksek Puanlı Anime</string>
+    <string name="section_most_popular_anime">En Popüler Anime</string>
+    <string name="section_top_airing_manga">En İyi Manga Yayınları</string>
+    <string name="section_top_upcoming_manga">Gelecek En İyi Manga</string>
+    <string name="section_highest_rated_manga">En Yüksek Puanlı Manga</string>
+    <string name="section_most_popular_manga">En Popüler Manga</string>
 
-    <string name="preference_category_ui">User Interface</string>
-    <string name="preference_category_account">Account</string>
-    <string name="preference_category_advanced">Advanced</string>
-    <string name="preference_category_about">About</string>
+    <string name="preference_category_ui">Kullanıcı Arayüzü</string>
+    <string name="preference_category_account">Hesap</string>
+    <string name="preference_category_advanced">Gelişmiş</string>
+    <string name="preference_category_about">Hakkında</string>
 
-    <string name="preference_appearance_description">Change the theme and toggle dark mode.</string>
-    <string name="preference_dark_mode">Dark Mode</string>
+    <string name="preference_appearance_description">Temayı değiştirin ve karanlık modu açın.</string>
+    <string name="preference_dark_mode">Karanlık Tema</string>
     <string-array name="preference_dark_mode_entries">
-        <item>Light</item>
-        <item>Dark</item>
-        <item>Follow System</item>
-        <item>Battery Saver</item>
+        <item>Aydınlık</item>
+        <item>Karanlık</item>
+        <item>Sistem Temasına Uy</item>
+        <item>Pil Tasarrufu</item>
     </string-array>
-    <string name="preference_oled_black_mode">OLED Black</string>
-    <string name="preference_oled_black_mode_description">Use a black background in dark mode.</string>
-    <string name="preference_app_theme">Theme</string>
-    <string name="preference_dynamic_color_theme">Use Dynamic Color</string>
-    <string name="preference_dynamic_color_theme_description">Adapt to the system theme.</string>
-    <string name="preference_app_theme_default">Default</string>
-    <string name="preference_app_theme_purple">Purple</string>
-    <string name="preference_app_theme_blue">Blue</string>
-    <string name="preference_app_theme_green">Green</string>
-    <string name="preference_media_item_size">Poster Image Size</string>
+    <string name="preference_oled_black_mode">OLED Siyah</string>
+    <string name="preference_oled_black_mode_description">Karanlık modda siyah arka plan kullan.</string>
+    <string name="preference_app_theme">Tema</string>
+    <string name="preference_dynamic_color_theme">Dinamik Renk Seç</string>
+    <string name="preference_dynamic_color_theme_description">Sistem temasına uy.</string>
+    <string name="preference_app_theme_default">Varsayılan</string>
+    <string name="preference_app_theme_purple">Mor</string>
+    <string name="preference_app_theme_blue">Mavi</string>
+    <string name="preference_app_theme_green">Yeşil</string>
+    <string name="preference_media_item_size">Poster Görüntü Boyutu</string>
     <string-array name="preference_media_item_size_entries">
-        <item>Small</item>
-        <item>Medium</item>
-        <item>Large</item>
+        <item>Küçük</item>
+        <item>Orta</item>
+        <item>Büyük</item>
     </string-array>
-    <string name="preference_start_fragment">Default Page</string>
+    <string name="preference_start_fragment">Varsayılan Sayfa</string>
     <string-array name="preference_start_fragment_entries">
-        <item>Home</item>
-        <item>Search</item>
-        <item>Library</item>
-        <item>Profile</item>
+        <item>Ev</item>
+        <item>Ara</item>
+        <item>Kütüphane</item>
+        <item>Profil</item>
     </string-array>
-    <string name="preference_start_fragment_description">The default page is set to %s.</string>
-    <string name="preference_language">Language</string>
-    <string name="preference_display_name">Display Name</string>
-    <string name="preference_profile_url">Profile URL</string>
-    <string name="preference_profile_url_not_set">No profile URL set.</string>
-    <string name="preference_country">Country</string>
-    <string name="preference_country_summary">Country is set to %s</string>
-    <string name="preference_country_summary_non">No country specified.</string>
-    <string name="preference_titles">Titles</string>
-    <string name="preference_titles_description">Define how media titles will be displayed.</string>
+    <string name="preference_start_fragment_description">Varsayılan sayfa olarak ayarlandı %s.</string>
+    <string name="preference_language">Dil</string>
+    <string name="preference_display_name">Görünen Ad</string>
+    <string name="preference_profile_url">Profil URL</string>
+    <string name="preference_profile_url_not_set">Profil URL'si ayarlanmadı.</string>
+    <string name="preference_country">Ülke</string>
+    <string name="preference_country_summary">Ülke şu şekilde ayarlandı %s</string>
+    <string name="preference_country_summary_non">Ülke belirtilmedi.</string>
+    <string name="preference_titles">Başlıklar</string>
+    <string name="preference_titles_description">Medya başlıklarının nasıl görüntüleneceğini belirle.</string>
     <string-array name="preference_titles_values">
-        <item>Canonical</item>
-        <item>Romanized</item>
-        <item>English</item>
+        <item>Standart</item>
+        <item>Romanize</item>
+        <item>İngilizce</item>
     </string-array>
-    <string name="preference_adult_content">Adult Content</string>
-    <string name="preference_adult_content_description_sfw">Media with R18+ age rating will be hidden.</string>
-    <string name="preference_adult_content_description_sometimes">Media with R18+ age rating will be visible, but posts tagged NSFW will be hidden in the global feed.</string>
-    <string name="preference_adult_content_description_everywhere">Media with R18+ age rating will be visible everywhere.</string>
+    <string name="preference_adult_content">Yetişkin İçeriği</string>
+    <string name="preference_adult_content_description_sfw">R18+ yaş derecelendirmesi olan medya gizlenecek.</string>
+    <string name="preference_adult_content_description_sometimes">R18+ yaş derecelendirmesi olan medya görünür olacak, ancak NSFW etiketiyle işaretlenmiş gönderiler genel akışta gizlenecek.</string>
+    <string name="preference_adult_content_description_everywhere">R18+ yaş derecelendirmesine sahip medya her yerde görünür olacak.</string>
     <string-array name="preference_sfw_filter_values">
-        <item>Hide all Adult Content</item>
-        <item>Limit to Following Feed</item>
-        <item>Adult Content Everywhere</item>
+        <item>Tüm Yetişkin İçeriğini Gizle</item>
+        <item>Aşağıdaki Akışla Sınırla</item>
+        <item>Her Yerde Yetişkin İçeriği</item>
     </string-array>
-    <string name="preference_rating_system">Rating System</string>
+    <string name="preference_rating_system">Puan Sistemi</string>
     <string-array name="preference_rating_system_values">
-        <item>Simple</item>
-        <item>Regular</item>
-        <item>Advanced</item>
+        <item>Basit</item>
+        <item>Orta</item>
+        <item>Gelişmiş</item>
     </string-array>
-    <string name="preference_remember_search_filters">Remember Search Filters</string>
-    <string name="preference_remember_search_filters_description">Apply the last used search filters after an app restart.</string>
-    <string name="preference_force_legacy_image_picker">Force legacy Photo Picker</string>
-    <string name="preference_force_legacy_image_picker_description">Use the system file picker instead of the new photo picker.</string>
-    <string name="preference_check_for_updates">Check for Updates on Launch</string>
-    <string name="preference_check_for_updates_description">Check for a new app version on every launch.</string>
+    <string name="preference_remember_search_filters">Arama Filtrelerini Hatırla</string>
+    <string name="preference_remember_search_filters_description">Uygulama yeniden başlatıldıktan sonra son kullanılan arama filtrelerini uygula.</string>
+    <string name="preference_force_legacy_image_picker">Geçmiş Fotoğraf Seçiciyi Zorla</string>
+    <string name="preference_force_legacy_image_picker_description">Sistem dosya seçicisini kullanmak için yeni fotoğraf seçicisi yerine zorla.</string>
+    <string name="preference_check_for_updates">Başlangıçta Güncellemeleri Kontrol Et</string>
+    <string name="preference_check_for_updates_description">Her başlatmada yeni bir uygulama sürümü olup olmadığını kontrol edin.</string>
     <string name="preference_app_logs">@string/nav_app_logs</string>
-    <string name="preference_app_logs_description">See and share the application log messages.</string>
-    <string name="preference_app_version">Version Info</string>
-    <string name="preference_app_version_description">Click to check for updates.</string>
-    <string name="preference_github_repo">GitHub Repository</string>
+    <string name="preference_app_logs_description">Uygulama günlük mesajlarını gör ve paylaş.</string>
+    <string name="preference_app_version">Versiyon Bİlgisi</string>
+    <string name="preference_app_version_description">Tıkla ve güncellemeyi kontrol et.</string>
+    <string name="preference_github_repo">GitHub Deposu</string>
     <string name="preference_open_source_libraries">@string/nav_os_libraries</string>
-    <string name="preference_open_source_libraries_description">A list of all used open source libraries.</string>
+    <string name="preference_open_source_libraries_description">Kullanılan tüm açık kaynak kütüphanelerinin listesi.</string>
 
     <string name="preference_not_logged_in">You must be logged in to edit this setting.</string>
     <string name="app_logs_no_data">No logs available.</string>
