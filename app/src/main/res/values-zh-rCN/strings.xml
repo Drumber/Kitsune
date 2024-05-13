@@ -15,7 +15,7 @@
     <string name="action_share_app_logs">分享日志</string>
     <string name="action_save_changes">保存更改</string>
     <string name="dialog_log_out_confirmation">您确定要退出登录吗？</string>
-    <string name="preference_adult_content_description_sometimes">带有R18+年龄等级的媒体将会被看到，但是标记为 NSFW 的帖子将会被隐藏在全局提要中。</string>
+    <string name="preference_adult_content_description_sometimes">带有 R18+ 年龄等级的媒体可见，但被标记为 NSFW 的帖子会被隐藏在全局信息流中。</string>
     <string name="action_log_in_to_kitsu">登录Kitsu</string>
     <string name="data_popularity">人气#%d</string>
     <string name="library_edit_rewatch_count">重看次数</string>
@@ -83,7 +83,7 @@
     <string name="hint_search">搜索</string>
     <string name="action_edit_profile_link">编辑个人主页链接</string>
     <string name="action_delete_profile_link">删除个人主页链接</string>
-    <string name="hint_mark_watched">标记为“看过”。</string>
+    <string name="hint_mark_watched">标记为看过。</string>
     <string name="hint_mark_not_watched">标记为未看。</string>
     <string name="hint_rating">评分</string>
     <string name="dialog_remove_from_library_title">从库中删除?</string>
@@ -323,4 +323,27 @@
     <plurals name="duration_years">
         <item quantity="other">%s 年</item>
     </plurals>
+    <string name="relationship_alternative_version">不同版本</string>
+    <string name="error_mapping_loading">未能加载外部站点的映射。</string>
+    <string name="preference_rating_system_advanced">高级</string>
+    <string name="preference_dark_mode_light">浅色</string>
+    <string name="relationship_alternative_setting">不同场景</string>
+    <string name="preference_dark_mode_dark">深色</string>
+    <string name="preference_dark_mode_follow_system">跟随系统</string>
+    <string name="preference_dark_mode_battery_saver">节电模式</string>
+    <string name="preference_media_item_size_small">小</string>
+    <string name="preference_media_item_size_medium">中</string>
+    <string name="preference_media_item_size_large">大</string>
+    <string name="preference_start_fragment_home">主页</string>
+    <string name="preference_start_fragment_search">搜索</string>
+    <string name="preference_start_fragment_library">库</string>
+    <string name="preference_start_fragment_profile">资料</string>
+    <string name="preference_titles_canonical">规范名</string>
+    <string name="preference_titles_romanized">罗马名</string>
+    <string name="preference_titles_english">英文名</string>
+    <string name="preference_sfw_filter_hide_all">隐藏所有成人内容</string>
+    <string name="preference_sfw_filter_limit_to_feed">限制关注信息流</string>
+    <string name="preference_sfw_filter_show_all">成人内容无处不在</string>
+    <string name="preference_rating_system_simple">简单</string>
+    <string name="preference_rating_system_regular">常规</string>
 </resources>
