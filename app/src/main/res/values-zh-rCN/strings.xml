@@ -230,7 +230,6 @@
     <string name="preference_app_logs_description">查看并共享应用程序日志消息。</string>
     <string name="preference_app_version">版本信息</string>
     <string name="preference_github_repo">GitHub 代码库</string>
-    <string name="preference_open_source_libraries">\@string/nav_os_libraries</string>
     <string name="preference_open_source_libraries_description">所有已使用的开源库的列表。</string>
     <string name="preference_not_logged_in">您必须登录才能编辑此设置。</string>
     <string name="app_logs_no_data">没有可用的日志。</string>
