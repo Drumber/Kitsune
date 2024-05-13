@@ -10,7 +10,6 @@
     <string name="error_user_create_profile_link_failed">创建 %s 个人主页链接失败。</string>
     <string name="preference_titles_description">定义媒体标题的显示方式。</string>
     <string name="error_library_update_failed">无法更新库条目。</string>
-    <string name="preference_app_logs">\@string/nav_app_logs</string>
     <string name="preference_app_version_description">点击检查更新。</string>
     <string name="action_share_app_logs">分享日志</string>
     <string name="action_save_changes">保存更改</string>
