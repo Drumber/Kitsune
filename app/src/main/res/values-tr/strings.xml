@@ -280,130 +280,130 @@
     <string name="preference_open_source_libraries">@string/nav_os_libraries</string>
     <string name="preference_open_source_libraries_description">Kullanılan tüm açık kaynak kütüphanelerinin listesi.</string>
 
-    <string name="preference_not_logged_in">You must be logged in to edit this setting.</string>
-    <string name="app_logs_no_data">No logs available.</string>
+    <string name="preference_not_logged_in">Bu ayarı düzenlemek için oturum açmalısınız.</string>
+    <string name="app_logs_no_data">Kayıt mevcut değil.</string>
 
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in</string>
-    <string name="action_log_in">Log in</string>
-    <string name="action_log_in_to_kitsu">Log in to Kitsu</string>
-    <string name="invalid_username">Not a valid email address</string>
-    <string name="login_failed">"Login failed"</string>
-    <string name="status_logging_in">Logging in…</string>
-    <string name="logged_in_success">Logged in as %s.</string>
-    <string name="login_no_account">Don\'t have an account? Create one on <a href="https://kitsu.io">kitsu.io</a>.</string>
-    <string name="not_logged_in">Not logged in</string>
+    <string name="prompt_password">Şifre</string>
+    <string name="action_sign_in">Oturum aç</string>
+    <string name="action_log_in">Giriş yap</string>
+    <string name="action_log_in_to_kitsu">Kitsu ile giriş yap</string>
+    <string name="invalid_username">Email adresi bulunamadı</string>
+    <string name="login_failed">"Giriş başarısız"</string>
+    <string name="status_logging_in">Giriş…</string>
+    <string name="logged_in_success">Olarak oturum açtı %s.</string>
+    <string name="login_no_account">Hesabınız yok mu? Bir tane oluşturun <a href="https://kitsu.io">kitsu.io</a>.</string>
+    <string name="not_logged_in">Giriş yapılamadı</string>
 
-    <string name="library_not_started">Not Started</string>
-    <string name="library_not_rated">Not Rated</string>
-    <string name="library_not_logged_in_title">Log in to access your library</string>
-    <string name="library_not_logged_in_text">Log in to your Kitsu Account to manage your library and get access to all features.</string>
-    <string name="library_kind_all">All</string>
-    <string name="library_not_synchronized">Not Synced</string>
+    <string name="library_not_started">Başlatılamadı</string>
+    <string name="library_not_rated">Derecelendirilmemiş</string>
+    <string name="library_not_logged_in_title">Kütüphanenize erişmek için giriş yapın</string>
+    <string name="library_not_logged_in_text">Kütüphanenizi yönetmek ve tüm özelliklere erişmek için Kitsu Hesabınıza giriş yapın.</string>
+    <string name="library_kind_all">Hepsi</string>
+    <string name="library_not_synchronized">Sekronize Değil</string>
 
-    <string name="library_edit_status">Library Status</string>
-    <string name="library_edit_progress">Progress</string>
-    <string name="library_edit_volumes">Volumes</string>
-    <string name="library_edit_rating">Rating</string>
-    <string name="library_edit_rewatch_count">Rewatch Count</string>
-    <string name="library_edit_reread_count">Reread Count</string>
-    <string name="library_edit_start_rewatch">Start Rewatch</string>
-    <string name="library_edit_start_reread">Start Reread</string>
-    <string name="library_edit_privacy">Privacy</string>
-    <string name="library_edit_privacy_public">Public</string>
-    <string name="library_edit_privacy_private">Private</string>
-    <string name="library_edit_started">Started</string>
-    <string name="library_edit_finished">Finished</string>
-    <string name="library_edit_no_date_set">No Date set</string>
-    <string name="library_edit_notes">Personal Notes</string>
+    <string name="library_edit_status">Kütüphane Durumu</string>
+    <string name="library_edit_progress">İlerleme</string>
+    <string name="library_edit_volumes">Ciltler</string>
+    <string name="library_edit_rating">Derecelendirme</string>
+    <string name="library_edit_rewatch_count">Tekrar İzleme Sayısı</string>
+    <string name="library_edit_reread_count">Tekrar Okuma Sayısı</string>
+    <string name="library_edit_start_rewatch">Tekrar İzlemeye Başlat</string>
+    <string name="library_edit_start_reread">Tekrar Okumaya Başlat</string>
+    <string name="library_edit_privacy">Gizlilik</string>
+    <string name="library_edit_privacy_public">Halka Açık</string>
+    <string name="library_edit_privacy_private">Özel</string>
+    <string name="library_edit_started">Başlatıldı</string>
+    <string name="library_edit_finished">Bitirildi</string>
+    <string name="library_edit_no_date_set">Tarih belirlenmemiş</string>
+    <string name="library_edit_notes">Kişisel Notları</string>
 
-    <string name="info_log_in_required">Log in to access all features.</string>
-    <string name="info_image_saved_in_gallery">Successfully saved image in gallery.</string>
-    <string name="info_update_checking_new_version">Checking for a new version…</string>
-    <string name="info_update_new_version_available">New version available.</string>
-    <string name="info_update_new_version_available_text">Version %s of Kitsune is available.</string>
-    <string name="info_update_no_new_version_available">No new version available.</string>
-    <string name="info_update_failed">Failed to check for a new version.</string>
-    <string name="info_logged_out_token_expired">Your access token has expired. Please log in again.</string>
+    <string name="info_log_in_required">Tüm özelliklere erişmek için giriş yapın.</string>
+    <string name="info_image_saved_in_gallery">Görsel galeriye başarıyla kaydedildi.</string>
+    <string name="info_update_checking_new_version">Yeni sürüm kontrol ediliyor…</string>
+    <string name="info_update_new_version_available">Yeni sürüm mevcut.</string>
+    <string name="info_update_new_version_available_text">Sürüm %s Kitsune'un bir sürüm mevcut.</string>
+    <string name="info_update_no_new_version_available">Yeni sürümü mevcut değil.</string>
+    <string name="info_update_failed">Yeni sürüm kontrolü başarısız oldu.</string>
+    <string name="info_logged_out_token_expired">Erişim tokeninizin süresi doldu. Lütfen tekrar giriş yapın.</string>
 
-    <string name="filter_kind">Kind</string>
-    <string name="filter_year">Year</string>
-    <string name="filter_avg_rating">Average Rating</string>
-    <string name="filter_select_categories">Select Categories</string>
-    <string name="filter_season">Season</string>
-    <string name="filter_subtype">Subtype</string>
-    <string name="filter_streamers">Streamers</string>
-    <string name="filter_age_rating">Age Rating</string>
+    <string name="filter_kind">Tür</string>
+    <string name="filter_year">Yıl</string>
+    <string name="filter_avg_rating">Ortalama Puan</string>
+    <string name="filter_select_categories">Kategori Seç</string>
+    <string name="filter_season">Sezon</string>
+    <string name="filter_subtype">Alt Tür</string>
+    <string name="filter_streamers">Yayıncılar</string>
+    <string name="filter_age_rating">Yaş Derecelendirmesi</string>
 
-    <string name="profile_not_logged_in_title">Nothing to see here!</string>
-    <string name="profile_not_logged_in_text">Log in to your Kitsu Account or create a new Account to get access to all features.</string>
+    <string name="profile_not_logged_in_title">Burada görülecek bir şey yok!</string>
+    <string name="profile_not_logged_in_text">Tüm özelliklere erişmek için Kitsu Hesabınıza giriş yapın veya yeni bir Hesap oluşturun.</string>
 
-    <string name="profile_anime_stats">Anime Stats</string>
-    <string name="profile_manga_stats">Manga Stats</string>
-    <string name="profile_stats_anime_watch_time">%s spent watching anime.</string>
-    <string name="profile_stats_manga_chapters_read">%d chapters read.</string>
-    <string name="profile_stats_time_spent_total">%s in total.</string>
-    <string name="profile_stats_completed">%d completed. More than &lt;b>%d%%&lt;/b> of users.</string>
-    <string name="profile_data_gender">Gender</string>
-    <string name="profile_data_location">Location</string>
-    <string name="profile_data_birthday">Birthday</string>
-    <string name="profile_data_join_date">Join Date</string>
-    <string name="profile_data_join_date_ago">%s ago</string>
-    <string name="profile_data_private">It\'s a secret.</string>
-    <string name="profile_gender_male">Male</string>
-    <string name="profile_gender_female">Female</string>
-    <string name="profile_gender_custom">Custom</string>
-    <string name="profile_gender_custom_hint">Define your gender</string>
+    <string name="profile_anime_stats">Anime İstatistikleri</string>
+    <string name="profile_manga_stats">Manga İstatistikleri</string>
+    <string name="profile_stats_anime_watch_time">%s anime izleyerek geçirdi.</string>
+    <string name="profile_stats_manga_chapters_read">%d bölümler okundu.</string>
+    <string name="profile_stats_time_spent_total">%s toplamda.</string>
+    <string name="profile_stats_completed">%d tamamlandı. Daha fazla &lt;b>%d%%&lt;/b> kullanıcıların.</string>
+    <string name="profile_data_gender">Cinsiyet</string>
+    <string name="profile_data_location">Konum</string>
+    <string name="profile_data_birthday">Doğum Tarihi</string>
+    <string name="profile_data_join_date">Katılım Tarihi</string>
+    <string name="profile_data_join_date_ago">%s önce</string>
+    <string name="profile_data_private">Bu bir sır.</string>
+    <string name="profile_gender_male">Erkek</string>
+    <string name="profile_gender_female">Kadın</string>
+    <string name="profile_gender_custom">Özel</string>
+    <string name="profile_gender_custom_hint">Cinsiyetinizi belirleyin</string>
     <string name="profile_data_waifu">Waifu</string>
     <string name="profile_data_husbando">Husbando</string>
-    <string name="profile_waifu_or_husbando">Waifu or Husbando</string>
-    <string name="profile_find_waifu">Find your special someone</string>
-    <string name="profile_data_bio">Bio</string>
-    <string name="profile_cover_image_description">Cover image</string>
-    <string name="profile_avatar_image_description">Profile picture</string>
-    <string name="profile_link_url">URL or Username</string>
+    <string name="profile_waifu_or_husbando">Waifu veya Husbando</string>
+    <string name="profile_find_waifu">Özel kişiyi bulun</string>
+    <string name="profile_data_bio">Özgeçmiş</string>
+    <string name="profile_cover_image_description">Kapak görseli</string>
+    <string name="profile_avatar_image_description">Profil fotoğrafı</string>
+    <string name="profile_link_url">URL veya Kullanıcı Adı</string>
 
-    <string name="notification_updates">Application Updates</string>
+    <string name="notification_updates">Uygulama Güncellemeleri</string>
 
-    <string name="unit_episode">Episode %d</string>
-    <string name="unit_chapter">Chapter %d</string>
+    <string name="unit_episode">Sezon %d</string>
+    <string name="unit_chapter">Bölüm %d</string>
 
     <!-- Unit Plurals -->
     <plurals name="unit_pages">
-        <item quantity="one">%s Page</item>
-        <item quantity="other">%s Pages</item>
+        <item quantity="one">%s Sayfa</item>
+        <item quantity="other">%s Sayfalar</item>
     </plurals>
 
     <!-- Duration Plurals -->
     <plurals name="duration_seconds">
-        <item quantity="one">%s second</item>
-        <item quantity="other">%s seconds</item>
+        <item quantity="one">%s saniye</item>
+        <item quantity="other">%s saniyeler</item>
     </plurals>
 
     <plurals name="duration_minutes">
-        <item quantity="one">%s minute</item>
-        <item quantity="other">%s minutes</item>
+        <item quantity="one">%s dakika</item>
+        <item quantity="other">%s dakikalar</item>
     </plurals>
 
     <plurals name="duration_hours">
-        <item quantity="one">%s hour</item>
-        <item quantity="other">%s hours</item>
+        <item quantity="one">%s saat</item>
+        <item quantity="other">%s saatler</item>
     </plurals>
 
     <plurals name="duration_days">
-        <item quantity="one">%s day</item>
-        <item quantity="other">%s days</item>
+        <item quantity="one">%s gün</item>
+        <item quantity="other">%s günler</item>
     </plurals>
 
     <plurals name="duration_months">
-        <item quantity="one">%s month</item>
-        <item quantity="other">%s months</item>
+        <item quantity="one">%s ay</item>
+        <item quantity="other">%s aylar</item>
     </plurals>
 
     <plurals name="duration_years">
-        <item quantity="one">%s year</item>
-        <item quantity="other">%s years</item>
+        <item quantity="one">%s yıl</item>
+        <item quantity="other">%s yıllar</item>
     </plurals>
 
     <!-- Transition names -->
