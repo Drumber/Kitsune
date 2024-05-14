@@ -1,0 +1,391 @@
+<resources>
+    <!-- Navigation Titles -->
+    <string name="nav_home">Ana Sayfa</string>
+    <string name="nav_search">Ara</string>
+    <string name="nav_library">Kütüphane</string>
+    <string name="nav_profile">Profil</string>
+    <string name="nav_settings">Ayarlar</string>
+    <string name="nav_appearance">Görünüş</string>
+    <string name="nav_app_logs">Uygulama Günlüğü</string>
+    <string name="nav_os_libraries">Açık Kaynak Kütüphaneleri</string>
+
+    <string name="anime">Anime</string>
+    <string name="manga">Manga</string>
+
+    <string name="action_retry">Yenile</string>
+    <string name="action_ok">Tamam</string>
+    <string name="action_cancel">Durdur</string>
+    <string name="action_reset_filter">Filtreyi sıfırla</string>
+    <string name="action_unselect_all">Seçimi kaldır</string>
+    <string name="action_read_more">Daha fazla bilgi</string>
+    <string name="action_read_less">Daha az bilgi</string>
+    <string name="action_show_more">Daha fazla göster</string>
+    <string name="action_show_less">Daha az göster</string>
+    <string name="action_view">İncele</string>
+    <string name="action_back">Geri</string>
+    <string name="action_close">Kapat</string>
+    <string name="action_log_out">Çıkış</string>
+    <string name="action_share_profile_url">Profili paylaş</string>
+    <string name="action_share">Paylaş</string>
+    <string name="action_open_external">Başka sekmede aç</string>
+    <string name="action_open_external_short">Harici siteler</string>
+    <string name="action_share_app_logs">Kayıtları paylaş</string>
+    <string name="action_add_to_favorites">Favorilere ekle</string>
+    <string name="action_remove_from_favorites">Favorilerden kaldır</string>
+    <string name="action_dismiss">Kapat</string>
+    <string name="action_synchronize">Sekronize</string>
+    <string name="action_save_in_gallery">Galeriye Kaydet</string>
+    <string name="action_open_in_browser">Tarayıcıda Aç</string>
+    <string name="action_open_on_mal">MyAnimeList.net de Aç</string>
+    <string name="action_save_changes">Değişikliği Kaydet</string>
+    <string name="action_edit_profile">Profili Düzenle</string>
+    <string name="action_update_profile">Profili Güncelle</string>
+    <string name="action_add">Ekle</string>
+    <string name="action_remove">Kaldır</string>
+    <string name="action_update">Güncelle</string>
+    <string name="action_start">Başlat</string>
+    <string name="action_allow">İzin</string>
+    <string name="action_rate">Puan</string>
+    <string name="action_update_rating">Puanı Güncelle</string>
+    <string name="action_remove_rating">Puanı Kaldır</string>
+    <string name="action_add_profile_link">Profile Link Ekle</string>
+    <string name="action_edit_profile_link">Profil Linkini Düzenle</string>
+    <string name="action_select_profile_link_site">Siteyi Seç</string>
+    <string name="action_delete_profile_link">Profil Linkini Sil</string>
+
+    <string name="hint_search">Ara</string>
+    <string name="hint_search_characters">Karakteri ara</string>
+    <string name="hint_mark_watched">İzlenildi olarak işaretle.</string>
+    <string name="hint_mark_not_watched">İzlenilmedi olarak işaretle.</string>
+    <string name="hint_rating">Puanla</string>
+
+    <string name="dialog_log_out_confirmation">Çıkış yapmak istediğine emin misin?</string>
+    <string name="dialog_remove_from_library_title">Kütüphaneden kaldır?</string>
+    <string name="dialog_remove_from_library_msg">&lt;b>%s&lt;/b> kütüphaneden kaldırılacak.</string>
+    <string name="dialog_notification_permission_rejected_title">İzin verilmedi</string>
+    <string name="dialog_notification_permission_rejected">Bildirim almayacak ve uygulama güncellemeleri hakkında bilgilendirilmeyeceksiniz.</string>
+    <string name="dialog_request_notification_permission_title">Bildirimlere izin ver</string>
+    <string name="dialog_request_notification_permission">Yeni bir uygulama sürümü yayınlandığında bildirim almak için bildirimlere izin ver.</string>
+
+    <string name="error_resource_loading">Veri yüklenemedi.</string>
+    <string name="error_image_loading">Görüntü yüklenemedi.</string>
+    <string name="error_mapping_loading">Harici siteler için eşleştirmeler yüklenemedi.</string>
+    <string name="error_nothing_found">Bulunamadı.</string>
+    <string name="error_invalid_user">Bilinmeyen kullanıcı. Sen mi giriş yaptın?</string>
+    <string name="error_user_update_failed">Kullanıcı verisi güncellenemedi.</string>
+    <string name="error_user_delete_waifu_failed">Silinemedi Waifu/Husbando.</string>
+    <string name="error_user_update_image_failed">Profil resmi veya kapağı güncellenemedi.</string>
+    <string name="error_user_create_profile_link_failed">Profil bağlantısı oluşturulamadı %s.</string>
+    <string name="error_user_update_profile_link_failed">Profil bağlantısı güncellenemedi %s.</string>
+    <string name="error_user_delete_profile_link_failed">Profil bağlantısı silinemedi %s.</string>
+    <string name="error_something_wrong">Hay aksi, bir şeyler ters gitti!</string>
+    <string name="error_requires_external_storage_permission">Harici depolama alanına yazma izni gerekiyor.</string>
+    <string name="error_search_provider_unavailable">Arama sağlayıcısı bulunamadı.</string>
+    <string name="error_library_update_failed">Kütüphane güncellemesi başarısız.</string>
+    <string name="error_library_update_failed_multiple">Güncellenemedi %d kütüphane girişleri.</string>
+    <string name="error_library_update_not_found">Kütüphane kaydı mevcut değil.</string>
+    <string name="error_library_add_failed">Küthaneye eklenemedi.</string>
+    <string name="error_library_delete_failed">Kütüphane kaydı silinemedi.</string>
+    <string name="error_requires_notification_permission">Bildirim izni gerekli.</string>
+
+    <string name="sort_popularity_asc">En Az Popüler</string>
+    <string name="sort_popularity_desc">En Popüler</string>
+    <string name="sort_average_rating_asc">En Kötü Puanlı</string>
+    <string name="sort_average_rating_desc">En İyi Puanlı</string>
+    <string name="sort_release_date_asc">Eskiler</string>
+    <string name="sort_release_date_desc">Yeniler</string>
+
+    <string name="title_media_type">Medya Tipi</string>
+    <string name="title_character_appearances">Karakter Görünümleri</string>
+    <string name="title_categories">Kategoriler</string>
+    <string name="title_filter">Filtre</string>
+    <string name="title_description">Açıklama</string>
+    <string name="title_details">Detaylar</string>
+    <string name="title_streamer">İzleme Bağlantıları</string>
+    <string name="title_ratings">Puanlar</string>
+    <string name="title_more_franchise">Bu seriden daha fazla</string>
+    <string name="title_favorite_anime">Favori Anime</string>
+    <string name="title_favorite_manga">Favori Manga</string>
+    <string name="title_favorite_characters">Favori Karakterler</string>
+    <string name="title_authentication">Doğrulama</string>
+    <string name="title_login">Kitsu hesabına giriş yap</string>
+    <string name="title_play_trailer">Fragmanı Oynat</string>
+    <string name="title_about_me">Hakkımda</string>
+    <string name="title_episodes">Sezonlar</string>
+    <string name="title_chapters">Bölümler</string>
+    <string name="title_characters">Karakterler</string>
+    <string name="title_edit_library_entry">Kütüphane Girişini Güncelle</string>
+    <string name="title_edit_profile">Profili Düzenle</string>
+
+    <string name="no_information">Bilinmeyen</string>
+    <string name="no_data_available">Veri Bulunamadı</string>
+
+    <string name="status_current">Şu An Yayında</string>
+    <string name="status_current_manga">Yayıncı</string>
+    <string name="status_finished">Bitiş</string>
+    <string name="status_tba">TBA</string>
+    <string name="status_unreleased">Yayınlanmamış</string>
+    <string name="status_upcoming">Yakında</string>
+
+    <string name="character_role_main">Ana</string>
+    <string name="character_role_supporting">Destekle</string>
+    <string name="character_role_recurring">Tekrarlanan</string>
+    <string name="character_role_cameo">Cameo</string>
+
+    <string name="library_status_watching">İzle</string>
+    <string name="library_status_planned">İzlemek İstediklerim</string>
+    <string name="library_status_completed">Tamamlananlar</string>
+    <string name="library_status_on_hold">Beklemede</string>
+    <string name="library_status_dropped">Çıkar</string>
+    <string name="library_status_reading">Okunan</string>
+    <string name="library_status_planned_manga">Okumak İstediklerim</string>
+    <string name="library_action_remove">Kütüphaneden Kaldır</string>
+    <string name="library_action_add">Kütüphaneye Ekle</string>
+    <string name="library_action_edit">Kütüphaneyi Düzenle</string>
+
+    <string name="data_rank">Seviye #%d</string>
+    <string name="data_popularity">Popülerite #%d</string>
+    <string name="data_kitsu_score">Kitsu Skoru %s%%</string>
+    <string name="data_length_total">%s toplam</string>
+    <string name="data_length_each">%d geçen dakika</string>
+
+    <string name="data_title_english">English</string>
+    <string name="data_title_japanese">Japanese</string>
+    <string name="data_title_japanese_romaji">Japanese (Romaji)</string>
+    <string name="data_abbreviated_titles">Eş Anlamlılar</string>
+    <string name="data_other_names">Ayrıca şöyle bilinir</string>
+    <string name="data_title_type">Tipi</string>
+    <string name="data_title_status">Durumu</string>
+    <string name="data_title_aired">Yayınlanan</string>
+    <string name="data_title_published">Yayınlandı</string>
+    <string name="data_title_tba">Beklenen</string>
+    <string name="data_title_season">Sezon</string>
+    <string name="data_title_age_rating">Puan</string>
+    <string name="data_title_serialization">Serileştirme</string>
+    <string name="data_title_chapters">Bölümler</string>
+    <string name="data_title_volumes">Ciltler</string>
+    <string name="data_title_episodes">Sezonlar</string>
+    <string name="data_title_length">Uzunluk</string>
+    <string name="data_title_producers">Yapımcıları</string>
+    <string name="data_title_licensors">Lisans Sahipleri</string>
+    <string name="data_title_studios">Stüdyolar</string>
+
+    <string name="season_winter">Kış</string>
+    <string name="season_spring">İlkbahar</string>
+    <string name="season_summer">Yaz</string>
+    <string name="season_fall">Sonbahar</string>
+
+    <string name="relationship_sequel">Devamı</string>
+    <string name="relationship_prequel">Öncesi</string>
+    <string name="relationship_alternative_setting">Alt. ayarlar</string>
+    <string name="relationship_alternative_version">Alt. versiyon</string>
+    <string name="relationship_side_story">Yan hikaye</string>
+    <string name="relationship_parent_story">Ebeveyn hikayesi</string>
+    <string name="relationship_summary">Özet</string>
+    <string name="relationship_full_story">Bütün hikaye</string>
+    <string name="relationship_spinoff">Yan ürün</string>
+    <string name="relationship_adaptation">Adaptasyon</string>
+    <string name="relationship_character">Karakter</string>
+    <string name="relationship_other">Diğer</string>
+
+    <string name="section_trending">Haftanın Trendleri</string>
+    <string name="section_top_airing_anime">En Çok Gösterilen Anime</string>
+    <string name="section_top_upcoming_anime">Gelecek En İyi Anime</string>
+    <string name="section_highest_rated_anime">En Yüksek Puanlı Anime</string>
+    <string name="section_most_popular_anime">En Popüler Anime</string>
+    <string name="section_top_airing_manga">En İyi Manga Yayınları</string>
+    <string name="section_top_upcoming_manga">Gelecek En İyi Manga</string>
+    <string name="section_highest_rated_manga">En Yüksek Puanlı Manga</string>
+    <string name="section_most_popular_manga">En Popüler Manga</string>
+
+    <string name="preference_category_ui">Kullanıcı Arayüzü</string>
+    <string name="preference_category_account">Hesap</string>
+    <string name="preference_category_advanced">Gelişmiş</string>
+    <string name="preference_category_about">Hakkında</string>
+
+    <string name="preference_appearance_description">Temayı değiştirin ve karanlık modu açın.</string>
+    <string name="preference_dark_mode">Karanlık Tema</string>
+    <string name="preference_dark_mode_light">Aydınlık</string>
+    <string name="preference_dark_mode_dark">Karanlık</string>
+    <string name="preference_dark_mode_follow_system">Sistem Temasına Uy</string>
+    <string name="preference_dark_mode_battery_saver">Pil Tasarrufu</string>
+    <string name="preference_oled_black_mode">OLED Siyah</string>
+    <string name="preference_oled_black_mode_description">Karanlık modda siyah arka plan kullan.</string>
+    <string name="preference_app_theme">Tema</string>
+    <string name="preference_dynamic_color_theme">Dinamik Renk Seç</string>
+    <string name="preference_dynamic_color_theme_description">Sistem temasına uy.</string>
+    <string name="preference_app_theme_default">Varsayılan</string>
+    <string name="preference_app_theme_purple">Mor</string>
+    <string name="preference_app_theme_blue">Mavi</string>
+    <string name="preference_app_theme_green">Yeşil</string>
+    <string name="preference_media_item_size">Poster Görüntü Boyutu</string>
+    <string name="preference_media_item_size_small">Küçük</string>
+    <string name="preference_media_item_size_medium">Orta</string>
+    <string name="preference_media_item_size_large">Büyük</string>
+    <string name="preference_start_fragment">Varsayılan Sayfa</string>
+    <string name="preference_start_fragment_home">Ev</string>
+    <string name="preference_start_fragment_search">Ara</string>
+    <string name="preference_start_fragment_library">Kütüphane</string>
+    <string name="preference_start_fragment_profile">Profil</string>
+    <string name="preference_start_fragment_description">Varsayılan sayfa olarak ayarlandı %s.</string>
+    <string name="preference_language">Dil</string>
+    <string name="preference_display_name">Görünen Ad</string>
+    <string name="preference_profile_url">Profil URL</string>
+    <string name="preference_profile_url_not_set">Profil URL\'si ayarlanmadı.</string>
+    <string name="preference_country">Ülke</string>
+    <string name="preference_country_summary">Ülke şu şekilde ayarlandı %s</string>
+    <string name="preference_country_summary_non">Ülke belirtilmedi.</string>
+    <string name="preference_titles">Başlıklar</string>
+    <string name="preference_titles_description">Medya başlıklarının nasıl görüntüleneceğini belirle.</string>
+    <string name="preference_titles_canonical">Standart</string>
+    <string name="preference_titles_romanized">Romanize</string>
+    <string name="preference_titles_english">İngilizce</string>
+    <string name="preference_adult_content">Yetişkin İçeriği</string>
+    <string name="preference_adult_content_description_sfw">R18+ yaş derecelendirmesi olan medya gizlenecek.</string>
+    <string name="preference_adult_content_description_sometimes">R18+ yaş derecelendirmesi olan medya görünür olacak, ancak NSFW etiketiyle işaretlenmiş gönderiler genel akışta gizlenecek.</string>
+    <string name="preference_adult_content_description_everywhere">R18+ yaş derecelendirmesine sahip medya her yerde görünür olacak.</string>
+    <string name="preference_sfw_filter_hide_all">Tüm Yetişkin İçeriğini Gizle</string>
+    <string name="preference_sfw_filter_limit_to_feed">Aşağıdaki Akışla Sınırla</string>
+    <string name="preference_sfw_filter_show_all">Her Yerde Yetişkin İçeriği</string>
+    <string name="preference_rating_system">Puan Sistemi</string>
+    <string name="preference_rating_system_simple">Basit</string>
+    <string name="preference_rating_system_regular">Orta</string>
+    <string name="preference_rating_system_advanced">Gelişmiş</string>
+    <string name="preference_remember_search_filters">Arama Filtrelerini Hatırla</string>
+    <string name="preference_remember_search_filters_description">Uygulama yeniden başlatıldıktan sonra son kullanılan arama filtrelerini uygula.</string>
+    <string name="preference_force_legacy_image_picker">Geçmiş Fotoğraf Seçiciyi Zorla</string>
+    <string name="preference_force_legacy_image_picker_description">Sistem dosya seçicisini kullanmak için yeni fotoğraf seçicisi yerine zorla.</string>
+    <string name="preference_check_for_updates">Başlangıçta Güncellemeleri Kontrol Et</string>
+    <string name="preference_check_for_updates_description">Her başlatmada yeni bir uygulama sürümü olup olmadığını kontrol edin.</string>
+    <string name="preference_app_logs_description">Uygulama günlük mesajlarını gör ve paylaş.</string>
+    <string name="preference_app_version">Versiyon Bİlgisi</string>
+    <string name="preference_app_version_description">Tıkla ve güncellemeyi kontrol et.</string>
+    <string name="preference_github_repo">GitHub Deposu</string>
+    <string name="preference_open_source_libraries_description">Kullanılan tüm açık kaynak kütüphanelerinin listesi.</string>
+
+    <string name="preference_not_logged_in">Bu ayarı düzenlemek için oturum açmalısınız.</string>
+    <string name="app_logs_no_data">Kayıt mevcut değil.</string>
+
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Şifre</string>
+    <string name="action_sign_in">Oturum aç</string>
+    <string name="action_log_in">Giriş yap</string>
+    <string name="action_log_in_to_kitsu">Kitsu ile giriş yap</string>
+    <string name="invalid_username">Email adresi bulunamadı</string>
+    <string name="login_failed">"Giriş başarısız"</string>
+    <string name="status_logging_in">Giriş…</string>
+    <string name="logged_in_success">Olarak oturum açtı %s.</string>
+    <string name="login_no_account">Hesabınız yok mu? Bir tane oluşturun <a href="https://kitsu.io">kitsu.io</a>.</string>
+    <string name="not_logged_in">Giriş yapılamadı</string>
+
+    <string name="library_not_started">Başlatılamadı</string>
+    <string name="library_not_rated">Derecelendirilmemiş</string>
+    <string name="library_not_logged_in_title">Kütüphanenize erişmek için giriş yapın</string>
+    <string name="library_not_logged_in_text">Kütüphanenizi yönetmek ve tüm özelliklere erişmek için Kitsu Hesabınıza giriş yapın.</string>
+    <string name="library_kind_all">Hepsi</string>
+    <string name="library_not_synchronized">Sekronize Değil</string>
+
+    <string name="library_edit_status">Kütüphane Durumu</string>
+    <string name="library_edit_progress">İlerleme</string>
+    <string name="library_edit_volumes">Ciltler</string>
+    <string name="library_edit_rating">Derecelendirme</string>
+    <string name="library_edit_rewatch_count">Tekrar İzleme Sayısı</string>
+    <string name="library_edit_reread_count">Tekrar Okuma Sayısı</string>
+    <string name="library_edit_start_rewatch">Tekrar İzlemeye Başlat</string>
+    <string name="library_edit_start_reread">Tekrar Okumaya Başlat</string>
+    <string name="library_edit_privacy">Gizlilik</string>
+    <string name="library_edit_privacy_public">Halka Açık</string>
+    <string name="library_edit_privacy_private">Özel</string>
+    <string name="library_edit_started">Başlatıldı</string>
+    <string name="library_edit_finished">Bitirildi</string>
+    <string name="library_edit_no_date_set">Tarih belirlenmemiş</string>
+    <string name="library_edit_notes">Kişisel Notları</string>
+
+    <string name="info_log_in_required">Tüm özelliklere erişmek için giriş yapın.</string>
+    <string name="info_image_saved_in_gallery">Görsel galeriye başarıyla kaydedildi.</string>
+    <string name="info_update_checking_new_version">Yeni sürüm kontrol ediliyor…</string>
+    <string name="info_update_new_version_available">Yeni sürüm mevcut.</string>
+    <string name="info_update_new_version_available_text">Sürüm %s Kitsune\'un bir sürüm mevcut.</string>
+    <string name="info_update_no_new_version_available">Yeni sürümü mevcut değil.</string>
+    <string name="info_update_failed">Yeni sürüm kontrolü başarısız oldu.</string>
+    <string name="info_logged_out_token_expired">Erişim tokeninizin süresi doldu. Lütfen tekrar giriş yapın.</string>
+
+    <string name="filter_kind">Tür</string>
+    <string name="filter_year">Yıl</string>
+    <string name="filter_avg_rating">Ortalama Puan</string>
+    <string name="filter_select_categories">Kategori Seç</string>
+    <string name="filter_season">Sezon</string>
+    <string name="filter_subtype">Alt Tür</string>
+    <string name="filter_streamers">Yayıncılar</string>
+    <string name="filter_age_rating">Yaş Derecelendirmesi</string>
+
+    <string name="profile_not_logged_in_title">Burada görülecek bir şey yok!</string>
+    <string name="profile_not_logged_in_text">Tüm özelliklere erişmek için Kitsu Hesabınıza giriş yapın veya yeni bir Hesap oluşturun.</string>
+
+    <string name="profile_anime_stats">Anime İstatistikleri</string>
+    <string name="profile_manga_stats">Manga İstatistikleri</string>
+    <string name="profile_stats_anime_watch_time">%s anime izleyerek geçirdi.</string>
+    <string name="profile_stats_manga_chapters_read">%d bölümler okundu.</string>
+    <string name="profile_stats_time_spent_total">%s toplamda.</string>
+    <string name="profile_stats_completed">%d tamamlandı. Daha fazla &lt;b>%d%%&lt;/b> kullanıcıların.</string>
+    <string name="profile_data_gender">Cinsiyet</string>
+    <string name="profile_data_location">Konum</string>
+    <string name="profile_data_birthday">Doğum Tarihi</string>
+    <string name="profile_data_join_date">Katılım Tarihi</string>
+    <string name="profile_data_join_date_ago">%s önce</string>
+    <string name="profile_data_private">Bu bir sır.</string>
+    <string name="profile_gender_male">Erkek</string>
+    <string name="profile_gender_female">Kadın</string>
+    <string name="profile_gender_custom">Özel</string>
+    <string name="profile_gender_custom_hint">Cinsiyetinizi belirleyin</string>
+    <string name="profile_data_waifu">Waifu</string>
+    <string name="profile_data_husbando">Husbando</string>
+    <string name="profile_waifu_or_husbando">Waifu veya Husbando</string>
+    <string name="profile_find_waifu">Özel kişiyi bulun</string>
+    <string name="profile_data_bio">Özgeçmiş</string>
+    <string name="profile_cover_image_description">Kapak görseli</string>
+    <string name="profile_avatar_image_description">Profil fotoğrafı</string>
+    <string name="profile_link_url">URL veya Kullanıcı Adı</string>
+
+    <string name="notification_updates">Uygulama Güncellemeleri</string>
+
+    <string name="unit_episode">Sezon %d</string>
+    <string name="unit_chapter">Bölüm %d</string>
+
+    <!-- Unit Plurals -->
+    <plurals name="unit_pages">
+        <item quantity="one">%s Sayfa</item>
+        <item quantity="other">%s Sayfalar</item>
+    </plurals>
+
+    <!-- Duration Plurals -->
+    <plurals name="duration_seconds">
+        <item quantity="one">%s saniye</item>
+        <item quantity="other">%s saniyeler</item>
+    </plurals>
+
+    <plurals name="duration_minutes">
+        <item quantity="one">%s dakika</item>
+        <item quantity="other">%s dakikalar</item>
+    </plurals>
+
+    <plurals name="duration_hours">
+        <item quantity="one">%s saat</item>
+        <item quantity="other">%s saatler</item>
+    </plurals>
+
+    <plurals name="duration_days">
+        <item quantity="one">%s gün</item>
+        <item quantity="other">%s günler</item>
+    </plurals>
+
+    <plurals name="duration_months">
+        <item quantity="one">%s ay</item>
+        <item quantity="other">%s aylar</item>
+    </plurals>
+
+    <plurals name="duration_years">
+        <item quantity="one">%s yıl</item>
+        <item quantity="other">%s yıllar</item>
+    </plurals>
+</resources>
