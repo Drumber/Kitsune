@@ -26,6 +26,10 @@ android {
         buildConfigField "boolean", "SCREENSHOT_MODE_ENABLED", screenshotMode
     }
 
+    androidResources {
+        generateLocaleConfig true
+    }
+
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas".toString())
     }
