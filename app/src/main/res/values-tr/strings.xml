@@ -1,7 +1,4 @@
 <resources>
-    <string name="app_name" translatable="false">Kitsune</string>
-    <string name="github_repo_url" translatable="false">https://github.com/Drumber/Kitsune</string>
-
     <!-- Navigation Titles -->
     <string name="nav_home">Ana Sayfa</string>
     <string name="nav_search">Ara</string>
@@ -208,12 +205,10 @@
 
     <string name="preference_appearance_description">Temayı değiştirin ve karanlık modu açın.</string>
     <string name="preference_dark_mode">Karanlık Tema</string>
-    <string-array name="preference_dark_mode_entries">
-        <item>Aydınlık</item>
-        <item>Karanlık</item>
-        <item>Sistem Temasına Uy</item>
-        <item>Pil Tasarrufu</item>
-    </string-array>
+    <string name="preference_dark_mode_light">Aydınlık</string>
+    <string name="preference_dark_mode_dark">Karanlık</string>
+    <string name="preference_dark_mode_follow_system">Sistem Temasına Uy</string>
+    <string name="preference_dark_mode_battery_saver">Pil Tasarrufu</string>
     <string name="preference_oled_black_mode">OLED Siyah</string>
     <string name="preference_oled_black_mode_description">Karanlık modda siyah arka plan kullan.</string>
     <string name="preference_app_theme">Tema</string>
@@ -224,60 +219,48 @@
     <string name="preference_app_theme_blue">Mavi</string>
     <string name="preference_app_theme_green">Yeşil</string>
     <string name="preference_media_item_size">Poster Görüntü Boyutu</string>
-    <string-array name="preference_media_item_size_entries">
-        <item>Küçük</item>
-        <item>Orta</item>
-        <item>Büyük</item>
-    </string-array>
+    <string name="preference_media_item_size_small">Küçük</string>
+    <string name="preference_media_item_size_medium">Orta</string>
+    <string name="preference_media_item_size_large">Büyük</string>
     <string name="preference_start_fragment">Varsayılan Sayfa</string>
-    <string-array name="preference_start_fragment_entries">
-        <item>Ev</item>
-        <item>Ara</item>
-        <item>Kütüphane</item>
-        <item>Profil</item>
-    </string-array>
+    <string name="preference_start_fragment_home">Ev</string>
+    <string name="preference_start_fragment_search">Ara</string>
+    <string name="preference_start_fragment_library">Kütüphane</string>
+    <string name="preference_start_fragment_profile">Profil</string>
     <string name="preference_start_fragment_description">Varsayılan sayfa olarak ayarlandı %s.</string>
     <string name="preference_language">Dil</string>
     <string name="preference_display_name">Görünen Ad</string>
     <string name="preference_profile_url">Profil URL</string>
-    <string name="preference_profile_url_not_set">Profil URL'si ayarlanmadı.</string>
+    <string name="preference_profile_url_not_set">Profil URL\'si ayarlanmadı.</string>
     <string name="preference_country">Ülke</string>
     <string name="preference_country_summary">Ülke şu şekilde ayarlandı %s</string>
     <string name="preference_country_summary_non">Ülke belirtilmedi.</string>
     <string name="preference_titles">Başlıklar</string>
     <string name="preference_titles_description">Medya başlıklarının nasıl görüntüleneceğini belirle.</string>
-    <string-array name="preference_titles_values">
-        <item>Standart</item>
-        <item>Romanize</item>
-        <item>İngilizce</item>
-    </string-array>
+    <string name="preference_titles_canonical">Standart</string>
+    <string name="preference_titles_romanized">Romanize</string>
+    <string name="preference_titles_english">İngilizce</string>
     <string name="preference_adult_content">Yetişkin İçeriği</string>
     <string name="preference_adult_content_description_sfw">R18+ yaş derecelendirmesi olan medya gizlenecek.</string>
     <string name="preference_adult_content_description_sometimes">R18+ yaş derecelendirmesi olan medya görünür olacak, ancak NSFW etiketiyle işaretlenmiş gönderiler genel akışta gizlenecek.</string>
     <string name="preference_adult_content_description_everywhere">R18+ yaş derecelendirmesine sahip medya her yerde görünür olacak.</string>
-    <string-array name="preference_sfw_filter_values">
-        <item>Tüm Yetişkin İçeriğini Gizle</item>
-        <item>Aşağıdaki Akışla Sınırla</item>
-        <item>Her Yerde Yetişkin İçeriği</item>
-    </string-array>
+    <string name="preference_sfw_filter_hide_all">Tüm Yetişkin İçeriğini Gizle</string>
+    <string name="preference_sfw_filter_limit_to_feed">Aşağıdaki Akışla Sınırla</string>
+    <string name="preference_sfw_filter_show_all">Her Yerde Yetişkin İçeriği</string>
     <string name="preference_rating_system">Puan Sistemi</string>
-    <string-array name="preference_rating_system_values">
-        <item>Basit</item>
-        <item>Orta</item>
-        <item>Gelişmiş</item>
-    </string-array>
+    <string name="preference_rating_system_simple">Basit</string>
+    <string name="preference_rating_system_regular">Orta</string>
+    <string name="preference_rating_system_advanced">Gelişmiş</string>
     <string name="preference_remember_search_filters">Arama Filtrelerini Hatırla</string>
     <string name="preference_remember_search_filters_description">Uygulama yeniden başlatıldıktan sonra son kullanılan arama filtrelerini uygula.</string>
     <string name="preference_force_legacy_image_picker">Geçmiş Fotoğraf Seçiciyi Zorla</string>
     <string name="preference_force_legacy_image_picker_description">Sistem dosya seçicisini kullanmak için yeni fotoğraf seçicisi yerine zorla.</string>
     <string name="preference_check_for_updates">Başlangıçta Güncellemeleri Kontrol Et</string>
     <string name="preference_check_for_updates_description">Her başlatmada yeni bir uygulama sürümü olup olmadığını kontrol edin.</string>
-    <string name="preference_app_logs">@string/nav_app_logs</string>
     <string name="preference_app_logs_description">Uygulama günlük mesajlarını gör ve paylaş.</string>
     <string name="preference_app_version">Versiyon Bİlgisi</string>
     <string name="preference_app_version_description">Tıkla ve güncellemeyi kontrol et.</string>
     <string name="preference_github_repo">GitHub Deposu</string>
-    <string name="preference_open_source_libraries">@string/nav_os_libraries</string>
     <string name="preference_open_source_libraries_description">Kullanılan tüm açık kaynak kütüphanelerinin listesi.</string>
 
     <string name="preference_not_logged_in">Bu ayarı düzenlemek için oturum açmalısınız.</string>
@@ -322,7 +305,7 @@
     <string name="info_image_saved_in_gallery">Görsel galeriye başarıyla kaydedildi.</string>
     <string name="info_update_checking_new_version">Yeni sürüm kontrol ediliyor…</string>
     <string name="info_update_new_version_available">Yeni sürüm mevcut.</string>
-    <string name="info_update_new_version_available_text">Sürüm %s Kitsune'un bir sürüm mevcut.</string>
+    <string name="info_update_new_version_available_text">Sürüm %s Kitsune\'un bir sürüm mevcut.</string>
     <string name="info_update_no_new_version_available">Yeni sürümü mevcut değil.</string>
     <string name="info_update_failed">Yeni sürüm kontrolü başarısız oldu.</string>
     <string name="info_logged_out_token_expired">Erişim tokeninizin süresi doldu. Lütfen tekrar giriş yapın.</string>
@@ -405,10 +388,4 @@
         <item quantity="one">%s yıl</item>
         <item quantity="other">%s yıllar</item>
     </plurals>
-
-    <!-- Transition names -->
-    <string name="unique_poster_transition_name" translatable="false">media_item_poster_%1$s</string>
-    <string name="details_poster_transition_name" translatable="false">media_details_poster</string>
-    <string name="character_picture_transition_name" translatable="false">character_picture</string>
-
 </resources>
