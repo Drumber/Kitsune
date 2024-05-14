@@ -208,12 +208,16 @@
 
     <string name="preference_appearance_description">Change the theme and toggle dark mode.</string>
     <string name="preference_dark_mode">Dark Mode</string>
-    <string-array name="preference_dark_mode_entries">
-        <item>Light</item>
-        <item>Dark</item>
-        <item>Follow System</item>
-        <item>Battery Saver</item>
+    <string-array name="preference_dark_mode_entries" translatable="false">
+        <item>@string/preference_dark_mode_light</item>
+        <item>@string/preference_dark_mode_dark</item>
+        <item>@string/preference_dark_mode_follow_system</item>
+        <item>@string/preference_dark_mode_battery_saver</item>
     </string-array>
+    <string name="preference_dark_mode_light">Light</string>
+    <string name="preference_dark_mode_dark">Dark</string>
+    <string name="preference_dark_mode_follow_system">Follow System</string>
+    <string name="preference_dark_mode_battery_saver">Battery Saver</string>
     <string name="preference_oled_black_mode">OLED Black</string>
     <string name="preference_oled_black_mode_description">Use a black background in dark mode.</string>
     <string name="preference_app_theme">Theme</string>
@@ -224,18 +228,25 @@
     <string name="preference_app_theme_blue">Blue</string>
     <string name="preference_app_theme_green">Green</string>
     <string name="preference_media_item_size">Poster Image Size</string>
-    <string-array name="preference_media_item_size_entries">
-        <item>Small</item>
-        <item>Medium</item>
-        <item>Large</item>
+    <string-array name="preference_media_item_size_entries" translatable="false">
+        <item>@string/preference_media_item_size_small</item>
+        <item>@string/preference_media_item_size_medium</item>
+        <item>@string/preference_media_item_size_large</item>
     </string-array>
+    <string name="preference_media_item_size_small">Small</string>
+    <string name="preference_media_item_size_medium">Medium</string>
+    <string name="preference_media_item_size_large">Large</string>
     <string name="preference_start_fragment">Default Page</string>
-    <string-array name="preference_start_fragment_entries">
-        <item>Home</item>
-        <item>Search</item>
-        <item>Library</item>
-        <item>Profile</item>
+    <string-array name="preference_start_fragment_entries" translatable="false">
+        <item>@string/preference_start_fragment_home</item>
+        <item>@string/preference_start_fragment_search</item>
+        <item>@string/preference_start_fragment_library</item>
+        <item>@string/preference_start_fragment_profile</item>
     </string-array>
+    <string name="preference_start_fragment_home">Home</string>
+    <string name="preference_start_fragment_search">Search</string>
+    <string name="preference_start_fragment_library">Library</string>
+    <string name="preference_start_fragment_profile">Profile</string>
     <string name="preference_start_fragment_description">The default page is set to %s.</string>
     <string name="preference_language">Language</string>
     <string name="preference_display_name">Display Name</string>
@@ -246,38 +257,47 @@
     <string name="preference_country_summary_non">No country specified.</string>
     <string name="preference_titles">Titles</string>
     <string name="preference_titles_description">Define how media titles will be displayed.</string>
-    <string-array name="preference_titles_values">
-        <item>Canonical</item>
-        <item>Romanized</item>
-        <item>English</item>
+    <string-array name="preference_titles_values" translatable="false">
+        <item>@string/preference_titles_canonical</item>
+        <item>@string/preference_titles_romanized</item>
+        <item>@string/preference_titles_english</item>
     </string-array>
+    <string name="preference_titles_canonical">Canonical</string>
+    <string name="preference_titles_romanized">Romanized</string>
+    <string name="preference_titles_english">English</string>
     <string name="preference_adult_content">Adult Content</string>
     <string name="preference_adult_content_description_sfw">Media with R18+ age rating will be hidden.</string>
     <string name="preference_adult_content_description_sometimes">Media with R18+ age rating will be visible, but posts tagged NSFW will be hidden in the global feed.</string>
     <string name="preference_adult_content_description_everywhere">Media with R18+ age rating will be visible everywhere.</string>
-    <string-array name="preference_sfw_filter_values">
-        <item>Hide all Adult Content</item>
-        <item>Limit to Following Feed</item>
-        <item>Adult Content Everywhere</item>
+    <string-array name="preference_sfw_filter_values" translatable="false">
+        <item>@string/preference_sfw_filter_hide_all</item>
+        <item>@string/preference_sfw_filter_limit_to_feed</item>
+        <item>@string/preference_sfw_filter_show_all</item>
     </string-array>
+    <string name="preference_sfw_filter_hide_all">Hide all Adult Content</string>
+    <string name="preference_sfw_filter_limit_to_feed">Limit to Following Feed</string>
+    <string name="preference_sfw_filter_show_all">Adult Content Everywhere</string>
     <string name="preference_rating_system">Rating System</string>
-    <string-array name="preference_rating_system_values">
-        <item>Simple</item>
-        <item>Regular</item>
-        <item>Advanced</item>
+    <string-array name="preference_rating_system_values" translatable="false">
+        <item>@string/preference_rating_system_simple</item>
+        <item>@string/preference_rating_system_regular</item>
+        <item>@string/preference_rating_system_advanced</item>
     </string-array>
+    <string name="preference_rating_system_simple">Simple</string>
+    <string name="preference_rating_system_regular">Regular</string>
+    <string name="preference_rating_system_advanced">Advanced</string>
     <string name="preference_remember_search_filters">Remember Search Filters</string>
     <string name="preference_remember_search_filters_description">Apply the last used search filters after an app restart.</string>
     <string name="preference_force_legacy_image_picker">Force legacy Photo Picker</string>
     <string name="preference_force_legacy_image_picker_description">Use the system file picker instead of the new photo picker.</string>
     <string name="preference_check_for_updates">Check for Updates on Launch</string>
     <string name="preference_check_for_updates_description">Check for a new app version on every launch.</string>
-    <string name="preference_app_logs">@string/nav_app_logs</string>
+    <string name="preference_app_logs" translatable="false">@string/nav_app_logs</string>
     <string name="preference_app_logs_description">See and share the application log messages.</string>
     <string name="preference_app_version">Version Info</string>
     <string name="preference_app_version_description">Click to check for updates.</string>
     <string name="preference_github_repo">GitHub Repository</string>
-    <string name="preference_open_source_libraries">@string/nav_os_libraries</string>
+    <string name="preference_open_source_libraries" translatable="false">@string/nav_os_libraries</string>
     <string name="preference_open_source_libraries_description">A list of all used open source libraries.</string>
 
     <string name="preference_not_logged_in">You must be logged in to edit this setting.</string>
