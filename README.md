@@ -44,6 +44,14 @@ Kitsune is available for download on GitHub and F-Droid.
 
 </details>
 
+### Localization
+Are you interested in translating Kitsune into your language?  
+Head over to the Kitsune project on [Hosted Weblate](https://hosted.weblate.org/engage/kitsune/) and help localize the app.
+
+<a href="https://hosted.weblate.org/engage/kitsune/">
+<img src="https://hosted.weblate.org/widget/kitsune/287x66-white.png" alt="Übersetzungsstatus" />
+</a>
+
 ## Screenshots
 <img src="./media/light_home_screen_framed.png" width="250"> <img src="./media/dark_home_screen_framed.png" width="250"> <img src="./media/dark_purple_home_screen_framed.png" width="250">
 
