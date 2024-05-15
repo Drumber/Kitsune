@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.util.network
 
 import io.github.drumber.kitsune.domain.Result
-import io.github.drumber.kitsune.domain.repository.AuthRepository
+import io.github.drumber.kitsune.domain.manager.AuthManager
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logI
 import kotlinx.coroutines.runBlocking
@@ -13,15 +13,14 @@ import okhttp3.Route
 
 interface AuthenticationInterceptor : Interceptor, Authenticator
 
-class AuthenticationInterceptorImpl(private val authRepository: AuthRepository) :
-    AuthenticationInterceptor {
+class AuthenticationInterceptorImpl(
+    private val authManager: AuthManager
+) : AuthenticationInterceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val requestBuilder = chain.request().newBuilder()
-        if (authRepository.isLoggedIn) {
-            authRepository.accessToken?.accessToken?.let {
-                requestBuilder.header("Authorization", "Bearer $it")
-            }
+        authManager.getAccessToken()?.accessToken?.let {
+            requestBuilder.header("Authorization", "Bearer $it")
         }
         return chain.proceed(requestBuilder.build())
     }
@@ -32,10 +31,9 @@ class AuthenticationInterceptorImpl(private val authRepository: AuthRepository) 
     override fun authenticate(route: Route?, response: Response): Request? {
         if (response.responseCount > 3) return null
 
-        val localAccessTokenHolder = authRepository.accessToken
+        val localAccessTokenHolder = authManager.getAccessToken()
         val localAccessToken = localAccessTokenHolder?.accessToken
-        val localRefreshToken = localAccessTokenHolder?.refreshToken
-        if (!authRepository.isLoggedIn || localAccessToken == null || localRefreshToken == null) return null
+        if (!authManager.hasAccessToken() || localAccessToken == null) return null
 
         // check if the token from the request differs from the local stored access token
         val isTokenAlreadyRefreshed = response.request
@@ -48,7 +46,7 @@ class AuthenticationInterceptorImpl(private val authRepository: AuthRepository) 
         } else {
             logI("Refreshing access token because of a 401 Unauthorized response.")
             val refreshResponse = runBlocking {
-                authRepository.refreshAccessToken(localRefreshToken)
+                authManager.refreshAccessToken()
             }
             if (refreshResponse !is Result.Success) return null
             refreshResponse.data.accessToken ?: return null

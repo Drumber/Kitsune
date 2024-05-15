@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.map
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -43,6 +44,8 @@ import io.github.drumber.kitsune.ui.permissions.showNotificationPermissionReject
 import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
 import io.github.drumber.kitsune.util.ui.RoundBitmapDrawable
 import io.github.drumber.kitsune.util.ui.getSystemBarsAndCutoutInsets
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -67,10 +70,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
 
         val userRepository = get<UserRepository>()
-        userRepository.userReLoginPrompt.observe(this) {
-            if (it) {
+        lifecycleScope.launch {
+            userRepository.userReLoginSignal.collectLatest {
                 promptUserReLogin()
-                userRepository.userReLoginPrompt.postValue(false)
             }
         }
 

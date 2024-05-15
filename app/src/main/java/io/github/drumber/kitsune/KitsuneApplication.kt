@@ -7,8 +7,8 @@ import com.algolia.instantsearch.core.InstantSearchTelemetry
 import com.chibatching.kotpref.Kotpref
 import com.chibatching.kotpref.livedata.asLiveData
 import io.github.drumber.kitsune.di.appModule
+import io.github.drumber.kitsune.domain.manager.AuthManager
 import io.github.drumber.kitsune.domain.manager.GitHubUpdateChecker
-import io.github.drumber.kitsune.domain.repository.AuthRepository
 import io.github.drumber.kitsune.domain.repository.UserRepository
 import io.github.drumber.kitsune.notification.NotificationChannels
 import io.github.drumber.kitsune.notification.Notifications
@@ -89,8 +89,8 @@ class KitsuneApplication : Application() {
 
     private fun initLoggedInUser() {
         val userRepository: UserRepository by inject()
-        val authRepository: AuthRepository by inject()
-        if (userRepository.hasUser || authRepository.isLoggedIn) {
+        val authManager: AuthManager by inject()
+        if (userRepository.hasUser || authManager.hasAccessToken()) {
             applicationScope.launch(Dispatchers.IO) {
                 userRepository.updateUserCache()
             }
