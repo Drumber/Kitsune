@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="sort_average_rating_asc">Xếp hạng tệ nhất</string>
+    <string name="sort_average_rating_asc">Xếp hạng thấp nhất</string>
     <string name="section_highest_rated_manga">Manga được xếp hạng cao nhất</string>
     <string name="library_not_rated">Chưa xếp hạng</string>
     <string name="error_user_update_image_failed">Không cập nhật được ảnh hồ sơ hoặc ảnh bìa.</string>
@@ -186,14 +186,14 @@
     <string name="action_reset_filter">Đặt lại bộ lọc</string>
     <string name="action_show_less">Hiện ít hơn</string>
     <string name="action_unselect_all">Bỏ chọn tất cả</string>
-    <string name="action_read_more">Đọc thêm</string>
+    <string name="action_read_more">Đọc nhiều hơn</string>
     <string name="action_read_less">Đọc ít hơn</string>
     <string name="action_show_more">Hiện thêm</string>
     <string name="action_back">Trở lại</string>
     <string name="action_log_out">Đăng xuất</string>
     <string name="action_share_profile_url">Chia sẻ hồ sơ</string>
     <string name="action_share_app_logs">Chia sẻ nhật ký</string>
-    <string name="action_save_in_gallery">Lưu vào Thư viện</string>
+    <string name="action_save_in_gallery">Lưu vào phòng trưng bày</string>
     <string name="action_save_changes">Lưu thay đổi</string>
     <string name="action_edit_profile">Chỉnh sửa hồ sơ</string>
     <string name="action_update">Cập nhật</string>
@@ -238,4 +238,110 @@
     <string name="preference_start_fragment">Trang mặc định</string>
     <string name="library_not_logged_in_text">Đăng nhập vào tài khoản Kitsu của bạn để quản lý thư viện của bạn và có quyền truy cập vào tất cả các tính năng.</string>
     <string name="library_edit_progress">Tiến độ</string>
+    <string name="status_tba">TBA</string>
+    <string name="character_role_recurring">Định kỳ</string>
+    <string name="character_role_cameo">Khách mời</string>
+    <string name="data_title_tba">Dự kiến</string>
+    <string name="data_title_serialization">Tuần tự</string>
+    <string name="relationship_alternative_setting">Thiết đặt th.thế</string>
+    <string name="relationship_spinoff">Sản phẩm phụ</string>
+    <string name="preference_start_fragment_description">Trang mặc định được đặt thành %s.</string>
+    <string name="preference_language">Ngôn ngữ</string>
+    <string name="preference_display_name">Tên hiển thị</string>
+    <string name="preference_country">Quốc gia</string>
+    <string name="preference_titles">Tiêu đề</string>
+    <string name="preference_titles_description">Xác định cách hiển thị tiêu đề phương tiện.</string>
+    <string name="preference_titles_canonical">Nguyên mẫu</string>
+    <string name="preference_titles_romanized">Latin hóa</string>
+    <string name="preference_titles_english">Tiếng Anh</string>
+    <string name="preference_country_summary_non">Chưa chỉ định quốc gia.</string>
+    <string name="preference_adult_content_description_sfw">Phương tiện có xếp hạng độ tuổi R18+ sẽ bị ẩn.</string>
+    <string name="preference_rating_system_simple">Đơn giản</string>
+    <string name="preference_rating_system_regular">Thông thường</string>
+    <string name="preference_rating_system_advanced">Nâng cao</string>
+    <string name="preference_force_legacy_image_picker">Buộc bộ chọn ảnh kiểu cũ</string>
+    <string name="preference_app_logs_description">Xem và chia sẻ tin nhắn nhật ký ứng dụng.</string>
+    <string name="preference_app_version">Thông tin phiên bản</string>
+    <string name="preference_app_version_description">Nhấn để kiểm tra các bản cập nhật.</string>
+    <string name="preference_github_repo">Kho lưu trữ GitHub</string>
+    <string name="action_log_in">Đăng nhập</string>
+    <string name="invalid_username">Không phải là một địa chỉ e-mail hợp lệ</string>
+    <string name="login_no_account">Không có tài khoản? Tạo một cái trên <a href="https://kitsu.io">kitsu.io</a>.</string>
+    <string name="library_edit_start_rewatch">Bắt đầu xem lại</string>
+    <string name="library_edit_no_date_set">Chưa đặt ngày</string>
+    <string name="library_edit_notes">Ghi chú cá nhân</string>
+    <string name="info_update_new_version_available_text">Đã có phiên bản %s của Kitsune.</string>
+    <string name="info_update_failed">Không thể kiểm tra phiên bản mới.</string>
+    <string name="filter_year">Năm</string>
+    <string name="filter_avg_rating">Xếp hạng trung bình</string>
+    <string name="filter_select_categories">Chọn danh mục</string>
+    <string name="filter_streamers">Nguồn phát</string>
+    <string name="profile_not_logged_in_title">Không có gì để thấy ở đây!</string>
+    <string name="profile_data_waifu">Vợ ảo</string>
+    <string name="profile_data_husbando">Chồng ảo</string>
+    <string name="profile_waifu_or_husbando">Vợ ảo hoặc Chồng ảo</string>
+    <string name="notification_updates">Cập nhật ứng dụng</string>
+    <plurals name="duration_seconds">
+        <item quantity="other">%s giây</item>
+    </plurals>
+    <plurals name="duration_minutes">
+        <item quantity="other">%s phút</item>
+    </plurals>
+    <string name="preference_adult_content_description_sometimes">Phương tiện có xếp hạng độ tuổi R18+ sẽ hiển thị nhưng các bài đăng được gắn thẻ NSFW sẽ bị ẩn trong nguồn cấp dữ liệu toàn cầu.</string>
+    <string name="preference_adult_content_description_everywhere">Phương tiện có xếp hạng độ tuổi R18+ sẽ hiển thị ở mọi nơi.</string>
+    <string name="preference_sfw_filter_hide_all">Ẩn tất cả nội dung người lớn</string>
+    <string name="preference_sfw_filter_limit_to_feed">Giới hạn theo dõi nguồn cấp dữ liệu</string>
+    <string name="preference_sfw_filter_show_all">Nội dung người lớn ở mọi nơi</string>
+    <string name="preference_rating_system">Hệ thống xếp hạng</string>
+    <string name="preference_force_legacy_image_picker_description">Sử dụng bộ chọn tệp hệ thống thay vì bộ chọn ảnh mới.</string>
+    <string name="preference_open_source_libraries_description">Một danh sách mọi thư viện nguồn mở đã dùng.</string>
+    <string name="preference_check_for_updates">Kiểm tra cập nhật khi khởi chạy</string>
+    <string name="preference_check_for_updates_description">Kiểm tra phiên bản ứng dụng mới mỗi lần khởi chạy.</string>
+    <string name="preference_not_logged_in">Bạn phải đăng nhập để chỉnh sửa thiết đặt này.</string>
+    <string name="app_logs_no_data">Không có sẵn nhật ký.</string>
+    <string name="prompt_email">Email</string>
+    <string name="action_log_in_to_kitsu">Đăng nhập vào Kitsu</string>
+    <string name="info_log_in_required">Đăng nhập để truy cập tất cả các tính năng.</string>
+    <string name="prompt_password">Mật khẩu</string>
+    <string name="login_failed">Đăng nhập thất bại</string>
+    <string name="action_sign_in">Đăng nhập</string>
+    <string name="status_logging_in">Đang đăng nhập…</string>
+    <string name="logged_in_success">Đã đăng nhập với tên %s.</string>
+    <string name="not_logged_in">Chưa đăng nhập</string>
+    <string name="info_image_saved_in_gallery">Đã lưu thành công hình ảnh vào phòng trưng bày.</string>
+    <string name="filter_season">Mùa</string>
+    <string name="filter_age_rating">Xếp hạng độ tuổi</string>
+    <string name="info_update_checking_new_version">Đang kiểm tra phiên bản mới…</string>
+    <string name="unit_chapter">Chương %d</string>
+    <string name="info_update_new_version_available">Có sẵn phiên bản mới.</string>
+    <plurals name="unit_pages">
+        <item quantity="other">%s Trang</item>
+    </plurals>
+    <string name="info_update_no_new_version_available">Không có sẵn phiên bản mới.</string>
+    <plurals name="duration_hours">
+        <item quantity="other">%s giờ</item>
+    </plurals>
+    <plurals name="duration_days">
+        <item quantity="other">%s ngày</item>
+    </plurals>
+    <plurals name="duration_months">
+        <item quantity="other">%s tháng</item>
+    </plurals>
+    <string name="info_logged_out_token_expired">Mã thông báo truy cập của bạn đã hết hạn. Xin vui lòng đăng nhập lại.</string>
+    <string name="filter_subtype">Loại phụ</string>
+    <plurals name="duration_years">
+        <item quantity="other">%s năm</item>
+    </plurals>
+    <string name="filter_kind">Loại</string>
+    <string name="preference_country_summary">Quốc gia được đặt thành %s</string>
+    <string name="preference_adult_content">Nội dung người lớn</string>
+    <string name="library_edit_rating">Xếp hạng</string>
+    <string name="library_edit_privacy_public">Công cộng</string>
+    <string name="library_edit_reread_count">Số lần đọc lại</string>
+    <string name="library_edit_start_reread">Bắt đầu đọc lại</string>
+    <string name="library_edit_rewatch_count">Số lần xem lại</string>
+    <string name="library_edit_privacy">Riêng tư</string>
+    <string name="library_edit_privacy_private">Riêng tư</string>
+    <string name="library_edit_started">Bắt đầu</string>
+    <string name="library_edit_finished">Hoàn thành</string>
 </resources>
