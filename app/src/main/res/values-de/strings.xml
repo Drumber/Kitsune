@@ -26,7 +26,7 @@
     <string name="title_play_trailer">Trailer abspielen</string>
     <string name="title_edit_profile">Profil bearbeiten</string>
     <string name="library_status_dropped">Abgebrochen</string>
-    <string name="library_status_planned_manga">Möchte lesen</string>
+    <string name="library_status_planned_manga">Gemerkt</string>
     <string name="library_action_remove">Von Bibliothek entfernen</string>
     <string name="library_action_add">Zur Bibliothek hinzufügen</string>
     <string name="library_action_edit">Bibliothekseintrag bearbeiten</string>
@@ -171,11 +171,11 @@
     <string name="character_role_supporting">Unterstützend</string>
     <string name="character_role_recurring">Wiederkehrend</string>
     <string name="character_role_cameo">Cameo</string>
-    <string name="library_status_watching">Am schauen</string>
-    <string name="library_status_planned">Möchte schauen</string>
+    <string name="library_status_watching">Angefangen</string>
+    <string name="library_status_planned">Gemerkt</string>
     <string name="library_status_completed">Abgeschlossen</string>
-    <string name="library_status_on_hold">Zurückgehalten</string>
-    <string name="library_status_reading">Am lesen</string>
+    <string name="library_status_on_hold">Pausiert</string>
+    <string name="library_status_reading">Angefangen</string>
     <string name="status_upcoming">Bevorstehend</string>
     <string name="data_popularity">Bekanntheit #%d</string>
     <string name="data_kitsu_score">Kitsu Score %s%%</string>
