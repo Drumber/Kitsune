@@ -28,7 +28,7 @@
     <string name="status_current_manga">Xuất bản</string>
     <string name="library_status_planned_manga">Muốn đọc</string>
     <string name="hint_rating">Xếp hạng</string>
-    <string name="dialog_remove_from_library_msg"><b>%s</b> sẽ bị loại khỏi thư viện của bạn.</string>
+    <string name="dialog_remove_from_library_msg">&lt;b&gt;%s&lt;/b&gt; sẽ bị loại khỏi thư viện của bạn.</string>
     <string name="dialog_notification_permission_rejected">Bạn sẽ không nhận được thông báo và sẽ không được thông báo về các bản cập nhật ứng dụng.</string>
     <string name="error_resource_loading">Không thể tải dữ liệu.</string>
     <string name="error_image_loading">Không thể tải hình ảnh.</string>
