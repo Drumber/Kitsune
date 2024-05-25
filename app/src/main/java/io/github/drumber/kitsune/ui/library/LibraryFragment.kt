@@ -203,6 +203,15 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
                             else -> R.string.library_kind_all
                         }
                     )
+
+                    binding.chipCurrent.setText(
+                        if (kind == LibraryEntryKind.Manga) R.string.library_status_reading
+                        else R.string.library_status_watching
+                    )
+                    binding.chipPlanned.setText(
+                        if (kind == LibraryEntryKind.Manga) R.string.library_status_planned_manga
+                        else R.string.library_status_planned
+                    )
                 }
         }
 

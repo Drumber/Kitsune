@@ -217,7 +217,10 @@ class LibraryViewModel(
                     when {
                         after?.status == null -> null
                         before == null || before.status != after.status ->
-                            LibraryEntryUiModel.StatusSeparatorModel(after.status!!)
+                            LibraryEntryUiModel.StatusSeparatorModel(
+                                after.status!!,
+                                filter.kind == LibraryEntryKind.Manga
+                            )
 
                         else -> null
                     }

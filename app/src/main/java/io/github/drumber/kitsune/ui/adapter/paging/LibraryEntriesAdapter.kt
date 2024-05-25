@@ -115,7 +115,7 @@ class LibraryEntriesAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(statusSeparator: StatusSeparatorModel) {
-            binding.tvTitle.setText(statusSeparator.status.getStringResId())
+            binding.tvTitle.setText(statusSeparator.status.getStringResId(!statusSeparator.isMangaSelected))
         }
 
     }
