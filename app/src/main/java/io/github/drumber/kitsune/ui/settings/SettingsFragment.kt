@@ -6,6 +6,8 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -15,6 +17,7 @@ import androidx.preference.ListPreference.SimpleSummaryProvider
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.snackbar.Snackbar
+import io.github.drumber.kitsune.AppLocales
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
@@ -77,6 +80,33 @@ class SettingsFragment : BasePreferenceFragment() {
                 SettingsFragmentDirections.actionSettingsFragmentToAppearanceFragment()
             findNavController().navigate(action)
             true
+        }
+
+        //---- App Language
+        findPreference<ListPreference>(R.string.preference_key_language)?.apply {
+            val supportedLocales = AppLocales.SUPPORTED_LOCALES
+            val selectedLocale = AppCompatDelegate.getApplicationLocales()
+                .getFirstMatch(supportedLocales)
+            val selectedLocaleValue =
+                supportedLocales.find { Locale.forLanguageTag(it).language == selectedLocale?.language }
+            val languageDisplayNames = supportedLocales.map {
+                Locale.forLanguageTag(it)
+                    .getDisplayLanguage(selectedLocale ?: Locale.getDefault())
+            }.toTypedArray()
+            entryValues = arrayOf("", *supportedLocales)
+            entries = arrayOf(
+                getString(R.string.preference_language_default),
+                *languageDisplayNames
+            )
+            value = selectedLocaleValue ?: ""
+            setOnPreferenceChangeListener { _, newValue ->
+                val localeList = when (newValue.toString()) {
+                    "" -> LocaleListCompat.getEmptyLocaleList()
+                    else -> LocaleListCompat.forLanguageTags(newValue.toString())
+                }
+                AppCompatDelegate.setApplicationLocales(localeList)
+                true
+            }
         }
 
         //---- Start Fragment

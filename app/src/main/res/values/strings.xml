@@ -249,6 +249,7 @@
     <string name="preference_start_fragment_profile">Profile</string>
     <string name="preference_start_fragment_description">The default page is set to %s.</string>
     <string name="preference_language">Language</string>
+    <string name="preference_language_default">Default language</string>
     <string name="preference_display_name">Display Name</string>
     <string name="preference_profile_url">Profile URL</string>
     <string name="preference_profile_url_not_set">No profile URL set.</string>

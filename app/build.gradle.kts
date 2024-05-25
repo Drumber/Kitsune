@@ -1,0 +1,215 @@
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.kapt)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.androidx.navigation.safeargs)
+    alias(libs.plugins.aboutlibraries.plugin)
+    alias(libs.plugins.jetbrains.kotlin.parcelize)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
+    id("kitsune-plugin")
+}
+
+val screenshotMode: String by project
+
+android {
+    namespace = "io.github.drumber.kitsune"
+    compileSdk = 34
+
+    defaultConfig {
+        applicationId = "io.github.drumber.kitsune"
+        minSdk = 26
+        targetSdk = 34
+        versionCode = 28
+        versionName = "1.10.4-2"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("boolean", "SCREENSHOT_MODE_ENABLED", screenshotMode)
+    }
+
+    androidResources {
+        generateLocaleConfig = true
+    }
+
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
+
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("debug")
+        }
+
+        getByName("debug") {
+            applicationIdSuffix = ".debug"
+            isDebuggable = true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
+        freeCompilerArgs += listOf("-opt-in=kotlin.RequiresOptIn")
+    }
+
+    buildFeatures {
+        viewBinding = true
+        dataBinding = true
+        buildConfig = true
+    }
+
+    packagingOptions {
+        excludes += "META-INF/*.kotlin_module"
+    }
+}
+
+aboutLibraries {
+    // Remove the "generated" timestamp to allow for reproducible builds
+    excludeFields = arrayOf("generated")
+}
+
+dependencies {
+    // Android core and support libs
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.constraint.layout)
+    implementation(libs.androidx.core.splashscreen)
+
+    // SwipeRefresh layout
+    implementation(libs.androidx.swiperefreshlayout)
+
+    // Navigation
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.fragment.ktx)
+
+    // Preference
+    implementation(libs.androidx.preference.ktx)
+
+    // Lifecycle
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+
+    // Material
+    implementation(libs.google.android.material)
+
+    // Kotlin coroutines
+    implementation(libs.jetbrains.kotlinx.coroutines.core)
+    implementation(libs.jetbrains.kotlinx.coroutines.android)
+
+    // Paging
+    implementation(libs.androidx.paging.runtime.ktx)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.paging)
+
+    // ViewPager
+    implementation(libs.androidx.viewpager2)
+
+    // Glide
+    implementation(libs.bumptech.glide)
+    ksp(libs.bumptech.glide.ksp)
+    implementation(libs.bumptech.glide.okhttp3)
+
+    // Koin DI
+    implementation(libs.insert.koin.android)
+    implementation(libs.insert.koin.androidx.navigation)
+
+    // View binding delegate
+    implementation(libs.kirich1409.viewbindingpropertydelegate)
+
+    // jsonapi-converter
+    implementation(libs.jasminb.jsonapi)
+
+    // Jackson
+    implementation(libs.fasterxml.jackson.databind)
+    implementation(libs.fasterxml.jackson.kotlin)
+
+    // Retrofit
+    implementation(libs.squareup.retrofit2.retrofit)
+    implementation(libs.squareup.retrofit2.jackson)
+
+    // OkHttp
+    implementation(libs.squareup.okhttp3.okhttp)
+    implementation(libs.squareup.okhttp3.logging)
+
+    // Algolia Instantsearch
+    implementation(libs.algolia.instantsearch.android)
+    implementation(libs.algolia.instantsearch.android.paging3)
+    implementation(libs.algolia.instantsearch.coroutines)
+
+    // Kotlinx serialization
+    implementation(libs.jetbrains.kotlinx.serialization)
+
+    // Ktor client
+    implementation(libs.ktor.client.okhttp)
+
+    // Kotpref
+    implementation(libs.chibatching.kotpref)
+    implementation(libs.chibatching.kotpref.enum)
+    implementation(libs.chibatching.kotpref.livedata)
+
+    // Security Crypto
+    implementation(libs.androidx.security.crypto)
+
+    // TreeView
+    implementation(libs.bmelnychuk.treeview)
+
+    // Expandable text view
+    implementation(libs.blogc.expandabletextview)
+
+    // CircleImageView
+    implementation(libs.hdodenhof.circleimageview)
+
+    // Material Rating Bar
+    implementation(libs.zhanghai.materialratingbar)
+
+    // MPAndroidCharts
+    implementation(libs.philjay.mpandroidchart)
+
+    // Photo View
+    implementation(libs.chrisbanes.photoview)
+
+    // Hauler Gesture
+    implementation(libs.futured.hauler)
+    implementation(libs.futured.hauler.databinding)
+
+    // AboutLibraries
+    implementation(libs.mikepenz.aboutlibraries.core)
+    implementation(libs.mikepenz.aboutlibraries)
+
+    // LeakCanary
+    debugImplementation(libs.squareup.leakcanary)
+
+    // Glide Transformations (only used for demo screenshots)
+    if (screenshotMode.toBoolean()) {
+        debugImplementation(libs.wasabeef.glide.transformations)
+    }
+
+    // Tests
+    testImplementation(libs.junit)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.tngtech.archunit.junit4)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.junit.ktx)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.espresso.core)
+
+    testImplementation(libs.jetbrains.kotlinx.coroutines.test)
+    testImplementation(libs.insert.koin.test.junit4)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.datafaker)
+
+    // fastlane screengrab
+    androidTestImplementation(libs.fastlane.screengrab)
+}

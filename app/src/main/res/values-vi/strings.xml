@@ -344,4 +344,5 @@
     <string name="library_edit_privacy_private">Riêng tư</string>
     <string name="library_edit_started">Bắt đầu</string>
     <string name="library_edit_finished">Hoàn thành</string>
+    <string name="preference_language_default">ngôn ngữ mặc định</string>
 </resources>

@@ -388,4 +388,5 @@
         <item quantity="one">%s yıl</item>
         <item quantity="other">%s yıllar</item>
     </plurals>
+    <string name="preference_language_default">varsayılan dil</string>
 </resources>

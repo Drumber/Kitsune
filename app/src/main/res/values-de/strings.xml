@@ -351,4 +351,5 @@
     <string name="nav_library">Bibliothek</string>
     <string name="nav_profile">Profil</string>
     <string name="nav_settings">Einstellungen</string>
+    <string name="preference_language_default">Standadsprache</string>
 </resources>

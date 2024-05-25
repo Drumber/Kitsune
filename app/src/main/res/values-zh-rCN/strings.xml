@@ -344,4 +344,5 @@
     <string name="preference_sfw_filter_show_all">成人内容无处不在</string>
     <string name="preference_rating_system_simple">简单</string>
     <string name="preference_rating_system_regular">常规</string>
+    <string name="preference_language_default">默认语言</string>
 </resources>

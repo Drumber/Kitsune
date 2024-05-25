@@ -28,7 +28,7 @@ platform :android do
       task: 'assemble',
       build_type: 'Debug',
       properties: {
-        'SCREENSHOT_MODE' => 'true'
+        'screenshotMode' => 'true'
       }
     )
     build_android_app(
