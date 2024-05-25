@@ -1,12 +1,12 @@
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
-    id("kotlin-kapt")
-    id("com.google.devtools.ksp")
-    id("androidx.navigation.safeargs.kotlin")
-    id("kotlin-parcelize")
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
-    id("com.mikepenz.aboutlibraries.plugin")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.kapt)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.androidx.navigation.safeargs)
+    alias(libs.plugins.aboutlibraries.plugin)
+    alias(libs.plugins.jetbrains.kotlin.parcelize)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
     id("kitsune-plugin")
 }
 
@@ -62,6 +62,7 @@ android {
     buildFeatures {
         viewBinding = true
         dataBinding = true
+        buildConfig = true
     }
 
     packagingOptions {
@@ -76,160 +77,139 @@ aboutLibraries {
 
 dependencies {
     // Android core and support libs
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.core:core-splashscreen:1.0.1")
-    implementation("androidx.cardview:cardview:1.0.0")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.constraint.layout)
+    implementation(libs.androidx.core.splashscreen)
+
+    // SwipeRefresh layout
+    implementation(libs.androidx.swiperefreshlayout)
 
     // Navigation
-    val nav_version = "2.7.7"
-    val fragment_version = "1.7.0"
-    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
-    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
-    implementation("androidx.fragment:fragment-ktx:$fragment_version")
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.fragment.ktx)
 
     // Preference
-    implementation("androidx.preference:preference-ktx:1.2.1")
+    implementation(libs.androidx.preference.ktx)
 
     // Lifecycle
-    val lifecycle_version = "2.7.0"
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
 
     // Material
-    implementation("com.google.android.material:material:1.12.0")
+    implementation(libs.google.android.material)
 
     // Kotlin coroutines
-    val coroutines_version = "1.7.3"
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core") {
-        version {
-            strictly("$coroutines_version")
-        }
-    }
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android") {
-        version {
-            strictly("$coroutines_version")
-        }
-    }
+    implementation(libs.jetbrains.kotlinx.coroutines.core)
+    implementation(libs.jetbrains.kotlinx.coroutines.android)
 
     // Paging
-    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
+    implementation(libs.androidx.paging.runtime.ktx)
 
     // Room
-    val room_version = "2.6.1"
-    implementation("androidx.room:room-runtime:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
-    ksp("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-paging:$room_version")
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.paging)
 
     // ViewPager
-    implementation("androidx.viewpager2:viewpager2:1.0.0")
+    implementation(libs.androidx.viewpager2)
 
     // Glide
-    val glide_version = "4.16.0"
-    implementation("com.github.bumptech.glide:glide:$glide_version")
-    ksp("com.github.bumptech.glide:ksp:$glide_version")
-    implementation("com.github.bumptech.glide:okhttp3-integration:$glide_version")
+    implementation(libs.bumptech.glide)
+    ksp(libs.bumptech.glide.ksp)
+    implementation(libs.bumptech.glide.okhttp3)
 
     // Koin DI
-    val koin_version = "3.5.6"
-    implementation("io.insert-koin:koin-android:$koin_version")
-    implementation("io.insert-koin:koin-androidx-navigation:$koin_version")
+    implementation(libs.insert.koin.android)
+    implementation(libs.insert.koin.androidx.navigation)
 
     // View binding delegate
-    implementation("com.github.kirich1409:viewbindingpropertydelegate:1.5.9")
+    implementation(libs.kirich1409.viewbindingpropertydelegate)
 
     // jsonapi-converter
-    implementation("com.github.jasminb:jsonapi-converter:0.13")
+    implementation(libs.jasminb.jsonapi)
 
     // Jackson
-    val jackson_version = "2.17.0"
-    implementation("com.fasterxml.jackson.core:jackson-databind:$jackson_version")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version")
+    implementation(libs.fasterxml.jackson.databind)
+    implementation(libs.fasterxml.jackson.kotlin)
 
     // Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-jackson:2.11.0")
+    implementation(libs.squareup.retrofit2.retrofit)
+    implementation(libs.squareup.retrofit2.jackson)
 
     // OkHttp
-    val okhttp_version = "4.12.0"
-    implementation("com.squareup.okhttp3:okhttp:$okhttp_version")
-    implementation("com.squareup.okhttp3:logging-interceptor:$okhttp_version")
+    implementation(libs.squareup.okhttp3.okhttp)
+    implementation(libs.squareup.okhttp3.logging)
 
     // Algolia Instantsearch
-    val algolia_instantsearch_version = "3.1.3"
-    implementation("com.algolia:instantsearch-android:$algolia_instantsearch_version")
-    implementation("com.algolia:instantsearch-android-paging3:$algolia_instantsearch_version")
-    implementation("com.algolia:instantsearch-coroutines-extensions:$algolia_instantsearch_version")
+    implementation(libs.algolia.instantsearch.android)
+    implementation(libs.algolia.instantsearch.android.paging3)
+    implementation(libs.algolia.instantsearch.coroutines)
 
     // Kotlinx serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation(libs.jetbrains.kotlinx.serialization)
 
     // Ktor client
-    val ktor_version = "1.6.8"
-    implementation("io.ktor:ktor-client-okhttp:$ktor_version")
+    implementation(libs.ktor.client.okhttp)
 
     // Kotpref
-    val kotpref_version = "2.13.2"
-    implementation("com.chibatching.kotpref:kotpref:$kotpref_version")
-    implementation("com.chibatching.kotpref:enum-support:$kotpref_version")
-    implementation("com.chibatching.kotpref:livedata-support:$kotpref_version")
+    implementation(libs.chibatching.kotpref)
+    implementation(libs.chibatching.kotpref.enum)
+    implementation(libs.chibatching.kotpref.livedata)
 
     // Security Crypto
-    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    implementation(libs.androidx.security.crypto)
 
     // TreeView
-    implementation("com.github.bmelnychuk:atv:1.2.9")
+    implementation(libs.bmelnychuk.treeview)
 
     // Expandable text view
-    implementation("at.blogc:expandabletextview:1.0.5")
+    implementation(libs.blogc.expandabletextview)
 
     // CircleImageView
-    implementation("de.hdodenhof:circleimageview:3.1.0")
+    implementation(libs.hdodenhof.circleimageview)
 
     // Material Rating Bar
-    implementation("me.zhanghai.android.materialratingbar:library:1.4.0")
+    implementation(libs.zhanghai.materialratingbar)
 
     // MPAndroidCharts
-    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation(libs.philjay.mpandroidchart)
 
     // Photo View
-    implementation("com.github.chrisbanes:PhotoView:2.3.0")
+    implementation(libs.chrisbanes.photoview)
 
     // Hauler Gesture
-    val hauler_version = "5.0.0"
-    implementation("app.futured.hauler:hauler:$hauler_version")
-    implementation("app.futured.hauler:databinding:$hauler_version")
+    implementation(libs.futured.hauler)
+    implementation(libs.futured.hauler.databinding)
 
     // AboutLibraries
-    val aboutLibraries_version = "11.1.3"
-    implementation("com.mikepenz:aboutlibraries-core:$aboutLibraries_version")
-    implementation("com.mikepenz:aboutlibraries:$aboutLibraries_version")
+    implementation(libs.mikepenz.aboutlibraries.core)
+    implementation(libs.mikepenz.aboutlibraries)
 
     // LeakCanary
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")
+    debugImplementation(libs.squareup.leakcanary)
 
     // Glide Transformations (only used for demo screenshots)
     if (screenshotMode.toBoolean()) {
-        debugImplementation("jp.wasabeef:glide-transformations:4.3.0")
+        debugImplementation(libs.wasabeef.glide.transformations)
     }
 
     // Tests
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.assertj:assertj-core:3.25.3")
-    testImplementation("com.tngtech.archunit:archunit-junit4:1.3.0")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
-    androidTestImplementation("androidx.test:rules:1.5.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    testImplementation(libs.junit)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.tngtech.archunit.junit4)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.junit.ktx)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.espresso.core)
 
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version")
-    testImplementation("io.insert-koin:koin-test-junit4:$koin_version")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
-    testImplementation("net.datafaker:datafaker:2.0.1")
+    testImplementation(libs.jetbrains.kotlinx.coroutines.test)
+    testImplementation(libs.insert.koin.test.junit4)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.datafaker)
 
     // fastlane screengrab
-    androidTestImplementation("tools.fastlane:screengrab:2.1.1")
+    androidTestImplementation(libs.fastlane.screengrab)
 }

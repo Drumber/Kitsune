@@ -1,6 +1,6 @@
 plugins {
     id("java-gradle-plugin")
-    id("org.jetbrains.kotlin.jvm") version "1.9.10"
+    alias(libs.plugins.jetbrains.kotlin.jvm)
 }
 
 java {
@@ -10,7 +10,7 @@ java {
 
 dependencies {
     compileOnly(gradleApi())
-    compileOnly("com.android.tools.build:gradle-api:8.4.1")
+    compileOnly(libs.android.gradle.api)
     implementation(gradleKotlinDsl())
 }
 
