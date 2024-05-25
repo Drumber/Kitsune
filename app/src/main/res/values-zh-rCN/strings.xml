@@ -86,7 +86,7 @@
     <string name="hint_mark_not_watched">标记为未看。</string>
     <string name="hint_rating">评分</string>
     <string name="dialog_remove_from_library_title">从库中删除?</string>
-    <string name="dialog_remove_from_library_msg"><b>%s</b>将从库中删除。</string>
+    <string name="dialog_remove_from_library_msg">&lt;b&gt;%s&lt;/b&gt;将从库中删除。</string>
     <string name="dialog_notification_permission_rejected_title">权限被拒绝</string>
     <string name="dialog_request_notification_permission_title">允许通知</string>
     <string name="dialog_request_notification_permission">允许在新应用版本发布时收到推送通知。</string>
