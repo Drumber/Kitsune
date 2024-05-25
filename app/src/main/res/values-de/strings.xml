@@ -296,7 +296,7 @@
     <string name="profile_stats_anime_watch_time">%s verbracht Anime zu schauen.</string>
     <string name="profile_stats_manga_chapters_read">%d Kapitel gelesen.</string>
     <string name="profile_stats_time_spent_total">%s insgesamt.</string>
-    <string name="profile_stats_completed">%d abgeschlossen. Mehr als <b>%d%%</b> der Nutzer.</string>
+    <string name="profile_stats_completed">%1$d abgeschlossen. Mehr als <b>%2$d%%</b> der Nutzer.</string>
     <string name="profile_data_gender">Geschlecht</string>
     <string name="profile_data_location">Standort</string>
     <string name="profile_data_birthday">Geburtstag</string>

@@ -327,7 +327,7 @@
     <string name="profile_stats_anime_watch_time">%s anime izleyerek geçirdi.</string>
     <string name="profile_stats_manga_chapters_read">%d bölümler okundu.</string>
     <string name="profile_stats_time_spent_total">%s toplamda.</string>
-    <string name="profile_stats_completed">%d tamamlandı. Daha fazla &lt;b>%d%%&lt;/b> kullanıcıların.</string>
+    <string name="profile_stats_completed">%1$d tamamlandı. Daha fazla &lt;b>%2$d%%&lt;/b> kullanıcıların.</string>
     <string name="profile_data_gender">Cinsiyet</string>
     <string name="profile_data_location">Konum</string>
     <string name="profile_data_birthday">Doğum Tarihi</string>
