@@ -1,5 +1,6 @@
+rootProject.name = "plugin"
+
 pluginManagement {
-    includeBuild("plugin")
     repositories {
         maven { url = uri("") }
         gradlePluginPortal()
@@ -9,14 +10,9 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        maven { url = uri("") }
         google()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
-        maven { url 'https://plugins.gradle.org/m2/' }
     }
 }
-
-rootProject.name = "Kitsune"
-include ':app'
