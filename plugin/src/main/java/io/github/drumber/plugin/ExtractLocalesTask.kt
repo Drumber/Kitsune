@@ -38,6 +38,7 @@ abstract class ExtractLocalesTask : DefaultTask() {
             .matching { it.include("**/values-*/strings.xml") }
             .mapNotNull { it.parentFile }
             .map { it.name.substringAfter("values-") }
+            .mapNotNull { it.resourceQualifierToLanguageCode() }
 
         val appLanguages = listOf(DEFAULT_LANG_CODE) + languageCodes
 
@@ -51,12 +52,23 @@ abstract class ExtractLocalesTask : DefaultTask() {
                 public static final String[] SUPPORTED_LOCALES = {${
                 appLanguages.joinToString(
                     prefix = "\"",
+                    separator = "\", \"",
                     postfix = "\""
                 )
             }};
             }
         """.trimIndent()
         )
+    }
+
+    private fun String.resourceQualifierToLanguageCode(): String? {
+        val segments = split("-").toMutableList()
+        if (segments.isEmpty()) return null
+        if (segments.size == 1) return segments.first()
+        if (segments[1].startsWith('r')) {
+            segments[1] = segments[1].substring(1)
+        }
+        return segments.joinToString("-")
     }
 
 }
