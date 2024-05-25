@@ -282,7 +282,7 @@
     <string name="profile_stats_anime_watch_time">%s 花在了看动漫上。</string>
     <string name="profile_stats_manga_chapters_read">读了 %d 章。</string>
     <string name="profile_stats_time_spent_total">总计 %s。</string>
-    <string name="profile_stats_completed">%1$d已完成。超过<b>%2$d%%</b>的用户。</string>
+    <string name="profile_stats_completed">%1$d已完成。超过&lt;b&gt;%2$d%%&lt;/b&gt;的用户。</string>
     <string name="profile_data_gender">性别</string>
     <string name="profile_data_location">位置</string>
     <string name="profile_data_birthday">生日</string>
