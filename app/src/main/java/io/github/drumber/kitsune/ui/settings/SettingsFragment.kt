@@ -87,13 +87,18 @@ class SettingsFragment : BasePreferenceFragment() {
             val supportedLocales = AppLocales.SUPPORTED_LOCALES
             val selectedLocale = AppCompatDelegate.getApplicationLocales()
                 .getFirstMatch(supportedLocales)
+            val selectedLocaleValue =
+                supportedLocales.find { Locale.forLanguageTag(it).language == selectedLocale?.language }
             val languageDisplayNames = supportedLocales.map {
                 Locale.forLanguageTag(it)
                     .getDisplayLanguage(selectedLocale ?: Locale.getDefault())
             }.toTypedArray()
             entryValues = arrayOf("", *supportedLocales)
-            entries = arrayOf(getString(R.string.preference_language_default), *languageDisplayNames)
-            value = selectedLocale?.toLanguageTag() ?: ""
+            entries = arrayOf(
+                getString(R.string.preference_language_default),
+                *languageDisplayNames
+            )
+            value = selectedLocaleValue ?: ""
             setOnPreferenceChangeListener { _, newValue ->
                 val localeList = when (newValue.toString()) {
                     "" -> LocaleListCompat.getEmptyLocaleList()
