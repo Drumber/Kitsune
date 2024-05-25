@@ -168,7 +168,7 @@
     <string name="library_edit_status">Trạng thái thư viện</string>
     <string name="profile_stats_manga_chapters_read">%d chương đã đọc.</string>
     <string name="profile_stats_time_spent_total">Tổng cộng là %s.</string>
-    <string name="profile_stats_completed">%1$d đã hoàn thành. Hơn <b>%2$d%%</b> người dùng.</string>
+    <string name="profile_stats_completed">%1$d đã hoàn thành. Hơn &lt;b&gt;%2$d%%&lt;/b&gt; người dùng.</string>
     <string name="profile_data_join_date">Ngày gia nhập</string>
     <string name="profile_data_join_date_ago">%s trước</string>
     <string name="profile_gender_male">Nam giới</string>
