@@ -81,6 +81,7 @@ import io.github.drumber.kitsune.util.ui.showSnackbarOnFailure
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.text.NumberFormat
 import java.util.concurrent.CopyOnWriteArrayList
 
 class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
@@ -567,6 +568,29 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             xAxis.labelCount = if (isFullChart) 19 else 10
             invalidate()
         }
+
+        val avgRating = calculateAverageForRatings(ratingList)
+        val numberFormatter = NumberFormat.getNumberInstance()
+        numberFormatter.minimumFractionDigits = 2
+        numberFormatter.maximumFractionDigits = 2
+        binding.tvCalculatedAverageRating.text = numberFormatter.format(avgRating / 2.0)
+    }
+
+    private fun calculateAverageForRatings(ratingList: List<String?>): Double {
+        if (ratingList.isEmpty()) return 0.0
+
+        var sum = 0
+        var totalRatings = 0
+        for (i in ratingList.indices) {
+            val count = ratingList[i]?.toIntOrNull() ?: continue
+
+            sum += (i + 1) * count
+            totalRatings += count
+        }
+
+        if (totalRatings == 0) return 0.0
+
+        return sum.toDouble() / totalRatings
     }
 
     private fun showManageLibraryBottomSheet() {

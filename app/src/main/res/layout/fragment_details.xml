@@ -309,6 +309,16 @@
                             android:text="@string/title_ratings"
                             android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
+                        <TextView
+                            android:id="@+id/tv_calculated_average_rating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:textAppearance="?attr/textAppearanceLabelMedium"
+                            app:drawableStartCompat="@drawable/ic_bar_chart_16"
+                            android:drawablePadding="6dp"
+                            tools:text="6.75" />
+
                         <com.github.mikephil.charting.charts.BarChart
                             android:id="@+id/chart_ratings"
                             android:layout_width="match_parent"
