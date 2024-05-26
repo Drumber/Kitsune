@@ -45,7 +45,7 @@ import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibrarySynchronizationResult
 import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibraryUpdateResult
-import io.github.drumber.kitsune.util.RatingSystemUtil
+import io.github.drumber.kitsune.util.rating.RatingSystemUtil
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes

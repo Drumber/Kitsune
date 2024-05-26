@@ -12,12 +12,12 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.SheetLibraryRatingBinding
-import io.github.drumber.kitsune.util.RatingSystemUtil
-import io.github.drumber.kitsune.util.RatingSystemUtil.convertFrom
-import io.github.drumber.kitsune.util.RatingSystemUtil.convertToRatingTwenty
-import io.github.drumber.kitsune.util.RatingSystemUtil.fromRatingTwentyTo
-import io.github.drumber.kitsune.util.RatingSystemUtil.stepSize
-import io.github.drumber.kitsune.util.RatingSystemUtil.toRatingTwentyFrom
+import io.github.drumber.kitsune.util.rating.RatingSystemUtil
+import io.github.drumber.kitsune.util.rating.RatingSystemUtil.convertFrom
+import io.github.drumber.kitsune.util.rating.RatingSystemUtil.convertToRatingTwenty
+import io.github.drumber.kitsune.util.rating.RatingSystemUtil.fromRatingTwentyTo
+import io.github.drumber.kitsune.util.rating.RatingSystemUtil.stepSize
+import io.github.drumber.kitsune.util.rating.RatingSystemUtil.toRatingTwentyFrom
 
 class RatingBottomSheet : BottomSheetDialogFragment() {
 

@@ -1,11 +1,10 @@
-package io.github.drumber.kitsune.util
+package io.github.drumber.kitsune.util.rating
 
 import io.github.drumber.kitsune.domain.model.infrastructure.user.RatingSystemPreference
 import io.github.drumber.kitsune.domain.repository.UserRepository
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlin.math.floor
-import kotlin.math.roundToInt
 
 object RatingSystemUtil : KoinComponent {
 
@@ -37,7 +36,7 @@ object RatingSystemUtil : KoinComponent {
                 in 14..19 -> 3f
                 else -> 4f
             }
-            RatingSystemPreference.Regular -> (ratingTwenty / 2.0f).roundToInt() / 2.0f
+            RatingSystemPreference.Regular -> floor(ratingTwenty / 2.0f) / 2.0f
             RatingSystemPreference.Advanced -> ratingTwenty / 2.0f
         }
     }

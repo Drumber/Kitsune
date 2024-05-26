@@ -38,8 +38,8 @@ import io.github.drumber.kitsune.ui.library.RatingBottomSheet
 import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel.LoadState
 import io.github.drumber.kitsune.ui.widget.CustomNumberSpinner
 import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
-import io.github.drumber.kitsune.util.RatingSystemUtil
-import io.github.drumber.kitsune.util.RatingSystemUtil.formatRatingTwenty
+import io.github.drumber.kitsune.util.rating.RatingSystemUtil
+import io.github.drumber.kitsune.util.rating.RatingSystemUtil.formatRatingTwenty
 import io.github.drumber.kitsune.util.extensions.getResourceId
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.formatDate

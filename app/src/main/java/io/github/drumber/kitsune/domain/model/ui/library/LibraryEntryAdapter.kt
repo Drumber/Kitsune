@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.domain.model.ui.library
 
 import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.util.RatingSystemUtil.formatRatingTwenty
+import io.github.drumber.kitsune.util.rating.RatingSystemUtil.formatRatingTwenty
 
 class LibraryEntryAdapter(private val wrapper: LibraryEntryWrapper) {
 

@@ -49,6 +49,7 @@ import io.github.drumber.kitsune.domain.model.common.media.en
 import io.github.drumber.kitsune.domain.model.common.media.withoutCommonTitles
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
+import io.github.drumber.kitsune.domain.model.infrastructure.user.RatingSystemPreference
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryAdapter
 import io.github.drumber.kitsune.domain.model.ui.library.getStringResId
 import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
@@ -73,6 +74,8 @@ import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.logW
+import io.github.drumber.kitsune.util.rating.RatingFrequenciesUtil.calculateAverageRating
+import io.github.drumber.kitsune.util.rating.RatingFrequenciesUtil.transformToRatingSystem
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
@@ -501,52 +504,18 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     private fun showRatingChart(mediaAdapter: MediaAdapter) {
         val ratings = mediaAdapter.media.ratingFrequencies ?: return
 
-
         val displayWidth = resources.displayMetrics.widthPixels
-        // full chart shows advanced ratings (1-10); reduced chart with shows regular rating (0.5-5)
+        // full chart shows advanced ratings (1-10); reduced chart shows regular rating (0.5-5)
         val isFullChart =
             displayWidth >= resources.getDimensionPixelSize(R.dimen.details_rating_chart_full_threshold)
 
-        val ratingList = with(ratings) {
-            val list = listOf(
-                r2,
-                r3,
-                r4,
-                r5,
-                r6,
-                r7,
-                r8,
-                r9,
-                r10,
-                r11,
-                r12,
-                r13,
-                r14,
-                r15,
-                r16,
-                r17,
-                r18,
-                r19,
-                r20
-            )
+        val ratingList = ratings.transformToRatingSystem(
+            if (isFullChart) RatingSystemPreference.Advanced
+            else RatingSystemPreference.Regular
+        )
 
-            if (isFullChart) {
-                list
-            } else {
-                var previous = 0
-                list.mapIndexedNotNull { index, s ->
-                    if (index % 2 == 0) {
-                        (previous + (s?.toInt() ?: 0)).toString()
-                    } else {
-                        previous = s?.toInt() ?: 0
-                        null
-                    }
-                }
-            }
-        }
-
-        val chartEntries = ratingList.mapIndexed { index, s ->
-            BarEntry(index.toFloat(), s?.toFloat() ?: 0f)
+        val chartEntries = ratingList.mapIndexed { index, value ->
+            BarEntry(index.toFloat(), value.toFloat())
         }
 
         val dataSet = BarDataSet(chartEntries, "Ratings")
@@ -569,28 +538,14 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             invalidate()
         }
 
-        val avgRating = calculateAverageForRatings(ratingList)
+        val avgRating = ratings.calculateAverageRating(
+            if (isFullChart) RatingSystemPreference.Advanced
+            else RatingSystemPreference.Regular
+        )
         val numberFormatter = NumberFormat.getNumberInstance()
         numberFormatter.minimumFractionDigits = 2
         numberFormatter.maximumFractionDigits = 2
-        binding.tvCalculatedAverageRating.text = numberFormatter.format(avgRating / 2.0)
-    }
-
-    private fun calculateAverageForRatings(ratingList: List<String?>): Double {
-        if (ratingList.isEmpty()) return 0.0
-
-        var sum = 0
-        var totalRatings = 0
-        for (i in ratingList.indices) {
-            val count = ratingList[i]?.toIntOrNull() ?: continue
-
-            sum += (i + 1) * count
-            totalRatings += count
-        }
-
-        if (totalRatings == 0) return 0.0
-
-        return sum.toDouble() / totalRatings
+        binding.tvCalculatedAverageRating.text = numberFormatter.format(avgRating)
     }
 
     private fun showManageLibraryBottomSheet() {
