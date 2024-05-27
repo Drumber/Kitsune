@@ -549,9 +549,10 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
         val avgRating = ratings.calculateAverageRating(ratingSystem)
         val numberFormatter = NumberFormat.getNumberInstance()
-        numberFormatter.minimumFractionDigits = 2
+        numberFormatter.minimumFractionDigits = 1
         numberFormatter.maximumFractionDigits = 2
         binding.tvCalculatedAverageRating.text = numberFormatter.format(avgRating)
+        binding.tvCalculatedAverageRatingMax.text = "/ " + numberFormatter.format(ratingSystem.convertFrom(20))
     }
 
     private fun showRatingTypeMenu(anchorView: View) {

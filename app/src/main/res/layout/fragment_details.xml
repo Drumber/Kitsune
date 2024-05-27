@@ -325,10 +325,20 @@
                                 android:layout_alignParentStart="true"
                                 android:layout_below="@id/tv_title_ratings"
                                 android:layout_marginTop="5dp"
-                                android:textAppearance="?attr/textAppearanceLabelMedium"
+                                android:textAppearance="?attr/textAppearanceLabelLarge"
                                 app:drawableStartCompat="@drawable/ic_bar_chart_16"
                                 android:drawablePadding="6dp"
                                 tools:text="6.75" />
+
+                            <TextView
+                                android:id="@+id/tv_calculated_average_rating_max"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_toEndOf="@id/tv_calculated_average_rating"
+                                android:layout_alignBaseline="@id/tv_calculated_average_rating"
+                                android:layout_marginStart="4dp"
+                                android:textAppearance="?attr/textAppearanceLabelMedium"
+                                tools:text="/ 5.0" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btn_rating_type_menu"
