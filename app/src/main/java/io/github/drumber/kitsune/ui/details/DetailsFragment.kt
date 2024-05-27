@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.os.bundleOf
 import androidx.core.view.children
 import androidx.core.view.doOnPreDraw
@@ -50,11 +51,13 @@ import io.github.drumber.kitsune.domain.model.common.media.withoutCommonTitles
 import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
 import io.github.drumber.kitsune.domain.model.infrastructure.user.RatingSystemPreference
+import io.github.drumber.kitsune.domain.model.infrastructure.user.getStringRes
 import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryAdapter
 import io.github.drumber.kitsune.domain.model.ui.library.getStringResId
 import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
 import io.github.drumber.kitsune.domain.service.Filter
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
 import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
@@ -76,6 +79,8 @@ import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.logW
 import io.github.drumber.kitsune.util.rating.RatingFrequenciesUtil.calculateAverageRating
 import io.github.drumber.kitsune.util.rating.RatingFrequenciesUtil.transformToRatingSystem
+import io.github.drumber.kitsune.util.rating.RatingSystemUtil.convertFrom
+import io.github.drumber.kitsune.util.rating.RatingSystemUtil.stepSize
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
@@ -86,6 +91,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.NumberFormat
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.math.roundToInt
 
 class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     NavigationBarView.OnItemReselectedListener {
@@ -239,6 +245,10 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             }
 
             btnEditLibraryEntry.setOnClickListener { showEditLibraryEntryFragment() }
+
+            btnRatingTypeMenu.setOnClickListener { v ->
+                showRatingTypeMenu(v)
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -503,16 +513,9 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
     private fun showRatingChart(mediaAdapter: MediaAdapter) {
         val ratings = mediaAdapter.media.ratingFrequencies ?: return
+        val ratingSystem = KitsunePref.ratingChartRatingSystem
 
-        val displayWidth = resources.displayMetrics.widthPixels
-        // full chart shows advanced ratings (1-10); reduced chart shows regular rating (0.5-5)
-        val isFullChart =
-            displayWidth >= resources.getDimensionPixelSize(R.dimen.details_rating_chart_full_threshold)
-
-        val ratingList = ratings.transformToRatingSystem(
-            if (isFullChart) RatingSystemPreference.Advanced
-            else RatingSystemPreference.Regular
-        )
+        val ratingList = ratings.transformToRatingSystem(ratingSystem)
 
         val chartEntries = ratingList.mapIndexed { index, value ->
             BarEntry(index.toFloat(), value.toFloat())
@@ -521,8 +524,11 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         val dataSet = BarDataSet(chartEntries, "Ratings")
         val chartColorArray = BarChartStyle
             .getColorArray(requireContext(), R.array.ratings_chart_colors)
-            .filterIndexed { index, _ ->
-                isFullChart || index % 2 == 0
+            .let { colorArray ->
+                val colorStep = (colorArray.size.toFloat() / ratingList.size).roundToInt()
+                colorArray.filterIndexed { index, _ ->
+                    index % colorStep == 0
+                }
             }
         dataSet.applyStyle(requireContext(), chartColorArray)
 
@@ -533,19 +539,38 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             data = barData
             applyStyle(requireContext())
             setFitBars(true)
-            xAxis.valueFormatter = StepAxisValueFormatter(if (isFullChart) 1f else 0.5f, 0.5f)
-            xAxis.labelCount = if (isFullChart) 19 else 10
+            xAxis.valueFormatter = StepAxisValueFormatter(
+                ratingSystem.convertFrom(2),
+                ratingSystem.stepSize()
+            )
+            xAxis.labelCount = ratingList.size
             invalidate()
         }
 
-        val avgRating = ratings.calculateAverageRating(
-            if (isFullChart) RatingSystemPreference.Advanced
-            else RatingSystemPreference.Regular
-        )
+        val avgRating = ratings.calculateAverageRating(ratingSystem)
         val numberFormatter = NumberFormat.getNumberInstance()
         numberFormatter.minimumFractionDigits = 2
         numberFormatter.maximumFractionDigits = 2
         binding.tvCalculatedAverageRating.text = numberFormatter.format(avgRating)
+    }
+
+    private fun showRatingTypeMenu(anchorView: View) {
+        val popup = PopupMenu(requireContext(), anchorView)
+        val menu = popup.menu
+        val selectedRatingSystem = KitsunePref.ratingChartRatingSystem
+
+        RatingSystemPreference.entries.forEach {
+            val menuItem = menu.add(1, it.ordinal, it.ordinal, it.getStringRes())
+            menuItem.isChecked = selectedRatingSystem == it
+            menuItem.setOnMenuItemClickListener { _ ->
+                KitsunePref.ratingChartRatingSystem = it
+                viewModel.mediaAdapter.value?.let { mediaAdapter -> showRatingChart(mediaAdapter) }
+                true
+            }
+        }
+
+        menu.setGroupCheckable(1, true, true)
+        popup.show()
     }
 
     private fun showManageLibraryBottomSheet() {

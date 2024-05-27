@@ -12,6 +12,7 @@ import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.domain.model.FilterCollection
 import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
+import io.github.drumber.kitsune.domain.model.infrastructure.user.RatingSystemPreference
 import io.github.drumber.kitsune.domain.model.infrastructure.user.TitleLanguagePreference
 import io.github.drumber.kitsune.domain.model.preference.CategoryPrefWrapper
 import io.github.drumber.kitsune.domain.model.preference.StartPagePref
@@ -111,6 +112,9 @@ object KitsunePref : KotprefModel(), KoinComponent {
 
 
     var flagUserDeniedNotificationPermission by booleanPref(false)
+
+
+    var ratingChartRatingSystem by enumValuePref(RatingSystemPreference.Regular)
 
 
     private fun Any.toJsonString(): String {
