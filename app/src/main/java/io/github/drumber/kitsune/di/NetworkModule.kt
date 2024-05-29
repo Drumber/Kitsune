@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.di
 
+import android.content.Context
 import android.os.Parcelable
 import com.algolia.search.model.filter.Filter
 import com.fasterxml.jackson.annotation.JsonInclude
@@ -56,6 +57,7 @@ import io.github.drumber.kitsune.util.json.IgnoreParcelablePropertyMixin
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptor
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptorImpl
 import io.github.drumber.kitsune.util.network.UserAgentInterceptor
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
@@ -63,10 +65,11 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
+import java.io.File
 import java.util.concurrent.TimeUnit
 
 val networkModule = module {
-    single { createHttpClient(get()) }
+    single { createHttpClient(get(), get()) }
     single(named("unauthenticated")) { createHttpClientBuilder().build() }
     single { createObjectMapper() }
     factory { createAuthService(get()) }
@@ -187,10 +190,14 @@ private fun createHttpClientBuilder(addLoggingInterceptor: Boolean = true) = OkH
     .readTimeout(60, TimeUnit.SECONDS)
     .writeTimeout(60, TimeUnit.SECONDS)
 
-private fun createHttpClient(authenticationInterceptor: AuthenticationInterceptor) =
+private fun createHttpClient(context: Context, authenticationInterceptor: AuthenticationInterceptor) =
     createHttpClientBuilder()
         .addInterceptor(authenticationInterceptor)
         .authenticator(authenticationInterceptor)
+        .cache(Cache(
+            directory = File(context.cacheDir, "http_cache"),
+            maxSize = 1024L * 1024L * 5L // 5 MiB
+        ))
         .build()
 
 private fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
