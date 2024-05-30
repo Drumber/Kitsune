@@ -1,23 +1,27 @@
-name: Test app
+name: Build app
 
-on: [push, pull_request]
+on: [ workflow_dispatch, workflow_call ]
 
 permissions:
   contents: read
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-    - name: Test with Gradle
-      uses: gradle/gradle-build-action@v2
-      with:
-        arguments: testDebugUnitTest
+      - uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Build release with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: assembleRelease
+      - name: Upload release apk
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-unsigned
+          path: app/build/outputs/apk/release/*.apk
+          if-no-files-found: error

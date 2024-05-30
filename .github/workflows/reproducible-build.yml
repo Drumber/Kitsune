@@ -1,0 +1,41 @@
+name: Verify reproducible build
+
+on:
+  workflow_dispatch:
+    inputs:
+      assetUrl:
+        description: URL to the release apk
+        required: true
+  release:
+    types: [ created ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+
+  verify:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install apksigner python3-click apksigcopier -y
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-release-unsigned
+      - run: mv *.apk unsigned.apk
+      - name: Set asset URL
+        id: set_asset_url
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            echo "asset_url=${{ github.event.release.assets[0].browser_download_url }}" >> "$GITHUB_ENV"
+          else
+            echo "asset_url=${{ github.event.inputs.assetUrl }}" >> "$GITHUB_ENV"
+          fi
+      - name: Download release asset
+        run: wget -O upstream.apk "$asset_url"
+      - name: Compare APKs
+        run: apksigcopier compare upstream.apk --unsigned unsigned.apk && echo OK

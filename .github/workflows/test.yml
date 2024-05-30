@@ -1,0 +1,21 @@
+name: Test app
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Test with Gradle
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: testDebugUnitTest
