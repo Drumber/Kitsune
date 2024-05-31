@@ -117,7 +117,7 @@
     <string name="hint_rating">Bewertung</string>
     <string name="dialog_log_out_confirmation">Bist du sicher, dass du dich abmelden möchtest?</string>
     <string name="dialog_remove_from_library_title">Von Bibliothek entfernen?</string>
-    <string name="dialog_remove_from_library_msg"><b>%s</b> wird von deiner Bibliothek entfernt.</string>
+    <string name="dialog_remove_from_library_msg">&lt;b&gt;%s&lt;/b&gt; wird von deiner Bibliothek entfernt.</string>
     <string name="dialog_notification_permission_rejected_title">Berechtigung abgelehnt</string>
     <string name="dialog_notification_permission_rejected">Du wirst keine Benachrichtigungen erhalten und wirst nicht über App-Aktualisierungen informiert.</string>
     <string name="dialog_request_notification_permission_title">Benachrichtigungen erlauben</string>
