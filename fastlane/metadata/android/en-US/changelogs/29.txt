@@ -1,6 +1,7 @@
 * Added Chinese translation (Thanks @yzqzss)
 * Added Turkish translation (Thanks @m3raa)
 * Added Vietnamese translation (Thanks @ngocanhtve)
+* Added German translation
 * Added support for per-app language (Android 13+)
 * Added language picker to settings
 * Show correct status labels when the library is filtered by manga only
