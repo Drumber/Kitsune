@@ -1,0 +1,11 @@
+* Added Chinese translation (Thanks @yzqzss)
+* Added Turkish translation (Thanks @m3raa)
+* Added Vietnamese translation (Thanks @ngocanhtve)
+* Added support for per-app language (Android 13+)
+* Added language picker to settings
+* Show correct status labels when the library is filtered by manga only
+* Show average rating above the rating chart
+* Added menu to change the rating system for the rating chart
+* Updated layout of the "edit library entry" dialog
+* Enabled HTTP caching
+* Fixed refreshing of the access token
