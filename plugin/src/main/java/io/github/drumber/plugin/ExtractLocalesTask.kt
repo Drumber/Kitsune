@@ -39,6 +39,7 @@ abstract class ExtractLocalesTask : DefaultTask() {
             .mapNotNull { it.parentFile }
             .map { it.name.substringAfter("values-") }
             .mapNotNull { it.resourceQualifierToLanguageCode() }
+            .sorted()
 
         val appLanguages = listOf(DEFAULT_LANG_CODE) + languageCodes
 
