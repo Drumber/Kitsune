@@ -153,7 +153,7 @@
     <string name="action_select_profile_link_site">Séléctionner un site</string>
     <string name="hint_search">Chercher</string>
     <string name="hint_search_characters">Chercher des personnages</string>
-    <string name="dialog_remove_from_library_msg"><b>%s</b> sera retiré de la bibliothèque.</string>
+    <string name="dialog_remove_from_library_msg">&lt;b&gt;%s&lt;/b&gt; sera retiré de la bibliothèque.</string>
     <string name="hint_mark_not_watched">Maquer comme non vu.</string>
     <string name="dialog_remove_from_library_title">Retirer de la bibliothèque ?</string>
     <string name="hint_mark_watched">Marquer comme vu.</string>
