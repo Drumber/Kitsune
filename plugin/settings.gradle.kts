@@ -2,7 +2,6 @@ rootProject.name = "plugin"
 
 pluginManagement {
     repositories {
-        maven { url = uri("") }
         gradlePluginPortal()
         google()
         mavenCentral()
@@ -11,7 +10,6 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
-        maven { url = uri("") }
         google()
         mavenCentral()
     }

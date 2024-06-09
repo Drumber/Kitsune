@@ -1,7 +1,6 @@
 pluginManagement {
     includeBuild("plugin")
     repositories {
-        maven { url = uri("") }
         gradlePluginPortal()
         google()
         mavenCentral()
