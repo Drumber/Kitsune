@@ -1,0 +1,2 @@
+* Added French translation (Thanks @IsAy15)
+* Fixed a crash when opening the "Characters" page
