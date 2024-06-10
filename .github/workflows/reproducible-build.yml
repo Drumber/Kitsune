@@ -36,6 +36,7 @@ jobs:
             echo "asset_url=${{ github.event.inputs.assetUrl }}" >> "$GITHUB_ENV"
           fi
       - name: Download release asset
-        run: wget --header "Bearer ${{ secrets.GITHUB_TOKEN }}" -O upstream.apk "$asset_url"
+        run: |
+          wget --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -O upstream.apk "$asset_url"
       - name: Compare APKs
         run: apksigcopier compare upstream.apk --unsigned unsigned.apk && echo OK
