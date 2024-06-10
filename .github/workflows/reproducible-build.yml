@@ -7,7 +7,7 @@ on:
         description: URL to the release apk
         required: true
   release:
-    types: [ created ]
+    types: [ published ]
 
 permissions:
   contents: read
@@ -36,6 +36,6 @@ jobs:
             echo "asset_url=${{ github.event.inputs.assetUrl }}" >> "$GITHUB_ENV"
           fi
       - name: Download release asset
-        run: wget -O upstream.apk "$asset_url"
+        run: wget --header "Bearer ${{ secrets.GITHUB_TOKEN }}" -O upstream.apk "$asset_url"
       - name: Compare APKs
         run: apksigcopier compare upstream.apk --unsigned unsigned.apk && echo OK
