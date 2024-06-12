@@ -122,6 +122,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:text="@string/login_no_account"
+                android:gravity="center"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginVertical="16dp"/>
