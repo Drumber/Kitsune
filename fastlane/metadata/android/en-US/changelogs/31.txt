@@ -1,0 +1,5 @@
+* Fixed a bug with the login
+
+Changes from v1.10.6:
+* Added French translation (Thanks @IsAy15)
+* Fixed a crash when opening the "Characters" page
