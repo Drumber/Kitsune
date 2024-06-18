@@ -113,11 +113,11 @@
     <string name="section_top_upcoming_anime">Top des animés à venir</string>
     <string name="preference_media_item_size_medium">Moyennes</string>
     <string name="preference_media_item_size_large">Grandes</string>
-    <string name="section_highest_rated_anime">Animé le mieux noté</string>
-    <string name="section_most_popular_anime">Anime le plus populaire</string>
+    <string name="section_highest_rated_anime">Animés les mieux notés</string>
+    <string name="section_most_popular_anime">Animés les plus populaires</string>
     <string name="preference_start_fragment_home">Accueil</string>
     <string name="preference_start_fragment_search">Chercher</string>
-    <string name="section_highest_rated_manga">Manga les mieux notés</string>
+    <string name="section_highest_rated_manga">Mangas les mieux notés</string>
     <string name="preference_start_fragment_library">Bibliothèque</string>
     <string name="section_most_popular_manga">Mangas les plus populaires</string>
     <string name="preference_start_fragment_profile">Profil</string>
@@ -276,9 +276,9 @@
         <item quantity="other">%s mois</item>
     </plurals>
     <plurals name="duration_years">
-        <item quantity="one">%s année</item>
-        <item quantity="many">%s années</item>
-        <item quantity="other">%s années</item>
+        <item quantity="one">%s an</item>
+        <item quantity="many">%s ans</item>
+        <item quantity="other">%s ans</item>
     </plurals>
     <string name="library_edit_rewatch_count">Nombre de revisionnage(s)</string>
     <string name="library_edit_started">Commencé</string>
