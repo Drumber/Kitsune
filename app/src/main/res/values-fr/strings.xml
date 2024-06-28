@@ -41,7 +41,7 @@
     <string name="title_media_type">Type de média</string>
     <string name="character_role_recurring">Récurrent</string>
     <string name="character_role_cameo">Caméo</string>
-    <string name="library_status_completed">Complété</string>
+    <string name="library_status_completed">Complétés</string>
     <string name="data_length_total">%s total</string>
     <string name="data_length_each">%d minutes par épisode</string>
     <string name="data_title_english">Anglais</string>
@@ -213,10 +213,10 @@
     <string name="status_current_manga">En cours d\'édition</string>
     <string name="status_finished">Terminé</string>
     <string name="status_upcoming">À venir</string>
-    <string name="library_status_planned">Veux voir</string>
+    <string name="library_status_planned">À regarder</string>
     <string name="library_status_watching">En cours de visionnage</string>
     <string name="library_status_on_hold">En pause</string>
-    <string name="library_status_dropped">Lâché</string>
+    <string name="library_status_dropped">Abandonnés</string>
     <string name="library_status_planned_manga">Veux lire</string>
     <string name="library_status_reading">En cours de lecture</string>
     <string name="library_action_add">Ajouter à la bibliothèque</string>
