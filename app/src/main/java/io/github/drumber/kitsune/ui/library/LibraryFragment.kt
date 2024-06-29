@@ -15,7 +15,9 @@ import androidx.core.view.doOnPreDraw
 import androidx.core.view.isEmpty
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.CombinedLoadStates
@@ -35,20 +37,20 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentLibraryBinding
-import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
+import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryKind
+import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryWrapper
+import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.LibraryEntriesAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibrarySynchronizationResult
 import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibraryUpdateResult
-import io.github.drumber.kitsune.util.rating.RatingSystemUtil
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
+import io.github.drumber.kitsune.util.rating.RatingSystemUtil
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbarOnAnyFailure
@@ -131,20 +133,24 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         val initialToolbarScrollFlags =
             (binding.toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags
 
-        viewModel.userRepository.userLiveData.observe(viewLifecycleOwner) { user ->
-            val isLoggedIn = user != null
-            binding.apply {
-                setMenuVisibility(isLoggedIn)
-                rvLibraryEntries.isVisible = isLoggedIn
-                nsvNotLoggedIn.isVisible = !isLoggedIn
-                scrollViewFilter.isVisible = isLoggedIn
-                // disable toolbar scrolling if library is not shown (not logged in)
-                (toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags =
-                    if (isLoggedIn) {
-                        initialToolbarScrollFlags
-                    } else {
-                        AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.localUser.collectLatest { user ->
+                    val isLoggedIn = user != null
+                    binding.apply {
+                        setMenuVisibility(isLoggedIn)
+                        rvLibraryEntries.isVisible = isLoggedIn
+                        nsvNotLoggedIn.isVisible = !isLoggedIn
+                        scrollViewFilter.isVisible = isLoggedIn
+                        // disable toolbar scrolling if library is not shown (not logged in)
+                        (toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags =
+                            if (isLoggedIn) {
+                                initialToolbarScrollFlags
+                            } else {
+                                AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
+                            }
                     }
+                }
             }
         }
 
@@ -385,7 +391,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         }
 
         viewModel.notSynchronizedLibraryEntryModifications.observe(viewLifecycleOwner) {
-            if (!viewModel.userRepository.hasUser)
+            if (!viewModel.hasUser())
                 return@observe
 
             viewModel.invalidatePagingSource()
@@ -501,7 +507,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     }
 
     override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
-        if (!viewModel.userRepository.hasUser)
+        if (!viewModel.hasUser())
             return
 
         inflater.inflate(R.menu.library_menu, menu)

@@ -1,0 +1,117 @@
+package io.github.drumber.kitsune.domain_old.manager.library
+
+import com.github.jasminb.jsonapi.JSONAPIDocument
+import io.github.drumber.kitsune.domain_old.mapper.toLibraryEntry
+import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
+import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntryModification
+import io.github.drumber.kitsune.domain_old.model.infrastructure.library.LibraryEntry
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Anime
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.BaseMedia
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Manga
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.User
+import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.domain_old.service.library.LibraryEntriesService
+import io.github.drumber.kitsune.exception.NotFoundException
+import io.github.drumber.kitsune.util.logE
+import kotlinx.coroutines.CancellationException
+import retrofit2.HttpException
+
+class LibraryEntryServiceClient(
+    private val libraryEntriesService: LibraryEntriesService
+) {
+
+    private val filterForFullLibraryEntry
+        get() = Filter().include("anime", "manga")
+
+    suspend fun postNewLibraryEntry(
+        userId: String,
+        media: BaseMedia,
+        status: LibraryStatus
+    ): LibraryEntry? {
+        val libraryEntry = LibraryEntry.withNulls().copy(
+            user = User(id = userId),
+            status = status,
+            anime = if (media is Anime) media else null,
+            manga = if (media is Manga) media else null
+        )
+
+        return try {
+            libraryEntriesService.postLibraryEntry(
+                JSONAPIDocument(libraryEntry),
+                filterForFullLibraryEntry.options
+            ).get()
+        } catch (e: Exception) {
+            logE("Failed to create new library entry.", e)
+            null
+        }
+    }
+
+    suspend fun updateLibraryEntryWithModification(
+        libraryEntryModification: LocalLibraryEntryModification,
+        shouldFetchWithMedia: Boolean
+    ): LibraryEntry? {
+        val libraryEntry = libraryEntryModification.toLocalLibraryEntry().toLibraryEntry()
+        val filter = if (shouldFetchWithMedia) filterForFullLibraryEntry.options else emptyMap()
+
+        return try {
+            libraryEntriesService.updateLibraryEntry(
+                libraryEntryModification.id,
+                JSONAPIDocument(libraryEntry),
+                filter
+            ).get()
+        } catch (e: HttpException) {
+            if (e.code() == 404)
+                throw NotFoundException(
+                    "Library entry with ID '${libraryEntryModification.id}' does not exist.",
+                    e
+                )
+            val errorResponseBody = e.response()?.errorBody()?.string()
+            logE(
+                "Received HTTP exception while updating library entry with ID '${libraryEntryModification.id}'. Response body is: $errorResponseBody",
+                e
+            )
+            null
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            logE("Failed to update library entry with ID '${libraryEntryModification.id}'.", e)
+            null
+        }
+    }
+
+    suspend fun deleteLibraryEntry(libraryEntryId: String): Boolean {
+        return try {
+            libraryEntriesService.deleteLibraryEntry(libraryEntryId).isSuccessful
+        } catch (e: Exception) {
+            logE("Failed to delete library entry with ID '$libraryEntryId'.", e)
+            false
+        }
+    }
+
+    suspend fun getFullLibraryEntry(libraryEntryId: String): LibraryEntry? {
+        return try {
+            libraryEntriesService.getLibraryEntry(
+                libraryEntryId,
+                filterForFullLibraryEntry.options
+            ).get()
+        } catch (e: Exception) {
+            logE("Failed to get library entry with ID '$libraryEntryId'.", e)
+            null
+        }
+    }
+
+    suspend fun doesLibraryEntryExist(libraryEntryId: String): Boolean {
+        return try {
+            libraryEntriesService.getLibraryEntry(
+                libraryEntryId,
+                Filter().fields("libraryEntries", "id").options
+            ).get() != null
+        } catch (e: HttpException) {
+            return e.code() == 404
+        } catch (e: Exception) {
+            logE("Failed to check for library entry with ID '${libraryEntryId}'.", e)
+            return false
+        }
+    }
+
+}

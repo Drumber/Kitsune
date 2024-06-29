@@ -6,7 +6,7 @@
     <data>
         <variable
             name="adapter"
-            type="io.github.drumber.kitsune.domain.model.ui.media.MediaUnitAdapter" />
+            type="io.github.drumber.kitsune.domain_old.model.ui.media.MediaUnitAdapter" />
     </data>
 
     <androidx.core.widget.NestedScrollView

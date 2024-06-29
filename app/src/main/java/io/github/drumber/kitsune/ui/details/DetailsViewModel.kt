@@ -6,26 +6,27 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.jasminb.jsonapi.JSONAPIDocument
-import io.github.drumber.kitsune.domain.database.LibraryEntryWithModificationDao
-import io.github.drumber.kitsune.domain.manager.library.LibraryManager
-import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult
-import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
-import io.github.drumber.kitsune.domain.mapper.toLibraryEntryModification
-import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
-import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.SYNCHRONIZING
-import io.github.drumber.kitsune.domain.model.infrastructure.mappings.Mapping
-import io.github.drumber.kitsune.domain.model.infrastructure.user.Favorite
-import io.github.drumber.kitsune.domain.model.infrastructure.user.User
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
-import io.github.drumber.kitsune.domain.repository.UserRepository
-import io.github.drumber.kitsune.domain.service.Filter
-import io.github.drumber.kitsune.domain.service.anime.AnimeService
-import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
-import io.github.drumber.kitsune.domain.service.manga.MangaService
-import io.github.drumber.kitsune.domain.service.mappings.MappingService
-import io.github.drumber.kitsune.domain.service.user.FavoriteService
+import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
+import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
+import io.github.drumber.kitsune.domain_old.database.LibraryEntryWithModificationDao
+import io.github.drumber.kitsune.domain_old.manager.library.LibraryManager
+import io.github.drumber.kitsune.domain_old.manager.library.SynchronizationResult
+import io.github.drumber.kitsune.domain_old.mapper.toLibraryEntry
+import io.github.drumber.kitsune.domain_old.mapper.toLibraryEntryModification
+import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
+import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntryModification
+import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryModificationState.SYNCHRONIZING
+import io.github.drumber.kitsune.domain_old.model.infrastructure.mappings.Mapping
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.Favorite
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.User
+import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryWrapper
+import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.domain_old.service.anime.AnimeService
+import io.github.drumber.kitsune.domain_old.service.library.LibraryEntriesService
+import io.github.drumber.kitsune.domain_old.service.manga.MangaService
+import io.github.drumber.kitsune.domain_old.service.mappings.MappingService
+import io.github.drumber.kitsune.domain_old.service.user.FavoriteService
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
@@ -46,7 +47,8 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
 class DetailsViewModel(
-    private val userRepository: UserRepository,
+    private val getLocalUserId: GetLocalUserIdUseCase,
+    private val isUserLoggedIn: IsUserLoggedInUseCase,
     private val libraryEntriesService: LibraryEntriesService,
     private val libraryEntryWithModificationDao: LibraryEntryWithModificationDao,
     private val libraryManager: LibraryManager,
@@ -56,7 +58,7 @@ class DetailsViewModel(
     private val mappingService: MappingService
 ) : ViewModel() {
 
-    fun isLoggedIn() = userRepository.hasUser
+    fun isLoggedIn() = isUserLoggedIn()
 
     private val _mediaAdapter = MutableLiveData<MediaAdapter>()
     val mediaAdapter: LiveData<MediaAdapter>
@@ -172,7 +174,7 @@ class DetailsViewModel(
     }
 
     private suspend fun loadLibraryEntry(mediaAdapter: MediaAdapter) {
-        val userId = userRepository.user?.id ?: return
+        val userId = getLocalUserId() ?: return
 
         // add local database as library entry source
         viewModelScope.launch(Dispatchers.Main) {
@@ -225,7 +227,7 @@ class DetailsViewModel(
     }
 
     private suspend fun loadFavorite(mediaAdapter: MediaAdapter) {
-        val userId = userRepository.user?.id ?: return
+        val userId = getLocalUserId() ?: return
 
         val filter = Filter()
             .filter("user_id", userId)
@@ -271,7 +273,7 @@ class DetailsViewModel(
     }
 
     fun updateLibraryEntryStatus(status: LibraryStatus) {
-        val userId = userRepository.user?.id ?: return
+        val userId = getLocalUserId() ?: return
         val mediaAdapter = mediaAdapter.value ?: return
         val existingLibraryEntryId = libraryEntryWrapper.value?.libraryEntry?.id
 
@@ -327,7 +329,7 @@ class DetailsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             if (favorite == null) {
                 val mediaItem = mediaAdapter.value?.media ?: return@launch
-                val userId = userRepository.user?.id ?: return@launch
+                val userId = getLocalUserId() ?: return@launch
 
                 val newFavorite = Favorite(item = mediaItem, user = User(id = userId))
                 try {

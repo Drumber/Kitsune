@@ -9,7 +9,7 @@ import androidx.databinding.OnRebindCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.constants.MediaItemSize
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
 import java.util.concurrent.CopyOnWriteArrayList

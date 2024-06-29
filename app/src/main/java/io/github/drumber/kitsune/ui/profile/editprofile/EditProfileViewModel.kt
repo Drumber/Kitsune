@@ -15,20 +15,20 @@ import com.algolia.search.model.search.Query
 import com.algolia.search.model.search.RemoveStopWords
 import com.algolia.search.model.search.RemoveWordIfNoResults
 import com.github.jasminb.jsonapi.JSONAPIDocument
-import io.github.drumber.kitsune.domain.manager.SearchProvider
-import io.github.drumber.kitsune.domain.model.infrastructure.algolia.SearchType
-import io.github.drumber.kitsune.domain.model.infrastructure.character.Character
-import io.github.drumber.kitsune.domain.model.infrastructure.user.User
-import io.github.drumber.kitsune.domain.model.infrastructure.user.UserImageUpload
-import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLink
-import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLinkSite
-import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
-import io.github.drumber.kitsune.domain.repository.AlgoliaKeyRepository
-import io.github.drumber.kitsune.domain.repository.UserRepository
-import io.github.drumber.kitsune.domain.service.Filter
-import io.github.drumber.kitsune.domain.service.user.ProfileLinkService
-import io.github.drumber.kitsune.domain.service.user.UserImageUploadService
-import io.github.drumber.kitsune.domain.service.user.UserService
+import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
+import io.github.drumber.kitsune.domain_old.manager.SearchProvider
+import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.SearchType
+import io.github.drumber.kitsune.domain_old.model.infrastructure.character.Character
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.User
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.UserImageUpload
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.profilelinks.ProfileLink
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.profilelinks.ProfileLinkSite
+import io.github.drumber.kitsune.domain_old.repository.AlgoliaKeyRepository
+import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.domain_old.service.user.ProfileLinkService
+import io.github.drumber.kitsune.domain_old.service.user.UserImageUploadService
+import io.github.drumber.kitsune.domain_old.service.user.UserService
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
@@ -100,7 +100,7 @@ class EditProfileViewModel(
     var currentImagePickerType: ImagePickerType? = null
 
     init {
-        val user = userRepository.user
+        val user = userRepository.localUser.value
 
         val initialProfileState = ProfileState(
             location = user?.location ?: "",
@@ -204,10 +204,10 @@ class EditProfileViewModel(
         }
     }
 
-    fun hasUser() = userRepository.hasUser
+    fun hasUser() = userRepository.hasLocalUser()
 
     fun updateUserProfile(profileImages: ProfileImageContainer?) {
-        val user = userRepository.user ?: return
+        val user = userRepository.localUser.value ?: return
         val changes = profileState
         val waifu = if (changes.character != null && changes.waifuOrHusbando.isNotBlank()) {
             Character(id = changes.character.id.toString())
@@ -224,8 +224,6 @@ class EditProfileViewModel(
             about = changes.about,
             waifu = waifu
         )
-
-        if (user.id.isNullOrBlank()) return
 
         acceptLoadingState(LoadingState.Loading)
         viewModelScope.launch(Dispatchers.IO) {
@@ -244,7 +242,7 @@ class EditProfileViewModel(
 
                 if (response.get() != null) {
                     // request full user model to update local cached model
-                    userRepository.updateUserCache()
+                    userRepository.updateLocalUserFromNetwork()
                     acceptLoadingState(LoadingState.Success)
                 } else {
                     throw ProfileUpdateException.ProfileDataError(ProfileDataErrorType.UpdateProfile)
@@ -502,14 +500,14 @@ class EditProfileViewModel(
         }
     }
 
-    private fun User.getGenderWithoutCustomGender(): String? {
+    private fun LocalUser.getGenderWithoutCustomGender(): String? {
         return when (gender) {
             null, "", "male", "female", "secret" -> gender
             else -> "custom"
         }
     }
 
-    private fun User.getCustomGenderOrNull(): String? {
+    private fun LocalUser.getCustomGenderOrNull(): String? {
         return when (gender) {
             "male", "female", "secret" -> null
             else -> gender

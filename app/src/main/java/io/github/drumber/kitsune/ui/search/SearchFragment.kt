@@ -26,9 +26,9 @@ import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentSearchBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
-import io.github.drumber.kitsune.domain.mapper.toMedia
-import io.github.drumber.kitsune.domain.model.infrastructure.algolia.search.MediaSearchResult
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.domain_old.mapper.toMedia
+import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.MediaSearchResult
+import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.paging.MediaSearchPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment

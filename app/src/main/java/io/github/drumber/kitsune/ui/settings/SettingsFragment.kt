@@ -21,13 +21,15 @@ import io.github.drumber.kitsune.AppLocales
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
+import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
-import io.github.drumber.kitsune.domain.manager.GitHubUpdateChecker
-import io.github.drumber.kitsune.domain.model.infrastructure.user.RatingSystemPreference
-import io.github.drumber.kitsune.domain.model.infrastructure.user.SfwFilterPreference
-import io.github.drumber.kitsune.domain.model.infrastructure.user.TitleLanguagePreference
-import io.github.drumber.kitsune.domain.model.infrastructure.user.User
-import io.github.drumber.kitsune.domain.model.preference.StartPagePref
+import io.github.drumber.kitsune.domain_old.manager.GitHubUpdateChecker
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.RatingSystemPreference
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.SfwFilterPreference
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.TitleLanguagePreference
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.User
+import io.github.drumber.kitsune.domain_old.model.preference.StartPagePref
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BasePreferenceFragment
@@ -232,11 +234,11 @@ class SettingsFragment : BasePreferenceFragment() {
         viewModel.userModel.observe(this) { user ->
             //---- Title Language Preference
             findPreference<ListPreference>(R.string.preference_key_titles)?.apply {
-                entryValues = TitleLanguagePreference.entries.map { it.name }.toTypedArray()
+                entryValues = LocalTitleLanguagePreference.entries.map { it.name }.toTypedArray()
                 setDefaultValue(KitsunePref.titles.name)
                 value = KitsunePref.titles.name
                 setOnPreferenceChangeListener { _, newValue ->
-                    val titlesPref = TitleLanguagePreference.valueOf(newValue.toString())
+                    val titlesPref = LocalTitleLanguagePreference.valueOf(newValue.toString())
                     KitsunePref.titles = titlesPref
 
                     // Title preference can be also changed without being logged in.
@@ -245,7 +247,7 @@ class SettingsFragment : BasePreferenceFragment() {
                         updateUserIfChanged(
                             value,
                             newValue,
-                            User(user.id, titleLanguagePreference = titlesPref)
+                            User(user.id, titleLanguagePreference = TitleLanguagePreference.valueOf(titlesPref.name)) // TODO: migrate to LocalTitleLanguagePreference
                         )
                     }
                     true
@@ -363,7 +365,7 @@ class SettingsFragment : BasePreferenceFragment() {
     }
 
     private inline fun <reified T : Preference> T.requireUserLoggedIn(
-        user: User?,
+        user: LocalUser?,
         @StringRes messageRes: Int = R.string.preference_not_logged_in,
         summaryProvider: Preference.SummaryProvider<T>? = null
     ) {

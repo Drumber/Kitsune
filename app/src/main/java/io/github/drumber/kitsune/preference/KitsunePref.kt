@@ -10,14 +10,14 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.constants.MediaItemSize
-import io.github.drumber.kitsune.domain.model.FilterCollection
-import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain.model.infrastructure.user.RatingSystemPreference
-import io.github.drumber.kitsune.domain.model.infrastructure.user.TitleLanguagePreference
-import io.github.drumber.kitsune.domain.model.preference.CategoryPrefWrapper
-import io.github.drumber.kitsune.domain.model.preference.StartPagePref
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind
-import io.github.drumber.kitsune.domain.repository.UserRepository
+import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
+import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
+import io.github.drumber.kitsune.domain_old.model.FilterCollection
+import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
+import io.github.drumber.kitsune.domain_old.model.preference.CategoryPrefWrapper
+import io.github.drumber.kitsune.domain_old.model.preference.StartPagePref
+import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryKind
 import io.github.drumber.kitsune.util.logE
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -32,16 +32,16 @@ object KitsunePref : KotprefModel(), KoinComponent {
     private val userRepository: UserRepository by inject()
 
     private var titlesIntern by enumValuePref(
-        TitleLanguagePreference.Canonical,
+        LocalTitleLanguagePreference.Canonical,
         key = R.string.preference_key_titles
     )
 
-    var titles: TitleLanguagePreference
+    var titles: LocalTitleLanguagePreference
         set(value) {
             titlesIntern = value
         }
         get() {
-            return userRepository.user?.titleLanguagePreference ?: titlesIntern
+            return userRepository.localUser.value?.titleLanguagePreference ?: titlesIntern
         }
 
     var appTheme by enumValuePref(AppTheme.DEFAULT)
@@ -114,7 +114,7 @@ object KitsunePref : KotprefModel(), KoinComponent {
     var flagUserDeniedNotificationPermission by booleanPref(false)
 
 
-    var ratingChartRatingSystem by enumValuePref(RatingSystemPreference.Regular)
+    var ratingChartRatingSystem by enumValuePref(LocalRatingSystemPreference.Regular)
 
 
     private fun Any.toJsonString(): String {

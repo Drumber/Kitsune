@@ -8,10 +8,10 @@
         <import type="androidx.core.content.ContextCompat" />
         <variable
             name="entry"
-            type="io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryAdapter" />
+            type="io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryAdapter" />
         <variable
             name="data"
-            type="io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter" />
+            type="io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

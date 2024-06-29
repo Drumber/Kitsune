@@ -14,9 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.map
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
@@ -31,11 +30,10 @@ import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.navigationrail.NavigationRailView
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.databinding.ActivityMainBinding
-import io.github.drumber.kitsune.domain.model.preference.StartPagePref
-import io.github.drumber.kitsune.domain.model.preference.getDestinationId
-import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
-import io.github.drumber.kitsune.domain.repository.UserRepository
+import io.github.drumber.kitsune.domain_old.model.preference.StartPagePref
+import io.github.drumber.kitsune.domain_old.model.preference.getDestinationId
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
@@ -45,6 +43,8 @@ import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
 import io.github.drumber.kitsune.util.ui.RoundBitmapDrawable
 import io.github.drumber.kitsune.util.ui.getSystemBarsAndCutoutInsets
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -71,7 +71,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
         val userRepository = get<UserRepository>()
         lifecycleScope.launch {
-            userRepository.userReLoginSignal.collectLatest {
+            userRepository.userReLogInPrompt.collectLatest {
                 promptUserReLogin()
             }
         }
@@ -137,30 +137,34 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
 
 
-            userRepository.userLiveData
-                .map { it?.avatar?.originalOrDown() }
-                .distinctUntilChanged()
-                .observe(this@MainActivity) { avatarUrl ->
-                    if (avatarUrl.isNullOrBlank()) {
-                        menu.findItem(R.id.profile_fragment).setIcon(R.drawable.selector_profile)
-                        return@observe
-                    }
-                    Glide.with(this)
-                        .asBitmap()
-                        .load(avatarUrl)
-                        .dontAnimate()
-                        .into(object : CustomTarget<Bitmap>() {
-                            override fun onResourceReady(
-                                resource: Bitmap,
-                                transition: Transition<in Bitmap>?
-                            ) {
-                                menu.findItem(R.id.profile_fragment).icon =
-                                    RoundBitmapDrawable(resource)
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    userRepository.localUser
+                        .map { it?.avatar?.originalOrDown() }
+                        .distinctUntilChanged()
+                        .collectLatest { avatarUrl ->
+                            if (avatarUrl.isNullOrBlank()) {
+                                menu.findItem(R.id.profile_fragment).setIcon(R.drawable.selector_profile)
+                                return@collectLatest
                             }
+                            Glide.with(this@MainActivity)
+                                .asBitmap()
+                                .load(avatarUrl)
+                                .dontAnimate()
+                                .into(object : CustomTarget<Bitmap>() {
+                                    override fun onResourceReady(
+                                        resource: Bitmap,
+                                        transition: Transition<in Bitmap>?
+                                    ) {
+                                        menu.findItem(R.id.profile_fragment).icon =
+                                            RoundBitmapDrawable(resource)
+                                    }
 
-                            override fun onLoadCleared(placeholder: Drawable?) {}
-                        })
+                                    override fun onLoadCleared(placeholder: Drawable?) {}
+                                })
+                        }
                 }
+            }
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->

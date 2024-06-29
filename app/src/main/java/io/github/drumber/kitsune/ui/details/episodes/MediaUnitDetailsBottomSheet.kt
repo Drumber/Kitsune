@@ -8,9 +8,9 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.SheetMediaUnitDetailsBinding
-import io.github.drumber.kitsune.domain.model.ui.media.MediaUnitAdapter
-import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
-import io.github.drumber.kitsune.domain.model.ui.media.smallOrHigher
+import io.github.drumber.kitsune.domain_old.model.ui.media.MediaUnitAdapter
+import io.github.drumber.kitsune.domain_old.model.ui.media.originalOrDown
+import io.github.drumber.kitsune.domain_old.model.ui.media.smallOrHigher
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 
 class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {

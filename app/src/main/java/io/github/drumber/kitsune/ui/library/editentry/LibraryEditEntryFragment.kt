@@ -29,10 +29,10 @@ import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.databinding.FragmentEditLibraryEntryBinding
-import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
-import io.github.drumber.kitsune.domain.model.ui.library.getStringResId
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Manga
+import io.github.drumber.kitsune.domain_old.model.ui.library.getStringResId
+import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.base.BaseDialogFragment
 import io.github.drumber.kitsune.ui.library.RatingBottomSheet
 import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel.LoadState

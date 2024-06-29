@@ -12,8 +12,8 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentMediaListBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
-import io.github.drumber.kitsune.domain.model.MediaType
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.domain_old.model.MediaType
+import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.base.MediaCollectionFragment
 import io.github.drumber.kitsune.ui.base.MediaCollectionViewModel
 import io.github.drumber.kitsune.util.extensions.navigateSafe

@@ -9,24 +9,25 @@ import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import androidx.paging.map
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.domain.database.LibraryEntryModificationDao
-import io.github.drumber.kitsune.domain.manager.library.LibraryManager
-import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult
-import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
-import io.github.drumber.kitsune.domain.mapper.toLibraryEntryModification
-import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
-import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
-import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.NOT_SYNCHRONIZED
-import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.SYNCHRONIZING
-import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryFilter
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryUiModel
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.domain.repository.LibraryEntriesRepository
-import io.github.drumber.kitsune.domain.repository.UserRepository
-import io.github.drumber.kitsune.domain.service.Filter
+import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
+import io.github.drumber.kitsune.domain_old.database.LibraryEntryModificationDao
+import io.github.drumber.kitsune.domain_old.manager.library.LibraryManager
+import io.github.drumber.kitsune.domain_old.manager.library.SynchronizationResult
+import io.github.drumber.kitsune.domain_old.mapper.toLibraryEntry
+import io.github.drumber.kitsune.domain_old.mapper.toLibraryEntryModification
+import io.github.drumber.kitsune.domain_old.mapper.toLocalLibraryEntry
+import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
+import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntryModification
+import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryModificationState.NOT_SYNCHRONIZED
+import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryModificationState.SYNCHRONIZING
+import io.github.drumber.kitsune.domain_old.model.infrastructure.library.LibraryEntry
+import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryFilter
+import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryKind
+import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryUiModel
+import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryWrapper
+import io.github.drumber.kitsune.domain_old.repository.LibraryEntriesRepository
+import io.github.drumber.kitsune.domain_old.service.Filter
 import io.github.drumber.kitsune.exception.InvalidDataException
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.library.InternalAction.LibraryUpdateOperationEnd
@@ -60,7 +61,8 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 class LibraryViewModel(
-    val userRepository: UserRepository,
+    private val userRepository: UserRepository,
+    private val getLocalUserId: GetLocalUserIdUseCase,
     private val libraryEntriesRepository: LibraryEntriesRepository,
     private val libraryManager: LibraryManager,
     libraryModificationDao: LibraryEntryModificationDao
@@ -88,6 +90,8 @@ class LibraryViewModel(
         libraryModificationDao.getLibraryEntryModificationsWithStateLiveData(NOT_SYNCHRONIZED)
 
     private val libraryProgressUpdateJobs = ConcurrentHashMap<String, Job>()
+
+    val localUser = userRepository.localUser
 
     init {
         val initialFilter = FilterState(
@@ -191,6 +195,8 @@ class LibraryViewModel(
         }
     }
 
+    fun hasUser() = userRepository.hasLocalUser()
+
     private fun getPagingLibraryEntriesFlow(
         filter: LibraryEntryFilter
     ): Flow<PagingData<LibraryEntryUiModel>> {
@@ -229,7 +235,7 @@ class LibraryViewModel(
     }
 
     private fun createLibraryEntryFilter(filter: FilterState): LibraryEntryFilter? {
-        return userRepository.user?.id?.let { userId ->
+        return getLocalUserId()?.let { userId ->
             val requestFilter = Filter()
                 .filter("user_id", userId)
                 .sort("status", "-progressed_at")

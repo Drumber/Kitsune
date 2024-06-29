@@ -14,11 +14,11 @@ import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentMediaListBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
-import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.MediaUnit
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
-import io.github.drumber.kitsune.domain.model.ui.media.MediaUnitAdapter
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Anime
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Manga
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.unit.MediaUnit
+import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.domain_old.model.ui.media.MediaUnitAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener

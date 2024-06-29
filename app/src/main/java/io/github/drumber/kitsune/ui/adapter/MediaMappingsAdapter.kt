@@ -13,9 +13,9 @@ import android.widget.BaseAdapter
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ItemMediaMappingBinding
-import io.github.drumber.kitsune.domain.model.infrastructure.mappings.Mapping
-import io.github.drumber.kitsune.domain.model.infrastructure.mappings.getExternalUrl
-import io.github.drumber.kitsune.domain.model.infrastructure.mappings.getSiteName
+import io.github.drumber.kitsune.domain_old.model.infrastructure.mappings.Mapping
+import io.github.drumber.kitsune.domain_old.model.infrastructure.mappings.getExternalUrl
+import io.github.drumber.kitsune.domain_old.model.infrastructure.mappings.getSiteName
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
