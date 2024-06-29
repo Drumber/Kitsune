@@ -1,8 +1,8 @@
 package io.github.drumber.kitsune.testutils
 
-import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryModification
+import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
+import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntryModification
+import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryModification
 import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
 import net.datafaker.Faker
 

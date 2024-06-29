@@ -14,43 +14,43 @@ import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.constants.GitHub
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.domain.model.infrastructure.character.Character
-import io.github.drumber.kitsune.domain.model.infrastructure.character.MediaCharacter
-import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
-import io.github.drumber.kitsune.domain.model.infrastructure.mappings.Mapping
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
-import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
-import io.github.drumber.kitsune.domain.model.infrastructure.media.mediarelationship.MediaRelationship
-import io.github.drumber.kitsune.domain.model.infrastructure.media.streamer.Streamer
-import io.github.drumber.kitsune.domain.model.infrastructure.media.streamer.StreamingLink
-import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.Chapter
-import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.Episode
-import io.github.drumber.kitsune.domain.model.infrastructure.production.AnimeProduction
-import io.github.drumber.kitsune.domain.model.infrastructure.production.Casting
-import io.github.drumber.kitsune.domain.model.infrastructure.production.Producer
-import io.github.drumber.kitsune.domain.model.infrastructure.user.Favorite
-import io.github.drumber.kitsune.domain.model.infrastructure.user.User
-import io.github.drumber.kitsune.domain.model.infrastructure.user.UserImageUpload
-import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLink
-import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLinkSite
-import io.github.drumber.kitsune.domain.model.infrastructure.user.stats.Stats
-import io.github.drumber.kitsune.domain.service.anime.AnimeService
-import io.github.drumber.kitsune.domain.service.anime.EpisodesService
-import io.github.drumber.kitsune.domain.service.auth.AlgoliaKeyService
-import io.github.drumber.kitsune.domain.service.auth.AuthService
-import io.github.drumber.kitsune.domain.service.category.CategoryService
-import io.github.drumber.kitsune.domain.service.character.CharacterService
-import io.github.drumber.kitsune.domain.service.github.GitHubApiService
-import io.github.drumber.kitsune.domain.service.library.LibraryEntriesService
-import io.github.drumber.kitsune.domain.service.manga.ChaptersService
-import io.github.drumber.kitsune.domain.service.manga.MangaService
-import io.github.drumber.kitsune.domain.service.mappings.MappingService
-import io.github.drumber.kitsune.domain.service.production.CastingService
-import io.github.drumber.kitsune.domain.service.user.FavoriteService
-import io.github.drumber.kitsune.domain.service.user.ProfileLinkService
-import io.github.drumber.kitsune.domain.service.user.UserImageUploadService
-import io.github.drumber.kitsune.domain.service.user.UserService
+import io.github.drumber.kitsune.domain_old.model.infrastructure.character.Character
+import io.github.drumber.kitsune.domain_old.model.infrastructure.character.MediaCharacter
+import io.github.drumber.kitsune.domain_old.model.infrastructure.library.LibraryEntry
+import io.github.drumber.kitsune.domain_old.model.infrastructure.mappings.Mapping
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Anime
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Manga
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.category.Category
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.mediarelationship.MediaRelationship
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.streamer.Streamer
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.streamer.StreamingLink
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.unit.Chapter
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.unit.Episode
+import io.github.drumber.kitsune.domain_old.model.infrastructure.production.AnimeProduction
+import io.github.drumber.kitsune.domain_old.model.infrastructure.production.Casting
+import io.github.drumber.kitsune.domain_old.model.infrastructure.production.Producer
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.Favorite
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.User
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.UserImageUpload
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.profilelinks.ProfileLink
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.profilelinks.ProfileLinkSite
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.stats.Stats
+import io.github.drumber.kitsune.domain_old.service.anime.AnimeService
+import io.github.drumber.kitsune.domain_old.service.anime.EpisodesService
+import io.github.drumber.kitsune.domain_old.service.auth.AlgoliaKeyService
+import io.github.drumber.kitsune.domain_old.service.auth.AuthService
+import io.github.drumber.kitsune.domain_old.service.category.CategoryService
+import io.github.drumber.kitsune.domain_old.service.character.CharacterService
+import io.github.drumber.kitsune.domain_old.service.github.GitHubApiService
+import io.github.drumber.kitsune.domain_old.service.library.LibraryEntriesService
+import io.github.drumber.kitsune.domain_old.service.manga.ChaptersService
+import io.github.drumber.kitsune.domain_old.service.manga.MangaService
+import io.github.drumber.kitsune.domain_old.service.mappings.MappingService
+import io.github.drumber.kitsune.domain_old.service.production.CastingService
+import io.github.drumber.kitsune.domain_old.service.user.FavoriteService
+import io.github.drumber.kitsune.domain_old.service.user.ProfileLinkService
+import io.github.drumber.kitsune.domain_old.service.user.UserImageUploadService
+import io.github.drumber.kitsune.domain_old.service.user.UserService
 import io.github.drumber.kitsune.util.json.AlgoliaFacetValueDeserializer
 import io.github.drumber.kitsune.util.json.AlgoliaNumericValueDeserializer
 import io.github.drumber.kitsune.util.json.IgnoreParcelablePropertyMixin
@@ -73,7 +73,7 @@ val networkModule = module {
     single(named("unauthenticated")) { createHttpClientBuilder().build() }
     single { createObjectMapper() }
     factory { createAuthService(get()) }
-    factory<AuthenticationInterceptor> { AuthenticationInterceptorImpl(get()) }
+    factory<AuthenticationInterceptor> { AuthenticationInterceptorImpl(get(), get()) }
     factory {
         createService<AnimeService>(
             get(), get(),
@@ -205,7 +205,7 @@ private fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
     redactHeader("Authorization")
 }
 
-private fun createUserAgentInterceptor() =
+fun createUserAgentInterceptor() =
     UserAgentInterceptor("Kitsune/${BuildConfig.VERSION_NAME}")
 
 private fun createAuthService(objectMapper: ObjectMapper) = createService<AuthService>(
@@ -234,7 +234,7 @@ fun createObjectMapper(): ObjectMapper = jacksonMapperBuilder()
     )
     .build()
 
-private fun createConverterFactory(
+fun createConverterFactory(
     httpClient: OkHttpClient,
     objectMapper: ObjectMapper,
     vararg classes: Class<*>
@@ -247,7 +247,7 @@ private fun createConverterFactory(
     return JSONAPIConverterFactory(resourceConverter)
 }
 
-private inline fun <reified T> createService(
+inline fun <reified T> createService(
     httpClient: OkHttpClient,
     objectMapper: ObjectMapper,
     vararg classes: Class<*>,
@@ -262,7 +262,7 @@ private inline fun <reified T> createService(
         .create(T::class.java)
 }
 
-private inline fun <reified T> createService(
+inline fun <reified T> createService(
     httpClient: OkHttpClient,
     objectMapper: ObjectMapper,
     baseUrl: String = Kitsu.API_URL

@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Defaults
-import io.github.drumber.kitsune.domain.model.MediaSelector
-import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
-import io.github.drumber.kitsune.domain.service.Filter
+import io.github.drumber.kitsune.domain_old.model.MediaSelector
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.BaseMedia
+import io.github.drumber.kitsune.domain_old.service.Filter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted

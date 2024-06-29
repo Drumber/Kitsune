@@ -8,9 +8,9 @@ import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
-import io.github.drumber.kitsune.domain.model.infrastructure.character.MediaCharacter
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
-import io.github.drumber.kitsune.domain.model.ui.media.getString
+import io.github.drumber.kitsune.domain_old.model.infrastructure.character.MediaCharacter
+import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.domain_old.model.ui.media.getString
 import java.util.concurrent.CopyOnWriteArrayList
 
 class MediaCharacterAdapter(

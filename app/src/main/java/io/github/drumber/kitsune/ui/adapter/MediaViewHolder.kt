@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.ui.adapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
 
 class MediaViewHolder(

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.domain.model.infrastructure.user.stats.StatsData
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.stats.StatsData
 import io.github.drumber.kitsune.databinding.ItemProfileStatsBinding
 import io.github.drumber.kitsune.ui.widget.chart.PieChartStyle.applyStyle
 import io.github.drumber.kitsune.util.TimeUtil

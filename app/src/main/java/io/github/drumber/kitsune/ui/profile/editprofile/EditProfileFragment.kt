@@ -33,9 +33,9 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentEditProfileBinding
 import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
-import io.github.drumber.kitsune.domain.mapper.toCharacter
-import io.github.drumber.kitsune.domain.model.infrastructure.algolia.search.CharacterSearchResult
-import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLinkSite
+import io.github.drumber.kitsune.domain_old.mapper.toCharacter
+import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.CharacterSearchResult
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.profilelinks.ProfileLinkSite
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BaseDialogFragment
 import io.github.drumber.kitsune.util.DataUtil

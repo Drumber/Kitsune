@@ -11,12 +11,12 @@ import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ItemLibraryEntryBinding
 import io.github.drumber.kitsune.databinding.ItemLibraryStatusSeparatorBinding
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryAdapter
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryUiModel
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryUiModel.StatusSeparatorModel
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.domain.model.ui.library.getStringResId
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryAdapter
+import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryUiModel
+import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryUiModel.StatusSeparatorModel
+import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryWrapper
+import io.github.drumber.kitsune.domain_old.model.ui.library.getStringResId
+import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
 
 class LibraryEntriesAdapter(
     private val glide: RequestManager,

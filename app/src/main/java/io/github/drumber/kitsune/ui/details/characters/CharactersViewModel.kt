@@ -8,10 +8,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.domain.model.infrastructure.production.Casting
-import io.github.drumber.kitsune.domain.repository.CastingRepository
-import io.github.drumber.kitsune.domain.service.Filter
-import io.github.drumber.kitsune.domain.service.anime.AnimeService
+import io.github.drumber.kitsune.domain_old.model.infrastructure.production.Casting
+import io.github.drumber.kitsune.domain_old.repository.CastingRepository
+import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.domain_old.service.anime.AnimeService
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

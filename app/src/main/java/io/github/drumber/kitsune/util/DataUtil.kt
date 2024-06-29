@@ -2,11 +2,11 @@ package io.github.drumber.kitsune.util
 
 import android.content.Context
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.domain.model.common.media.Titles
-import io.github.drumber.kitsune.domain.model.common.media.en
-import io.github.drumber.kitsune.domain.model.common.media.enJp
-import io.github.drumber.kitsune.domain.model.common.media.jaJp
-import io.github.drumber.kitsune.domain.model.infrastructure.user.TitleLanguagePreference
+import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
+import io.github.drumber.kitsune.domain_old.model.common.media.Titles
+import io.github.drumber.kitsune.domain_old.model.common.media.en
+import io.github.drumber.kitsune.domain_old.model.common.media.enJp
+import io.github.drumber.kitsune.domain_old.model.common.media.jaJp
 import io.github.drumber.kitsune.preference.KitsunePref
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -40,11 +40,11 @@ object DataUtil {
     @JvmStatic
     fun getTitle(title: Titles?, canonical: String?): String? {
         return when (KitsunePref.titles) {
-            TitleLanguagePreference.Canonical -> canonical.nb()
+            LocalTitleLanguagePreference.Canonical -> canonical.nb()
                 ?: title?.enJp.nb() ?: title?.en.nb() ?: title?.jaJp
-            TitleLanguagePreference.Romanized -> title?.enJp.nb()
+            LocalTitleLanguagePreference.Romanized -> title?.enJp.nb()
                 ?: canonical.nb() ?: title?.en.nb() ?: title?.jaJp
-            TitleLanguagePreference.English -> title?.en.nb()
+            LocalTitleLanguagePreference.English -> title?.en.nb()
                 ?: canonical.nb() ?: title?.enJp.nb() ?: title?.jaJp
         }
     }

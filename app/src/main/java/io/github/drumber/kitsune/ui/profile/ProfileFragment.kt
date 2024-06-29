@@ -31,19 +31,19 @@ import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.MediaItemSize
+import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
 import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
-import io.github.drumber.kitsune.domain.model.infrastructure.character.Character
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
-import io.github.drumber.kitsune.domain.model.infrastructure.user.Favorite
-import io.github.drumber.kitsune.domain.model.infrastructure.user.User
-import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLink
-import io.github.drumber.kitsune.domain.model.infrastructure.user.stats.Stats
-import io.github.drumber.kitsune.domain.model.infrastructure.user.stats.StatsData
-import io.github.drumber.kitsune.domain.model.infrastructure.user.stats.StatsKind
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
-import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
+import io.github.drumber.kitsune.domain_old.model.infrastructure.character.Character
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Anime
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Manga
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.Favorite
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.profilelinks.ProfileLink
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.stats.Stats
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.stats.StatsData
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.stats.StatsKind
+import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.domain_old.model.ui.media.originalOrDown
 import io.github.drumber.kitsune.ui.adapter.CharacterAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder
@@ -203,7 +203,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
         }
     }
 
-    private fun updateUser(user: User?) {
+    private fun updateUser(user: LocalUser?) {
         binding.user = user
         binding.invalidateAll()
 

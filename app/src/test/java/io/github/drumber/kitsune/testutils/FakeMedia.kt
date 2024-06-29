@@ -1,15 +1,15 @@
 package io.github.drumber.kitsune.testutils
 
-import io.github.drumber.kitsune.domain.model.common.media.AgeRating
-import io.github.drumber.kitsune.domain.model.common.media.AnimeSubtype
-import io.github.drumber.kitsune.domain.model.common.media.MangaSubtype
-import io.github.drumber.kitsune.domain.model.common.media.RatingFrequencies
-import io.github.drumber.kitsune.domain.model.common.media.ReleaseStatus
-import io.github.drumber.kitsune.domain.model.common.media.Titles
-import io.github.drumber.kitsune.domain.model.database.LocalAnime
-import io.github.drumber.kitsune.domain.model.database.LocalManga
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
+import io.github.drumber.kitsune.domain_old.model.common.media.AgeRating
+import io.github.drumber.kitsune.domain_old.model.common.media.AnimeSubtype
+import io.github.drumber.kitsune.domain_old.model.common.media.MangaSubtype
+import io.github.drumber.kitsune.domain_old.model.common.media.RatingFrequencies
+import io.github.drumber.kitsune.domain_old.model.common.media.ReleaseStatus
+import io.github.drumber.kitsune.domain_old.model.common.media.Titles
+import io.github.drumber.kitsune.domain_old.model.database.LocalAnime
+import io.github.drumber.kitsune.domain_old.model.database.LocalManga
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Anime
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Manga
 import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
 import net.datafaker.Faker
 import java.util.Locale

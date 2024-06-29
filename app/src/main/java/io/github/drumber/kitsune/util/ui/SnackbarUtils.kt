@@ -4,7 +4,7 @@ import android.view.View
 import androidx.annotation.StringRes
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult
+import io.github.drumber.kitsune.domain_old.manager.library.SynchronizationResult
 
 fun showSnackbar(
     parent: View,

@@ -8,9 +8,9 @@ import com.algolia.instantsearch.core.hits.HitsView
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ItemCharacterSearchResultBinding
-import io.github.drumber.kitsune.domain.mapper.toImage
-import io.github.drumber.kitsune.domain.model.infrastructure.algolia.search.CharacterSearchResult
-import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
+import io.github.drumber.kitsune.domain_old.mapper.toImage
+import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.CharacterSearchResult
+import io.github.drumber.kitsune.domain_old.model.ui.media.originalOrDown
 
 class CharacterSearchResultAdapter(private val onCharacterClicked: (CharacterSearchResult) -> Unit) :
     RecyclerView.Adapter<CharacterSearchResultAdapter.CharacterSearchResultViewHolder>(),

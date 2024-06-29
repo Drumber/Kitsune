@@ -40,23 +40,23 @@ import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.constants.SortFilter
+import io.github.drumber.kitsune.data.presentation.getStringRes
+import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.databinding.ItemDetailsInfoRowBinding
-import io.github.drumber.kitsune.domain.model.MediaSelector
-import io.github.drumber.kitsune.domain.model.MediaType
-import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain.model.common.media.Titles
-import io.github.drumber.kitsune.domain.model.common.media.en
-import io.github.drumber.kitsune.domain.model.common.media.withoutCommonTitles
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
-import io.github.drumber.kitsune.domain.model.infrastructure.media.category.Category
-import io.github.drumber.kitsune.domain.model.infrastructure.user.RatingSystemPreference
-import io.github.drumber.kitsune.domain.model.infrastructure.user.getStringRes
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryAdapter
-import io.github.drumber.kitsune.domain.model.ui.library.getStringResId
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
-import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
-import io.github.drumber.kitsune.domain.service.Filter
+import io.github.drumber.kitsune.domain_old.model.MediaSelector
+import io.github.drumber.kitsune.domain_old.model.MediaType
+import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
+import io.github.drumber.kitsune.domain_old.model.common.media.Titles
+import io.github.drumber.kitsune.domain_old.model.common.media.en
+import io.github.drumber.kitsune.domain_old.model.common.media.withoutCommonTitles
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Anime
+import io.github.drumber.kitsune.domain_old.model.infrastructure.media.category.Category
+import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryAdapter
+import io.github.drumber.kitsune.domain_old.model.ui.library.getStringResId
+import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.domain_old.model.ui.media.originalOrDown
+import io.github.drumber.kitsune.domain_old.service.Filter
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
@@ -560,7 +560,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         val menu = popup.menu
         val selectedRatingSystem = KitsunePref.ratingChartRatingSystem
 
-        RatingSystemPreference.entries.forEach {
+        LocalRatingSystemPreference.entries.forEach {
             val menuItem = menu.add(1, it.ordinal, it.ordinal, it.getStringRes())
             menuItem.isChecked = selectedRatingSystem == it
             menuItem.setOnMenuItemClickListener { _ ->

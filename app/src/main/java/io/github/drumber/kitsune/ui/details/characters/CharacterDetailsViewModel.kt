@@ -4,13 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.constants.Defaults
-import io.github.drumber.kitsune.domain.model.infrastructure.character.Character
-import io.github.drumber.kitsune.domain.model.infrastructure.user.Favorite
-import io.github.drumber.kitsune.domain.model.infrastructure.user.User
-import io.github.drumber.kitsune.domain.repository.UserRepository
-import io.github.drumber.kitsune.domain.service.Filter
-import io.github.drumber.kitsune.domain.service.character.CharacterService
-import io.github.drumber.kitsune.domain.service.user.FavoriteService
+import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
+import io.github.drumber.kitsune.domain_old.model.infrastructure.character.Character
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.Favorite
+import io.github.drumber.kitsune.domain_old.model.infrastructure.user.User
+import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.domain_old.service.character.CharacterService
+import io.github.drumber.kitsune.domain_old.service.user.FavoriteService
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 class CharacterDetailsViewModel(
     private val service: CharacterService,
-    private val userRepository: UserRepository,
+    private val getLocalUserId: GetLocalUserIdUseCase,
     private val favoriteService: FavoriteService
 ) : ViewModel() {
 
@@ -87,7 +87,7 @@ class CharacterDetailsViewModel(
     }
 
     private suspend fun fetchFavorite(characterId: String): Favorite? {
-        val userId = userRepository.user?.id ?: return null
+        val userId = getLocalUserId() ?: return null
 
         val filter = Filter()
             .filter("user_id", userId)
@@ -104,7 +104,7 @@ class CharacterDetailsViewModel(
 
     fun toggleFavorite(): Boolean {
         val characterId = characterFlow.replayCache.firstOrNull()?.id ?: return false
-        val userId = userRepository.user?.id ?: return false
+        val userId = getLocalUserId() ?: return false
         val favorite = favoriteFlow.replayCache.firstOrNull()
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -120,8 +120,9 @@ class CharacterDetailsViewModel(
                 }
             }
 
+            // TODO: verify if this is necessary and remove if not
             // trigger user model update to show updated favorites on the profile fragment
-            userRepository.user?.let { userRepository.updateUserModel(it) }
+            //userRepository.localUser?.let { userRepository.updateUserModel(it) }
         }
         return favorite == null
     }
