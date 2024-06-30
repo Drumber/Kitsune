@@ -6,6 +6,7 @@ import io.github.drumber.kitsune.data.source.local.auth.LocalAccessToken
 import io.github.drumber.kitsune.data.source.network.auth.AccessTokenNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.auth.model.ObtainAccessToken
 import io.github.drumber.kitsune.data.source.network.auth.model.RefreshAccessToken
+import io.github.drumber.kitsune.util.logD
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -46,6 +47,13 @@ class AccessTokenRepository(
             ?: throw IllegalStateException("No refresh token available. Are you logged in?")
 
         mutex.withLock {
+            // Check if the access token was changed by a concurrent request
+            val localAccessToken = getAccessToken()
+            if (localAccessToken != null && localAccessToken.refreshToken != refreshToken) {
+                logD("Access token was updated by a concurrent request. Returning the updated token.")
+                return localAccessToken
+            }
+
             val accessToken = remoteAccessTokenDataSource.refreshToken(
                 RefreshAccessToken(
                     refreshToken = refreshToken

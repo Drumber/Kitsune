@@ -7,15 +7,21 @@ import io.github.drumber.kitsune.data.source.network.auth.model.NetworkAccessTok
 import io.github.drumber.kitsune.data.source.network.auth.model.ObtainAccessToken
 import io.github.drumber.kitsune.data.source.network.auth.model.RefreshAccessToken
 import io.github.drumber.kitsune.testutils.onSuspend
+import io.github.drumber.kitsune.testutils.useMockedAndroidLogger
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doNothing
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 
 class AccessTokenRepositoryTest {
@@ -158,5 +164,71 @@ class AccessTokenRepositoryTest {
             .isEqualTo(networkAccessToken)
 
         assertThat(actualAccessToken).usingRecursiveComparison().isEqualTo(networkAccessToken)
+    }
+
+    @Test
+    fun shouldRefreshAccessTokenOnlyOnce(): Unit = runBlocking {
+        // given
+        val localAccessToken = LocalAccessToken(
+            accessToken = faker.lorem().word(),
+            createdAt = faker.number().randomNumber(),
+            expiresIn = faker.number().randomNumber(),
+            refreshToken = faker.internet().uuid()
+        )
+        val networkAccessToken ={
+            NetworkAccessToken(
+                accessToken = faker.lorem().word(),
+                createdAt = faker.number().randomNumber(),
+                expiresIn = faker.number().randomNumber(),
+                refreshToken = faker.internet().uuid(),
+                tokenType = "bearer",
+                scope = "public"
+            )
+        }
+
+        val localAccessTokenDataSource = FakeAccessTokenLocalDataSource(localAccessToken)
+        val remoteAccessTokenDataSource = mock<AccessTokenNetworkDataSource> {
+            onSuspend { refreshToken(any()) } doAnswer {
+                runBlocking {
+                    delay(10) // simulate network delay
+                    networkAccessToken()
+                }
+            }
+        }
+
+        val accessTokenRepository = AccessTokenRepository(
+            localAccessTokenDataSource = localAccessTokenDataSource,
+            remoteAccessTokenDataSource = remoteAccessTokenDataSource
+        )
+
+        useMockedAndroidLogger {
+            // when
+            val firstAccessToken = async { accessTokenRepository.refreshAccessToken() }
+            val secondAccessToken = async { accessTokenRepository.refreshAccessToken() }
+
+            // then
+            awaitAll(firstAccessToken, secondAccessToken)
+            verify(remoteAccessTokenDataSource, times(1)).refreshToken(any())
+            assertThat(firstAccessToken.await()).isEqualTo(localAccessTokenDataSource.loadAccessToken())
+            assertThat(firstAccessToken.await()).isEqualTo(secondAccessToken.await())
+        }
+    }
+
+
+    class FakeAccessTokenLocalDataSource(
+        private var accessToken: LocalAccessToken? = null
+    ) : AccessTokenLocalDataSource {
+
+        override fun loadAccessToken(): LocalAccessToken? {
+            return accessToken
+        }
+
+        override fun storeAccessToken(accessToken: LocalAccessToken) {
+            this.accessToken = accessToken
+        }
+
+        override fun clearAccessToken() {
+            accessToken = null
+        }
     }
 }

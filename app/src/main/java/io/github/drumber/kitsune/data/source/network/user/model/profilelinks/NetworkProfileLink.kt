@@ -1,9 +1,9 @@
-package io.github.drumber.kitsune.data.source.network.user.model
+package io.github.drumber.kitsune.data.source.network.user.model.profilelinks
 
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.User
+import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 
 @Type("profileLinks")
 data class NetworkProfileLink(
@@ -14,5 +14,5 @@ data class NetworkProfileLink(
     @Relationship("profileLinkSite")
     val profileLinkSite: NetworkProfileLinkSite?,
     @Relationship("user")
-    val user: User?
+    val user: NetworkUser?
 )

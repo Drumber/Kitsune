@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.source.network.user.model
+package io.github.drumber.kitsune.data.source.network.user.model.profilelinks
 
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Type
