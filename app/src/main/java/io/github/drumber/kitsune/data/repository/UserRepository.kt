@@ -1,8 +1,10 @@
 package io.github.drumber.kitsune.data.repository
 
 import io.github.drumber.kitsune.constants.Defaults
-import io.github.drumber.kitsune.data.common.NoDataException
+import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.mapper.UserMapper.toLocalUser
+import io.github.drumber.kitsune.data.mapper.UserMapper.toUser
+import io.github.drumber.kitsune.data.presentation.model.user.User
 import io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.data.source.network.user.UserNetworkDataSource
@@ -32,6 +34,9 @@ class UserRepository(
         _localUser.value = null
     }
 
+    /**
+     * Fetches the app user from the network and updates the local cached user object.
+     */
     suspend fun updateLocalUserFromNetwork() {
         val baseFilter = Filter()
             .include("waifu")
@@ -51,7 +56,11 @@ class UserRepository(
         _userReLogInPrompt.tryEmit(Unit)
     }
 
-    suspend fun getUser(userId: String, filter: Filter): LocalUser? {
+    suspend fun getLocalUserFromNetwork(userId: String, filter: Filter): LocalUser? {
         return remoteUserDataSource.getUser(userId, filter)?.toLocalUser()
+    }
+
+    suspend fun getUser(userId: String, filter: Filter): User? {
+        return remoteUserDataSource.getUser(userId, filter)?.toUser()
     }
 }

@@ -16,6 +16,7 @@ import com.algolia.search.model.search.RemoveStopWords
 import com.algolia.search.model.search.RemoveWordIfNoResults
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.data.source.local.character.LocalCharacter
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.domain_old.manager.SearchProvider
 import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.SearchType
@@ -527,7 +528,7 @@ data class ProfileState(
     val gender: String,
     val customGender: String,
     val waifuOrHusbando: String,
-    val character: Character?,
+    val character: LocalCharacter?,
     val about: String
 )
 

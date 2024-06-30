@@ -1,9 +1,13 @@
 package io.github.drumber.kitsune.data.source.network.user.model
 
 import com.github.jasminb.jsonapi.annotations.Id
+import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
 import io.github.drumber.kitsune.data.common.Image
 import io.github.drumber.kitsune.data.common.user.UserThemePreference
+import io.github.drumber.kitsune.data.source.network.character.NetworkCharacter
+import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
+import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStats
 
 @Type("users")
 data class NetworkUser(
@@ -60,12 +64,12 @@ data class NetworkUser(
     val hasPassword: Boolean? = null,
     val subscribedToNewsletter: Boolean? = null,
 
-//    @Relationship("stats")
-//    val stats: List<Stats>? = null,
-//    @Relationship("favorites")
-//    val favorites: List<Favorite>? = null,
-//    @Relationship("waifu")
-//    val waifu: Character? = null,
-//    @Relationship("profileLinks")
-//    val profileLinks: List<ProfileLink>? = null,
+    @Relationship("stats")
+    val stats: List<NetworkUserStats>? = null,
+    @Relationship("favorites")
+    val favorites: List<NetworkFavorite>? = null,
+    @Relationship("waifu")
+    val waifu: NetworkCharacter? = null,
+    @Relationship("profileLinks")
+    val profileLinks: List<NetworkProfileLink>? = null,
 )

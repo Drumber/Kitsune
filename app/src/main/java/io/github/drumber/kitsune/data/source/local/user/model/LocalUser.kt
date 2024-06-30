@@ -2,10 +2,7 @@ package io.github.drumber.kitsune.data.source.local.user.model
 
 import io.github.drumber.kitsune.data.common.Image
 import io.github.drumber.kitsune.data.common.user.UserThemePreference
-import io.github.drumber.kitsune.domain_old.model.infrastructure.character.Character
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.Favorite
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.profilelinks.ProfileLink
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.stats.Stats
+import io.github.drumber.kitsune.data.source.local.character.LocalCharacter
 
 data class LocalUser(
     val id: String,
@@ -35,9 +32,5 @@ data class LocalUser(
     val sfwFilterPreference: LocalSfwFilterPreference?,
     val titleLanguagePreference: LocalTitleLanguagePreference?,
 
-    // TODO: update imports
-    val stats: List<Stats>?,
-    val favorites: List<Favorite>?,
-    val waifu: Character?,
-    val profileLinks: List<ProfileLink>?,
+    val waifu: LocalCharacter?
 )

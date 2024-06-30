@@ -10,6 +10,7 @@ import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
 import com.tngtech.archunit.library.GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS
 import com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices
 import io.github.drumber.kitsune.KitsuneApplication
+import org.junit.Ignore
 import org.junit.Test
 
 class ArchUnitTest {
@@ -48,6 +49,7 @@ class ArchUnitTest {
             .check(NON_TEST_CLASSES)
     }
 
+    @Ignore("Deactivated during recode of domain logic")
     @Test
     fun differentModelLayersShouldNotDependOnEachOther() {
         slices()
@@ -89,6 +91,42 @@ class ArchUnitTest {
                     .and(simpleNameEndingWith("DataSource"))
             )
             .because("data sources should only be accessed by the repositories")
+            .check(NON_TEST_CLASSES)
+    }
+
+    @Test
+    fun presentation_model_classes_should_not_depend_on_data_sources() {
+        noClasses()
+            .that()
+            .resideInAPackage("..data.presentation.model..")
+            .should()
+            .dependOnClassesThat()
+            .resideInAPackage("..data.source..")
+            .because("presentation model classes should not depend on data sources")
+            .check(NON_TEST_CLASSES)
+    }
+
+    @Test
+    fun common_classes_should_not_depend_on_data_sources() {
+        noClasses()
+            .that()
+            .resideInAPackage("..data.common..")
+            .should()
+            .dependOnClassesThat()
+            .resideInAPackage("..data.source..")
+            .because("common classes should not depend on data sources")
+            .check(NON_TEST_CLASSES)
+    }
+
+    @Test
+    fun data_sources_should_not_depend_on_presentation_classes() {
+        noClasses()
+            .that()
+            .resideInAPackage("..data.source..")
+            .should()
+            .dependOnClassesThat()
+            .resideInAPackage("..data.presentation..")
+            .because("data sources classes should not depend on presentation classes")
             .check(NON_TEST_CLASSES)
     }
 

@@ -33,7 +33,7 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentEditProfileBinding
 import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
-import io.github.drumber.kitsune.domain_old.mapper.toCharacter
+import io.github.drumber.kitsune.domain_old.mapper.toLocalCharacter
 import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.CharacterSearchResult
 import io.github.drumber.kitsune.domain_old.model.infrastructure.user.profilelinks.ProfileLinkSite
 import io.github.drumber.kitsune.preference.KitsunePref
@@ -392,7 +392,7 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
 
     private fun initSearchView() {
         val adapter = CharacterSearchResultAdapter {
-            viewModel.acceptProfileChanges(viewModel.profileState.copy(character = it.toCharacter()))
+            viewModel.acceptProfileChanges(viewModel.profileState.copy(character = it.toLocalCharacter()))
             binding.characterSearchView.hide()
         }
 

@@ -8,6 +8,7 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.constants.Defaults
+import io.github.drumber.kitsune.data.presentation.model.user.User
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.domain.auth.LogOutUserUseCase
@@ -27,7 +28,7 @@ class ProfileViewModel(
     val userModel: LiveData<LocalUser?> = userRepository.localUser.asLiveData()
 
     // full user model including stats and favorites
-    val fullUserModel: LiveData<ResponseData<LocalUser>> = userModel.switchMap {
+    val fullUserModel: LiveData<ResponseData<User>> = userModel.switchMap {
         it?.id?.let { userId ->
             liveData(context = Dispatchers.IO) {
                 val response = try {
