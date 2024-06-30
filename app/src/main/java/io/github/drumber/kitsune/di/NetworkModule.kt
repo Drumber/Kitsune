@@ -29,16 +29,9 @@ import io.github.drumber.kitsune.domain_old.model.infrastructure.media.unit.Epis
 import io.github.drumber.kitsune.domain_old.model.infrastructure.production.AnimeProduction
 import io.github.drumber.kitsune.domain_old.model.infrastructure.production.Casting
 import io.github.drumber.kitsune.domain_old.model.infrastructure.production.Producer
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.Favorite
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.User
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.UserImageUpload
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.profilelinks.ProfileLink
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.profilelinks.ProfileLinkSite
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.stats.Stats
 import io.github.drumber.kitsune.domain_old.service.anime.AnimeService
 import io.github.drumber.kitsune.domain_old.service.anime.EpisodesService
 import io.github.drumber.kitsune.domain_old.service.auth.AlgoliaKeyService
-import io.github.drumber.kitsune.domain_old.service.auth.AuthService
 import io.github.drumber.kitsune.domain_old.service.category.CategoryService
 import io.github.drumber.kitsune.domain_old.service.character.CharacterService
 import io.github.drumber.kitsune.domain_old.service.github.GitHubApiService
@@ -47,10 +40,6 @@ import io.github.drumber.kitsune.domain_old.service.manga.ChaptersService
 import io.github.drumber.kitsune.domain_old.service.manga.MangaService
 import io.github.drumber.kitsune.domain_old.service.mappings.MappingService
 import io.github.drumber.kitsune.domain_old.service.production.CastingService
-import io.github.drumber.kitsune.domain_old.service.user.FavoriteService
-import io.github.drumber.kitsune.domain_old.service.user.ProfileLinkService
-import io.github.drumber.kitsune.domain_old.service.user.UserImageUploadService
-import io.github.drumber.kitsune.domain_old.service.user.UserService
 import io.github.drumber.kitsune.util.json.AlgoliaFacetValueDeserializer
 import io.github.drumber.kitsune.util.json.AlgoliaNumericValueDeserializer
 import io.github.drumber.kitsune.util.json.IgnoreParcelablePropertyMixin
@@ -72,7 +61,6 @@ val networkModule = module {
     single { createHttpClient(get(), get()) }
     single(named("unauthenticated")) { createHttpClientBuilder().build() }
     single { createObjectMapper() }
-    factory { createAuthService(get()) }
     factory<AuthenticationInterceptor> { AuthenticationInterceptorImpl(get(), get()) }
     factory {
         createService<AnimeService>(
@@ -99,34 +87,34 @@ val networkModule = module {
     }
     factory { createService<ChaptersService>(get(), get(), Chapter::class.java) }
     factory { createService<CategoryService>(get(), get(), Category::class.java) }
-    factory {
-        createService<UserService>(
-            get(),
-            get(),
-            User::class.java,
-            Stats::class.java,
-            Favorite::class.java,
-            Anime::class.java,
-            Manga::class.java,
-            Character::class.java
-        )
-    }
-    factory {
-        createService<UserImageUploadService>(
-            get(),
-            get(),
-            UserImageUpload::class.java
-        )
-    }
-    factory {
-        createService<ProfileLinkService>(
-            get(),
-            get(),
-            ProfileLink::class.java,
-            ProfileLinkSite::class.java,
-            User::class.java
-        )
-    }
+//    factory {
+//        createService<UserService>(
+//            get(),
+//            get(),
+//            User::class.java,
+//            Stats::class.java,
+//            Favorite::class.java,
+//            Anime::class.java,
+//            Manga::class.java,
+//            Character::class.java
+//        )
+//    }
+//    factory {
+//        createService<UserImageUploadService>(
+//            get(),
+//            get(),
+//            UserImageUpload::class.java
+//        )
+//    }
+//    factory {
+//        createService<ProfileLinkService>(
+//            get(),
+//            get(),
+//            ProfileLink::class.java,
+//            ProfileLinkSite::class.java,
+//            User::class.java
+//        )
+//    }
     factory {
         createService<LibraryEntriesService>(
             get(), get(),
@@ -135,16 +123,16 @@ val networkModule = module {
             Manga::class.java
         )
     }
-    factory {
-        createService<FavoriteService>(
-            get(),
-            get(),
-            Favorite::class.java,
-            Anime::class.java,
-            Manga::class.java,
-            User::class.java
-        )
-    }
+//    factory {
+//        createService<FavoriteService>(
+//            get(),
+//            get(),
+//            Favorite::class.java,
+//            Anime::class.java,
+//            Manga::class.java,
+//            User::class.java
+//        )
+//    }
     factory {
         createService<CastingService>(
             get(),
@@ -207,12 +195,6 @@ private fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
 
 fun createUserAgentInterceptor() =
     UserAgentInterceptor("Kitsune/${BuildConfig.VERSION_NAME}")
-
-private fun createAuthService(objectMapper: ObjectMapper) = createService<AuthService>(
-    createHttpClientBuilder(false).build(),
-    objectMapper,
-    Kitsu.OAUTH_URL
-)
 
 fun createObjectMapper(): ObjectMapper = jacksonMapperBuilder()
     .serializationInclusion(JsonInclude.Include.NON_NULL)

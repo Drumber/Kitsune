@@ -10,9 +10,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLinkSite
 import io.github.drumber.kitsune.databinding.ItemListOptionBinding
 import io.github.drumber.kitsune.databinding.SheetSelectProfileLinkSiteBinding
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.profilelinks.ProfileLinkSite
 import io.github.drumber.kitsune.util.ItemClickListener
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
 import kotlinx.coroutines.flow.collectLatest

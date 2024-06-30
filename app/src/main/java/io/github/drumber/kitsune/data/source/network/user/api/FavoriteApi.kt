@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.source.network.user.api
 
 import com.github.jasminb.jsonapi.JSONAPIDocument
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.Favorite
+import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -10,18 +10,17 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
-// TODO: change Favorite import
 interface FavoriteApi {
 
     @GET("favorites")
     suspend fun getAllFavorites(
         @QueryMap filter: Map<String, String> = emptyMap()
-    ): JSONAPIDocument<List<Favorite>>
+    ): JSONAPIDocument<List<NetworkFavorite>>
 
     @POST("favorites")
     suspend fun postFavorite(
-        @Body favorite: JSONAPIDocument<Favorite>
-    ): JSONAPIDocument<Favorite>
+        @Body favorite: JSONAPIDocument<NetworkFavorite>
+    ): JSONAPIDocument<NetworkFavorite>
 
     @DELETE("favorites/{id}")
     suspend fun deleteFavorite(

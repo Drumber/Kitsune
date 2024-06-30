@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.data.mapper
 
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toLocalCharacter
-import io.github.drumber.kitsune.data.mapper.UserProfileLinksMapper.toProfileLink
+import io.github.drumber.kitsune.data.mapper.ProfileLinksMapper.toProfileLink
 import io.github.drumber.kitsune.data.mapper.UserStatsMapper.toUserStats
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
 import io.github.drumber.kitsune.data.presentation.model.user.FavoriteItem
@@ -71,32 +71,32 @@ object UserMapper {
         profileLinks = profileLinks?.map { it.toProfileLink() }
     )
 
-    private fun NetworkRatingSystemPreference.toLocalRatingSystemPreference() = when (this) {
+    fun NetworkRatingSystemPreference.toLocalRatingSystemPreference() = when (this) {
         NetworkRatingSystemPreference.Advanced -> LocalRatingSystemPreference.Advanced
         NetworkRatingSystemPreference.Regular -> LocalRatingSystemPreference.Regular
         NetworkRatingSystemPreference.Simple -> LocalRatingSystemPreference.Simple
     }
 
-    private fun NetworkSfwFilterPreference.toLocalSfwFilterPreference() = when (this) {
+    fun NetworkSfwFilterPreference.toLocalSfwFilterPreference() = when (this) {
         NetworkSfwFilterPreference.SFW -> LocalSfwFilterPreference.SFW
         NetworkSfwFilterPreference.NSFW_SOMETIMES -> LocalSfwFilterPreference.NSFW_SOMETIMES
         NetworkSfwFilterPreference.NSFW_EVERYWHERE -> LocalSfwFilterPreference.NSFW_EVERYWHERE
     }
 
-    private fun NetworkTitleLanguagePreference.toLocalTitleLanguagePreference() = when (this) {
+    fun NetworkTitleLanguagePreference.toLocalTitleLanguagePreference() = when (this) {
         NetworkTitleLanguagePreference.Canonical -> LocalTitleLanguagePreference.Canonical
         NetworkTitleLanguagePreference.Romanized -> LocalTitleLanguagePreference.Romanized
         NetworkTitleLanguagePreference.English -> LocalTitleLanguagePreference.English
     }
 
-    private fun NetworkFavorite.toFavorite(): Favorite = Favorite(
+    fun NetworkFavorite.toFavorite(): Favorite = Favorite(
         id = id.require(),
         favRank = favRank,
         item = item?.toFavoriteItem(),
         user = user?.toUser()
     )
 
-    private fun NetworkFavoriteItem.toFavoriteItem(): FavoriteItem = when (this) {
+    fun NetworkFavoriteItem.toFavoriteItem(): FavoriteItem = when (this) {
         //is Anime -> toAnime() // TODO
         else -> throw IllegalArgumentException("Unknown favorite item type: ${this.javaClass.name}")
     }
@@ -126,4 +126,22 @@ object UserMapper {
         waifu = waifu?.toCharacter(),
         profileLinks = null
     )
+
+    fun LocalRatingSystemPreference.toNetworkRatingSystemPreference() = when (this) {
+        LocalRatingSystemPreference.Advanced -> NetworkRatingSystemPreference.Advanced
+        LocalRatingSystemPreference.Regular -> NetworkRatingSystemPreference.Regular
+        LocalRatingSystemPreference.Simple -> NetworkRatingSystemPreference.Simple
+    }
+
+    fun LocalSfwFilterPreference.toNetworkSfwFilterPreference() = when (this) {
+        LocalSfwFilterPreference.SFW -> NetworkSfwFilterPreference.SFW
+        LocalSfwFilterPreference.NSFW_SOMETIMES -> NetworkSfwFilterPreference.NSFW_SOMETIMES
+        LocalSfwFilterPreference.NSFW_EVERYWHERE -> NetworkSfwFilterPreference.NSFW_EVERYWHERE
+    }
+
+    fun LocalTitleLanguagePreference.toNetworkTitleLanguagePreference() = when (this) {
+        LocalTitleLanguagePreference.Canonical -> NetworkTitleLanguagePreference.Canonical
+        LocalTitleLanguagePreference.Romanized -> NetworkTitleLanguagePreference.Romanized
+        LocalTitleLanguagePreference.English -> NetworkTitleLanguagePreference.English
+    }
 }

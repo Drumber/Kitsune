@@ -35,7 +35,7 @@ class LogInUserUseCaseTest {
         )
 
         val userRepository = mock<UserRepository> {
-            onSuspend { updateLocalUserFromNetwork() } doReturn Unit
+            onSuspend { fetchAndStoreLocalUserFromNetwork() } doReturn Unit
         }
 
         val accessTokenRepository = mock<AccessTokenRepository> {
@@ -58,7 +58,7 @@ class LogInUserUseCaseTest {
 
         // then
         verify(accessTokenRepository).obtainAccessToken(username, password)
-        verify(userRepository).updateLocalUserFromNetwork()
+        verify(userRepository).fetchAndStoreLocalUserFromNetwork()
         verify(isUserLoggedInUserCase).invoke()
         assertThat(result).isEqualTo(LoginResult.Success(accessToken, null))
     }
@@ -70,7 +70,7 @@ class LogInUserUseCaseTest {
         val password = faker.internet().password()
 
         val userRepository = mock<UserRepository> {
-            onSuspend { updateLocalUserFromNetwork() } doReturn Unit
+            onSuspend { fetchAndStoreLocalUserFromNetwork() } doReturn Unit
         }
 
         val accessTokenRepository = mock<AccessTokenRepository> {
@@ -93,7 +93,7 @@ class LogInUserUseCaseTest {
 
         // then
         verify(accessTokenRepository).obtainAccessToken(username, password)
-        verify(userRepository, times(0)).updateLocalUserFromNetwork()
+        verify(userRepository, times(0)).fetchAndStoreLocalUserFromNetwork()
         verify(isUserLoggedInUserCase).invoke()
         assertThat(result).isEqualTo(LoginResult.Failure)
     }
@@ -105,7 +105,7 @@ class LogInUserUseCaseTest {
         val password = faker.internet().password()
 
         val userRepository = mock<UserRepository> {
-            onSuspend { updateLocalUserFromNetwork() } doReturn Unit
+            onSuspend { fetchAndStoreLocalUserFromNetwork() } doReturn Unit
         }
 
         val accessTokenRepository = mock<AccessTokenRepository> {
@@ -133,7 +133,7 @@ class LogInUserUseCaseTest {
 
         // then
         verify(accessTokenRepository).obtainAccessToken(username, password)
-        verify(userRepository, times(0)).updateLocalUserFromNetwork()
+        verify(userRepository, times(0)).fetchAndStoreLocalUserFromNetwork()
         verify(isUserLoggedInUserCase).invoke()
         assertThat(result).isInstanceOf(LoginResult.Error::class.java)
     }

@@ -5,7 +5,11 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.jasminb.jsonapi.JSONAPIDocument
+import io.github.drumber.kitsune.data.common.exception.ResourceUpdateFailed
+import io.github.drumber.kitsune.data.presentation.model.user.Favorite
+import io.github.drumber.kitsune.data.repository.FavoriteRepository
+import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
+import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.domain_old.database.LibraryEntryWithModificationDao
@@ -17,8 +21,6 @@ import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntryModification
 import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryModificationState.SYNCHRONIZING
 import io.github.drumber.kitsune.domain_old.model.infrastructure.mappings.Mapping
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.Favorite
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.User
 import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.domain_old.service.Filter
@@ -26,7 +28,6 @@ import io.github.drumber.kitsune.domain_old.service.anime.AnimeService
 import io.github.drumber.kitsune.domain_old.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.domain_old.service.manga.MangaService
 import io.github.drumber.kitsune.domain_old.service.mappings.MappingService
-import io.github.drumber.kitsune.domain_old.service.user.FavoriteService
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
@@ -44,17 +45,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
 
 class DetailsViewModel(
     private val getLocalUserId: GetLocalUserIdUseCase,
     private val isUserLoggedIn: IsUserLoggedInUseCase,
+    private val favoriteRepository: FavoriteRepository,
     private val libraryEntriesService: LibraryEntriesService,
     private val libraryEntryWithModificationDao: LibraryEntryWithModificationDao,
     private val libraryManager: LibraryManager,
     private val animeService: AnimeService,
     private val mangaService: MangaService,
-    private val favoriteService: FavoriteService,
     private val mappingService: MappingService
 ) : ViewModel() {
 
@@ -235,7 +235,7 @@ class DetailsViewModel(
             .filter("item_type", if (mediaAdapter.isAnime()) "Anime" else "Manga")
 
         try {
-            val favorites = favoriteService.allFavorites(filter.options).get()
+            val favorites = favoriteRepository.getAllFavorites(filter)
             _favorite.postValue(favorites?.firstOrNull())
         } catch (e: Exception) {
             logE("Failed to load favorites.", e)
@@ -331,22 +331,22 @@ class DetailsViewModel(
                 val mediaItem = mediaAdapter.value?.media ?: return@launch
                 val userId = getLocalUserId() ?: return@launch
 
-                val newFavorite = Favorite(item = mediaItem, user = User(id = userId))
+                // TODO: uncomment after migrating media items
+                val newFavorite = NetworkFavorite(/*item = mediaItem,*/ user = NetworkUser(id = userId))
                 try {
-                    val resFavorite =
-                        favoriteService.postFavorite(JSONAPIDocument(newFavorite)).get()
+                    val resFavorite = favoriteRepository.createFavorite(newFavorite)
                     _favorite.postValue(resFavorite)
                 } catch (e: Exception) {
                     logE("Failed to post favorite.", e)
                 }
             } else {
-                val favoriteId = favorite.id ?: return@launch
+                val favoriteId = favorite.id
                 try {
-                    val response = favoriteService.deleteFavorite(favoriteId)
-                    if (response.isSuccessful) {
+                    val isSuccessful = favoriteRepository.deleteFavorite(favoriteId)
+                    if (isSuccessful) {
                         _favorite.postValue(null)
                     } else {
-                        throw HttpException(response)
+                        throw ResourceUpdateFailed()
                     }
                 } catch (e: Exception) {
                     logE("Failed to delete favorite.", e)

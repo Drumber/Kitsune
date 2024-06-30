@@ -2,15 +2,16 @@ package io.github.drumber.kitsune.ui.details.characters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.constants.Defaults
+import io.github.drumber.kitsune.data.presentation.model.user.Favorite
+import io.github.drumber.kitsune.data.repository.FavoriteRepository
+import io.github.drumber.kitsune.data.source.network.character.NetworkCharacter
+import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
+import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.domain_old.model.infrastructure.character.Character
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.Favorite
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.User
 import io.github.drumber.kitsune.domain_old.service.Filter
 import io.github.drumber.kitsune.domain_old.service.character.CharacterService
-import io.github.drumber.kitsune.domain_old.service.user.FavoriteService
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -23,7 +24,7 @@ import kotlinx.coroutines.launch
 class CharacterDetailsViewModel(
     private val service: CharacterService,
     private val getLocalUserId: GetLocalUserIdUseCase,
-    private val favoriteService: FavoriteService
+    private val favoriteRepository: FavoriteRepository
 ) : ViewModel() {
 
     private val _characterFlow = MutableSharedFlow<Character>(
@@ -95,7 +96,7 @@ class CharacterDetailsViewModel(
             .filter("item_type", "Character")
 
         return try {
-            favoriteService.allFavorites(filter.options).get()?.firstOrNull()
+            favoriteRepository.getAllFavorites(filter)?.firstOrNull()
         } catch (e: Exception) {
             logE("Failed to fetch favorites.", e)
             null
@@ -128,9 +129,12 @@ class CharacterDetailsViewModel(
     }
 
     private suspend fun addToFavorites(userId: String, characterId: String): Favorite? {
-        val newFavorite = Favorite(item = Character(id = characterId), user = User(id = userId))
+        val newFavorite = NetworkFavorite(
+            item = NetworkCharacter(id = characterId),
+            user = NetworkUser(id = userId)
+        )
         return try {
-            favoriteService.postFavorite(JSONAPIDocument(newFavorite)).get()
+            favoriteRepository.createFavorite(newFavorite)
         } catch (e: Exception) {
             logE("Failed to post favorite.", e)
             null
@@ -139,8 +143,7 @@ class CharacterDetailsViewModel(
 
     private suspend fun removeFromFavorites(favoriteId: String): Boolean {
         return try {
-            val response = favoriteService.deleteFavorite(favoriteId)
-            response.isSuccessful
+            favoriteRepository.deleteFavorite(favoriteId)
         } catch (e: Exception) {
             logE("Failed to delete favorite.", e)
             false

@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.data.source.network.user.api
 
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
+import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -16,7 +17,7 @@ interface ProfileLinkApi {
     @GET("profile-link-sites")
     suspend fun getAllProfileLinkSites(
         @QueryMap filter: Map<String, String> = emptyMap()
-    ): JSONAPIDocument<List<NetworkProfileLink>>
+    ): JSONAPIDocument<List<NetworkProfileLinkSite>>
 
     @POST("profile-links")
     suspend fun createProfileLink(

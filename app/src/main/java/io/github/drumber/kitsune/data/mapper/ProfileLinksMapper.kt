@@ -6,7 +6,7 @@ import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.Profi
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
 
-object UserProfileLinksMapper {
+object ProfileLinksMapper {
     fun NetworkProfileLink.toProfileLink(): ProfileLink = ProfileLink(
         id = id.require(),
         url = url,
@@ -14,7 +14,7 @@ object UserProfileLinksMapper {
         user = user?.toUser()
     )
 
-    private fun NetworkProfileLinkSite.toProfileLinkSite() = ProfileLinkSite(
+    fun NetworkProfileLinkSite.toProfileLinkSite() = ProfileLinkSite(
         id = id.require(),
         name = name
     )
