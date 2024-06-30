@@ -16,7 +16,7 @@ class UpdateLocalUserUseCaseTest {
     fun shouldUpdateLocalUser(): Unit = runBlocking {
         // given
         val userRepository = mock<UserRepository> {
-            onSuspend { updateLocalUserFromNetwork() } doReturn Unit
+            onSuspend { fetchAndStoreLocalUserFromNetwork() } doReturn Unit
         }
 
         val isUserLoggedIn = mock<IsUserLoggedInUseCase> {
@@ -33,6 +33,6 @@ class UpdateLocalUserUseCaseTest {
         updateLocalUser()
 
         // then
-        verify(userRepository).updateLocalUserFromNetwork()
+        verify(userRepository).fetchAndStoreLocalUserFromNetwork()
     }
 }

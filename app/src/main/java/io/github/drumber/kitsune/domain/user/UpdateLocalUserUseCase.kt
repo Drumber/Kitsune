@@ -24,7 +24,7 @@ class UpdateLocalUserUseCase(
             return
         }
 
-        userRepository.updateLocalUserFromNetwork()
+        userRepository.fetchAndStoreLocalUserFromNetwork()
     }
 
 }

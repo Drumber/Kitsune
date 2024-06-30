@@ -1,11 +1,10 @@
-package io.github.drumber.kitsune.preference
+package io.github.drumber.kitsune.data.source.local.user
 
 import android.content.Context
 import androidx.core.content.edit
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.util.logD
 

@@ -21,14 +21,16 @@ import io.github.drumber.kitsune.AppLocales
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.data.mapper.UserMapper.toNetworkRatingSystemPreference
+import io.github.drumber.kitsune.data.mapper.UserMapper.toNetworkSfwFilterPreference
+import io.github.drumber.kitsune.data.mapper.UserMapper.toNetworkTitleLanguagePreference
+import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
+import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
+import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
 import io.github.drumber.kitsune.domain_old.manager.GitHubUpdateChecker
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.RatingSystemPreference
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.SfwFilterPreference
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.TitleLanguagePreference
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.User
 import io.github.drumber.kitsune.domain_old.model.preference.StartPagePref
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
@@ -247,7 +249,10 @@ class SettingsFragment : BasePreferenceFragment() {
                         updateUserIfChanged(
                             value,
                             newValue,
-                            User(user.id, titleLanguagePreference = TitleLanguagePreference.valueOf(titlesPref.name)) // TODO: migrate to LocalTitleLanguagePreference
+                            NetworkUser(
+                                id = user.id,
+                                titleLanguagePreference = titlesPref.toNetworkTitleLanguagePreference()
+                            )
                         )
                     }
                     true
@@ -265,7 +270,7 @@ class SettingsFragment : BasePreferenceFragment() {
                     updateUserIfChanged(
                         value,
                         newValue,
-                        User(user.id, country = newValue as String)
+                        NetworkUser(id = user.id, country = newValue as String)
                     )
                     true
                 }
@@ -282,27 +287,27 @@ class SettingsFragment : BasePreferenceFragment() {
             //---- Adult Content
             findPreference<ListPreference>(R.string.preference_key_sfw_filter)?.apply {
                 value = user?.sfwFilterPreference?.name
-                entryValues = SfwFilterPreference.entries.map { it.name }.toTypedArray()
+                entryValues = LocalSfwFilterPreference.entries.map { it.name }.toTypedArray()
                 setOnPreferenceChangeListener { _, newValue ->
                     if (user == null) return@setOnPreferenceChangeListener false
                     updateUserIfChanged(
                         value,
                         newValue,
-                        User(
-                            user.id,
-                            sfwFilterPreference = SfwFilterPreference.valueOf(newValue as String)
+                        NetworkUser(
+                            id = user.id,
+                            sfwFilterPreference = LocalSfwFilterPreference.valueOf(newValue as String).toNetworkSfwFilterPreference()
                         )
                     )
                     true
                 }
                 requireUserLoggedIn(user) {
                     val filterPreference =
-                        it.value?.let { filter -> SfwFilterPreference.valueOf(filter) }
+                        it.value?.let { filter -> LocalSfwFilterPreference.valueOf(filter) }
                     getString(
                         when (filterPreference) {
-                            SfwFilterPreference.SFW -> R.string.preference_adult_content_description_sfw
-                            SfwFilterPreference.NSFW_SOMETIMES -> R.string.preference_adult_content_description_sometimes
-                            SfwFilterPreference.NSFW_EVERYWHERE -> R.string.preference_adult_content_description_everywhere
+                            LocalSfwFilterPreference.SFW -> R.string.preference_adult_content_description_sfw
+                            LocalSfwFilterPreference.NSFW_SOMETIMES -> R.string.preference_adult_content_description_sometimes
+                            LocalSfwFilterPreference.NSFW_EVERYWHERE -> R.string.preference_adult_content_description_everywhere
                             else -> R.string.no_information
                         }
                     )
@@ -312,16 +317,16 @@ class SettingsFragment : BasePreferenceFragment() {
             //---- Rating System
             findPreference<ListPreference>(R.string.preference_key_rating_system)?.apply {
                 entryValues =
-                    RatingSystemPreference.entries.reversed().map { it.name }.toTypedArray()
+                    LocalRatingSystemPreference.entries.reversed().map { it.name }.toTypedArray()
                 value = user?.ratingSystem?.name
                 setOnPreferenceChangeListener { _, newValue ->
                     if (user == null) return@setOnPreferenceChangeListener false
                     updateUserIfChanged(
                         value,
                         newValue,
-                        User(
-                            user.id,
-                            ratingSystem = RatingSystemPreference.valueOf(newValue as String)
+                        NetworkUser(
+                            id = user.id,
+                            ratingSystem = LocalRatingSystemPreference.valueOf(newValue as String).toNetworkRatingSystemPreference()
                         )
                     )
                     true
@@ -334,7 +339,7 @@ class SettingsFragment : BasePreferenceFragment() {
                 text = user?.name
                 setOnPreferenceChangeListener { _, newValue ->
                     if (user == null) return@setOnPreferenceChangeListener false
-                    updateUserIfChanged(text, newValue, User(user.id, name = newValue as String))
+                    updateUserIfChanged(text, newValue, NetworkUser(id = user.id, name = newValue as String))
                     true
                 }
                 requireUserLoggedIn(user) { it.text }
@@ -345,7 +350,7 @@ class SettingsFragment : BasePreferenceFragment() {
                 text = user?.slug
                 setOnPreferenceChangeListener { _, newValue ->
                     if (user == null) return@setOnPreferenceChangeListener false
-                    updateUserIfChanged(text, newValue, User(user.id, slug = newValue as String))
+                    updateUserIfChanged(text, newValue, NetworkUser(id = user.id, slug = newValue as String))
                     true
                 }
                 requireUserLoggedIn(user) {
@@ -358,7 +363,7 @@ class SettingsFragment : BasePreferenceFragment() {
         }
     }
 
-    private fun updateUserIfChanged(oldValue: Any?, newValue: Any?, user: User) {
+    private fun updateUserIfChanged(oldValue: Any?, newValue: Any?, user: NetworkUser) {
         if (oldValue != newValue) {
             viewModel.updateUser(user)
         }

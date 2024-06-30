@@ -5,6 +5,7 @@ import io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource
 import io.github.drumber.kitsune.data.source.network.user.UserNetworkDataSource
 import io.github.drumber.kitsune.testutils.networkUser
 import io.github.drumber.kitsune.testutils.onSuspend
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
@@ -20,7 +21,7 @@ class UserRepositoryTest {
     private val faker = Faker()
 
     @Test
-    fun shouldUpdateLocalUserFromNetwork(): Unit = runBlocking {
+    fun shouldFetchAndStoreLocalUserFromNetwork(): Unit = runBlocking {
         // given
         val user = networkUser(faker)
 
@@ -32,10 +33,10 @@ class UserRepositoryTest {
             onSuspend { getSelf(any()) } doReturn user
         }
 
-        val userRepository = UserRepository(localUserDataSource, remoteUserDataSource)
+        val userRepository = UserRepository(localUserDataSource, remoteUserDataSource, CoroutineScope(coroutineContext))
 
         // when
-        userRepository.updateLocalUserFromNetwork()
+        userRepository.fetchAndStoreLocalUserFromNetwork()
 
         // then
         verify(remoteUserDataSource).getSelf(any())
@@ -44,7 +45,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    fun shouldStoreLocalUser() {
+    fun shouldStoreLocalUser(): Unit = runBlocking {
         // given
         val user = networkUser(faker).toLocalUser()
 
@@ -54,7 +55,7 @@ class UserRepositoryTest {
 
         val remoteUserDataSource = mock<UserNetworkDataSource>()
 
-        val userRepository = UserRepository(localUserDataSource, remoteUserDataSource)
+        val userRepository = UserRepository(localUserDataSource, remoteUserDataSource, CoroutineScope(coroutineContext))
 
         // when
         userRepository.storeLocalUser(user)

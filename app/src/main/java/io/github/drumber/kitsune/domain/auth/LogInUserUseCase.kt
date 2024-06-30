@@ -33,7 +33,7 @@ class LogInUserUseCase(
         }
 
         val localUser = try {
-            userRepository.updateLocalUserFromNetwork()
+            userRepository.fetchAndStoreLocalUserFromNetwork()
             userRepository.localUser.value
         } catch (e: Exception) {
             logE("Login: Failed to update local user from network.", e)

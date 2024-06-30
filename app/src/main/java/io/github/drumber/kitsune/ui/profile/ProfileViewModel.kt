@@ -32,7 +32,7 @@ class ProfileViewModel(
         it?.id?.let { userId ->
             liveData(context = Dispatchers.IO) {
                 val response = try {
-                    val fullUser = userRepository.getUser(userId, FULL_USER_FILTER)
+                    val fullUser = userRepository.fetchUser(userId, FULL_USER_FILTER)
                         ?: throw ReceivedDataException("Received data is null.")
                     ResponseData.Success(fullUser)
                 } catch (e: Exception) {
@@ -51,7 +51,7 @@ class ProfileViewModel(
         _isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                userRepository.updateLocalUserFromNetwork()
+                userRepository.fetchAndStoreLocalUserFromNetwork()
             } catch (e: Exception) {
                 logE("Failed to refresh user model.", e)
             } finally {

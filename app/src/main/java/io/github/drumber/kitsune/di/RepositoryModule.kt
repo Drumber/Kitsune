@@ -1,26 +1,40 @@
 package io.github.drumber.kitsune.di
 
+import android.app.usage.NetworkStats
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.repository.AccessTokenRepository
+import io.github.drumber.kitsune.data.repository.FavoriteRepository
+import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.auth.AccessTokenLocalDataSource
+import io.github.drumber.kitsune.data.source.local.auth.AccessTokenPreference
 import io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource
+import io.github.drumber.kitsune.data.source.local.user.UserPreferences
 import io.github.drumber.kitsune.data.source.network.auth.AccessTokenNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.auth.api.AuthenticationApi
+import io.github.drumber.kitsune.data.source.network.character.NetworkCharacter
+import io.github.drumber.kitsune.data.source.network.user.FavoriteNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.user.ProfileLinkNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.user.UserNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.user.api.FavoriteApi
+import io.github.drumber.kitsune.data.source.network.user.api.ProfileLinkApi
 import io.github.drumber.kitsune.data.source.network.user.api.UserApi
 import io.github.drumber.kitsune.data.source.network.user.api.UserImageUploadApi
+import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImageUpload
+import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
+import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
 import io.github.drumber.kitsune.domain_old.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.domain_old.repository.AnimeRepository
 import io.github.drumber.kitsune.domain_old.repository.CastingRepository
 import io.github.drumber.kitsune.domain_old.repository.LibraryEntriesRepository
 import io.github.drumber.kitsune.domain_old.repository.MangaRepository
 import io.github.drumber.kitsune.domain_old.repository.MediaUnitRepository
-import io.github.drumber.kitsune.preference.AuthPreference
-import io.github.drumber.kitsune.preference.UserPreferences
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -40,7 +54,7 @@ val repositoryModule = module {
     // Auth
     factory { createAuthService(get()) }
     single { AccessTokenNetworkDataSource(get()) }
-    single<AccessTokenLocalDataSource> { AuthPreference(androidContext(), get()) }
+    single<AccessTokenLocalDataSource> { AccessTokenPreference(androidContext(), get()) }
     single { AccessTokenRepository(get(), get()) }
 
     // User
@@ -49,11 +63,11 @@ val repositoryModule = module {
             get(),
             get(),
             NetworkUser::class.java,
-//            Stats::class.java,
-//            Favorite::class.java,
-//            Anime::class.java,
-//            Manga::class.java,
-//            Character::class.java
+            NetworkStats::class.java,
+            NetworkFavorite::class.java,
+//            NetworkAnime::class.java, // TODO
+//            NetworkManga::class.java,
+            NetworkCharacter::class.java
         )
     }
     factory {
@@ -63,9 +77,36 @@ val repositoryModule = module {
             NetworkUserImageUpload::class.java
         )
     }
-    single { UserNetworkDataSource(get()) }
+    single { UserNetworkDataSource(get(), get()) }
     single<UserLocalDataSource> { UserPreferences(androidContext(), get()) }
-    single { UserRepository(get(), get()) }
+    single { UserRepository(get(), get(), CoroutineScope(SupervisorJob() + Dispatchers.Default)) }
+
+    // ProfileLinks
+    factory {
+        createService<ProfileLinkApi>(
+            get(),
+            get(),
+            NetworkProfileLink::class.java,
+            NetworkProfileLinkSite::class.java,
+            NetworkUser::class.java
+        )
+    }
+    single { ProfileLinkNetworkDataSource(get()) }
+    single { ProfileLinkRepository(get()) }
+
+    // Favorite
+    factory {
+        createService<FavoriteApi>(
+            get(),
+            get(),
+            NetworkFavorite::class.java,
+//            Anime::class.java, // TODO
+//            Manga::class.java,
+            NetworkUser::class.java
+        )
+    }
+    single { FavoriteNetworkDataSource(get()) }
+    single { FavoriteRepository(get()) }
 }
 
 private fun createAuthService(objectMapper: ObjectMapper) = createService<AuthenticationApi>(

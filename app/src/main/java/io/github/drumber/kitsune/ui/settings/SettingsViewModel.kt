@@ -8,19 +8,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.repository.UserRepository
-import io.github.drumber.kitsune.domain_old.model.infrastructure.user.User
-import io.github.drumber.kitsune.domain_old.service.user.UserService
+import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
-    private val userRepository: UserRepository,
-    private val userService: UserService
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     val userModel = userRepository.localUser.asLiveData().map { it }
@@ -34,11 +31,11 @@ class SettingsViewModel(
     init {
         // make sure cached user data is up-to-date
         viewModelScope.launch(Dispatchers.IO) {
-            userRepository.updateLocalUserFromNetwork()
+            userRepository.fetchAndStoreLocalUserFromNetwork()
         }
     }
 
-    fun updateUser(user: User) {
+    fun updateUser(user: NetworkUser) {
         if (user.id.isNullOrBlank()) {
             errorMessageListener?.invoke(ErrorMessage(R.string.error_invalid_user))
             return
@@ -46,10 +43,9 @@ class SettingsViewModel(
         _isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = userService.updateUser(user.id, JSONAPIDocument(user))
-                response.get()?.let { updatedUser ->
-                    userRepository.updateLocalUserFromNetwork()
-                } ?: throw ReceivedDataException("Received user data is null.")
+                userRepository.updateUser(user.id, user)
+                    ?: throw ReceivedDataException("Received user data is null.")
+                userRepository.fetchAndStoreLocalUserFromNetwork()
             } catch (e: Exception) {
                 logE("Failed to update user settings.", e)
                 errorMessageListener?.invoke(ErrorMessage(R.string.error_user_update_failed))
