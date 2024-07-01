@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.source.network.algolia
+package io.github.drumber.kitsune.data.source.network.algolia.model
 
 data class NetworkAlgoliaKeyCollection(
     val users: NetworkAlgoliaKey?,

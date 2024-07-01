@@ -31,7 +31,6 @@ import io.github.drumber.kitsune.domain_old.model.infrastructure.production.Cast
 import io.github.drumber.kitsune.domain_old.model.infrastructure.production.Producer
 import io.github.drumber.kitsune.domain_old.service.anime.AnimeService
 import io.github.drumber.kitsune.domain_old.service.anime.EpisodesService
-import io.github.drumber.kitsune.domain_old.service.auth.AlgoliaKeyService
 import io.github.drumber.kitsune.domain_old.service.category.CategoryService
 import io.github.drumber.kitsune.domain_old.service.character.CharacterService
 import io.github.drumber.kitsune.domain_old.service.github.GitHubApiService
@@ -158,7 +157,7 @@ val networkModule = module {
             Mapping::class.java
         )
     }
-    factory { createService<AlgoliaKeyService>(get(), get()) }
+//    factory { createService<AlgoliaKeyService>(get(), get()) }
     factory {
         createService<GitHubApiService>(
             get(named("unauthenticated")),
