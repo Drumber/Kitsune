@@ -4,6 +4,7 @@ import android.app.usage.NetworkStats
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.repository.AccessTokenRepository
+import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
@@ -11,6 +12,8 @@ import io.github.drumber.kitsune.data.source.local.auth.AccessTokenLocalDataSour
 import io.github.drumber.kitsune.data.source.local.auth.AccessTokenPreference
 import io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource
 import io.github.drumber.kitsune.data.source.local.user.UserPreferences
+import io.github.drumber.kitsune.data.source.network.algolia.AlgoliaKeyNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.algolia.api.AlgoliaKeyApi
 import io.github.drumber.kitsune.data.source.network.auth.AccessTokenNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.auth.api.AuthenticationApi
 import io.github.drumber.kitsune.data.source.network.character.NetworkCharacter
@@ -26,7 +29,6 @@ import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImageUpload
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
-import io.github.drumber.kitsune.domain_old.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.domain_old.repository.AnimeRepository
 import io.github.drumber.kitsune.domain_old.repository.CastingRepository
 import io.github.drumber.kitsune.domain_old.repository.LibraryEntriesRepository
@@ -49,7 +51,7 @@ val repositoryModule = module {
 //    single { AuthManager(get(), get()) }
 //    single { AccessTokenRepository(get()) }
 //    single { UserRepository(get(), get(), get()) }
-    single { AlgoliaKeyRepository(get()) }
+//    single { AlgoliaKeyRepository(get()) }
 
     // Auth
     factory { createAuthService(get()) }
@@ -80,6 +82,11 @@ val repositoryModule = module {
     single { UserNetworkDataSource(get(), get()) }
     single<UserLocalDataSource> { UserPreferences(androidContext(), get()) }
     single { UserRepository(get(), get(), CoroutineScope(SupervisorJob() + Dispatchers.Default)) }
+
+    // Algolia
+    factory { createService<AlgoliaKeyApi>(get(), get()) }
+    single { AlgoliaKeyNetworkDataSource(get()) }
+    single { AlgoliaKeyRepository(get()) }
 
     // ProfileLinks
     factory {

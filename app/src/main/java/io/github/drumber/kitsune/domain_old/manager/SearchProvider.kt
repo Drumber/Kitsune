@@ -10,8 +10,8 @@ import com.algolia.search.model.IndexName
 import com.algolia.search.model.search.Query
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.SearchType
-import io.github.drumber.kitsune.domain_old.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.exception.InvalidDataException
 import io.github.drumber.kitsune.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.util.logE
@@ -63,7 +63,7 @@ class SearchProvider(
     private suspend fun getAlgoliaKeysAsync() = withContext(Dispatchers.IO) {
         async {
             try {
-                algoliaKeyRepository.getAlgoliaKeys()
+                algoliaKeyRepository.getAllAlgoliaKeys()
             } catch (e: Exception) {
                 logE("Failed to obtain algolia search keys.", e)
                 null

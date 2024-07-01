@@ -16,6 +16,7 @@ import com.algolia.search.model.search.RemoveStopWords
 import com.algolia.search.model.search.RemoveWordIfNoResults
 import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLink
 import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLinkSite
+import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.character.LocalCharacter
@@ -27,7 +28,6 @@ import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.Net
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
 import io.github.drumber.kitsune.domain_old.manager.SearchProvider
 import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.SearchType
-import io.github.drumber.kitsune.domain_old.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.domain_old.service.Filter
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logD
