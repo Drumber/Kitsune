@@ -31,12 +31,10 @@ class UserRepository(
     private val storeLocalUserMutex = Mutex()
 
     private val _localUser = MutableStateFlow(localUserDataSource.loadUser())
-    val localUser
-        get() = _localUser.asStateFlow()
+    val localUser = _localUser.asStateFlow()
 
     private val _userReLogInPrompt = MutableSharedFlow<Unit>()
-    val userReLogInPrompt
-        get() = _userReLogInPrompt.asSharedFlow()
+    val userReLogInPrompt = _userReLogInPrompt.asSharedFlow()
 
     fun hasLocalUser() = _localUser.value != null
 
@@ -68,8 +66,8 @@ class UserRepository(
         }
     }
 
-    fun promptUserReLogIn() {
-        _userReLogInPrompt.tryEmit(Unit)
+    suspend fun promptUserReLogIn() {
+        _userReLogInPrompt.emit(Unit)
     }
 
     suspend fun fetchLocalUserFromNetwork(userId: String, filter: Filter): LocalUser? {

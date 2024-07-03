@@ -38,7 +38,7 @@ class RefreshAccessTokenUseCaseTest {
         }
 
         val userRepository = mock<UserRepository> {
-            doNothing().on { promptUserReLogIn() }
+            onSuspend { promptUserReLogIn() } doReturn Unit
         }
 
         val logOutUserUseCase = mock<LogOutUserUseCase> {
@@ -65,7 +65,7 @@ class RefreshAccessTokenUseCaseTest {
         }
 
         val userRepository = mock<UserRepository> {
-            doNothing().on { promptUserReLogIn() }
+            onSuspend { promptUserReLogIn() } doReturn Unit
         }
 
         val logOutUserUseCase = mock<LogOutUserUseCase> {
@@ -93,7 +93,7 @@ class RefreshAccessTokenUseCaseTest {
         }
 
         val userRepository = mock<UserRepository> {
-            doNothing().on { promptUserReLogIn() }
+            onSuspend { promptUserReLogIn() } doReturn Unit
         }
 
         val logOutUserUseCase = mock<LogOutUserUseCase> {

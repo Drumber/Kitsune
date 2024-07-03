@@ -38,7 +38,7 @@ class RefreshAccessTokenUseCase(
     /**
      * Log out the current user and prompt for re-login.
      */
-    private fun triggerLogOutWithLoginPrompt() {
+    private suspend fun triggerLogOutWithLoginPrompt() {
         logOutUser()
         userRepository.promptUserReLogIn()
     }
