@@ -1,13 +1,13 @@
-package io.github.drumber.kitsune.data.presentation.model.media
+package io.github.drumber.kitsune.data.source.network.media.model
 
 import io.github.drumber.kitsune.data.common.Image
 import io.github.drumber.kitsune.data.common.Titles
 import io.github.drumber.kitsune.data.common.media.AgeRating
-import io.github.drumber.kitsune.data.presentation.model.media.category.Category
-import io.github.drumber.kitsune.data.presentation.model.media.relationship.MediaRelationship
-import io.github.drumber.kitsune.data.presentation.model.user.FavoriteItem
+import io.github.drumber.kitsune.data.source.network.media.model.category.NetworkCategory
+import io.github.drumber.kitsune.data.source.network.media.model.relationship.NetworkMediaRelationship
+import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavoriteItem
 
-sealed interface Media : FavoriteItem {
+sealed interface NetworkMedia : NetworkFavoriteItem {
     val id: String
     val slug: String?
 
@@ -17,7 +17,7 @@ sealed interface Media : FavoriteItem {
     val abbreviatedTitles: List<String>?
 
     val averageRating: String?
-    val ratingFrequencies: RatingFrequencies?
+    val ratingFrequencies: NetworkRatingFrequencies?
     val userCount: Int?
     val favoritesCount: Int?
     val popularityRank: Int?
@@ -27,7 +27,7 @@ sealed interface Media : FavoriteItem {
     val endDate: String?
     val nextRelease: String?
     val tba: String?
-    val status: ReleaseStatus?
+    val status: NetworkReleaseStatus?
 
     val ageRating: AgeRating?
     val ageRatingGuide: String?
@@ -38,6 +38,7 @@ sealed interface Media : FavoriteItem {
 
     val totalLength: Int?
 
-    val categories: List<Category>?
-    val mediaRelationships: List<MediaRelationship>?
+    // Relationships
+    val categories: List<NetworkCategory>?
+    val mediaRelationships: List<NetworkMediaRelationship>?
 }

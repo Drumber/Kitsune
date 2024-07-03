@@ -1,16 +1,16 @@
-package io.github.drumber.kitsune.data.source.network.character
+package io.github.drumber.kitsune.data.source.network.media.model.relationship
 
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
 import io.github.drumber.kitsune.data.source.network.media.model.NetworkMedia
 
-@Type("mediaCharacters")
-data class NetworkMediaCharacter(
+@Type("mediaRelationships")
+data class NetworkMediaRelationship(
     @Id
     val id: String?,
-    val role: NetworkMediaCharacterRole?,
+    val role: NetworkMediaRelationshipRole?,
 
-    @Relationship("media")
+    @Relationship("destination")
     val media: NetworkMedia?
 )
