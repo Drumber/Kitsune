@@ -10,6 +10,8 @@ import io.github.drumber.kitsune.data.presentation.model.media.ReleaseStatus
 import io.github.drumber.kitsune.data.presentation.model.media.category.Category
 import io.github.drumber.kitsune.data.presentation.model.media.production.AnimeProduction
 import io.github.drumber.kitsune.data.presentation.model.media.production.AnimeProductionRole
+import io.github.drumber.kitsune.data.presentation.model.media.production.Casting
+import io.github.drumber.kitsune.data.presentation.model.media.production.Person
 import io.github.drumber.kitsune.data.presentation.model.media.production.Producer
 import io.github.drumber.kitsune.data.presentation.model.media.relationship.MediaRelationship
 import io.github.drumber.kitsune.data.presentation.model.media.relationship.MediaRelationshipRole
@@ -25,6 +27,8 @@ import io.github.drumber.kitsune.data.source.network.media.model.NetworkReleaseS
 import io.github.drumber.kitsune.data.source.network.media.model.category.NetworkCategory
 import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkAnimeProduction
 import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkAnimeProductionRole
+import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkCasting
+import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkPerson
 import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkProducer
 import io.github.drumber.kitsune.data.source.network.media.model.relationship.NetworkMediaRelationship
 import io.github.drumber.kitsune.data.source.network.media.model.relationship.NetworkMediaRelationshipRole
@@ -186,6 +190,23 @@ object MediaMapper {
         id = id.require(),
         slug = slug,
         name = name
+    )
+
+    fun NetworkCasting.toCasting() = Casting(
+        id = id.require(),
+        role = role,
+        voiceActor = voiceActor,
+        featured = featured,
+        language = language,
+        character = character,
+        person = person?.toPerson()
+    )
+
+    fun NetworkPerson.toPerson() = Person(
+        id = id.require(),
+        name = name,
+        description = description,
+        image = image
     )
 
     //********************************************************************************************//

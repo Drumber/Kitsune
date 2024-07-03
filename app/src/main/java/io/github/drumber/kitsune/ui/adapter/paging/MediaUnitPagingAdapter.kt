@@ -8,12 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.unit.Chapter
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.unit.Episode
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.unit.MediaUnit
-import io.github.drumber.kitsune.domain_old.model.ui.media.MediaUnitAdapter
+import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.databinding.ItemEpisodeBinding
-import io.github.drumber.kitsune.domain_old.model.ui.media.originalOrDown
 import kotlin.math.max
 
 class MediaUnitPagingAdapter(
@@ -61,12 +57,10 @@ class MediaUnitPagingAdapter(
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivThumbnail)
 
-            val adapter = MediaUnitAdapter.fromMediaUnit(unit)
-
             binding.apply {
-                tvEpisodeTitle.text = adapter.title(root.context)
-                tvEpisodeNumber.text = if (adapter.hasValidTitle) {
-                    adapter.numberText(root.context)
+                tvEpisodeTitle.text = unit.title(root.context)
+                tvEpisodeNumber.text = if (unit.hasValidTitle()) {
+                    unit.numberText(root.context)
                 } else {
                     null
                 }
@@ -86,11 +80,7 @@ class MediaUnitPagingAdapter(
         override fun areItemsTheSame(oldItem: MediaUnit, newItem: MediaUnit) =
             oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: MediaUnit, newItem: MediaUnit) = when {
-            oldItem is Episode && newItem is Episode -> oldItem as Episode == newItem as Episode
-            oldItem is Chapter && newItem is Chapter -> oldItem as Chapter == newItem as Chapter
-            else -> oldItem.id == newItem.id
-        }
+        override fun areContentsTheSame(oldItem: MediaUnit, newItem: MediaUnit) = oldItem == newItem
     }
 
 }

@@ -2,11 +2,13 @@ package io.github.drumber.kitsune.ui.medialist
 
 import androidx.paging.PagingData
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.domain_old.model.MediaSelector
-import io.github.drumber.kitsune.domain_old.model.MediaType
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.BaseMedia
-import io.github.drumber.kitsune.domain_old.repository.AnimeRepository
-import io.github.drumber.kitsune.domain_old.repository.MangaRepository
+import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
+import io.github.drumber.kitsune.data.presentation.model.media.MediaType
+import io.github.drumber.kitsune.data.presentation.model.media.RequestType
+import io.github.drumber.kitsune.data.repository.AnimeRepository
+import io.github.drumber.kitsune.data.repository.MangaRepository
+import io.github.drumber.kitsune.domain_old.service.Filter
 import io.github.drumber.kitsune.ui.base.MediaCollectionViewModel
 import kotlinx.coroutines.flow.Flow
 
@@ -15,21 +17,34 @@ class MediaListViewModel(
     private val mangaRepository: MangaRepository
 ) : MediaCollectionViewModel() {
 
-    override fun getData(mediaSelector: MediaSelector): Flow<PagingData<BaseMedia>> {
-        val filter = mediaSelector.filter
-        val requestType = mediaSelector.requestType
+    override fun getData(mediaSelector: MediaSelector): Flow<PagingData<Media>> {
         return when (mediaSelector.mediaType) {
-            MediaType.Anime -> animeRepository.animeCollection(
-                Kitsu.DEFAULT_PAGE_SIZE,
-                filter,
-                requestType
-            ) as Flow<PagingData<BaseMedia>>
+            MediaType.Anime -> getAnimeData(mediaSelector.requestType, mediaSelector.filter)
+            MediaType.Manga -> getMangaData(mediaSelector.requestType, mediaSelector.filter)
+        } as Flow<PagingData<Media>>
+    }
 
-            MediaType.Manga -> mangaRepository.mangaCollection(
-                Kitsu.DEFAULT_PAGE_SIZE,
-                filter,
-                requestType
-            ) as Flow<PagingData<BaseMedia>>
-        }
+    private fun getAnimeData(type: RequestType, filter: Filter) = when (type) {
+        RequestType.ALL -> animeRepository.animePager(
+            filter,
+            Kitsu.DEFAULT_PAGE_SIZE
+        )
+
+        RequestType.TRENDING -> animeRepository.trendingAnimePager(
+            filter,
+            Kitsu.DEFAULT_PAGE_SIZE
+        )
+    }
+
+    private fun getMangaData(type: RequestType, filter: Filter) = when (type) {
+        RequestType.ALL -> mangaRepository.mangaPager(
+            filter,
+            Kitsu.DEFAULT_PAGE_SIZE
+        )
+
+        RequestType.TRENDING -> mangaRepository.trendingMangaPager(
+            filter,
+            Kitsu.DEFAULT_PAGE_SIZE
+        )
     }
 }

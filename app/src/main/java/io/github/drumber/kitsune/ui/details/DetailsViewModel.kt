@@ -5,9 +5,14 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.common.exception.ResourceUpdateFailed
+import io.github.drumber.kitsune.data.presentation.model.media.Anime
+import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
+import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
+import io.github.drumber.kitsune.data.repository.MangaRepository
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
@@ -22,13 +27,9 @@ import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntryModi
 import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryModificationState.SYNCHRONIZING
 import io.github.drumber.kitsune.domain_old.model.infrastructure.mappings.Mapping
 import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.domain_old.service.Filter
-import io.github.drumber.kitsune.domain_old.service.anime.AnimeService
 import io.github.drumber.kitsune.domain_old.service.library.LibraryEntriesService
-import io.github.drumber.kitsune.domain_old.service.manga.MangaService
 import io.github.drumber.kitsune.domain_old.service.mappings.MappingService
-import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.LibraryUpdateResult
@@ -53,16 +54,16 @@ class DetailsViewModel(
     private val libraryEntriesService: LibraryEntriesService,
     private val libraryEntryWithModificationDao: LibraryEntryWithModificationDao,
     private val libraryManager: LibraryManager,
-    private val animeService: AnimeService,
-    private val mangaService: MangaService,
+    private val animeRepository: AnimeRepository,
+    private val mangaRepository: MangaRepository,
     private val mappingService: MappingService
 ) : ViewModel() {
 
     fun isLoggedIn() = isUserLoggedIn()
 
-    private val _mediaAdapter = MutableLiveData<MediaAdapter>()
-    val mediaAdapter: LiveData<MediaAdapter>
-        get() = _mediaAdapter
+    private val _mediaModel = MutableLiveData<Media>()
+    val mediaModel: LiveData<Media>
+        get() = _mediaModel
 
     /** Combines local cached and fetched library entry. */
     private val _libraryEntryWrapper = MediatorLiveData<LibraryEntryWrapper?>()
@@ -109,9 +110,9 @@ class DetailsViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             val media = if (isAnime) {
-                animeService.allAnime(filter.options).get()
+                animeRepository.getAllAnime(filter)
             } else {
-                mangaService.allManga(filter.options).get()
+                mangaRepository.getAllManga(filter)
             }
 
             if (media.isNullOrEmpty()) {
@@ -119,30 +120,29 @@ class DetailsViewModel(
                 return@launch
             }
 
-            val mediaAdapter = MediaAdapter.fromMedia(media.first())
             withContext(Dispatchers.Main) {
-                initMediaAdapter(mediaAdapter)
+                initMediaModel(media.first())
             }
         }
     }
 
-    fun initMediaAdapter(mediaAdapter: MediaAdapter) {
-        if (_mediaAdapter.value == null) {
-            _mediaAdapter.value = mediaAdapter
+    fun initMediaModel(media: Media) {
+        if (_mediaModel.value == null) {
+            _mediaModel.value = media
             _isLoading.value = true
             viewModelScope.launch(Dispatchers.IO) {
                 awaitAll(
-                    async { loadFullMedia(mediaAdapter) },
-                    async { loadLibraryEntry(mediaAdapter) },
-                    async { loadFavorite(mediaAdapter) }
+                    async { loadFullMedia(media) },
+                    async { loadLibraryEntry(media) },
+                    async { loadFavorite(media) }
                 )
                 _isLoading.postValue(false)
             }
         }
     }
 
-    private suspend fun loadFullMedia(mediaAdapter: MediaAdapter) {
-        val id = mediaAdapter.id
+    private suspend fun loadFullMedia(media: Media) {
+        val id = media.id
         val filter = Filter()
             .fields("categories", "slug", "title")
 
@@ -153,32 +153,31 @@ class DetailsViewModel(
         )
 
         try {
-            val mediaModel = if (mediaAdapter.isAnime()) {
+            val fullMedia = if (media is Anime) {
                 filter.include(
                     *commonIncludes,
                     "animeProductions.producer",
                     "streamingLinks",
                     "streamingLinks.streamer"
                 )
-                animeService.getAnime(id, filter.options).get()
+                animeRepository.getAnime(id, filter)
             } else {
                 filter.include(*commonIncludes)
-                mangaService.getManga(id, filter.options).get()
-            } ?: throw ReceivedDataException("Received data is null.")
+                mangaRepository.getManga(id, filter)
+            } ?: throw NoDataException("Received data is null.")
 
-            val fullMediaAdapter = MediaAdapter.fromMedia(mediaModel)
-            _mediaAdapter.postValue(fullMediaAdapter)
+            _mediaModel.postValue(fullMedia)
         } catch (e: Exception) {
             logE("Failed to load full media model.", e)
         }
     }
 
-    private suspend fun loadLibraryEntry(mediaAdapter: MediaAdapter) {
+    private suspend fun loadLibraryEntry(media: Media) {
         val userId = getLocalUserId() ?: return
 
         // add local database as library entry source
         viewModelScope.launch(Dispatchers.Main) {
-            _libraryEntryWrapper.addSource(libraryEntryWithModificationDao.getLibraryEntryWithModificationFromMediaLiveData(mediaAdapter.id)) {
+            _libraryEntryWrapper.addSource(libraryEntryWithModificationDao.getLibraryEntryWithModificationFromMediaLiveData(media.id)) {
                 _libraryEntryWrapper.value = it?.let { entryWithModification ->
                     LibraryEntryWrapper(
                         entryWithModification.libraryEntry.toLibraryEntry(),
@@ -193,10 +192,10 @@ class DetailsViewModel(
             .fields("libraryEntries", "status", "progress", "ratingTwenty")
             .pageLimit(1)
 
-        if (mediaAdapter.isAnime()) {
-            filter.filter("anime_id", mediaAdapter.id)
+        if (media is Anime) {
+            filter.filter("anime_id", media.id)
         } else {
-            filter.filter("manga_id", mediaAdapter.id)
+            filter.filter("manga_id", media.id)
         }
 
         try {
@@ -226,13 +225,13 @@ class DetailsViewModel(
         }
     }
 
-    private suspend fun loadFavorite(mediaAdapter: MediaAdapter) {
+    private suspend fun loadFavorite(media: Media) {
         val userId = getLocalUserId() ?: return
 
         val filter = Filter()
             .filter("user_id", userId)
-            .filter("item_id", mediaAdapter.id)
-            .filter("item_type", if (mediaAdapter.isAnime()) "Anime" else "Manga")
+            .filter("item_id", media.id)
+            .filter("item_type", if (media is Anime) "Anime" else "Manga")
 
         try {
             val favorites = favoriteRepository.getAllFavorites(filter)
@@ -244,22 +243,22 @@ class DetailsViewModel(
 
     fun loadMappingsIfNotAlreadyLoaded() {
         if (_mappingsSate.value != MediaMappingsSate.Initial) return
-        val mediaAdapter = mediaAdapter.value ?: return
+        val mediaModel = mediaModel.value ?: return
 
         viewModelScope.launch(Dispatchers.IO) {
             _mappingsSate.value = MediaMappingsSate.Loading
 
             val mappingsState = try {
-                val mappings = if (mediaAdapter.isAnime()) {
-                    mappingService.getAnimeMappings(mediaAdapter.id).get()
+                val mappings = if (mediaModel is Anime) {
+                    mappingService.getAnimeMappings(mediaModel.id).get()
                 } else {
-                    mappingService.getMangaMappings(mediaAdapter.id).get()
+                    mappingService.getMangaMappings(mediaModel.id).get()
                 } ?: emptyList()
 
                 val mappingsWithKitsu = mappings + Mapping(
                     id = null,
-                    externalSite = "kitsu/" + if (mediaAdapter.isAnime()) "anime" else "manga",
-                    externalId = mediaAdapter.media.slug ?: mediaAdapter.media.id
+                    externalSite = "kitsu/" + if (mediaModel is Anime) "anime" else "manga",
+                    externalId = mediaModel.slug ?: mediaModel.id
                 )
 
                 MediaMappingsSate.Success(mappingsWithKitsu)
@@ -274,7 +273,7 @@ class DetailsViewModel(
 
     fun updateLibraryEntryStatus(status: LibraryStatus) {
         val userId = getLocalUserId() ?: return
-        val mediaAdapter = mediaAdapter.value ?: return
+        val mediaModel = mediaModel.value ?: return
         val existingLibraryEntryId = libraryEntryWrapper.value?.libraryEntry?.id
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -282,7 +281,7 @@ class DetailsViewModel(
                 try {
                     val newLibraryEntry = libraryManager.addNewLibraryEntry(
                         userId,
-                        mediaAdapter.media,
+                        /*mediaModel*/ TODO(),
                         status
                     ) ?: throw Exception("Failed to post new library entry.")
                     _libraryEntryWrapper.postValue(
@@ -328,7 +327,7 @@ class DetailsViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             if (favorite == null) {
-                val mediaItem = mediaAdapter.value?.media ?: return@launch
+                val mediaItem = mediaModel.value ?: return@launch
                 val userId = getLocalUserId() ?: return@launch
 
                 // TODO: uncomment after migrating media items

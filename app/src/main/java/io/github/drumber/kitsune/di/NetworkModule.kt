@@ -21,24 +21,11 @@ import io.github.drumber.kitsune.domain_old.model.infrastructure.mappings.Mappin
 import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Manga
 import io.github.drumber.kitsune.domain_old.model.infrastructure.media.category.Category
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.mediarelationship.MediaRelationship
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.streamer.Streamer
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.streamer.StreamingLink
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.unit.Chapter
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.unit.Episode
-import io.github.drumber.kitsune.domain_old.model.infrastructure.production.AnimeProduction
-import io.github.drumber.kitsune.domain_old.model.infrastructure.production.Casting
-import io.github.drumber.kitsune.domain_old.model.infrastructure.production.Producer
-import io.github.drumber.kitsune.domain_old.service.anime.AnimeService
-import io.github.drumber.kitsune.domain_old.service.anime.EpisodesService
 import io.github.drumber.kitsune.domain_old.service.category.CategoryService
 import io.github.drumber.kitsune.domain_old.service.character.CharacterService
 import io.github.drumber.kitsune.domain_old.service.github.GitHubApiService
 import io.github.drumber.kitsune.domain_old.service.library.LibraryEntriesService
-import io.github.drumber.kitsune.domain_old.service.manga.ChaptersService
-import io.github.drumber.kitsune.domain_old.service.manga.MangaService
 import io.github.drumber.kitsune.domain_old.service.mappings.MappingService
-import io.github.drumber.kitsune.domain_old.service.production.CastingService
 import io.github.drumber.kitsune.util.json.AlgoliaFacetValueDeserializer
 import io.github.drumber.kitsune.util.json.AlgoliaNumericValueDeserializer
 import io.github.drumber.kitsune.util.json.IgnoreParcelablePropertyMixin
@@ -61,30 +48,30 @@ val networkModule = module {
     single(named("unauthenticated")) { createHttpClientBuilder().build() }
     single { createObjectMapper() }
     factory<AuthenticationInterceptor> { AuthenticationInterceptorImpl(get(), get()) }
-    factory {
-        createService<AnimeService>(
-            get(), get(),
-            Anime::class.java,
-            Manga::class.java,
-            Category::class.java,
-            AnimeProduction::class.java,
-            Producer::class.java,
-            StreamingLink::class.java,
-            Streamer::class.java,
-            MediaRelationship::class.java
-        )
-    }
-    factory { createService<EpisodesService>(get(), get(), Episode::class.java) }
-    factory {
-        createService<MangaService>(
-            get(), get(),
-            Manga::class.java,
-            Anime::class.java,
-            Category::class.java,
-            MediaRelationship::class.java
-        )
-    }
-    factory { createService<ChaptersService>(get(), get(), Chapter::class.java) }
+//    factory {
+//        createService<AnimeService>(
+//            get(), get(),
+//            Anime::class.java,
+//            Manga::class.java,
+//            Category::class.java,
+//            AnimeProduction::class.java,
+//            Producer::class.java,
+//            StreamingLink::class.java,
+//            Streamer::class.java,
+//            MediaRelationship::class.java
+//        )
+//    }
+//    factory { createService<EpisodesService>(get(), get(), Episode::class.java) }
+//    factory {
+//        createService<MangaService>(
+//            get(), get(),
+//            Manga::class.java,
+//            Anime::class.java,
+//            Category::class.java,
+//            MediaRelationship::class.java
+//        )
+//    }
+//    factory { createService<ChaptersService>(get(), get(), Chapter::class.java) }
     factory { createService<CategoryService>(get(), get(), Category::class.java) }
 //    factory {
 //        createService<UserService>(
@@ -132,14 +119,14 @@ val networkModule = module {
 //            User::class.java
 //        )
 //    }
-    factory {
-        createService<CastingService>(
-            get(),
-            get(),
-            Casting::class.java,
-            Character::class.java
-        )
-    }
+//    factory {
+//        createService<CastingService>(
+//            get(),
+//            get(),
+//            Casting::class.java,
+//            Character::class.java
+//        )
+//    }
     factory {
         createService<CharacterService>(
             get(),

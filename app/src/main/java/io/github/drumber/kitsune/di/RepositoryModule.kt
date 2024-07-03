@@ -5,7 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.repository.AccessTokenRepository
 import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
+import io.github.drumber.kitsune.data.repository.AnimeRepository
+import io.github.drumber.kitsune.data.repository.CastingRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
+import io.github.drumber.kitsune.data.repository.MangaRepository
+import io.github.drumber.kitsune.data.repository.MediaUnitRepository
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.auth.AccessTokenLocalDataSource
@@ -17,6 +21,27 @@ import io.github.drumber.kitsune.data.source.network.algolia.api.AlgoliaKeyApi
 import io.github.drumber.kitsune.data.source.network.auth.AccessTokenNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.auth.api.AuthenticationApi
 import io.github.drumber.kitsune.data.source.network.character.NetworkCharacter
+import io.github.drumber.kitsune.data.source.network.media.AnimeNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.media.CastingNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.media.ChapterNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.media.EpisodeNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.media.MangaNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.media.api.AnimeApi
+import io.github.drumber.kitsune.data.source.network.media.api.CastingApi
+import io.github.drumber.kitsune.data.source.network.media.api.ChapterApi
+import io.github.drumber.kitsune.data.source.network.media.api.EpisodeApi
+import io.github.drumber.kitsune.data.source.network.media.api.MangaApi
+import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime
+import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga
+import io.github.drumber.kitsune.data.source.network.media.model.category.NetworkCategory
+import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkAnimeProduction
+import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkCasting
+import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkProducer
+import io.github.drumber.kitsune.data.source.network.media.model.relationship.NetworkMediaRelationship
+import io.github.drumber.kitsune.data.source.network.media.model.streamer.NetworkStreamer
+import io.github.drumber.kitsune.data.source.network.media.model.streamer.NetworkStreamingLink
+import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkChapter
+import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkEpisode
 import io.github.drumber.kitsune.data.source.network.user.FavoriteNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.user.ProfileLinkNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.user.UserNetworkDataSource
@@ -29,11 +54,7 @@ import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImageUpload
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
-import io.github.drumber.kitsune.domain_old.repository.AnimeRepository
-import io.github.drumber.kitsune.domain_old.repository.CastingRepository
 import io.github.drumber.kitsune.domain_old.repository.LibraryEntriesRepository
-import io.github.drumber.kitsune.domain_old.repository.MangaRepository
-import io.github.drumber.kitsune.domain_old.repository.MediaUnitRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -43,10 +64,10 @@ import org.koin.dsl.module
 import java.util.concurrent.TimeUnit
 
 val repositoryModule = module {
-    single { AnimeRepository(get()) }
-    single { MangaRepository(get()) }
-    single { MediaUnitRepository(get(), get()) }
-    single { CastingRepository(get()) }
+//    single { AnimeRepository(get()) }
+//    single { MangaRepository(get()) }
+//    single { MediaUnitRepository(get(), get()) }
+//    single { CastingRepository(get()) }
     single { LibraryEntriesRepository(get(), get()) }
 //    single { AuthManager(get(), get()) }
 //    single { AccessTokenRepository(get()) }
@@ -67,8 +88,8 @@ val repositoryModule = module {
             NetworkUser::class.java,
             NetworkStats::class.java,
             NetworkFavorite::class.java,
-//            NetworkAnime::class.java, // TODO
-//            NetworkManga::class.java,
+            NetworkAnime::class.java,
+            NetworkManga::class.java,
             NetworkCharacter::class.java
         )
     }
@@ -107,13 +128,62 @@ val repositoryModule = module {
             get(),
             get(),
             NetworkFavorite::class.java,
-//            Anime::class.java, // TODO
-//            Manga::class.java,
+            NetworkAnime::class.java,
+            NetworkManga::class.java,
             NetworkUser::class.java
         )
     }
     single { FavoriteNetworkDataSource(get()) }
     single { FavoriteRepository(get()) }
+
+    // Anime
+    factory {
+        createService<AnimeApi>(
+            get(), get(),
+            NetworkAnime::class.java,
+            NetworkManga::class.java,
+            NetworkCategory::class.java,
+            NetworkAnimeProduction::class.java,
+            NetworkProducer::class.java,
+            NetworkStreamingLink::class.java,
+            NetworkStreamer::class.java,
+            NetworkMediaRelationship::class.java
+        )
+    }
+    single { AnimeNetworkDataSource(get()) }
+    single { AnimeRepository(get()) }
+
+    // Manga
+    factory {
+        createService<MangaApi>(
+            get(), get(),
+            NetworkManga::class.java,
+            NetworkAnime::class.java,
+            NetworkCategory::class.java,
+            NetworkMediaRelationship::class.java
+        )
+    }
+    single { MangaNetworkDataSource(get()) }
+    single { MangaRepository(get()) }
+
+    // Media Unit
+    factory { createService<EpisodeApi>(get(), get(), NetworkEpisode::class.java) }
+    factory { createService<ChapterApi>(get(), get(), NetworkChapter::class.java) }
+    single { EpisodeNetworkDataSource(get()) }
+    single { ChapterNetworkDataSource(get()) }
+    single { MediaUnitRepository(get(), get()) }
+
+    // Casting
+    factory {
+        createService<CastingApi>(
+            get(),
+            get(),
+            NetworkCasting::class.java,
+            NetworkCharacter::class.java
+        )
+    }
+    single { CastingNetworkDataSource(get()) }
+    single { CastingRepository(get()) }
 }
 
 private fun createAuthService(objectMapper: ObjectMapper) = createService<AuthenticationApi>(

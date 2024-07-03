@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Defaults
-import io.github.drumber.kitsune.domain_old.model.MediaSelector
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.BaseMedia
+import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
 import io.github.drumber.kitsune.domain_old.service.Filter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -42,7 +42,7 @@ abstract class MediaCollectionViewModel : ViewModel() {
         }
     }
 
-    val dataSource: Flow<PagingData<out BaseMedia>> = mediaSelectorFlow
+    val dataSource: Flow<PagingData<out Media>> = mediaSelectorFlow
         .filterNotNull()
         .distinctUntilChanged()
         .flatMapLatest { selector ->
@@ -56,6 +56,6 @@ abstract class MediaCollectionViewModel : ViewModel() {
             getData(mediaSelector)
         }.cachedIn(viewModelScope)
 
-    abstract fun getData(mediaSelector: MediaSelector): Flow<PagingData<BaseMedia>>
+    abstract fun getData(mediaSelector: MediaSelector): Flow<PagingData<Media>>
 
 }

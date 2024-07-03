@@ -12,13 +12,12 @@ import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.databinding.FragmentMediaListBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Manga
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.unit.MediaUnit
 import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
-import io.github.drumber.kitsune.domain_old.model.ui.media.MediaUnitAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
@@ -102,9 +101,7 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
     private fun showDetailsBottomSheet(mediaUnit: MediaUnit) {
         val sheetMediaUnit = MediaUnitDetailsBottomSheet()
         sheetMediaUnit.arguments = bundleOf(
-            MediaUnitDetailsBottomSheet.BUNDLE_MEDIA_UNIT_ADAPTER to MediaUnitAdapter.fromMediaUnit(
-                mediaUnit
-            ),
+            MediaUnitDetailsBottomSheet.BUNDLE_MEDIA_UNIT_ADAPTER to mediaUnit,
             MediaUnitDetailsBottomSheet.BUNDLE_THUMBNAIL to MediaAdapter.fromMedia(args.media).posterImage
         )
         sheetMediaUnit.show(parentFragmentManager, MediaUnitDetailsBottomSheet.TAG)

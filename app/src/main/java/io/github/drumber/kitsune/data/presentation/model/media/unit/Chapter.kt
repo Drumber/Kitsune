@@ -1,10 +1,11 @@
 package io.github.drumber.kitsune.data.presentation.model.media.unit
 
+import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.common.Image
 import io.github.drumber.kitsune.data.common.Titles
 
 data class Chapter(
-    override val id: String?,
+    override val id: String,
 
     override val description: String?,
     override val titles: Titles?,
@@ -16,4 +17,14 @@ data class Chapter(
 
     override val thumbnail: Image?,
     val published: String?
-) : MediaUnit
+) : MediaUnit {
+
+    override val numberStringRes
+        get() = R.string.unit_chapter
+
+    override val lengthStringRes: Int
+        get() = R.plurals.unit_pages
+
+    override val date: String?
+        get() = published
+}
