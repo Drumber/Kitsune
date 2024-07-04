@@ -6,12 +6,12 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.domain_old.database.LocalDatabase
+import io.github.drumber.kitsune.data.source.local.LocalDatabase
 import io.github.drumber.kitsune.domain_old.mapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntry
-import io.github.drumber.kitsune.domain_old.model.database.RemoteKeyEntity
-import io.github.drumber.kitsune.domain_old.model.database.RemoteKeyType
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
+import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyEntity
+import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyType
 import io.github.drumber.kitsune.domain_old.model.toPage
 import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryFilter
 import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryKind
@@ -84,7 +84,7 @@ class LibraryEntriesRemoteMediator(
                                 targetStatus
                             )
 
-                            else -> libraryEntryDao.getAllLibraryEntryByStatus(targetStatus)
+                            else -> libraryEntryDao.getAllLibraryEntriesByStatus(targetStatus)
                         }
 
                         libraryEntryDao.deleteAll(libraryEntriesToBeCleared)
@@ -120,7 +120,7 @@ class LibraryEntriesRemoteMediator(
         return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
             ?.let { libraryEntry ->
                 // Get the remote keys of the last item retrieved
-                remoteKeyDao.remoteKeyByResourceId(libraryEntry.id, RemoteKeyType.LibraryEntry)
+                remoteKeyDao.getRemoteKeyByResourceId(libraryEntry.id, RemoteKeyType.LibraryEntry)
             }
     }
 

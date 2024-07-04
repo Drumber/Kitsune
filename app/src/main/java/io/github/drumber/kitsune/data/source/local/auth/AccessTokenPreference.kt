@@ -7,6 +7,7 @@ import androidx.security.crypto.MasterKey
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.source.local.auth.model.LocalAccessToken
 import io.github.drumber.kitsune.util.logD
 
 class AccessTokenPreference(

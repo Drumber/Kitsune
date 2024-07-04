@@ -1,8 +1,8 @@
 package io.github.drumber.kitsune.domain_old.mapper
 
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntryModification
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryModificationState
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryModificationState.NOT_SYNCHRONIZED
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState.NOT_SYNCHRONIZED
 import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryModification
 
 fun LibraryEntryModification.toLocalLibraryEntryModification(

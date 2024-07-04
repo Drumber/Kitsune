@@ -3,6 +3,9 @@ package io.github.drumber.kitsune.data.presentation.model.media
 import io.github.drumber.kitsune.data.common.Image
 import io.github.drumber.kitsune.data.common.Titles
 import io.github.drumber.kitsune.data.common.media.AgeRating
+import io.github.drumber.kitsune.data.common.media.AnimeSubtype
+import io.github.drumber.kitsune.data.common.media.RatingFrequencies
+import io.github.drumber.kitsune.data.common.media.ReleaseStatus
 import io.github.drumber.kitsune.data.presentation.model.media.category.Category
 import io.github.drumber.kitsune.data.presentation.model.media.production.AnimeProduction
 import io.github.drumber.kitsune.data.presentation.model.media.relationship.MediaRelationship

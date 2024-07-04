@@ -39,7 +39,7 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentLibraryBinding
 import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryKind
-import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryWrapper
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.LibraryEntriesAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter

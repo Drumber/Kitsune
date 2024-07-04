@@ -1,9 +1,9 @@
 package io.github.drumber.kitsune.domain_old.manager.library
 
 import io.github.drumber.kitsune.domain_old.mapper.toLocalLibraryEntry
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntryModification
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryModificationState.NOT_SYNCHRONIZED
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryModificationState.SYNCHRONIZING
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState.NOT_SYNCHRONIZED
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState.SYNCHRONIZING
 import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.exception.NotFoundException
 import io.github.drumber.kitsune.util.DATE_FORMAT_ISO

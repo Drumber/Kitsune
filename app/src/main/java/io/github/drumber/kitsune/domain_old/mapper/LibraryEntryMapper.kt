@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.domain_old.mapper
 
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntry
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.domain_old.model.infrastructure.library.LibraryEntry
 import io.github.drumber.kitsune.exception.InvalidDataException
 

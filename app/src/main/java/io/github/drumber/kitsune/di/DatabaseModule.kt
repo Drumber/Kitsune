@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.di
 
 import android.app.Application
 import androidx.room.Room
-import io.github.drumber.kitsune.domain_old.database.LocalDatabase
+import io.github.drumber.kitsune.data.source.local.LocalDatabase
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 

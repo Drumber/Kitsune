@@ -9,6 +9,8 @@ import io.github.drumber.kitsune.data.common.en
 import io.github.drumber.kitsune.data.common.enJp
 import io.github.drumber.kitsune.data.common.jaJp
 import io.github.drumber.kitsune.data.common.media.AgeRating
+import io.github.drumber.kitsune.data.common.media.RatingFrequencies
+import io.github.drumber.kitsune.data.common.media.ReleaseStatus
 import io.github.drumber.kitsune.data.presentation.model.media.category.Category
 import io.github.drumber.kitsune.data.presentation.model.media.production.AnimeProductionRole
 import io.github.drumber.kitsune.data.presentation.model.media.relationship.MediaRelationship

@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.domain.auth
 
-import io.github.drumber.kitsune.data.source.local.auth.LocalAccessToken
+import io.github.drumber.kitsune.data.source.local.auth.model.LocalAccessToken
 
 sealed interface RefreshResult {
     /** The access token was successfully refreshed. */

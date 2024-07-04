@@ -1,9 +1,9 @@
 package io.github.drumber.kitsune.domain_old.manager.library
 
 import androidx.room.withTransaction
-import io.github.drumber.kitsune.domain_old.database.LocalDatabase
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntry
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntryModification
+import io.github.drumber.kitsune.data.source.local.LocalDatabase
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
 
 class LibraryEntryDatabaseClient(
     private val database: LocalDatabase

@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.domain_old.manager.library
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.domain_old.mapper.toLibraryEntry
 import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntryModification
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
 import io.github.drumber.kitsune.domain_old.model.infrastructure.library.LibraryEntry
 import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain_old.model.infrastructure.media.BaseMedia

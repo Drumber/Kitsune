@@ -2,11 +2,11 @@ package io.github.drumber.kitsune.testutils
 
 import io.github.drumber.kitsune.data.common.media.AgeRating
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
-import io.github.drumber.kitsune.data.presentation.model.media.AnimeSubtype
+import io.github.drumber.kitsune.data.common.media.AnimeSubtype
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
-import io.github.drumber.kitsune.data.presentation.model.media.MangaSubtype
-import io.github.drumber.kitsune.data.presentation.model.media.RatingFrequencies
-import io.github.drumber.kitsune.data.presentation.model.media.ReleaseStatus
+import io.github.drumber.kitsune.data.common.media.MangaSubtype
+import io.github.drumber.kitsune.data.common.media.RatingFrequencies
+import io.github.drumber.kitsune.data.common.media.ReleaseStatus
 import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime
 import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnimeSubtype
 import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga

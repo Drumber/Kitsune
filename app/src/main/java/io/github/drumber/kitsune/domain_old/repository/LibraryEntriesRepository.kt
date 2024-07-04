@@ -5,9 +5,9 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import io.github.drumber.kitsune.constants.Repository
-import io.github.drumber.kitsune.domain_old.database.LibraryEntryDao
-import io.github.drumber.kitsune.domain_old.database.LocalDatabase
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntry
+import io.github.drumber.kitsune.data.source.local.library.dao.LibraryEntryDao
+import io.github.drumber.kitsune.data.source.local.LocalDatabase
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryFilter
 import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryKind
 import io.github.drumber.kitsune.domain_old.paging.LibraryEntriesPagingDataSource
@@ -88,7 +88,7 @@ private fun LibraryEntryDao.getLibraryEntriesByFilter(
         kind == LibraryEntryKind.Anime && !hasStatus -> getAnimeLibraryEntry()
         kind == LibraryEntryKind.Manga && hasStatus -> getMangaLibraryEntry(filter.libraryStatus)
         kind == LibraryEntryKind.Manga && !hasStatus -> getMangaLibraryEntry()
-        kind == LibraryEntryKind.All && hasStatus -> getAllLibraryEntry(filter.libraryStatus)
-        else -> getAllLibraryEntry()
+        kind == LibraryEntryKind.All && hasStatus -> allLibraryEntriesByStatusPagingSource(filter.libraryStatus)
+        else -> allLibraryEntriesPagingSource()
     }
 }

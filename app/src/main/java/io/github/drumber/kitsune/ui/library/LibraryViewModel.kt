@@ -9,24 +9,20 @@ import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import androidx.paging.map
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWrapper
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
+import io.github.drumber.kitsune.data.repository.LibraryRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.data.source.local.library.dao.LibraryEntryModificationDao
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState.NOT_SYNCHRONIZED
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState.SYNCHRONIZING
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
-import io.github.drumber.kitsune.domain_old.database.LibraryEntryModificationDao
 import io.github.drumber.kitsune.domain_old.manager.library.LibraryManager
-import io.github.drumber.kitsune.domain_old.manager.library.SynchronizationResult
-import io.github.drumber.kitsune.domain_old.mapper.toLibraryEntry
-import io.github.drumber.kitsune.domain_old.mapper.toLibraryEntryModification
-import io.github.drumber.kitsune.domain_old.mapper.toLocalLibraryEntry
-import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntryModification
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryModificationState.NOT_SYNCHRONIZED
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryModificationState.SYNCHRONIZING
-import io.github.drumber.kitsune.domain_old.model.infrastructure.library.LibraryEntry
-import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryFilter
-import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryKind
 import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryUiModel
-import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.domain_old.repository.LibraryEntriesRepository
 import io.github.drumber.kitsune.domain_old.service.Filter
 import io.github.drumber.kitsune.exception.InvalidDataException
 import io.github.drumber.kitsune.preference.KitsunePref
@@ -63,7 +59,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class LibraryViewModel(
     private val userRepository: UserRepository,
     private val getLocalUserId: GetLocalUserIdUseCase,
-    private val libraryEntriesRepository: LibraryEntriesRepository,
+    private val libraryRepository: LibraryRepository,
     private val libraryManager: LibraryManager,
     libraryModificationDao: LibraryEntryModificationDao
 ) : ViewModel() {
@@ -87,7 +83,7 @@ class LibraryViewModel(
     val libraryChangeResultFlow: Flow<LibraryChangeResult>
 
     val notSynchronizedLibraryEntryModifications =
-        libraryModificationDao.getLibraryEntryModificationsWithStateLiveData(NOT_SYNCHRONIZED)
+        libraryModificationDao.getLibraryEntryModificationsByStateAsLiveData(NOT_SYNCHRONIZED)
 
     private val libraryProgressUpdateJobs = ConcurrentHashMap<String, Job>()
 
@@ -138,7 +134,7 @@ class LibraryViewModel(
             }
 
         val libraryEntryModificationsFlow =
-            libraryModificationDao.getAllLibraryEntryModificationsLiveData()
+            libraryModificationDao.getAllLibraryEntryModificationsAsLiveData()
                 .asFlow()
                 .shareIn(
                     scope = viewModelScope,
@@ -202,14 +198,13 @@ class LibraryViewModel(
     ): Flow<PagingData<LibraryEntryUiModel>> {
         val pagingDataFlow = if (filter.isFilteredBySearchQuery()) {
             // if filter contains a search query, then search directly using the paging source
-            libraryEntriesRepository.searchLibraryEntries(
+            libraryRepository.searchLibraryEntries(
                 Kitsu.DEFAULT_PAGE_SIZE_LIBRARY,
                 filter.buildFilter()
             )
         } else {
             // otherwise use the paging source supplied by Room
-            libraryEntriesRepository.libraryEntries(Kitsu.DEFAULT_PAGE_SIZE_LIBRARY, filter)
-                .map { pagingSource -> pagingSource.map { it.toLibraryEntry() } }
+            libraryRepository.libraryEntries(Kitsu.DEFAULT_PAGE_SIZE_LIBRARY, filter)
         }
         return pagingDataFlow
             .map { pagingData ->
@@ -262,7 +257,7 @@ class LibraryViewModel(
     }
 
     fun invalidatePagingSource() {
-        libraryEntriesRepository.invalidatePagingSources()
+        libraryRepository.invalidatePagingSources()
     }
 
     fun setLibraryEntryKind(kind: LibraryEntryKind) {

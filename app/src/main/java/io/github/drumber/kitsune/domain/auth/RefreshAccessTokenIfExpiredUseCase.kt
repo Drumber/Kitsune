@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.domain.auth
 
 import io.github.drumber.kitsune.data.repository.AccessTokenRepository
-import io.github.drumber.kitsune.data.source.local.auth.LocalAccessToken
+import io.github.drumber.kitsune.data.source.local.auth.model.LocalAccessToken
 import io.github.drumber.kitsune.util.logI
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.seconds

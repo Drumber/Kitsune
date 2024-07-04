@@ -19,15 +19,15 @@ import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
-import io.github.drumber.kitsune.domain_old.database.LibraryEntryWithModificationDao
+import io.github.drumber.kitsune.data.source.local.library.dao.LibraryEntryWithModificationDao
 import io.github.drumber.kitsune.domain_old.manager.library.LibraryManager
 import io.github.drumber.kitsune.domain_old.manager.library.SynchronizationResult
 import io.github.drumber.kitsune.domain_old.mapper.toLibraryEntry
 import io.github.drumber.kitsune.domain_old.mapper.toLibraryEntryModification
 import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntryModification
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryModificationState.SYNCHRONIZING
-import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryWrapper
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState.SYNCHRONIZING
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.domain_old.service.Filter
 import io.github.drumber.kitsune.domain_old.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
@@ -177,7 +177,7 @@ class DetailsViewModel(
 
         // add local database as library entry source
         viewModelScope.launch(Dispatchers.Main) {
-            _libraryEntryWrapper.addSource(libraryEntryWithModificationDao.getLibraryEntryWithModificationFromMediaLiveData(media.id)) {
+            _libraryEntryWrapper.addSource(libraryEntryWithModificationDao.getLibraryEntryWithModificationFromMediaAsLiveData(media.id)) {
                 _libraryEntryWrapper.value = it?.let { entryWithModification ->
                     LibraryEntryWrapper(
                         entryWithModification.libraryEntry.toLibraryEntry(),

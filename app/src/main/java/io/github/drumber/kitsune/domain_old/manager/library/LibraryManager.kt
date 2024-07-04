@@ -6,10 +6,10 @@ import io.github.drumber.kitsune.domain_old.manager.library.SynchronizationResul
 import io.github.drumber.kitsune.domain_old.mapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.domain_old.mapper.toLocalLibraryEntryModification
 import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntry
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntryModification
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryModificationState
-import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryModificationState.SYNCHRONIZING
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState.SYNCHRONIZING
 import io.github.drumber.kitsune.domain_old.model.infrastructure.library.LibraryEntry
 import io.github.drumber.kitsune.domain_old.model.infrastructure.media.BaseMedia
 import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryModification

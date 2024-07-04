@@ -9,6 +9,7 @@ import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.CastingRepository
 import io.github.drumber.kitsune.data.repository.CategoryRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
+import io.github.drumber.kitsune.data.repository.LibraryRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
 import io.github.drumber.kitsune.data.repository.MappingRepository
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository
@@ -25,6 +26,9 @@ import io.github.drumber.kitsune.data.source.network.auth.api.AuthenticationApi
 import io.github.drumber.kitsune.data.source.network.character.api.CharacterApi
 import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
 import io.github.drumber.kitsune.data.source.network.character.model.NetworkMediaCharacter
+import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.library.api.LibraryEntryApi
+import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry
 import io.github.drumber.kitsune.data.source.network.mapping.MappingNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.mapping.api.MappingApi
 import io.github.drumber.kitsune.data.source.network.mapping.model.NetworkMapping
@@ -63,7 +67,6 @@ import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImageUpload
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
-import io.github.drumber.kitsune.domain_old.repository.LibraryEntriesRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -77,7 +80,7 @@ val repositoryModule = module {
 //    single { MangaRepository(get()) }
 //    single { MediaUnitRepository(get(), get()) }
 //    single { CastingRepository(get()) }
-    single { LibraryEntriesRepository(get(), get()) }
+//    single { LibraryEntriesRepository(get(), get()) }
 //    single { AuthManager(get(), get()) }
 //    single { AccessTokenRepository(get()) }
 //    single { UserRepository(get(), get(), get()) }
@@ -221,6 +224,18 @@ val repositoryModule = module {
     }
     single { MappingNetworkDataSource(get()) }
     single { MappingRepository(get()) }
+
+    // Library Entry
+    factory {
+        createService<LibraryEntryApi>(
+            get(), get(),
+            NetworkLibraryEntry::class.java,
+            NetworkAnime::class.java,
+            NetworkManga::class.java
+        )
+    }
+    single { LibraryNetworkDataSource(get()) }
+    single { LibraryRepository(get(), get()) }
 }
 
 private fun createAuthService(objectMapper: ObjectMapper) = createService<AuthenticationApi>(

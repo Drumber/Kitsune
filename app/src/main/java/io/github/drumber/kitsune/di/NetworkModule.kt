@@ -14,11 +14,7 @@ import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.constants.GitHub
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.domain_old.model.infrastructure.library.LibraryEntry
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Anime
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Manga
 import io.github.drumber.kitsune.domain_old.service.github.GitHubApiService
-import io.github.drumber.kitsune.domain_old.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.util.json.AlgoliaFacetValueDeserializer
 import io.github.drumber.kitsune.util.json.AlgoliaNumericValueDeserializer
 import io.github.drumber.kitsune.util.json.IgnoreParcelablePropertyMixin
@@ -94,14 +90,14 @@ val networkModule = module {
 //            User::class.java
 //        )
 //    }
-    factory {
-        createService<LibraryEntriesService>(
-            get(), get(),
-            LibraryEntry::class.java,
-            Anime::class.java,
-            Manga::class.java
-        )
-    }
+//    factory {
+//        createService<LibraryEntriesService>(
+//            get(), get(),
+//            LibraryEntry::class.java,
+//            Anime::class.java,
+//            Manga::class.java
+//        )
+//    }
 //    factory {
 //        createService<FavoriteService>(
 //            get(),

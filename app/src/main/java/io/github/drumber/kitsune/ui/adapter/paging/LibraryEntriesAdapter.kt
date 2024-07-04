@@ -14,7 +14,7 @@ import io.github.drumber.kitsune.databinding.ItemLibraryStatusSeparatorBinding
 import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryAdapter
 import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryUiModel
 import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryUiModel.StatusSeparatorModel
-import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryWrapper
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.domain_old.model.ui.library.getStringResId
 import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
 
