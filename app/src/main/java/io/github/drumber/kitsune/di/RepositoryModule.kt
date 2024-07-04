@@ -7,8 +7,10 @@ import io.github.drumber.kitsune.data.repository.AccessTokenRepository
 import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.CastingRepository
+import io.github.drumber.kitsune.data.repository.CategoryRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
+import io.github.drumber.kitsune.data.repository.MappingRepository
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
@@ -23,13 +25,18 @@ import io.github.drumber.kitsune.data.source.network.auth.api.AuthenticationApi
 import io.github.drumber.kitsune.data.source.network.character.api.CharacterApi
 import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
 import io.github.drumber.kitsune.data.source.network.character.model.NetworkMediaCharacter
+import io.github.drumber.kitsune.data.source.network.mapping.MappingNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.mapping.api.MappingApi
+import io.github.drumber.kitsune.data.source.network.mapping.model.NetworkMapping
 import io.github.drumber.kitsune.data.source.network.media.AnimeNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.media.CastingNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.media.CategoryNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.media.ChapterNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.media.EpisodeNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.media.MangaNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.media.api.AnimeApi
 import io.github.drumber.kitsune.data.source.network.media.api.CastingApi
+import io.github.drumber.kitsune.data.source.network.media.api.CategoryApi
 import io.github.drumber.kitsune.data.source.network.media.api.ChapterApi
 import io.github.drumber.kitsune.data.source.network.media.api.EpisodeApi
 import io.github.drumber.kitsune.data.source.network.media.api.MangaApi
@@ -187,6 +194,11 @@ val repositoryModule = module {
     single { CastingNetworkDataSource(get()) }
     single { CastingRepository(get()) }
 
+    // Category
+    factory { createService<CategoryApi>(get(), get(), NetworkCategory::class.java) }
+    single { CategoryNetworkDataSource(get()) }
+    single { CategoryRepository(get()) }
+
     // Character
     factory {
         createService<CharacterApi>(
@@ -198,6 +210,17 @@ val repositoryModule = module {
             NetworkManga::class.java
         )
     }
+
+    // Mapping
+    factory {
+        createService<MappingApi>(
+            get(),
+            get(),
+            NetworkMapping::class.java
+        )
+    }
+    single { MappingNetworkDataSource(get()) }
+    single { MappingRepository(get()) }
 }
 
 private fun createAuthService(objectMapper: ObjectMapper) = createService<AuthenticationApi>(

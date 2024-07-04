@@ -11,13 +11,13 @@ import com.google.android.material.snackbar.Snackbar
 import com.unnamed.b.atv.model.TreeNode
 import com.unnamed.b.atv.view.AndroidTreeView
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.presentation.model.media.category.CategoryNode
 import io.github.drumber.kitsune.databinding.FragmentCategoriesBinding
 import io.github.drumber.kitsune.domain_old.model.preference.CategoryPrefWrapper
-import io.github.drumber.kitsune.domain_old.model.ui.media.CategoryNode
 import io.github.drumber.kitsune.ui.base.BaseDialogFragment
+import io.github.drumber.kitsune.util.network.ResponseData
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
-import io.github.drumber.kitsune.util.network.ResponseData
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CategoriesDialogFragment : BaseDialogFragment(R.layout.fragment_categories) {
@@ -153,7 +153,7 @@ class CategoriesDialogFragment : BaseDialogFragment(R.layout.fragment_categories
 
     private fun getCategoryWrapper(childNode: TreeNode): CategoryPrefWrapper {
         val parentCategories = findRootCategoryNodes(childNode)
-        val parentIds = parentCategories.mapNotNull { (it.value as CategoryNode).category.id }
+        val parentIds = parentCategories.map { (it.value as CategoryNode).category.id }
         val category = (childNode.value as CategoryNode).category
         return CategoryPrefWrapper(category.id, category.title, category.slug, parentIds)
     }
@@ -173,7 +173,7 @@ class CategoriesDialogFragment : BaseDialogFragment(R.layout.fragment_categories
         parentNode.children.forEach { child ->
             val categoryNode = child.value as CategoryNode
             if (categoryNode.hasChildren()) {
-                categoryNode.category.id?.let { id ->
+                categoryNode.category.id.let { id ->
                     val selectedChildren = viewModel.countSelectedChildrenForParent(id)
                     val viewHolder = child.viewHolder as CategoryViewHolder
                     viewHolder.onSelectionCounterUpdate(selectedChildren)

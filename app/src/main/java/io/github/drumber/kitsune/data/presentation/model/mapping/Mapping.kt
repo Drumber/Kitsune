@@ -1,18 +1,10 @@
-package io.github.drumber.kitsune.domain_old.model.infrastructure.mappings
+package io.github.drumber.kitsune.data.presentation.model.mapping
 
-import android.os.Parcelable
-import com.github.jasminb.jsonapi.annotations.Id
-import com.github.jasminb.jsonapi.annotations.Type
-import kotlinx.parcelize.Parcelize
-
-@Parcelize
-@Type("mappings")
 data class Mapping(
-    @Id
-    val id: String?,
+    val id: String,
     val externalSite: String?,
     val externalId: String?
-) : Parcelable
+)
 
 fun Mapping.getSiteName() = when (externalSite) {
     "kitsu/anime", "kitsu/manga" -> "Kitsu"

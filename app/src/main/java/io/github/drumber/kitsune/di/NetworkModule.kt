@@ -15,14 +15,10 @@ import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.constants.GitHub
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.domain_old.model.infrastructure.library.LibraryEntry
-import io.github.drumber.kitsune.domain_old.model.infrastructure.mappings.Mapping
 import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Manga
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.category.Category
-import io.github.drumber.kitsune.domain_old.service.category.CategoryService
 import io.github.drumber.kitsune.domain_old.service.github.GitHubApiService
 import io.github.drumber.kitsune.domain_old.service.library.LibraryEntriesService
-import io.github.drumber.kitsune.domain_old.service.mappings.MappingService
 import io.github.drumber.kitsune.util.json.AlgoliaFacetValueDeserializer
 import io.github.drumber.kitsune.util.json.AlgoliaNumericValueDeserializer
 import io.github.drumber.kitsune.util.json.IgnoreParcelablePropertyMixin
@@ -69,7 +65,7 @@ val networkModule = module {
 //        )
 //    }
 //    factory { createService<ChaptersService>(get(), get(), Chapter::class.java) }
-    factory { createService<CategoryService>(get(), get(), Category::class.java) }
+//    factory { createService<CategoryService>(get(), get(), Category::class.java) }
 //    factory {
 //        createService<UserService>(
 //            get(),
@@ -134,13 +130,13 @@ val networkModule = module {
 //            Manga::class.java
 //        )
 //    }
-    factory {
-        createService<MappingService>(
-            get(),
-            get(),
-            Mapping::class.java
-        )
-    }
+//    factory {
+//        createService<MappingService>(
+//            get(),
+//            get(),
+//            Mapping::class.java
+//        )
+//    }
 //    factory { createService<AlgoliaKeyService>(get(), get()) }
     factory {
         createService<GitHubApiService>(

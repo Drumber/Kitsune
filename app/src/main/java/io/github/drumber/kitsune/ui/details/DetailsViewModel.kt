@@ -7,12 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.common.exception.ResourceUpdateFailed
+import io.github.drumber.kitsune.data.presentation.model.mapping.Mapping
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
 import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
+import io.github.drumber.kitsune.data.repository.MappingRepository
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
@@ -25,11 +27,9 @@ import io.github.drumber.kitsune.domain_old.mapper.toLibraryEntryModification
 import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
 import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntryModification
 import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryModificationState.SYNCHRONIZING
-import io.github.drumber.kitsune.domain_old.model.infrastructure.mappings.Mapping
 import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.domain_old.service.Filter
 import io.github.drumber.kitsune.domain_old.service.library.LibraryEntriesService
-import io.github.drumber.kitsune.domain_old.service.mappings.MappingService
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.LibraryUpdateResult
@@ -56,7 +56,7 @@ class DetailsViewModel(
     private val libraryManager: LibraryManager,
     private val animeRepository: AnimeRepository,
     private val mangaRepository: MangaRepository,
-    private val mappingService: MappingService
+    private val mappingRepository: MappingRepository
 ) : ViewModel() {
 
     fun isLoggedIn() = isUserLoggedIn()
@@ -250,13 +250,13 @@ class DetailsViewModel(
 
             val mappingsState = try {
                 val mappings = if (mediaModel is Anime) {
-                    mappingService.getAnimeMappings(mediaModel.id).get()
+                    mappingRepository.getAnimeMappings(mediaModel.id)
                 } else {
-                    mappingService.getMangaMappings(mediaModel.id).get()
+                    mappingRepository.getMangaMappings(mediaModel.id)
                 } ?: emptyList()
 
                 val mappingsWithKitsu = mappings + Mapping(
-                    id = null,
+                    id = "",
                     externalSite = "kitsu/" + if (mediaModel is Anime) "anime" else "manga",
                     externalId = mediaModel.slug ?: mediaModel.id
                 )
