@@ -20,6 +20,10 @@ class MangaRepository(
         return mangaNetworkDataSource.getAllManga(filter).data?.map { it.toManga() }
     }
 
+    suspend fun getTrending(filter: Filter): List<Manga>? {
+        return mangaNetworkDataSource.getTrending(filter).data?.map { it.toManga() }
+    }
+
     suspend fun getManga(id: String, filter: Filter): Manga? {
         return mangaNetworkDataSource.getManga(id, filter)?.toManga()
     }

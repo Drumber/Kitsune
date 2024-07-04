@@ -3,15 +3,15 @@ package io.github.drumber.kitsune.ui.details.characters
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.constants.Defaults
+import io.github.drumber.kitsune.data.presentation.model.character.Character
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
+import io.github.drumber.kitsune.data.repository.CharacterRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
-import io.github.drumber.kitsune.data.source.network.character.NetworkCharacter
+import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
-import io.github.drumber.kitsune.domain_old.model.infrastructure.character.Character
 import io.github.drumber.kitsune.domain_old.service.Filter
-import io.github.drumber.kitsune.domain_old.service.character.CharacterService
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class CharacterDetailsViewModel(
-    private val service: CharacterService,
+    private val characterRepository: CharacterRepository,
     private val getLocalUserId: GetLocalUserIdUseCase,
     private val favoriteRepository: FavoriteRepository
 ) : ViewModel() {
@@ -52,14 +52,14 @@ class CharacterDetailsViewModel(
             _characterFlow.emit(character)
 
             launch(Dispatchers.IO) fetchFavorite@{
-                val characterId = character.id ?: return@fetchFavorite
+                val characterId = character.id
                 val favorite = fetchFavorite(characterId)
                 _favoriteFlow.emit(favorite)
             }
 
             launch(Dispatchers.IO) fetchFullCharacter@{
                 // fetch full character model
-                val characterId = character.id ?: return@fetchFullCharacter
+                val characterId = character.id
                 _uiState.emit(UiState(isLoadingMediaCharacters = true))
                 val fullCharacter = try {
                     fetchCharacterData(characterId)
@@ -80,7 +80,7 @@ class CharacterDetailsViewModel(
             .fields("media", *Defaults.MINIMUM_COLLECTION_FIELDS)
 
         return try {
-            service.getCharacter(id, filter.options).get()
+            characterRepository.getCharacter(id, filter)
         } catch (e: Exception) {
             logE("Failed to fetch character data.", e)
             null

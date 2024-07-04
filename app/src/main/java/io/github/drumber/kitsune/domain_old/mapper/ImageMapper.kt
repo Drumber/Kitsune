@@ -1,13 +1,13 @@
 package io.github.drumber.kitsune.domain_old.mapper
 
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaDimension
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaDimensions
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaImage
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaImageMeta
 import io.github.drumber.kitsune.domain_old.model.database.DBDimension
 import io.github.drumber.kitsune.domain_old.model.database.DBDimensions
 import io.github.drumber.kitsune.domain_old.model.database.DBImage
 import io.github.drumber.kitsune.domain_old.model.database.DBImageMeta
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.AlgoliaDimension
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.AlgoliaDimensions
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.AlgoliaImage
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.AlgoliaImageMeta
 import io.github.drumber.kitsune.domain_old.model.infrastructure.image.Dimension
 import io.github.drumber.kitsune.domain_old.model.infrastructure.image.Dimensions
 import io.github.drumber.kitsune.domain_old.model.infrastructure.image.Image

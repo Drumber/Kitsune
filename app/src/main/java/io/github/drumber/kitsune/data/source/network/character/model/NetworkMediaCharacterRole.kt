@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.source.network.character
+package io.github.drumber.kitsune.data.source.network.character.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

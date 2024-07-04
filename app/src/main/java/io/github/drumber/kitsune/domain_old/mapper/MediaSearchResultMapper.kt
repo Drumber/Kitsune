@@ -1,9 +1,9 @@
 package io.github.drumber.kitsune.domain_old.mapper
 
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.MediaSearchKind
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.MediaSearchResult
 import io.github.drumber.kitsune.domain_old.model.common.media.AnimeSubtype
 import io.github.drumber.kitsune.domain_old.model.common.media.MangaSubtype
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.MediaSearchKind
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.MediaSearchResult
 import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Manga
 

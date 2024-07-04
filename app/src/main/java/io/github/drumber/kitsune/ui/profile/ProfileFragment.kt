@@ -33,18 +33,20 @@ import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
 import io.github.drumber.kitsune.data.mapper.UserMapper.toUser
+import io.github.drumber.kitsune.data.presentation.dto.toCharacterDto
+import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.model.character.Character
+import io.github.drumber.kitsune.data.presentation.model.media.Anime
+import io.github.drumber.kitsune.data.presentation.model.media.Manga
+import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
 import io.github.drumber.kitsune.data.presentation.model.user.User
 import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLink
 import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStats
+import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsData
 import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsKind
-import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStatsData
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
 import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Anime
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Manga
-import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.adapter.CharacterAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder
@@ -274,7 +276,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
         viewModel.fullUserModel.observe(viewLifecycleOwner) { response ->
             val user = response.data
 
-            val animeCategoryStats: NetworkUserStatsData.NetworkCategoryBreakdownData? = user
+            val animeCategoryStats: UserStatsData.CategoryBreakdownData? = user
                 ?.stats
                 .findStatsData(UserStatsKind.AnimeCategoryBreakdown)
             updateStatsChart(
@@ -283,7 +285,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
                 animeCategoryStats
             )
 
-            val mangaCategoryStats: NetworkUserStatsData.NetworkCategoryBreakdownData? = user
+            val mangaCategoryStats: UserStatsData.CategoryBreakdownData? = user
                 ?.stats
                 .findStatsData(UserStatsKind.MangaCategoryBreakdown)
             updateStatsChart(
@@ -292,12 +294,12 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
                 mangaCategoryStats
             )
 
-            val animeAmountConsumed: NetworkUserStatsData.NetworkAmountConsumedData? = user
+            val animeAmountConsumed: UserStatsData.AmountConsumedData? = user
                 ?.stats
                 .findStatsData(UserStatsKind.AnimeAmountConsumed)
             adapter.updateAmountConsumedData(ProfileStatsAdapter.POS_ANIME, animeAmountConsumed)
 
-            val mangaAmountConsumed: NetworkUserStatsData.NetworkAmountConsumedData? = user
+            val mangaAmountConsumed: UserStatsData.AmountConsumedData? = user
                 ?.stats
                 .findStatsData(UserStatsKind.MangaAmountConsumed)
             adapter.updateAmountConsumedData(ProfileStatsAdapter.POS_MANGA, mangaAmountConsumed)
@@ -314,7 +316,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
     private fun updateStatsChart(
         position: Int,
         @StringRes titleRes: Int,
-        categoryStats: NetworkUserStatsData.NetworkCategoryBreakdownData?
+        categoryStats: UserStatsData.CategoryBreakdownData?
     ) {
         val categoryEntries: List<PieEntry> = categoryStats?.let { stats ->
             val total = stats.total ?: return@let null
@@ -360,12 +362,9 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
     }
 
     private fun updateFavoritesData(favorites: List<Favorite>) {
-        val favAnime = favorites
-            .mapNotNull { (it.item as? Anime)?.let { media -> MediaAdapter.fromMedia(media) } }
-        val favManga = favorites
-            .mapNotNull { (it.item as? Manga)?.let { media -> MediaAdapter.fromMedia(media) } }
-        val favCharacters = favorites
-            .mapNotNull { it.item as? Character }
+        val favAnime = favorites.filter { it.item is Anime }.map { it.item as Anime }
+        val favManga = favorites.filter { it.item is Manga }.map { it.item as Manga }
+        val favCharacters = favorites.filter { it.item is Character }.map { it.item as Character }
 
         showFavoriteMediaInRecyclerView(binding.rvFavoriteAnime, favAnime)
         showFavoriteMediaInRecyclerView(binding.rvFavoriteManga, favManga)
@@ -378,7 +377,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
 
     private fun showFavoriteMediaInRecyclerView(
         recyclerView: RecyclerView,
-        data: List<MediaAdapter>
+        data: List<Media>
     ) {
         if (recyclerView.adapter !is MediaRecyclerViewAdapter) {
             val glide = Glide.with(this)
@@ -420,17 +419,16 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
         }
     }
 
-    private fun onFavoriteMediaItemClicked(view: View, mediaAdapter: MediaAdapter) {
-        val action = ProfileFragmentDirections.actionProfileFragmentToDetailsFragment(mediaAdapter)
+    private fun onFavoriteMediaItemClicked(view: View, media: Media) {
+        val action = ProfileFragmentDirections.actionProfileFragmentToDetailsFragment(media.toMediaDto())
         val detailsTransitionName = getString(R.string.details_poster_transition_name)
         val extras = FragmentNavigatorExtras(view to detailsTransitionName)
         findNavController().navigateSafe(R.id.profile_fragment, action, extras)
     }
 
     private fun openCharacterDetailsBottomSheet(character: Character) {
-        // TODO: migrate character bottom sheet to new character model
-//        val action = ProfileFragmentDirections.actionProfileFragmentToCharacterDetailsBottomSheet(character)
-//        findNavController().navigateSafe(R.id.profile_fragment, action)
+        val action = ProfileFragmentDirections.actionProfileFragmentToCharacterDetailsBottomSheet(character.toCharacterDto())
+        findNavController().navigateSafe(R.id.profile_fragment, action)
     }
 
     private fun updateOptionsMenu() {

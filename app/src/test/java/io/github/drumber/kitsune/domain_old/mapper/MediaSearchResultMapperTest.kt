@@ -1,11 +1,11 @@
 package io.github.drumber.kitsune.domain_old.mapper
 
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.AlgoliaDimension
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.AlgoliaDimensions
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.AlgoliaImage
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.AlgoliaImageMeta
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.MediaSearchKind
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.MediaSearchResult
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaDimension
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaDimensions
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaImage
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaImageMeta
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.MediaSearchKind
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.MediaSearchResult
 import io.github.drumber.kitsune.domain_old.model.infrastructure.image.Dimension
 import io.github.drumber.kitsune.domain_old.model.infrastructure.image.Dimensions
 import io.github.drumber.kitsune.domain_old.model.infrastructure.image.Image

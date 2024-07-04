@@ -9,17 +9,17 @@ import androidx.databinding.OnRebindCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.constants.MediaItemSize
-import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
 import java.util.concurrent.CopyOnWriteArrayList
 
 class MediaRecyclerViewAdapter(
-    val dataSet: CopyOnWriteArrayList<MediaAdapter>,
+    val dataSet: CopyOnWriteArrayList<Media>,
     private val glide: RequestManager,
     private val tagData: TagData = TagData.None,
     private val transitionNameSuffix: String? = null,
-    private val listener: OnItemClickListener<MediaAdapter>? = null
+    private val listener: OnItemClickListener<Media>? = null
 ) : RecyclerView.Adapter<MediaViewHolder>() {
 
     var overrideItemSize: MediaItemSize? = null

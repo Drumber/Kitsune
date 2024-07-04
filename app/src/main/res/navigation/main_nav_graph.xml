@@ -60,10 +60,9 @@
         android:name="io.github.drumber.kitsune.ui.details.DetailsFragment"
         android:label="DetailsFragment">
         <argument
-            android:name="model"
-            app:argType="io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            android:name="media"
+            app:argType="io.github.drumber.kitsune.data.presentation.dto.MediaDto"
+            app:nullable="true" />
         <action
             android:id="@+id/action_details_fragment_to_media_list_fragment"
             app:destination="@id/media_list_fragment" />
@@ -105,7 +104,7 @@
             app:launchSingleTop="true" />
         <argument
             android:name="mediaSelector"
-            app:argType="io.github.drumber.kitsune.domain_old.model.MediaSelector" />
+            app:argType="io.github.drumber.kitsune.data.presentation.model.media.MediaSelector" />
         <argument
             android:name="title"
             app:argType="string" />
@@ -135,7 +134,7 @@
         android:label="EpisodesFragment" >
         <argument
             android:name="media"
-            app:argType="io.github.drumber.kitsune.domain_old.model.infrastructure.media.BaseMedia" />
+            app:argType="io.github.drumber.kitsune.data.presentation.dto.MediaDto" />
         <argument
             android:name="libraryEntryId"
             app:argType="string"
@@ -226,7 +225,7 @@
         android:label="CharacterDetailsBottomSheet" >
         <argument
             android:name="character"
-            app:argType="io.github.drumber.kitsune.domain_old.model.infrastructure.character.Character" />
+            app:argType="io.github.drumber.kitsune.data.presentation.dto.CharacterDto" />
         <action
             android:id="@+id/action_characterDetailsBottomSheet_to_details_fragment"
             app:destination="@id/details_fragment" />

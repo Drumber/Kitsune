@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.domain_old.mapper
 
 import io.github.drumber.kitsune.data.source.local.character.LocalCharacter
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.CharacterSearchResult
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.CharacterSearchResult
 import io.github.drumber.kitsune.domain_old.model.infrastructure.character.Character
 
 fun CharacterSearchResult.toCharacter() = Character(

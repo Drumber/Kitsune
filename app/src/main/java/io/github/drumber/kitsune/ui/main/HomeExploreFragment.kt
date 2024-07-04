@@ -11,13 +11,13 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
+import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
+import io.github.drumber.kitsune.data.presentation.model.media.MediaType
+import io.github.drumber.kitsune.data.presentation.model.media.RequestType
 import io.github.drumber.kitsune.databinding.FragmentHomeExploreBinding
 import io.github.drumber.kitsune.databinding.SectionMainExploreBinding
-import io.github.drumber.kitsune.domain_old.model.MediaSelector
-import io.github.drumber.kitsune.domain_old.model.MediaType
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.BaseMedia
-import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
-import io.github.drumber.kitsune.domain_old.paging.RequestType
 import io.github.drumber.kitsune.domain_old.service.Filter
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
@@ -28,7 +28,7 @@ import io.github.drumber.kitsune.util.network.ResponseData
 import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
-    OnItemClickListener<MediaAdapter> {
+    OnItemClickListener<Media> {
 
     private val binding: FragmentHomeExploreBinding by viewBinding()
 
@@ -62,7 +62,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
             Filter().limit(30),
             RequestType.TRENDING,
             binding.sectionTrending,
-            viewModel.getAnimeExploreLiveData(MainFragmentViewModel.TRENDING) as LiveData<ResponseData<List<BaseMedia>>>
+            viewModel.getAnimeExploreLiveData(MainFragmentViewModel.TRENDING) as LiveData<ResponseData<List<Media>>>
         )
 
         // top airing
@@ -72,7 +72,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
             MainFragmentViewModel.FILTER_TOP_AIRING,
             RequestType.ALL,
             binding.sectionTopAiring,
-            viewModel.getAnimeExploreLiveData(MainFragmentViewModel.TOP_AIRING) as LiveData<ResponseData<List<BaseMedia>>>
+            viewModel.getAnimeExploreLiveData(MainFragmentViewModel.TOP_AIRING) as LiveData<ResponseData<List<Media>>>
         )
 
         // top upcoming
@@ -82,7 +82,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
             MainFragmentViewModel.FILTER_TOP_UPCOMING,
             RequestType.ALL,
             binding.sectionTopUpcoming,
-            viewModel.getAnimeExploreLiveData(MainFragmentViewModel.TOP_UPCOMING) as LiveData<ResponseData<List<BaseMedia>>>
+            viewModel.getAnimeExploreLiveData(MainFragmentViewModel.TOP_UPCOMING) as LiveData<ResponseData<List<Media>>>
         )
 
         // highest rated
@@ -92,7 +92,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
             MainFragmentViewModel.FILTER_HIGHEST_RATED,
             RequestType.ALL,
             binding.sectionHighestRated,
-            viewModel.getAnimeExploreLiveData(MainFragmentViewModel.HIGHEST_RATED) as LiveData<ResponseData<List<BaseMedia>>>
+            viewModel.getAnimeExploreLiveData(MainFragmentViewModel.HIGHEST_RATED) as LiveData<ResponseData<List<Media>>>
         )
 
         // most popular
@@ -102,7 +102,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
             MainFragmentViewModel.FILTER_MOST_POPULAR,
             RequestType.ALL,
             binding.sectionMostPopular,
-            viewModel.getAnimeExploreLiveData(MainFragmentViewModel.MOST_POPULAR) as LiveData<ResponseData<List<BaseMedia>>>
+            viewModel.getAnimeExploreLiveData(MainFragmentViewModel.MOST_POPULAR) as LiveData<ResponseData<List<Media>>>
         )
     }
 
@@ -114,7 +114,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
             Filter().limit(30),
             RequestType.TRENDING,
             binding.sectionTrending,
-            viewModel.getMangaExploreLiveData(MainFragmentViewModel.TRENDING) as LiveData<ResponseData<List<BaseMedia>>>
+            viewModel.getMangaExploreLiveData(MainFragmentViewModel.TRENDING) as LiveData<ResponseData<List<Media>>>
         )
 
         // top airing
@@ -124,7 +124,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
             MainFragmentViewModel.FILTER_TOP_AIRING,
             RequestType.ALL,
             binding.sectionTopAiring,
-            viewModel.getMangaExploreLiveData(MainFragmentViewModel.TOP_AIRING) as LiveData<ResponseData<List<BaseMedia>>>
+            viewModel.getMangaExploreLiveData(MainFragmentViewModel.TOP_AIRING) as LiveData<ResponseData<List<Media>>>
         )
 
         // top upcoming
@@ -134,7 +134,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
             MainFragmentViewModel.FILTER_TOP_UPCOMING,
             RequestType.ALL,
             binding.sectionTopUpcoming,
-            viewModel.getMangaExploreLiveData(MainFragmentViewModel.TOP_UPCOMING) as LiveData<ResponseData<List<BaseMedia>>>
+            viewModel.getMangaExploreLiveData(MainFragmentViewModel.TOP_UPCOMING) as LiveData<ResponseData<List<Media>>>
         )
 
         // highest rated
@@ -144,7 +144,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
             MainFragmentViewModel.FILTER_HIGHEST_RATED,
             RequestType.ALL,
             binding.sectionHighestRated,
-            viewModel.getMangaExploreLiveData(MainFragmentViewModel.HIGHEST_RATED) as LiveData<ResponseData<List<BaseMedia>>>
+            viewModel.getMangaExploreLiveData(MainFragmentViewModel.HIGHEST_RATED) as LiveData<ResponseData<List<Media>>>
         )
 
         // most popular
@@ -154,7 +154,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
             MainFragmentViewModel.FILTER_MOST_POPULAR,
             RequestType.ALL,
             binding.sectionMostPopular,
-            viewModel.getMangaExploreLiveData(MainFragmentViewModel.MOST_POPULAR) as LiveData<ResponseData<List<BaseMedia>>>
+            viewModel.getMangaExploreLiveData(MainFragmentViewModel.MOST_POPULAR) as LiveData<ResponseData<List<Media>>>
         )
     }
 
@@ -164,7 +164,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         filter: Filter,
         requestType: RequestType,
         sectionBinding: SectionMainExploreBinding,
-        liveData: LiveData<ResponseData<List<BaseMedia>>>
+        liveData: LiveData<ResponseData<List<Media>>>
     ): ExploreSection {
         sectionBinding.apply {
             rvMedia.isVisible = false
@@ -182,7 +182,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
 
         liveData.observe(viewLifecycleOwner) { response ->
             if (response is ResponseData.Success) {
-                section.setData(response.data.map { MediaAdapter(it) })
+                section.setData(response.data)
                 sectionBinding.apply {
                     layoutLoading.root.isVisible = false
                     rvMedia.isVisible = true
@@ -219,8 +219,8 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         return section
     }
 
-    override fun onItemClick(view: View, item: MediaAdapter) {
-        val action = MainFragmentDirections.actionMainFragmentToDetailsFragment(item)
+    override fun onItemClick(view: View, item: Media) {
+        val action = MainFragmentDirections.actionMainFragmentToDetailsFragment(item.toMediaDto())
         val detailsTransitionName = getString(R.string.details_poster_transition_name)
         val extras = FragmentNavigatorExtras(view to detailsTransitionName)
         findNavController().navigateSafe(R.id.main_fragment, action, extras)

@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.source.network.character
+package io.github.drumber.kitsune.data.source.network.character.model
 
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship

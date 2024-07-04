@@ -6,7 +6,7 @@
     <data>
         <variable
             name="data"
-            type="io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter" />
+            type="io.github.drumber.kitsune.data.presentation.model.media.Media" />
     </data>
 
     <LinearLayout
@@ -23,8 +23,8 @@
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             tools:text="Kitsu Score 83.03%"
-            app:isVisible="@{data.avgRating != null}"
-            android:text="@{@string/data_kitsu_score(data.avgRating)}" />
+            app:isVisible="@{data.avgRatingFormatted != null}"
+            android:text="@{@string/data_kitsu_score(data.avgRatingFormatted)}" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -58,7 +58,7 @@
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             tools:text="Currently Airing"
-            android:text="@{data.statusText(context)}" />
+            android:text="@{context.getString(data.statusStringRes)}" />
 
     </LinearLayout>
 

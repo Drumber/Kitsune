@@ -35,7 +35,7 @@ import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.Profi
 import io.github.drumber.kitsune.databinding.FragmentEditProfileBinding
 import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
 import io.github.drumber.kitsune.domain_old.mapper.toLocalCharacter
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.CharacterSearchResult
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.CharacterSearchResult
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BaseDialogFragment
 import io.github.drumber.kitsune.util.DataUtil

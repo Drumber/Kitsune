@@ -5,10 +5,9 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.RequestManager
+import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toMedia
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.MediaSearchResult
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
-import io.github.drumber.kitsune.domain_old.mapper.toMedia
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.MediaSearchResult
-import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
@@ -19,7 +18,7 @@ class MediaSearchPagingAdapter(
 ) : PagingDataAdapter<MediaSearchResult, MediaViewHolder>(MediaSearchComparator) {
 
     override fun onBindViewHolder(holder: MediaViewHolder, position: Int) {
-        getItem(position)?.let { holder.bind(MediaAdapter.fromMedia(it.toMedia())) }
+        getItem(position)?.let { holder.bind(it.toMedia()) }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaViewHolder {

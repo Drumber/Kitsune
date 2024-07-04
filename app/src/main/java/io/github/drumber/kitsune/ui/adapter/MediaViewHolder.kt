@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.ui.adapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
 
 class MediaViewHolder(
@@ -31,12 +31,13 @@ class MediaViewHolder(
         }
     }
 
-    fun bind(data: MediaAdapter) {
+    fun bind(data: Media) {
         binding.data = data
+        // TODO: Media needs to be aware of its relationship role
         binding.overlayTagText = when (tagData) {
             TagData.None -> null
-            TagData.Subtype -> data.subtype
-            TagData.RelationshipRole -> data.ownRelationshipRoleText(binding.root.context)
+            TagData.Subtype -> data.subtypeFormatted
+            TagData.RelationshipRole -> null/*data.ownRelationshipRoleText(binding.root.context)*/
         }
         glide.load(data.posterImage)
             .placeholder(R.drawable.ic_insert_photo_48)

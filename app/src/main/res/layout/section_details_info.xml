@@ -3,14 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <import type="android.text.TextUtils" />
-
-        <import type="io.github.drumber.kitsune.domain_old.model.infrastructure.production.AnimeProductionRole" />
+        <import type="io.github.drumber.kitsune.data.presentation.model.media.Anime" />
+        <import type="io.github.drumber.kitsune.data.presentation.model.media.production.AnimeProductionRole" />
 
         <variable
             name="data"
-            type="io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter" />
+            type="io.github.drumber.kitsune.data.presentation.model.media.Media" />
     </data>
 
     <TableLayout
@@ -46,35 +45,35 @@
         <include
             android:id="@+id/synonyms_row_layout"
             layout="@layout/item_details_info_row"
-            app:isVisible="@{!TextUtils.isEmpty(data.abbreviatedTitles)}"
+            app:isVisible="@{!TextUtils.isEmpty(data.abbreviatedTitlesFormatted)}"
             app:title="@{@string/data_abbreviated_titles}"
-            app:value="@{data.abbreviatedTitles}" />
+            app:value="@{data.abbreviatedTitlesFormatted}" />
 
         <!-- Subtype -->
         <include
             layout="@layout/item_details_info_row"
             app:title="@{@string/data_title_type}"
-            app:value="@{data.subtype}" />
+            app:value="@{data.subtypeFormatted}" />
 
         <!-- Status -->
         <include
             layout="@layout/item_details_info_row"
             app:title="@{@string/data_title_status}"
-            app:value="@{data.statusText(context)}" />
+            app:value="@{context.getString(data.statusStringRes)}" />
 
         <!-- Aired Date -->
         <include
             layout="@layout/item_details_info_row"
             app:isVisible="@{TextUtils.isEmpty(data.tba) &amp;&amp; !TextUtils.isEmpty(data.airedText)}"
-            app:title="@{data.isAnime ? @string/data_title_aired : @string/data_title_published}"
+            app:title="@{data instanceof Anime ? @string/data_title_aired : @string/data_title_published}"
             app:value="@{data.airedText}" />
 
         <!-- Season -->
         <include
             layout="@layout/item_details_info_row"
-            app:isVisible="@{TextUtils.isEmpty(data.tba) &amp;&amp; !TextUtils.isEmpty(data.seasonYear) &amp;&amp; data.isAnime}"
+            app:isVisible="@{TextUtils.isEmpty(data.tba) &amp;&amp; !TextUtils.isEmpty(data.seasonYear) &amp;&amp; data instanceof Anime}"
             app:title="@{@string/data_title_season}"
-            app:value="@{data.season(context) + ` ` + data.seasonYear}" />
+            app:value="@{context.getString(data.seasonStringRes) + ` ` + data.seasonYear}" />
 
         <!-- TBA (Expected Date) -->
         <include
@@ -93,9 +92,9 @@
         <!-- Serialization (Manga) -->
         <include
             layout="@layout/item_details_info_row"
-            app:isVisible="@{!TextUtils.isEmpty(data.serialization)}"
+            app:isVisible="@{!TextUtils.isEmpty(data.serializationText)}"
             app:title="@{@string/data_title_serialization}"
-            app:value="@{data.serialization}" />
+            app:value="@{data.serializationText}" />
 
         <!-- Chapters (Manga) -->
         <include

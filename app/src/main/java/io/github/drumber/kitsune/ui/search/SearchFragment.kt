@@ -24,16 +24,19 @@ import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toMedia
+import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.MediaSearchResult
 import io.github.drumber.kitsune.databinding.FragmentSearchBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
-import io.github.drumber.kitsune.domain_old.mapper.toMedia
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.MediaSearchResult
-import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.paging.MediaSearchPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.ui.main.FragmentDecorationPreference
-import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.*
+import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.Error
+import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.Initialized
+import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotAvailable
+import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotInitialized
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
@@ -171,8 +174,8 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
     }
 
     override fun onItemClick(view: View, item: MediaSearchResult) {
-        val mediaAdapter = MediaAdapter.fromMedia(item.toMedia())
-        val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(mediaAdapter)
+        val media = item.toMedia()
+        val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(media.toMediaDto())
         val detailsTransitionName = getString(R.string.details_poster_transition_name)
         val extras = FragmentNavigatorExtras(view to detailsTransitionName)
         findNavController().navigateSafe(R.id.search_fragment, action, extras)

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStatsData
+import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsData
 import io.github.drumber.kitsune.databinding.ItemProfileStatsBinding
 import io.github.drumber.kitsune.ui.widget.chart.PieChartStyle.applyStyle
 import io.github.drumber.kitsune.util.TimeUtil
@@ -36,7 +36,7 @@ class ProfileStatsAdapter(dataSet: List<ProfileStatsData>) :
         notifyItemChanged(position)
     }
 
-    fun updateAmountConsumedData(position: Int, data: NetworkUserStatsData.NetworkAmountConsumedData?) {
+    fun updateAmountConsumedData(position: Int, data: UserStatsData.AmountConsumedData?) {
         dataSet[position].amountConsumedData = data
         notifyItemChanged(position)
     }
@@ -148,7 +148,7 @@ class ProfileStatsAdapter(dataSet: List<ProfileStatsData>) :
     data class ProfileStatsData(
         val title: String,
         var categoriesDataSet: PieDataSet? = null,
-        var amountConsumedData: NetworkUserStatsData.NetworkAmountConsumedData? = null,
+        var amountConsumedData: UserStatsData.AmountConsumedData? = null,
         var isLoading: Boolean = true
     )
 

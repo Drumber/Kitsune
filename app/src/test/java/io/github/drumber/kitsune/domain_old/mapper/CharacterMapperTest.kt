@@ -1,10 +1,10 @@
 package io.github.drumber.kitsune.domain_old.mapper
 
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.AlgoliaDimension
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.AlgoliaDimensions
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.AlgoliaImage
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.AlgoliaImageMeta
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.CharacterSearchResult
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaDimension
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaDimensions
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaImage
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaImageMeta
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.CharacterSearchResult
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test

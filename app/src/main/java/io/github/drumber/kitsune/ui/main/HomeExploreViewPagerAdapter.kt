@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.ui.main
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import io.github.drumber.kitsune.domain_old.model.MediaType
+import io.github.drumber.kitsune.data.presentation.model.media.MediaType
 
 class HomeExploreViewPagerAdapter(fragment: Fragment) :
     FragmentStateAdapter(fragment.childFragmentManager, fragment.viewLifecycleOwner.lifecycle) {

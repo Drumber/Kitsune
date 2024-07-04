@@ -20,6 +20,10 @@ class AnimeRepository(
         return animeNetworkDataSource.getAllAnime(filter).data?.map { it.toAnime() }
     }
 
+    suspend fun getTrending(filter: Filter): List<Anime>? {
+        return animeNetworkDataSource.getTrending(filter).data?.map { it.toAnime() }
+    }
+
     suspend fun getAnime(id: String, filter: Filter): Anime? {
         return animeNetworkDataSource.getAnime(id, filter)?.toAnime()
     }

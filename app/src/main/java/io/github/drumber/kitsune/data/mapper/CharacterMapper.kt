@@ -5,9 +5,9 @@ import io.github.drumber.kitsune.data.presentation.model.character.Character
 import io.github.drumber.kitsune.data.presentation.model.character.MediaCharacter
 import io.github.drumber.kitsune.data.presentation.model.character.MediaCharacterRole
 import io.github.drumber.kitsune.data.source.local.character.LocalCharacter
-import io.github.drumber.kitsune.data.source.network.character.NetworkCharacter
-import io.github.drumber.kitsune.data.source.network.character.NetworkMediaCharacter
-import io.github.drumber.kitsune.data.source.network.character.NetworkMediaCharacterRole
+import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
+import io.github.drumber.kitsune.data.source.network.character.model.NetworkMediaCharacter
+import io.github.drumber.kitsune.data.source.network.character.model.NetworkMediaCharacterRole
 
 object CharacterMapper {
 

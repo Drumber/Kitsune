@@ -20,7 +20,9 @@ import io.github.drumber.kitsune.data.source.network.algolia.AlgoliaKeyNetworkDa
 import io.github.drumber.kitsune.data.source.network.algolia.api.AlgoliaKeyApi
 import io.github.drumber.kitsune.data.source.network.auth.AccessTokenNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.auth.api.AuthenticationApi
-import io.github.drumber.kitsune.data.source.network.character.NetworkCharacter
+import io.github.drumber.kitsune.data.source.network.character.api.CharacterApi
+import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
+import io.github.drumber.kitsune.data.source.network.character.model.NetworkMediaCharacter
 import io.github.drumber.kitsune.data.source.network.media.AnimeNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.media.CastingNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.media.ChapterNetworkDataSource
@@ -184,6 +186,18 @@ val repositoryModule = module {
     }
     single { CastingNetworkDataSource(get()) }
     single { CastingRepository(get()) }
+
+    // Character
+    factory {
+        createService<CharacterApi>(
+            get(),
+            get(),
+            NetworkCharacter::class.java,
+            NetworkMediaCharacter::class.java,
+            NetworkAnime::class.java,
+            NetworkManga::class.java
+        )
+    }
 }
 
 private fun createAuthService(objectMapper: ObjectMapper) = createService<AuthenticationApi>(

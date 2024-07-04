@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.presentation.dto.toCharacterDto
 import io.github.drumber.kitsune.databinding.FragmentCharactersBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.ui.adapter.paging.CharacterPagingAdapter
@@ -62,7 +63,7 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters) 
             viewModel.setLanguage(language)
         }
         val pagingAdapter = CharacterPagingAdapter(Glide.with(this)) { _, character ->
-            val action = CharactersFragmentDirections.actionCharactersFragmentToCharacterDetailsBottomSheet(character)
+            val action = CharactersFragmentDirections.actionCharactersFragmentToCharacterDetailsBottomSheet(character.toCharacterDto())
             findNavController().navigateSafe(R.id.characters_fragment, action)
         }
         val concatAdapter = ConcatAdapter(

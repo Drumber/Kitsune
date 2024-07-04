@@ -40,22 +40,23 @@ import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.constants.SortFilter
+import io.github.drumber.kitsune.data.common.Titles
+import io.github.drumber.kitsune.data.common.en
+import io.github.drumber.kitsune.data.common.withoutCommonTitles
+import io.github.drumber.kitsune.data.presentation.dto.toMedia
+import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.getStringRes
+import io.github.drumber.kitsune.data.presentation.model.media.Anime
+import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
+import io.github.drumber.kitsune.data.presentation.model.media.MediaType
+import io.github.drumber.kitsune.data.presentation.model.media.category.Category
 import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.databinding.ItemDetailsInfoRowBinding
-import io.github.drumber.kitsune.domain_old.model.MediaSelector
-import io.github.drumber.kitsune.domain_old.model.MediaType
 import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain_old.model.common.media.Titles
-import io.github.drumber.kitsune.domain_old.model.common.media.en
-import io.github.drumber.kitsune.domain_old.model.common.media.withoutCommonTitles
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Anime
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.category.Category
 import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryAdapter
 import io.github.drumber.kitsune.domain_old.model.ui.library.getStringResId
-import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
-import io.github.drumber.kitsune.domain_old.model.ui.media.originalOrDown
 import io.github.drumber.kitsune.domain_old.service.Filter
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
@@ -130,8 +131,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
-        if (args.model != null) {
-            viewModel.initMediaModel(args.model!!)
+        if (args.media != null) {
+            viewModel.initMediaModel(args.media!!.toMedia())
         } else if (!args.type.isNullOrBlank() && !args.slug.isNullOrBlank()) {
             val isAnime = when (args.type!!.lowercase()) {
                 "anime" -> true
@@ -147,7 +148,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 viewModel.initFromDeepLink(isAnime, args.slug!!)
             }
         } else {
-            logW("DetailsFragment opened without media adapter or invalid deeplink parameters.")
+            logW("DetailsFragment opened without media bundle or invalid deeplink parameters.")
             showSomethingWrongToast()
             goBack()
         }
@@ -177,13 +178,13 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
 
         binding.ivThumbnail.setOnClickListener {
-            viewModel.mediaModel.value?.let { mediaAdapter ->
-                val title = mediaAdapter.title
-                mediaAdapter.media.posterImage?.originalOrDown()?.let { imageUrl ->
+            viewModel.mediaModel.value?.let { media ->
+                val title = media.title
+                media.posterImage?.originalOrDown()?.let { imageUrl ->
                     openPhotoViewActivity(
                         imageUrl,
                         title,
-                        mediaAdapter.posterImage,
+                        media.posterImageUrl,
                         binding.ivThumbnail
                     )
                 }
@@ -191,17 +192,17 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
 
         binding.ivCover.setOnClickListener {
-            viewModel.mediaModel.value?.let { mediaAdapter ->
-                val title = mediaAdapter.title
-                mediaAdapter.media.coverImage?.originalOrDown()?.let { imageUrl ->
-                    openPhotoViewActivity(imageUrl, title, mediaAdapter.coverImage, binding.ivCover)
+            viewModel.mediaModel.value?.let { media ->
+                val title = media.title
+                media.coverImage?.originalOrDown()?.let { imageUrl ->
+                    openPhotoViewActivity(imageUrl, title, media.coverImageUrl, binding.ivCover)
                 }
             }
         }
 
         viewModel.libraryEntryWrapper.observe(viewLifecycleOwner) { libraryEntryWrapper ->
             val isManga = libraryEntryWrapper?.libraryEntry?.manga != null
-                    || viewModel.mediaModel.value?.isAnime() == false
+                    || viewModel.mediaModel.value is Anime
             if (libraryEntryWrapper != null) {
                 libraryEntryWrapper.status?.let { status ->
                     binding.btnManageLibrary.setText(status.getStringResId(!isManga))
@@ -227,10 +228,10 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             content.initPaddingWindowInsetsListener(left = true, right = true)
             btnManageLibrary.setOnClickListener { showManageLibraryBottomSheet() }
             btnMediaUnits.setOnClickListener {
-                val media = viewModel.mediaModel.value?.media ?: return@setOnClickListener
+                val media = viewModel.mediaModel.value ?: return@setOnClickListener
                 val libraryEntry = viewModel.libraryEntryWrapper.value?.libraryEntry
                 val action = DetailsFragmentDirections.actionDetailsFragmentToEpisodesFragment(
-                    media,
+                    media.toMediaDto(),
                     libraryEntry?.id
                 )
                 findNavController().navigate(action)
@@ -239,7 +240,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 val media = viewModel.mediaModel.value ?: return@setOnClickListener
                 val action = DetailsFragmentDirections.actionDetailsFragmentToCharactersFragment(
                     media.id,
-                    media.isAnime()
+                    media is Anime
                 )
                 findNavController().navigate(action)
             }
@@ -290,8 +291,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                     R.id.menu_share_media -> {
                         val url = viewModel.mediaModel.value?.let {
                             val prefix =
-                                if (it.isAnime()) Kitsu.ANIME_URL_PREFIX else Kitsu.MANGA_URL_PREFIX
-                            prefix + it.media.slug
+                                if (it is Anime) Kitsu.ANIME_URL_PREFIX else Kitsu.MANGA_URL_PREFIX
+                            prefix + it.slug
                         }
                         if (url != null) {
                             startUrlShareIntent(url)
@@ -426,29 +427,29 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         return rowBinding.root
     }
 
-    private fun showCategoryChips(mediaAdapter: MediaAdapter) {
-        if (!mediaAdapter.categories.isNullOrEmpty()) {
+    private fun showCategoryChips(media: Media) {
+        if (!media.categories.isNullOrEmpty()) {
             binding.chipGroupCategories.removeAllViews()
 
-            mediaAdapter.categories.orEmpty()
+            media.categories.orEmpty()
                 .sortedBy { it.title }
                 .forEach { category ->
                     val chip = Chip(requireContext())
                     chip.text = category.title
                     chip.setOnClickListener {
-                        onCategoryChipClicked(category, mediaAdapter)
+                        onCategoryChipClicked(category, media)
                     }
                     binding.chipGroupCategories.addView(chip)
                 }
         }
     }
 
-    private fun onCategoryChipClicked(category: Category, mediaAdapter: MediaAdapter) {
+    private fun onCategoryChipClicked(category: Category, media: Media) {
         val categorySlug = category.slug ?: return
         val title = category.title ?: getString(R.string.no_information)
 
         val mediaSelector = MediaSelector(
-            if (mediaAdapter.isAnime()) MediaType.Anime else MediaType.Manga,
+            if (media is Anime) MediaType.Anime else MediaType.Manga,
             Filter()
                 .filter("categories", categorySlug)
                 .sort(SortFilter.POPULARITY_DESC.queryParam)
@@ -459,11 +460,12 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         findNavController().navigate(action)
     }
 
-    private fun showFranchise(mediaAdapter: MediaAdapter) {
-        val data = mediaAdapter.media.mediaRelationships?.sortedBy {
+    private fun showFranchise(media: Media) {
+        // TODO: Media needs to be aware of its relationship role
+        val data = media.mediaRelationships?.sortedBy {
             it.role?.ordinal
         }?.mapNotNull {
-            it.media?.let { media -> MediaAdapter.fromMedia(media, it.role) }
+            it.media?.let { media -> media/*MediaAdapter.fromMedia(media, it.role)*/ }
         } ?: emptyList()
 
         if (binding.rvFranchise.adapter !is MediaRecyclerViewAdapter) {
@@ -472,8 +474,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 CopyOnWriteArrayList(data),
                 glide,
                 TagData.RelationshipRole
-            ) { view, media ->
-                onFranchiseItemClicked(view, media)
+            ) { view, clickedMedia ->
+                onFranchiseItemClicked(view, clickedMedia)
             }
             adapter.overrideItemSize = MediaItemSize.SMALL
             binding.rvFranchise.adapter = adapter
@@ -484,15 +486,15 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
     }
 
-    private fun onFranchiseItemClicked(view: View, mediaAdapter: MediaAdapter) {
-        val action = DetailsFragmentDirections.actionDetailsFragmentSelf(mediaAdapter)
+    private fun onFranchiseItemClicked(view: View, media: Media) {
+        val action = DetailsFragmentDirections.actionDetailsFragmentSelf(media.toMediaDto())
         val detailsTransitionName = getString(R.string.details_poster_transition_name)
         val extras = FragmentNavigatorExtras(view to detailsTransitionName)
         findNavController().navigateSafe(R.id.details_fragment, action, extras)
     }
 
-    private fun showStreamingLinks(mediaAdapter: MediaAdapter) {
-        val data = (mediaAdapter.media as? Anime)?.streamingLinks ?: emptyList()
+    private fun showStreamingLinks(media: Media) {
+        val data = (media as? Anime)?.streamingLinks ?: emptyList()
 
         if (binding.rvStreamer.adapter !is StreamingLinkAdapter) {
             val glide = Glide.with(this)
@@ -511,8 +513,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
     }
 
-    private fun showRatingChart(mediaAdapter: MediaAdapter) {
-        val ratings = mediaAdapter.media.ratingFrequencies ?: return
+    private fun showRatingChart(media: Media) {
+        val ratings = media.ratingFrequencies ?: return
         val ratingSystem = KitsunePref.ratingChartRatingSystem
 
         val ratingList = ratings.transformToRatingSystem(ratingSystem)
@@ -580,7 +582,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 val sheetManageLibrary = ManageLibraryBottomSheet()
                 val bundle = bundleOf(
                     ManageLibraryBottomSheet.BUNDLE_TITLE to mediaAdapter.title,
-                    ManageLibraryBottomSheet.BUNDLE_IS_ANIME to mediaAdapter.isAnime(),
+                    ManageLibraryBottomSheet.BUNDLE_IS_ANIME to (mediaAdapter is Anime),
                     ManageLibraryBottomSheet.BUNDLE_EXISTS_IN_LIBRARY to (viewModel.libraryEntryWrapper.value != null)
                 )
                 sheetManageLibrary.arguments = bundle

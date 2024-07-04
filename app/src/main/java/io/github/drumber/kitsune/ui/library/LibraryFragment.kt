@@ -416,9 +416,10 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
             val detailsTransitionName = getString(R.string.details_poster_transition_name)
             val extras =
                 FragmentNavigatorExtras(view.findViewById<View>(R.id.iv_thumbnail) to detailsTransitionName)
-            val action =
-                LibraryFragmentDirections.actionLibraryFragmentToDetailsFragment(mediaAdapter)
-            findNavController().navigateSafe(R.id.library_fragment, action, extras)
+            // TODO: Update after migrating library entry to use new media model
+//            val action =
+//                LibraryFragmentDirections.actionLibraryFragmentToDetailsFragment(mediaAdapter)
+//            findNavController().navigateSafe(R.id.library_fragment, action, extras)
         }
     }
 

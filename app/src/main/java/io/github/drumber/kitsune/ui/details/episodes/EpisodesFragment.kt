@@ -12,12 +12,11 @@ import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.presentation.dto.MediaDto.MediaType
+import io.github.drumber.kitsune.data.presentation.dto.toMedia
 import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.databinding.FragmentMediaListBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Anime
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Manga
-import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
@@ -44,16 +43,16 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.setMedia(args.media)
+        viewModel.setMedia(args.media.toMedia())
         args.libraryEntryId?.let { viewModel.setLibraryEntryId(it) }
 
         binding.collapsingToolbar.initWindowInsetsListener(consume = false)
         binding.toolbar.apply {
             initWindowInsetsListener(consume = false)
             title = getString(
-                when (args.media) {
-                    is Anime -> R.string.title_episodes
-                    is Manga -> R.string.title_chapters
+                when (args.media.type) {
+                    MediaType.Anime -> R.string.title_episodes
+                    MediaType.Manga -> R.string.title_chapters
                 }
             )
             setNavigationOnClickListener { findNavController().navigateUp() }
@@ -71,10 +70,9 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
             }
         }
 
-        val resourceAdapter = MediaAdapter.fromMedia(args.media)
         val adapter = MediaUnitPagingAdapter(
             Glide.with(this),
-            resourceAdapter.posterImage,
+            args.media.toMedia().posterImageUrl,
             args.libraryEntryId != null,
             this
         )
@@ -102,7 +100,7 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
         val sheetMediaUnit = MediaUnitDetailsBottomSheet()
         sheetMediaUnit.arguments = bundleOf(
             MediaUnitDetailsBottomSheet.BUNDLE_MEDIA_UNIT_ADAPTER to mediaUnit,
-            MediaUnitDetailsBottomSheet.BUNDLE_THUMBNAIL to MediaAdapter.fromMedia(args.media).posterImage
+            MediaUnitDetailsBottomSheet.BUNDLE_THUMBNAIL to args.media.toMedia().posterImageUrl
         )
         sheetMediaUnit.show(parentFragmentManager, MediaUnitDetailsBottomSheet.TAG)
     }

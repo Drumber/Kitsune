@@ -35,7 +35,7 @@ import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.domain_old.manager.SearchProvider
 import io.github.drumber.kitsune.domain_old.model.FilterCollection
 import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.SearchType
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search.MediaSearchResult
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.MediaSearchResult
 import io.github.drumber.kitsune.domain_old.model.toCombinedMap
 import io.github.drumber.kitsune.domain_old.model.toFilterCollection
 import io.github.drumber.kitsune.exception.SearchProviderUnavailableException

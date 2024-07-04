@@ -14,15 +14,12 @@ import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.constants.GitHub
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.domain_old.model.infrastructure.character.Character
-import io.github.drumber.kitsune.domain_old.model.infrastructure.character.MediaCharacter
 import io.github.drumber.kitsune.domain_old.model.infrastructure.library.LibraryEntry
 import io.github.drumber.kitsune.domain_old.model.infrastructure.mappings.Mapping
 import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Anime
 import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Manga
 import io.github.drumber.kitsune.domain_old.model.infrastructure.media.category.Category
 import io.github.drumber.kitsune.domain_old.service.category.CategoryService
-import io.github.drumber.kitsune.domain_old.service.character.CharacterService
 import io.github.drumber.kitsune.domain_old.service.github.GitHubApiService
 import io.github.drumber.kitsune.domain_old.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.domain_old.service.mappings.MappingService
@@ -127,16 +124,16 @@ val networkModule = module {
 //            Character::class.java
 //        )
 //    }
-    factory {
-        createService<CharacterService>(
-            get(),
-            get(),
-            Character::class.java,
-            MediaCharacter::class.java,
-            Anime::class.java,
-            Manga::class.java
-        )
-    }
+//    factory {
+//        createService<CharacterService>(
+//            get(),
+//            get(),
+//            Character::class.java,
+//            MediaCharacter::class.java,
+//            Anime::class.java,
+//            Manga::class.java
+//        )
+//    }
     factory {
         createService<MappingService>(
             get(),

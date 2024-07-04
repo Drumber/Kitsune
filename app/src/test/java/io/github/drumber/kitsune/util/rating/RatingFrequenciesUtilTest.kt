@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.util.rating
 
+import io.github.drumber.kitsune.data.presentation.model.media.RatingFrequencies
 import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
-import io.github.drumber.kitsune.domain_old.model.common.media.RatingFrequencies
 import io.github.drumber.kitsune.util.rating.RatingFrequenciesUtil.calculateAverageRating
 import io.github.drumber.kitsune.util.rating.RatingFrequenciesUtil.transformToRatingSystem
 import org.assertj.core.api.Assertions.assertThat

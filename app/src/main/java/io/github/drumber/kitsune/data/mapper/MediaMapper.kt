@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.data.mapper
 
+import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.AnimeSubtype
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
@@ -198,7 +199,7 @@ object MediaMapper {
         voiceActor = voiceActor,
         featured = featured,
         language = language,
-        character = character,
+        character = character?.toCharacter(),
         person = person?.toPerson()
     )
 
@@ -216,7 +217,7 @@ object MediaMapper {
     fun NetworkMediaRelationship.toMediaRelationship() = MediaRelationship(
         id = id.require(),
         role = role?.toMediaRelationshipRole(),
-        media = media
+        media = media?.toMedia()
     )
 
     fun NetworkMediaRelationshipRole.toMediaRelationshipRole(): MediaRelationshipRole =

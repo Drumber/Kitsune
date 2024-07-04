@@ -10,6 +10,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.data.presentation.model.media.Anime
+import io.github.drumber.kitsune.data.presentation.model.media.Manga
+import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository.MediaUnitType
@@ -23,9 +26,6 @@ import io.github.drumber.kitsune.domain_old.mapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntry
 import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryEntryModification
 import io.github.drumber.kitsune.domain_old.model.database.LocalLibraryModificationState.SYNCHRONIZING
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Anime
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.BaseMedia
-import io.github.drumber.kitsune.domain_old.model.infrastructure.media.Manga
 import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.domain_old.service.Filter
 import io.github.drumber.kitsune.domain_old.service.library.LibraryEntriesService
@@ -50,7 +50,7 @@ class EpisodesViewModel(
 
     val libraryUpdateResultFlow: Flow<SynchronizationResult>
 
-    private val media = MutableLiveData<BaseMedia>()
+    private val media = MutableLiveData<Media>()
 
     private val libraryEntryId = MutableLiveData<String>()
 
@@ -109,7 +109,7 @@ class EpisodesViewModel(
     }
 
 
-    fun setMedia(media: BaseMedia) {
+    fun setMedia(media: Media) {
         if (media != this.media.value) {
             this.media.value = media
         }

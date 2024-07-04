@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.presentation.model.media.production
 
-import io.github.drumber.kitsune.data.source.network.character.NetworkCharacter
+import io.github.drumber.kitsune.data.presentation.model.character.Character
 
 data class Casting(
     val id: String,
@@ -9,6 +9,6 @@ data class Casting(
     val featured: Boolean?,
     val language: String?,
 
-    val character: NetworkCharacter?,
+    val character: Character?,
     val person: Person?
 )

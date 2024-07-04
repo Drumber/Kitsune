@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.search
+package io.github.drumber.kitsune.data.source.network.algolia.model.search
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
