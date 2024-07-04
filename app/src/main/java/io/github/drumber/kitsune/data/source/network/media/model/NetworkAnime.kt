@@ -56,4 +56,42 @@ data class NetworkAnime(
     val streamingLinks: List<NetworkStreamingLink>?,
     @Relationship("mediaRelationships")
     override val mediaRelationships: List<NetworkMediaRelationship>?
-) : NetworkMedia
+) : NetworkMedia {
+
+    companion object {
+        fun empty(id: String) = NetworkAnime(
+            id = id,
+            slug = null,
+            description = null,
+            titles = null,
+            canonicalTitle = null,
+            abbreviatedTitles = null,
+            averageRating = null,
+            ratingFrequencies = null,
+            userCount = null,
+            favoritesCount = null,
+            popularityRank = null,
+            ratingRank = null,
+            startDate = null,
+            endDate = null,
+            nextRelease = null,
+            tba = null,
+            status = null,
+            ageRating = null,
+            ageRatingGuide = null,
+            nsfw = null,
+            posterImage = null,
+            coverImage = null,
+            totalLength = null,
+            episodeCount = null,
+            episodeLength = null,
+            youtubeVideoId = null,
+            subtype = null,
+            categories = null,
+            animeProduction = null,
+            streamingLinks = null,
+            mediaRelationships = null
+        )
+    }
+
+}

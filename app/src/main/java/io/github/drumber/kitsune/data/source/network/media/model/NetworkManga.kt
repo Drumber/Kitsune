@@ -50,4 +50,40 @@ data class NetworkManga(
     override val categories: List<NetworkCategory>?,
     @Relationship("mediaRelationships")
     override val mediaRelationships: List<NetworkMediaRelationship>?
-) : NetworkMedia
+) : NetworkMedia {
+
+    companion object {
+        fun empty(id: String) = NetworkManga(
+            id = id,
+            slug = null,
+            description = null,
+            titles = null,
+            canonicalTitle = null,
+            abbreviatedTitles = null,
+            averageRating = null,
+            ratingFrequencies = null,
+            userCount = null,
+            favoritesCount = null,
+            popularityRank = null,
+            ratingRank = null,
+            startDate = null,
+            endDate = null,
+            nextRelease = null,
+            tba = null,
+            status = null,
+            ageRating = null,
+            ageRatingGuide = null,
+            nsfw = null,
+            posterImage = null,
+            coverImage = null,
+            totalLength = null,
+            chapterCount = null,
+            volumeCount = null,
+            subtype = null,
+            serialization = null,
+            categories = null,
+            mediaRelationships = null
+        )
+    }
+
+}

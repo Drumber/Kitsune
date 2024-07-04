@@ -9,12 +9,13 @@ import androidx.room.Query
 import androidx.room.Update
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LibraryEntryModificationDao {
 
     @Query("SELECT * FROM library_entries_modifications")
-    fun getAllLibraryEntryModificationsAsLiveData(): LiveData<List<LocalLibraryEntryModification>>
+    fun getAllLibraryEntryModificationsAsFlow(): Flow<List<LocalLibraryEntryModification>>
 
     @Query("SELECT * FROM library_entries_modifications WHERE state = :state")
     fun getLibraryEntryModificationsByStateAsLiveData(state: LocalLibraryModificationState): LiveData<List<LocalLibraryEntryModification>>

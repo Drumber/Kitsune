@@ -4,6 +4,7 @@ import io.github.drumber.kitsune.data.common.Image
 import io.github.drumber.kitsune.data.common.Titles
 import io.github.drumber.kitsune.data.common.media.AgeRating
 import io.github.drumber.kitsune.data.common.media.AnimeSubtype
+import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.common.media.RatingFrequencies
 import io.github.drumber.kitsune.data.common.media.ReleaseStatus
 import io.github.drumber.kitsune.data.presentation.model.media.category.Category
@@ -50,4 +51,9 @@ data class Anime(
     val animeProduction: List<AnimeProduction>?,
     val streamingLinks: List<StreamingLink>?,
     override val mediaRelationships: List<MediaRelationship>?
-) : Media
+) : Media {
+
+    override val mediaType: MediaType
+        get() = MediaType.Anime
+
+}

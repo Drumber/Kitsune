@@ -28,7 +28,7 @@ class LibraryNetworkDataSource(
     suspend fun updateLibraryEntry(
         id: String,
         libraryEntry: NetworkLibraryEntry,
-        filter: Filter
+        filter: Filter = Filter()
     ): NetworkLibraryEntry? {
         return withContext(Dispatchers.IO) {
             libraryEntryApi.updateLibraryEntry(
@@ -41,7 +41,7 @@ class LibraryNetworkDataSource(
 
     suspend fun postLibraryEntry(
         libraryEntry: NetworkLibraryEntry,
-        filter: Filter
+        filter: Filter = Filter()
     ): NetworkLibraryEntry? {
         return withContext(Dispatchers.IO) {
             libraryEntryApi.postLibraryEntry(JSONAPIDocument(libraryEntry), filter.options).get()

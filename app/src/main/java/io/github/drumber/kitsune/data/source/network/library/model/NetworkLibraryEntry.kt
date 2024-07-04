@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
+import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime
 import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
@@ -40,4 +41,64 @@ data class NetworkLibraryEntry(
     val manga: NetworkManga?,
     @Relationship("user")
     val user: NetworkUser?
-)
+) {
+
+    companion object {
+        fun new(
+            userId: String,
+            mediaType: MediaType,
+            mediaId: String,
+            status: NetworkLibraryStatus? = null
+        ) = NetworkLibraryEntry(
+            user = NetworkUser(id = userId),
+            status = status,
+            anime = mediaType.takeIf { it == MediaType.Anime }?.let { NetworkAnime.empty(mediaId) },
+            manga = mediaType.takeIf { it == MediaType.Manga }?.let { NetworkManga.empty(mediaId) },
+            id = null,
+            updatedAt = null,
+            startedAt = null,
+            finishedAt = null,
+            progressedAt = null,
+            progress = null,
+            reconsuming = null,
+            reconsumeCount = null,
+            volumesOwned = null,
+            ratingTwenty = null,
+            notes = null,
+            privateEntry = null,
+            reactionSkipped = null
+        )
+
+        fun update(
+            id: String,
+            startedAt: String? = null,
+            finishedAt: String? = null,
+            status: NetworkLibraryStatus? = null,
+            progress: Int? = null,
+            reconsumeCount: Int? = null,
+            volumesOwned: Int? = null,
+            ratingTwenty: Int? = null,
+            notes: String? = null,
+            isPrivate: Boolean? = null
+        ) = NetworkLibraryEntry(
+            id = id,
+            updatedAt = null,
+            startedAt = startedAt,
+            finishedAt = finishedAt,
+            progressedAt = null,
+            status = status,
+            progress = progress,
+            reconsuming = null,
+            reconsumeCount = reconsumeCount,
+            volumesOwned = volumesOwned,
+            ratingTwenty = ratingTwenty,
+            notes = notes,
+            privateEntry = isPrivate,
+            reactionSkipped = null,
+            anime = null,
+            manga = null,
+            user = null
+        )
+    }
+
+}

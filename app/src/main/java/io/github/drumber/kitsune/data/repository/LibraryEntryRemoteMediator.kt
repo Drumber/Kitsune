@@ -4,13 +4,12 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import androidx.room.withTransaction
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryKind
-import io.github.drumber.kitsune.data.source.local.LocalDatabase
+import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMedia.MediaType
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus
@@ -24,10 +23,8 @@ import io.github.drumber.kitsune.util.logD
 class LibraryEntryRemoteMediator(
     private val filter: LibraryEntryFilter,
     private val networkDataSource: LibraryNetworkDataSource,
-    private val database: LocalDatabase,
+    private val localDataSource: LibraryLocalDataSource
 ) : RemoteMediator<Int, LocalLibraryEntry>() {
-    private val libraryEntryDao = database.libraryEntryDao()
-    private val remoteKeyDao = database.remoteKeyDao()
 
     /**
      * Implementation based on android paging example from
@@ -59,14 +56,14 @@ class LibraryEntryRemoteMediator(
             )
             val endReached = pageData.next == null
 
-            database.withTransaction {
+            localDataSource.runDatabaseTransaction {
                 // only clear database on REFRESH
                 if (loadType == LoadType.REFRESH) {
                     // if no filter is selected (full library is shown), clear full database
                     if (!filter.isFiltered()) {
                         logD("Clearing all library entries and remote keys from database.")
-                        libraryEntryDao.clearLibraryEntries()
-                        remoteKeyDao.clearRemoteKeys(RemoteKeyType.LibraryEntry)
+                        libraryEntryDao().clearLibraryEntries()
+                        remoteKeyDao().clearRemoteKeys(RemoteKeyType.LibraryEntry)
                     }
                     // otherwise clear all displayed library entries
                     else {
@@ -78,20 +75,20 @@ class LibraryEntryRemoteMediator(
 
                         // clear all library entries in database with the selected kind and status
                         val libraryEntriesToBeCleared = when (filter.kind) {
-                            LibraryEntryKind.Anime -> libraryEntryDao.getAllLibraryEntriesByTypeAndStatus(
+                            LibraryEntryKind.Anime -> libraryEntryDao().getAllLibraryEntriesByTypeAndStatus(
                                 MediaType.Anime, targetStatus
                             )
 
-                            LibraryEntryKind.Manga -> libraryEntryDao.getAllLibraryEntriesByTypeAndStatus(
+                            LibraryEntryKind.Manga -> libraryEntryDao().getAllLibraryEntriesByTypeAndStatus(
                                 MediaType.Manga, targetStatus
                             )
 
-                            else -> libraryEntryDao.getAllLibraryEntriesByStatus(targetStatus)
+                            else -> libraryEntryDao().getAllLibraryEntriesByStatus(targetStatus)
                         }
 
-                        libraryEntryDao.deleteAll(libraryEntriesToBeCleared)
+                        libraryEntryDao().deleteAll(libraryEntriesToBeCleared)
                         libraryEntriesToBeCleared.forEach { libraryEntry ->
-                            remoteKeyDao.deleteByResourceId(
+                            remoteKeyDao().deleteByResourceId(
                                 libraryEntry.id,
                                 RemoteKeyType.LibraryEntry
                             )
@@ -106,8 +103,8 @@ class LibraryEntryRemoteMediator(
                     RemoteKeyEntity(it.id, RemoteKeyType.LibraryEntry, pageData.prev, pageData.next)
                 }
 
-                remoteKeyDao.insertALl(remoteKeys)
-                libraryEntryDao.insertAll(data)
+                remoteKeyDao().insertALl(remoteKeys)
+                libraryEntryDao().insertAll(data)
             }
 
             MediatorResult.Success(endOfPaginationReached = endReached)
@@ -122,7 +119,7 @@ class LibraryEntryRemoteMediator(
         return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
             ?.let { libraryEntry ->
                 // Get the remote keys of the last item retrieved
-                remoteKeyDao.getRemoteKeyByResourceId(libraryEntry.id, RemoteKeyType.LibraryEntry)
+                localDataSource.getRemoteKeyByResourceId(libraryEntry.id, RemoteKeyType.LibraryEntry)
             }
     }
 

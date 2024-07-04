@@ -7,13 +7,17 @@ import io.github.drumber.kitsune.data.mapper.MediaMapper.toMangaSubtype
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toRatingFrequencies
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toReleaseStatus
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryModificationState
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.ReactionSkip
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMedia
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMedia.MediaType
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus
 import io.github.drumber.kitsune.data.source.local.library.model.LocalReactionSkip
 import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry
@@ -83,6 +87,36 @@ object LibraryMapper {
             manga != null -> manga.toLocalLibraryMedia()
             else -> null
         }
+    )
+
+    fun LocalLibraryEntryModification.toLibraryEntryModification() = LibraryEntryModification(
+        id = id,
+        createTime = createTime,
+        state = state.toLibraryModificationState(),
+        startedAt = startedAt,
+        finishedAt = finishedAt,
+        status = status?.toLibraryStatus(),
+        progress = progress,
+        reconsumeCount = reconsumeCount,
+        volumesOwned = volumesOwned,
+        ratingTwenty = ratingTwenty,
+        notes = notes,
+        privateEntry = privateEntry,
+    )
+
+    fun LibraryEntryModification.toLocalLibraryEntryModification() = LocalLibraryEntryModification(
+        id = id,
+        createTime = createTime,
+        state = state.toLocalLibraryModificationState(),
+        startedAt = startedAt,
+        finishedAt = finishedAt,
+        status = status?.toLocalLibraryStatus(),
+        progress = progress,
+        reconsumeCount = reconsumeCount,
+        volumesOwned = volumesOwned,
+        ratingTwenty = ratingTwenty,
+        notes = notes,
+        privateEntry = privateEntry,
     )
 
     fun LocalLibraryMedia.toMedia() = when (type) {
@@ -248,6 +282,14 @@ object LibraryMapper {
         LibraryStatus.Dropped -> LocalLibraryStatus.Dropped
     }
 
+    fun LibraryStatus.toNetworkLibraryStatus(): NetworkLibraryStatus = when (this) {
+        LibraryStatus.Current -> NetworkLibraryStatus.Current
+        LibraryStatus.Planned -> NetworkLibraryStatus.Planned
+        LibraryStatus.Completed -> NetworkLibraryStatus.Completed
+        LibraryStatus.OnHold -> NetworkLibraryStatus.OnHold
+        LibraryStatus.Dropped -> NetworkLibraryStatus.Dropped
+    }
+
     fun LocalLibraryStatus.toLibraryStatus(): LibraryStatus = when (this) {
         LocalLibraryStatus.Current -> LibraryStatus.Current
         LocalLibraryStatus.Planned -> LibraryStatus.Planned
@@ -267,4 +309,16 @@ object LibraryMapper {
         LocalReactionSkip.Skipped -> ReactionSkip.Skipped
         LocalReactionSkip.Ignored -> ReactionSkip.Ignored
     }
+
+    fun LocalLibraryModificationState.toLibraryModificationState(): LibraryModificationState =
+        when (this) {
+            LocalLibraryModificationState.SYNCHRONIZING -> LibraryModificationState.SYNCHRONIZING
+            LocalLibraryModificationState.NOT_SYNCHRONIZED -> LibraryModificationState.NOT_SYNCHRONIZED
+        }
+
+    fun LibraryModificationState.toLocalLibraryModificationState(): LocalLibraryModificationState =
+        when (this) {
+            LibraryModificationState.SYNCHRONIZING -> LocalLibraryModificationState.SYNCHRONIZING
+            LibraryModificationState.NOT_SYNCHRONIZED -> LocalLibraryModificationState.NOT_SYNCHRONIZED
+        }
 }

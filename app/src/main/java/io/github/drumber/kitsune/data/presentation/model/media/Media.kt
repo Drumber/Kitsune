@@ -9,6 +9,7 @@ import io.github.drumber.kitsune.data.common.en
 import io.github.drumber.kitsune.data.common.enJp
 import io.github.drumber.kitsune.data.common.jaJp
 import io.github.drumber.kitsune.data.common.media.AgeRating
+import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.common.media.RatingFrequencies
 import io.github.drumber.kitsune.data.common.media.ReleaseStatus
 import io.github.drumber.kitsune.data.presentation.model.media.category.Category
@@ -58,6 +59,8 @@ sealed interface Media : FavoriteItem {
     val mediaRelationships: List<MediaRelationship>?
 
     //********************************************************************************************//
+
+    val mediaType: MediaType
 
     val title get() = DataUtil.getTitle(titles, canonicalTitle)
 
