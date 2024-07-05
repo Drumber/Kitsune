@@ -5,30 +5,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import io.github.drumber.kitsune.data.source.local.library.dao.LibraryEntryDao
-import io.github.drumber.kitsune.data.source.local.library.dao.LibraryEntryModificationDao
-import io.github.drumber.kitsune.domain_old.manager.library.LibraryManager
-import io.github.drumber.kitsune.domain_old.manager.library.SynchronizationResult
-import io.github.drumber.kitsune.domain_old.mapper.toLibraryEntry
-import io.github.drumber.kitsune.domain_old.mapper.toLibraryEntryModification
-import io.github.drumber.kitsune.domain_old.mapper.toLocalLibraryEntry
-import io.github.drumber.kitsune.domain_old.mapper.toLocalLibraryEntryModification
-import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
-import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState.SYNCHRONIZING
-import io.github.drumber.kitsune.domain_old.model.infrastructure.library.LibraryEntry
-import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryModification
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWrapper
+import io.github.drumber.kitsune.data.repository.LibraryRepository
+import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.NotFound
+import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Failure
+import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Success
+import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryUseCase
 import io.github.drumber.kitsune.domain_old.service.Filter
-import io.github.drumber.kitsune.domain_old.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LibraryEditEntryViewModel(
-    private val libraryManager: LibraryManager,
-    private val libraryEntryDao: LibraryEntryDao,
-    private val libraryModificationDao: LibraryEntryModificationDao,
-    private val libraryEntriesService: LibraryEntriesService
+    private val libraryRepository: LibraryRepository,
+    private val updateLibraryEntryUseCase: UpdateLibraryEntryUseCase
 ) : ViewModel() {
 
     var uneditedLibraryEntryWrapper: LibraryEntryWrapper? = null
@@ -51,13 +43,11 @@ class LibraryEditEntryViewModel(
         val entry = uneditedWrapper.libraryEntry.copy()
         // apply old modifications
         val oldModifiedEntry = uneditedWrapper.libraryModification
-            ?.toLocalLibraryEntryModification()
-            ?.applyToLibraryEntry(entry.toLocalLibraryEntry())
+            ?.applyToLibraryEntry(entry)
             ?: entry
         // apply new modifications
         val newModifiedEntry = it.libraryModification
-            ?.toLocalLibraryEntryModification()
-            ?.applyToLibraryEntry(entry.toLocalLibraryEntry())
+            ?.applyToLibraryEntry(entry)
             ?: entry
         oldModifiedEntry != newModifiedEntry
     }
@@ -73,14 +63,12 @@ class LibraryEditEntryViewModel(
             }
             _libraryEntry.postValue(libraryEntry)
 
-            val libraryModification =
-                libraryModificationDao.getLibraryEntryModification(libraryEntryId)
-                    ?: LocalLibraryEntryModification.withIdAndNulls(libraryEntryId)
+            val libraryModification = libraryRepository.getLibraryEntryModification(libraryEntryId)
+                    ?: LibraryEntryModification.withIdAndNulls(libraryEntryId)
 
             val libraryEntryWrapper = LibraryEntryWrapper(
                 libraryEntry,
-                libraryModification.toLibraryEntryModification(),
-                libraryModification.state == SYNCHRONIZING
+                libraryModification
             )
             uneditedLibraryEntryWrapper = libraryEntryWrapper.copy()
             _libraryEntryWrapper.postValue(libraryEntryWrapper)
@@ -91,11 +79,11 @@ class LibraryEditEntryViewModel(
 
     private suspend fun getLibraryEntry(libraryEntryId: String): LibraryEntry? {
         return try {
-            libraryEntryDao.getLibraryEntry(libraryEntryId)?.toLibraryEntry()
-                ?: libraryEntriesService.getLibraryEntry(
+            libraryRepository.getLibraryEntryFromDatabase(libraryEntryId)
+                ?: libraryRepository.fetchLibraryEntry(
                     libraryEntryId,
-                    Filter().include("anime", "manga").options
-                ).get()
+                    Filter().include("anime", "manga")
+                )
         } catch (e: Exception) {
             logE("Failed to obtain library entry.", e)
             return null
@@ -122,15 +110,11 @@ class LibraryEditEntryViewModel(
 
         _loadState.value = LoadState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                when (libraryManager.updateLibraryEntry(libraryModification)) {
-                    is SynchronizationResult.Success -> _loadState.postValue(LoadState.CloseDialog)
-                    is SynchronizationResult.Failed -> _loadState.postValue(LoadState.Error)
-                    is SynchronizationResult.NotFound -> _loadState.postValue(LoadState.CloseDialog)
-                }
-            } catch (e: Exception) {
-                logE("Failed to update library entry.", e)
-                _loadState.postValue(LoadState.Error)
+            val result = updateLibraryEntryUseCase.invoke(libraryModification)
+            when {
+                result is Success -> _loadState.postValue(LoadState.CloseDialog)
+                result is Failure && result.reason is NotFound -> _loadState.postValue(LoadState.CloseDialog)
+                result is Failure -> _loadState.postValue(LoadState.Error)
             }
         }
     }
@@ -140,7 +124,7 @@ class LibraryEditEntryViewModel(
         _loadState.value = LoadState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                libraryManager.removeLibraryEntry(libraryEntryId)
+                libraryRepository.removeLibraryEntry(libraryEntryId)
                 _loadState.postValue(LoadState.CloseDialog)
             } catch (e: Exception) {
                 logE("Failed to remove library entry.", e)

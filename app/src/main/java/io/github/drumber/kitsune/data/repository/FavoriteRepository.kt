@@ -1,9 +1,15 @@
 package io.github.drumber.kitsune.data.repository
 
+import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.mapper.UserMapper.toFavorite
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
+import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
+import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime
+import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga
 import io.github.drumber.kitsune.data.source.network.user.FavoriteNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
+import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavoriteItem
+import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.domain_old.service.Filter
 
 class FavoriteRepository(
@@ -14,8 +20,25 @@ class FavoriteRepository(
         return remoteFavoriteDataSource.getAllFavorites(filter)?.map { it.toFavorite() }
     }
 
-    suspend fun createFavorite(favorite: NetworkFavorite): Favorite? {
-        return remoteFavoriteDataSource.createFavorite(favorite)?.toFavorite()
+    suspend fun createMediaFavorite(userId: String, mediaType: MediaType, mediaId: String): Favorite? {
+        val favoriteItem = when (mediaType) {
+            MediaType.Anime -> NetworkAnime.empty(mediaId)
+            MediaType.Manga -> NetworkManga.empty(mediaId)
+        }
+        return createFavorite(userId, favoriteItem)
+    }
+
+    suspend fun createCharacterFavorite(userId: String, characterId: String): Favorite? {
+        val favoriteItem = NetworkCharacter(id = characterId)
+        return createFavorite(userId,favoriteItem)
+    }
+
+    private suspend fun createFavorite(userId: String, item: NetworkFavoriteItem): Favorite? {
+        val newFavorite = NetworkFavorite(
+            item = item,
+            user = NetworkUser(id = userId)
+        )
+        return remoteFavoriteDataSource.createFavorite(newFavorite)?.toFavorite()
     }
 
     suspend fun deleteFavorite(id: String): Boolean {

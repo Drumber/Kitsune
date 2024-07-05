@@ -18,8 +18,11 @@ import io.github.drumber.kitsune.data.mapper.LibraryMapper.toNetworkLibraryStatu
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryModificationState
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
+import io.github.drumber.kitsune.data.presentation.model.media.Anime
+import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
@@ -30,6 +33,7 @@ import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibrar
 import io.github.drumber.kitsune.data.utils.InvalidatingPagingSourceFactory
 import io.github.drumber.kitsune.domain_old.service.Filter
 import io.github.drumber.kitsune.exception.NotFoundException
+import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.parseUtcDate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
@@ -102,10 +106,10 @@ class LibraryRepository(
         val modification =
             libraryEntryModification.copy(state = LibraryModificationState.SYNCHRONIZING)
 
-        localLibraryDataSource.insertLibraryEntryModification(modification.toLocalLibraryEntryModification())
+        return coroutineScope.async {
+            try {
+                localLibraryDataSource.insertLibraryEntryModification(modification.toLocalLibraryEntryModification())
 
-        try {
-            return coroutineScope.async {
                 val libraryEntry = pushModificationToService(modification)
                 if (isLibraryEntryNotOlderThanInDatabase(libraryEntry.toLocalLibraryEntry())) {
                     localLibraryDataSource.updateLibraryEntryAndDeleteModification(
@@ -114,22 +118,69 @@ class LibraryRepository(
                     )
                 }
                 libraryEntry.toLibraryEntry()
-            }.await()
-        } catch (e: NotFoundException) {
-            localLibraryDataSource.deleteLibraryEntryAndAnyModification(modification.id)
-            throw e
-        } catch (e: Exception) {
-            insertLocalModificationOrDeleteIfSameAsLibraryEntry(
-                modification.copy(state = LibraryModificationState.NOT_SYNCHRONIZED)
-                    .toLocalLibraryEntryModification()
-            )
-            throw e
+            } catch (e: NotFoundException) {
+                localLibraryDataSource.deleteLibraryEntryAndAnyModification(modification.id)
+                throw e
+            } catch (e: Exception) {
+                insertLocalModificationOrDeleteIfSameAsLibraryEntry(
+                    modification.copy(state = LibraryModificationState.NOT_SYNCHRONIZED)
+                        .toLocalLibraryEntryModification()
+                )
+                throw e
+            }
+        }.await()
+    }
+
+    suspend fun fetchAndStoreLibraryEntryForMedia(media: Media): LibraryEntry? {
+        val filter = filterForFullLibraryEntry.copy()
+        when (media) {
+            is Anime -> filter.filter("anime_id", media.id)
+            is Manga -> filter.filter("manga_id", media.id)
         }
+
+        val libraryEntry = remoteLibraryDataSource.getAllLibraryEntries(filter).data?.firstOrNull()
+        if (libraryEntry != null) {
+            localLibraryDataSource.insertLibraryEntry(libraryEntry.toLocalLibraryEntry())
+        }
+        return libraryEntry?.toLibraryEntry()
+    }
+
+    suspend fun fetchAllLibraryEntries(filter: Filter): List<LibraryEntry>? {
+        return remoteLibraryDataSource.getAllLibraryEntries(filter).data?.map { it.toLibraryEntry() }
+    }
+
+    suspend fun fetchLibraryEntry(id: String, filter: Filter): LibraryEntry? {
+        return remoteLibraryDataSource.getLibraryEntry(id, filter)?.toLibraryEntry()
+    }
+
+    suspend fun getLibraryEntryFromDatabase(id: String): LibraryEntry? {
+        return localLibraryDataSource.getLibraryEntry(id)?.toLibraryEntry()
+    }
+
+    fun getLibraryEntryWithModificationFromMediaAsLiveData(mediaId: String): LiveData<LibraryEntryWithModification?> {
+        return localLibraryDataSource.getLibraryEntryWithModificationFromMediaAsLiveData(mediaId)
+            .map { entry ->
+                entry?.let {
+                    LibraryEntryWithModification(
+                        libraryEntry = it.libraryEntry.toLibraryEntry(),
+                        modification = it.libraryEntryModification?.toLibraryEntryModification()
+                    )
+                }
+            }
     }
 
     //********************************************************************************************//
     // Library modifications related methods
     //********************************************************************************************//
+
+    suspend fun getLibraryEntryModification(id: String): LibraryEntryModification? {
+        return localLibraryDataSource.getLibraryEntryModification(id)?.toLibraryEntryModification()
+    }
+
+    suspend fun getAllLibraryEntryModifications(): List<LibraryEntryModification> {
+        return localLibraryDataSource.getAllLocalLibraryModifications()
+            .map { it.toLibraryEntryModification() }
+    }
 
     fun getLibraryEntryModificationsAsFlow(): Flow<List<LibraryEntryModification>> {
         return localLibraryDataSource.getAllLibraryEntryModificationsAsFlow()
@@ -184,8 +235,14 @@ class LibraryRepository(
     private suspend fun insertLocalModificationOrDeleteIfSameAsLibraryEntry(
         libraryEntryModification: LocalLibraryEntryModification
     ) {
+        val modificationInDb =
+            localLibraryDataSource.getLibraryEntryModification(libraryEntryModification.id)
+        if (modificationInDb != null && modificationInDb.createTime > libraryEntryModification.createTime) {
+            logD("Modification in database is newer than the one being inserted. Ignoring $libraryEntryModification")
+            return
+        }
+
         val libraryEntry = localLibraryDataSource.getLibraryEntry(libraryEntryModification.id)
-        // TODO
         if (libraryEntry != null && libraryEntryModification.isEqualToLibraryEntry(libraryEntry)) {
             localLibraryDataSource.deleteLibraryEntryModification(libraryEntryModification)
         } else {

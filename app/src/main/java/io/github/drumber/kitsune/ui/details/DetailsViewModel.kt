@@ -7,29 +7,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.common.exception.ResourceUpdateFailed
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWrapper
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.mapping.Mapping
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
 import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
+import io.github.drumber.kitsune.data.repository.LibraryRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
 import io.github.drumber.kitsune.data.repository.MappingRepository
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
+import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult
+import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryUseCase
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
-import io.github.drumber.kitsune.data.source.local.library.dao.LibraryEntryWithModificationDao
-import io.github.drumber.kitsune.domain_old.manager.library.LibraryManager
-import io.github.drumber.kitsune.domain_old.manager.library.SynchronizationResult
-import io.github.drumber.kitsune.domain_old.mapper.toLibraryEntry
-import io.github.drumber.kitsune.domain_old.mapper.toLibraryEntryModification
-import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
-import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState.SYNCHRONIZING
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.domain_old.service.Filter
-import io.github.drumber.kitsune.domain_old.service.library.LibraryEntriesService
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.LibraryUpdateResult
@@ -50,10 +44,9 @@ import kotlinx.coroutines.withContext
 class DetailsViewModel(
     private val getLocalUserId: GetLocalUserIdUseCase,
     private val isUserLoggedIn: IsUserLoggedInUseCase,
+    private val updateLibraryEntry: UpdateLibraryEntryUseCase,
     private val favoriteRepository: FavoriteRepository,
-    private val libraryEntriesService: LibraryEntriesService,
-    private val libraryEntryWithModificationDao: LibraryEntryWithModificationDao,
-    private val libraryManager: LibraryManager,
+    private val libraryRepository: LibraryRepository,
     private val animeRepository: AnimeRepository,
     private val mangaRepository: MangaRepository,
     private val mappingRepository: MappingRepository
@@ -177,12 +170,11 @@ class DetailsViewModel(
 
         // add local database as library entry source
         viewModelScope.launch(Dispatchers.Main) {
-            _libraryEntryWrapper.addSource(libraryEntryWithModificationDao.getLibraryEntryWithModificationFromMediaAsLiveData(media.id)) {
+            _libraryEntryWrapper.addSource(libraryRepository.getLibraryEntryWithModificationFromMediaAsLiveData(media.id)) {
                 _libraryEntryWrapper.value = it?.let { entryWithModification ->
                     LibraryEntryWrapper(
-                        entryWithModification.libraryEntry.toLibraryEntry(),
-                        entryWithModification.libraryEntryModification?.toLibraryEntryModification(),
-                        entryWithModification.libraryEntryModification?.state == SYNCHRONIZING
+                        entryWithModification.libraryEntry,
+                        entryWithModification.modification
                     )
                 }
             }
@@ -200,7 +192,7 @@ class DetailsViewModel(
 
         try {
             // fetch library entry from the server
-            val libraryEntries = libraryEntriesService.allLibraryEntries(filter.options).get()
+            val libraryEntries = libraryRepository.fetchAllLibraryEntries(filter)
             if (!libraryEntries.isNullOrEmpty()) {
                 // post fetched library entry that is possibly more up-to-date than the local cached one
                 _libraryEntryWrapper.postValue(
@@ -209,14 +201,14 @@ class DetailsViewModel(
             } else if (libraryEntryWrapper.value != null) {
                 // library entry is not available on the server but it is in the local cache, was it deleted?
                 // -> local database cache is out of sync, remove entry from database
-                libraryEntryWrapper.value?.let { libraryEntry ->
+                libraryEntryWrapper.value?.let { wrapper ->
                     logD(
                         "There is no library entry on the server, but it exists in the local cache. " +
                                 "Removed it from local database..."
                     )
                     withContext(Dispatchers.IO) {
                         _libraryEntryWrapper.postValue(null)
-                        libraryEntry.libraryEntry.id?.let { libraryManager.mayRemoveLibraryEntryLocally(it) }
+                        libraryRepository.mayRemoveLibraryEntryLocally(wrapper.libraryEntry.id)
                     }
                 }
             }
@@ -279,11 +271,11 @@ class DetailsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             if (existingLibraryEntryId.isNullOrBlank()) { // post new library entry
                 try {
-                    val newLibraryEntry = libraryManager.addNewLibraryEntry(
+                    val newLibraryEntry = libraryRepository.addNewLibraryEntry(
                         userId,
-                        /*mediaModel*/ TODO(),
+                        mediaModel,
                         status
-                    ) ?: throw Exception("Failed to post new library entry.")
+                    ) ?: throw NoDataException("Failed to post new library entry.")
                     _libraryEntryWrapper.postValue(
                         LibraryEntryWrapper(newLibraryEntry, null)
                     )
@@ -292,15 +284,11 @@ class DetailsViewModel(
                     acceptInternalAction(InternalAction.AddNewLibraryEntryFailed)
                 }
             } else { // update existing library entry
-                val modification = LocalLibraryEntryModification
+                val modification = LibraryEntryModification
                     .withIdAndNulls(existingLibraryEntryId)
                     .copy(status = status)
-                try {
-                    val result = libraryManager.updateLibraryEntry(modification)
-                    acceptInternalAction(InternalAction.LibraryUpdateResult(result))
-                } catch (e: Exception) {
-                    logE("Error while updating library entry.", e)
-                }
+                val result = updateLibraryEntry(modification)
+                acceptInternalAction(InternalAction.LibraryUpdateResult(result))
             }
         }
     }
@@ -309,7 +297,8 @@ class DetailsViewModel(
         val libraryEntryId = libraryEntryWrapper.value?.libraryEntry?.id ?: return
         viewModelScope.launch(Dispatchers.IO) {
             val isDeleted = try {
-                libraryManager.removeLibraryEntry(libraryEntryId)
+                libraryRepository.removeLibraryEntry(libraryEntryId)
+                true
             } catch (e: Exception) {
                 logE("Failed to remove library entry.", e)
                 false
@@ -330,13 +319,11 @@ class DetailsViewModel(
                 val mediaItem = mediaModel.value ?: return@launch
                 val userId = getLocalUserId() ?: return@launch
 
-                // TODO: uncomment after migrating media items
-                val newFavorite = NetworkFavorite(/*item = mediaItem,*/ user = NetworkUser(id = userId))
                 try {
-                    val resFavorite = favoriteRepository.createFavorite(newFavorite)
-                    _favorite.postValue(resFavorite)
+                    val newFavorite = favoriteRepository.createMediaFavorite(userId, mediaItem.mediaType, mediaItem.id)
+                    _favorite.postValue(newFavorite)
                 } catch (e: Exception) {
-                    logE("Failed to post favorite.", e)
+                    logE("Failed to create new favorite.", e)
                 }
             } else {
                 val favoriteId = favorite.id
@@ -356,13 +343,13 @@ class DetailsViewModel(
 }
 
 sealed class LibraryChangeResult {
-    data class LibraryUpdateResult(val result: SynchronizationResult) : LibraryChangeResult()
+    data class LibraryUpdateResult(val result: LibraryEntryUpdateResult) : LibraryChangeResult()
     data object AddNewLibraryEntryFailed : LibraryChangeResult()
     data object DeleteLibraryEntryFailed : LibraryChangeResult()
 }
 
 private sealed class InternalAction {
-    data class LibraryUpdateResult(val result: SynchronizationResult) : InternalAction()
+    data class LibraryUpdateResult(val result: LibraryEntryUpdateResult) : InternalAction()
     data object AddNewLibraryEntryFailed : InternalAction()
     data object DeleteLibraryEntryFailed : InternalAction()
 }

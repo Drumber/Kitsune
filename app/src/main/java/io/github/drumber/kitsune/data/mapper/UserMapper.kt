@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.data.mapper
 
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toLocalCharacter
+import io.github.drumber.kitsune.data.mapper.MediaMapper.toMedia
 import io.github.drumber.kitsune.data.mapper.ProfileLinksMapper.toProfileLink
 import io.github.drumber.kitsune.data.mapper.UserStatsMapper.toUserStats
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
@@ -11,6 +12,8 @@ import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemP
 import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
+import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
+import io.github.drumber.kitsune.data.source.network.media.model.NetworkMedia
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavoriteItem
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkRatingSystemPreference
@@ -97,7 +100,8 @@ object UserMapper {
     )
 
     fun NetworkFavoriteItem.toFavoriteItem(): FavoriteItem = when (this) {
-        //is Anime -> toAnime() // TODO
+        is NetworkMedia -> toMedia()
+        is NetworkCharacter -> toCharacter()
         else -> throw IllegalArgumentException("Unknown favorite item type: ${this.javaClass.name}")
     }
 

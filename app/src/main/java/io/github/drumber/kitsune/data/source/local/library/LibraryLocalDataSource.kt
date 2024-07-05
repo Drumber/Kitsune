@@ -19,14 +19,19 @@ class LibraryLocalDataSource(
         get() = database.libraryEntryDao()
     private val libraryEntryModificationDao
         get() = database.libraryEntryModificationDao()
+    private val libraryEntryWithModificationDao
+        get() = database.libraryEntryWithModificationDao()
     private val remoteKeyDao
         get() = database.remoteKeyDao()
 
+    //********************************************************************************************//
+    // LibraryEntry related methods
+    //********************************************************************************************//
+
     suspend fun getLibraryEntry(id: String) = libraryEntryDao.getLibraryEntry(id)
 
-    suspend fun getAllLocalLibraryModifications(): List<LocalLibraryEntryModification> {
-        return libraryEntryModificationDao.getAllLibraryEntryModifications()
-    }
+    fun getLibraryEntryWithModificationFromMediaAsLiveData(mediaId: String) =
+        libraryEntryWithModificationDao.getLibraryEntryWithModificationFromMediaAsLiveData(mediaId)
 
     suspend fun insertLibraryEntry(libraryEntry: LocalLibraryEntry) {
         libraryEntry.verifyIsValidLibraryEntry()
@@ -36,47 +41,6 @@ class LibraryLocalDataSource(
     suspend fun updateLibraryEntry(libraryEntry: LocalLibraryEntry) {
         libraryEntryDao.updateSingle(libraryEntry)
     }
-
-    suspend fun insertLibraryEntryModification(
-        libraryEntryModification: LocalLibraryEntryModification
-    ) {
-        libraryEntryModificationDao.insertSingle(libraryEntryModification)
-    }
-
-    suspend fun deleteLibraryEntryModification(
-        libraryEntryModification: LocalLibraryEntryModification
-    ) {
-        libraryEntryModificationDao.deleteSingle(libraryEntryModification)
-    }
-
-    suspend fun updateLibraryEntryAndDeleteModification(
-        libraryEntry: LocalLibraryEntry,
-        libraryEntryModification: LocalLibraryEntryModification
-    ) {
-        database.withTransaction {
-            libraryEntryDao.updateSingle(libraryEntry)
-            libraryEntryModificationDao.deleteSingleMatchingCreateTime(
-                libraryEntryModification.id,
-                libraryEntryModification.createTime
-            )
-        }
-    }
-
-    suspend fun deleteLibraryEntryAndAnyModification(libraryEntryId: String) {
-        database.withTransaction {
-            libraryEntryDao.deleteSingleById(libraryEntryId)
-            libraryEntryModificationDao.deleteSingleById(libraryEntryId)
-        }
-    }
-
-    suspend fun getRemoteKeyByResourceId(resourceId: String, remoteKeyType: RemoteKeyType) =
-        remoteKeyDao.getRemoteKeyByResourceId(resourceId, remoteKeyType)
-
-    fun getAllLibraryEntryModificationsAsFlow() =
-        libraryEntryModificationDao.getAllLibraryEntryModificationsAsFlow()
-
-    fun getLibraryEntryModificationsByStateAsLiveData(state: LocalLibraryModificationState) =
-        libraryEntryModificationDao.getLibraryEntryModificationsByStateAsLiveData(state)
 
     fun getLibraryEntriesByKindAndStatusAsPagingSource(
         kind: LibraryEntryKind,
@@ -111,6 +75,66 @@ class LibraryLocalDataSource(
             }
         }
     }
+
+    //********************************************************************************************//
+    // LibraryEntryModification related methods
+    //********************************************************************************************//
+
+    suspend fun getLibraryEntryModification(id: String) =
+        libraryEntryModificationDao.getLibraryEntryModification(id)
+
+    suspend fun getAllLocalLibraryModifications(): List<LocalLibraryEntryModification> {
+        return libraryEntryModificationDao.getAllLibraryEntryModifications()
+    }
+
+    fun getAllLibraryEntryModificationsAsFlow() =
+        libraryEntryModificationDao.getAllLibraryEntryModificationsAsFlow()
+
+    fun getLibraryEntryModificationsByStateAsLiveData(state: LocalLibraryModificationState) =
+        libraryEntryModificationDao.getLibraryEntryModificationsByStateAsLiveData(state)
+
+    suspend fun insertLibraryEntryModification(
+        libraryEntryModification: LocalLibraryEntryModification
+    ) {
+        libraryEntryModificationDao.insertSingle(libraryEntryModification)
+    }
+
+    suspend fun deleteLibraryEntryModification(
+        libraryEntryModification: LocalLibraryEntryModification
+    ) {
+        libraryEntryModificationDao.deleteSingle(libraryEntryModification)
+    }
+
+    suspend fun updateLibraryEntryAndDeleteModification(
+        libraryEntry: LocalLibraryEntry,
+        libraryEntryModification: LocalLibraryEntryModification
+    ) {
+        database.withTransaction {
+            libraryEntryDao.updateSingle(libraryEntry)
+            libraryEntryModificationDao.deleteSingleMatchingCreateTime(
+                libraryEntryModification.id,
+                libraryEntryModification.createTime
+            )
+        }
+    }
+
+    suspend fun deleteLibraryEntryAndAnyModification(libraryEntryId: String) {
+        database.withTransaction {
+            libraryEntryDao.deleteSingleById(libraryEntryId)
+            libraryEntryModificationDao.deleteSingleById(libraryEntryId)
+        }
+    }
+
+    //********************************************************************************************//
+    // RemoteKey related methods
+    //********************************************************************************************//
+
+    suspend fun getRemoteKeyByResourceId(resourceId: String, remoteKeyType: RemoteKeyType) =
+        remoteKeyDao.getRemoteKeyByResourceId(resourceId, remoteKeyType)
+
+    //********************************************************************************************//
+    // Utilities
+    //********************************************************************************************//
 
     suspend fun <R> runDatabaseTransaction(block: suspend LocalDatabase.() -> R) =
         database.withTransaction {

@@ -10,7 +10,7 @@ val databaseModule = module {
     single { createLocalDatabase(androidApplication()) }
     factory { get<LocalDatabase>().libraryEntryDao() }
     factory { get<LocalDatabase>().libraryEntryModificationDao() }
-    factory { get<LocalDatabase>().libraryEntryWithModification() }
+    factory { get<LocalDatabase>().libraryEntryWithModificationDao() }
     factory { get<LocalDatabase>().remoteKeyDao() }
 }
 

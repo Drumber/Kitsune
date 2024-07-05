@@ -24,7 +24,7 @@ abstract class LocalDatabase : RoomDatabase() {
 
     abstract fun libraryEntryDao(): LibraryEntryDao
     abstract fun libraryEntryModificationDao(): LibraryEntryModificationDao
-    abstract fun libraryEntryWithModification(): LibraryEntryWithModificationDao
+    abstract fun libraryEntryWithModificationDao(): LibraryEntryWithModificationDao
     abstract fun remoteKeyDao(): RemoteKeyDao
 
 }

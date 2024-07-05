@@ -2,9 +2,11 @@ package io.github.drumber.kitsune.data.presentation.model.library
 
 data class LibraryEntryWrapper(
     val libraryEntry: LibraryEntry,
-    val libraryModification: LibraryEntryModification?,
-    val isSynchronizing: Boolean = false
+    val libraryModification: LibraryEntryModification?
 ) {
+
+    val isSynchronizing
+        get() = libraryModification?.state == LibraryModificationState.SYNCHRONIZING
 
     val progress
         get() = libraryModification?.progress ?: libraryEntry.progress

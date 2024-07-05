@@ -24,4 +24,25 @@ data class LocalLibraryEntryModification(
 
     val notes: String?,
     val privateEntry: Boolean?
-)
+) {
+
+    fun isEqualToLibraryEntry(localLibraryEntry: LocalLibraryEntry): Boolean {
+        return id == localLibraryEntry.id && applyToLibraryEntry(localLibraryEntry) == localLibraryEntry
+    }
+
+    fun applyToLibraryEntry(localLibraryEntry: LocalLibraryEntry): LocalLibraryEntry {
+        require(id == localLibraryEntry.id) { "ID of the library modification and the entry must be the same." }
+        return localLibraryEntry.copy(
+            startedAt = startedAt ?: localLibraryEntry.startedAt,
+            finishedAt = finishedAt ?: localLibraryEntry.finishedAt,
+            status = status ?: localLibraryEntry.status,
+            progress = progress ?: localLibraryEntry.progress,
+            reconsumeCount = reconsumeCount ?: localLibraryEntry.reconsumeCount,
+            volumesOwned = volumesOwned ?: localLibraryEntry.volumesOwned,
+            ratingTwenty = ratingTwenty ?: localLibraryEntry.ratingTwenty,
+            notes = notes?.takeIf { it.isNotBlank() || !localLibraryEntry.notes.isNullOrBlank() }
+                ?: localLibraryEntry.notes,
+            privateEntry = privateEntry ?: localLibraryEntry.privateEntry
+        )
+    }
+}
