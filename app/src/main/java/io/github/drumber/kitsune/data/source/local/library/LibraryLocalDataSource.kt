@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.data.source.local.library
 
 import androidx.paging.PagingSource
 import androidx.room.withTransaction
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
 import io.github.drumber.kitsune.data.source.local.LocalDatabase
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification

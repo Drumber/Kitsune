@@ -7,9 +7,6 @@ import io.github.drumber.kitsune.data.presentation.model.character.Character
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
 import io.github.drumber.kitsune.data.repository.CharacterRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
-import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.domain_old.service.Filter
 import io.github.drumber.kitsune.util.logE
@@ -129,12 +126,8 @@ class CharacterDetailsViewModel(
     }
 
     private suspend fun addToFavorites(userId: String, characterId: String): Favorite? {
-        val newFavorite = NetworkFavorite(
-            item = NetworkCharacter(id = characterId),
-            user = NetworkUser(id = userId)
-        )
         return try {
-            favoriteRepository.createFavorite(newFavorite)
+            favoriteRepository.createCharacterFavorite(userId, characterId)
         } catch (e: Exception) {
             logE("Failed to post favorite.", e)
             null

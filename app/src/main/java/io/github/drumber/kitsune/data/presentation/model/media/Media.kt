@@ -157,7 +157,8 @@ sealed interface Media : FavoriteItem {
 
     val episodes: String? get() = (this as? Anime)?.episodeCount?.toString()
 
-    val episodeOrChapterCount get() = (this as? Anime)?.episodeCount ?: (this as? Manga)?.chapterCount
+    val episodeOrChapterCount
+        get() = (this as? Anime)?.episodeCount ?: (this as? Manga)?.chapterCount
 
     fun lengthText(context: Context): String? {
         if (this is Anime) {

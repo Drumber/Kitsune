@@ -135,10 +135,6 @@
         <argument
             android:name="media"
             app:argType="io.github.drumber.kitsune.data.presentation.dto.MediaDto" />
-        <argument
-            android:name="libraryEntryId"
-            app:argType="string"
-            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/characters_fragment"

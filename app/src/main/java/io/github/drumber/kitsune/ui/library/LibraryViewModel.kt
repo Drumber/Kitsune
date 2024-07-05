@@ -10,9 +10,8 @@ import androidx.paging.map
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWrapper
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryModificationState.NOT_SYNCHRONIZED
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.repository.LibraryRepository
@@ -24,7 +23,7 @@ import io.github.drumber.kitsune.domain.library.SynchronizeLocalLibraryModificat
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCase
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryRatingUseCase
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
-import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryUiModel
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel
 import io.github.drumber.kitsune.domain_old.service.Filter
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.library.InternalAction.LibraryUpdateOperationEnd
@@ -263,13 +262,13 @@ class LibraryViewModel(
         }
     }
 
-    fun markEpisodeWatched(libraryEntryWrapper: LibraryEntryWrapper) {
+    fun markEpisodeWatched(libraryEntryWrapper: LibraryEntryWithModification) {
         val currentProgress = libraryEntryWrapper.progress ?: 0
         val newProgress = currentProgress + 1
         updateLibraryProgress(libraryEntryWrapper.libraryEntry, newProgress)
     }
 
-    fun markEpisodeUnwatched(libraryEntryWrapper: LibraryEntryWrapper) {
+    fun markEpisodeUnwatched(libraryEntryWrapper: LibraryEntryWithModification) {
         val currentProgress = libraryEntryWrapper.progress ?: 0
         if (currentProgress == 0) return
         val newProgress = currentProgress - 1

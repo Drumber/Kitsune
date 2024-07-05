@@ -28,8 +28,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -67,7 +67,7 @@ class LibraryRepositoryTest {
         // then
         val networkLibraryEntryArg = argumentCaptor<NetworkLibraryEntry>()
         val localLibraryEntryArg = argumentCaptor<LocalLibraryEntry>()
-        verify(remoteDataSource).postLibraryEntry(networkLibraryEntryArg.capture())
+        verify(remoteDataSource).postLibraryEntry(networkLibraryEntryArg.capture(), any())
         verify(localDataSource).insertLibraryEntry(localLibraryEntryArg.capture())
 
         assertThat(networkLibraryEntryArg.firstValue.user?.id).isEqualTo(userId)
@@ -88,7 +88,7 @@ class LibraryRepositoryTest {
         val status = LibraryStatus.Planned
 
         val remoteDataSource = mock<LibraryNetworkDataSource> {
-            onSuspend { postLibraryEntry(any(), any()) } doThrow IOException()
+            onSuspend { postLibraryEntry(any(), any()) } doAnswer { throw IOException() }
         }
         val localDataSource = mock<LibraryLocalDataSource> {
             onSuspend { insertLibraryEntry(any()) } doReturn Unit
@@ -137,7 +137,7 @@ class LibraryRepositoryTest {
         val libraryEntryId = faker.internet().uuid()
 
         val remoteDataSource = mock<LibraryNetworkDataSource> {
-            onSuspend { deleteLibraryEntry(any()) } doThrow IOException()
+            onSuspend { deleteLibraryEntry(any()) } doAnswer { throw IOException() }
         }
         val localDataSource = mock<LibraryLocalDataSource> {
             onSuspend { deleteLibraryEntryAndAnyModification(any()) } doReturn Unit
@@ -162,7 +162,7 @@ class LibraryRepositoryTest {
         val libraryEntryId = faker.internet().uuid()
 
         val remoteDataSource = mock<LibraryNetworkDataSource> {
-            onSuspend { getLibraryEntry(any(), any()) } doThrow FakeHttpException(404)
+            onSuspend { getLibraryEntry(any(), any()) } doAnswer { throw FakeHttpException(404) }
         }
         val localDataSource = mock<LibraryLocalDataSource> {
             onSuspend { deleteLibraryEntryAndAnyModification(any()) } doReturn Unit
@@ -215,7 +215,7 @@ class LibraryRepositoryTest {
             )
 
         val remoteDataSource = mock<LibraryNetworkDataSource> {
-            onSuspend { updateLibraryEntry(any(), any()) } doReturn expectedLibraryEntry
+            onSuspend { updateLibraryEntry(any(), any(), any()) } doReturn expectedLibraryEntry
         }
         val localDataSource = mock<LibraryLocalDataSource> {
             onSuspend { insertLibraryEntryModification(any()) } doReturn Unit
@@ -229,7 +229,7 @@ class LibraryRepositoryTest {
         val result = libraryRepository.updateLibraryEntry(libraryEntryModification)
 
         // then
-        verify(remoteDataSource).updateLibraryEntry(eq(libraryEntryModification.id), any())
+        verify(remoteDataSource).updateLibraryEntry(eq(libraryEntryModification.id), any(), any())
         verify(localDataSource).updateLibraryEntryAndDeleteModification(
             expectedLibraryEntry.toLocalLibraryEntry(),
             libraryEntryModification.toLocalLibraryEntryModification().copy(state = SYNCHRONIZING)
@@ -254,7 +254,7 @@ class LibraryRepositoryTest {
             .copy(updatedAt = Date.from(now.plusMillis(1)).formatDate(DATE_FORMAT_ISO))
 
         val remoteDataSource = mock<LibraryNetworkDataSource> {
-            onSuspend { updateLibraryEntry(any(), any()) } doReturn libraryEntryFromService
+            onSuspend { updateLibraryEntry(any(), any(), any()) } doReturn libraryEntryFromService
         }
         val localDataSource = mock<LibraryLocalDataSource> {
             onSuspend { insertLibraryEntryModification(any()) } doReturn Unit
@@ -280,7 +280,7 @@ class LibraryRepositoryTest {
             .copy(status = LibraryStatus.Completed)
 
         val remoteDataSource = mock<LibraryNetworkDataSource> {
-            onSuspend { updateLibraryEntry(any(), any()) } doThrow IOException()
+            onSuspend { updateLibraryEntry(any(), any(), any()) } doAnswer { throw IOException() }
         }
         val localDataSource = mock<LibraryLocalDataSource> {
             onSuspend { insertLibraryEntryModification(any()) } doReturn Unit
@@ -316,7 +316,13 @@ class LibraryRepositoryTest {
             .copy(status = LibraryStatus.Completed)
 
         val remoteDataSource = mock<LibraryNetworkDataSource> {
-            onSuspend { updateLibraryEntry(any(), any()) } doThrow FakeHttpException(404)
+            onSuspend {
+                updateLibraryEntry(
+                    any(),
+                    any(),
+                    any()
+                )
+            } doAnswer { throw FakeHttpException(404) }
         }
         val localDataSource = mock<LibraryLocalDataSource> {
             onSuspend { insertLibraryEntryModification(any()) } doReturn Unit

@@ -44,7 +44,6 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setMedia(args.media.toMedia())
-        args.libraryEntryId?.let { viewModel.setLibraryEntryId(it) }
 
         binding.collapsingToolbar.initWindowInsetsListener(consume = false)
         binding.toolbar.apply {
@@ -73,12 +72,13 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
         val adapter = MediaUnitPagingAdapter(
             Glide.with(this),
             args.media.toMedia().posterImageUrl,
-            args.libraryEntryId != null,
+            viewModel.libraryEntryWrapper.value != null,
             this
         )
         setRecyclerViewAdapter(adapter)
 
         viewModel.libraryEntryWrapper.observe(viewLifecycleOwner) {
+            adapter.setIsWatchedCheckboxEnabled(it != null)
             it?.progress?.let { progress ->
                 adapter.updateLibraryWatchCount(progress)
             }

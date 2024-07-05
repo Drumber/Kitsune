@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.common.exception.ResourceUpdateFailed
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWrapper
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.mapping.Mapping
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
@@ -59,9 +59,9 @@ class DetailsViewModel(
         get() = _mediaModel
 
     /** Combines local cached and fetched library entry. */
-    private val _libraryEntryWrapper = MediatorLiveData<LibraryEntryWrapper?>()
-    val libraryEntryWrapper: LiveData<LibraryEntryWrapper?>
-        get() = _libraryEntryWrapper
+    private val _libraryEntryWithModification = MediatorLiveData<LibraryEntryWithModification?>()
+    val libraryEntryWrapper: LiveData<LibraryEntryWithModification?>
+        get() = _libraryEntryWithModification
 
     private val _favorite = MutableLiveData<Favorite?>()
     val favorite: LiveData<Favorite?>
@@ -170,13 +170,8 @@ class DetailsViewModel(
 
         // add local database as library entry source
         viewModelScope.launch(Dispatchers.Main) {
-            _libraryEntryWrapper.addSource(libraryRepository.getLibraryEntryWithModificationFromMediaAsLiveData(media.id)) {
-                _libraryEntryWrapper.value = it?.let { entryWithModification ->
-                    LibraryEntryWrapper(
-                        entryWithModification.libraryEntry,
-                        entryWithModification.modification
-                    )
-                }
+            _libraryEntryWithModification.addSource(libraryRepository.getLibraryEntryWithModificationFromMediaAsLiveData(media.id)) {
+                _libraryEntryWithModification.value = it
             }
         }
         val filter = Filter()
@@ -195,8 +190,8 @@ class DetailsViewModel(
             val libraryEntries = libraryRepository.fetchAllLibraryEntries(filter)
             if (!libraryEntries.isNullOrEmpty()) {
                 // post fetched library entry that is possibly more up-to-date than the local cached one
-                _libraryEntryWrapper.postValue(
-                    LibraryEntryWrapper(libraryEntries[0], null)
+                _libraryEntryWithModification.postValue(
+                    LibraryEntryWithModification(libraryEntries.first(), null)
                 )
             } else if (libraryEntryWrapper.value != null) {
                 // library entry is not available on the server but it is in the local cache, was it deleted?
@@ -207,7 +202,7 @@ class DetailsViewModel(
                                 "Removed it from local database..."
                     )
                     withContext(Dispatchers.IO) {
-                        _libraryEntryWrapper.postValue(null)
+                        _libraryEntryWithModification.postValue(null)
                         libraryRepository.mayRemoveLibraryEntryLocally(wrapper.libraryEntry.id)
                     }
                 }
@@ -276,8 +271,8 @@ class DetailsViewModel(
                         mediaModel,
                         status
                     ) ?: throw NoDataException("Failed to post new library entry.")
-                    _libraryEntryWrapper.postValue(
-                        LibraryEntryWrapper(newLibraryEntry, null)
+                    _libraryEntryWithModification.postValue(
+                        LibraryEntryWithModification(newLibraryEntry, null)
                     )
                 } catch (e: Exception) {
                     logE("Failed to add new library entry.", e)
@@ -304,7 +299,7 @@ class DetailsViewModel(
                 false
             }
             if (isDeleted) {
-                _libraryEntryWrapper.postValue(null)
+                _libraryEntryWithModification.postValue(null)
             } else {
                 acceptInternalAction(InternalAction.DeleteLibraryEntryFailed)
             }

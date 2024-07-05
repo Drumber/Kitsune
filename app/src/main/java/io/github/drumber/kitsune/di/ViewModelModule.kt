@@ -25,13 +25,13 @@ val viewModelModule = module {
     viewModel { SearchViewModel(get()) }
     viewModel { MediaListViewModel(get(), get()) }
     viewModel { CategoriesViewModel(get()) }
-    viewModel { LibraryViewModel(get(), get(), get(), get(), get()) }
-    viewModel { LibraryEditEntryViewModel(get(), get(), get(), get()) }
+    viewModel { LibraryViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { LibraryEditEntryViewModel(get(), get()) }
     viewModel { LoginViewModel(get()) }
     viewModel { ProfileViewModel(get(), get()) }
     viewModel { EditProfileViewModel(get(), get(), get()) }
-    viewModel { DetailsViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { EpisodesViewModel(get(), get(), get(), get(), get()) }
+    viewModel { DetailsViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { EpisodesViewModel(get(), get(), get()) }
     viewModel { CharactersViewModel(get(), get()) }
     viewModel { CharacterDetailsViewModel(get(), get(), get()) }
     viewModel { SettingsViewModel(get()) }

@@ -36,11 +36,12 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.databinding.FragmentLibraryBinding
-import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryKind
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.domain_old.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel
 import io.github.drumber.kitsune.ui.adapter.paging.LibraryEntriesAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
@@ -382,7 +383,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
             if (!shouldScroll || isLoading) return@addOnPagesUpdatedListener
 
             val indexOfUpdatedEntry = adapter.snapshot()
-                .indexOfFirst { (it as? LibraryEntryWrapper)?.libraryEntry?.id == viewModel.scrollToUpdatedEntryId }
+                .indexOfFirst { (it as? LibraryEntryUiModel.EntryModel)?.entry?.id == viewModel.scrollToUpdatedEntryId }
 
             if (indexOfUpdatedEntry != -1) {
                 binding.rvLibraryEntries.scrollToPosition(indexOfUpdatedEntry)
@@ -409,21 +410,19 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         }
     }
 
-    override fun onItemClicked(view: View, item: LibraryEntryWrapper) {
-        val media = item.libraryEntry.anime ?: item.libraryEntry.manga
+    override fun onItemClicked(view: View, item: LibraryEntryWithModification) {
+        val media = item.libraryEntry.media
         if (media != null) {
-            val mediaAdapter = MediaAdapter.fromMedia(media)
             val detailsTransitionName = getString(R.string.details_poster_transition_name)
             val extras =
                 FragmentNavigatorExtras(view.findViewById<View>(R.id.iv_thumbnail) to detailsTransitionName)
-            // TODO: Update after migrating library entry to use new media model
-//            val action =
-//                LibraryFragmentDirections.actionLibraryFragmentToDetailsFragment(mediaAdapter)
-//            findNavController().navigateSafe(R.id.library_fragment, action, extras)
+            val action =
+                LibraryFragmentDirections.actionLibraryFragmentToDetailsFragment(media.toMediaDto())
+            findNavController().navigateSafe(R.id.library_fragment, action, extras)
         }
     }
 
-    override fun onItemLongClicked(item: LibraryEntryWrapper) {
+    override fun onItemLongClicked(item: LibraryEntryWithModification) {
         val action =
             LibraryFragmentDirections.actionLibraryFragmentToLibraryEditEntryFragment(
                 item.libraryEntry.id ?: return,
@@ -432,21 +431,19 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         findNavController().navigateSafe(R.id.library_fragment, action)
     }
 
-    override fun onEpisodeWatchedClicked(item: LibraryEntryWrapper) {
+    override fun onEpisodeWatchedClicked(item: LibraryEntryWithModification) {
         viewModel.markEpisodeWatched(item)
     }
 
-    override fun onEpisodeUnwatchedClicked(item: LibraryEntryWrapper) {
+    override fun onEpisodeUnwatchedClicked(item: LibraryEntryWithModification) {
         viewModel.markEpisodeUnwatched(item)
     }
 
-    override fun onRatingClicked(item: LibraryEntryWrapper) {
+    override fun onRatingClicked(item: LibraryEntryWithModification) {
         viewModel.lastRatedLibraryEntry = item.libraryEntry
-        val mediaAdapter =
-            (item.libraryEntry.anime ?: item.libraryEntry.manga)?.let { MediaAdapter.fromMedia(it) }
 
         val action = LibraryFragmentDirections.actionLibraryFragmentToRatingBottomSheet(
-            title = mediaAdapter?.title ?: "",
+            title = item.media?.title ?: "",
             ratingTwenty = item.ratingTwenty ?: -1,
             ratingResultKey = RESULT_KEY_RATING,
             removeResultKey = RESULT_KEY_REMOVE_RATING,

@@ -46,7 +46,10 @@ import io.github.drumber.kitsune.data.common.withoutCommonTitles
 import io.github.drumber.kitsune.data.presentation.dto.toMedia
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.getStringRes
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
+import io.github.drumber.kitsune.data.presentation.model.library.getStringResId
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
+import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
 import io.github.drumber.kitsune.data.presentation.model.media.MediaType
@@ -54,9 +57,6 @@ import io.github.drumber.kitsune.data.presentation.model.media.category.Category
 import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.databinding.ItemDetailsInfoRowBinding
-import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryAdapter
-import io.github.drumber.kitsune.domain_old.model.ui.library.getStringResId
 import io.github.drumber.kitsune.domain_old.service.Filter
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
@@ -200,14 +200,14 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             }
         }
 
-        viewModel.libraryEntryWrapper.observe(viewLifecycleOwner) { libraryEntryWrapper ->
-            val isManga = libraryEntryWrapper?.libraryEntry?.manga != null
-                    || viewModel.mediaModel.value is Anime
-            if (libraryEntryWrapper != null) {
-                libraryEntryWrapper.status?.let { status ->
+        viewModel.libraryEntryWrapper.observe(viewLifecycleOwner) { libraryEntryWithModification ->
+            val isManga = libraryEntryWithModification?.libraryEntry?.media is Manga
+                    || viewModel.mediaModel.value is Manga
+            if (libraryEntryWithModification != null) {
+                libraryEntryWithModification.status?.let { status ->
                     binding.btnManageLibrary.setText(status.getStringResId(!isManga))
                 } ?: binding.btnManageLibrary.setText(R.string.library_action_add)
-                binding.libraryEntry = LibraryEntryAdapter(libraryEntryWrapper)
+                binding.libraryEntry = libraryEntryWithModification
             } else {
                 // reset to defaults
                 binding.btnManageLibrary.setText(R.string.library_action_add)
@@ -229,10 +229,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             btnManageLibrary.setOnClickListener { showManageLibraryBottomSheet() }
             btnMediaUnits.setOnClickListener {
                 val media = viewModel.mediaModel.value ?: return@setOnClickListener
-                val libraryEntry = viewModel.libraryEntryWrapper.value?.libraryEntry
                 val action = DetailsFragmentDirections.actionDetailsFragmentToEpisodesFragment(
-                    media.toMediaDto(),
-                    libraryEntry?.id
+                    media.toMediaDto()
                 )
                 findNavController().navigate(action)
             }

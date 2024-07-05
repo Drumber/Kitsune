@@ -50,7 +50,7 @@ interface LibraryEntryDao {
     @Query("SELECT * FROM library_entries WHERE status IN (:status) $ORDER_BY_STATUS")
     suspend fun getAllLibraryEntriesByStatus(status: List<LocalLibraryStatus>): List<LocalLibraryEntry>
 
-    @Query("SELECT * FROM library_entries WHERE status IN (:status) $ORDER_BY_STATUS")
+    @Query("SELECT * FROM library_entries WHERE status IN (:status) AND media_type = :type $ORDER_BY_STATUS")
     suspend fun getAllLibraryEntriesByTypeAndStatus(type: LocalLibraryMedia.MediaType, status: List<LocalLibraryStatus>): List<LocalLibraryEntry>
 
     @Query("SELECT * FROM library_entries WHERE media_id = :mediaId")

@@ -15,7 +15,7 @@ import kotlin.math.max
 class MediaUnitPagingAdapter(
     private val glide: RequestManager,
     private val posterUrl: String?,
-    private val enableWatchedCheckbox: Boolean,
+    private var enableWatchedCheckbox: Boolean,
     private val listener: MediaUnitActionListener
 ) : PagingDataAdapter<MediaUnit, MediaUnitPagingAdapter.MediaUnitViewHolder>(MediaUnitComparator) {
 
@@ -25,6 +25,12 @@ class MediaUnitPagingAdapter(
         val oldValue = this.numberWatched
         this.numberWatched = numberWatched
         notifyItemRangeChanged(0, max(oldValue, numberWatched))
+    }
+
+    fun setIsWatchedCheckboxEnabled(isEnabled: Boolean) {
+        if (isEnabled == enableWatchedCheckbox) return
+        enableWatchedCheckbox = isEnabled
+        notifyItemRangeChanged(0, itemCount)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaUnitViewHolder {

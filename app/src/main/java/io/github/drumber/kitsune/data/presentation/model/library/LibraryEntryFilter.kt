@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.data.presentation.model.library
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
 import io.github.drumber.kitsune.domain_old.service.Filter
 
 data class LibraryEntryFilter(

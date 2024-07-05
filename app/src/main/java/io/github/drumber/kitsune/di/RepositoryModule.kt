@@ -235,7 +235,7 @@ val repositoryModule = module {
         )
     }
     single { LibraryNetworkDataSource(get()) }
-    single { LibraryRepository(get(), get()) }
+    single { LibraryRepository(get(), get(), get()) }
 }
 
 private fun createAuthService(objectMapper: ObjectMapper) = createService<AuthenticationApi>(

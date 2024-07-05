@@ -1,8 +1,9 @@
 package io.github.drumber.kitsune.testutils
 
-import io.github.drumber.kitsune.domain_old.model.common.library.LibraryStatus
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
-import io.github.drumber.kitsune.domain_old.model.ui.library.LibraryEntryModification
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus
 import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
 import net.datafaker.Faker
 
@@ -10,7 +11,7 @@ fun libraryEntryModification(faker: Faker) = LibraryEntryModification(
     id = faker.number().positive().toString(),
     startedAt = faker.date().birthday(DATE_FORMAT_ISO),
     finishedAt = faker.date().birthday(DATE_FORMAT_ISO),
-    status = LibraryStatus.Completed,
+    status = LibraryStatus.entries.random(),
     progress = faker.number().positive(),
     reconsumeCount = faker.number().positive(),
     volumesOwned = faker.number().positive(),
@@ -23,7 +24,7 @@ fun localLibraryEntryModification(faker: Faker) = LocalLibraryEntryModification(
     id = faker.number().positive().toString(),
     startedAt = faker.date().birthday(DATE_FORMAT_ISO),
     finishedAt = faker.date().birthday(DATE_FORMAT_ISO),
-    status = LibraryStatus.Completed,
+    status = LocalLibraryStatus.entries.random(),
     progress = faker.number().positive(),
     reconsumeCount = faker.number().positive(),
     volumesOwned = faker.number().positive(),

@@ -1,23 +1,22 @@
-package io.github.drumber.kitsune.domain_old.model.ui.library
+package io.github.drumber.kitsune.data.presentation.model.library
 
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.testutils.libraryEntry
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryModificationState.SYNCHRONIZING
 import io.github.drumber.kitsune.testutils.libraryEntryModification
+import io.github.drumber.kitsune.testutils.libraryEntry
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
-class NetworkLibraryEntryWrapperTest {
+class LibraryEntryWithModificationTest {
 
     private val faker = Faker()
 
     @Test
     fun shouldIsNotSyncedReturnTrue() {
         // given
-        val wrapper = LibraryEntryWrapper(
+        val wrapper = LibraryEntryWithModification(
             libraryEntry(faker),
-            libraryEntryModification(faker),
-            false
+            libraryEntryModification(faker)
         )
 
         // when
@@ -31,12 +30,11 @@ class NetworkLibraryEntryWrapperTest {
     fun shouldIsNotSyncedReturnFalseWhenEqual() {
         // given
         val libraryEntry = libraryEntry(faker)
-        val wrapper = LibraryEntryWrapper(
+        val wrapper = LibraryEntryWithModification(
             libraryEntry,
             LibraryEntryModification
-                .withIdAndNulls(libraryEntry.id!!)
-                .copy(progress = libraryEntry.progress),
-            false
+                .withIdAndNulls(libraryEntry.id)
+                .copy(progress = libraryEntry.progress)
         )
 
         // when
@@ -49,10 +47,9 @@ class NetworkLibraryEntryWrapperTest {
     @Test
     fun shouldIsNotSyncedReturnFalseWhenSynchronizing() {
         // given
-        val wrapper = LibraryEntryWrapper(
+        val wrapper = LibraryEntryWithModification(
             libraryEntry(faker),
-            libraryEntryModification(faker),
-            true
+            libraryEntryModification(faker).copy(state = SYNCHRONIZING)
         )
 
         // when
@@ -61,5 +58,4 @@ class NetworkLibraryEntryWrapperTest {
         // then
         assertThat(isNotSynced).isFalse
     }
-
 }

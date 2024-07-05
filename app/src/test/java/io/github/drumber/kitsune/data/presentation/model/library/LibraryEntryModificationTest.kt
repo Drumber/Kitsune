@@ -1,13 +1,14 @@
-package io.github.drumber.kitsune.domain_old.model.database
+package io.github.drumber.kitsune.data.presentation.model.library
 
-import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
+import io.github.drumber.kitsune.testutils.libraryEntryModification
 import io.github.drumber.kitsune.testutils.localLibraryEntry
 import io.github.drumber.kitsune.testutils.localLibraryEntryModification
+import io.github.drumber.kitsune.testutils.libraryEntry
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
-class LocalNetworkLibraryEntryModificationTest {
+class LibraryEntryModificationTest {
 
     private val faker = Faker()
 
@@ -24,11 +25,11 @@ class LocalNetworkLibraryEntryModificationTest {
         // then
         assertThat(libraryEntryWithModifications)
             .usingRecursiveComparison()
-            .comparingOnlyFields("id", "anime", "manga")
+            .comparingOnlyFields("id", "media")
             .isEqualTo(libraryEntry)
         assertThat(libraryEntryWithModifications)
             .usingRecursiveComparison()
-            .ignoringFields("id", "anime", "manga")
+            .ignoringFields("id", "media")
             .isNotEqualTo(libraryEntry)
     }
 
@@ -40,30 +41,16 @@ class LocalNetworkLibraryEntryModificationTest {
             .copy(id = libraryEntry.id, notes = "")
 
         // when
-        val libraryEntryWithModifications = modification.applyToLibraryEntry(libraryEntry, true)
+        val libraryEntryWithModifications = modification.applyToLibraryEntry(libraryEntry)
 
         // then
         assertThat(libraryEntryWithModifications.notes).isNull()
     }
 
     @Test
-    fun shouldApplyModificationsToLibraryEntryWithoutIgnoringBlankNotes() {
-        // given
-        val libraryEntry = localLibraryEntry(faker).copy(notes = null)
-        val modification = localLibraryEntryModification(faker)
-            .copy(id = libraryEntry.id, notes = "")
-
-        // when
-        val libraryEntryWithModifications = modification.applyToLibraryEntry(libraryEntry, false)
-
-        // then
-        assertThat(libraryEntryWithModifications.notes).isEqualTo("")
-    }
-
-    @Test
     fun shouldCreateLibraryEntryFromModification() {
         // given
-        val modification = localLibraryEntryModification(faker)
+        val modification = libraryEntryModification(faker)
 
         // when
         val libraryEntry = modification.toLocalLibraryEntry()
@@ -71,15 +58,15 @@ class LocalNetworkLibraryEntryModificationTest {
         // then
         assertThat(libraryEntry)
             .usingRecursiveComparison()
-            .ignoringFields("progressedAt", "reactionSkipped", "manga", "anime", "updatedAt", "reconsuming")
+            .ignoringFields("progressedAt", "reactionSkipped", "media", "updatedAt", "reconsuming")
             .isEqualTo(modification)
     }
 
     @Test
     fun shouldBeEqualToLibraryEntry() {
         // given
-        val libraryEntry = localLibraryEntry(faker)
-        val modification = LocalLibraryEntryModification
+        val libraryEntry = libraryEntry(faker)
+        val modification = LibraryEntryModification
             .withIdAndNulls(faker.internet().uuid())
             .copy(
                 progress = libraryEntry.progress,
@@ -97,8 +84,8 @@ class LocalNetworkLibraryEntryModificationTest {
     @Test
     fun shouldNotBeEqualToLibraryEntry() {
         // given
-        val libraryEntry = localLibraryEntry(faker)
-        val modification = LocalLibraryEntryModification
+        val libraryEntry = libraryEntry(faker)
+        val modification = LibraryEntryModification
             .withIdAndNulls(faker.internet().uuid())
             .copy(
                 progress = libraryEntry.progress?.plus(1)
@@ -110,5 +97,4 @@ class LocalNetworkLibraryEntryModificationTest {
         // then
         assertThat(isEqual).isFalse
     }
-
 }
