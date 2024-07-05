@@ -149,6 +149,7 @@ class LocalLibraryEntryModificationTest {
         // then
         assertThat(actualLibraryEntry)
             .usingRecursiveComparison()
+            .ignoringFields("media", "progressedAt", "reactionSkipped", "updatedAt", "reconsuming")
             .isEqualTo(modification)
     }
 

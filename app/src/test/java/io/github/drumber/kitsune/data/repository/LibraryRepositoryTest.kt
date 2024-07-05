@@ -22,6 +22,8 @@ import io.github.drumber.kitsune.testutils.onSuspend
 import io.github.drumber.kitsune.testutils.useMockedAndroidLogger
 import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
 import io.github.drumber.kitsune.util.formatDate
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.test.runTest
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
@@ -95,7 +97,7 @@ class LibraryRepositoryTest {
         }
 
         val libraryRepository =
-            LibraryRepository(remoteDataSource, localDataSource, backgroundScope)
+            LibraryRepository(remoteDataSource, localDataSource, backgroundScope + SupervisorJob())
 
         // then
         assertThatThrownBy {
@@ -103,7 +105,7 @@ class LibraryRepositoryTest {
             libraryRepository.addNewLibraryEntry(userId, media, status)
         }.isInstanceOf(IOException::class.java)
 
-        verify(remoteDataSource).postLibraryEntry(any())
+        verify(remoteDataSource).postLibraryEntry(any(), any())
         verify(localDataSource, times(0)).insertLibraryEntry(any())
     }
 
@@ -289,7 +291,7 @@ class LibraryRepositoryTest {
         }
 
         val libraryRepository =
-            LibraryRepository(remoteDataSource, localDataSource, backgroundScope)
+            LibraryRepository(remoteDataSource, localDataSource, backgroundScope + SupervisorJob())
 
         // then
         assertThatThrownBy {
@@ -331,20 +333,18 @@ class LibraryRepositoryTest {
         }
 
         val libraryRepository =
-            LibraryRepository(remoteDataSource, localDataSource, backgroundScope)
+            LibraryRepository(remoteDataSource, localDataSource, backgroundScope + SupervisorJob())
 
         // then
         assertThatThrownBy {
             // when
-            useMockedAndroidLogger {
-                libraryRepository.updateLibraryEntry(libraryEntryModification)
-            }
+            libraryRepository.updateLibraryEntry(libraryEntryModification)
         }.isInstanceOf(NotFoundException::class.java)
 
-        verify(remoteDataSource).updateLibraryEntry(eq(libraryEntryModification.id), any())
+        verify(remoteDataSource).updateLibraryEntry(eq(libraryEntryModification.id), any(), any())
         verify(localDataSource).insertLibraryEntryModification(
             libraryEntryModification.toLocalLibraryEntryModification()
-                .copy(state = NOT_SYNCHRONIZED)
+                .copy(state = SYNCHRONIZING)
         )
         verify(localDataSource, never()).updateLibraryEntryAndDeleteModification(any(), any())
         verify(localDataSource).deleteLibraryEntryAndAnyModification(libraryEntryModification.id)

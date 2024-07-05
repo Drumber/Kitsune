@@ -96,7 +96,9 @@ class LibraryRepository(
                 Filter().fields("libraryEntries", "id")
             ) != null
         } catch (e: HttpException) {
-            return e.code() == 404
+            if (e.code() == 404)
+                return false
+            throw e
         }
     }
 
