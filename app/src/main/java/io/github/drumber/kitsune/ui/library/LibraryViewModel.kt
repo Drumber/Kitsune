@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.TerminalSeparatorType
+import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import androidx.paging.map
 import io.github.drumber.kitsune.constants.Kitsu
@@ -136,6 +137,7 @@ class LibraryViewModel(
                 getPagingLibraryEntriesFlow(filter)
                     .insertSeparators(filter)
             }
+            .cachedIn(viewModelScope)
 
         state = combine(
             searches,

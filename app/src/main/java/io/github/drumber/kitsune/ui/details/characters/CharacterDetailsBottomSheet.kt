@@ -93,7 +93,8 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
                 if (favorite != null && icon is AnimatedVectorDrawableCompat) {
                     icon.registerAnimationCallback(object : AnimationCallback() {
                         override fun onAnimationEnd(drawable: Drawable?) {
-                            binding.btnFavorite.setIconResource(R.drawable.ic_favorite_24)
+                            // binding can be null if the fragment is destroyed
+                            _binding?.btnFavorite?.setIconResource(R.drawable.ic_favorite_24)
                         }
                     })
                 } else {
@@ -142,16 +143,20 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
                         registerAnimationCallback(object : AnimationCallback() {
                             var originalTintColor = binding.btnFavorite.iconTint
                             override fun onAnimationStart(drawable: Drawable?) {
-                                binding.btnFavorite.iconTint = null
+                                drawable?.setTintList(null)
                             }
 
                             override fun onAnimationEnd(drawable: Drawable?) {
-                                binding.btnFavorite.iconTint = originalTintColor
+                                drawable?.setTintList(originalTintColor)
                             }
                         })
                         start()
                     }
             }
+            findNavController().previousBackStackEntry
+                ?.takeIf { it.destination.id == R.id.profile_fragment }
+                ?.savedStateHandle
+                ?.set("refreshFavorites", true)
         }
     }
 

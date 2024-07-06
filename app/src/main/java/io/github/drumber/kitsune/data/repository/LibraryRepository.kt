@@ -32,7 +32,7 @@ import io.github.drumber.kitsune.data.source.network.library.LibraryEntryPagingD
 import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry
 import io.github.drumber.kitsune.data.utils.InvalidatingPagingSourceFactory
-import io.github.drumber.kitsune.exception.NotFoundException
+import io.github.drumber.kitsune.data.common.exception.NotFoundException
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.parseUtcDate
 import kotlinx.coroutines.CoroutineScope
@@ -89,7 +89,7 @@ class LibraryRepository(
         }
     }
 
-    suspend fun doesLibraryEntryExist(libraryEntryId: String): Boolean {
+    private suspend fun doesLibraryEntryExist(libraryEntryId: String): Boolean {
         return try {
             remoteLibraryDataSource.getLibraryEntry(
                 libraryEntryId,

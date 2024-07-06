@@ -15,6 +15,7 @@ import com.algolia.search.model.search.Query
 import com.algolia.search.model.search.RemoveStopWords
 import com.algolia.search.model.search.RemoveWordIfNoResults
 import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
 import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
 import io.github.drumber.kitsune.data.presentation.model.character.Character
@@ -26,7 +27,6 @@ import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.character.LocalCharacter
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.domain.algolia.SearchProvider
-import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
@@ -282,7 +282,7 @@ class EditProfileViewModel(
         newProfileLinks.forEach { profileLinkEntry ->
             try {
                 val createdProfileLink = createProfileLink(profileLinkEntry, userId)
-                    ?: throw ReceivedDataException("Received response is null.")
+                    ?: throw NoDataException("Received response is null.")
                 addOrUpdateInitialProfileLink(profileLinkEntry, createdProfileLink)
             } catch (e: Exception) {
                 logE("Failed to create profile link $profileLinkEntry.", e)
@@ -296,7 +296,7 @@ class EditProfileViewModel(
         updatedProfileLinks.forEach { profileLinkEntry ->
             try {
                 val updatedProfileLink = updateProfileLink(profileLinkEntry, userId)
-                    ?: throw ReceivedDataException("Received response is null.")
+                    ?: throw NoDataException("Received response is null.")
                 addOrUpdateInitialProfileLink(profileLinkEntry, updatedProfileLink)
             } catch (e: Exception) {
                 logE("Failed to update profile link $profileLinkEntry.", e)
@@ -311,7 +311,7 @@ class EditProfileViewModel(
             try {
                 val isSuccessful = profileLinkRepository.deleteProfileLink(profileLinkEntry.id!!)
                 if (!isSuccessful) {
-                    throw ReceivedDataException("Failed to delete profile link.")
+                    throw NoDataException("Failed to delete profile link.")
                 }
                 removeFromInitialProfileLinks(profileLinkEntry)
             } catch (e: Exception) {

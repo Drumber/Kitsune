@@ -4,6 +4,7 @@ import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.domain.auth.RefreshAccessTokenIfExpiredUseCase
 import io.github.drumber.kitsune.domain.auth.RefreshResult
+import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logI
 
 class UpdateLocalUserUseCase(
@@ -24,7 +25,11 @@ class UpdateLocalUserUseCase(
             return
         }
 
-        userRepository.fetchAndStoreLocalUserFromNetwork()
+        try {
+            userRepository.fetchAndStoreLocalUserFromNetwork()
+        } catch (e: Exception) {
+            logE("Failed to update local user model from network.", e)
+        }
     }
 
 }

@@ -40,7 +40,7 @@ import io.github.drumber.kitsune.domain.algolia.FilterCollection
 import io.github.drumber.kitsune.domain.algolia.SearchProvider
 import io.github.drumber.kitsune.domain.algolia.toCombinedMap
 import io.github.drumber.kitsune.domain.algolia.toFilterCollection
-import io.github.drumber.kitsune.exception.SearchProviderUnavailableException
+import io.github.drumber.kitsune.data.common.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.widget.algolia.SeasonListPresenter
 import io.github.drumber.kitsune.ui.widget.algolia.range.CustomFilterRangeConnector

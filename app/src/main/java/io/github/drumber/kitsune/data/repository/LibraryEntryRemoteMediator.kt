@@ -5,10 +5,11 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.data.common.exception.NoDataException
+import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
-import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMedia.MediaType
@@ -16,7 +17,6 @@ import io.github.drumber.kitsune.data.source.local.library.model.LocalLibrarySta
 import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyEntity
 import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyType
 import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
-import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logD
 
 @OptIn(ExperimentalPagingApi::class)
@@ -97,7 +97,7 @@ class LibraryEntryRemoteMediator(
                 }
 
                 val data = pageData.data?.map { it.toLocalLibraryEntry() }
-                    ?: throw ReceivedDataException("Received data is 'null'.")
+                    ?: throw NoDataException("Received data is 'null'.")
 
                 val remoteKeys = data.map {
                     RemoteKeyEntity(it.id, RemoteKeyType.LibraryEntry, pageData.prev, pageData.next)

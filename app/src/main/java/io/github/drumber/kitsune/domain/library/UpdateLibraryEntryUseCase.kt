@@ -7,7 +7,7 @@ import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.UnknownException
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Failure
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Success
-import io.github.drumber.kitsune.exception.NotFoundException
+import io.github.drumber.kitsune.data.common.exception.NotFoundException
 import java.io.IOException
 import kotlin.coroutines.cancellation.CancellationException
 

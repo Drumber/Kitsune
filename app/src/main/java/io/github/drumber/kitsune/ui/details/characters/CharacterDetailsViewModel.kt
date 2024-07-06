@@ -3,12 +3,12 @@ package io.github.drumber.kitsune.ui.details.characters
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.constants.Defaults
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.presentation.model.character.Character
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
 import io.github.drumber.kitsune.data.repository.CharacterRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
-import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -112,7 +112,6 @@ class CharacterDetailsViewModel(
                 _favoriteFlow.emit(addedFavorite)
             } else {
                 val favoriteId = favorite.id
-                    ?: return@launch _favoriteFlow.emit(favorite)
                 if (removeFromFavorites(favoriteId)) {
                     _favoriteFlow.emit(null)
                 }
@@ -120,7 +119,6 @@ class CharacterDetailsViewModel(
 
             // TODO: verify if this is necessary and remove if not
             // trigger user model update to show updated favorites on the profile fragment
-            //userRepository.localUser?.let { userRepository.updateUserModel(it) }
         }
         return favorite == null
     }

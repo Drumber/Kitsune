@@ -16,7 +16,9 @@ import androidx.annotation.StringRes
 import androidx.core.view.children
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -32,8 +34,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.MediaItemSize
-import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
-import io.github.drumber.kitsune.data.mapper.UserMapper.toUser
 import io.github.drumber.kitsune.data.presentation.dto.toCharacterDto
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.model.character.Character
@@ -63,10 +63,10 @@ import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.extensions.toPx
-import io.github.drumber.kitsune.util.network.ResponseData
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.CopyOnWriteArrayList
@@ -97,22 +97,20 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
         initToolbar()
         updateOptionsMenu()
 
-        viewModel.userModel.observe(viewLifecycleOwner) { user ->
-            updateUser(user?.toUser())
-            updateOptionsMenu()
-            binding.swipeRefreshLayout.isEnabled = user != null
-        }
-
-        viewModel.fullUserModel.observe(viewLifecycleOwner) { fullUser ->
-            if (fullUser is ResponseData.Success) {
-                updateUser(fullUser.data)
-                updateProfileLinks(fullUser.data.profileLinks ?: emptyList())
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.userModel.collectLatest { user ->
+                updateUser(user)
+                updateProfileLinks(user?.profileLinks ?: emptyList())
+                updateOptionsMenu()
+                binding.swipeRefreshLayout.isEnabled = user != null
             }
         }
 
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.swipeRefreshLayout.apply {
-                isRefreshing = isRefreshing && isLoading
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.uiState.collectLatest { state ->
+                binding.swipeRefreshLayout.apply {
+                    isRefreshing = isRefreshing && state.isRefreshing
+                }
             }
         }
 
@@ -136,19 +134,15 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
             }
 
             ivCover.setOnClickListener {
-                val coverImgUrl = (viewModel.fullUserModel.value?.data?.coverImage
-                    ?: viewModel.userModel.value?.coverImage)?.originalOrDown()
+                val coverImgUrl = viewModel.getUser()?.coverImage?.originalOrDown()
                     ?: return@setOnClickListener
-                val title = (viewModel.fullUserModel.value?.data?.name
-                    ?: viewModel.userModel.value?.name)?.let { "$it Cover" }
+                val title = viewModel.getUser()?.name?.let { "$it Cover" }
                 openPhotoViewActivity(coverImgUrl, title, null, ivCover)
             }
 
             val onWaifuClicked: OnClickListener = object : OnClickListener {
                 override fun onClick(v: View?) {
-                    val waifu = viewModel.fullUserModel.value?.data?.waifu
-                        ?: viewModel.userModel.value?.waifu?.toCharacter()
-                        ?: return
+                    val waifu = viewModel.getUser()?.waifu ?: return
                     openCharacterDetailsBottomSheet(waifu)
                 }
             }
@@ -157,6 +151,19 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
         }
 
         initStatsViewPager()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                val savedState = findNavController().currentBackStackEntry?.savedStateHandle
+                savedState?.getStateFlow("refreshFavorites", false)
+                    ?.collectLatest { shouldRefresh ->
+                        if (shouldRefresh) {
+                            viewModel.refreshUser()
+                            savedState["refreshFavorites"] = false
+                        }
+                    }
+            }
+        }
     }
 
     private fun initToolbar() {
@@ -178,7 +185,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
                     }
 
                     R.id.menu_share_profile_url -> {
-                        val user = viewModel.userModel.value
+                        val user = viewModel.getUser()
                         val profileId = user?.slug ?: user?.id
                         if (profileId != null) {
                             val url = Kitsu.USER_URL_PREFIX + profileId
@@ -199,11 +206,9 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
 
     private fun setToolbarLogoClickListener() {
         binding.toolbar.children.firstOrNull { it is ImageView }?.setOnClickListener { logoView ->
-            val avatarImgUrl = (viewModel.fullUserModel.value?.data?.avatar
-                ?: viewModel.userModel.value?.avatar)?.originalOrDown()
+            val avatarImgUrl = viewModel.getUser()?.avatar?.originalOrDown()
                 ?: return@setOnClickListener
-            val title = (viewModel.fullUserModel.value?.data?.name
-                ?: viewModel.userModel.value?.name)?.let { "$it Avatar" }
+            val title = viewModel.getUser()?.name?.let { "$it Avatar" }
             openPhotoViewActivity(avatarImgUrl, title, null, logoView)
         }
     }
@@ -275,39 +280,38 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
             }
         }.attach()
 
-        viewModel.fullUserModel.observe(viewLifecycleOwner) { response ->
-            val user = response.data
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.userModel.collectLatest { user ->
+                val animeCategoryStats: UserStatsData.CategoryBreakdownData? = user?.stats
+                    .findStatsData(UserStatsKind.AnimeCategoryBreakdown)
+                updateStatsChart(
+                    ProfileStatsAdapter.POS_ANIME,
+                    R.string.profile_anime_stats,
+                    animeCategoryStats
+                )
 
-            val animeCategoryStats: UserStatsData.CategoryBreakdownData? = user
-                ?.stats
-                .findStatsData(UserStatsKind.AnimeCategoryBreakdown)
-            updateStatsChart(
-                ProfileStatsAdapter.POS_ANIME,
-                R.string.profile_anime_stats,
-                animeCategoryStats
-            )
+                val mangaCategoryStats: UserStatsData.CategoryBreakdownData? = user?.stats
+                    .findStatsData(UserStatsKind.MangaCategoryBreakdown)
+                updateStatsChart(
+                    ProfileStatsAdapter.POS_MANGA,
+                    R.string.profile_manga_stats,
+                    mangaCategoryStats
+                )
 
-            val mangaCategoryStats: UserStatsData.CategoryBreakdownData? = user
-                ?.stats
-                .findStatsData(UserStatsKind.MangaCategoryBreakdown)
-            updateStatsChart(
-                ProfileStatsAdapter.POS_MANGA,
-                R.string.profile_manga_stats,
-                mangaCategoryStats
-            )
+                val animeAmountConsumed: UserStatsData.AmountConsumedData? = user?.stats
+                    .findStatsData(UserStatsKind.AnimeAmountConsumed)
+                adapter.updateAmountConsumedData(ProfileStatsAdapter.POS_ANIME, animeAmountConsumed)
 
-            val animeAmountConsumed: UserStatsData.AmountConsumedData? = user
-                ?.stats
-                .findStatsData(UserStatsKind.AnimeAmountConsumed)
-            adapter.updateAmountConsumedData(ProfileStatsAdapter.POS_ANIME, animeAmountConsumed)
-
-            val mangaAmountConsumed: UserStatsData.AmountConsumedData? = user
-                ?.stats
-                .findStatsData(UserStatsKind.MangaAmountConsumed)
-            adapter.updateAmountConsumedData(ProfileStatsAdapter.POS_MANGA, mangaAmountConsumed)
-
-            adapter.setLoading(ProfileStatsAdapter.POS_ANIME, false)
-            adapter.setLoading(ProfileStatsAdapter.POS_MANGA, false)
+                val mangaAmountConsumed: UserStatsData.AmountConsumedData? = user?.stats
+                    .findStatsData(UserStatsKind.MangaAmountConsumed)
+                adapter.updateAmountConsumedData(ProfileStatsAdapter.POS_MANGA, mangaAmountConsumed)
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.uiState.collectLatest { state ->
+                adapter.setLoading(ProfileStatsAdapter.POS_ANIME, state.isInitialLoading)
+                adapter.setLoading(ProfileStatsAdapter.POS_MANGA, state.isInitialLoading)
+            }
         }
     }
 
@@ -346,27 +350,29 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
         binding.chipGroupProfileLinks.apply {
             removeAllViews()
 
-            profileLinks.sortedBy { it.profileLinkSite?.id?.toIntOrNull() }.forEach { profileLink ->
-                val profileLinkBinding = ItemProfileSiteChipBinding.inflate(
-                    layoutInflater,
-                    this,
-                    true
-                )
-                val chip = profileLinkBinding.root
-                val siteName = profileLink.profileLinkSite?.name
-                chip.text = siteName
-                chip.setChipIconResource(getProfileSiteLogoResourceId(siteName))
-                chip.setOnClickListener {
-                    profileLink.url?.let { url -> openUrl(url) }
+            profileLinks.sortedBy { it.profileLinkSite?.id?.toIntOrNull() }
+                .forEach { profileLink ->
+                    val profileLinkBinding = ItemProfileSiteChipBinding.inflate(
+                        layoutInflater,
+                        this,
+                        true
+                    )
+                    val chip = profileLinkBinding.root
+                    val siteName = profileLink.profileLinkSite?.name
+                    chip.text = siteName
+                    chip.setChipIconResource(getProfileSiteLogoResourceId(siteName))
+                    chip.setOnClickListener {
+                        profileLink.url?.let { url -> openUrl(url) }
+                    }
                 }
-            }
         }
     }
 
     private fun updateFavoritesData(favorites: List<Favorite>) {
         val favAnime = favorites.filter { it.item is Anime }.map { it.item as Anime }
         val favManga = favorites.filter { it.item is Manga }.map { it.item as Manga }
-        val favCharacters = favorites.filter { it.item is Character }.map { it.item as Character }
+        val favCharacters =
+            favorites.filter { it.item is Character }.map { it.item as Character }
 
         showFavoriteMediaInRecyclerView(binding.rvFavoriteAnime, favAnime)
         showFavoriteMediaInRecyclerView(binding.rvFavoriteManga, favManga)
@@ -422,19 +428,23 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
     }
 
     private fun onFavoriteMediaItemClicked(view: View, media: Media) {
-        val action = ProfileFragmentDirections.actionProfileFragmentToDetailsFragment(media.toMediaDto())
+        val action =
+            ProfileFragmentDirections.actionProfileFragmentToDetailsFragment(media.toMediaDto())
         val detailsTransitionName = getString(R.string.details_poster_transition_name)
         val extras = FragmentNavigatorExtras(view to detailsTransitionName)
         findNavController().navigateSafe(R.id.profile_fragment, action, extras)
     }
 
     private fun openCharacterDetailsBottomSheet(character: Character) {
-        val action = ProfileFragmentDirections.actionProfileFragmentToCharacterDetailsBottomSheet(character.toCharacterDto())
+        val action =
+            ProfileFragmentDirections.actionProfileFragmentToCharacterDetailsBottomSheet(
+                character.toCharacterDto()
+            )
         findNavController().navigateSafe(R.id.profile_fragment, action)
     }
 
     private fun updateOptionsMenu() {
-        val isLoggedIn = viewModel.userModel.value != null
+        val isLoggedIn = viewModel.getUser() != null
         binding.toolbar.menu.apply {
             findItem(R.id.menu_edit_profile).isVisible = isLoggedIn
             findItem(R.id.menu_log_out).isVisible = isLoggedIn

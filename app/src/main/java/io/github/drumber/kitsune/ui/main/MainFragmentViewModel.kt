@@ -7,12 +7,12 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.SortFilter
+import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.presentation.model.media.identifier
 import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
-import io.github.drumber.kitsune.data.common.Filter
-import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logV
 import io.github.drumber.kitsune.util.network.ResponseData
@@ -144,7 +144,7 @@ class MainFragmentViewModel(
 
     private suspend fun <T> processCall(call: suspend () -> List<T>?): ResponseData<List<T>> {
         return try {
-            val data = call() ?: throw ReceivedDataException("Received data is 'null'.")
+            val data = call() ?: throw NoDataException("Received data is 'null'.")
             ResponseData.Success(data)
         } catch (e: Exception) {
             logE("Failed to load data.", e)

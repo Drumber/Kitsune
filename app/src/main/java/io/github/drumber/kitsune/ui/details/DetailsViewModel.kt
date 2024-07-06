@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.common.exception.ResourceUpdateFailed
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
@@ -23,7 +24,6 @@ import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryUseCase
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
-import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.LibraryUpdateResult
@@ -102,10 +102,15 @@ class DetailsViewModel(
             .fields("media", "id")
 
         viewModelScope.launch(Dispatchers.IO) {
-            val media = if (isAnime) {
-                animeRepository.getAllAnime(filter)
-            } else {
-                mangaRepository.getAllManga(filter)
+            val media = try {
+                if (isAnime) {
+                    animeRepository.getAllAnime(filter)
+                } else {
+                    mangaRepository.getAllManga(filter)
+                }
+            } catch (e: Exception) {
+                logE("Failed to load media from deep link.", e)
+                null
             }
 
             if (media.isNullOrEmpty()) {

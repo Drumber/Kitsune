@@ -1,7 +1,6 @@
 package io.github.drumber.kitsune.data.source.local.library.model
 
 import androidx.room.Embedded
-import androidx.room.PrimaryKey
 import io.github.drumber.kitsune.data.common.Titles
 import io.github.drumber.kitsune.data.common.media.AgeRating
 import io.github.drumber.kitsune.data.common.media.AnimeSubtype
@@ -10,7 +9,6 @@ import io.github.drumber.kitsune.data.common.media.RatingFrequencies
 import io.github.drumber.kitsune.data.common.media.ReleaseStatus
 
 data class LocalLibraryMedia(
-    @PrimaryKey
     val id: String,
     val type: MediaType,
 

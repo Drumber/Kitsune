@@ -70,10 +70,6 @@ class UserRepository(
         _userReLogInPrompt.emit(Unit)
     }
 
-    suspend fun fetchLocalUserFromNetwork(userId: String, filter: Filter): LocalUser? {
-        return remoteUserDataSource.getUser(userId, filter)?.toLocalUser()
-    }
-
     suspend fun fetchUser(userId: String, filter: Filter): User? {
         return remoteUserDataSource.getUser(userId, filter)?.toUser()
     }
@@ -96,6 +92,7 @@ class UserRepository(
     }
 
     suspend fun getProfileLinksForUser(userId: String, filter: Filter): List<ProfileLink>? {
-        return remoteUserDataSource.getProfileLinksForUser(userId, filter)?.map { it.toProfileLink() }
+        return remoteUserDataSource.getProfileLinksForUser(userId, filter)
+            ?.map { it.toProfileLink() }
     }
 }

@@ -12,7 +12,7 @@ import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMod
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState.SYNCHRONIZING
 import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry
-import io.github.drumber.kitsune.exception.NotFoundException
+import io.github.drumber.kitsune.data.common.exception.NotFoundException
 import io.github.drumber.kitsune.testutils.anime
 import io.github.drumber.kitsune.testutils.assertThatThrownBy
 import io.github.drumber.kitsune.testutils.localLibraryEntry

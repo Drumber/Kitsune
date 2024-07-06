@@ -9,9 +9,9 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
-import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,7 +31,11 @@ class SettingsViewModel(
     init {
         // make sure cached user data is up-to-date
         viewModelScope.launch(Dispatchers.IO) {
-            userRepository.fetchAndStoreLocalUserFromNetwork()
+            try {
+                userRepository.fetchAndStoreLocalUserFromNetwork()
+            } catch (e: Exception) {
+                logE("Failed to update local user model from network.", e)
+            }
         }
     }
 
@@ -40,14 +44,13 @@ class SettingsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 userRepository.updateUser(user.id, user)
-                    ?: throw ReceivedDataException("Received user data is null.")
+                    ?: throw NoDataException("Received user data is null.")
                 userRepository.fetchAndStoreLocalUserFromNetwork()
             } catch (e: Exception) {
                 logE("Failed to update user settings.", e)
                 errorMessageListener?.invoke(ErrorMessage(R.string.error_user_update_failed))
-                // TODO: trigger update of the user model to update preference values
-                // trigger to reset preference values from the user model
-                //(userModel as MutableLiveData).postValue(userModel.value)
+                // workaround to trigger an update to reset preference values from the user model
+                (userModel as MutableLiveData).postValue(userModel.value)
             } finally {
                 _isLoading.postValue(false)
             }
