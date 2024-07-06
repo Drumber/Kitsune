@@ -1,8 +1,7 @@
 package io.github.drumber.kitsune.data.presentation.model.library
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
 import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
 
 data class LibraryEntryFilter(
     val kind: LibraryEntryKind,
@@ -19,8 +18,7 @@ data class LibraryEntryFilter(
                 filter("kind", kind.name.lowercase())
             }
             if (libraryStatus.isNotEmpty()) {
-                val objectMapper = jacksonObjectMapper()
-                val status = libraryStatus.joinToString(",") { objectMapper.writeValueAsString(it) }
+                val status = libraryStatus.joinToString(",") { it.getFilterValue() }
                 filter("status", status)
             }
         }

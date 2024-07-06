@@ -9,7 +9,7 @@ class LogOutUserUseCase(
     private val accessTokenRepository: AccessTokenRepository
 ) {
 
-    operator fun invoke() {
+    suspend operator fun invoke() {
         logI("Logout: Clearing access token and local user.")
         accessTokenRepository.clearAccessToken()
         userRepository.clearLocalUser()

@@ -34,7 +34,7 @@ val networkModule = module {
     single { createHttpClient(get(), get()) }
     single(named("unauthenticated")) { createHttpClientBuilder().build() }
     single { createObjectMapper() }
-    factory<AuthenticationInterceptor> { AuthenticationInterceptorImpl(get(), get()) }
+    factory<AuthenticationInterceptor> { AuthenticationInterceptorImpl(get()) }
 //    factory {
 //        createService<AnimeService>(
 //            get(), get(),

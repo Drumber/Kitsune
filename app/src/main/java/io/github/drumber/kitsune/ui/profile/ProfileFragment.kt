@@ -16,6 +16,7 @@ import androidx.annotation.StringRes
 import androidx.core.view.children
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -66,6 +67,7 @@ import io.github.drumber.kitsune.util.network.ResponseData
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.math.round
@@ -455,10 +457,12 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
     }
 
     private fun onLogOut() {
-        viewModel.logOut()
-        (requireActivity() as BaseActivity).apply {
-            startNewMainActivity()
-            finish()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.logOut()
+            (requireActivity() as BaseActivity).apply {
+                startNewMainActivity()
+                finish()
+            }
         }
     }
 

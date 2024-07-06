@@ -9,13 +9,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel.EntryModel
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel.StatusSeparatorModel
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.model.library.getStringResId
 import io.github.drumber.kitsune.databinding.ItemLibraryEntryBinding
 import io.github.drumber.kitsune.databinding.ItemLibraryStatusSeparatorBinding
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel.EntryModel
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel.StatusSeparatorModel
 
 class LibraryEntriesAdapter(
     private val glide: RequestManager,
@@ -36,6 +36,7 @@ class LibraryEntriesAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
+        if (position >= itemCount) return 0
         return when (peek(position)) {
             is EntryModel -> R.layout.item_library_entry
             is StatusSeparatorModel -> R.layout.item_library_status_separator
@@ -136,8 +137,7 @@ class LibraryEntriesAdapter(
         override fun areContentsTheSame(
             oldItem: LibraryEntryUiModel,
             newItem: LibraryEntryUiModel
-        ) =
-            oldItem == newItem
+        ) = oldItem == newItem
     }
 
     interface LibraryEntryActionListener {

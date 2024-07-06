@@ -1,6 +1,5 @@
 package io.github.drumber.kitsune.di
 
-import android.app.usage.NetworkStats
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.drumber.kitsune.constants.GitHub
 import io.github.drumber.kitsune.constants.Kitsu
@@ -10,6 +9,7 @@ import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.AppUpdateRepository
 import io.github.drumber.kitsune.data.repository.CastingRepository
 import io.github.drumber.kitsune.data.repository.CategoryRepository
+import io.github.drumber.kitsune.data.repository.CharacterRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
 import io.github.drumber.kitsune.data.repository.LibraryRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
@@ -19,6 +19,7 @@ import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.auth.AccessTokenLocalDataSource
 import io.github.drumber.kitsune.data.source.local.auth.AccessTokenPreference
+import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
 import io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource
 import io.github.drumber.kitsune.data.source.local.user.UserPreferences
 import io.github.drumber.kitsune.data.source.network.algolia.AlgoliaKeyNetworkDataSource
@@ -27,6 +28,7 @@ import io.github.drumber.kitsune.data.source.network.appupdate.AppReleaseNetwork
 import io.github.drumber.kitsune.data.source.network.appupdate.api.GitHubApi
 import io.github.drumber.kitsune.data.source.network.auth.AccessTokenNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.auth.api.AuthenticationApi
+import io.github.drumber.kitsune.data.source.network.character.CharacterNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.character.api.CharacterApi
 import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
 import io.github.drumber.kitsune.data.source.network.character.model.NetworkMediaCharacter
@@ -71,6 +73,7 @@ import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImageUpload
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
+import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStats
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -103,7 +106,7 @@ val repositoryModule = module {
             get(),
             get(),
             NetworkUser::class.java,
-            NetworkStats::class.java,
+            NetworkUserStats::class.java,
             NetworkFavorite::class.java,
             NetworkAnime::class.java,
             NetworkManga::class.java,
@@ -218,6 +221,8 @@ val repositoryModule = module {
             NetworkManga::class.java
         )
     }
+    single { CharacterNetworkDataSource(get()) }
+    single { CharacterRepository(get()) }
 
     // Mapping
     factory {
@@ -240,7 +245,8 @@ val repositoryModule = module {
         )
     }
     single { LibraryNetworkDataSource(get()) }
-    single { LibraryRepository(get(), get(), get()) }
+    single { LibraryLocalDataSource(get()) }
+    single { LibraryRepository(get(), get(), CoroutineScope(SupervisorJob() + Dispatchers.Default)) }
 
     // App Update
     factory {

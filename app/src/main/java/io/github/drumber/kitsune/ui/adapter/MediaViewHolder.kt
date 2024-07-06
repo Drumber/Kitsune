@@ -39,7 +39,7 @@ class MediaViewHolder(
             TagData.Subtype -> data.subtypeFormatted
             TagData.RelationshipRole -> null/*data.ownRelationshipRoleText(binding.root.context)*/
         }
-        glide.load(data.posterImage)
+        glide.load(data.posterImageUrl)
             .placeholder(R.drawable.ic_insert_photo_48)
             .into(binding.ivThumbnail)
     }

@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.presentation.model.media.Media
@@ -17,7 +18,8 @@ import io.github.drumber.kitsune.data.repository.MediaUnitRepository
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository.MediaUnitType
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCase
-import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
+import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -28,7 +30,8 @@ import kotlinx.coroutines.launch
 class EpisodesViewModel(
     private val mediaUnitRepository: MediaUnitRepository,
     private val libraryRepository: LibraryRepository,
-    private val updateLibraryEntryProgress: UpdateLibraryEntryProgressUseCase
+    private val updateLibraryEntryProgress: UpdateLibraryEntryProgressUseCase,
+    private val getLocalUserId: GetLocalUserIdUseCase
 ) : ViewModel() {
 
     private val acceptLibraryUpdateResult: (LibraryEntryUpdateResult) -> Unit
@@ -39,9 +42,14 @@ class EpisodesViewModel(
 
     val libraryEntryWrapper = media.switchMap { media ->
         val dbEntry = libraryRepository.getLibraryEntryWithModificationFromMediaAsLiveData(media.id)
-        if (dbEntry.value == null) {
+        val userId = getLocalUserId()
+        if (dbEntry.value == null && userId != null) {
             viewModelScope.launch(Dispatchers.IO) {
-                libraryRepository.fetchAndStoreLibraryEntryForMedia(media)
+                try {
+                    libraryRepository.fetchAndStoreLibraryEntryForMedia(userId, media)
+                } catch (e: Exception) {
+                    logE("Failed to fetch library entry for media: ${media.id}", e)
+                }
             }
         }
         return@switchMap dbEntry

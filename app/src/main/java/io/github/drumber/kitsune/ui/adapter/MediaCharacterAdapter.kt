@@ -50,7 +50,7 @@ class MediaCharacterAdapter(
             binding.data = media
             binding.overlayTagText = data.role?.getStringRes()?.let { binding.root.context.getString(it) }
 
-            glide.load(media?.posterImage)
+            glide.load(media?.posterImageUrl)
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivThumbnail)
 

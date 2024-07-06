@@ -6,6 +6,7 @@ import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPref
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
+import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavoriteItem
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkRatingSystemPreference
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkSfwFilterPreference
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkTitleLanguagePreference
@@ -90,10 +91,14 @@ fun localUser(faker: Faker) = LocalUser(
     waifu = localCharacter(faker),
 )
 
-fun networkFavorite(faker: Faker, user: NetworkUser? = networkUser(faker)) = NetworkFavorite(
+fun networkFavorite(
+    faker: Faker,
+    user: NetworkUser? = networkUser(faker),
+    item: NetworkFavoriteItem? = networkAnime(faker)
+) = NetworkFavorite(
     id = faker.number().positive().toString(),
     favRank = faker.number().positive(),
-    item = null, // TODO: change to media item
+    item = item,
     user = user
 )
 

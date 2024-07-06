@@ -8,15 +8,16 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.constants.Defaults
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.presentation.model.user.User
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.domain.auth.LogOutUserUseCase
-import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.network.ResponseData
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
@@ -60,8 +61,10 @@ class ProfileViewModel(
         }
     }
 
-    fun logOut() {
-        logOutUser()
+    suspend fun logOut() {
+        viewModelScope.async {
+            logOutUser()
+        }.await()
     }
 
     companion object {

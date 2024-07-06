@@ -17,16 +17,23 @@ class AccessTokenRepository(
 
     private val mutex = Mutex()
 
+    private var cachedAccessToken: LocalAccessToken? = null
+
     fun getAccessToken(): LocalAccessToken? {
-        return localAccessTokenDataSource.loadAccessToken()
+        return cachedAccessToken ?: localAccessTokenDataSource.loadAccessToken().also {
+            cachedAccessToken = it
+        }
     }
 
     fun hasAccessToken(): Boolean {
         return getAccessToken() != null
     }
 
-    fun clearAccessToken() {
-        localAccessTokenDataSource.clearAccessToken()
+    suspend fun clearAccessToken() {
+        mutex.withLock {
+            cachedAccessToken = null
+            localAccessTokenDataSource.clearAccessToken()
+        }
     }
 
     suspend fun obtainAccessToken(username: String, password: String): LocalAccessToken {
@@ -37,7 +44,7 @@ class AccessTokenRepository(
                     password = password
                 )
             ).toLocalAccessToken()
-            localAccessTokenDataSource.storeAccessToken(accessToken)
+            storeAccessToken(accessToken)
             return accessToken
         }
     }
@@ -59,8 +66,13 @@ class AccessTokenRepository(
                     refreshToken = refreshToken
                 )
             ).toLocalAccessToken()
-            localAccessTokenDataSource.storeAccessToken(accessToken)
+            storeAccessToken(accessToken)
             return accessToken
         }
+    }
+
+    private fun storeAccessToken(accessToken: LocalAccessToken) {
+        localAccessTokenDataSource.storeAccessToken(accessToken)
+        cachedAccessToken = accessToken
     }
 }

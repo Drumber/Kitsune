@@ -4,13 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.TerminalSeparatorType
-import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import androidx.paging.map
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
-import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryModificationState.NOT_SYNCHRONIZED
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
@@ -23,8 +24,6 @@ import io.github.drumber.kitsune.domain.library.SynchronizeLocalLibraryModificat
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCase
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryRatingUseCase
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel
-import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.library.InternalAction.LibraryUpdateOperationEnd
 import io.github.drumber.kitsune.ui.library.InternalAction.LibraryUpdateOperationStart
@@ -137,7 +136,6 @@ class LibraryViewModel(
                 getPagingLibraryEntriesFlow(filter)
                     .insertSeparators(filter)
             }
-            .cachedIn(viewModelScope)
 
         state = combine(
             searches,
@@ -174,11 +172,16 @@ class LibraryViewModel(
             // if filter contains a search query, then search directly using the paging source
             searchLibraryEntriesWithModification(
                 Kitsu.DEFAULT_PAGE_SIZE_LIBRARY,
-                filter.buildFilter()
+                filter.buildFilter(),
+                viewModelScope
             )
         } else {
             // otherwise use the default paging source
-            getLibraryEntriesWithModifications(Kitsu.DEFAULT_PAGE_SIZE_LIBRARY, filter)
+            getLibraryEntriesWithModifications(
+                Kitsu.DEFAULT_PAGE_SIZE_LIBRARY,
+                filter,
+                viewModelScope
+            )
         }
     }
 

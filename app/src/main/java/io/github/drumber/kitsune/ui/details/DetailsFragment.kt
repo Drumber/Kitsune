@@ -165,12 +165,12 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
             val glide = Glide.with(this)
 
-            glide.load(model.coverImage)
+            glide.load(model.coverImageUrl)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .placeholder(R.drawable.cover_placeholder)
                 .into(binding.ivCover)
 
-            glide.load(model.posterImage)
+            glide.load(model.posterImageUrl)
                 .addTransform(RoundedCorners(8.toPx()))
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivThumbnail)

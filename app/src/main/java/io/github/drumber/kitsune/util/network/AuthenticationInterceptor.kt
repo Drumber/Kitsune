@@ -11,13 +11,14 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 
 interface AuthenticationInterceptor : Interceptor, Authenticator
 
 class AuthenticationInterceptorImpl(
-    private val accessTokenRepository: AccessTokenRepository,
-    private val refreshAccessToken: RefreshAccessTokenUseCase
-) : AuthenticationInterceptor {
+    private val accessTokenRepository: AccessTokenRepository
+) : AuthenticationInterceptor, KoinComponent {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val requestBuilder = chain.request().newBuilder()
@@ -48,6 +49,7 @@ class AuthenticationInterceptorImpl(
         } else {
             logI("Refreshing access token because of a 401 Unauthorized response.")
             val refreshResult = runBlocking {
+                val refreshAccessToken: RefreshAccessTokenUseCase = get()
                 refreshAccessToken()
             }
             if (refreshResult !is RefreshResult.Success) return null

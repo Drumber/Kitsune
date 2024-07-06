@@ -31,7 +31,7 @@ val viewModelModule = module {
     viewModel { ProfileViewModel(get(), get()) }
     viewModel { EditProfileViewModel(get(), get(), get()) }
     viewModel { DetailsViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { EpisodesViewModel(get(), get(), get()) }
+    viewModel { EpisodesViewModel(get(), get(), get(), get()) }
     viewModel { CharactersViewModel(get(), get()) }
     viewModel { CharacterDetailsViewModel(get(), get(), get()) }
     viewModel { SettingsViewModel(get()) }

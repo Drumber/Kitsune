@@ -7,6 +7,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.map
 import io.github.drumber.kitsune.constants.Repository
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntryModification
@@ -31,7 +32,6 @@ import io.github.drumber.kitsune.data.source.network.library.LibraryEntryPagingD
 import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry
 import io.github.drumber.kitsune.data.utils.InvalidatingPagingSourceFactory
-import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.exception.NotFoundException
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.parseUtcDate
@@ -39,6 +39,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class LibraryRepository(
@@ -108,33 +109,36 @@ class LibraryRepository(
         val modification =
             libraryEntryModification.copy(state = LibraryModificationState.SYNCHRONIZING)
 
-        return coroutineScope.async {
-            try {
+        return try {
+            coroutineScope.launch {
                 localLibraryDataSource.insertLibraryEntryModification(modification.toLocalLibraryEntryModification())
+            }
 
-                val libraryEntry = pushModificationToService(modification)
+            val libraryEntry = pushModificationToService(modification)
+            coroutineScope.launch {
                 if (isLibraryEntryNotOlderThanInDatabase(libraryEntry.toLocalLibraryEntry())) {
                     localLibraryDataSource.updateLibraryEntryAndDeleteModification(
                         libraryEntry.toLocalLibraryEntry(),
                         modification.toLocalLibraryEntryModification()
                     )
                 }
-                libraryEntry.toLibraryEntry()
-            } catch (e: NotFoundException) {
-                localLibraryDataSource.deleteLibraryEntryAndAnyModification(modification.id)
-                throw e
-            } catch (e: Exception) {
-                insertLocalModificationOrDeleteIfSameAsLibraryEntry(
-                    modification.copy(state = LibraryModificationState.NOT_SYNCHRONIZED)
-                        .toLocalLibraryEntryModification()
-                )
-                throw e
             }
-        }.await()
+            libraryEntry.toLibraryEntry()
+        } catch (e: NotFoundException) {
+            localLibraryDataSource.deleteLibraryEntryAndAnyModification(modification.id)
+            throw e
+        } catch (e: Exception) {
+            insertLocalModificationOrDeleteIfSameAsLibraryEntry(
+                modification.copy(state = LibraryModificationState.NOT_SYNCHRONIZED)
+                    .toLocalLibraryEntryModification()
+            )
+            throw e
+        }
     }
 
-    suspend fun fetchAndStoreLibraryEntryForMedia(media: Media): LibraryEntry? {
+    suspend fun fetchAndStoreLibraryEntryForMedia(userId: String, media: Media): LibraryEntry? {
         val filter = filterForFullLibraryEntry.copy()
+            .filter("user_id", userId)
         when (media) {
             is Anime -> filter.filter("anime_id", media.id)
             is Manga -> filter.filter("manga_id", media.id)
