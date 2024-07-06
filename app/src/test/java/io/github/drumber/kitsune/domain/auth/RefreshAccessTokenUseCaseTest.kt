@@ -11,7 +11,6 @@ import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.mockito.kotlin.doAnswer
-import org.mockito.kotlin.doNothing
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.mock
@@ -42,7 +41,7 @@ class RefreshAccessTokenUseCaseTest {
         }
 
         val logOutUserUseCase = mock<LogOutUserUseCase> {
-            doNothing().on { invoke() }
+            onSuspend { invoke() } doReturn Unit
         }
 
         val refreshAccessToken = RefreshAccessTokenUseCase(accessTokenRepository, userRepository, logOutUserUseCase)
@@ -61,7 +60,7 @@ class RefreshAccessTokenUseCaseTest {
         // given
         val accessTokenRepository = mock<AccessTokenRepository> {
             onSuspend { refreshAccessToken() } doThrow FakeHttpException(400)
-            doNothing().on { clearAccessToken() }
+            onSuspend { clearAccessToken() } doReturn Unit
         }
 
         val userRepository = mock<UserRepository> {
@@ -69,7 +68,7 @@ class RefreshAccessTokenUseCaseTest {
         }
 
         val logOutUserUseCase = mock<LogOutUserUseCase> {
-            doNothing().on { invoke() }
+            onSuspend { invoke() } doReturn Unit
         }
 
         val refreshAccessToken = RefreshAccessTokenUseCase(accessTokenRepository, userRepository, logOutUserUseCase)
@@ -89,7 +88,7 @@ class RefreshAccessTokenUseCaseTest {
         // given
         val accessTokenRepository = mock<AccessTokenRepository> {
             onSuspend { refreshAccessToken() } doAnswer { throw UnknownHostException() }
-            doNothing().on { clearAccessToken() }
+            onSuspend { clearAccessToken() } doReturn Unit
         }
 
         val userRepository = mock<UserRepository> {
@@ -97,7 +96,7 @@ class RefreshAccessTokenUseCaseTest {
         }
 
         val logOutUserUseCase = mock<LogOutUserUseCase> {
-            doNothing().on { invoke() }
+            onSuspend { invoke() } doReturn Unit
         }
 
         val refreshAccessToken = RefreshAccessTokenUseCase(accessTokenRepository, userRepository, logOutUserUseCase)

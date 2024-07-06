@@ -12,6 +12,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -56,7 +57,7 @@ class AccessTokenRepositoryTest {
     }
 
     @Test
-    fun shouldClearAccessToken() {
+    fun shouldClearAccessToken() = runTest {
         // given
         val localAccessTokenDataSource = mock<AccessTokenLocalDataSource> {
             doNothing().on { clearAccessToken() }

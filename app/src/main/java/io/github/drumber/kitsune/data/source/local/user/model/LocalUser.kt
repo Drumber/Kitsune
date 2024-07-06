@@ -33,4 +33,31 @@ data class LocalUser(
     val titleLanguagePreference: LocalTitleLanguagePreference?,
 
     val waifu: LocalCharacter?
-)
+) {
+    companion object {
+        fun empty(id: String) = LocalUser(
+            id = id,
+            createdAt = null,
+            name = null,
+            slug = null,
+            email = null,
+            title = null,
+            avatar = null,
+            coverImage = null,
+            about = null,
+            location = null,
+            gender = null,
+            birthday = null,
+            waifuOrHusbando = null,
+            country = null,
+            language = null,
+            timeZone = null,
+            theme = null,
+            sfwFilter = null,
+            ratingSystem = null,
+            sfwFilterPreference = null,
+            titleLanguagePreference = null,
+            waifu = null
+        )
+    }
+}

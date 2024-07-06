@@ -31,7 +31,9 @@ import com.algolia.search.model.response.ResponseSearch
 import com.algolia.search.model.search.Query
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.Repository
+import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toMedia
 import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
+import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaMediaSearchResult
 import io.github.drumber.kitsune.domain.algolia.FilterCollection
@@ -60,7 +62,7 @@ class SearchViewModel(
 
     private var filterState: FilterState? = null
 
-    private val searchPaginator = MutableLiveData<Paginator<AlgoliaMediaSearchResult>>()
+    private val searchPaginator = MutableLiveData<Paginator<Media>>()
 
     private val _filtersLiveData = MutableLiveData<Filters?>()
     val filtersLiveData get() = _filtersLiveData as LiveData<Filters?>
@@ -116,7 +118,7 @@ class SearchViewModel(
                         ),
                         transformer = { hit ->
                             when (searchType) {
-                                SearchType.Media -> json.decodeFromJsonElement<AlgoliaMediaSearchResult>(hit.json)
+                                SearchType.Media -> json.decodeFromJsonElement<AlgoliaMediaSearchResult>(hit.json).toMedia()
                                 else -> throw IllegalStateException("Search type '$searchType' is not supported.")
                             }
                         }
@@ -154,7 +156,7 @@ class SearchViewModel(
         }
     }
 
-    private fun createSearchBox(searcher: HitsSearcher, paginator: Paginator<AlgoliaMediaSearchResult>) {
+    private fun createSearchBox(searcher: HitsSearcher, paginator: Paginator<Media>) {
         val searchBox = SearchBoxConnector(searcher)
         connectionHandler += searchBox
         connectionHandler += searchBox.connectPaginator(paginator)

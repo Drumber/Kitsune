@@ -15,4 +15,8 @@ data class NetworkProfileLink(
     val profileLinkSite: NetworkProfileLinkSite?,
     @Relationship("user")
     val user: NetworkUser?
-)
+) {
+    companion object {
+        fun empty() = NetworkProfileLink(null, null, null, null)
+    }
+}

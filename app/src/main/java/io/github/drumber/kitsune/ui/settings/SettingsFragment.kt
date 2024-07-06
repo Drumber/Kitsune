@@ -21,20 +21,16 @@ import io.github.drumber.kitsune.AppLocales
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.data.mapper.UserMapper.toNetworkRatingSystemPreference
-import io.github.drumber.kitsune.data.mapper.UserMapper.toNetworkSfwFilterPreference
-import io.github.drumber.kitsune.data.mapper.UserMapper.toNetworkTitleLanguagePreference
 import io.github.drumber.kitsune.data.presentation.model.appupdate.UpdateCheckResult
 import io.github.drumber.kitsune.data.repository.AppUpdateRepository
 import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
-import io.github.drumber.kitsune.preference.StartPagePref
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.preference.StartPagePref
 import io.github.drumber.kitsune.ui.base.BasePreferenceFragment
 import io.github.drumber.kitsune.ui.permissions.isNotificationPermissionGranted
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
@@ -250,9 +246,8 @@ class SettingsFragment : BasePreferenceFragment() {
                         updateUserIfChanged(
                             value,
                             newValue,
-                            NetworkUser(
-                                id = user.id,
-                                titleLanguagePreference = titlesPref.toNetworkTitleLanguagePreference()
+                            LocalUser.empty(user.id).copy(
+                                titleLanguagePreference = titlesPref
                             )
                         )
                     }
@@ -271,7 +266,7 @@ class SettingsFragment : BasePreferenceFragment() {
                     updateUserIfChanged(
                         value,
                         newValue,
-                        NetworkUser(id = user.id, country = newValue as String)
+                        LocalUser.empty(user.id).copy(country = newValue as String)
                     )
                     true
                 }
@@ -294,9 +289,8 @@ class SettingsFragment : BasePreferenceFragment() {
                     updateUserIfChanged(
                         value,
                         newValue,
-                        NetworkUser(
-                            id = user.id,
-                            sfwFilterPreference = LocalSfwFilterPreference.valueOf(newValue as String).toNetworkSfwFilterPreference()
+                        LocalUser.empty(user.id).copy(
+                            sfwFilterPreference = LocalSfwFilterPreference.valueOf(newValue as String)
                         )
                     )
                     true
@@ -325,9 +319,8 @@ class SettingsFragment : BasePreferenceFragment() {
                     updateUserIfChanged(
                         value,
                         newValue,
-                        NetworkUser(
-                            id = user.id,
-                            ratingSystem = LocalRatingSystemPreference.valueOf(newValue as String).toNetworkRatingSystemPreference()
+                        LocalUser.empty(user.id).copy(
+                            ratingSystem = LocalRatingSystemPreference.valueOf(newValue as String)
                         )
                     )
                     true
@@ -340,7 +333,7 @@ class SettingsFragment : BasePreferenceFragment() {
                 text = user?.name
                 setOnPreferenceChangeListener { _, newValue ->
                     if (user == null) return@setOnPreferenceChangeListener false
-                    updateUserIfChanged(text, newValue, NetworkUser(id = user.id, name = newValue as String))
+                    updateUserIfChanged(text, newValue, LocalUser.empty(user.id).copy(name = newValue as String))
                     true
                 }
                 requireUserLoggedIn(user) { it.text }
@@ -351,7 +344,7 @@ class SettingsFragment : BasePreferenceFragment() {
                 text = user?.slug
                 setOnPreferenceChangeListener { _, newValue ->
                     if (user == null) return@setOnPreferenceChangeListener false
-                    updateUserIfChanged(text, newValue, NetworkUser(id = user.id, slug = newValue as String))
+                    updateUserIfChanged(text, newValue, LocalUser.empty(user.id).copy(slug = newValue as String))
                     true
                 }
                 requireUserLoggedIn(user) {
@@ -364,7 +357,7 @@ class SettingsFragment : BasePreferenceFragment() {
         }
     }
 
-    private fun updateUserIfChanged(oldValue: Any?, newValue: Any?, user: NetworkUser) {
+    private fun updateUserIfChanged(oldValue: Any?, newValue: Any?, user: LocalUser) {
         if (oldValue != newValue) {
             viewModel.updateUser(user)
         }

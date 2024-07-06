@@ -1,18 +1,18 @@
 package io.github.drumber.kitsune.data.repository
 
 import io.github.drumber.kitsune.constants.Defaults
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.mapper.ProfileLinksMapper.toProfileLink
 import io.github.drumber.kitsune.data.mapper.UserMapper.toLocalUser
+import io.github.drumber.kitsune.data.mapper.UserMapper.toNetworkUser
 import io.github.drumber.kitsune.data.mapper.UserMapper.toUser
 import io.github.drumber.kitsune.data.presentation.model.user.User
 import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLink
 import io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.data.source.network.user.UserNetworkDataSource
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImageUpload
-import io.github.drumber.kitsune.data.common.Filter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -78,12 +78,17 @@ class UserRepository(
         return remoteUserDataSource.getUser(userId, filter)?.toUser()
     }
 
-    suspend fun updateUser(userId: String, user: NetworkUser): LocalUser? {
-        return remoteUserDataSource.updateUser(userId, user)?.toLocalUser()
+    suspend fun updateUser(userId: String, user: LocalUser): LocalUser? {
+        return remoteUserDataSource.updateUser(userId, user.toNetworkUser())?.toLocalUser()
     }
 
-    suspend fun updateUserImage(userId: String, user: NetworkUserImageUpload): Boolean {
-        return remoteUserDataSource.updateUserImage(userId, user)
+    suspend fun updateUserImage(userId: String, avatar: String?, coverImage: String?): Boolean {
+        val userImageUpload = NetworkUserImageUpload(
+            id = userId,
+            avatar = avatar,
+            coverImage = coverImage
+        )
+        return remoteUserDataSource.updateUserImage(userId, userImageUpload)
     }
 
     suspend fun deleteWaifuRelationship(userId: String): Boolean {

@@ -39,7 +39,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class LibraryRepository(
@@ -110,19 +109,19 @@ class LibraryRepository(
             libraryEntryModification.copy(state = LibraryModificationState.SYNCHRONIZING)
 
         return try {
-            coroutineScope.launch {
+            coroutineScope.async {
                 localLibraryDataSource.insertLibraryEntryModification(modification.toLocalLibraryEntryModification())
-            }
+            }.await()
 
             val libraryEntry = pushModificationToService(modification)
-            coroutineScope.launch {
+            coroutineScope.async {
                 if (isLibraryEntryNotOlderThanInDatabase(libraryEntry.toLocalLibraryEntry())) {
                     localLibraryDataSource.updateLibraryEntryAndDeleteModification(
                         libraryEntry.toLocalLibraryEntry(),
                         modification.toLocalLibraryEntryModification()
                     )
                 }
-            }
+            }.await()
             libraryEntry.toLibraryEntry()
         } catch (e: NotFoundException) {
             localLibraryDataSource.deleteLibraryEntryAndAnyModification(modification.id)

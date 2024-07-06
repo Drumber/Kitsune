@@ -5,8 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.RequestManager
-import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toMedia
-import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaMediaSearchResult
+import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
@@ -14,11 +13,11 @@ import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 
 class MediaSearchPagingAdapter(
     private val glide: RequestManager,
-    private val listener: OnItemClickListener<AlgoliaMediaSearchResult>? = null
-) : PagingDataAdapter<AlgoliaMediaSearchResult, MediaViewHolder>(MediaSearchComparator) {
+    private val listener: OnItemClickListener<Media>? = null
+) : PagingDataAdapter<Media, MediaViewHolder>(MediaSearchComparator) {
 
     override fun onBindViewHolder(holder: MediaViewHolder, position: Int) {
-        getItem(position)?.let { holder.bind(it.toMedia()) }
+        getItem(position)?.let { holder.bind(it) }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaViewHolder {
@@ -34,12 +33,11 @@ class MediaSearchPagingAdapter(
         }
     }
 
-    object MediaSearchComparator : DiffUtil.ItemCallback<AlgoliaMediaSearchResult>() {
-        override fun areItemsTheSame(oldItem: AlgoliaMediaSearchResult, newItem: AlgoliaMediaSearchResult) =
-            oldItem.id == newItem.id
+    object MediaSearchComparator : DiffUtil.ItemCallback<Media>() {
+        override fun areItemsTheSame(oldItem: Media, newItem: Media) =
+            oldItem.mediaType == newItem.mediaType && oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: AlgoliaMediaSearchResult, newItem: AlgoliaMediaSearchResult) =
+        override fun areContentsTheSame(oldItem: Media, newItem: Media) =
             oldItem == newItem
     }
-
 }

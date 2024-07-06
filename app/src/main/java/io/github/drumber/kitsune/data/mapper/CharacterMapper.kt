@@ -80,4 +80,15 @@ object CharacterMapper {
         mediaCharacters = null
     )
 
+    fun LocalCharacter.toNetworkCharacter() = NetworkCharacter(
+        id = id,
+        slug = slug,
+        name = name,
+        names = names,
+        otherNames = otherNames,
+        malId = malId,
+        description = description,
+        image = image,
+        mediaCharacters = null
+    )
 }

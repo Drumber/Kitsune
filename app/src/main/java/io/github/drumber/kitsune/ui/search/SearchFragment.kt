@@ -24,9 +24,8 @@ import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toMedia
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
-import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaMediaSearchResult
+import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.FragmentSearchBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
@@ -46,7 +45,7 @@ import java.lang.ref.WeakReference
 
 class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
     FragmentDecorationPreference,
-    OnItemClickListener<AlgoliaMediaSearchResult>,
+    OnItemClickListener<Media>,
     NavigationBarView.OnItemReselectedListener {
 
     override val hasTransparentStatusBar = false
@@ -173,9 +172,8 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
         }
     }
 
-    override fun onItemClick(view: View, item: AlgoliaMediaSearchResult) {
-        val media = item.toMedia()
-        val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(media.toMediaDto())
+    override fun onItemClick(view: View, item: Media) {
+        val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(item.toMediaDto())
         val detailsTransitionName = getString(R.string.details_poster_transition_name)
         val extras = FragmentNavigatorExtras(view to detailsTransitionName)
         findNavController().navigateSafe(R.id.search_fragment, action, extras)

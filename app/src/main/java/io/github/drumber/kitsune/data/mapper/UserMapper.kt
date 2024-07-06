@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.data.mapper
 
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toLocalCharacter
+import io.github.drumber.kitsune.data.mapper.CharacterMapper.toNetworkCharacter
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toMedia
 import io.github.drumber.kitsune.data.mapper.ProfileLinksMapper.toProfileLink
 import io.github.drumber.kitsune.data.mapper.UserStatsMapper.toUserStats
@@ -129,6 +130,31 @@ object UserMapper {
         favorites = null,
         waifu = waifu?.toCharacter(),
         profileLinks = null
+    )
+
+    fun LocalUser.toNetworkUser() = NetworkUser(
+        id = id,
+        createdAt = createdAt,
+        name = name,
+        slug = slug,
+        email = email,
+        title = title,
+        avatar = avatar,
+        coverImage = coverImage,
+        about = about,
+        location = location,
+        gender = gender,
+        birthday = birthday,
+        waifuOrHusbando = waifuOrHusbando,
+        country = country,
+        language = language,
+        timeZone = timeZone,
+        theme = theme,
+        sfwFilter = sfwFilter,
+        ratingSystem = ratingSystem?.toNetworkRatingSystemPreference(),
+        sfwFilterPreference = sfwFilterPreference?.toNetworkSfwFilterPreference(),
+        titleLanguagePreference = titleLanguagePreference?.toNetworkTitleLanguagePreference(),
+        waifu = waifu?.toNetworkCharacter(),
     )
 
     fun LocalRatingSystemPreference.toNetworkRatingSystemPreference() = when (this) {

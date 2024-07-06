@@ -1,16 +1,14 @@
 package io.github.drumber.kitsune.archunit
 
-import androidx.lifecycle.ViewModel
-import androidx.room.Entity
+import com.tngtech.archunit.base.DescribedPredicate.not
 import com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAPackage
-import com.tngtech.archunit.core.domain.JavaClass.Predicates.resideOutsideOfPackage
+import com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAnyPackage
 import com.tngtech.archunit.core.domain.JavaClass.Predicates.simpleNameEndingWith
 import com.tngtech.archunit.core.importer.ClassFileImporter
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
 import com.tngtech.archunit.library.GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS
 import com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices
 import io.github.drumber.kitsune.KitsuneApplication
-import org.junit.Ignore
 import org.junit.Test
 
 class ArchUnitTest {
@@ -29,44 +27,31 @@ class ArchUnitTest {
     }
 
     @Test
-    fun classesShouldNotUseStandardStreams() {
-        NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS.check(NON_TEST_CLASSES)
+    fun classes_should_not_use_standard_streams() {
+        NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS.check(ALL_CLASSES)
     }
 
     @Test
-    fun uiClassesShouldNotAccessDatabaseEntities() {
+    fun ui_should_not_depend_on_data_sources() {
         noClasses()
             .that()
             .resideInAPackage("..kitsune.ui..")
-            .and()
-            .areNotAssignableTo(ViewModel::class.java)
-            .and()
-            .areNotAnonymousClasses()
             .should()
-            .accessClassesThat()
-            .areAnnotatedWith(Entity::class.java)
-            .because("UI classes should not depend on the database")
-            .check(NON_TEST_CLASSES)
-    }
-
-    @Ignore("Deactivated during recode of domain logic")
-    @Test
-    fun differentModelLayersShouldNotDependOnEachOther() {
-        slices()
-            .matching("..domain.model.(*)..")
-            .should()
-            .notDependOnEachOther()
-            // any classes outside 'common' are allowed to depend on 'common'
-            .ignoreDependency(
-                resideOutsideOfPackage("..common.."),
-                resideInAPackage("..common..")
+            .dependOnClassesThat(
+                resideInAPackage("..data.source..")
+                    .and(
+                        not(
+                            // exclusion: local user and character models are allowed in the UI
+                            resideInAnyPackage(
+                                "..data.source.local.user.model..",
+                                "..data.source.local.character..",
+                                // temporary exclusion: Algolia character search is used in EditProfileFragment
+                                "..data.source.network.algolia.model.search.."
+                            )
+                        )
+                    )
             )
-            // classes in 'ui' are allowed to depend on 'infrastructure' classes
-            .ignoreDependency(
-                resideInAPackage("..ui.."),
-                resideInAPackage("..infrastructure..")
-            )
-            .because("different model layers should be independent from each other")
+            .because("UI classes should not depend on data sources directly")
             .check(NON_TEST_CLASSES)
     }
 
@@ -81,12 +66,12 @@ class ArchUnitTest {
     }
 
     @Test
-    fun other_layers_should_not_access_data_sources_directly() {
+    fun other_layers_should_not_depend_on_data_sources_directly() {
         noClasses()
             .that()
             .resideOutsideOfPackages("..data.source..", "..data.repository..", "..di..")
             .should()
-            .accessClassesThat(
+            .dependOnClassesThat(
                 resideInAPackage("..data.source..")
                     .and(simpleNameEndingWith("DataSource"))
             )
@@ -129,5 +114,4 @@ class ArchUnitTest {
             .because("data sources classes should not depend on presentation classes")
             .check(NON_TEST_CLASSES)
     }
-
 }

@@ -10,7 +10,7 @@ import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.repository.UserRepository
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
+import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
@@ -35,11 +35,7 @@ class SettingsViewModel(
         }
     }
 
-    fun updateUser(user: NetworkUser) {
-        if (user.id.isNullOrBlank()) {
-            errorMessageListener?.invoke(ErrorMessage(R.string.error_invalid_user))
-            return
-        }
+    fun updateUser(user: LocalUser) {
         _isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {

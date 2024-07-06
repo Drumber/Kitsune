@@ -14,6 +14,7 @@ import com.algolia.search.model.response.ResponseSearch
 import com.algolia.search.model.search.Query
 import com.algolia.search.model.search.RemoveStopWords
 import com.algolia.search.model.search.RemoveWordIfNoResults
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
 import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
 import io.github.drumber.kitsune.data.presentation.model.character.Character
@@ -22,14 +23,9 @@ import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.Profi
 import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.data.source.local.character.LocalCharacter
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
-import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImageUpload
-import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
-import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
 import io.github.drumber.kitsune.domain.algolia.SearchProvider
-import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
@@ -209,13 +205,12 @@ class EditProfileViewModel(
         val user = userRepository.localUser.value ?: return
         val changes = profileState
         val waifu = if (changes.character != null && changes.waifuOrHusbando.isNotBlank()) {
-            NetworkCharacter(id = changes.character.id)
+            LocalCharacter.empty(changes.character.id)
         } else {
             null
         }
 
-        val updatedUserModel = NetworkUser(
-            id = user.id,
+        val updatedUserModel = LocalUser.empty(user.id).copy(
             location = changes.location,
             birthday = changes.birthday,
             gender = if (changes.gender == "custom") changes.customGender else changes.gender,
@@ -263,13 +258,7 @@ class EditProfileViewModel(
 
     private suspend fun uploadUserImages(useId: String, profileImages: ProfileImageContainer) {
         logD("Updating user image(s).")
-        val body = NetworkUserImageUpload(
-            id = useId,
-            avatar = profileImages.avatar,
-            coverImage = profileImages.coverImage
-        )
-
-        val isSuccessful = userRepository.updateUserImage(useId, body)
+        val isSuccessful = userRepository.updateUserImage(useId, profileImages.avatar, profileImages.coverImage)
         if (!isSuccessful) {
             throw ProfileUpdateException.ProfileImageError()
         }
@@ -340,15 +329,9 @@ class EditProfileViewModel(
         userId: String
     ): ProfileLink? {
         return profileLinkRepository.createProfileLink(
-            NetworkProfileLink(
-                id = null,
-                url = profileLinkEntry.url,
-                profileLinkSite = NetworkProfileLinkSite(
-                    id = profileLinkEntry.site.id,
-                    name = null
-                ),
-                user = NetworkUser(id = userId)
-            )
+            userId,
+            profileLinkEntry.site.id,
+            profileLinkEntry.url
         )
     }
 
@@ -357,13 +340,9 @@ class EditProfileViewModel(
         userId: String
     ): ProfileLink? {
         return profileLinkRepository.updateProfileLink(
+            userId,
             profileLinkEntry.id!!,
-            NetworkProfileLink(
-                id = profileLinkEntry.id,
-                url = profileLinkEntry.url,
-                profileLinkSite = null,
-                user = NetworkUser(id = userId)
-            )
+            profileLinkEntry.url
         )
     }
 

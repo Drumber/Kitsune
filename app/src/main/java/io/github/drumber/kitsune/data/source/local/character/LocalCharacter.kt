@@ -12,4 +12,17 @@ data class LocalCharacter(
     val malId: Int?,
     val description: String?,
     val image: Image?
-)
+) {
+    companion object {
+        fun empty(id: String) = LocalCharacter(
+            id = id,
+            slug = null,
+            name = null,
+            names = null,
+            otherNames = null,
+            malId = null,
+            description = null,
+            image = null
+        )
+    }
+}
