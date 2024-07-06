@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.domain_old.model.preference
+package io.github.drumber.kitsune.preference
 
 import io.github.drumber.kitsune.R
 

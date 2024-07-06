@@ -6,7 +6,7 @@ import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.Profi
 import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLinkSite
 import io.github.drumber.kitsune.data.source.network.user.ProfileLinkNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 
 class ProfileLinkRepository(
     private val remoteProfileLinkDataSource: ProfileLinkNetworkDataSource

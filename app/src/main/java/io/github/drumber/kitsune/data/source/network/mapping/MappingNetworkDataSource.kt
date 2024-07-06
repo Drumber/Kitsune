@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.data.source.network.mapping
 
 import io.github.drumber.kitsune.data.source.network.mapping.api.MappingApi
 import io.github.drumber.kitsune.data.source.network.mapping.model.NetworkMapping
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

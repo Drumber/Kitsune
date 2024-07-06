@@ -1,5 +1,7 @@
 package io.github.drumber.kitsune.data.mapper
 
+import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
+import io.github.drumber.kitsune.data.mapper.ImageMapper.toLocalImage
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toAnime
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toAnimeSubtype
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toManga
@@ -145,8 +147,8 @@ object LibraryMapper {
         ageRating = ageRating,
         ageRatingGuide = ageRatingGuide,
         nsfw = nsfw,
-        posterImage = posterImage,
-        coverImage = coverImage,
+        posterImage = posterImage?.toImage(),
+        coverImage = coverImage?.toImage(),
         totalLength = totalLength,
         episodeCount = episodeCount,
         episodeLength = episodeLength,
@@ -179,8 +181,8 @@ object LibraryMapper {
         ageRating = ageRating,
         ageRatingGuide = ageRatingGuide,
         nsfw = nsfw,
-        posterImage = posterImage,
-        coverImage = coverImage,
+        posterImage = posterImage?.toImage(),
+        coverImage = coverImage?.toImage(),
         totalLength = totalLength,
         chapterCount = chapterCount,
         volumeCount = volumeCount,
@@ -209,8 +211,8 @@ object LibraryMapper {
         ageRating = ageRating,
         ageRatingGuide = ageRatingGuide,
         nsfw = nsfw,
-        posterImage = posterImage,
-        coverImage = coverImage,
+        posterImage = posterImage?.toLocalImage(),
+        coverImage = coverImage?.toLocalImage(),
         animeSubtype = subtype?.toAnimeSubtype(),
         totalLength = totalLength,
         episodeCount = episodeCount,
@@ -240,8 +242,8 @@ object LibraryMapper {
         ageRating = ageRating,
         ageRatingGuide = ageRatingGuide,
         nsfw = nsfw,
-        posterImage = posterImage,
-        coverImage = coverImage,
+        posterImage = posterImage?.toLocalImage(),
+        coverImage = coverImage?.toLocalImage(),
         animeSubtype = null,
         totalLength = null,
         episodeCount = null,

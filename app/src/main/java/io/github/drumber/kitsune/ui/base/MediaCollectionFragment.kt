@@ -6,8 +6,8 @@ import androidx.annotation.LayoutRes
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingData
 import com.bumptech.glide.Glide
+import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.presentation.model.media.Media
-import io.github.drumber.kitsune.data.presentation.model.media.MediaType
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.paging.AnimeAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.MangaAdapter

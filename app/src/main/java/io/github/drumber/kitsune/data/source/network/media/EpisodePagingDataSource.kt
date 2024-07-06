@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.data.source.network.media
 import io.github.drumber.kitsune.data.source.network.BasePagingDataSource
 import io.github.drumber.kitsune.data.source.network.PageData
 import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkEpisode
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 
 class EpisodePagingDataSource(
     private val dataSource: EpisodeNetworkDataSource,

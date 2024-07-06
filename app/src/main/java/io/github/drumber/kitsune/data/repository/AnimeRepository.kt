@@ -9,7 +9,7 @@ import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.source.network.media.AnimeNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.media.AnimePagingDataSource
 import io.github.drumber.kitsune.data.source.network.media.TrendingAnimePagingDataSource
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 import kotlinx.coroutines.flow.map
 
 class AnimeRepository(

@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.data.presentation.model.media.category.CategoryNode
 import io.github.drumber.kitsune.data.repository.CategoryRepository
-import io.github.drumber.kitsune.domain_old.model.preference.CategoryPrefWrapper
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.preference.CategoryPrefWrapper
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.network.ResponseData

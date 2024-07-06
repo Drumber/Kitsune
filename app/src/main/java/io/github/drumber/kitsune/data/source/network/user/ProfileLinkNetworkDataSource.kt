@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.data.source.network.user
 import io.github.drumber.kitsune.data.source.network.user.api.ProfileLinkApi
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

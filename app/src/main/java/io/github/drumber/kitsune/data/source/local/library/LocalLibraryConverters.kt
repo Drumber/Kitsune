@@ -2,11 +2,9 @@ package io.github.drumber.kitsune.data.source.local.library
 
 import androidx.room.TypeConverter
 import com.fasterxml.jackson.module.kotlin.readValue
-import io.github.drumber.kitsune.data.common.Image
 import io.github.drumber.kitsune.data.common.media.AgeRating
 import io.github.drumber.kitsune.data.common.media.AnimeSubtype
 import io.github.drumber.kitsune.data.common.media.MangaSubtype
-import io.github.drumber.kitsune.data.common.media.RatingFrequencies
 import io.github.drumber.kitsune.data.common.media.ReleaseStatus
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus
 import io.github.drumber.kitsune.data.source.local.library.model.LocalReactionSkip
@@ -168,42 +166,6 @@ class LocalLibraryConverters {
 
     @TypeConverter
     fun stringToRemoteKeyType(json: String?): RemoteKeyType? {
-        return if (json != null) {
-            objectMapper.readValue(json)
-        } else {
-            null
-        }
-    }
-
-    @TypeConverter
-    fun ratingFrequenciesToString(ratingFrequencies: RatingFrequencies?): String? {
-        return if (ratingFrequencies != null) {
-            objectMapper.writeValueAsString(ratingFrequencies)
-        } else {
-            null
-        }
-    }
-
-    @TypeConverter
-    fun stringToRatingFrequencies(json: String?): RatingFrequencies? {
-        return if (json != null) {
-            objectMapper.readValue(json)
-        } else {
-            null
-        }
-    }
-
-    @TypeConverter
-    fun imageToString(image: Image?): String? {
-        return if (image != null) {
-            objectMapper.writeValueAsString(image)
-        } else {
-            null
-        }
-    }
-
-    @TypeConverter
-    fun stringToImage(json: String?): Image? {
         return if (json != null) {
             objectMapper.readValue(json)
         } else {

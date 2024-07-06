@@ -4,7 +4,7 @@ import io.github.drumber.kitsune.data.source.network.PageData
 import io.github.drumber.kitsune.data.source.network.media.api.EpisodeApi
 import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkEpisode
 import io.github.drumber.kitsune.data.source.network.toPageData
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 
 class EpisodeNetworkDataSource(
     private val episodeApi: EpisodeApi

@@ -40,8 +40,10 @@ import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.constants.SortFilter
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.Titles
 import io.github.drumber.kitsune.data.common.en
+import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.common.withoutCommonTitles
 import io.github.drumber.kitsune.data.presentation.dto.toMedia
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
@@ -52,12 +54,10 @@ import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
-import io.github.drumber.kitsune.data.presentation.model.media.MediaType
 import io.github.drumber.kitsune.data.presentation.model.media.category.Category
 import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.databinding.ItemDetailsInfoRowBinding
-import io.github.drumber.kitsune.domain_old.service.Filter
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
@@ -451,6 +451,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             Filter()
                 .filter("categories", categorySlug)
                 .sort(SortFilter.POPULARITY_DESC.queryParam)
+                .options
         )
 
         val action =

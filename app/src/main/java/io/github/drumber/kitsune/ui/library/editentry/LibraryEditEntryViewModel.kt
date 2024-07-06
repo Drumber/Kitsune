@@ -13,7 +13,7 @@ import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Failure
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Success
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryUseCase
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

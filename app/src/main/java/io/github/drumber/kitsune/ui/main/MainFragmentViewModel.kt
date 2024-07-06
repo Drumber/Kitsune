@@ -7,10 +7,11 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.SortFilter
-import io.github.drumber.kitsune.data.presentation.model.media.MediaType
+import io.github.drumber.kitsune.data.common.media.MediaType
+import io.github.drumber.kitsune.data.presentation.model.media.identifier
 import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logV
@@ -171,7 +172,7 @@ class MainFragmentViewModel(
             pageLimit(10)
             filterType?.let { filter("status", it) }
             sort(sortBy.queryParam)
-            fields(type.type, *Defaults.MINIMUM_COLLECTION_FIELDS)
+            fields(type.identifier, *Defaults.MINIMUM_COLLECTION_FIELDS)
         }
     }
 

@@ -1,11 +1,8 @@
-package io.github.drumber.kitsune.domain_old.service
+package io.github.drumber.kitsune.data.common
 
-import android.os.Parcelable
 import io.github.drumber.kitsune.constants.Kitsu
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
-data class Filter(val options: MutableMap<String, String> = mutableMapOf()): Parcelable {
+data class Filter(val options: FilterOptions = mutableMapOf()) {
 
     /** Defines how much of data to receive. This is only used for some lists, like trending. */
     fun limit(limit: Int) = put("limit", limit)
@@ -34,5 +31,8 @@ data class Filter(val options: MutableMap<String, String> = mutableMapOf()): Par
         options[key] = value.toString()
         return this
     }
-
 }
+
+typealias FilterOptions = MutableMap<String, String>
+
+fun FilterOptions.toFilter() = Filter(this)

@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.data.source.local.library.model
 
-import io.github.drumber.kitsune.data.common.Image
+import androidx.room.Embedded
+import androidx.room.PrimaryKey
 import io.github.drumber.kitsune.data.common.Titles
 import io.github.drumber.kitsune.data.common.media.AgeRating
 import io.github.drumber.kitsune.data.common.media.AnimeSubtype
@@ -9,6 +10,7 @@ import io.github.drumber.kitsune.data.common.media.RatingFrequencies
 import io.github.drumber.kitsune.data.common.media.ReleaseStatus
 
 data class LocalLibraryMedia(
+    @PrimaryKey
     val id: String,
     val type: MediaType,
 
@@ -18,6 +20,7 @@ data class LocalLibraryMedia(
     val abbreviatedTitles: List<String>?,
 
     val averageRating: String?,
+    @Embedded(prefix = "rating_")
     val ratingFrequencies: RatingFrequencies?,
     val popularityRank: Int?,
     val ratingRank: Int?,
@@ -32,8 +35,10 @@ data class LocalLibraryMedia(
     val ageRatingGuide: String?,
     val nsfw: Boolean?,
 
-    val posterImage: Image?,
-    val coverImage: Image?,
+    @Embedded(prefix = "poster_")
+    val posterImage: LocalImage?,
+    @Embedded(prefix = "cover_")
+    val coverImage: LocalImage?,
 
     // Anime specific attributes
     val animeSubtype: AnimeSubtype?,

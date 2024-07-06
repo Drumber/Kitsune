@@ -24,7 +24,7 @@ import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCas
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryRatingUseCase
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.library.InternalAction.LibraryUpdateOperationEnd
 import io.github.drumber.kitsune.ui.library.InternalAction.LibraryUpdateOperationStart

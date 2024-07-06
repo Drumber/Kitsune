@@ -12,7 +12,7 @@ import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.data.source.network.user.UserNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImageUpload
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow

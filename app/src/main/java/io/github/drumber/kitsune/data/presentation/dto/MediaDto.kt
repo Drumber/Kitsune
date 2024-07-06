@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.data.presentation.dto
 
 import android.os.Parcelable
 import io.github.drumber.kitsune.data.common.Titles
-import io.github.drumber.kitsune.data.presentation.dto.MediaDto.MediaType
+import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.presentation.model.media.Media
@@ -16,13 +16,7 @@ data class MediaDto(
     val canonicalTitle: String?,
     val posterImage: ImageDto?,
     val coverImage: ImageDto?
-) : Parcelable {
-
-    enum class MediaType {
-        Anime,
-        Manga
-    }
-}
+) : Parcelable
 
 fun Media.toMediaDto() = MediaDto(
     id = id,

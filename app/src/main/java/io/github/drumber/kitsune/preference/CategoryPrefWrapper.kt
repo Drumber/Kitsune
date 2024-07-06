@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.domain_old.model.preference
+package io.github.drumber.kitsune.preference
 
 data class CategoryPrefWrapper(
     val categoryId: String? = null,

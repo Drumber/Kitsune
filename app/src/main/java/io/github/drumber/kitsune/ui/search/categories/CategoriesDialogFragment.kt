@@ -13,7 +13,7 @@ import com.unnamed.b.atv.view.AndroidTreeView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.media.category.CategoryNode
 import io.github.drumber.kitsune.databinding.FragmentCategoriesBinding
-import io.github.drumber.kitsune.domain_old.model.preference.CategoryPrefWrapper
+import io.github.drumber.kitsune.preference.CategoryPrefWrapper
 import io.github.drumber.kitsune.ui.base.BaseDialogFragment
 import io.github.drumber.kitsune.util.network.ResponseData
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener

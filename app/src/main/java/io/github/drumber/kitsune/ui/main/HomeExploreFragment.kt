@@ -11,14 +11,14 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
-import io.github.drumber.kitsune.data.presentation.model.media.MediaType
 import io.github.drumber.kitsune.data.presentation.model.media.RequestType
 import io.github.drumber.kitsune.databinding.FragmentHomeExploreBinding
 import io.github.drumber.kitsune.databinding.SectionMainExploreBinding
-import io.github.drumber.kitsune.domain_old.service.Filter
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.base.BaseFragment
@@ -177,7 +177,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
             }
         }
 
-        val mediaSelector = MediaSelector(mediaType, filter, requestType)
+        val mediaSelector = MediaSelector(mediaType, filter.options, requestType)
         val section = createExploreSection(titleRes, mediaSelector, sectionBinding.root)
 
         liveData.observe(viewLifecycleOwner) { response ->

@@ -31,7 +31,7 @@ import io.github.drumber.kitsune.data.source.network.library.LibraryEntryPagingD
 import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry
 import io.github.drumber.kitsune.data.utils.InvalidatingPagingSourceFactory
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.exception.NotFoundException
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.parseUtcDate

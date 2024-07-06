@@ -17,7 +17,7 @@ import io.github.drumber.kitsune.data.repository.MediaUnitRepository
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository.MediaUnitType
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCase
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.data.repository
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toCategory
 import io.github.drumber.kitsune.data.presentation.model.media.category.Category
 import io.github.drumber.kitsune.data.source.network.media.CategoryNetworkDataSource
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 
 class CategoryRepository(
     private val categoryNetworkDataSource: CategoryNetworkDataSource

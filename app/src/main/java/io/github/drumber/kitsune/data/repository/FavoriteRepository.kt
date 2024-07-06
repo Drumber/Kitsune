@@ -10,7 +10,7 @@ import io.github.drumber.kitsune.data.source.network.user.FavoriteNetworkDataSou
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavoriteItem
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 
 class FavoriteRepository(
     private val remoteFavoriteDataSource: FavoriteNetworkDataSource

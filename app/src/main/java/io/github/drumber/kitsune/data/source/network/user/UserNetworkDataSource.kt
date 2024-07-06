@@ -6,7 +6,7 @@ import io.github.drumber.kitsune.data.source.network.user.api.UserImageUploadApi
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImageUpload
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

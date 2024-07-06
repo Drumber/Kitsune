@@ -32,8 +32,8 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.databinding.ActivityMainBinding
-import io.github.drumber.kitsune.domain_old.model.preference.StartPagePref
-import io.github.drumber.kitsune.domain_old.model.preference.getDestinationId
+import io.github.drumber.kitsune.preference.StartPagePref
+import io.github.drumber.kitsune.preference.getDestinationId
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity

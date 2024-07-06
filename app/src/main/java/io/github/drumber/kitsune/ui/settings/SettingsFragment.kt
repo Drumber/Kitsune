@@ -32,7 +32,7 @@ import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguage
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
-import io.github.drumber.kitsune.domain_old.model.preference.StartPagePref
+import io.github.drumber.kitsune.preference.StartPagePref
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BasePreferenceFragment

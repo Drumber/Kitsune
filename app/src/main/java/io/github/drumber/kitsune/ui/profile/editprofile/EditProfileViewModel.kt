@@ -29,7 +29,7 @@ import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImage
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
 import io.github.drumber.kitsune.domain.algolia.SearchProvider
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE

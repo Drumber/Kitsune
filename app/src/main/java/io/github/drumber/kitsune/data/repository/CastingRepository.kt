@@ -7,7 +7,7 @@ import io.github.drumber.kitsune.constants.Repository
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toCasting
 import io.github.drumber.kitsune.data.source.network.media.CastingNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.media.CastingPagingDataSource
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 import kotlinx.coroutines.flow.map
 
 class CastingRepository(

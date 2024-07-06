@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="adapter"
-            type="io.github.drumber.kitsune.domain_old.model.ui.media.MediaUnitAdapter" />
+            name="mediaUnit"
+            type="io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit" />
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -45,7 +45,7 @@
                     android:maxLines="3"
                     android:ellipsize="end"
                     android:textColor="@color/white"
-                    android:text="@{adapter.title(context)}"
+                    android:text="@{mediaUnit.title(context)}"
                     tools:text="Some Title" />
 
             </FrameLayout>
@@ -63,7 +63,7 @@
                     android:gravity="center"
                     android:layout_weight="1"
                     android:layout_marginHorizontal="10dp"
-                    android:text="@{adapter.hasValidTitle ? adapter.numberText(context) : null}"
+                    android:text="@{mediaUnit.hasValidTitle ? mediaUnit.numberText(context) : null}"
                     tools:text="Episode 2" />
 
                 <TextView
@@ -72,7 +72,7 @@
                     android:gravity="center"
                     android:layout_weight="1"
                     android:layout_marginHorizontal="10dp"
-                    android:text="@{adapter.date}"
+                    android:text="@{mediaUnit.formatDate()}"
                     tools:text="21/1/1" />
 
                 <TextView
@@ -81,7 +81,7 @@
                     android:gravity="center"
                     android:layout_weight="1"
                     android:layout_marginHorizontal="10dp"
-                    android:text="@{adapter.length(context)}"
+                    android:text="@{mediaUnit.length(context)}"
                     tools:text="23 minutes" />
 
             </LinearLayout>
@@ -91,8 +91,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                app:isVisible="@{adapter.description != null}"
-                android:text="@{adapter.description}"
+                app:isVisible="@{mediaUnit.description != null}"
+                android:text="@{mediaUnit.description}"
                 tools:text="Some description text." />
 
         </LinearLayout>

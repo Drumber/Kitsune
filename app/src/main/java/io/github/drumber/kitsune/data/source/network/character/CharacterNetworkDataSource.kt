@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.data.source.network.character
 
 import io.github.drumber.kitsune.data.source.network.character.api.CharacterApi
 import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

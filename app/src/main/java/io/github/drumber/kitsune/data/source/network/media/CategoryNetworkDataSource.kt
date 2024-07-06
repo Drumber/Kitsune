@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.data.source.network.media
 
 import io.github.drumber.kitsune.data.source.network.media.api.CategoryApi
 import io.github.drumber.kitsune.data.source.network.media.model.category.NetworkCategory
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

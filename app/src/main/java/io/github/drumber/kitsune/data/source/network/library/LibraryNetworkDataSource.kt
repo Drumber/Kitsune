@@ -5,7 +5,7 @@ import io.github.drumber.kitsune.data.source.network.PageData
 import io.github.drumber.kitsune.data.source.network.library.api.LibraryEntryApi
 import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry
 import io.github.drumber.kitsune.data.source.network.toPageData
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

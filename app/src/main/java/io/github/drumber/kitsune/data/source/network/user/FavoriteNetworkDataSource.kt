@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.data.source.network.user
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.data.source.network.user.api.FavoriteApi
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

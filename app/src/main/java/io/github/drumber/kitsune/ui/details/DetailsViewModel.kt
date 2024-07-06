@@ -23,7 +23,7 @@ import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryUseCase
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
-import io.github.drumber.kitsune.domain_old.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.LibraryUpdateResult
