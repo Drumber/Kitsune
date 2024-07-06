@@ -2,10 +2,12 @@ package io.github.drumber.kitsune.di
 
 import android.app.usage.NetworkStats
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.drumber.kitsune.constants.GitHub
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.repository.AccessTokenRepository
 import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.data.repository.AnimeRepository
+import io.github.drumber.kitsune.data.repository.AppUpdateRepository
 import io.github.drumber.kitsune.data.repository.CastingRepository
 import io.github.drumber.kitsune.data.repository.CategoryRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
@@ -21,6 +23,8 @@ import io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource
 import io.github.drumber.kitsune.data.source.local.user.UserPreferences
 import io.github.drumber.kitsune.data.source.network.algolia.AlgoliaKeyNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.algolia.api.AlgoliaKeyApi
+import io.github.drumber.kitsune.data.source.network.appupdate.AppReleaseNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.appupdate.api.GitHubApi
 import io.github.drumber.kitsune.data.source.network.auth.AccessTokenNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.auth.api.AuthenticationApi
 import io.github.drumber.kitsune.data.source.network.character.api.CharacterApi
@@ -72,6 +76,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.util.concurrent.TimeUnit
 
@@ -236,6 +241,17 @@ val repositoryModule = module {
     }
     single { LibraryNetworkDataSource(get()) }
     single { LibraryRepository(get(), get(), get()) }
+
+    // App Update
+    factory {
+        createService<GitHubApi>(
+            get(named("unauthenticated")),
+            get(),
+            GitHub.API_URL
+        )
+    }
+    single { AppReleaseNetworkDataSource(get()) }
+    single { AppUpdateRepository(get()) }
 }
 
 private fun createAuthService(objectMapper: ObjectMapper) = createService<AuthenticationApi>(

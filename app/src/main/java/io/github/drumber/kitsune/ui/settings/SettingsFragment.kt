@@ -24,13 +24,14 @@ import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.mapper.UserMapper.toNetworkRatingSystemPreference
 import io.github.drumber.kitsune.data.mapper.UserMapper.toNetworkSfwFilterPreference
 import io.github.drumber.kitsune.data.mapper.UserMapper.toNetworkTitleLanguagePreference
+import io.github.drumber.kitsune.data.presentation.model.appupdate.UpdateCheckResult
+import io.github.drumber.kitsune.data.repository.AppUpdateRepository
 import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
-import io.github.drumber.kitsune.domain_old.manager.GitHubUpdateChecker
 import io.github.drumber.kitsune.domain_old.model.preference.StartPagePref
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
@@ -48,7 +49,7 @@ class SettingsFragment : BasePreferenceFragment() {
 
     private val viewModel: SettingsViewModel by viewModel()
 
-    private val updateChecker: GitHubUpdateChecker by inject()
+    private val appUpdateRepository: AppUpdateRepository by inject()
 
     // this result listener will be called on requesting notification permission after the
     // 'check for updates on launch' permission was changed and notification permission is not granted
@@ -196,8 +197,8 @@ class SettingsFragment : BasePreferenceFragment() {
         ).show()
 
         lifecycleScope.launch {
-            when (val result = updateChecker.checkForUpdates()) {
-                is GitHubUpdateChecker.UpdateCheckerResult.NewVersion -> {
+            when (val result = appUpdateRepository.checkForUpdates()) {
+                is UpdateCheckResult.NewVersion -> {
                     val release = result.release
                     Notifications.showNewVersion(requireContext(), release)
 
@@ -213,7 +214,7 @@ class SettingsFragment : BasePreferenceFragment() {
                         .show()
                 }
 
-                is GitHubUpdateChecker.UpdateCheckerResult.NoNewVersion -> {
+                is UpdateCheckResult.NoNewVersion -> {
                     Toast.makeText(
                         requireContext(),
                         R.string.info_update_no_new_version_available,
@@ -221,7 +222,7 @@ class SettingsFragment : BasePreferenceFragment() {
                     ).show()
                 }
 
-                is GitHubUpdateChecker.UpdateCheckerResult.Failed -> {
+                is UpdateCheckResult.Error -> {
                     Toast.makeText(
                         requireContext(),
                         R.string.info_update_failed,

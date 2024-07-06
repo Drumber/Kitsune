@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class MediaSearchKind {
+enum class AlgoliaMediaSearchKind {
     @SerialName("anime")
     Anime,
     @SerialName("manga")

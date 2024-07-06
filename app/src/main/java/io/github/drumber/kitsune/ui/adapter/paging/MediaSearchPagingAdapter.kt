@@ -6,7 +6,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toMedia
-import io.github.drumber.kitsune.data.source.network.algolia.model.search.MediaSearchResult
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaMediaSearchResult
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
@@ -14,8 +14,8 @@ import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 
 class MediaSearchPagingAdapter(
     private val glide: RequestManager,
-    private val listener: OnItemClickListener<MediaSearchResult>? = null
-) : PagingDataAdapter<MediaSearchResult, MediaViewHolder>(MediaSearchComparator) {
+    private val listener: OnItemClickListener<AlgoliaMediaSearchResult>? = null
+) : PagingDataAdapter<AlgoliaMediaSearchResult, MediaViewHolder>(MediaSearchComparator) {
 
     override fun onBindViewHolder(holder: MediaViewHolder, position: Int) {
         getItem(position)?.let { holder.bind(it.toMedia()) }
@@ -34,11 +34,11 @@ class MediaSearchPagingAdapter(
         }
     }
 
-    object MediaSearchComparator : DiffUtil.ItemCallback<MediaSearchResult>() {
-        override fun areItemsTheSame(oldItem: MediaSearchResult, newItem: MediaSearchResult) =
+    object MediaSearchComparator : DiffUtil.ItemCallback<AlgoliaMediaSearchResult>() {
+        override fun areItemsTheSame(oldItem: AlgoliaMediaSearchResult, newItem: AlgoliaMediaSearchResult) =
             oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: MediaSearchResult, newItem: MediaSearchResult) =
+        override fun areContentsTheSame(oldItem: AlgoliaMediaSearchResult, newItem: AlgoliaMediaSearchResult) =
             oldItem == newItem
     }
 

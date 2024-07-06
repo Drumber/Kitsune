@@ -26,7 +26,7 @@ import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toMedia
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
-import io.github.drumber.kitsune.data.source.network.algolia.model.search.MediaSearchResult
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaMediaSearchResult
 import io.github.drumber.kitsune.databinding.FragmentSearchBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
@@ -46,7 +46,7 @@ import java.lang.ref.WeakReference
 
 class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
     FragmentDecorationPreference,
-    OnItemClickListener<MediaSearchResult>,
+    OnItemClickListener<AlgoliaMediaSearchResult>,
     NavigationBarView.OnItemReselectedListener {
 
     override val hasTransparentStatusBar = false
@@ -173,7 +173,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
         }
     }
 
-    override fun onItemClick(view: View, item: MediaSearchResult) {
+    override fun onItemClick(view: View, item: AlgoliaMediaSearchResult) {
         val media = item.toMedia()
         val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(media.toMediaDto())
         val detailsTransitionName = getString(R.string.details_poster_transition_name)

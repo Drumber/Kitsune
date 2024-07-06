@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.domain_old.model
+package io.github.drumber.kitsune.domain.algolia
 
 import com.algolia.instantsearch.filter.state.FilterGroupID
 import com.algolia.instantsearch.filter.state.Filters

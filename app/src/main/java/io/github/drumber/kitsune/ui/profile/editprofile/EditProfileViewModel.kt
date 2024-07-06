@@ -14,20 +14,21 @@ import com.algolia.search.model.response.ResponseSearch
 import com.algolia.search.model.search.Query
 import com.algolia.search.model.search.RemoveStopWords
 import com.algolia.search.model.search.RemoveWordIfNoResults
+import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
+import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
+import io.github.drumber.kitsune.data.presentation.model.character.Character
 import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLink
 import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLinkSite
 import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
-import io.github.drumber.kitsune.data.source.local.character.LocalCharacter
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImageUpload
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
-import io.github.drumber.kitsune.domain_old.manager.SearchProvider
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.SearchType
+import io.github.drumber.kitsune.domain.algolia.SearchProvider
 import io.github.drumber.kitsune.domain_old.service.Filter
 import io.github.drumber.kitsune.exception.ReceivedDataException
 import io.github.drumber.kitsune.util.logD
@@ -106,7 +107,7 @@ class EditProfileViewModel(
             gender = user?.getGenderWithoutCustomGender() ?: "",
             customGender = user?.getCustomGenderOrNull() ?: "",
             waifuOrHusbando = user?.waifuOrHusbando ?: "",
-            character = user?.waifu,
+            character = user?.waifu?.toCharacter(),
             about = user?.about ?: ""
         )
 
@@ -525,7 +526,7 @@ data class ProfileState(
     val gender: String,
     val customGender: String,
     val waifuOrHusbando: String,
-    val character: LocalCharacter?,
+    val character: Character?,
     val about: String
 )
 

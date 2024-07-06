@@ -1,7 +1,4 @@
-package io.github.drumber.kitsune.domain_old.model.infrastructure.algolia
-
-import io.github.drumber.kitsune.data.presentation.model.algolia.AlgoliaKey
-import io.github.drumber.kitsune.data.presentation.model.algolia.AlgoliaKeyCollection
+package io.github.drumber.kitsune.data.presentation.model.algolia
 
 enum class SearchType(private val algoliaKey: (AlgoliaKeyCollection) -> AlgoliaKey?) {
     Users({ it.users }),

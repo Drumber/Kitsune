@@ -10,12 +10,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.domain_old.model.infrastructure.github.GitHubRelease
+import io.github.drumber.kitsune.data.presentation.model.appupdate.AppRelease
 import io.github.drumber.kitsune.notification.NotificationChannels.CHANNEL_UPDATE_CHECKER
 
 object Notifications {
 
-    fun showNewVersion(context: Context, release: GitHubRelease) {
+    fun showNewVersion(context: Context, release: AppRelease) {
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(release.url))
         val releaseIntent = PendingIntent.getActivity(
             context,

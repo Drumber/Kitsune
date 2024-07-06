@@ -6,10 +6,11 @@ import by.kirich1409.viewbindingdelegate.ViewBindingPropertyDelegate
 import com.algolia.instantsearch.core.InstantSearchTelemetry
 import com.chibatching.kotpref.Kotpref
 import com.chibatching.kotpref.livedata.asLiveData
+import io.github.drumber.kitsune.data.presentation.model.appupdate.UpdateCheckResult
+import io.github.drumber.kitsune.data.repository.AppUpdateRepository
 import io.github.drumber.kitsune.di.appModule
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.domain.user.UpdateLocalUserUseCase
-import io.github.drumber.kitsune.domain_old.manager.GitHubUpdateChecker
 import io.github.drumber.kitsune.notification.NotificationChannels
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
@@ -99,12 +100,11 @@ class KitsuneApplication : Application() {
 
     private fun checkForNewVersion() {
         applicationScope.launch {
-            val updateChecker: GitHubUpdateChecker = get()
+            val updateChecker: AppUpdateRepository = get()
             val result = updateChecker.checkForUpdates()
-            if (result is GitHubUpdateChecker.UpdateCheckerResult.NewVersion) {
+            if (result is UpdateCheckResult.NewVersion) {
                 Notifications.showNewVersion(this@KitsuneApplication, result.release)
             }
         }
     }
-
 }

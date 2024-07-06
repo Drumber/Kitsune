@@ -4,9 +4,9 @@ import io.github.drumber.kitsune.domain_old.model.common.media.Titles
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MediaSearchResult(
+data class AlgoliaMediaSearchResult(
     val id: Long,
-    val kind: MediaSearchKind,
+    val kind: AlgoliaMediaSearchKind,
     val subtype: String? = null,
     val slug: String? = null,
     val titles: Titles? = null,

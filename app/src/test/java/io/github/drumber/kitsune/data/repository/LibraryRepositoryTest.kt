@@ -17,7 +17,7 @@ import io.github.drumber.kitsune.testutils.assertThatThrownBy
 import io.github.drumber.kitsune.testutils.localLibraryEntry
 import io.github.drumber.kitsune.testutils.network.FakeHttpException
 import io.github.drumber.kitsune.testutils.networkLibraryEntry
-import io.github.drumber.kitsune.testutils.newAnime
+import io.github.drumber.kitsune.testutils.anime
 import io.github.drumber.kitsune.testutils.onSuspend
 import io.github.drumber.kitsune.testutils.useMockedAndroidLogger
 import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
@@ -49,7 +49,7 @@ class LibraryRepositoryTest {
     fun shouldAddNewLibraryEntry() = runTest {
         // given
         val userId = faker.internet().uuid()
-        val media = newAnime(faker)
+        val media = anime(faker)
         val status = LibraryStatus.Planned
         val libraryEntry = networkLibraryEntry(faker)
 
@@ -86,7 +86,7 @@ class LibraryRepositoryTest {
     fun shouldNotAddNewLibraryEntryOnNetworkError() = runTest {
         // given
         val userId = faker.internet().uuid()
-        val media = newAnime(faker)
+        val media = anime(faker)
         val status = LibraryStatus.Planned
 
         val remoteDataSource = mock<LibraryNetworkDataSource> {

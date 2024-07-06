@@ -14,5 +14,4 @@ class AlgoliaKeyNetworkDataSource(
             algoliaKeyApi.getAllAlgoliaKeys()
         }
     }
-
 }

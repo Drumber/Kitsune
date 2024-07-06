@@ -15,7 +15,7 @@ import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
-import io.github.drumber.kitsune.domain_old.model.FilterCollection
+import io.github.drumber.kitsune.domain.algolia.FilterCollection
 import io.github.drumber.kitsune.domain_old.model.preference.CategoryPrefWrapper
 import io.github.drumber.kitsune.domain_old.model.preference.StartPagePref
 import io.github.drumber.kitsune.util.logE

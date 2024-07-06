@@ -17,7 +17,7 @@ fun networkCharacter(faker: Faker) = NetworkCharacter(
     otherNames = listOf(faker.name().name(), faker.name().name()),
     malId = faker.number().positive(),
     description = faker.lorem().sentence(),
-    image = newImage(faker),
+    image = image(faker),
     mediaCharacters = listOf(
         NetworkMediaCharacter(
             id = faker.number().positive().toString(),
@@ -35,7 +35,7 @@ fun localCharacter(faker: Faker) = LocalCharacter(
     otherNames = listOf(faker.name().name(), faker.name().name()),
     malId = faker.number().positive(),
     description = faker.lorem().sentence(),
-    image = newImage(faker)
+    image = image(faker)
 )
 
 fun character(faker: Faker) = Character(
@@ -46,7 +46,7 @@ fun character(faker: Faker) = Character(
     otherNames = listOf(faker.name().name(), faker.name().name()),
     malId = faker.number().positive(),
     description = faker.lorem().sentence(),
-    image = newImage(faker),
+    image = image(faker),
     mediaCharacters = listOf(
         MediaCharacter(
             id = faker.number().positive().toString(),

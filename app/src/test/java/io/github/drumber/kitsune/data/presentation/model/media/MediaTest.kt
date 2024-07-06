@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.presentation.model.media
 
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.testutils.newAnime
+import io.github.drumber.kitsune.testutils.anime
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -13,7 +13,7 @@ class MediaTest {
     @Test
     fun shouldGetCorrectSeasonString() {
         // given
-        val anime = newAnime(faker)
+        val anime = anime(faker)
 
         // when & then
         mapOf(
@@ -34,7 +34,7 @@ class MediaTest {
     @Test
     fun shouldGetCorrectSeasonYear() {
         // given
-        val anime = newAnime(faker)
+        val anime = anime(faker)
 
         // when & then
         mapOf(

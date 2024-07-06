@@ -12,9 +12,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.github.jasminb.jsonapi.ResourceConverter
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.BuildConfig
-import io.github.drumber.kitsune.constants.GitHub
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.domain_old.service.github.GitHubApiService
 import io.github.drumber.kitsune.util.json.AlgoliaFacetValueDeserializer
 import io.github.drumber.kitsune.util.json.AlgoliaNumericValueDeserializer
 import io.github.drumber.kitsune.util.json.IgnoreParcelablePropertyMixin
@@ -134,13 +132,13 @@ val networkModule = module {
 //        )
 //    }
 //    factory { createService<AlgoliaKeyService>(get(), get()) }
-    factory {
-        createService<GitHubApiService>(
-            get(named("unauthenticated")),
-            get(),
-            GitHub.API_URL
-        )
-    }
+//    factory {
+//        createService<GitHubApiService>(
+//            get(named("unauthenticated")),
+//            get(),
+//            GitHub.API_URL
+//        )
+//    }
 }
 
 private fun createHttpClientBuilder(addLoggingInterceptor: Boolean = true) = OkHttpClient.Builder()

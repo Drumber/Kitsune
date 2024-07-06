@@ -4,20 +4,22 @@ import io.github.drumber.kitsune.data.common.Image
 import io.github.drumber.kitsune.data.common.ImageDimension
 import io.github.drumber.kitsune.data.common.ImageDimensions
 import io.github.drumber.kitsune.data.common.ImageMeta
+import io.github.drumber.kitsune.data.common.media.AnimeSubtype
+import io.github.drumber.kitsune.data.common.media.MangaSubtype
 import io.github.drumber.kitsune.data.presentation.model.algolia.AlgoliaKey
 import io.github.drumber.kitsune.data.presentation.model.algolia.AlgoliaKeyCollection
+import io.github.drumber.kitsune.data.presentation.model.character.CharacterSearchResult
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
-import io.github.drumber.kitsune.data.common.media.AnimeSubtype
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
-import io.github.drumber.kitsune.data.common.media.MangaSubtype
 import io.github.drumber.kitsune.data.source.network.algolia.model.NetworkAlgoliaKey
 import io.github.drumber.kitsune.data.source.network.algolia.model.NetworkAlgoliaKeyCollection
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaCharacterSearchResult
 import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaDimension
 import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaDimensions
 import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaImage
 import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaImageMeta
-import io.github.drumber.kitsune.data.source.network.algolia.model.search.MediaSearchKind
-import io.github.drumber.kitsune.data.source.network.algolia.model.search.MediaSearchResult
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaMediaSearchKind
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaMediaSearchResult
 
 object AlgoliaMapper {
     fun NetworkAlgoliaKeyCollection.toAlgoliaKeyCollection() = AlgoliaKeyCollection(
@@ -33,12 +35,12 @@ object AlgoliaMapper {
         index = index
     )
 
-    fun MediaSearchResult.toMedia() = when (kind) {
-        MediaSearchKind.Anime -> toAnime()
-        MediaSearchKind.Manga -> toManga()
+    fun AlgoliaMediaSearchResult.toMedia() = when (kind) {
+        AlgoliaMediaSearchKind.Anime -> toAnime()
+        AlgoliaMediaSearchKind.Manga -> toManga()
     }
 
-    private fun MediaSearchResult.toAnime() = Anime(
+    private fun AlgoliaMediaSearchResult.toAnime() = Anime(
         id = id.toString(),
         subtype = animeSubtypeFromString(subtype),
         slug = slug,
@@ -72,7 +74,7 @@ object AlgoliaMapper {
         youtubeVideoId = null
     )
 
-    private fun MediaSearchResult.toManga() = Manga(
+    private fun AlgoliaMediaSearchResult.toManga() = Manga(
         id = id.toString(),
         subtype = mangaSubtypeFromString(subtype),
         slug = slug,
@@ -102,6 +104,14 @@ object AlgoliaMapper {
         chapterCount = null,
         serialization = null,
         volumeCount = null
+    )
+
+    fun AlgoliaCharacterSearchResult.toCharacterSearchResult() = CharacterSearchResult(
+        id = id.toString(),
+        slug = slug,
+        name = canonicalName,
+        image = image?.toImage(),
+        primaryMediaTitle = primaryMedia
     )
 
     fun AlgoliaImage.toImage() = Image(

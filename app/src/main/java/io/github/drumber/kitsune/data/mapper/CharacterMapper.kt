@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.data.mapper
 
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toMedia
 import io.github.drumber.kitsune.data.presentation.model.character.Character
+import io.github.drumber.kitsune.data.presentation.model.character.CharacterSearchResult
 import io.github.drumber.kitsune.data.presentation.model.character.MediaCharacter
 import io.github.drumber.kitsune.data.presentation.model.character.MediaCharacterRole
 import io.github.drumber.kitsune.data.source.local.character.LocalCharacter
@@ -36,6 +37,18 @@ object CharacterMapper {
         malId = malId,
         description = description,
         image = image
+    )
+
+    fun CharacterSearchResult.toCharacter() = Character(
+        id = id,
+        slug = slug,
+        name = name,
+        names = null,
+        otherNames = null,
+        malId = null,
+        description = null,
+        image = image,
+        mediaCharacters = null
     )
 
     private fun NetworkMediaCharacter.toMediaCharacter() = MediaCharacter(

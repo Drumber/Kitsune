@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.domain_old.manager
+package io.github.drumber.kitsune.domain.algolia
 
 import com.algolia.instantsearch.searcher.hits.HitsSearcher
 import com.algolia.instantsearch.searcher.hits.SearchForQuery
@@ -10,8 +10,8 @@ import com.algolia.search.model.IndexName
 import com.algolia.search.model.search.Query
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
 import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
-import io.github.drumber.kitsune.domain_old.model.infrastructure.algolia.SearchType
 import io.github.drumber.kitsune.exception.InvalidDataException
 import io.github.drumber.kitsune.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.util.logE
