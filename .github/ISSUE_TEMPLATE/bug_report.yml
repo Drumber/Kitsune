@@ -1,0 +1,68 @@
+name: Bug Report
+description: Create a report for bugs or other issues you've encountered.
+labels: [ bug ]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Problem description
+      description: A clear and concise description of the issue.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce-steps
+    attributes:
+      label: Steps to reproduce
+      description: Describe the steps to reproduce the issue.
+      placeholder: |
+        Example:
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+
+  - type: input
+    id: app-version
+    attributes:
+      label: App version
+      description: The installed app version (Settings > About).
+      placeholder: 1.0.0
+    validations:
+      required: true
+
+  - type: input
+    id: android-version
+    attributes:
+      label: Android version
+      description: The Android version of your device.
+      placeholder: 10"
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: Device information
+      description: |
+        Optional: The device model you're using.
+      placeholder: e.g. Google Pixel 4
+
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Attachments and Logs
+      description: |
+        If applicable, add screenshots or screen recordings to help explain the issue.
+        You can also paste or upload logs here (you can find them in Settings > Application Logs).
+
+  - type: checkboxes
+    id: acknowledgements
+    attributes:
+      label: Acknowledgements
+      options:
+        - label: I have searched the open and closed [issues](https://github.com/Drumber/Kitsune/issues?q=) and this is **NOT** a duplicate.
+          required: true
+        - label: I'm using the latest version of the app.
+          required: true
+        - label: I have provided all required information.
+          required: true

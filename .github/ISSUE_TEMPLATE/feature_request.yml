@@ -1,0 +1,19 @@
+name: Feature Request
+description: Suggest new features or improvements for the app.
+labels: [ enhancement ]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the feature you'd like to see.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: acknowledgements
+    attributes:
+      label: Acknowledgements
+      options:
+        - label: I have searched the open and closed [issues](https://github.com/Drumber/Kitsune/issues?q=) and this is **NOT** a duplicate.
+          required: true
