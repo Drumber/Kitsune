@@ -39,7 +39,7 @@ val networkModule = module {
 }
 
 fun createHttpClientBuilder(addLoggingInterceptor: Boolean = true) = OkHttpClient.Builder()
-    .addNetworkInterceptor(createUserAgentInterceptor())
+    .addInterceptor(createUserAgentInterceptor())
     .apply {
         if (addLoggingInterceptor) {
             addNetworkInterceptor(createHttpLoggingInterceptor())

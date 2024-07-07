@@ -49,7 +49,9 @@ class AccessTokenRepositoryTest {
         )
 
         // when
-        val actualAccessToken = accessTokenRepository.getAccessToken()
+        val actualAccessToken = useMockedAndroidLogger {
+            accessTokenRepository.getAccessToken()
+        }
 
         // then
         verify(localAccessTokenDataSource).loadAccessToken()
@@ -76,8 +78,12 @@ class AccessTokenRepositoryTest {
         )
 
         // when
-        val firstAccessToken = accessTokenRepository.getAccessToken()
-        val secondAccessToken = accessTokenRepository.getAccessToken()
+        val (firstAccessToken, secondAccessToken) = useMockedAndroidLogger {
+            Pair(
+                accessTokenRepository.getAccessToken(),
+                accessTokenRepository.getAccessToken()
+            )
+        }
 
         // then
         verify(localAccessTokenDataSource, times(1)).loadAccessToken()
@@ -96,12 +102,14 @@ class AccessTokenRepositoryTest {
             remoteAccessTokenDataSource = mock(stubOnly = true)
         )
 
-        // when
-        accessTokenRepository.clearAccessToken()
+        useMockedAndroidLogger {
+            // when
+            accessTokenRepository.clearAccessToken()
 
-        // then
-        verify(localAccessTokenDataSource).clearAccessToken()
-        assertThat(accessTokenRepository.getAccessToken()).isNull()
+            // then
+            verify(localAccessTokenDataSource).clearAccessToken()
+            assertThat(accessTokenRepository.getAccessToken()).isNull()
+        }
     }
 
     @Test
@@ -128,21 +136,23 @@ class AccessTokenRepositoryTest {
             remoteAccessTokenDataSource = remoteAccessTokenDataSource
         )
 
-        // when
-        val actualAccessToken = accessTokenRepository.obtainAccessToken(username, password)
+        useMockedAndroidLogger {
+            // when
+            val actualAccessToken = accessTokenRepository.obtainAccessToken(username, password)
 
-        // then
-        val obtainAccessTokenCaptor = argumentCaptor<ObtainAccessToken>()
-        verify(remoteAccessTokenDataSource).obtainAccessToken(obtainAccessTokenCaptor.capture())
-        assertThat(obtainAccessTokenCaptor.firstValue.username).isEqualTo(username)
-        assertThat(obtainAccessTokenCaptor.firstValue.password).isEqualTo(password)
+            // then
+            val obtainAccessTokenCaptor = argumentCaptor<ObtainAccessToken>()
+            verify(remoteAccessTokenDataSource).obtainAccessToken(obtainAccessTokenCaptor.capture())
+            assertThat(obtainAccessTokenCaptor.firstValue.username).isEqualTo(username)
+            assertThat(obtainAccessTokenCaptor.firstValue.password).isEqualTo(password)
 
-        assertThat(localAccessTokenDataSource.accessToken)
-            .usingRecursiveComparison()
-            .isEqualTo(accessToken)
+            assertThat(localAccessTokenDataSource.accessToken)
+                .usingRecursiveComparison()
+                .isEqualTo(accessToken)
 
-        assertThat(actualAccessToken).usingRecursiveComparison().isEqualTo(accessToken)
-        assertThat(accessTokenRepository.getAccessToken()).isEqualTo(actualAccessToken)
+            assertThat(actualAccessToken).usingRecursiveComparison().isEqualTo(accessToken)
+            assertThat(accessTokenRepository.getAccessToken()).isEqualTo(actualAccessToken)
+        }
     }
 
     @Test
@@ -176,22 +186,24 @@ class AccessTokenRepositoryTest {
             remoteAccessTokenDataSource = remoteAccessTokenDataSource
         )
 
-        // when
-        val actualAccessToken = accessTokenRepository.refreshAccessToken()
+        useMockedAndroidLogger {
+            // when
+            val actualAccessToken = accessTokenRepository.refreshAccessToken()
 
-        // then
-        val refreshAccessTokenCaptor = argumentCaptor<RefreshAccessToken>()
-        verify(remoteAccessTokenDataSource).refreshToken(refreshAccessTokenCaptor.capture())
-        assertThat(refreshAccessTokenCaptor.firstValue.refreshToken).isEqualTo(localAccessToken.refreshToken)
+            // then
+            val refreshAccessTokenCaptor = argumentCaptor<RefreshAccessToken>()
+            verify(remoteAccessTokenDataSource).refreshToken(refreshAccessTokenCaptor.capture())
+            assertThat(refreshAccessTokenCaptor.firstValue.refreshToken).isEqualTo(localAccessToken.refreshToken)
 
-        val storeAccessTokenCaptor = argumentCaptor<LocalAccessToken>()
-        verify(localAccessTokenDataSource).storeAccessToken(storeAccessTokenCaptor.capture())
-        assertThat(storeAccessTokenCaptor.firstValue)
-            .usingRecursiveComparison()
-            .isEqualTo(networkAccessToken)
+            val storeAccessTokenCaptor = argumentCaptor<LocalAccessToken>()
+            verify(localAccessTokenDataSource).storeAccessToken(storeAccessTokenCaptor.capture())
+            assertThat(storeAccessTokenCaptor.firstValue)
+                .usingRecursiveComparison()
+                .isEqualTo(networkAccessToken)
 
-        assertThat(actualAccessToken).usingRecursiveComparison().isEqualTo(networkAccessToken)
-        assertThat(accessTokenRepository.getAccessToken()).isEqualTo(actualAccessToken)
+            assertThat(actualAccessToken).usingRecursiveComparison().isEqualTo(networkAccessToken)
+            assertThat(accessTokenRepository.getAccessToken()).isEqualTo(actualAccessToken)
+        }
     }
 
     @Test

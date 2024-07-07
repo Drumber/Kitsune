@@ -7,8 +7,10 @@ import io.github.drumber.kitsune.data.source.network.auth.AccessTokenNetworkData
 import io.github.drumber.kitsune.data.source.network.auth.model.ObtainAccessToken
 import io.github.drumber.kitsune.data.source.network.auth.model.RefreshAccessToken
 import io.github.drumber.kitsune.util.logD
+import io.github.drumber.kitsune.util.logI
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import java.util.Date
 
 class AccessTokenRepository(
     private val localAccessTokenDataSource: AccessTokenLocalDataSource,
@@ -24,6 +26,9 @@ class AccessTokenRepository(
         if (!isAccessTokenLoaded) {
             cachedAccessToken = localAccessTokenDataSource.loadAccessToken()
             isAccessTokenLoaded = true
+            cachedAccessToken?.let {
+                logI("Access token expires on: ${Date(it.getExpirationTimeInSeconds() * 1000)}")
+            }
         }
         return cachedAccessToken
     }
