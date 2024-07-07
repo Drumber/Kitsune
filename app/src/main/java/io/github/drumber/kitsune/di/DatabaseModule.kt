@@ -1,21 +1,13 @@
 package io.github.drumber.kitsune.di
 
-import android.app.Application
-import androidx.room.Room
 import io.github.drumber.kitsune.data.source.local.LocalDatabase
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 
 val databaseModule = module {
-    single { createLocalDatabase(androidApplication()) }
+    single { LocalDatabase.createLocalDatabase(androidApplication()) }
     factory { get<LocalDatabase>().libraryEntryDao() }
     factory { get<LocalDatabase>().libraryEntryModificationDao() }
     factory { get<LocalDatabase>().libraryEntryWithModificationDao() }
     factory { get<LocalDatabase>().remoteKeyDao() }
-}
-
-private fun createLocalDatabase(application: Application): LocalDatabase {
-    return Room.databaseBuilder(application, LocalDatabase::class.java, "kitsune.db")
-        .fallbackToDestructiveMigration()
-        .build()
 }

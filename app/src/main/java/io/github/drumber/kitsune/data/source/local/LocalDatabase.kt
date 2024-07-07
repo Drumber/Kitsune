@@ -1,6 +1,8 @@
 package io.github.drumber.kitsune.data.source.local
 
+import android.app.Application
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import io.github.drumber.kitsune.data.source.local.library.LocalLibraryConverters
@@ -27,4 +29,11 @@ abstract class LocalDatabase : RoomDatabase() {
     abstract fun libraryEntryWithModificationDao(): LibraryEntryWithModificationDao
     abstract fun remoteKeyDao(): RemoteKeyDao
 
+    companion object {
+        fun createLocalDatabase(application: Application): LocalDatabase {
+            return Room.databaseBuilder(application, LocalDatabase::class.java, "kitsune.db")
+                .fallbackToDestructiveMigration()
+                .build()
+        }
+    }
 }

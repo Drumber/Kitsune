@@ -77,23 +77,11 @@ import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import java.util.concurrent.TimeUnit
 
-val repositoryModule = module {
-//    single { AnimeRepository(get()) }
-//    single { MangaRepository(get()) }
-//    single { MediaUnitRepository(get(), get()) }
-//    single { CastingRepository(get()) }
-//    single { LibraryEntriesRepository(get(), get()) }
-//    single { AuthManager(get(), get()) }
-//    single { AccessTokenRepository(get()) }
-//    single { UserRepository(get(), get(), get()) }
-//    single { AlgoliaKeyRepository(get()) }
-
+val dataModule = module {
     // Auth
     factory { createAuthService(get()) }
     single { AccessTokenNetworkDataSource(get()) }
@@ -246,7 +234,13 @@ val repositoryModule = module {
     }
     single { LibraryNetworkDataSource(get()) }
     single { LibraryLocalDataSource(get()) }
-    single { LibraryRepository(get(), get(), CoroutineScope(SupervisorJob() + Dispatchers.Default)) }
+    single {
+        LibraryRepository(
+            get(),
+            get(),
+            CoroutineScope(SupervisorJob() + Dispatchers.Default)
+        )
+    }
 
     // App Update
     factory {
@@ -261,12 +255,7 @@ val repositoryModule = module {
 }
 
 private fun createAuthService(objectMapper: ObjectMapper) = createService<AuthenticationApi>(
-    OkHttpClient.Builder()
-        .addNetworkInterceptor(createUserAgentInterceptor())
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(60, TimeUnit.SECONDS)
-        .writeTimeout(60, TimeUnit.SECONDS)
-        .build(),
+    createHttpClientBuilder(addLoggingInterceptor = false).build(),
     objectMapper,
     Kitsu.OAUTH_URL
 )

@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.util.network
 
+import io.github.drumber.kitsune.constants.Kitsu.API_HOST
 import io.github.drumber.kitsune.data.repository.AccessTokenRepository
 import io.github.drumber.kitsune.domain.auth.RefreshAccessTokenUseCase
 import io.github.drumber.kitsune.domain.auth.RefreshResult
@@ -22,8 +23,10 @@ class AuthenticationInterceptorImpl(
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val requestBuilder = chain.request().newBuilder()
-        accessTokenRepository.getAccessToken()?.accessToken?.let {
-            requestBuilder.header("Authorization", "Bearer $it")
+        if (chain.request().url.host == API_HOST) {
+            accessTokenRepository.getAccessToken()?.accessToken?.let {
+                requestBuilder.header("Authorization", "Bearer $it")
+            }
         }
         return chain.proceed(requestBuilder.build())
     }
@@ -32,7 +35,7 @@ class AuthenticationInterceptorImpl(
      * This method is automatically called by retrofit when a request fails with a 401 code.
      */
     override fun authenticate(route: Route?, response: Response): Request? {
-        if (response.responseCount > 3) return null
+        if (response.request.url.host != API_HOST || response.responseCount > 3) return null
 
         val localAccessTokenHolder = accessTokenRepository.getAccessToken()
         val localAccessToken = localAccessTokenHolder?.accessToken

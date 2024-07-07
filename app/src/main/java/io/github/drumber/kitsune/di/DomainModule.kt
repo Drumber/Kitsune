@@ -15,7 +15,7 @@ import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.domain.user.UpdateLocalUserUseCase
 import org.koin.dsl.module
 
-val useCaseModule = module {
+val domainModule = module {
     // Auth
     factory { IsUserLoggedInUseCase(get()) }
     factory { LogInUserUseCase(get(), get(), get()) }
