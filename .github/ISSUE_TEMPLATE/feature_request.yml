@@ -15,5 +15,5 @@ body:
     attributes:
       label: Acknowledgements
       options:
-        - label: I have searched the open and closed [issues](https://github.com/Drumber/Kitsune/issues?q=) and this is **NOT** a duplicate.
+        - label: I have searched the open and closed [issues](https://github.com/Drumber/Kitsune/issues?q=is%3Aissue) and this is **NOT** a duplicate.
           required: true
