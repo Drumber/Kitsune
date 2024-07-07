@@ -17,12 +17,15 @@ class AccessTokenRepository(
 
     private val mutex = Mutex()
 
+    private var isAccessTokenLoaded = false
     private var cachedAccessToken: LocalAccessToken? = null
 
     fun getAccessToken(): LocalAccessToken? {
-        return cachedAccessToken ?: localAccessTokenDataSource.loadAccessToken().also {
-            cachedAccessToken = it
+        if (!isAccessTokenLoaded) {
+            cachedAccessToken = localAccessTokenDataSource.loadAccessToken()
+            isAccessTokenLoaded = true
         }
+        return cachedAccessToken
     }
 
     fun hasAccessToken(): Boolean {

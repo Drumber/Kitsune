@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.source.local.auth.model.LocalAccessToken
-import io.github.drumber.kitsune.util.logD
+import io.github.drumber.kitsune.util.logI
 
 class AccessTokenPreference(
     context: Context,
@@ -29,7 +29,7 @@ class AccessTokenPreference(
     )
 
     override fun storeAccessToken(accessToken: LocalAccessToken) {
-        logD("Converting access token to json and storing it in encrypted shared preferences.")
+        logI("Converting access token to json and storing it in encrypted shared preferences.")
         val jsonString = objectMapper.writeValueAsString(accessToken)
         sharedPreferences.edit(commit = true) {
             putString(KEY_ACCESS_TOKEN, jsonString)
@@ -37,7 +37,7 @@ class AccessTokenPreference(
     }
 
     override fun clearAccessToken() {
-        logD("Deleting access token from encrypted shared preferences.")
+        logI("Deleting access token from encrypted shared preferences.")
         sharedPreferences.edit(commit = true) {
             remove(KEY_ACCESS_TOKEN)
         }
@@ -46,10 +46,10 @@ class AccessTokenPreference(
     override fun loadAccessToken(): LocalAccessToken? {
         val jsonString = sharedPreferences.getString(KEY_ACCESS_TOKEN, null)
         return if (!jsonString.isNullOrBlank()) {
-            logD("Parse and return access token stored as json.")
+            logI("Parse and return access token stored as json.")
             objectMapper.readValue(jsonString)
         } else {
-            logD("No access token stored.")
+            logI("No access token stored.")
             null
         }
     }

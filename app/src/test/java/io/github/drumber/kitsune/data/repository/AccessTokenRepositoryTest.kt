@@ -57,6 +57,34 @@ class AccessTokenRepositoryTest {
     }
 
     @Test
+    fun shouldCacheAccessToken() {
+        // given
+        val accessToken = LocalAccessToken(
+            accessToken = faker.lorem().word(),
+            createdAt = faker.number().randomNumber(),
+            expiresIn = faker.number().randomNumber(),
+            refreshToken = faker.lorem().word()
+        )
+
+        val localAccessTokenDataSource = mock<AccessTokenLocalDataSource> {
+            on { loadAccessToken() } doReturn accessToken
+        }
+
+        val accessTokenRepository = AccessTokenRepository(
+            localAccessTokenDataSource = localAccessTokenDataSource,
+            remoteAccessTokenDataSource = mock(stubOnly = true)
+        )
+
+        // when
+        val firstAccessToken = accessTokenRepository.getAccessToken()
+        val secondAccessToken = accessTokenRepository.getAccessToken()
+
+        // then
+        verify(localAccessTokenDataSource, times(1)).loadAccessToken()
+        assertThat(firstAccessToken).isEqualTo(secondAccessToken)
+    }
+
+    @Test
     fun shouldClearAccessToken() = runTest {
         // given
         val localAccessTokenDataSource = mock<AccessTokenLocalDataSource> {
@@ -73,6 +101,7 @@ class AccessTokenRepositoryTest {
 
         // then
         verify(localAccessTokenDataSource).clearAccessToken()
+        assertThat(accessTokenRepository.getAccessToken()).isNull()
     }
 
     @Test
@@ -89,9 +118,7 @@ class AccessTokenRepositoryTest {
             scope = "public"
         )
 
-        val localAccessTokenDataSource = mock<AccessTokenLocalDataSource> {
-            doNothing().on { storeAccessToken(any()) }
-        }
+        val localAccessTokenDataSource = FakeAccessTokenLocalDataSource()
         val remoteAccessTokenDataSource = mock<AccessTokenNetworkDataSource> {
             onSuspend { obtainAccessToken(any()) } doReturn accessToken
         }
@@ -110,13 +137,12 @@ class AccessTokenRepositoryTest {
         assertThat(obtainAccessTokenCaptor.firstValue.username).isEqualTo(username)
         assertThat(obtainAccessTokenCaptor.firstValue.password).isEqualTo(password)
 
-        val storeAccessTokenCaptor = argumentCaptor<LocalAccessToken>()
-        verify(localAccessTokenDataSource).storeAccessToken(storeAccessTokenCaptor.capture())
-        assertThat(storeAccessTokenCaptor.firstValue)
+        assertThat(localAccessTokenDataSource.accessToken)
             .usingRecursiveComparison()
             .isEqualTo(accessToken)
 
         assertThat(actualAccessToken).usingRecursiveComparison().isEqualTo(accessToken)
+        assertThat(accessTokenRepository.getAccessToken()).isEqualTo(actualAccessToken)
     }
 
     @Test
@@ -165,6 +191,7 @@ class AccessTokenRepositoryTest {
             .isEqualTo(networkAccessToken)
 
         assertThat(actualAccessToken).usingRecursiveComparison().isEqualTo(networkAccessToken)
+        assertThat(accessTokenRepository.getAccessToken()).isEqualTo(actualAccessToken)
     }
 
     @Test
@@ -176,7 +203,7 @@ class AccessTokenRepositoryTest {
             expiresIn = faker.number().randomNumber(),
             refreshToken = faker.internet().uuid()
         )
-        val networkAccessToken ={
+        val networkAccessToken = {
             NetworkAccessToken(
                 accessToken = faker.lorem().word(),
                 createdAt = faker.number().randomNumber(),
@@ -217,7 +244,7 @@ class AccessTokenRepositoryTest {
 
 
     class FakeAccessTokenLocalDataSource(
-        private var accessToken: LocalAccessToken? = null
+        var accessToken: LocalAccessToken? = null
     ) : AccessTokenLocalDataSource {
 
         override fun loadAccessToken(): LocalAccessToken? {

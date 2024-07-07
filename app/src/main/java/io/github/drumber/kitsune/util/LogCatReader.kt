@@ -10,7 +10,11 @@ import java.util.Date
 object LogCatReader {
 
     suspend fun readAppLogs(maxLines: Int = 5000) = withContext(Dispatchers.IO) {
-        val process = Runtime.getRuntime().exec("logcat -d -t $maxLines")
+        val logLevelFilter = when (BuildConfig.DEBUG) {
+            true -> "*:D"
+            false -> "*:I"
+        }
+        val process = Runtime.getRuntime().exec("logcat -d -t $maxLines $logLevelFilter")
         process.inputStream.bufferedReader().use {
             return@withContext it.readLines()
         }

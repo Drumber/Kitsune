@@ -34,6 +34,6 @@ val viewModelModule = module {
     viewModel { EpisodesViewModel(get(), get(), get(), get()) }
     viewModel { CharactersViewModel(get(), get()) }
     viewModel { CharacterDetailsViewModel(get(), get(), get()) }
-    viewModel { SettingsViewModel(get()) }
+    viewModel { SettingsViewModel(get(), get()) }
     viewModel { AppLogsViewModel() }
 }
