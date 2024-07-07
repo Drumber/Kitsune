@@ -129,6 +129,10 @@ class DetailsViewModel(
             _mediaModel.value = media
             _isLoading.value = true
             viewModelScope.launch(Dispatchers.IO) {
+                libraryRepository.getLibraryEntryFromMedia(media.id)?.media?.let {
+                    // display media model from local library entry if available
+                    _mediaModel.postValue(it)
+                }
                 awaitAll(
                     async { loadFullMedia(media) },
                     async { loadLibraryEntry(media) },

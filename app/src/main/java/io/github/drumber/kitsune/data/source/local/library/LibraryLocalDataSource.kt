@@ -30,6 +30,9 @@ class LibraryLocalDataSource(
 
     suspend fun getLibraryEntry(id: String) = libraryEntryDao.getLibraryEntry(id)
 
+    suspend fun getLibraryEntryFromMedia(mediaId: String) =
+        libraryEntryDao.getLibraryEntryFromMedia(mediaId)
+
     fun getLibraryEntryWithModificationFromMediaAsLiveData(mediaId: String) =
         libraryEntryWithModificationDao.getLibraryEntryWithModificationFromMediaAsLiveData(mediaId)
 

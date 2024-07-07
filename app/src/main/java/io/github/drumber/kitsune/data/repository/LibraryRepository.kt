@@ -9,6 +9,7 @@ import androidx.paging.map
 import io.github.drumber.kitsune.constants.Repository
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.exception.NoDataException
+import io.github.drumber.kitsune.data.common.exception.NotFoundException
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntryModification
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry
@@ -32,7 +33,6 @@ import io.github.drumber.kitsune.data.source.network.library.LibraryEntryPagingD
 import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry
 import io.github.drumber.kitsune.data.utils.InvalidatingPagingSourceFactory
-import io.github.drumber.kitsune.data.common.exception.NotFoundException
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.parseUtcDate
 import kotlinx.coroutines.CoroutineScope
@@ -160,6 +160,10 @@ class LibraryRepository(
 
     suspend fun getLibraryEntryFromDatabase(id: String): LibraryEntry? {
         return localLibraryDataSource.getLibraryEntry(id)?.toLibraryEntry()
+    }
+
+    suspend fun getLibraryEntryFromMedia(mediaId: String): LibraryEntry? {
+        return localLibraryDataSource.getLibraryEntryFromMedia(mediaId)?.toLibraryEntry()
     }
 
     fun getLibraryEntryWithModificationFromMediaAsLiveData(mediaId: String): LiveData<LibraryEntryWithModification?> {
