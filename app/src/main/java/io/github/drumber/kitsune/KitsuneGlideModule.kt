@@ -41,7 +41,7 @@ class KitsuneGlideModule : AppGlideModule(), KoinComponent {
 
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
         // replace Glides default OkHttpClient
-        val okHttpClient: OkHttpClient = get(named("unauthenticated"))
+        val okHttpClient: OkHttpClient = get(named("images"))
         registry.replace(GlideUrl::class.java, InputStream::class.java, OkHttpUrlLoader.Factory(okHttpClient))
     }
 

@@ -35,8 +35,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:clickable="true"
-                    android:focusable="true"
                     app:cardCornerRadius="50dp"
                     app:cardElevation="6dp"
                     style="@style/Widget.Material3.CardView.Elevated">
@@ -49,7 +47,7 @@
                         android:clipChildren="false"
                         android:orientation="horizontal">
 
-                        <ImageButton
+                        <androidx.appcompat.widget.AppCompatImageButton
                             android:id="@+id/btn_search"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
@@ -58,8 +56,7 @@
                             app:tint="?attr/colorControlNormal"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:layout_gravity="center"
-                            android:contentDescription="@string/hint_search"
-                            style="@style/Widget.Material3.Button.IconButton" />
+                            android:contentDescription="@string/hint_search" />
 
                         <androidx.appcompat.widget.SearchView
                             android:id="@+id/search_view"
@@ -70,7 +67,7 @@
                             app:searchIcon="@null"
                             style="@style/Widget.Kitsune.SearchView" />
 
-                        <ImageButton
+                        <androidx.appcompat.widget.AppCompatImageButton
                             android:id="@+id/btn_filter"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
@@ -79,8 +76,7 @@
                             app:tint="?attr/colorControlNormal"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:layout_gravity="center"
-                            android:contentDescription="@string/title_filter"
-                            style="?attr/materialIconButtonStyle" />
+                            android:contentDescription="@string/title_filter" />
 
                     </LinearLayout>
 

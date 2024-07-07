@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit
 val networkModule = module {
     single { createHttpClient(get(), get()) }
     single(named("unauthenticated")) { createHttpClientBuilder().build() }
+    single(named("images")) { createHttpClientBuilder(false).build() }
     single { createObjectMapper() }
     factory<AuthenticationInterceptor> { AuthenticationInterceptorImpl(get()) }
 }
@@ -40,8 +41,9 @@ val networkModule = module {
 fun createHttpClientBuilder(addLoggingInterceptor: Boolean = true) = OkHttpClient.Builder()
     .addNetworkInterceptor(createUserAgentInterceptor())
     .apply {
-        if (addLoggingInterceptor && BuildConfig.DEBUG)
+        if (addLoggingInterceptor) {
             addNetworkInterceptor(createHttpLoggingInterceptor())
+        }
     }
     .connectTimeout(30, TimeUnit.SECONDS)
     .readTimeout(60, TimeUnit.SECONDS)
@@ -58,7 +60,10 @@ private fun createHttpClient(context: Context, authenticationInterceptor: Authen
         .build()
 
 private fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
-    level = HttpLoggingInterceptor.Level.BASIC
+    level = when (BuildConfig.DEBUG) {
+        true -> HttpLoggingInterceptor.Level.HEADERS
+        false -> HttpLoggingInterceptor.Level.BASIC
+    }
     redactHeader("Authorization")
 }
 
