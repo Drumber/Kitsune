@@ -284,26 +284,31 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         adapter.addLoadStateListener { state ->
             lastLoadState = state
             if (view?.parent != null) {
-                val isNotLoading =
-                    state.mediator?.refresh is LoadState.NotLoading || state.source.refresh is LoadState.NotLoading
+                val isNotLoading = when {
+                    adapter.itemCount < 1 -> state.refresh is LoadState.NotLoading
+
+                    else -> state.mediator?.refresh !is LoadState.Loading
+                            || state.source.refresh is LoadState.NotLoading
+                }
+
                 binding.apply {
                     rvLibraryEntries.isVisible = isNotLoading
                     layoutLoading.apply {
                         root.isVisible = !isNotLoading
                         progressBar.isVisible = state.refresh is LoadState.Loading
-                        btnRetry.isVisible = state.refresh is LoadState.Error
-                        tvError.isVisible = state.refresh is LoadState.Error
+                        btnRetry.isVisible = state.mediator?.refresh is LoadState.Error
+                        tvError.isVisible = state.mediator?.refresh is LoadState.Error
+                    }
 
-                        if (state.refresh is LoadState.NotLoading
-                            && state.append.endOfPaginationReached
-                            && adapter.itemCount < 1
-                        ) {
-                            root.isVisible = true
-                            tvNoData.isVisible = true
-                            rvLibraryEntries.isVisible = false
-                        } else {
-                            tvNoData.isVisible = false
-                        }
+                    if (state.refresh is LoadState.NotLoading
+                        && state.append.endOfPaginationReached
+                        && adapter.itemCount < 1
+                    ) {
+                        layoutLoading.root.isVisible = true
+                        layoutLoading.tvNoData.isVisible = true
+                        rvLibraryEntries.isVisible = false
+                    } else {
+                        layoutLoading.tvNoData.isVisible = false
                     }
 
                     swipeRefreshLayout.isRefreshing =
@@ -347,8 +352,9 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
             viewLifecycleOwner.lifecycleScope.launch {
                 shouldScrollToTop.collect { shouldScroll ->
-                    if (shouldScroll)
+                    if (shouldScroll) {
                         scrollToPosition(0)
+                    }
                 }
             }
         }
@@ -366,8 +372,10 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         viewModel.doRefreshListener = { adapter.refresh() }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.pagingDataFlow.collectLatest {
-                adapter.submitData(it)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.pagingDataFlow.collect {
+                    adapter.submitData(it)
+                }
             }
         }
 

@@ -56,8 +56,6 @@ class LibraryEntryRemoteMediator(
             val data = pageData.data?.map { it.toLocalLibraryEntry() }
                 ?: throw NoDataException("Received data is 'null'.")
 
-            val endReached = pageData.next == null
-
             localDataSource.runDatabaseTransaction {
                 // only clear database on REFRESH
                 if (loadType == LoadType.REFRESH) {
@@ -65,17 +63,17 @@ class LibraryEntryRemoteMediator(
                     clearLibraryEntriesForFilterIgnoringNewerLibraryEntries(filter, data)
                 }
 
-                val insertedLibraryEntries = data.filter { libraryEntry ->
+                data.forEach { libraryEntry ->
                     localDataSource.insertLibraryEntryIfUpdatedAtIsNewer(libraryEntry)
                 }
 
-                val remoteKeys = insertedLibraryEntries.map {
+                val remoteKeys = data.map {
                     RemoteKeyEntity(it.id, RemoteKeyType.LibraryEntry, pageData.prev, pageData.next)
                 }
                 remoteKeyDao().insertALl(remoteKeys)
             }
 
-            MediatorResult.Success(endOfPaginationReached = endReached)
+            MediatorResult.Success(endOfPaginationReached = pageData.next == null)
         } catch (e: Exception) {
             MediatorResult.Error(e)
         }
