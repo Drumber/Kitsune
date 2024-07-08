@@ -47,6 +47,12 @@ interface LibraryEntryDao {
      * Non Paging Queries
      * =================== */
 
+    @Query("SELECT * FROM library_entries $ORDER_BY_STATUS")
+    suspend fun getAllLibraryEntries(): List<LocalLibraryEntry>
+
+    @Query("SELECT * FROM library_entries WHERE media_type = :type $ORDER_BY_STATUS")
+    suspend fun getAllLibraryEntriesByType(type: LocalLibraryMedia.MediaType): List<LocalLibraryEntry>
+
     @Query("SELECT * FROM library_entries WHERE status IN (:status) $ORDER_BY_STATUS")
     suspend fun getAllLibraryEntriesByStatus(status: List<LocalLibraryStatus>): List<LocalLibraryEntry>
 
@@ -61,6 +67,9 @@ interface LibraryEntryDao {
 
     @Query("SELECT * FROM library_entries WHERE id = :id")
     suspend fun getLibraryEntry(id: String): LocalLibraryEntry?
+
+    @Query("SELECT EXISTS(SELECT 1 FROM library_entries WHERE id = :id AND DATETIME(updatedAt) > DATETIME(:updatedAt))")
+    suspend fun hasLibraryEntryWhereUpdatedAtIsAfter(id: String, updatedAt: String): Boolean
 
     @Query("SELECT * FROM library_entries WHERE id = :id")
     fun getLibraryEntryAsLiveData(id: String): LiveData<LocalLibraryEntry?>
@@ -85,5 +94,4 @@ interface LibraryEntryDao {
 
     @Query("DELETE FROM library_entries")
     suspend fun clearLibraryEntries()
-
 }

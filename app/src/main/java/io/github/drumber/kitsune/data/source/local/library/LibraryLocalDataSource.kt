@@ -38,11 +38,62 @@ class LibraryLocalDataSource(
 
     suspend fun insertLibraryEntry(libraryEntry: LocalLibraryEntry) {
         libraryEntry.verifyIsValidLibraryEntry()
-        libraryEntryDao.insertSingle(libraryEntry)
+        insertLibraryEntryIfUpdatedAtIsNewer(libraryEntry)
     }
 
-    suspend fun updateLibraryEntry(libraryEntry: LocalLibraryEntry) {
-        libraryEntryDao.updateSingle(libraryEntry)
+    suspend fun insertLibraryEntryIfUpdatedAtIsNewer(libraryEntry: LocalLibraryEntry): Boolean {
+        libraryEntry.verifyIsValidLibraryEntry()
+        if (libraryEntry.updatedAt.isNullOrBlank()) {
+            insertLibraryEntry(libraryEntry)
+            return true
+        }
+        return database.withTransaction {
+            val hasNewerEntry = libraryEntryDao.hasLibraryEntryWhereUpdatedAtIsAfter(
+                libraryEntry.id,
+                libraryEntry.updatedAt
+            )
+            if (!hasNewerEntry) {
+                libraryEntryDao.insertSingle(libraryEntry)
+                true
+            } else {
+                // do not overwrite more up-to-date library entry
+                false
+            }
+        }
+    }
+
+    suspend fun getLibraryEntriesByKindAndStatus(
+        kind: LibraryEntryKind,
+        status: List<LocalLibraryStatus>
+    ): List<LocalLibraryEntry> {
+        val hasStatus = status.isNotEmpty()
+        return with(libraryEntryDao) {
+            when {
+                kind == LibraryEntryKind.Anime && hasStatus -> getAllLibraryEntriesByTypeAndStatus(
+                    MediaType.Anime,
+                    status
+                )
+
+                kind == LibraryEntryKind.Anime && !hasStatus -> getAllLibraryEntriesByType(
+                    MediaType.Anime
+                )
+
+                kind == LibraryEntryKind.Manga && hasStatus -> getAllLibraryEntriesByTypeAndStatus(
+                    MediaType.Manga,
+                    status
+                )
+
+                kind == LibraryEntryKind.Manga && !hasStatus -> getAllLibraryEntriesByType(
+                    MediaType.Manga
+                )
+
+                kind == LibraryEntryKind.All && hasStatus -> getAllLibraryEntriesByStatus(
+                    status
+                )
+
+                else -> getAllLibraryEntries()
+            }
+        }
     }
 
     fun getLibraryEntriesByKindAndStatusAsPagingSource(

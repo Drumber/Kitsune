@@ -6,18 +6,17 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.common.exception.NoDataException
-import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
+import io.github.drumber.kitsune.data.source.local.LocalDatabase
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
-import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMedia.MediaType
-import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus
 import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyEntity
 import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyType
 import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.util.logD
+import io.github.drumber.kitsune.util.parseUtcDate
 
 @OptIn(ExperimentalPagingApi::class)
 class LibraryEntryRemoteMediator(
@@ -54,57 +53,26 @@ class LibraryEntryRemoteMediator(
             val pageData = networkDataSource.getAllLibraryEntries(
                 filter.buildFilter().pageOffset(pageOffset)
             )
+            val data = pageData.data?.map { it.toLocalLibraryEntry() }
+                ?: throw NoDataException("Received data is 'null'.")
+
             val endReached = pageData.next == null
 
             localDataSource.runDatabaseTransaction {
                 // only clear database on REFRESH
                 if (loadType == LoadType.REFRESH) {
-                    // if no filter is selected (full library is shown), clear full database
-                    if (!filter.isFiltered()) {
-                        logD("Clearing all library entries and remote keys from database.")
-                        libraryEntryDao().clearLibraryEntries()
-                        remoteKeyDao().clearRemoteKeys(RemoteKeyType.LibraryEntry)
-                    }
-                    // otherwise clear all displayed library entries
-                    else {
-                        logD("Clearing filtered library entries and corresponding remote keys from database.")
-                        // if no status filter is selected, we target all status types
-                        val targetStatus = filter.libraryStatus
-                            .map { it.toLocalLibraryStatus() }
-                            .ifEmpty { LocalLibraryStatus.entries }
-
-                        // clear all library entries in database with the selected kind and status
-                        val libraryEntriesToBeCleared = when (filter.kind) {
-                            LibraryEntryKind.Anime -> libraryEntryDao().getAllLibraryEntriesByTypeAndStatus(
-                                MediaType.Anime, targetStatus
-                            )
-
-                            LibraryEntryKind.Manga -> libraryEntryDao().getAllLibraryEntriesByTypeAndStatus(
-                                MediaType.Manga, targetStatus
-                            )
-
-                            else -> libraryEntryDao().getAllLibraryEntriesByStatus(targetStatus)
-                        }
-
-                        libraryEntryDao().deleteAll(libraryEntriesToBeCleared)
-                        libraryEntriesToBeCleared.forEach { libraryEntry ->
-                            remoteKeyDao().deleteByResourceId(
-                                libraryEntry.id,
-                                RemoteKeyType.LibraryEntry
-                            )
-                        }
-                    }
+                    logD("Clearing filtered library entries and corresponding remote keys from database.")
+                    clearLibraryEntriesForFilterIgnoringNewerLibraryEntries(filter, data)
                 }
 
-                val data = pageData.data?.map { it.toLocalLibraryEntry() }
-                    ?: throw NoDataException("Received data is 'null'.")
+                val insertedLibraryEntries = data.filter { libraryEntry ->
+                    localDataSource.insertLibraryEntryIfUpdatedAtIsNewer(libraryEntry)
+                }
 
-                val remoteKeys = data.map {
+                val remoteKeys = insertedLibraryEntries.map {
                     RemoteKeyEntity(it.id, RemoteKeyType.LibraryEntry, pageData.prev, pageData.next)
                 }
-
                 remoteKeyDao().insertALl(remoteKeys)
-                libraryEntryDao().insertAll(data)
             }
 
             MediatorResult.Success(endOfPaginationReached = endReached)
@@ -113,13 +81,42 @@ class LibraryEntryRemoteMediator(
         }
     }
 
+    private suspend fun LocalDatabase.clearLibraryEntriesForFilterIgnoringNewerLibraryEntries(
+        filter: LibraryEntryFilter,
+        data: List<LocalLibraryEntry>
+    ) {
+        // clear all library entries in database with the selected kind and status
+        val libraryEntriesToBeCleared = localDataSource.getLibraryEntriesByKindAndStatus(
+            filter.kind,
+            filter.libraryStatus.map { it.toLocalLibraryStatus() }
+        ).filter { existingLibraryEntry ->
+            // do not clear library entries from database that are newer than the ones received
+            val updatedAtOfExistingEntry = existingLibraryEntry.updatedAt
+            val updatedAtOfNewEntry = data.find { it.id == existingLibraryEntry.id }?.updatedAt
+            if (updatedAtOfExistingEntry.isNullOrBlank() || updatedAtOfNewEntry.isNullOrBlank())
+                return@filter true
+
+            val existingEntryUpdateTime = updatedAtOfExistingEntry.parseUtcDate()?.time
+            val newEntryUpdateTime = updatedAtOfNewEntry.parseUtcDate()?.time
+            return@filter existingEntryUpdateTime == null || newEntryUpdateTime == null ||
+                    existingEntryUpdateTime <= newEntryUpdateTime
+        }
+
+        libraryEntryDao().deleteAll(libraryEntriesToBeCleared)
+        val remoteKeyIdsToClear = libraryEntriesToBeCleared.map { it.id }
+        remoteKeyDao().deleteAllByResourceId(remoteKeyIdsToClear, RemoteKeyType.LibraryEntry)
+    }
+
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, LocalLibraryEntry>): RemoteKeyEntity? {
         // Get the last page that was retrieved, that contained items.
         // From that last page, get the last item
         return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
             ?.let { libraryEntry ->
                 // Get the remote keys of the last item retrieved
-                localDataSource.getRemoteKeyByResourceId(libraryEntry.id, RemoteKeyType.LibraryEntry)
+                localDataSource.getRemoteKeyByResourceId(
+                    libraryEntry.id,
+                    RemoteKeyType.LibraryEntry
+                )
             }
     }
 
