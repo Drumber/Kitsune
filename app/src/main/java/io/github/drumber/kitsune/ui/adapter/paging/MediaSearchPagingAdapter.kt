@@ -8,7 +8,6 @@ import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder
-import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 
 class MediaSearchPagingAdapter(
@@ -27,8 +26,8 @@ class MediaSearchPagingAdapter(
         return MediaViewHolder(
             binding,
             glide,
-            TagData.Subtype
-        ) { position ->
+            showSubtype = true
+        ) { _, position ->
             getItem(position)?.let { item -> listener?.onItemClick(binding.cardMedia, item) }
         }
     }

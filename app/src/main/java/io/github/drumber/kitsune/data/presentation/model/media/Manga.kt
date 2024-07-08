@@ -47,7 +47,7 @@ data class Manga(
 
     override val categories: List<Category>?,
     override val mediaRelationships: List<MediaRelationship>?
-) : Media {
+) : Media() {
 
     override val mediaType: MediaType
         get() = MediaType.Manga

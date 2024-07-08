@@ -51,7 +51,7 @@ data class Anime(
     val animeProduction: List<AnimeProduction>?,
     val streamingLinks: List<StreamingLink>?,
     override val mediaRelationships: List<MediaRelationship>?
-) : Media {
+) : Media() {
 
     override val mediaType: MediaType
         get() = MediaType.Anime

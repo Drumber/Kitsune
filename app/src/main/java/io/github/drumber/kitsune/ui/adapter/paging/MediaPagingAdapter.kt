@@ -23,7 +23,7 @@ sealed class MediaPagingAdapter<T : Media>(
         return MediaViewHolder(
             binding,
             glide
-        ) { position ->
+        ) { _, position ->
             getItem(position)?.let { item -> listener?.onItemClick(binding.cardMedia, item) }
         }
     }

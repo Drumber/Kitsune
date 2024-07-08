@@ -24,43 +24,43 @@ import io.github.drumber.kitsune.util.parseDate
 import io.github.drumber.kitsune.util.toCalendar
 import java.util.Calendar
 
-sealed interface Media : FavoriteItem {
-    val id: String
-    val slug: String?
+sealed class Media : FavoriteItem {
+    abstract val id: String
+    abstract val slug: String?
 
-    val description: String?
-    val titles: Titles?
-    val canonicalTitle: String?
-    val abbreviatedTitles: List<String>?
+    abstract val description: String?
+    abstract val titles: Titles?
+    abstract val canonicalTitle: String?
+    abstract val abbreviatedTitles: List<String>?
 
-    val averageRating: String?
-    val ratingFrequencies: RatingFrequencies?
-    val userCount: Int?
-    val favoritesCount: Int?
-    val popularityRank: Int?
-    val ratingRank: Int?
+    abstract val averageRating: String?
+    abstract val ratingFrequencies: RatingFrequencies?
+    abstract val userCount: Int?
+    abstract val favoritesCount: Int?
+    abstract val popularityRank: Int?
+    abstract val ratingRank: Int?
 
-    val startDate: String?
-    val endDate: String?
-    val nextRelease: String?
-    val tba: String?
-    val status: ReleaseStatus?
+    abstract val startDate: String?
+    abstract val endDate: String?
+    abstract val nextRelease: String?
+    abstract val tba: String?
+    abstract val status: ReleaseStatus?
 
-    val ageRating: AgeRating?
-    val ageRatingGuide: String?
-    val nsfw: Boolean?
+    abstract val ageRating: AgeRating?
+    abstract val ageRatingGuide: String?
+    abstract val nsfw: Boolean?
 
-    val posterImage: Image?
-    val coverImage: Image?
+    abstract val posterImage: Image?
+    abstract val coverImage: Image?
 
-    val totalLength: Int?
+    abstract val totalLength: Int?
 
-    val categories: List<Category>?
-    val mediaRelationships: List<MediaRelationship>?
+    abstract val categories: List<Category>?
+    abstract val mediaRelationships: List<MediaRelationship>?
 
     //********************************************************************************************//
 
-    val mediaType: MediaType
+    abstract val mediaType: MediaType
 
     val title get() = DataUtil.getTitle(titles, canonicalTitle)
 

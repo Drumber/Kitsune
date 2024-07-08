@@ -31,10 +31,10 @@ class ExploreSection(
         exploreAdapter = MediaRecyclerViewAdapter(
             if(initialData != null) CopyOnWriteArrayList(initialData) else CopyOnWriteArrayList(),
             glide,
+            itemSize = KitsunePref.mediaItemSize,
             transitionNameSuffix = "_$title",
             listener = itemListener
         )
-        exploreAdapter.overrideItemSize = KitsunePref.mediaItemSize
 
         binding.apply {
             rvMedia.apply {

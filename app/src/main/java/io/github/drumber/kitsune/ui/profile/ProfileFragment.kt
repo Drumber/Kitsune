@@ -50,7 +50,6 @@ import io.github.drumber.kitsune.databinding.FragmentProfileBinding
 import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
 import io.github.drumber.kitsune.ui.adapter.CharacterAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
-import io.github.drumber.kitsune.ui.adapter.MediaViewHolder
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
@@ -392,11 +391,10 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
             val adapter = MediaRecyclerViewAdapter(
                 CopyOnWriteArrayList(data),
                 glide,
-                MediaViewHolder.TagData.RelationshipRole
+                itemSize = MediaItemSize.SMALL
             ) { view, media ->
                 onFavoriteMediaItemClicked(view, media)
             }
-            adapter.overrideItemSize = MediaItemSize.SMALL
             recyclerView.adapter = adapter
         } else {
             val adapter = recyclerView.adapter as MediaRecyclerViewAdapter

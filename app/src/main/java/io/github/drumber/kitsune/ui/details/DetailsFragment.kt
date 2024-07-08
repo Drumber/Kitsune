@@ -38,7 +38,6 @@ import com.google.android.material.transition.MaterialContainerTransform
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.Titles
@@ -59,8 +58,7 @@ import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemP
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.databinding.ItemDetailsInfoRowBinding
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
-import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
+import io.github.drumber.kitsune.ui.adapter.MediaRelationshipRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
@@ -463,23 +461,19 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         // TODO: Media needs to be aware of its relationship role
         val data = media.mediaRelationships?.sortedBy {
             it.role?.ordinal
-        }?.mapNotNull {
-            it.media?.let { media -> media/*MediaAdapter.fromMedia(media, it.role)*/ }
         } ?: emptyList()
 
-        if (binding.rvFranchise.adapter !is MediaRecyclerViewAdapter) {
+        if (binding.rvFranchise.adapter !is MediaRelationshipRecyclerViewAdapter) {
             val glide = Glide.with(this)
-            val adapter = MediaRecyclerViewAdapter(
+            val adapter = MediaRelationshipRecyclerViewAdapter(
                 CopyOnWriteArrayList(data),
-                glide,
-                TagData.RelationshipRole
+                glide
             ) { view, clickedMedia ->
-                onFranchiseItemClicked(view, clickedMedia)
+                clickedMedia.media?.let { onFranchiseItemClicked(view, it) }
             }
-            adapter.overrideItemSize = MediaItemSize.SMALL
             binding.rvFranchise.adapter = adapter
         } else {
-            val adapter = binding.rvFranchise.adapter as MediaRecyclerViewAdapter
+            val adapter = binding.rvFranchise.adapter as MediaRelationshipRecyclerViewAdapter
             adapter.dataSet.addAll(0, data)
             adapter.notifyDataSetChanged()
         }
