@@ -458,10 +458,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     }
 
     private fun showFranchise(media: Media) {
-        // TODO: Media needs to be aware of its relationship role
-        val data = media.mediaRelationships?.sortedBy {
-            it.role?.ordinal
-        } ?: emptyList()
+        val data = media.mediaRelationships?.sortedBy { it.role?.ordinal } ?: emptyList()
 
         if (binding.rvFranchise.adapter !is MediaRelationshipRecyclerViewAdapter) {
             val glide = Glide.with(this)

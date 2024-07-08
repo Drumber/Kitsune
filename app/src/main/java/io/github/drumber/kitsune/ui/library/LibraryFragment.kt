@@ -284,8 +284,11 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         adapter.addLoadStateListener { state ->
             lastLoadState = state
             if (view?.parent != null) {
+                val isSearching = viewModel.state.value.filter.searchQuery.isNotBlank()
                 val isNotLoading = when {
                     adapter.itemCount < 1 -> state.refresh is LoadState.NotLoading
+
+                    isSearching -> state.source.refresh is LoadState.NotLoading
 
                     else -> state.mediator?.refresh !is LoadState.Loading
                             || state.source.refresh is LoadState.NotLoading

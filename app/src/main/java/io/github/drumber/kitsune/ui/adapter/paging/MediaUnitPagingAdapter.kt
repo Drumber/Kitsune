@@ -40,6 +40,7 @@ class MediaUnitPagingAdapter(
     }
 
     override fun onBindViewHolder(holder: MediaUnitViewHolder, position: Int) {
+        if (position >= itemCount) return
         getItem(position)?.let { holder.bind(it) }
     }
 

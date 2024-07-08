@@ -25,6 +25,7 @@ class CharacterPagingAdapter(
     }
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
+        if (position >= itemCount) return
         getItem(position)?.let { holder.bind(it) }
     }
 

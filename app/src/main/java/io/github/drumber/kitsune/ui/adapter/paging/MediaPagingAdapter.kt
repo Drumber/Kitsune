@@ -29,6 +29,7 @@ sealed class MediaPagingAdapter<T : Media>(
     }
 
     override fun onBindViewHolder(holder: MediaViewHolder, position: Int) {
+        if (position >= itemCount) return
         getItem(position)?.let { holder.bind(it) }
     }
 

@@ -116,9 +116,6 @@ class CharacterDetailsViewModel(
                     _favoriteFlow.emit(null)
                 }
             }
-
-            // TODO: verify if this is necessary and remove if not
-            // trigger user model update to show updated favorites on the profile fragment
         }
         return favorite == null
     }

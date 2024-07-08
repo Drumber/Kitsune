@@ -45,6 +45,7 @@ class LibraryEntriesAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (position >= itemCount) return
         val item = getItem(position) ?: return
         when (holder) {
             is LibraryEntryViewHolder -> holder.bind((item as EntryModel).entry)

@@ -16,6 +16,7 @@ class MediaSearchPagingAdapter(
 ) : PagingDataAdapter<Media, MediaViewHolder>(MediaSearchComparator) {
 
     override fun onBindViewHolder(holder: MediaViewHolder, position: Int) {
+        if (position >= itemCount) return
         getItem(position)?.let { holder.bind(it) }
     }
 
