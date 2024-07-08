@@ -270,7 +270,7 @@
     <string name="library_not_started">Nicht begonnen</string>
     <string name="library_not_rated">Nicht bewertet</string>
     <string name="library_not_logged_in_title">Anmelden, um auf deine Bibliothek zuzugreifen</string>
-    <string name="library_not_logged_in_text">Mit deinem Kitsu Benutzerkonto anmelden, um deine Bibliothek zu verwalten und Zugriff auf alle Funktionen zu erhalten.</string>
+    <string name="library_not_logged_in_text">Melde dich mit deinem Kitsu Benutzerkonto an, um deine Bibliothek zu verwalten und Zugriff auf alle Funktionen zu erhalten.</string>
     <string name="library_kind_all">Alle</string>
     <string name="library_not_synchronized">Nicht synchronisiert</string>
     <string name="library_edit_status">Bibliotheksstatus</string>
@@ -290,7 +290,7 @@
     <string name="info_update_new_version_available">Neue Version verfügbar.</string>
     <string name="info_update_new_version_available_text">Version %s von Kitsune ist verfügbar.</string>
     <string name="info_update_no_new_version_available">Keine neue Version verfügbar.</string>
-    <string name="profile_not_logged_in_text">Mit deinem Kitsu Benutzerkonto anmelden oder ein neues Benutzerkonto erstellen, um auf alle Funktionen zuzugreifen.</string>
+    <string name="profile_not_logged_in_text">Melde dich mit deinem Kitsu Benutzerkonto an oder erstelle ein neues Benutzerkonto, um auf alle Funktionen zuzugreifen.</string>
     <string name="profile_anime_stats">Anime Statistiken</string>
     <string name="profile_manga_stats">Manga Statistiken</string>
     <string name="profile_stats_anime_watch_time">%s verbracht Anime zu schauen.</string>
