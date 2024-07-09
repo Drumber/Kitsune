@@ -155,7 +155,7 @@ class LibraryRepository(
     suspend fun fetchAndStoreLibraryEntriesForFilter(filter: LibraryEntryFilter): List<LibraryEntry>? {
         val libraryEntries = remoteLibraryDataSource.getAllLibraryEntries(filter.buildFilter()).data
         if (libraryEntries != null) {
-             localLibraryDataSource.insertAllLibraryEntries(libraryEntries.map { it.toLocalLibraryEntry() })
+            localLibraryDataSource.insertAllLibraryEntries(libraryEntries.map { it.toLocalLibraryEntry() })
         }
         return libraryEntries?.map { it.toLibraryEntry() }
     }
@@ -168,19 +168,23 @@ class LibraryRepository(
         return remoteLibraryDataSource.getLibraryEntry(id, filter)?.toLibraryEntry()
     }
 
-    suspend fun getLibraryEntriesByFilterFromDatabase(filter: LibraryEntryFilter): List<LibraryEntry> {
-        return localLibraryDataSource.getLibraryEntriesByKindAndStatus(
-            filter.kind,
-            filter.libraryStatus.map { it.toLocalLibraryStatus() }
-        ).map { it.toLibraryEntry() }
-    }
-
     suspend fun getLibraryEntryFromDatabase(id: String): LibraryEntry? {
         return localLibraryDataSource.getLibraryEntry(id)?.toLibraryEntry()
     }
 
     suspend fun getLibraryEntryFromMedia(mediaId: String): LibraryEntry? {
         return localLibraryDataSource.getLibraryEntryFromMedia(mediaId)?.toLibraryEntry()
+    }
+
+    suspend fun getLibraryEntriesWithModificationsByStatus(status: List<LibraryStatus>): List<LibraryEntryWithModification> {
+        return localLibraryDataSource.getLibraryEntriesWithModificationsByStatus(
+            status.map { it.toLocalLibraryStatus() }
+        ).map {
+            LibraryEntryWithModification(
+                libraryEntry = it.libraryEntry.toLibraryEntry(),
+                modification = it.libraryEntryModification?.toLibraryEntryModification()
+            )
+        }
     }
 
     fun getLibraryEntryWithModificationFromMediaAsLiveData(mediaId: String): LiveData<LibraryEntryWithModification?> {

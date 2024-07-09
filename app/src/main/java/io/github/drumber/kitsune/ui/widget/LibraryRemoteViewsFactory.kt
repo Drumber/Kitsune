@@ -3,15 +3,16 @@ package io.github.drumber.kitsune.ui.widget
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
+import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
+import androidx.core.os.bundleOf
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.LibraryWidget
-import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
+import io.github.drumber.kitsune.data.presentation.model.media.identifier
 import io.github.drumber.kitsune.data.repository.LibraryRepository
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.runBlocking
@@ -28,7 +29,7 @@ class LibraryRemoteViewsFactory(
         AppWidgetManager.INVALID_APPWIDGET_ID
     )
 
-    private val libraryEntries = CopyOnWriteArrayList<LibraryEntry>()
+    private val libraryEntries = CopyOnWriteArrayList<LibraryEntryWithModification>()
 
     override fun onCreate() {
     }
@@ -60,16 +61,28 @@ class LibraryRemoteViewsFactory(
         return RemoteViews(context.packageName, R.layout.widget_library_item).apply {
             setTextViewText(R.id.widget_library_title, libraryEntry.media?.title)
             setTextViewText(R.id.widget_subtype, libraryEntry.media?.subtypeFormatted)
-            val progressText =
-                "${libraryEntry.progress ?: 0}/${libraryEntry.media?.episodeOrChapterCount ?: "-"}"
+            val progressText = "${libraryEntry.progress ?: 0}/${libraryEntry.episodeCountFormatted}"
             setTextViewText(R.id.widget_progress, progressText)
 
-            setProgressBar(
-                R.id.widget_progress_bar,
-                libraryEntry.media?.episodeOrChapterCount ?: 0,
-                libraryEntry.progress ?: 0,
-                false
-            )
+            if (libraryEntry.hasEpisodesCount) {
+                setProgressBar(
+                    R.id.widget_progress_bar,
+                    libraryEntry.media?.episodeOrChapterCount ?: 0,
+                    libraryEntry.progress ?: 0,
+                    false
+                )
+            } else {
+                setViewVisibility(R.id.widget_progress_bar, View.GONE)
+            }
+
+            val fillInIntent = Intent().apply {
+                val bundle = bundleOf(
+                    KitsuneWidgetProvider.EXTRA_MEDIA_ID to libraryEntry.media?.id,
+                    KitsuneWidgetProvider.EXTRA_MEDIA_TYPE to libraryEntry.media?.mediaType?.identifier
+                )
+                putExtras(bundle)
+            }
+            setOnClickFillInIntent(R.id.widget_btn_progress, fillInIntent)
 
             try {
                 val bitmap = Glide.with(context.applicationContext)
@@ -107,12 +120,9 @@ class LibraryRemoteViewsFactory(
     private fun updateData() {
         runBlocking {
             try {
-                val filter = LibraryEntryFilter(
-                    kind = LibraryEntryKind.All,
-                    libraryStatus = listOf(LibraryStatus.Current)
-                )
-                val entries = libraryRepository.getLibraryEntriesByFilterFromDatabase(filter)
-                    .take(LibraryWidget.MAX_ITEM_COUNT)
+                val entries = libraryRepository.getLibraryEntriesWithModificationsByStatus(
+                    listOf(LibraryStatus.Current)
+                ).take(LibraryWidget.MAX_ITEM_COUNT)
                 libraryEntries.clear()
                 libraryEntries.addAll(entries)
             } catch (e: Exception) {

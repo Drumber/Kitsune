@@ -59,7 +59,7 @@
         <include
             layout="@layout/item_details_info_row"
             app:title="@{@string/data_title_status}"
-            app:value="@{context.getString(data.statusStringRes)}" />
+            app:value='@{data != null ? context.getString(data.statusStringRes) : ""}' />
 
         <!-- Aired Date -->
         <include
@@ -73,7 +73,7 @@
             layout="@layout/item_details_info_row"
             app:isVisible="@{TextUtils.isEmpty(data.tba) &amp;&amp; !TextUtils.isEmpty(data.seasonYear) &amp;&amp; data instanceof Anime}"
             app:title="@{@string/data_title_season}"
-            app:value="@{context.getString(data.seasonStringRes) + ` ` + data.seasonYear}" />
+            app:value='@{data != null ? context.getString(data.seasonStringRes) + ` ` + data.seasonYear : ""}' />
 
         <!-- TBA (Expected Date) -->
         <include

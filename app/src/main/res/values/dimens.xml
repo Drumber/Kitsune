@@ -51,6 +51,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <!-- Widget -->
-    <dimen name="widget_poster_width">53dp</dimen>
-    <dimen name="widget_poster_height">75dp</dimen>
+    <dimen name="widget_poster_width">60dp</dimen>
+    <dimen name="widget_poster_height">85dp</dimen>
 </resources>

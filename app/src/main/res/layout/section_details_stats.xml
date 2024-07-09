@@ -58,7 +58,7 @@
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             tools:text="Currently Airing"
-            android:text="@{context.getString(data.statusStringRes)}" />
+            android:text='@{data != null ? context.getString(data.statusStringRes) : ""}' />
 
     </LinearLayout>
 
