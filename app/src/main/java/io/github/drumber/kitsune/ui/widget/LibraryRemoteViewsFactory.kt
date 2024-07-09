@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
+import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.LibraryWidget
 import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
@@ -48,13 +49,38 @@ class LibraryRemoteViewsFactory(
         val data = ArrayList(libraryEntries)
         if (position >= data.size) {
             return RemoteViews(context.packageName, R.layout.widget_library_item).apply {
-                setTextViewText(R.id.widget_library_title, "No data")
+                setTextViewText(
+                    R.id.widget_library_title,
+                    context.getString(R.string.no_information)
+                )
             }
         }
 
-        val entry = data[position]
+        val libraryEntry = data[position]
         return RemoteViews(context.packageName, R.layout.widget_library_item).apply {
-            setTextViewText(R.id.widget_library_title, entry.media?.title)
+            setTextViewText(R.id.widget_library_title, libraryEntry.media?.title)
+            setTextViewText(R.id.widget_subtype, libraryEntry.media?.subtypeFormatted)
+            val progressText =
+                "${libraryEntry.progress ?: 0}/${libraryEntry.media?.episodeOrChapterCount ?: "-"}"
+            setTextViewText(R.id.widget_progress, progressText)
+
+            setProgressBar(
+                R.id.widget_progress_bar,
+                libraryEntry.media?.episodeOrChapterCount ?: 0,
+                libraryEntry.progress ?: 0,
+                false
+            )
+
+            try {
+                val bitmap = Glide.with(context.applicationContext)
+                    .asBitmap()
+                    .load(libraryEntry.media?.posterImageUrl)
+                    .submit()
+                    .get()
+                setImageViewBitmap(R.id.widget_iv_poster, bitmap)
+            } catch (e: Exception) {
+                logE("Failed to load poster image for widget $appWidgetId", e)
+            }
         }
     }
 

@@ -49,4 +49,8 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- Widget -->
+    <dimen name="widget_poster_width">53dp</dimen>
+    <dimen name="widget_poster_height">75dp</dimen>
 </resources>

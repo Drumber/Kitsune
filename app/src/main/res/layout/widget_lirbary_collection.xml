@@ -2,7 +2,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_theme_surface">
+    android:background="?attr/colorSurfaceContainer"
+    android:theme="@style/Theme.Material3.DynamicColors.DayNight">
+
     <ListView
         android:id="@+id/widget_list_view"
         android:layout_width="match_parent"
@@ -14,5 +16,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="No data" />
+        android:text="@string/no_data_available" />
 </FrameLayout>

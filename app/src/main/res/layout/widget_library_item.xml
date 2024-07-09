@@ -1,10 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="@dimen/widget_poster_height"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/widget_iv_poster"
+        android:layout_width="@dimen/widget_poster_width"
+        android:layout_height="@dimen/widget_poster_height"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_insert_photo_48" />
+
     <TextView
         android:id="@+id/widget_library_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginHorizontal="12dp"
+        android:layout_toEndOf="@id/widget_iv_poster"
+        android:layout_alignParentTop="true"
+        android:textAppearance="?attr/textAppearanceTitleSmall"
+        android:maxLines="2"
+        android:ellipsize="end"
+        tools:text="Some media title" />
+
+    <TextView
+        android:id="@+id/widget_subtype"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Example" />
-</FrameLayout>
+        android:layout_marginTop="4dp"
+        android:layout_marginHorizontal="12dp"
+        android:layout_toEndOf="@id/widget_iv_poster"
+        android:layout_below="@id/widget_library_title"
+        android:textAppearance="?attr/textAppearanceBodySmall"
+        tools:text="TV" />
+
+    <TextView
+        android:id="@+id/widget_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_toStartOf="@id/widget_btn_progress"
+        android:layout_above="@id/widget_progress_bar"
+        tools:text="3/12" />
+
+    <ImageButton
+        android:id="@+id/widget_btn_progress"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@id/widget_progress_bar"
+        android:layout_margin="12dp"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_add_24"
+        android:clickable="true"
+        app:tint="?attr/colorOnSecondaryContainer"
+        android:background="@drawable/widget_plus_button_background"/>
+
+    <ProgressBar
+        android:id="@+id/widget_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/widget_iv_poster"
+        android:layout_alignParentBottom="true"
+        style="@style/Widget.Material3.LinearProgressIndicator"/>
+</RelativeLayout>
