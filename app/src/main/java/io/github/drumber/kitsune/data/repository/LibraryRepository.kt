@@ -10,6 +10,7 @@ import io.github.drumber.kitsune.constants.Repository
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.common.exception.NotFoundException
+import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntryModification
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry
@@ -136,18 +137,27 @@ class LibraryRepository(
     }
 
     suspend fun fetchAndStoreLibraryEntryForMedia(userId: String, media: Media): LibraryEntry? {
-        val filter = filterForFullLibraryEntry.copy()
+        val requestFilter = filterForFullLibraryEntry.copy()
             .filter("user_id", userId)
         when (media) {
-            is Anime -> filter.filter("anime_id", media.id)
-            is Manga -> filter.filter("manga_id", media.id)
+            is Anime -> requestFilter.filter("anime_id", media.id)
+            is Manga -> requestFilter.filter("manga_id", media.id)
         }
 
-        val libraryEntry = remoteLibraryDataSource.getAllLibraryEntries(filter).data?.firstOrNull()
-        if (libraryEntry != null) {
-            localLibraryDataSource.insertLibraryEntry(libraryEntry.toLocalLibraryEntry())
+        val filter = LibraryEntryFilter(
+            kind = LibraryEntryKind.All,
+            libraryStatus = emptyList(),
+            initialFilter = requestFilter
+        )
+        return fetchAndStoreLibraryEntriesForFilter(filter)?.firstOrNull()
+    }
+
+    suspend fun fetchAndStoreLibraryEntriesForFilter(filter: LibraryEntryFilter): List<LibraryEntry>? {
+        val libraryEntries = remoteLibraryDataSource.getAllLibraryEntries(filter.buildFilter()).data
+        if (libraryEntries != null) {
+             localLibraryDataSource.insertAllLibraryEntries(libraryEntries.map { it.toLocalLibraryEntry() })
         }
-        return libraryEntry?.toLibraryEntry()
+        return libraryEntries?.map { it.toLibraryEntry() }
     }
 
     suspend fun fetchAllLibraryEntries(filter: Filter): List<LibraryEntry>? {
@@ -156,6 +166,13 @@ class LibraryRepository(
 
     suspend fun fetchLibraryEntry(id: String, filter: Filter): LibraryEntry? {
         return remoteLibraryDataSource.getLibraryEntry(id, filter)?.toLibraryEntry()
+    }
+
+    suspend fun getLibraryEntriesByFilterFromDatabase(filter: LibraryEntryFilter): List<LibraryEntry> {
+        return localLibraryDataSource.getLibraryEntriesByKindAndStatus(
+            filter.kind,
+            filter.libraryStatus.map { it.toLocalLibraryStatus() }
+        ).map { it.toLibraryEntry() }
     }
 
     suspend fun getLibraryEntryFromDatabase(id: String): LibraryEntry? {

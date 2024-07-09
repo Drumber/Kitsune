@@ -5,6 +5,7 @@ import io.github.drumber.kitsune.domain.auth.LogInUserUseCase
 import io.github.drumber.kitsune.domain.auth.LogOutUserUseCase
 import io.github.drumber.kitsune.domain.auth.RefreshAccessTokenIfExpiredUseCase
 import io.github.drumber.kitsune.domain.auth.RefreshAccessTokenUseCase
+import io.github.drumber.kitsune.domain.library.FetchLibraryEntriesForWidgetUseCase
 import io.github.drumber.kitsune.domain.library.GetLibraryEntriesWithModificationsPagerUseCase
 import io.github.drumber.kitsune.domain.library.SearchLibraryEntriesWithLocalModificationsPagerUseCase
 import io.github.drumber.kitsune.domain.library.SynchronizeLocalLibraryModificationsUseCase
@@ -34,4 +35,5 @@ val domainModule = module {
     factory { UpdateLibraryEntryProgressUseCase(get()) }
     factory { UpdateLibraryEntryRatingUseCase(get()) }
     factory { UpdateLibraryEntryUseCase(get()) }
+    factory { FetchLibraryEntriesForWidgetUseCase(get(), get()) }
 }

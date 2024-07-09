@@ -36,6 +36,14 @@ class LibraryLocalDataSource(
     fun getLibraryEntryWithModificationFromMediaAsLiveData(mediaId: String) =
         libraryEntryWithModificationDao.getLibraryEntryWithModificationFromMediaAsLiveData(mediaId)
 
+    suspend fun insertAllLibraryEntries(libraryEntries: List<LocalLibraryEntry>) {
+        database.withTransaction {
+            libraryEntries.forEach {
+                insertLibraryEntry(it)
+            }
+        }
+    }
+
     suspend fun insertLibraryEntry(libraryEntry: LocalLibraryEntry) {
         libraryEntry.verifyIsValidLibraryEntry()
         insertLibraryEntryIfUpdatedAtIsNewer(libraryEntry)
