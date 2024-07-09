@@ -16,7 +16,7 @@
         app:dragDismissScale="0.9"
         tools:context=".ui.details.photoview.PhotoViewActivity">
 
-        <io.github.drumber.kitsune.ui.widget.PhotoViewNestedScrollView
+        <io.github.drumber.kitsune.ui.component.PhotoViewNestedScrollView
             android:id="@+id/nested_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -101,7 +101,7 @@
 
             </FrameLayout>
 
-        </io.github.drumber.kitsune.ui.widget.PhotoViewNestedScrollView>
+        </io.github.drumber.kitsune.ui.component.PhotoViewNestedScrollView>
 
     </app.futured.hauler.HaulerView>
 </layout>

@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <io.github.drumber.kitsune.ui.widget.NestedScrollableHost
+        <io.github.drumber.kitsune.ui.component.NestedScrollableHost
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -58,7 +58,7 @@
                 android:transitionGroup="true"
                 tools:listitem="@layout/item_media" />
 
-        </io.github.drumber.kitsune.ui.widget.NestedScrollableHost>
+        </io.github.drumber.kitsune.ui.component.NestedScrollableHost>
 
         <include
             android:id="@+id/layout_loading"

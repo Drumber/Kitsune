@@ -195,7 +195,7 @@
                 android:text="@string/filter_subtype"
                 android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
-            <io.github.drumber.kitsune.ui.widget.ExpandableLayout
+            <io.github.drumber.kitsune.ui.component.ExpandableLayout
                 android:id="@+id/wrapper_subtype"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -230,7 +230,7 @@
 
                 </FrameLayout>
 
-            </io.github.drumber.kitsune.ui.widget.ExpandableLayout>
+            </io.github.drumber.kitsune.ui.component.ExpandableLayout>
 
             <TextView
                 android:id="@+id/tv_streamers"
@@ -241,7 +241,7 @@
                 android:text="@string/filter_streamers"
                 android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
-            <io.github.drumber.kitsune.ui.widget.ExpandableLayout
+            <io.github.drumber.kitsune.ui.component.ExpandableLayout
                 android:id="@+id/wrapper_streamers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -276,7 +276,7 @@
 
                 </FrameLayout>
 
-            </io.github.drumber.kitsune.ui.widget.ExpandableLayout>
+            </io.github.drumber.kitsune.ui.component.ExpandableLayout>
 
             <TextView
                 android:id="@+id/tv_age_rating"

@@ -53,7 +53,7 @@ import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
-import io.github.drumber.kitsune.ui.widget.chart.PieChartStyle
+import io.github.drumber.kitsune.ui.component.chart.PieChartStyle
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.openUrl

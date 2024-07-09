@@ -22,7 +22,7 @@ import io.github.drumber.kitsune.databinding.SectionMainExploreBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.base.BaseFragment
-import io.github.drumber.kitsune.ui.widget.ExploreSection
+import io.github.drumber.kitsune.ui.component.ExploreSection
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.network.ResponseData
 import org.koin.androidx.navigation.koinNavGraphViewModel

@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.widget.algolia
+package io.github.drumber.kitsune.ui.component.algolia
 
 import com.algolia.instantsearch.filter.facet.FacetListItem
 import com.algolia.instantsearch.filter.facet.FacetListPresenter

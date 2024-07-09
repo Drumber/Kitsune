@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.widget
+package io.github.drumber.kitsune.ui.component
 
 import android.content.Context
 import android.view.View

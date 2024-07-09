@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.widget.algolia.range
+package io.github.drumber.kitsune.ui.component.algolia.range
 
 import com.algolia.instantsearch.core.Callback
 import com.algolia.instantsearch.core.connection.AbstractConnection

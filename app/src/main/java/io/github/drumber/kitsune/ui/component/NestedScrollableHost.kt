@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.github.drumber.kitsune.ui.widget
+package io.github.drumber.kitsune.ui.component
 
 import android.content.Context
 import android.util.AttributeSet

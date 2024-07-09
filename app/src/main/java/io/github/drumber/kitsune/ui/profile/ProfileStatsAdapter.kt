@@ -10,7 +10,7 @@ import com.github.mikephil.charting.data.PieDataSet
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsData
 import io.github.drumber.kitsune.databinding.ItemProfileStatsBinding
-import io.github.drumber.kitsune.ui.widget.chart.PieChartStyle.applyStyle
+import io.github.drumber.kitsune.ui.component.chart.PieChartStyle.applyStyle
 import io.github.drumber.kitsune.util.TimeUtil
 import kotlin.math.roundToInt
 

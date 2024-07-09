@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.widget
+package io.github.drumber.kitsune.ui.component
 
 import androidx.paging.LoadState
 import androidx.paging.PagingDataAdapter

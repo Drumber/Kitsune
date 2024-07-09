@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.widget.chart
+package io.github.drumber.kitsune.ui.component.chart
 
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.ValueFormatter

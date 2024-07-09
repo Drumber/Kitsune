@@ -37,7 +37,7 @@ import io.github.drumber.kitsune.databinding.FragmentEditLibraryEntryBinding
 import io.github.drumber.kitsune.ui.base.BaseDialogFragment
 import io.github.drumber.kitsune.ui.library.RatingBottomSheet
 import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel.LoadState
-import io.github.drumber.kitsune.ui.widget.CustomNumberSpinner
+import io.github.drumber.kitsune.ui.component.CustomNumberSpinner
 import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
 import io.github.drumber.kitsune.util.extensions.getResourceId
 import io.github.drumber.kitsune.util.extensions.navigateSafe

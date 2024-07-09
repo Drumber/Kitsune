@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.widget
+package io.github.drumber.kitsune.ui.component
 
 import android.animation.ValueAnimator
 import android.content.Context
@@ -13,10 +13,10 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.ui.widget.ExpandableLayout.State.COLLAPSED
-import io.github.drumber.kitsune.ui.widget.ExpandableLayout.State.COLLAPSING
-import io.github.drumber.kitsune.ui.widget.ExpandableLayout.State.EXPANDED
-import io.github.drumber.kitsune.ui.widget.ExpandableLayout.State.EXPANDING
+import io.github.drumber.kitsune.ui.component.ExpandableLayout.State.COLLAPSED
+import io.github.drumber.kitsune.ui.component.ExpandableLayout.State.COLLAPSING
+import io.github.drumber.kitsune.ui.component.ExpandableLayout.State.EXPANDED
+import io.github.drumber.kitsune.ui.component.ExpandableLayout.State.EXPANDING
 import kotlin.math.round
 
 /**

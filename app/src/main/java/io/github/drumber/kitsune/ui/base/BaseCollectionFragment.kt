@@ -17,7 +17,7 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
-import io.github.drumber.kitsune.ui.widget.LoadStateSpanSizeLookup
+import io.github.drumber.kitsune.ui.component.LoadStateSpanSizeLookup
 import kotlin.math.floor
 import kotlin.math.max
 

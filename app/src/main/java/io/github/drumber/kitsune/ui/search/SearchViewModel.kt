@@ -42,8 +42,8 @@ import io.github.drumber.kitsune.domain.algolia.toCombinedMap
 import io.github.drumber.kitsune.domain.algolia.toFilterCollection
 import io.github.drumber.kitsune.data.common.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.widget.algolia.SeasonListPresenter
-import io.github.drumber.kitsune.ui.widget.algolia.range.CustomFilterRangeConnector
+import io.github.drumber.kitsune.ui.component.algolia.SeasonListPresenter
+import io.github.drumber.kitsune.ui.component.algolia.range.CustomFilterRangeConnector
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logI
 import kotlinx.coroutines.flow.flatMapLatest

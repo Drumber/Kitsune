@@ -65,9 +65,9 @@ import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.LibraryUpdateResult
-import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle
-import io.github.drumber.kitsune.ui.widget.chart.BarChartStyle.applyStyle
-import io.github.drumber.kitsune.ui.widget.chart.StepAxisValueFormatter
+import io.github.drumber.kitsune.ui.component.chart.BarChartStyle
+import io.github.drumber.kitsune.ui.component.chart.BarChartStyle.applyStyle
+import io.github.drumber.kitsune.ui.component.chart.StepAxisValueFormatter
 import io.github.drumber.kitsune.util.DataUtil.mapLanguageCodesToDisplayName
 import io.github.drumber.kitsune.util.extensions.getColor
 import io.github.drumber.kitsune.util.extensions.navigateSafe

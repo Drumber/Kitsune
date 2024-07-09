@@ -30,9 +30,9 @@ import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.In
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotAvailable
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotInitialized
 import io.github.drumber.kitsune.ui.search.categories.CategoriesDialogFragment
-import io.github.drumber.kitsune.ui.widget.ExpandableLayout
-import io.github.drumber.kitsune.ui.widget.algolia.range.IntNumberRangeView
-import io.github.drumber.kitsune.ui.widget.algolia.range.connectView
+import io.github.drumber.kitsune.ui.component.ExpandableLayout
+import io.github.drumber.kitsune.ui.component.algolia.range.IntNumberRangeView
+import io.github.drumber.kitsune.ui.component.algolia.range.connectView
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
