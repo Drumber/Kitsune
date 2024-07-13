@@ -32,9 +32,9 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.databinding.ActivityMainBinding
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.preference.StartPagePref
 import io.github.drumber.kitsune.preference.getDestinationId
-import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
@@ -238,7 +238,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     /** Checks if the activity was launched using an app link, */
     private fun isLaunchedByDeepLink(): Boolean {
-        return intent.action == Intent.ACTION_VIEW && intent.data != null
+        val flags = intent.flags
+        val isNewTask = flags and Intent.FLAG_ACTIVITY_NEW_TASK != 0 &&
+                flags and Intent.FLAG_ACTIVITY_CLEAR_TASK != 0
+        return (intent.action == Intent.ACTION_VIEW && intent.data != null) || isNewTask
     }
 
     override fun onNewIntent(intent: Intent?) {
