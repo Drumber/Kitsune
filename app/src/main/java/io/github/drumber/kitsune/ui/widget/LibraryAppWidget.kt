@@ -223,7 +223,7 @@ class LibraryAppWidget : GlanceAppWidget(), KoinComponent {
 
                 Row(
                     verticalAlignment = Alignment.Bottom,
-                    modifier = GlanceModifier.padding(bottom = 10.dp, end = 12.dp)
+                    modifier = GlanceModifier.padding(bottom = 12.dp, end = 12.dp)
                 ) {
                     val progressText = when (item.progress) {
                         null, 0 -> context.getString(R.string.library_not_started)

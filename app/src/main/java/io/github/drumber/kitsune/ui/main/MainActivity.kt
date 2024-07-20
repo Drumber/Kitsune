@@ -65,6 +65,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private lateinit var navController: NavController
 
     private var overrideStartDestination: Int? = null
+    private var handledIntentHashCode: Int? = null
 
     private val navigationBarView: NavigationBarView
         get() = binding.bottomNavigation
@@ -261,6 +262,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     }
 
     private fun handleIntentAction(intent: Intent): Boolean {
+        if (handledIntentHashCode == intent.filterHashCode()) return false
+        handledIntentHashCode = intent.filterHashCode()
+
         return when (intent.action) {
             OPEN_MEDIA -> {
                 val argsResult = intent.extras?.runCatching {
