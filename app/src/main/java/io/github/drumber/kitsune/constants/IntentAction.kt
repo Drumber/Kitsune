@@ -8,4 +8,5 @@ object IntentAction {
 
     // Actions for widget
     const val OPEN_MEDIA = "io.github.drumber.kitsune.OPEN_MEDIA"
+    const val OPEN_LIBRARY = "io.github.drumber.kitsune.OPEN_LIBRARY"
 }

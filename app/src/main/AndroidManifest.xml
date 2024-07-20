@@ -52,7 +52,7 @@
             android:windowSoftInputMode="adjustResize"
             android:label="@string/title_authentication" />
 
-        <receiver android:name=".ui.widget.KitsuneWidgetProvider" android:exported="false">
+        <receiver android:name=".ui.widget.KitsuneWidgetReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -62,8 +62,8 @@
                 android:resource="@xml/library_widget_info" />
         </receiver>
 
-        <service android:name=".ui.widget.LibraryWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
+<!--        <service android:name=".ui.widget.LibraryWidgetService"-->
+<!--            android:permission="android.permission.BIND_REMOTEVIEWS" />-->
 
         <provider
             android:name="androidx.core.content.FileProvider"

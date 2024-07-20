@@ -66,6 +66,11 @@ android {
         viewBinding = true
         dataBinding = true
         buildConfig = true
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 
     packagingOptions {
@@ -102,6 +107,11 @@ dependencies {
 
     // Material
     implementation(libs.google.android.material)
+
+    // Glance AppWidget
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.material3)
+    implementation(libs.androidx.glance.preview)
 
     // Kotlin coroutines
     implementation(libs.jetbrains.kotlinx.coroutines.core)

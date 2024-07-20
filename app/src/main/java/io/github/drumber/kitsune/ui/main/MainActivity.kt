@@ -30,6 +30,7 @@ import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.navigationrail.NavigationRailView
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.IntentAction.OPEN_LIBRARY
 import io.github.drumber.kitsune.constants.IntentAction.OPEN_MEDIA
 import io.github.drumber.kitsune.constants.IntentAction.SHORTCUT_LIBRARY
 import io.github.drumber.kitsune.constants.IntentAction.SHORTCUT_SEARCH
@@ -209,7 +210,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         super.onStart()
         if (!handleIntentAction(intent)) {
             overrideStartDestination?.let {
-                navigateToStartFragment(it)
+                navigateToSingleTopDestination(it)
                 overrideStartDestination = null
             }
         }
@@ -276,6 +277,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 } ?: false
             }
 
+            OPEN_LIBRARY -> {
+                navigateToSingleTopDestination(R.id.library_fragment)
+                true
+            }
+
             else -> false
         }
     }
@@ -289,7 +295,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
     }
 
-    private fun navigateToStartFragment(navigationId: Int) {
+    private fun navigateToSingleTopDestination(navigationId: Int) {
         val navOptions = NavOptions.Builder()
             .setLaunchSingleTop(true)
             .setRestoreState(true)

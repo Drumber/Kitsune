@@ -187,6 +187,19 @@ class LibraryRepository(
         }
     }
 
+    fun getLibraryEntriesWithModificationsByStatusAsFlow(status: List<LibraryStatus>): Flow<List<LibraryEntryWithModification>> {
+        return localLibraryDataSource.getLibraryEntriesWithModificationsByStatusAsFlow(
+            status.map { it.toLocalLibraryStatus() }
+        ).map { entries ->
+            entries.map {
+                LibraryEntryWithModification(
+                    libraryEntry = it.libraryEntry.toLibraryEntry(),
+                    modification = it.libraryEntryModification?.toLibraryEntryModification()
+                )
+            }
+        }
+    }
+
     fun getLibraryEntryWithModificationFromMediaAsLiveData(mediaId: String): LiveData<LibraryEntryWithModification?> {
         return localLibraryDataSource.getLibraryEntryWithModificationFromMediaAsLiveData(mediaId)
             .map { entry ->
