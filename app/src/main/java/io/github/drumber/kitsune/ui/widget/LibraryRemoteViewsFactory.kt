@@ -6,14 +6,15 @@ import android.content.Intent
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import androidx.core.os.bundleOf
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.LibraryWidget
+import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.media.identifier
 import io.github.drumber.kitsune.data.repository.LibraryRepository
+import io.github.drumber.kitsune.ui.details.DetailsFragmentArgs
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.CopyOnWriteArrayList
@@ -76,11 +77,12 @@ class LibraryRemoteViewsFactory(
             }
 
             val fillInIntent = Intent().apply {
-                val bundle = bundleOf(
-                    KitsuneWidgetProvider.EXTRA_MEDIA_ID to libraryEntry.media?.id,
-                    KitsuneWidgetProvider.EXTRA_MEDIA_TYPE to libraryEntry.media?.mediaType?.identifier
+                val args = DetailsFragmentArgs(
+                    media = libraryEntry.media?.toMediaDto(),
+                    type = libraryEntry.media?.mediaType?.identifier,
+                    slug = libraryEntry.media?.id
                 )
-                putExtras(bundle)
+                putExtras(args.toBundle())
             }
             setOnClickFillInIntent(R.id.widget_btn_progress, fillInIntent)
 

@@ -30,6 +30,10 @@ import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.navigationrail.NavigationRailView
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.IntentAction.OPEN_MEDIA
+import io.github.drumber.kitsune.constants.IntentAction.SHORTCUT_LIBRARY
+import io.github.drumber.kitsune.constants.IntentAction.SHORTCUT_SEARCH
+import io.github.drumber.kitsune.constants.IntentAction.SHORTCUT_SETTINGS
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.databinding.ActivityMainBinding
 import io.github.drumber.kitsune.preference.KitsunePref
@@ -37,6 +41,8 @@ import io.github.drumber.kitsune.preference.StartPagePref
 import io.github.drumber.kitsune.preference.getDestinationId
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
+import io.github.drumber.kitsune.ui.details.DetailsFragmentArgs
+import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
 import io.github.drumber.kitsune.ui.permissions.showNotificationPermissionRejectedDialog
 import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
@@ -201,9 +207,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     override fun onStart() {
         super.onStart()
-        overrideStartDestination?.let {
-            navigateToStartFragment(it)
-            overrideStartDestination = null
+        if (!handleIntentAction(intent)) {
+            overrideStartDestination?.let {
+                navigateToStartFragment(it)
+                overrideStartDestination = null
+            }
         }
     }
 
@@ -246,7 +254,30 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        navController.handleDeepLink(intent)
+        if (!navController.handleDeepLink(intent) && intent != null) {
+            handleIntentAction(intent)
+        }
+    }
+
+    private fun handleIntentAction(intent: Intent): Boolean {
+        return when (intent.action) {
+            OPEN_MEDIA -> {
+                val argsResult = intent.extras?.runCatching {
+                    DetailsFragmentArgs.fromBundle(this)
+                }
+                argsResult?.getOrNull()?.let { args ->
+                    val action = DetailsFragmentDirections.actionGlobalDetailsFragment(
+                        media = args.media,
+                        type = args.type,
+                        slug = args.slug
+                    )
+                    navController.navigate(action)
+                    true
+                } ?: false
+            }
+
+            else -> false
+        }
     }
 
     private fun getShortcutStartDestinationId(): Int? {
@@ -337,12 +368,6 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         val right = if (isRtl) insets.right else 0
         updatePadding(left = left, top = insets.top, right = right, bottom = insets.bottom)
         return Insets.of(left, 0, right, 0)
-    }
-
-    companion object {
-        const val SHORTCUT_LIBRARY = "io.github.drumber.kitsune.LIBRARY"
-        const val SHORTCUT_SEARCH = "io.github.drumber.kitsune.SEARCH"
-        const val SHORTCUT_SETTINGS = "io.github.drumber.kitsune.SETTINGS"
     }
 
 }

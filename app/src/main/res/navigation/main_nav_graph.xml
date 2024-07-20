@@ -228,5 +228,5 @@
     </dialog>
     <action
         android:id="@+id/action_global_photo_view_activity"
-        app:destination="@id/photo_view_activity" />
+        app:destination="@id/photo_view_activity" /><action android:id="@+id/action_global_details_fragment" app:destination="@id/details_fragment"/>
 </navigation>
