@@ -45,6 +45,7 @@ import retrofit2.HttpException
 class LibraryRepository(
     private val remoteLibraryDataSource: LibraryNetworkDataSource,
     private val localLibraryDataSource: LibraryLocalDataSource,
+    private val libraryChangeListener: LibraryChangeListener,
     private val coroutineScope: CoroutineScope
 ) {
 
@@ -73,12 +74,15 @@ class LibraryRepository(
                 localLibraryDataSource.insertLibraryEntry(libraryEntry.toLocalLibraryEntry())
             }
             libraryEntry?.toLibraryEntry()
-        }.await()
+        }.await().also { libraryEntry ->
+            libraryEntry?.let { libraryChangeListener.onNewLibraryEntry(it) }
+        }
     }
 
     suspend fun removeLibraryEntry(libraryEntryId: String) {
         remoteLibraryDataSource.deleteLibraryEntry(libraryEntryId)
         localLibraryDataSource.deleteLibraryEntryAndAnyModification(libraryEntryId)
+        libraryChangeListener.onRemoveLibraryEntry(libraryEntryId)
     }
 
     /**
@@ -87,6 +91,7 @@ class LibraryRepository(
     suspend fun mayRemoveLibraryEntryLocally(libraryEntryId: String) {
         if (!doesLibraryEntryExist(libraryEntryId)) {
             localLibraryDataSource.deleteLibraryEntryAndAnyModification(libraryEntryId)
+            libraryChangeListener.onRemoveLibraryEntry(libraryEntryId)
         }
     }
 
@@ -108,22 +113,23 @@ class LibraryRepository(
     ): LibraryEntry {
         val modification =
             libraryEntryModification.copy(state = LibraryModificationState.SYNCHRONIZING)
+        var libraryEntry: LibraryEntry? = null
 
         return try {
             coroutineScope.async {
                 localLibraryDataSource.insertLibraryEntryModification(modification.toLocalLibraryEntryModification())
             }.await()
 
-            val libraryEntry = pushModificationToService(modification)
+            val networkLibraryEntry = pushModificationToService(modification)
             coroutineScope.async {
-                if (isLibraryEntryNotOlderThanInDatabase(libraryEntry.toLocalLibraryEntry())) {
+                if (isLibraryEntryNotOlderThanInDatabase(networkLibraryEntry.toLocalLibraryEntry())) {
                     localLibraryDataSource.updateLibraryEntryAndDeleteModification(
-                        libraryEntry.toLocalLibraryEntry(),
+                        networkLibraryEntry.toLocalLibraryEntry(),
                         modification.toLocalLibraryEntryModification()
                     )
                 }
             }.await()
-            libraryEntry.toLibraryEntry()
+            networkLibraryEntry.toLibraryEntry().also { libraryEntry = it }
         } catch (e: NotFoundException) {
             localLibraryDataSource.deleteLibraryEntryAndAnyModification(modification.id)
             throw e
@@ -133,6 +139,8 @@ class LibraryRepository(
                     .toLocalLibraryEntryModification()
             )
             throw e
+        } finally {
+            libraryChangeListener.onUpdateLibraryEntry(libraryEntryModification, libraryEntry)
         }
     }
 
@@ -157,7 +165,9 @@ class LibraryRepository(
         if (libraryEntries != null) {
             localLibraryDataSource.insertAllLibraryEntries(libraryEntries.map { it.toLocalLibraryEntry() })
         }
-        return libraryEntries?.map { it.toLibraryEntry() }
+        return libraryEntries?.map { it.toLibraryEntry() }?.also {
+            libraryChangeListener.onDataInsertion(it)
+        }
     }
 
     suspend fun fetchAllLibraryEntries(filter: Filter): List<LibraryEntry>? {

@@ -105,6 +105,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
 
+    // WorkManager
+    implementation(libs.androidx.workmanager)
+
     // Material
     implementation(libs.google.android.material)
 

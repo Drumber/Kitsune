@@ -115,6 +115,9 @@ object KitsunePref : KotprefModel(), KoinComponent {
     var ratingChartRatingSystem by enumValuePref(LocalRatingSystemPreference.Regular)
 
 
+    var lastLibraryFetchForWidget by longPref(default = -1L)
+
+
     private fun Any.toJsonString(): String {
         val objectMapper: ObjectMapper = get()
         return objectMapper.writeValueAsString(this)

@@ -1,9 +1,11 @@
 package io.github.drumber.kitsune.data.repository
 
+import io.github.drumber.kitsune.data.common.exception.NotFoundException
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntryModification
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toNetworkLibraryStatus
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
@@ -12,7 +14,6 @@ import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMod
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState.SYNCHRONIZING
 import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry
-import io.github.drumber.kitsune.data.common.exception.NotFoundException
 import io.github.drumber.kitsune.testutils.anime
 import io.github.drumber.kitsune.testutils.assertThatThrownBy
 import io.github.drumber.kitsune.testutils.localLibraryEntry
@@ -60,8 +61,12 @@ class LibraryRepositoryTest {
             onSuspend { insertLibraryEntry(any()) } doReturn Unit
         }
 
-        val libraryRepository =
-            LibraryRepository(remoteDataSource, localDataSource, backgroundScope)
+        val libraryRepository = LibraryRepository(
+            remoteDataSource,
+            localDataSource,
+            NoOpLibraryChangeListener,
+            backgroundScope
+        )
 
         // when
         val newLibraryEntry = libraryRepository.addNewLibraryEntry(userId, media, status)
@@ -96,8 +101,12 @@ class LibraryRepositoryTest {
             onSuspend { insertLibraryEntry(any()) } doReturn Unit
         }
 
-        val libraryRepository =
-            LibraryRepository(remoteDataSource, localDataSource, backgroundScope + SupervisorJob())
+        val libraryRepository = LibraryRepository(
+            remoteDataSource,
+            localDataSource,
+            NoOpLibraryChangeListener,
+            backgroundScope + SupervisorJob()
+        )
 
         // then
         assertThatThrownBy {
@@ -122,8 +131,12 @@ class LibraryRepositoryTest {
             onSuspend { deleteLibraryEntryAndAnyModification(any()) } doReturn Unit
         }
 
-        val libraryRepository =
-            LibraryRepository(remoteDataSource, localDataSource, backgroundScope)
+        val libraryRepository = LibraryRepository(
+            remoteDataSource,
+            localDataSource,
+            NoOpLibraryChangeListener,
+            backgroundScope
+        )
 
         // when
         libraryRepository.removeLibraryEntry(libraryEntryId)
@@ -145,8 +158,12 @@ class LibraryRepositoryTest {
             onSuspend { deleteLibraryEntryAndAnyModification(any()) } doReturn Unit
         }
 
-        val libraryRepository =
-            LibraryRepository(remoteDataSource, localDataSource, backgroundScope)
+        val libraryRepository = LibraryRepository(
+            remoteDataSource,
+            localDataSource,
+            NoOpLibraryChangeListener,
+            backgroundScope
+        )
 
         // then
         assertThatThrownBy {
@@ -170,8 +187,12 @@ class LibraryRepositoryTest {
             onSuspend { deleteLibraryEntryAndAnyModification(any()) } doReturn Unit
         }
 
-        val libraryRepository =
-            LibraryRepository(remoteDataSource, localDataSource, backgroundScope)
+        val libraryRepository = LibraryRepository(
+            remoteDataSource,
+            localDataSource,
+            NoOpLibraryChangeListener,
+            backgroundScope
+        )
 
         // when
         libraryRepository.mayRemoveLibraryEntryLocally(libraryEntryId)
@@ -193,8 +214,12 @@ class LibraryRepositoryTest {
             onSuspend { deleteLibraryEntryAndAnyModification(any()) } doReturn Unit
         }
 
-        val libraryRepository =
-            LibraryRepository(remoteDataSource, localDataSource, backgroundScope)
+        val libraryRepository = LibraryRepository(
+            remoteDataSource,
+            localDataSource,
+            NoOpLibraryChangeListener,
+            backgroundScope
+        )
 
         // when
         libraryRepository.mayRemoveLibraryEntryLocally(libraryEntryId)
@@ -224,8 +249,12 @@ class LibraryRepositoryTest {
             onSuspend { updateLibraryEntryAndDeleteModification(any(), any()) } doReturn Unit
         }
 
-        val libraryRepository =
-            LibraryRepository(remoteDataSource, localDataSource, backgroundScope)
+        val libraryRepository = LibraryRepository(
+            remoteDataSource,
+            localDataSource,
+            NoOpLibraryChangeListener,
+            backgroundScope
+        )
 
         // when
         val result = libraryRepository.updateLibraryEntry(libraryEntryModification)
@@ -264,8 +293,12 @@ class LibraryRepositoryTest {
             onSuspend { getLibraryEntry(any()) } doReturn libraryEntryFromDb
         }
 
-        val libraryRepository =
-            LibraryRepository(remoteDataSource, localDataSource, backgroundScope)
+        val libraryRepository = LibraryRepository(
+            remoteDataSource,
+            localDataSource,
+            NoOpLibraryChangeListener,
+            backgroundScope
+        )
 
         // when
         libraryRepository.updateLibraryEntry(libraryEntryModification)
@@ -290,8 +323,12 @@ class LibraryRepositoryTest {
             onSuspend { deleteLibraryEntryAndAnyModification(any()) } doReturn Unit
         }
 
-        val libraryRepository =
-            LibraryRepository(remoteDataSource, localDataSource, backgroundScope + SupervisorJob())
+        val libraryRepository = LibraryRepository(
+            remoteDataSource,
+            localDataSource,
+            NoOpLibraryChangeListener,
+            backgroundScope + SupervisorJob()
+        )
 
         // then
         assertThatThrownBy {
@@ -332,8 +369,12 @@ class LibraryRepositoryTest {
             onSuspend { deleteLibraryEntryAndAnyModification(any()) } doReturn Unit
         }
 
-        val libraryRepository =
-            LibraryRepository(remoteDataSource, localDataSource, backgroundScope + SupervisorJob())
+        val libraryRepository = LibraryRepository(
+            remoteDataSource,
+            localDataSource,
+            NoOpLibraryChangeListener,
+            backgroundScope + SupervisorJob()
+        )
 
         // then
         assertThatThrownBy {
@@ -348,5 +389,20 @@ class LibraryRepositoryTest {
         )
         verify(localDataSource, never()).updateLibraryEntryAndDeleteModification(any(), any())
         verify(localDataSource).deleteLibraryEntryAndAnyModification(libraryEntryModification.id)
+    }
+
+
+    object NoOpLibraryChangeListener : LibraryChangeListener {
+        override fun onNewLibraryEntry(libraryEntry: LibraryEntry) {}
+
+        override fun onUpdateLibraryEntry(
+            libraryEntryModification: LibraryEntryModification,
+            updatedLibraryEntry: LibraryEntry?
+        ) {
+        }
+
+        override fun onRemoveLibraryEntry(id: String) {}
+
+        override fun onDataInsertion(libraryEntries: List<LibraryEntry>) {}
     }
 }
