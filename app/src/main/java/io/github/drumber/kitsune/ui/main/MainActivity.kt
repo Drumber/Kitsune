@@ -193,6 +193,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             )
         }
 
+        handledIntentHashCode = when (savedInstanceState?.containsKey(LAST_HANDLED_INTENT_KEY)) {
+            true -> savedInstanceState.getInt(LAST_HANDLED_INTENT_KEY)
+            else -> null
+        }
+
         // override start fragment, but only on clean launch and when not launched by a deep link
         if (savedInstanceState == null && !isLaunchedByDeepLink()) {
             overrideStartDestination = getShortcutStartDestinationId()
@@ -205,6 +210,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
 
         requestRequiredPermissions()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        handledIntentHashCode?.let { outState.putInt(LAST_HANDLED_INTENT_KEY, it) }
     }
 
     override fun onStart() {
@@ -380,6 +390,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         return Insets.of(left, 0, right, 0)
     }
 
+    companion object {
+        private const val LAST_HANDLED_INTENT_KEY = "last_handled_intent"
+    }
 }
 
 interface FragmentDecorationPreference {
