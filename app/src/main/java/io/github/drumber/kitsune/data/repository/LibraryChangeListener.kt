@@ -1,13 +1,10 @@
 package io.github.drumber.kitsune.data.repository
 
 import android.content.Context
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
-import io.github.drumber.kitsune.work.UpdateLibraryWidgetWorker
+import io.github.drumber.kitsune.domain.work.UpdateLibraryWidgetUseCase
 
 interface LibraryChangeListener {
     fun onNewLibraryEntry(libraryEntry: LibraryEntry)
@@ -20,7 +17,11 @@ interface LibraryChangeListener {
     fun onDataInsertion(libraryEntries: List<LibraryEntry>)
 }
 
-class WidgetLibraryChangeListener(private val context: Context) : LibraryChangeListener {
+class WidgetLibraryChangeListener(
+    private val context: Context,
+    private val updateLibraryWidget: UpdateLibraryWidgetUseCase
+) : LibraryChangeListener {
+
     override fun onNewLibraryEntry(libraryEntry: LibraryEntry) {
         if (libraryEntry.status == LibraryStatus.Current)
             updateWidgets()
@@ -43,13 +44,6 @@ class WidgetLibraryChangeListener(private val context: Context) : LibraryChangeL
     }
 
     private fun updateWidgets() {
-        val updateWidgetWork = OneTimeWorkRequestBuilder<UpdateLibraryWidgetWorker>()
-            .build()
-
-        WorkManager.getInstance(context).enqueueUniqueWork(
-            UpdateLibraryWidgetWorker.TAG,
-            ExistingWorkPolicy.REPLACE,
-            updateWidgetWork
-        )
+        updateLibraryWidget(context)
     }
 }

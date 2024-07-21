@@ -14,6 +14,7 @@ import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryRatingUseCase
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryUseCase
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.domain.user.UpdateLocalUserUseCase
+import io.github.drumber.kitsune.domain.work.UpdateLibraryWidgetUseCase
 import org.koin.dsl.module
 
 val domainModule = module {
@@ -36,4 +37,7 @@ val domainModule = module {
     factory { UpdateLibraryEntryRatingUseCase(get()) }
     factory { UpdateLibraryEntryUseCase(get()) }
     factory { FetchLibraryEntriesForWidgetUseCase(get(), get()) }
+
+    // Work
+    factory { UpdateLibraryWidgetUseCase() }
 }

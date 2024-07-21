@@ -28,7 +28,6 @@ import androidx.glance.appwidget.LinearProgressIndicator
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.components.SquareIconButton
-import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
@@ -48,11 +47,13 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
+import androidx.lifecycle.asFlow
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.chibatching.kotpref.livedata.asLiveData
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.IntentAction.OPEN_LIBRARY
 import io.github.drumber.kitsune.constants.IntentAction.OPEN_MEDIA
@@ -64,8 +65,10 @@ import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.media.identifier
 import io.github.drumber.kitsune.data.repository.LibraryRepository
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCase
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.details.DetailsFragmentArgs
 import io.github.drumber.kitsune.ui.main.MainActivity
+import io.github.drumber.kitsune.ui.widget.KitsuneWidgetTheme.applyTheme
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelFutureOnCancellation
@@ -88,10 +91,18 @@ class LibraryAppWidget : GlanceAppWidget(), KoinComponent {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val initialEntries = loadData()
         provideContent {
+            val appTheme by KitsunePref.asLiveData(KitsunePref::appTheme)
+                .asFlow()
+                .collectAsState(initial = KitsunePref.appTheme)
+            val useDynamicColorTheme by KitsunePref.asLiveData(KitsunePref::useDynamicColorTheme)
+                .asFlow()
+                .collectAsState(initial = KitsunePref.useDynamicColorTheme)
+            LocalContext.current.applyTheme(appTheme)
+
             val scope = rememberCoroutineScope()
             val entries by getDataFlow().collectAsState(initial = initialEntries)
 
-            GlanceTheme {
+            GlanceTheme(colors = KitsuneWidgetTheme.getColors(useDynamicColorTheme)) {
                 Scaffold(horizontalPadding = 0.dp) {
                     WidgetContent(
                         entries = entries,
@@ -217,7 +228,6 @@ class LibraryAppWidget : GlanceAppWidget(), KoinComponent {
                         modifier = GlanceModifier
                             .fillMaxWidth()
                             .height(4.dp)
-                            .cornerRadius(0)
                     )
                 }
 

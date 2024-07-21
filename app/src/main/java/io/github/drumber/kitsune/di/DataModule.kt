@@ -237,7 +237,7 @@ val dataModule = module {
     }
     single { LibraryNetworkDataSource(get()) }
     single { LibraryLocalDataSource(get()) }
-    single<LibraryChangeListener> { WidgetLibraryChangeListener(androidApplication()) }
+    single<LibraryChangeListener> { WidgetLibraryChangeListener(androidApplication(), get()) }
     single {
         LibraryRepository(
             get(),

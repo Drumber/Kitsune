@@ -8,10 +8,14 @@ import com.google.android.material.color.DynamicColors
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.constants.MediaItemSize
+import io.github.drumber.kitsune.domain.work.UpdateLibraryWidgetUseCase
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BasePreferenceFragment
+import org.koin.android.ext.android.inject
 
 class AppearanceFragment : BasePreferenceFragment(R.string.nav_appearance) {
+
+    private val updateLibraryWidget: UpdateLibraryWidgetUseCase by inject()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.sharedPreferencesName = getString(R.string.preference_file_key)
@@ -22,6 +26,7 @@ class AppearanceFragment : BasePreferenceFragment(R.string.nav_appearance) {
             isVisible = DynamicColors.isDynamicColorAvailable()
             setOnPreferenceChangeListener { _, newValue ->
                 KitsunePref.useDynamicColorTheme = newValue as Boolean
+                updateLibraryWidget(context)
                 true
             }
         }
@@ -35,6 +40,7 @@ class AppearanceFragment : BasePreferenceFragment(R.string.nav_appearance) {
             setOnPreferenceChangeListener { _, newValue ->
                 val themeIndex = themeEntries.indexOf(newValue as ThemePickerPreference.ThemeEntry)
                 KitsunePref.appTheme = AppTheme.entries[themeIndex]
+                updateLibraryWidget(context)
                 true
             }
         }
