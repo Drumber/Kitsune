@@ -62,7 +62,8 @@
         <argument
             android:name="media"
             app:argType="io.github.drumber.kitsune.data.presentation.dto.MediaDto"
-            app:nullable="true" />
+            app:nullable="true"
+            android:defaultValue="@null" />
         <action
             android:id="@+id/action_details_fragment_to_media_list_fragment"
             app:destination="@id/media_list_fragment" />

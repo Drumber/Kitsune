@@ -76,6 +76,10 @@ android {
     packagingOptions {
         excludes += "META-INF/*.kotlin_module"
     }
+
+    testOptions {
+        animationsDisabled = true
+    }
 }
 
 aboutLibraries {
@@ -221,6 +225,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit.ktx)
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.espresso.contrib)
 
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
     testImplementation(libs.insert.koin.test.junit4)

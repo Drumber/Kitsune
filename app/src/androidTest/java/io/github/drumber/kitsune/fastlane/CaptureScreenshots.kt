@@ -16,6 +16,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.internal.runner.junit4.statement.UiThreadStatement
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
+import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.preference.KitsunePref
@@ -24,6 +25,8 @@ import io.github.drumber.kitsune.utils.OkHttpIdlingResource
 import io.github.drumber.kitsune.utils.waitForView
 import okhttp3.OkHttpClient
 import org.junit.AfterClass
+import org.junit.Assume.assumeTrue
+import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -46,6 +49,12 @@ class CaptureScreenshots : KoinComponent {
     )
 
     companion object {
+        @BeforeClass
+        @JvmStatic
+        fun beforeAll() {
+            assumeTrue(BuildConfig.SCREENSHOT_MODE_ENABLED)
+        }
+
         @AfterClass
         @JvmStatic
         fun afterAll() {
