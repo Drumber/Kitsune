@@ -47,7 +47,7 @@ class KitsuneGlideModule : AppGlideModule(), KoinComponent {
 
 }
 
-fun RequestBuilder<*>.addTransform(vararg transformations: Transformation<Bitmap>) = with(this) {
+fun <T> RequestBuilder<T>.addTransform(vararg transformations: Transformation<Bitmap>) = with(this) {
     val oldTransforms = this.transformations
         .filterKeys { it.isAssignableFrom(Bitmap::class.java) }
         .map { it.value as Transformation<Bitmap> }

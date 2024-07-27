@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -25,13 +26,16 @@ import androidx.glance.action.Action
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.LinearProgressIndicator
+import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.components.SquareIconButton
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.updateAll
+import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
@@ -43,6 +47,7 @@ import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
 import androidx.glance.layout.width
+import androidx.glance.layout.wrapContentHeight
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
@@ -51,10 +56,12 @@ import androidx.lifecycle.asFlow
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.chibatching.kotpref.livedata.asLiveData
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.constants.IntentAction.OPEN_LIBRARY
 import io.github.drumber.kitsune.constants.IntentAction.OPEN_MEDIA
 import io.github.drumber.kitsune.constants.LibraryWidget
@@ -85,8 +92,15 @@ import kotlin.coroutines.resumeWithException
 
 class LibraryAppWidget : GlanceAppWidget(), KoinComponent {
 
+    companion object {
+        private const val POSTER_IMG_WIDTH = 60
+        private const val POSTER_IMG_HEIGHT = 85
+    }
+
     private val libraryRepository: LibraryRepository by inject()
     private val updateLibraryEntryProgress: UpdateLibraryEntryProgressUseCase by inject()
+
+    override val sizeMode: SizeMode = SizeMode.Single
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val initialEntries = loadData()
@@ -146,16 +160,36 @@ class LibraryAppWidget : GlanceAppWidget(), KoinComponent {
         emptyListAction: () -> Action
     ) {
         if (entries.isNotEmpty()) {
+            val padding = 8.dp
+            val itemBackgroundColor = GlanceTheme.colors.surfaceVariant
+
             LazyColumn(
                 modifier = GlanceModifier
                     .fillMaxSize()
             ) {
                 items(items = entries, itemId = { item -> item.id.toLong() }) { item ->
-                    LibraryItem(
-                        item = item,
-                        clickItemAction = clickItemAction,
-                        progressAction = progressAction
-                    )
+                    val isLastItem = entries.lastOrNull()?.id == item.id
+                    val itemCardModifier = GlanceModifier
+                        .wrapContentHeight()
+                        .fillMaxWidth()
+                        .background(itemBackgroundColor)
+                        .cornerRadiusCompat { itemBackgroundColor }
+
+                    Box(
+                        modifier = GlanceModifier.padding(
+                            start = padding,
+                            top = padding,
+                            end = padding,
+                            bottom = if (isLastItem) padding else 0.dp
+                        )
+                    ) {
+                        LibraryItem(
+                            item = item,
+                            modifier = itemCardModifier,
+                            clickItemAction = clickItemAction,
+                            progressAction = progressAction
+                        )
+                    }
                 }
             }
         } else {
@@ -166,16 +200,19 @@ class LibraryAppWidget : GlanceAppWidget(), KoinComponent {
     @Composable
     private fun LibraryItem(
         item: LibraryEntryWithModification,
+        modifier: GlanceModifier,
         clickItemAction: (LibraryEntry) -> Action,
         progressAction: (LibraryEntry, Int) -> Unit
     ) {
         val context = LocalContext.current
 
+        val posterCornerRadius = innerCornerRadius(context)
+
         val posterUrl = item.media?.posterImageUrl
         var posterImage by remember(posterUrl) { mutableStateOf<Bitmap?>(null) }
         LaunchedEffect(posterUrl) {
             try {
-                posterImage = loadBitmap(context, posterUrl)
+                posterImage = loadBitmap(context, posterUrl, posterCornerRadius)
             } catch (e: Exception) {
                 logE("Failed to load poster image for URL $posterUrl", e)
             }
@@ -185,12 +222,16 @@ class LibraryAppWidget : GlanceAppWidget(), KoinComponent {
             ?: ImageProvider(R.drawable.ic_insert_photo_48)
 
         Row(
-            modifier = GlanceModifier.clickable(clickItemAction(item.libraryEntry))
+            modifier = modifier.clickable(clickItemAction(item.libraryEntry))
         ) {
             Image(
                 provider = imageProvider,
                 contentDescription = null,
-                modifier = GlanceModifier.size(width = 60.dp, height = 85.dp)
+                modifier = GlanceModifier
+                    .size(width = POSTER_IMG_WIDTH.dp, height = POSTER_IMG_HEIGHT.dp)
+                    .applyIf(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        cornerRadius(android.R.dimen.system_app_widget_inner_radius)
+                    }
             )
             Box(contentAlignment = Alignment.BottomEnd) {
                 Column(
@@ -228,6 +269,11 @@ class LibraryAppWidget : GlanceAppWidget(), KoinComponent {
                         modifier = GlanceModifier
                             .fillMaxWidth()
                             .height(4.dp)
+                            .applyIf(Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                                // corner clipping is not supported on android < S
+                                // to avoid overflow of the progress bar, we add padding to the end
+                                padding(end = 12.dp)
+                            }
                     )
                 }
 
@@ -307,11 +353,13 @@ class LibraryAppWidget : GlanceAppWidget(), KoinComponent {
 
     private suspend fun loadBitmap(
         context: Context,
-        url: String?
+        url: String?,
+        cornerRadius: Int
     ) = suspendCancellableCoroutine { cont ->
         val request = Glide.with(context)
             .asBitmap()
             .load(url)
+            .addTransform(RoundedCorners(cornerRadius))
             .listener(object : RequestListener<Bitmap> {
                 override fun onLoadFailed(
                     e: GlideException?,

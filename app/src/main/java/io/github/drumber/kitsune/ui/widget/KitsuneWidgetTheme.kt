@@ -45,7 +45,7 @@ object KitsuneWidgetTheme {
             errorContainer = ColorProvider(context.theme.getResourceId(R.attr.colorErrorContainer)),
             onError = ColorProvider(context.theme.getResourceId(R.attr.colorOnError)),
             onErrorContainer = ColorProvider(context.theme.getResourceId(R.attr.colorOnErrorContainer)),
-            background = ColorProvider(context.theme.getResourceId(R.attr.colorSurface)),
+            background = ColorProvider(context.theme.getResourceId(android.R.attr.colorBackground)),
             onBackground = ColorProvider(context.theme.getResourceId(R.attr.colorOnBackground)),
             surface = ColorProvider(context.theme.getResourceId(R.attr.colorSurface)),
             onSurface = ColorProvider(context.theme.getResourceId(R.attr.colorOnSurface)),
