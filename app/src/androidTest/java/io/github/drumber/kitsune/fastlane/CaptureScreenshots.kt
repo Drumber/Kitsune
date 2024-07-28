@@ -22,6 +22,7 @@ import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.main.MainActivity
 import io.github.drumber.kitsune.utils.OkHttpIdlingResource
+import io.github.drumber.kitsune.utils.filter.RequiresScreenshotMode
 import io.github.drumber.kitsune.utils.waitForView
 import okhttp3.OkHttpClient
 import org.junit.AfterClass
@@ -71,6 +72,7 @@ class CaptureScreenshots : KoinComponent {
         }
     }
 
+    @RequiresScreenshotMode
     @Test
     fun testTakeScreenshot() {
         enterDemoMode()
@@ -145,7 +147,10 @@ class CaptureScreenshots : KoinComponent {
 
         Screengrab.screenshot("${prefix}_details_screen")
 
-        onView(withId(R.id.chart_ratings)).perform(scrollTo())
+        Thread.sleep(1000)
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+
+        onView(withId(R.id.layout_ratings)).perform(scrollTo())
         onView(withId(R.id.nsv_content)).perform(swipeUp())
         Thread.sleep(100) // wait for scroll
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()

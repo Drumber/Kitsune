@@ -67,6 +67,7 @@ class NavigationTest : KoinComponent {
     fun shouldNavigateToDestinationsFromHome() {
         onView(withId(R.id.main_fragment)).perform(click())
 
+        Thread.sleep(1000)
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
 
         // navigate to trending section
@@ -77,6 +78,7 @@ class NavigationTest : KoinComponent {
             )
         ).perform(click())
 
+        Thread.sleep(1000)
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
 
         // click first media item
