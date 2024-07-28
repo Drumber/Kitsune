@@ -7,7 +7,11 @@ import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.pressBack
 import androidx.test.espresso.action.ViewActions.scrollTo
+import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
+import androidx.test.espresso.matcher.ViewMatchers.isNotEnabled
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -102,6 +106,23 @@ class NavigationTest : KoinComponent {
 
         // click first media item
         onView(withId(R.id.rv_media)).perform(actionOnItemAtPosition<MediaViewHolder>(0, click()))
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+
+        // go back to search fragment
+        onView(isRoot()).perform(pressBack())
+
+        // open filters
+        onView(withId(R.id.btn_filter)).perform(click())
+        Thread.sleep(1000)
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+
+        // open categories
+        onView(withId(R.id.card_categories)).perform(scrollTo(), click())
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+
+        // go back to search fragment
+        onView(isRoot()).perform(pressBack())
+        onView(isRoot()).perform(pressBack())
     }
 
     @Test
@@ -135,42 +156,94 @@ class NavigationTest : KoinComponent {
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         Thread.sleep(3000)
 
-        // navigate to episodes
-        onView(withId(R.id.btn_media_units)).perform(scrollTo())
-        Thread.sleep(100)
-        onView(withId(R.id.btn_media_units)).perform(click())
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        fun goBack() {
+            onView(isRoot()).perform(pressBack())
+            onView(isRoot()).perform(pressBack())
+        }
 
-        // click on first episode
-        onView(withId(R.id.rv_media)).perform(
-            actionOnItemAtPosition<MediaUnitViewHolder>(
-                0,
-                click()
+        fun navigateToEpisodes() {
+            // navigate to episodes
+            onView(withId(R.id.btn_media_units)).perform(scrollTo())
+            Thread.sleep(100)
+            onView(withId(R.id.btn_media_units)).perform(click())
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+
+            // click on first episode
+            onView(withId(R.id.rv_media)).perform(
+                actionOnItemAtPosition<MediaUnitViewHolder>(
+                    0,
+                    click()
+                )
             )
-        )
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
 
-        // go back to details fragment
-        onView(isRoot()).perform(pressBack())
-        onView(isRoot()).perform(pressBack())
+            // go back to details fragment
+            goBack()
+        }
 
-        // navigate to characters
-        onView(withId(R.id.btn_characters)).perform(scrollTo())
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        onView(withId(R.id.btn_characters)).perform(click())
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        fun navigateToCharacters() {
+            // navigate to characters
+            onView(withId(R.id.btn_characters)).perform(scrollTo())
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+            onView(withId(R.id.btn_characters)).perform(click())
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
 
-        // click on first character
-        onView(withId(R.id.rv_media)).perform(
-            actionOnItemAtPosition<CharacterViewHolder>(
-                1,
-                actionOnChild(withId(R.id.iv_character), click())
+            // click on first character
+            onView(withId(R.id.rv_media)).perform(
+                actionOnItemAtPosition<CharacterViewHolder>(
+                    1,
+                    actionOnChild(withId(R.id.iv_character), click())
+                )
             )
-        )
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+
+            // go back to details fragment
+            goBack()
+        }
+
+        fun navigateToCategory() {
+            // navigate to category
+            onView(withChild(withId(R.id.chip_group_categories))).perform(scrollTo())
+            onView(withId(R.id.chip_group_categories)).perform(click())
+
+            Thread.sleep(1000)
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+
+            // click first media item
+            onView(withId(R.id.rv_media)).perform(actionOnItemAtPosition<MediaViewHolder>(0, click()))
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+
+            // go back to details fragment
+            goBack()
+        }
+
+        navigateToEpisodes()
+        navigateToCharacters()
+        navigateToCategory()
+    }
+
+    @Test
+    fun shouldNavigateToLoginScreen() {
+        // navigate to profile fragment
+        onView(withId(R.id.profile_fragment)).perform(click())
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
 
-        // go back to details fragment
+        // navigate to login screen
+        onView(withId(R.id.btn_login)).perform(click())
+
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+
+        onView(withId(R.id.btn_login)).check(matches(isNotEnabled()))
+
+        onView(withId(R.id.input_username)).perform(typeText("user@example.com"))
+        onView(withId(R.id.btn_login)).check(matches(isNotEnabled()))
+
+        onView(withId(R.id.input_password)).perform(typeText("password"))
+
+        onView(withId(R.id.btn_login)).check(matches(isEnabled()))
+
+        // go back to profile fragment
         onView(isRoot()).perform(pressBack())
-        onView(isRoot()).perform(pressBack())
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
     }
 }
