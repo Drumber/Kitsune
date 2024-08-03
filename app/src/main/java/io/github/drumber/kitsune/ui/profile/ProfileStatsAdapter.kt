@@ -24,24 +24,20 @@ class ProfileStatsAdapter(dataSet: List<ProfileStatsData>) :
 
     private val dataSet = dataSet.toMutableList()
 
-    fun getDataSet() = dataSet.toList()
-
-    fun updateData(position: Int, newData: ProfileStatsData) {
-        dataSet[position] = newData
-        notifyItemChanged(position)
-    }
-
     fun updateCategoryData(position: Int, data: PieDataSet) {
+        if (dataSet[position].categoriesDataSet == data) return
         dataSet[position].categoriesDataSet = data
         notifyItemChanged(position)
     }
 
     fun updateAmountConsumedData(position: Int, data: UserStatsData.AmountConsumedData?) {
+        if (dataSet[position].amountConsumedData == data) return
         dataSet[position].amountConsumedData = data
         notifyItemChanged(position)
     }
 
     fun setLoading(position: Int, isLoading: Boolean) {
+        if (dataSet[position].isLoading == isLoading) return
         dataSet[position].isLoading = isLoading
         notifyItemChanged(position)
     }

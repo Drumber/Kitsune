@@ -46,6 +46,8 @@
 }
 -keep class * implements com.github.jasminb.jsonapi.ResourceIdHandler
 
+# MPAndroidChart
+-keep class com.github.mikephil.charting.** { *; }
 
 ############################################
 # Kitsune specific rules
