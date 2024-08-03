@@ -20,7 +20,7 @@ import io.github.drumber.kitsune.databinding.FragmentMediaListBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
-import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbarOnFailure
 import kotlinx.coroutines.flow.collectLatest
@@ -58,9 +58,10 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
             setNavigationOnClickListener { findNavController().navigateUp() }
         }
 
-        binding.rvMedia.initMarginWindowInsetsListener(
+        binding.rvMedia.initPaddingWindowInsetsListener(
             left = true,
             right = true,
+            bottom = true,
             consume = false
         )
 

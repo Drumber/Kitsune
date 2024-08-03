@@ -19,7 +19,7 @@ import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.ui.adapter.paging.CharacterPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.util.extensions.navigateSafe
-import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -52,9 +52,10 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters) 
             toolbar.initWindowInsetsListener(false)
             toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
-            rvMedia.initMarginWindowInsetsListener(
+            rvMedia.initPaddingWindowInsetsListener(
                 left = true,
                 right = true,
+                bottom = true,
                 consume = false
             )
         }

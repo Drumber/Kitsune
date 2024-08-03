@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
@@ -360,7 +361,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         binding.navigationRail?.apply {
             if (slideOut) {
                 // different direction depending on if rail is left or right aligned
-                val isRtl = ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL
+                val isRtl = layoutDirection == View.LAYOUT_DIRECTION_RTL
                 val translationFactor = if (isRtl) 1 else -1
                 animate().translationX(this.width.toFloat() * translationFactor)
                     .withEndAction { this.isVisible = false }
@@ -383,7 +384,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     }
 
     private fun NavigationRailView.applyWindowInsets(insets: Insets): Insets {
-        val isRtl = ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL
+        val isRtl = layoutDirection == View.LAYOUT_DIRECTION_RTL
         val left = if (!isRtl) insets.left else 0
         val right = if (isRtl) insets.right else 0
         updatePadding(left = left, top = insets.top, right = right, bottom = insets.bottom)

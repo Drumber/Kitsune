@@ -74,6 +74,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
                 consume = false
             )
             searchWrapper.initPaddingWindowInsetsListener(top = true, consume = false)
+            rvMedia.initPaddingWindowInsetsListener(bottom = true, consume = false)
         }
 
         val adapter = MediaSearchPagingAdapter(Glide.with(this), this)

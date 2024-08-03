@@ -124,6 +124,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
                 right = true,
                 consume = false
             )
+            nsvContent.initPaddingWindowInsetsListener(bottom = true, consume = false)
 
             swipeRefreshLayout.apply {
                 setAppTheme()

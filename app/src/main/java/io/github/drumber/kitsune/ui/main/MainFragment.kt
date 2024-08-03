@@ -43,6 +43,7 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
             right = true,
             consume = false
         )
+        binding.nsvContent.initPaddingWindowInsetsListener(bottom = true, consume = false)
     }
 
     private fun initExploreViewPager() {

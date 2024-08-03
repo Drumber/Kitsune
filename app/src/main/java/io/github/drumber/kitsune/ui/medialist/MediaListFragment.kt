@@ -18,7 +18,7 @@ import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.ui.base.MediaCollectionFragment
 import io.github.drumber.kitsune.ui.base.MediaCollectionViewModel
 import io.github.drumber.kitsune.util.extensions.navigateSafe
-import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -44,9 +44,10 @@ class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) 
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
-        binding.rvMedia.initMarginWindowInsetsListener(
+        binding.rvMedia.initPaddingWindowInsetsListener(
             left = true,
             right = true,
+            bottom = true,
             consume = false
         )
 

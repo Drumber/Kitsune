@@ -223,7 +223,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
 
         binding.apply {
-            content.initPaddingWindowInsetsListener(left = true, right = true)
+            content.initPaddingWindowInsetsListener(left = true, right = true, bottom = true)
             btnManageLibrary.setOnClickListener { showManageLibraryBottomSheet() }
             btnMediaUnits.setOnClickListener {
                 val media = viewModel.mediaModel.value ?: return@setOnClickListener
@@ -597,7 +597,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             R.string.info_log_in_required,
             Snackbar.LENGTH_LONG
         ).apply {
-            view.initMarginWindowInsetsListener(left = true, right = true)
+            view.initMarginWindowInsetsListener(left = true, right = true, bottom = true)
             setAction(R.string.action_log_in) {
                 val intent = Intent(requireActivity(), AuthenticationActivity::class.java)
                 startActivity(intent)

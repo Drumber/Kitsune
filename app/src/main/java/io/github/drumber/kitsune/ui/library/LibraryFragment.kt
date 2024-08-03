@@ -125,6 +125,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
                 left = true,
                 top = true,
                 right = true,
+                bottom = true,
                 consume = false
             )
 
@@ -323,6 +324,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         }
 
         binding.rvLibraryEntries.apply {
+            initPaddingWindowInsetsListener(bottom = true, consume = false)
             this.adapter = adapter.withLoadStateHeaderAndFooter(
                 header = ResourceLoadStateAdapter(adapter),
                 footer = ResourceLoadStateAdapter(adapter)
