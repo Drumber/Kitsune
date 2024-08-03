@@ -352,4 +352,7 @@
     <string name="nav_profile">Profil</string>
     <string name="nav_settings">Einstellungen</string>
     <string name="preference_language_default">Standadsprache</string>
+    <string name="widget_description">Bibliotheksfortschritte</string>
+    <string name="widget_empty_text">Keine aktiven Einträge in der Bibliothek vorhanden</string>
+    <string name="widget_empty_action">Bibliothek öffnen</string>
 </resources>
