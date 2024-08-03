@@ -22,7 +22,7 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -46,11 +46,13 @@ import io.github.drumber.kitsune.ui.adapter.paging.LibraryEntriesAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
+import io.github.drumber.kitsune.ui.component.ResponsiveGridLayoutManager
 import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibrarySynchronizationResult
 import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibraryUpdateResult
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
+import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.rating.RatingSystemUtil
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
@@ -325,7 +327,17 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
                 header = ResourceLoadStateAdapter(adapter),
                 footer = ResourceLoadStateAdapter(adapter)
             )
-            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            layoutManager = ResponsiveGridLayoutManager(context, 350.toPx(), 1).apply {
+                spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int {
+                        return if (adapter.getItemViewType(position) == R.layout.item_library_entry) {
+                            1
+                        } else {
+                            spanCount
+                        }
+                    }
+                }
+            }
             // disable change animation to prevent "blinking"
             (itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
 

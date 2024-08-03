@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class LoadStateSpanSizeLookup<T : Any, VH : RecyclerView.ViewHolder>(
     private val adapter: PagingDataAdapter<T, VH>,
-    private val spanCount: Int = 2
+    private val gridLayoutManager: GridLayoutManager
 ) : GridLayoutManager.SpanSizeLookup() {
 
     private var append: LoadState? = null
@@ -22,11 +22,11 @@ class LoadStateSpanSizeLookup<T : Any, VH : RecyclerView.ViewHolder>(
 
     override fun getSpanSize(position: Int): Int {
         if(position == 0 && prepend !is LoadState.NotLoading) {
-            return spanCount
+            return gridLayoutManager.spanCount
         }
         val totalCount = adapter.itemCount.plus(if(prepend !is LoadState.NotLoading) 1 else 0)
         if(position >= totalCount && append !is LoadState.NotLoading) {
-            return spanCount
+            return gridLayoutManager.spanCount
         }
         return 1
     }
