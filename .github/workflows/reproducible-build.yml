@@ -3,8 +3,8 @@ name: Verify reproducible build
 on:
   workflow_dispatch:
     inputs:
-      assetUrl:
-        description: URL to the release apk
+      releaseTag:
+        description: Tag of the release to download
         required: true
   release:
     types: [ published ]
@@ -31,12 +31,12 @@ jobs:
         id: set_asset_url
         run: |
           if [ "${{ github.event_name }}" = "release" ]; then
-            echo "asset_url=${{ github.event.release.assets[0].browser_download_url }}" >> "$GITHUB_ENV"
+            echo "release_tag=${{ github.event.release.tag_name }}" >> "$GITHUB_ENV"
           else
-            echo "asset_url=${{ github.event.inputs.assetUrl }}" >> "$GITHUB_ENV"
+            echo "release_tag=${{ github.event.inputs.releaseTag }}" >> "$GITHUB_ENV"
           fi
       - name: Download release asset
         run: |
-          wget --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -O upstream.apk "$asset_url"
+          gh release download "$release_tag" --pattern "*.apk" --output upstream.apk
       - name: Compare APKs
         run: apksigcopier compare upstream.apk --unsigned unsigned.apk && echo OK
