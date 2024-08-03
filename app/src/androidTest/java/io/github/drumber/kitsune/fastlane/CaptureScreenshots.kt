@@ -33,6 +33,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import org.koin.core.qualifier.named
 import tools.fastlane.screengrab.Screengrab
 import tools.fastlane.screengrab.cleanstatusbar.CleanStatusBar
 import kotlin.time.Duration.Companion.seconds
@@ -77,12 +78,14 @@ class CaptureScreenshots : KoinComponent {
     fun testTakeScreenshot() {
         enterDemoMode()
 
-        var idlingResource: OkHttpIdlingResource? = null
+        val idlingResource = mutableListOf<OkHttpIdlingResource>()
         activityRule.scenario.onActivity {
             val client: OkHttpClient = get()
-            idlingResource = OkHttpIdlingResource(client)
+            val imageClient: OkHttpClient = get(named("images"))
+            idlingResource.add(OkHttpIdlingResource(client))
+            idlingResource.add(OkHttpIdlingResource(imageClient))
         }
-        IdlingRegistry.getInstance().register(idlingResource!!)
+        IdlingRegistry.getInstance().register(*idlingResource.toTypedArray())
 
         // Light Mode
         KitsunePref.darkMode = AppCompatDelegate.MODE_NIGHT_NO.toString()
@@ -112,7 +115,8 @@ class CaptureScreenshots : KoinComponent {
         }
         takeHomeScreenshots("light_purple")
 
-        IdlingRegistry.getInstance().unregister(idlingResource)
+        IdlingRegistry.getInstance().unregister(*idlingResource.toTypedArray())
+        idlingResource.clear()
     }
 
     private fun takeHomeScreenshots(prefix: String) {
@@ -142,12 +146,13 @@ class CaptureScreenshots : KoinComponent {
         }
 
         onView(isRoot()).perform(waitForView(R.id.tv_description, 30.seconds))
-        Thread.sleep(1000)
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        Thread.sleep(3000)
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
 
         Screengrab.screenshot("${prefix}_details_screen")
 
-        Thread.sleep(1000)
+        Thread.sleep(3000)
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
 
         onView(withId(R.id.layout_ratings)).perform(scrollTo())
