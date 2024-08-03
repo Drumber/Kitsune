@@ -38,5 +38,7 @@ jobs:
       - name: Download release asset
         run: |
           gh release download "$release_tag" --pattern "*.apk" --output upstream.apk
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Compare APKs
         run: apksigcopier compare upstream.apk --unsigned unsigned.apk && echo OK
