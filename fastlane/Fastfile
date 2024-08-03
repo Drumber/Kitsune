@@ -33,7 +33,10 @@ platform :android do
     )
     build_android_app(
       task: 'assemble',
-      build_type: 'AndroidTest'
+      build_type: 'AndroidTest',
+      properties: {
+        'screenshotMode' => 'true'
+      }
     )
     do_screengrab()
   end

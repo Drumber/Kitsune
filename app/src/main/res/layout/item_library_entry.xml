@@ -8,10 +8,7 @@
         <import type="androidx.core.content.ContextCompat" />
         <variable
             name="entry"
-            type="io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryAdapter" />
-        <variable
-            name="data"
-            type="io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter" />
+            type="io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -63,7 +60,7 @@
                         android:ellipsize="end"
                         android:maxLines="3"
                         android:layout_marginBottom="8dp"
-                        android:text="@{data.title}"
+                        android:text="@{entry.media.title}"
                         tools:text="Some Title" />
 
                     <com.google.android.material.button.MaterialButton
@@ -73,7 +70,7 @@
                         android:layout_marginStart="2dp"
                         app:icon="@{entry.hasRating ? @drawable/ic_star_24 : @drawable/ic_star_outline_24}"
                         app:iconGravity="end"
-                        android:text="@{entry.rating}"
+                        android:text="@{entry.ratingFormatted}"
                         app:iconPadding="@{entry.hasRating ? @dimen/icon_button_padding : @dimen/zero_dp}"
                         tools:icon="@drawable/ic_star_24"
                         tools:text="5"
@@ -89,7 +86,7 @@
                     android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="@{data.publishingYear + ` • ` + data.subtype}"
+                    android:text="@{entry.media.publishingYearText + ` • ` + entry.media.subtypeFormatted}"
                     tools:text="2002 • TV" />
 
                 <TextView
@@ -121,7 +118,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:text="@{entry.hasStartedWatching ? entry.progress + `/` + entry.episodes : @string/library_not_started}"
+                    android:text="@{entry.hasStartedWatching ? entry.progress + `/` + entry.episodeCountFormatted : @string/library_not_started}"
                     tools:text="12/24" />
 
                 <Space
@@ -178,7 +175,7 @@
                 app:trackCornerRadius="0dp"
                 app:isVisible="@{entry.hasEpisodesCount &amp;&amp; entry.hasStartedWatchingOrIsCurrent}"
                 android:max="@{entry.episodeCount}"
-                android:progress="@{entry.progressCount}"
+                android:progress="@{entry.progress}"
                 tools:progress="50"/>
             
         </RelativeLayout>

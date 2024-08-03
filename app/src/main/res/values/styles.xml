@@ -61,4 +61,9 @@
         <item name="cornerSizeTopRight">0dp</item>
         <item name="cornerSizeBottomRight">0dp</item>
     </style>
+
+    <!-- Override default colors of the LinearProgressIndicator on devices with SDK version below 31 -->
+    <style name="Glance.AppWidget.LinearProgressIndicator" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal</item>
+    </style>
 </resources>

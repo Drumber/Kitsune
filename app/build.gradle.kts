@@ -38,8 +38,11 @@ android {
 
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             signingConfig = signingConfigs.getByName("debug")
         }
 
@@ -63,10 +66,19 @@ android {
         viewBinding = true
         dataBinding = true
         buildConfig = true
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 
     packagingOptions {
         excludes += "META-INF/*.kotlin_module"
+    }
+
+    testOptions {
+        animationsDisabled = true
     }
 }
 
@@ -97,8 +109,16 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
 
+    // WorkManager
+    implementation(libs.androidx.workmanager)
+
     // Material
     implementation(libs.google.android.material)
+
+    // Glance AppWidget
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.material3)
+    implementation(libs.androidx.glance.preview)
 
     // Kotlin coroutines
     implementation(libs.jetbrains.kotlinx.coroutines.core)
@@ -200,10 +220,12 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.assertj.core)
     testImplementation(libs.tngtech.archunit.junit4)
+    testImplementation(libs.robolectric)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.junit.ktx)
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.espresso.contrib)
 
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
     testImplementation(libs.insert.koin.test.junit4)

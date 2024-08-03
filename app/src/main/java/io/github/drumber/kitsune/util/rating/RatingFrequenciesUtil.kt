@@ -1,12 +1,12 @@
 package io.github.drumber.kitsune.util.rating
 
-import io.github.drumber.kitsune.domain.model.common.media.RatingFrequencies
-import io.github.drumber.kitsune.domain.model.infrastructure.user.RatingSystemPreference
+import io.github.drumber.kitsune.data.common.media.RatingFrequencies
+import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
 import io.github.drumber.kitsune.util.rating.RatingSystemUtil.convertFrom
 
 object RatingFrequenciesUtil {
 
-    fun RatingFrequencies.transformToRatingSystem(ratingSystem: RatingSystemPreference): List<Int> {
+    fun RatingFrequencies.transformToRatingSystem(ratingSystem: LocalRatingSystemPreference): List<Int> {
         val ratingCounts = this.toList().map { it?.toIntOrNull() ?: 0 }
 
         // contains the rating counts categorized by the rating type (1-4 for simple, 0.5-5 for regular, 1-10 for advanced)
@@ -25,7 +25,7 @@ object RatingFrequenciesUtil {
         return ratingsMap.values.toList()
     }
 
-    fun RatingFrequencies.calculateAverageRating(ratingSystem: RatingSystemPreference): Double {
+    fun RatingFrequencies.calculateAverageRating(ratingSystem: LocalRatingSystemPreference): Double {
         val ratingCounts = this.toList().map { it?.toIntOrNull() ?: 0 }
         if (ratingCounts.isEmpty()) return 0.0
 

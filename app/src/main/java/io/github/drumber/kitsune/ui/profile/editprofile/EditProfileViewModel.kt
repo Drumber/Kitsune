@@ -14,22 +14,19 @@ import com.algolia.search.model.response.ResponseSearch
 import com.algolia.search.model.search.Query
 import com.algolia.search.model.search.RemoveStopWords
 import com.algolia.search.model.search.RemoveWordIfNoResults
-import com.github.jasminb.jsonapi.JSONAPIDocument
-import io.github.drumber.kitsune.domain.manager.SearchProvider
-import io.github.drumber.kitsune.domain.model.infrastructure.algolia.SearchType
-import io.github.drumber.kitsune.domain.model.infrastructure.character.Character
-import io.github.drumber.kitsune.domain.model.infrastructure.user.User
-import io.github.drumber.kitsune.domain.model.infrastructure.user.UserImageUpload
-import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLink
-import io.github.drumber.kitsune.domain.model.infrastructure.user.profilelinks.ProfileLinkSite
-import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
-import io.github.drumber.kitsune.domain.repository.AlgoliaKeyRepository
-import io.github.drumber.kitsune.domain.repository.UserRepository
-import io.github.drumber.kitsune.domain.service.Filter
-import io.github.drumber.kitsune.domain.service.user.ProfileLinkService
-import io.github.drumber.kitsune.domain.service.user.UserImageUploadService
-import io.github.drumber.kitsune.domain.service.user.UserService
-import io.github.drumber.kitsune.exception.ReceivedDataException
+import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.common.exception.NoDataException
+import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
+import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
+import io.github.drumber.kitsune.data.presentation.model.character.Character
+import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLink
+import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLinkSite
+import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
+import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
+import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.data.source.local.character.LocalCharacter
+import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
+import io.github.drumber.kitsune.domain.algolia.SearchProvider
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
@@ -50,10 +47,8 @@ import kotlinx.parcelize.Parcelize
 
 class EditProfileViewModel(
     private val userRepository: UserRepository,
-    algoliaKeyRepository: AlgoliaKeyRepository,
-    private val service: UserService,
-    private val imageUploadService: UserImageUploadService,
-    private val profileLinkService: ProfileLinkService
+    private val profileLinkRepository: ProfileLinkRepository,
+    algoliaKeyRepository: AlgoliaKeyRepository
 ) : ViewModel() {
 
     val loadingStateFlow: StateFlow<LoadingState>
@@ -100,7 +95,7 @@ class EditProfileViewModel(
     var currentImagePickerType: ImagePickerType? = null
 
     init {
-        val user = userRepository.user
+        val user = userRepository.localUser.value
 
         val initialProfileState = ProfileState(
             location = user?.location ?: "",
@@ -108,7 +103,7 @@ class EditProfileViewModel(
             gender = user?.getGenderWithoutCustomGender() ?: "",
             customGender = user?.getCustomGenderOrNull() ?: "",
             waifuOrHusbando = user?.waifuOrHusbando ?: "",
-            character = user?.waifu,
+            character = user?.waifu?.toCharacter(),
             about = user?.about ?: ""
         )
 
@@ -204,19 +199,18 @@ class EditProfileViewModel(
         }
     }
 
-    fun hasUser() = userRepository.hasUser
+    fun hasUser() = userRepository.hasLocalUser()
 
     fun updateUserProfile(profileImages: ProfileImageContainer?) {
-        val user = userRepository.user ?: return
+        val user = userRepository.localUser.value ?: return
         val changes = profileState
         val waifu = if (changes.character != null && changes.waifuOrHusbando.isNotBlank()) {
-            Character(id = changes.character.id.toString())
+            LocalCharacter.empty(changes.character.id)
         } else {
             null
         }
 
-        val updatedUserModel = User(
-            id = user.id,
+        val updatedUserModel = LocalUser.empty(user.id).copy(
             location = changes.location,
             birthday = changes.birthday,
             gender = if (changes.gender == "custom") changes.customGender else changes.gender,
@@ -224,8 +218,6 @@ class EditProfileViewModel(
             about = changes.about,
             waifu = waifu
         )
-
-        if (user.id.isNullOrBlank()) return
 
         acceptLoadingState(LoadingState.Loading)
         viewModelScope.launch(Dispatchers.IO) {
@@ -240,11 +232,11 @@ class EditProfileViewModel(
 
                 updateProfileLinks(user.id)
 
-                val response = service.updateUser(user.id, JSONAPIDocument(updatedUserModel))
+                val response = userRepository.updateUser(user.id, updatedUserModel)
 
-                if (response.get() != null) {
+                if (response != null) {
                     // request full user model to update local cached model
-                    userRepository.updateUserCache()
+                    userRepository.fetchAndStoreLocalUserFromNetwork()
                     acceptLoadingState(LoadingState.Success)
                 } else {
                     throw ProfileUpdateException.ProfileDataError(ProfileDataErrorType.UpdateProfile)
@@ -258,22 +250,16 @@ class EditProfileViewModel(
 
     private suspend fun deleteWaifuRelationship(userId: String) {
         logD("Deleting waifu relationship.")
-        val responseWaifu = service.deleteWaifuRelationship(userId)
-        if (!responseWaifu.isSuccessful) {
+        val isSuccessful = userRepository.deleteWaifuRelationship(userId)
+        if (!isSuccessful) {
             throw ProfileUpdateException.ProfileDataError(ProfileDataErrorType.DeleteWaifu)
         }
     }
 
     private suspend fun uploadUserImages(useId: String, profileImages: ProfileImageContainer) {
         logD("Updating user image(s).")
-        val body = UserImageUpload(
-            id = useId,
-            avatar = profileImages.avatar,
-            coverImage = profileImages.coverImage
-        )
-
-        val response = imageUploadService.updateUserImage(useId, JSONAPIDocument(body))
-        if (!response.isSuccessful) {
+        val isSuccessful = userRepository.updateUserImage(useId, profileImages.avatar, profileImages.coverImage)
+        if (!isSuccessful) {
             throw ProfileUpdateException.ProfileImageError()
         }
     }
@@ -296,7 +282,7 @@ class EditProfileViewModel(
         newProfileLinks.forEach { profileLinkEntry ->
             try {
                 val createdProfileLink = createProfileLink(profileLinkEntry, userId)
-                    ?: throw ReceivedDataException("Received response is null.")
+                    ?: throw NoDataException("Received response is null.")
                 addOrUpdateInitialProfileLink(profileLinkEntry, createdProfileLink)
             } catch (e: Exception) {
                 logE("Failed to create profile link $profileLinkEntry.", e)
@@ -310,7 +296,7 @@ class EditProfileViewModel(
         updatedProfileLinks.forEach { profileLinkEntry ->
             try {
                 val updatedProfileLink = updateProfileLink(profileLinkEntry, userId)
-                    ?: throw ReceivedDataException("Received response is null.")
+                    ?: throw NoDataException("Received response is null.")
                 addOrUpdateInitialProfileLink(profileLinkEntry, updatedProfileLink)
             } catch (e: Exception) {
                 logE("Failed to update profile link $profileLinkEntry.", e)
@@ -323,9 +309,9 @@ class EditProfileViewModel(
 
         deletedProfileLinks.forEach { profileLinkEntry ->
             try {
-                val response = profileLinkService.deleteProfileLink(profileLinkEntry.id!!)
-                if (!response.isSuccessful) {
-                    throw ReceivedDataException("Failed to delete profile link.")
+                val isSuccessful = profileLinkRepository.deleteProfileLink(profileLinkEntry.id!!)
+                if (!isSuccessful) {
+                    throw NoDataException("Failed to delete profile link.")
                 }
                 removeFromInitialProfileLinks(profileLinkEntry)
             } catch (e: Exception) {
@@ -342,32 +328,22 @@ class EditProfileViewModel(
         profileLinkEntry: ProfileLinkEntry,
         userId: String
     ): ProfileLink? {
-        return profileLinkService.createProfileLink(
-            ProfileLink(
-                id = null,
-                url = profileLinkEntry.url,
-                profileLinkSite = ProfileLinkSite(
-                    id = profileLinkEntry.site.id,
-                    name = null
-                ),
-                user = User(id = userId)
-            )
-        ).get()
+        return profileLinkRepository.createProfileLink(
+            userId,
+            profileLinkEntry.site.id,
+            profileLinkEntry.url
+        )
     }
 
     private suspend fun updateProfileLink(
         profileLinkEntry: ProfileLinkEntry,
         userId: String
     ): ProfileLink? {
-        return profileLinkService.updateProfileLink(
+        return profileLinkRepository.updateProfileLink(
+            userId,
             profileLinkEntry.id!!,
-            ProfileLink(
-                id = profileLinkEntry.id,
-                url = profileLinkEntry.url,
-                profileLinkSite = null,
-                user = User(id = userId)
-            )
-        ).get()
+            profileLinkEntry.url
+        )
     }
 
     private fun addOrUpdateInitialProfileLink(
@@ -401,7 +377,7 @@ class EditProfileViewModel(
     private fun removeFromInitialProfileLinks(profileLinkEntry: ProfileLinkEntry) {
         val initialProfileLinksWithoutEntry = getInitialProfileLinksWithout(
             ProfileLink(
-                id = profileLinkEntry.id,
+                id = profileLinkEntry.id ?: "",
                 url = profileLinkEntry.url,
                 profileLinkSite = profileLinkEntry.site,
                 user = null
@@ -475,7 +451,7 @@ class EditProfileViewModel(
             val filter = Filter()
                 .limit(50)
                 .include("profileLinkSite")
-            service.getProfileLinksForUser(userId, filter.options).get() ?: emptyList()
+            userRepository.getProfileLinksForUser(userId, filter) ?: emptyList()
         } catch (e: Exception) {
             logE("Failed to fetch profile links for user.", e)
             emptyList()
@@ -495,21 +471,21 @@ class EditProfileViewModel(
     private suspend fun fetchProfileLinkSites(): List<ProfileLinkSite> {
         return try {
             val filter = Filter().pageLimit(50)
-            profileLinkService.allProfileLinkSites(filter.options).get() ?: emptyList()
+            profileLinkRepository.getAllProfileLinkSites(filter) ?: emptyList()
         } catch (e: Exception) {
             logE("Failed to fetch profile link sites.", e)
             emptyList()
         }
     }
 
-    private fun User.getGenderWithoutCustomGender(): String? {
+    private fun LocalUser.getGenderWithoutCustomGender(): String? {
         return when (gender) {
             null, "", "male", "female", "secret" -> gender
             else -> "custom"
         }
     }
 
-    private fun User.getCustomGenderOrNull(): String? {
+    private fun LocalUser.getCustomGenderOrNull(): String? {
         return when (gender) {
             "male", "female", "secret" -> null
             else -> gender

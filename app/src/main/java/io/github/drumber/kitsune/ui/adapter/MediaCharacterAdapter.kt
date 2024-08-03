@@ -7,10 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.MediaItemSize
+import io.github.drumber.kitsune.data.presentation.model.character.MediaCharacter
+import io.github.drumber.kitsune.data.presentation.model.character.getStringRes
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
-import io.github.drumber.kitsune.domain.model.infrastructure.character.MediaCharacter
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
-import io.github.drumber.kitsune.domain.model.ui.media.getString
 import java.util.concurrent.CopyOnWriteArrayList
 
 class MediaCharacterAdapter(
@@ -47,11 +46,11 @@ class MediaCharacterAdapter(
         }
 
         fun bind(data: MediaCharacter) {
-            val mediaAdapter = data.media?.let { MediaAdapter.fromMedia(it) }
-            binding.data = mediaAdapter
-            binding.overlayTagText = data.role?.getString(binding.root.context)
+            val media = data.media
+            binding.data = media
+            binding.overlayTagText = data.role?.getStringRes()?.let { binding.root.context.getString(it) }
 
-            glide.load(mediaAdapter?.posterImage)
+            glide.load(media?.posterImageUrl)
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivThumbnail)
 

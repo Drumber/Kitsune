@@ -17,14 +17,13 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.addTransform
+import io.github.drumber.kitsune.data.common.Titles
+import io.github.drumber.kitsune.data.presentation.dto.toCharacter
+import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
+import io.github.drumber.kitsune.data.presentation.model.character.Character
+import io.github.drumber.kitsune.data.presentation.model.character.MediaCharacter
 import io.github.drumber.kitsune.databinding.ItemDetailsInfoRowBinding
 import io.github.drumber.kitsune.databinding.SheetCharacterDetailsBinding
-import io.github.drumber.kitsune.domain.model.common.media.Titles
-import io.github.drumber.kitsune.domain.model.infrastructure.character.Character
-import io.github.drumber.kitsune.domain.model.infrastructure.character.MediaCharacter
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
-import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
-import io.github.drumber.kitsune.domain.model.ui.media.smallOrHigher
 import io.github.drumber.kitsune.ui.adapter.MediaCharacterAdapter
 import io.github.drumber.kitsune.util.DataUtil.mapLanguageCodesToDisplayName
 import io.github.drumber.kitsune.util.extensions.navigateSafe
@@ -61,17 +60,16 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
             CopyOnWriteArrayList(),
             Glide.with(this)
         ) { _, mediaCharacter ->
-            val mediaAdapter = mediaCharacter.media?.let { MediaAdapter.fromMedia(it) }
+            val media = mediaCharacter.media
                 ?: return@MediaCharacterAdapter
             val action =
                 CharacterDetailsBottomSheetDirections.actionCharacterDetailsBottomSheetToDetailsFragment(
-                    mediaAdapter
+                    media.toMediaDto()
                 )
             findNavController().navigateSafe(R.id.characterDetailsBottomSheet, action)
         }
 
-        val character = navArgs.character
-        viewModel.initCharacter(character)
+        viewModel.initCharacter(navArgs.character.toCharacter())
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.characterFlow.collectLatest { character ->
@@ -95,7 +93,8 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
                 if (favorite != null && icon is AnimatedVectorDrawableCompat) {
                     icon.registerAnimationCallback(object : AnimationCallback() {
                         override fun onAnimationEnd(drawable: Drawable?) {
-                            binding.btnFavorite.setIconResource(R.drawable.ic_favorite_24)
+                            // binding can be null if the fragment is destroyed
+                            _binding?.btnFavorite?.setIconResource(R.drawable.ic_favorite_24)
                         }
                     })
                 } else {
@@ -144,16 +143,20 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
                         registerAnimationCallback(object : AnimationCallback() {
                             var originalTintColor = binding.btnFavorite.iconTint
                             override fun onAnimationStart(drawable: Drawable?) {
-                                binding.btnFavorite.iconTint = null
+                                drawable?.setTintList(null)
                             }
 
                             override fun onAnimationEnd(drawable: Drawable?) {
-                                binding.btnFavorite.iconTint = originalTintColor
+                                drawable?.setTintList(originalTintColor)
                             }
                         })
                         start()
                     }
             }
+            findNavController().previousBackStackEntry
+                ?.takeIf { it.destination.id == R.id.profile_fragment }
+                ?.savedStateHandle
+                ?.set("refreshFavorites", true)
         }
     }
 

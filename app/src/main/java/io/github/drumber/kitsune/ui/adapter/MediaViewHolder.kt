@@ -1,46 +1,26 @@
 package io.github.drumber.kitsune.ui.adapter
 
-import androidx.recyclerview.widget.RecyclerView
+import android.view.View
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
+import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
 
 class MediaViewHolder(
     private val binding: ItemMediaBinding,
     private val glide: RequestManager,
-    private val tagData: TagData = TagData.None,
-    private val listener: (position: Int) -> Unit
-): RecyclerView.ViewHolder(binding.root) {
+    private val showSubtype: Boolean = false,
+    listener: (View, Int) -> Unit
+) : AbstractMediaRecyclerViewAdapter.AbstractMediaViewHolder<Media>(binding, listener) {
 
-    /**
-     * Information type for the overlay tag.
-     */
-    enum class TagData {
-        None,
-        Subtype,
-        RelationshipRole
-    }
-
-    init {
-        binding.cardMedia.setOnClickListener {
-            val position = bindingAdapterPosition
-            if(position != RecyclerView.NO_POSITION) {
-                listener(position)
-            }
-        }
-    }
-
-    fun bind(data: MediaAdapter) {
+    override fun bind(data: Media) {
         binding.data = data
-        binding.overlayTagText = when (tagData) {
-            TagData.None -> null
-            TagData.Subtype -> data.subtype
-            TagData.RelationshipRole -> data.ownRelationshipRoleText(binding.root.context)
+        binding.overlayTagText = when (showSubtype) {
+            false -> null
+            true -> data.subtypeFormatted
         }
-        glide.load(data.posterImage)
+        glide.load(data.posterImageUrl)
             .placeholder(R.drawable.ic_insert_photo_48)
             .into(binding.ivThumbnail)
     }
-
 }

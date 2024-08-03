@@ -24,16 +24,18 @@ import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
+import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.FragmentSearchBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
-import io.github.drumber.kitsune.domain.mapper.toMedia
-import io.github.drumber.kitsune.domain.model.infrastructure.algolia.search.MediaSearchResult
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.paging.MediaSearchPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
 import io.github.drumber.kitsune.ui.main.FragmentDecorationPreference
-import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.*
+import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.Error
+import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.Initialized
+import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotAvailable
+import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotInitialized
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
@@ -43,7 +45,7 @@ import java.lang.ref.WeakReference
 
 class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
     FragmentDecorationPreference,
-    OnItemClickListener<MediaSearchResult>,
+    OnItemClickListener<Media>,
     NavigationBarView.OnItemReselectedListener {
 
     override val hasTransparentStatusBar = false
@@ -72,6 +74,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
                 consume = false
             )
             searchWrapper.initPaddingWindowInsetsListener(top = true, consume = false)
+            rvMedia.initPaddingWindowInsetsListener(bottom = true, consume = false)
         }
 
         val adapter = MediaSearchPagingAdapter(Glide.with(this), this)
@@ -170,9 +173,8 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
         }
     }
 
-    override fun onItemClick(view: View, item: MediaSearchResult) {
-        val mediaAdapter = MediaAdapter.fromMedia(item.toMedia())
-        val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(mediaAdapter)
+    override fun onItemClick(view: View, item: Media) {
+        val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(item.toMediaDto())
         val detailsTransitionName = getString(R.string.details_poster_transition_name)
         val extras = FragmentNavigatorExtras(view to detailsTransitionName)
         findNavController().navigateSafe(R.id.search_fragment, action, extras)

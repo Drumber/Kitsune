@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.domain.model.infrastructure.user.stats.StatsData
+import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsData
 import io.github.drumber.kitsune.databinding.ItemProfileStatsBinding
-import io.github.drumber.kitsune.ui.widget.chart.PieChartStyle.applyStyle
+import io.github.drumber.kitsune.ui.component.chart.PieChartStyle.applyStyle
 import io.github.drumber.kitsune.util.TimeUtil
 import kotlin.math.roundToInt
 
@@ -24,24 +24,20 @@ class ProfileStatsAdapter(dataSet: List<ProfileStatsData>) :
 
     private val dataSet = dataSet.toMutableList()
 
-    fun getDataSet() = dataSet.toList()
-
-    fun updateData(position: Int, newData: ProfileStatsData) {
-        dataSet[position] = newData
-        notifyItemChanged(position)
-    }
-
     fun updateCategoryData(position: Int, data: PieDataSet) {
+        if (dataSet[position].categoriesDataSet == data) return
         dataSet[position].categoriesDataSet = data
         notifyItemChanged(position)
     }
 
-    fun updateAmountConsumedData(position: Int, data: StatsData.AmountConsumedData?) {
+    fun updateAmountConsumedData(position: Int, data: UserStatsData.AmountConsumedData?) {
+        if (dataSet[position].amountConsumedData == data) return
         dataSet[position].amountConsumedData = data
         notifyItemChanged(position)
     }
 
     fun setLoading(position: Int, isLoading: Boolean) {
+        if (dataSet[position].isLoading == isLoading) return
         dataSet[position].isLoading = isLoading
         notifyItemChanged(position)
     }
@@ -148,7 +144,7 @@ class ProfileStatsAdapter(dataSet: List<ProfileStatsData>) :
     data class ProfileStatsData(
         val title: String,
         var categoriesDataSet: PieDataSet? = null,
-        var amountConsumedData: StatsData.AmountConsumedData? = null,
+        var amountConsumedData: UserStatsData.AmountConsumedData? = null,
         var isLoading: Boolean = true
     )
 

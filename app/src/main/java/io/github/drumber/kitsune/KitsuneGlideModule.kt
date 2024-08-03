@@ -41,13 +41,13 @@ class KitsuneGlideModule : AppGlideModule(), KoinComponent {
 
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
         // replace Glides default OkHttpClient
-        val okHttpClient: OkHttpClient = get(named("unauthenticated"))
+        val okHttpClient: OkHttpClient = get(named("images"))
         registry.replace(GlideUrl::class.java, InputStream::class.java, OkHttpUrlLoader.Factory(okHttpClient))
     }
 
 }
 
-fun RequestBuilder<*>.addTransform(vararg transformations: Transformation<Bitmap>) = with(this) {
+fun <T> RequestBuilder<T>.addTransform(vararg transformations: Transformation<Bitmap>) = with(this) {
     val oldTransforms = this.transformations
         .filterKeys { it.isAssignableFrom(Bitmap::class.java) }
         .map { it.value as Transformation<Bitmap> }

@@ -8,10 +8,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.domain.model.infrastructure.production.Casting
-import io.github.drumber.kitsune.domain.repository.CastingRepository
-import io.github.drumber.kitsune.domain.service.Filter
-import io.github.drumber.kitsune.domain.service.anime.AnimeService
+import io.github.drumber.kitsune.data.presentation.model.media.production.Casting
+import io.github.drumber.kitsune.data.repository.AnimeRepository
+import io.github.drumber.kitsune.data.repository.CastingRepository
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -21,7 +21,7 @@ import kotlinx.coroutines.withContext
 
 class CharactersViewModel(
     private val castingRepository: CastingRepository,
-    private val animeService: AnimeService
+    private val animeRepository: AnimeRepository
 ) : ViewModel() {
 
     private val filter = MutableLiveData<Filter>()
@@ -89,7 +89,7 @@ class CharactersViewModel(
     private suspend fun fetchLanguages(id: String): List<String>? {
         _isLoadingLanguages.postValue(true)
         return try {
-            animeService.getLanguages(id)
+            animeRepository.getLanguages(id)
         } catch (e: Exception) {
             logE("Failed to fetch languages for anime with id '$id'.", e)
             null
@@ -99,7 +99,7 @@ class CharactersViewModel(
     }
 
     val dataSource: Flow<PagingData<Casting>> = filter.asFlow().flatMapLatest { filter ->
-        castingRepository.castingCollection(Kitsu.DEFAULT_PAGE_SIZE, filter)
+        castingRepository.castingPager(filter, Kitsu.DEFAULT_PAGE_SIZE)
     }.cachedIn(viewModelScope)
 
 }

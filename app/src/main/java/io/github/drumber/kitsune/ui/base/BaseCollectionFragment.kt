@@ -17,9 +17,8 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
-import io.github.drumber.kitsune.ui.widget.LoadStateSpanSizeLookup
-import kotlin.math.floor
-import kotlin.math.max
+import io.github.drumber.kitsune.ui.component.LoadStateSpanSizeLookup
+import io.github.drumber.kitsune.ui.component.ResponsiveGridLayoutManager
 
 abstract class BaseCollectionFragment(@LayoutRes contentLayoutId: Int) :
     Fragment(contentLayoutId),
@@ -38,20 +37,10 @@ abstract class BaseCollectionFragment(@LayoutRes contentLayoutId: Int) :
     }
 
     protected open fun initRecyclerView(recyclerView: RecyclerView) {
-        val gridLayout = GridLayoutManager(requireContext(), 2)
+        val columnWidth = resources.getDimension(KitsunePref.mediaItemSize.widthRes) +
+                2 * resources.getDimension(R.dimen.media_item_margin)
+        val gridLayout = ResponsiveGridLayoutManager(requireContext(), columnWidth.toInt(), 2)
         recyclerView.layoutManager = gridLayout
-
-        recyclerView.addOnLayoutChangeListener { _, left, _, right, _, oldLeft, _, oldRight, _ ->
-            val width = right - left
-            val oldWidth = oldRight - oldLeft
-            if (width == oldWidth || !isAdded) return@addOnLayoutChangeListener
-
-            val cellWidth = resources.getDimension(KitsunePref.mediaItemSize.widthRes) +
-                    2 * resources.getDimension(R.dimen.media_item_margin)
-            val spanCount = floor(width / cellWidth).toInt()
-            // set new span count with minimum 2 columns
-            gridLayout.spanCount = max(2, spanCount)
-        }
     }
 
     fun setRecyclerViewAdapter(adapter: RecyclerView.Adapter<*>) {
@@ -62,7 +51,7 @@ abstract class BaseCollectionFragment(@LayoutRes contentLayoutId: Int) :
         recyclerView.adapter = if (adapter is PagingDataAdapter<*, *>) {
             (recyclerView.layoutManager as? GridLayoutManager)?.let { gridLayout ->
                 // this will make sure to display header and footer with full width
-                gridLayout.spanSizeLookup = LoadStateSpanSizeLookup(adapter, gridLayout.spanCount)
+                gridLayout.spanSizeLookup = LoadStateSpanSizeLookup(adapter, gridLayout)
             }
 
             adapter.applyLoadStateListenerWithLoadStateHeaderAndFooter()

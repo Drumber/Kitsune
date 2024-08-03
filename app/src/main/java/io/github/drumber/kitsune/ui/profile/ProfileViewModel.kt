@@ -1,66 +1,83 @@
 package io.github.drumber.kitsune.ui.profile
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.constants.Defaults
-import io.github.drumber.kitsune.domain.model.infrastructure.user.User
-import io.github.drumber.kitsune.domain.repository.UserRepository
-import io.github.drumber.kitsune.domain.service.Filter
-import io.github.drumber.kitsune.domain.service.user.UserService
-import io.github.drumber.kitsune.exception.ReceivedDataException
+import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.common.exception.NoDataException
+import io.github.drumber.kitsune.data.mapper.UserMapper.toUser
+import io.github.drumber.kitsune.data.presentation.model.user.User
+import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.domain.auth.LogOutUserUseCase
 import io.github.drumber.kitsune.util.logE
-import io.github.drumber.kitsune.util.network.ResponseData
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val userRepository: UserRepository,
-    userService: UserService
+    private val logOutUser: LogOutUserUseCase
 ) : ViewModel() {
 
-    // simple user model stored in user preference
-    val userModel: LiveData<User?> = userRepository.userLiveData
+    private val _refreshTrigger = MutableSharedFlow<Unit>()
 
-    // full user model including stats and favorites
-    val fullUserModel: LiveData<ResponseData<User>> = userModel.switchMap {
-        it?.id?.let { userId ->
-            liveData(context = Dispatchers.IO) {
-                val response = try {
-                    val response = userService.getUser(userId, FULL_USER_FILTER.options)
-                    response.get()?.let { fullUser ->
-                        ResponseData.Success(fullUser)
-                    } ?: throw ReceivedDataException("Received data is null.")
-                } catch (e: Exception) {
-                    logE("Failed to fetch full user model.", e)
-                    ResponseData.Error(e)
+    private val _userModel = combine(
+        userRepository.localUser,
+        _refreshTrigger.onStart { emit(Unit) }
+    ) { user, _ ->
+            try {
+                user?.let { fetchFullUserModel(it.id) ?: user.toUser() }
+            } finally {
+                _uiState.update {
+                    it.copy(
+                        isInitialLoading = false,
+                        isRefreshing = false
+                    )
                 }
-                emit(response)
             }
-        } ?: MutableLiveData(ResponseData.Error(ReceivedDataException("User is null.")))
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 60000L),
+            initialValue = userRepository.localUser.value?.toUser()
+        )
+
+    val userModel = _userModel
+
+    private val _uiState = MutableStateFlow(ProfileUiState())
+    val uiState = _uiState.asStateFlow()
+
+    fun getUser(): User? {
+        return _userModel.replayCache.firstOrNull() ?: userRepository.localUser.value?.toUser()
     }
 
-    private val _isLoading = MutableLiveData(false)
-    val isLoading get() = _isLoading as LiveData<Boolean>
-
     fun refreshUser() {
-        _isLoading.value = true
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                userRepository.updateUserCache()
-            } catch (e: Exception) {
-                logE("Failed to refresh user model.", e)
-            } finally {
-                _isLoading.postValue(false)
-            }
+        viewModelScope.launch {
+            _uiState.update { it.copy(isRefreshing = true) }
+            _refreshTrigger.emit(Unit)
         }
     }
 
-    fun logOut() {
-        userRepository.logOut()
+    private suspend fun fetchFullUserModel(userId: String): User? {
+        return try {
+            userRepository.fetchUser(userId, FULL_USER_FILTER)
+                ?: throw NoDataException("Received data is null.")
+        } catch (e: Exception) {
+            logE("Failed to fetch full user model.", e)
+            null
+        }
+    }
+
+    suspend fun logOut() {
+        viewModelScope.async {
+            logOutUser()
+        }.await()
     }
 
     companion object {
@@ -70,5 +87,9 @@ class ProfileViewModel(
                 .fields("media", *Defaults.MINIMUM_COLLECTION_FIELDS)
                 .fields("characters", *Defaults.MINIMUM_CHARACTER_FIELDS)
     }
-
 }
+
+data class ProfileUiState(
+    val isRefreshing: Boolean = false,
+    val isInitialLoading: Boolean = true
+)

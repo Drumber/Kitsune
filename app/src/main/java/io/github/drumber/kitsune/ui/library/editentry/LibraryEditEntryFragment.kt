@@ -28,15 +28,16 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.addTransform
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
+import io.github.drumber.kitsune.data.presentation.model.library.getStringResId
+import io.github.drumber.kitsune.data.presentation.model.media.Anime
+import io.github.drumber.kitsune.data.presentation.model.media.Manga
+import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.FragmentEditLibraryEntryBinding
-import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
-import io.github.drumber.kitsune.domain.model.ui.library.getStringResId
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.base.BaseDialogFragment
 import io.github.drumber.kitsune.ui.library.RatingBottomSheet
 import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel.LoadState
-import io.github.drumber.kitsune.ui.widget.CustomNumberSpinner
+import io.github.drumber.kitsune.ui.component.CustomNumberSpinner
 import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
 import io.github.drumber.kitsune.util.extensions.getResourceId
 import io.github.drumber.kitsune.util.extensions.navigateSafe
@@ -128,12 +129,10 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
             }
             btnRemoveEntry.setOnClickListener {
                 val libraryEntry = viewModel.libraryEntry.value
-                val mediaAdapter = (libraryEntry?.anime ?: libraryEntry?.manga)
-                    ?.let { MediaAdapter.fromMedia(it) }
 
                 val dialogMsg = getString(
                     R.string.dialog_remove_from_library_msg,
-                    mediaAdapter?.title?.htmlEncode() ?: getString(R.string.no_information)
+                    libraryEntry?.media?.title?.htmlEncode() ?: getString(R.string.no_information)
                 ).parseAsHtml()
 
                 MaterialAlertDialogBuilder(requireContext())
@@ -171,37 +170,35 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
         }
 
         viewModel.libraryEntry.observe(viewLifecycleOwner) { libraryEntry ->
-            val mediaAdapter = (libraryEntry.anime ?: libraryEntry.manga)
-                ?.let { MediaAdapter.fromMedia(it) }
+            val media = libraryEntry.media
 
-            binding.tvTitle.text = mediaAdapter?.title
+            binding.tvTitle.text = media?.title
 
-            binding.tvMediaInfo.text = mediaAdapter?.let { "${it.publishingYear} • ${it.subtype}" }
+            binding.tvMediaInfo.text = media?.let { "${it.publishingYearText} • ${it.subtypeFormatted}" }
 
             Glide.with(this)
-                .load(mediaAdapter?.posterImage)
+                .load(media?.posterImageUrl)
                 .addTransform(RoundedCorners(8))
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivThumbnail)
         }
 
-        viewModel.libraryEntryWrapper.observe(viewLifecycleOwner) { wrapper ->
-            val mediaAdapter = (wrapper.libraryEntry.anime ?: wrapper.libraryEntry.manga)
-                ?.let { MediaAdapter.fromMedia(it) }
+        viewModel.libraryEntryWithModification.observe(viewLifecycleOwner) { libraryEntry ->
+            val media = libraryEntry.media
 
             binding.apply {
-                setLibraryStatusMenu(mediaAdapter, wrapper.status)
+                setLibraryStatusMenu(media, libraryEntry.status)
 
-                mediaAdapter?.episodeOrChapterCount?.let {
+                media?.episodeOrChapterCount?.let {
                     spinnerProgress.setMaxValue(it)
                 } ?: spinnerProgress.setSuffixMode(CustomNumberSpinner.SuffixMode.Disabled)
-                spinnerProgress.setValue(wrapper.progress ?: 0)
+                spinnerProgress.setValue(libraryEntry.progress ?: 0)
 
-                layoutVolumes.isVisible = mediaAdapter?.isAnime() == false
-                spinnerVolumes.setMaxValue((mediaAdapter?.media as? Manga)?.volumeCount ?: 0)
-                spinnerVolumes.setValue(wrapper.volumesOwned ?: 0)
+                layoutVolumes.isVisible = media is Manga
+                spinnerVolumes.setMaxValue((media as? Manga)?.volumeCount ?: 0)
+                spinnerVolumes.setValue(libraryEntry.volumesOwned ?: 0)
 
-                val ratingTwenty = wrapper.ratingTwenty
+                val ratingTwenty = libraryEntry.ratingTwenty
                 val hasRated = ratingTwenty != null && ratingTwenty != -1
                 fieldRating.editText?.apply {
                     val ratingText = if (hasRated) {
@@ -220,15 +217,15 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
                 fieldRating.setEndIconTintList(ColorStateList.valueOf(getControlColor(hasRated)))
 
                 tvReconsumeLabel.text = getString(
-                    if (mediaAdapter?.isAnime() != false)
+                    if (media is Anime)
                         R.string.library_edit_rewatch_count
                     else
                         R.string.library_edit_reread_count
                 )
-                spinnerReconsume.setValue(wrapper.reconsumeCount ?: 0)
+                spinnerReconsume.setValue(libraryEntry.reconsumeCount ?: 0)
                 spinnerReconsume.setActionTooltip(
                     getString(
-                        if (mediaAdapter?.isAnime() != false)
+                        if (media is Anime)
                             R.string.library_edit_start_rewatch
                         else
                             R.string.library_edit_start_reread
@@ -245,28 +242,28 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
                 )
                 (menuPrivacy.editText as? AutoCompleteTextView)?.apply {
                     setAdapter(privacyAdapter)
-                    val currValue = if (wrapper.isPrivate == true)
+                    val currValue = if (libraryEntry.isPrivate == true)
                         getString(R.string.library_edit_privacy_private)
                     else
                         getString(R.string.library_edit_privacy_public)
                     setText(currValue, false)
                 }
 
-                val startedText = wrapper.startedAt?.parseUtcDate()?.formatDate()
+                val startedText = libraryEntry.startedAt?.parseUtcDate()?.formatDate()
                     ?: getString(R.string.library_edit_no_date_set)
                 fieldStarted.editText?.setText(startedText)
-                btnResetStarted.isVisible = wrapper.libraryModification?.startedAt != null
-                        && wrapper.libraryModification.startedAt != viewModel.uneditedLibraryEntryWrapper?.startedAt
+                btnResetStarted.isVisible = libraryEntry.modification?.startedAt != null
+                        && libraryEntry.modification.startedAt != viewModel.uneditedLibraryEntryWrapper?.startedAt
 
-                val finishedText = wrapper.finishedAt?.parseUtcDate()?.formatDate()
+                val finishedText = libraryEntry.finishedAt?.parseUtcDate()?.formatDate()
                     ?: getString(R.string.library_edit_no_date_set)
                 fieldFinished.editText?.setText(finishedText)
-                btnResetFinished.isVisible = wrapper.libraryModification?.finishedAt != null
-                        && wrapper.libraryModification.finishedAt != viewModel.uneditedLibraryEntryWrapper?.finishedAt
+                btnResetFinished.isVisible = libraryEntry.modification?.finishedAt != null
+                        && libraryEntry.modification.finishedAt != viewModel.uneditedLibraryEntryWrapper?.finishedAt
 
                 fieldNotes.editText?.apply {
-                    if (text.toString() != (wrapper.notes ?: "")) {
-                        setText(wrapper.notes)
+                    if (text.toString() != (libraryEntry.notes ?: "")) {
+                        setText(libraryEntry.notes)
                     }
                 }
             }
@@ -303,16 +300,14 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
             }
 
             spinnerProgress.setValueChangedListener { value ->
-                val wrapper = viewModel.libraryEntryWrapper.value
-                val mediaAdapter = (wrapper?.libraryEntry?.anime ?: wrapper?.libraryEntry?.manga)
-                    ?.let { MediaAdapter.fromMedia(it) }
+                val wrapper = viewModel.libraryEntryWithModification.value
 
-                if (value == mediaAdapter?.episodeOrChapterCount) {
+                if (value == wrapper?.media?.episodeOrChapterCount) {
                     viewModel.updateLibraryEntry {
                         it.copy(
                             progress = value,
                             status = LibraryStatus.Completed,
-                            finishedAt = wrapper?.finishedAt ?: getLocalCalendar().formatUtcDate()
+                            finishedAt = wrapper.finishedAt ?: getLocalCalendar().formatUtcDate()
                         )
                     }
                 } else {
@@ -334,7 +329,7 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
 
             // start reconsume action
             spinnerReconsume.setActionClickListener {
-                val wrapper = viewModel.libraryEntryWrapper.value
+                val wrapper = viewModel.libraryEntryWithModification.value
                 viewModel.updateLibraryEntry {
                     it.copy(
                         progress = 0,
@@ -350,7 +345,7 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
             }
 
             fieldStarted.editText?.setOnClickListener {
-                val wrapper = viewModel.libraryEntryWrapper.value
+                val wrapper = viewModel.libraryEntryWithModification.value
                 val selection = wrapper?.startedAt?.parseUtcDate()?.time
                     ?.stripTimeUtcMillis() ?: MaterialDatePicker.todayInUtcMilliseconds()
 
@@ -375,7 +370,7 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
             }
 
             fieldFinished.editText?.setOnClickListener {
-                val wrapper = viewModel.libraryEntryWrapper.value
+                val wrapper = viewModel.libraryEntryWithModification.value
                 val selection = wrapper?.finishedAt?.parseUtcDate()?.time
                     ?.stripTimeUtcMillis() ?: MaterialDatePicker.todayInUtcMilliseconds()
 
@@ -412,8 +407,8 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
         }
     }
 
-    private fun setLibraryStatusMenu(mediaAdapter: MediaAdapter?, currValue: LibraryStatus?) {
-        val isAnime = mediaAdapter?.isAnime() != false
+    private fun setLibraryStatusMenu(media: Media?, currValue: LibraryStatus?) {
+        val isAnime = media is Anime
         val statusItems = libraryStatusMenuItems.map { getString(it.getStringResId(isAnime)) }
 
         val adapter = ArrayAdapter(
@@ -429,14 +424,13 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
     }
 
     private fun showRatingBottomSheet() {
-        val libraryEntryWrapper = viewModel.libraryEntryWrapper.value ?: return
-        val libraryEntry = viewModel.libraryEntryWrapper.value?.libraryEntry ?: return
-        val media = libraryEntry.anime ?: libraryEntry.manga ?: return
-        val mediaAdapter = MediaAdapter.fromMedia(media)
+        val libraryEntryWrapper = viewModel.libraryEntryWithModification.value ?: return
+        val libraryEntry = viewModel.libraryEntryWithModification.value?.libraryEntry ?: return
+        val media = libraryEntry.media ?: return
 
         val action =
             LibraryEditEntryFragmentDirections.actionLibraryEditEntryFragmentToRatingBottomSheet(
-                title = mediaAdapter.title ?: "",
+                title = media.title ?: "",
                 ratingTwenty = libraryEntryWrapper.ratingTwenty ?: -1,
                 ratingResultKey = RESULT_KEY_RATING,
                 removeResultKey = RESULT_KEY_REMOVE_RATING,
@@ -478,5 +472,4 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
         super.onDestroyView()
         _binding = null
     }
-
 }

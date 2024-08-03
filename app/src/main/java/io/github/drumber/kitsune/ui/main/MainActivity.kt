@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
@@ -14,9 +15,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.map
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
@@ -31,20 +31,28 @@ import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.navigationrail.NavigationRailView
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.IntentAction.OPEN_LIBRARY
+import io.github.drumber.kitsune.constants.IntentAction.OPEN_MEDIA
+import io.github.drumber.kitsune.constants.IntentAction.SHORTCUT_LIBRARY
+import io.github.drumber.kitsune.constants.IntentAction.SHORTCUT_SEARCH
+import io.github.drumber.kitsune.constants.IntentAction.SHORTCUT_SETTINGS
+import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.databinding.ActivityMainBinding
-import io.github.drumber.kitsune.domain.model.preference.StartPagePref
-import io.github.drumber.kitsune.domain.model.preference.getDestinationId
-import io.github.drumber.kitsune.domain.model.ui.media.originalOrDown
-import io.github.drumber.kitsune.domain.repository.UserRepository
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.preference.StartPagePref
+import io.github.drumber.kitsune.preference.getDestinationId
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
+import io.github.drumber.kitsune.ui.details.DetailsFragmentArgs
+import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
 import io.github.drumber.kitsune.ui.permissions.showNotificationPermissionRejectedDialog
 import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
 import io.github.drumber.kitsune.util.ui.RoundBitmapDrawable
 import io.github.drumber.kitsune.util.ui.getSystemBarsAndCutoutInsets
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -58,6 +66,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private lateinit var navController: NavController
 
     private var overrideStartDestination: Int? = null
+    private var handledIntentHashCode: Int? = null
 
     private val navigationBarView: NavigationBarView
         get() = binding.bottomNavigation
@@ -71,7 +80,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
         val userRepository = get<UserRepository>()
         lifecycleScope.launch {
-            userRepository.userReLoginSignal.collectLatest {
+            userRepository.userReLogInPrompt.collectLatest {
                 promptUserReLogin()
             }
         }
@@ -137,30 +146,34 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
 
 
-            userRepository.userLiveData
-                .map { it?.avatar?.originalOrDown() }
-                .distinctUntilChanged()
-                .observe(this@MainActivity) { avatarUrl ->
-                    if (avatarUrl.isNullOrBlank()) {
-                        menu.findItem(R.id.profile_fragment).setIcon(R.drawable.selector_profile)
-                        return@observe
-                    }
-                    Glide.with(this)
-                        .asBitmap()
-                        .load(avatarUrl)
-                        .dontAnimate()
-                        .into(object : CustomTarget<Bitmap>() {
-                            override fun onResourceReady(
-                                resource: Bitmap,
-                                transition: Transition<in Bitmap>?
-                            ) {
-                                menu.findItem(R.id.profile_fragment).icon =
-                                    RoundBitmapDrawable(resource)
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    userRepository.localUser
+                        .map { it?.avatar?.originalOrDown() }
+                        .distinctUntilChanged()
+                        .collectLatest { avatarUrl ->
+                            if (avatarUrl.isNullOrBlank()) {
+                                menu.findItem(R.id.profile_fragment).setIcon(R.drawable.selector_profile)
+                                return@collectLatest
                             }
+                            Glide.with(this@MainActivity)
+                                .asBitmap()
+                                .load(avatarUrl)
+                                .dontAnimate()
+                                .into(object : CustomTarget<Bitmap>() {
+                                    override fun onResourceReady(
+                                        resource: Bitmap,
+                                        transition: Transition<in Bitmap>?
+                                    ) {
+                                        menu.findItem(R.id.profile_fragment).icon =
+                                            RoundBitmapDrawable(resource)
+                                    }
 
-                            override fun onLoadCleared(placeholder: Drawable?) {}
-                        })
+                                    override fun onLoadCleared(placeholder: Drawable?) {}
+                                })
+                        }
                 }
+            }
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -181,6 +194,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             )
         }
 
+        handledIntentHashCode = when (savedInstanceState?.containsKey(LAST_HANDLED_INTENT_KEY)) {
+            true -> savedInstanceState.getInt(LAST_HANDLED_INTENT_KEY)
+            else -> null
+        }
+
         // override start fragment, but only on clean launch and when not launched by a deep link
         if (savedInstanceState == null && !isLaunchedByDeepLink()) {
             overrideStartDestination = getShortcutStartDestinationId()
@@ -195,11 +213,18 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         requestRequiredPermissions()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        handledIntentHashCode?.let { outState.putInt(LAST_HANDLED_INTENT_KEY, it) }
+    }
+
     override fun onStart() {
         super.onStart()
-        overrideStartDestination?.let {
-            navigateToStartFragment(it)
-            overrideStartDestination = null
+        if (!handleIntentAction(intent)) {
+            overrideStartDestination?.let {
+                navigateToSingleTopDestination(it)
+                overrideStartDestination = null
+            }
         }
     }
 
@@ -234,12 +259,46 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     /** Checks if the activity was launched using an app link, */
     private fun isLaunchedByDeepLink(): Boolean {
-        return intent.action == Intent.ACTION_VIEW && intent.data != null
+        val flags = intent.flags
+        val isNewTask = flags and Intent.FLAG_ACTIVITY_NEW_TASK != 0 &&
+                flags and Intent.FLAG_ACTIVITY_CLEAR_TASK != 0
+        return (intent.action == Intent.ACTION_VIEW && intent.data != null) || isNewTask
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        navController.handleDeepLink(intent)
+        if (!navController.handleDeepLink(intent) && intent != null) {
+            handleIntentAction(intent)
+        }
+    }
+
+    private fun handleIntentAction(intent: Intent): Boolean {
+        if (handledIntentHashCode == intent.filterHashCode()) return false
+        handledIntentHashCode = intent.filterHashCode()
+
+        return when (intent.action) {
+            OPEN_MEDIA -> {
+                val argsResult = intent.extras?.runCatching {
+                    DetailsFragmentArgs.fromBundle(this)
+                }
+                argsResult?.getOrNull()?.let { args ->
+                    val action = DetailsFragmentDirections.actionGlobalDetailsFragment(
+                        media = args.media,
+                        type = args.type,
+                        slug = args.slug
+                    )
+                    navController.navigate(action)
+                    true
+                } ?: false
+            }
+
+            OPEN_LIBRARY -> {
+                navigateToSingleTopDestination(R.id.library_fragment)
+                true
+            }
+
+            else -> false
+        }
     }
 
     private fun getShortcutStartDestinationId(): Int? {
@@ -251,7 +310,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
     }
 
-    private fun navigateToStartFragment(navigationId: Int) {
+    private fun navigateToSingleTopDestination(navigationId: Int) {
         val navOptions = NavOptions.Builder()
             .setLaunchSingleTop(true)
             .setRestoreState(true)
@@ -302,7 +361,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         binding.navigationRail?.apply {
             if (slideOut) {
                 // different direction depending on if rail is left or right aligned
-                val isRtl = ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL
+                val isRtl = layoutDirection == View.LAYOUT_DIRECTION_RTL
                 val translationFactor = if (isRtl) 1 else -1
                 animate().translationX(this.width.toFloat() * translationFactor)
                     .withEndAction { this.isVisible = false }
@@ -325,7 +384,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     }
 
     private fun NavigationRailView.applyWindowInsets(insets: Insets): Insets {
-        val isRtl = ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL
+        val isRtl = layoutDirection == View.LAYOUT_DIRECTION_RTL
         val left = if (!isRtl) insets.left else 0
         val right = if (isRtl) insets.right else 0
         updatePadding(left = left, top = insets.top, right = right, bottom = insets.bottom)
@@ -333,11 +392,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     }
 
     companion object {
-        const val SHORTCUT_LIBRARY = "io.github.drumber.kitsune.LIBRARY"
-        const val SHORTCUT_SEARCH = "io.github.drumber.kitsune.SEARCH"
-        const val SHORTCUT_SETTINGS = "io.github.drumber.kitsune.SETTINGS"
+        private const val LAST_HANDLED_INTENT_KEY = "last_handled_intent"
     }
-
 }
 
 interface FragmentDecorationPreference {

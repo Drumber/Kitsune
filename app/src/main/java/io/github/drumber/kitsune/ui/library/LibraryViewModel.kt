@@ -1,7 +1,6 @@
 package io.github.drumber.kitsune.ui.library
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.TerminalSeparatorType
@@ -9,34 +8,28 @@ import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import androidx.paging.map
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.domain.database.LibraryEntryModificationDao
-import io.github.drumber.kitsune.domain.manager.library.LibraryManager
-import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult
-import io.github.drumber.kitsune.domain.mapper.toLibraryEntry
-import io.github.drumber.kitsune.domain.mapper.toLibraryEntryModification
-import io.github.drumber.kitsune.domain.mapper.toLocalLibraryEntry
-import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain.model.database.LocalLibraryEntryModification
-import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.NOT_SYNCHRONIZED
-import io.github.drumber.kitsune.domain.model.database.LocalLibraryModificationState.SYNCHRONIZING
-import io.github.drumber.kitsune.domain.model.infrastructure.library.LibraryEntry
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryFilter
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryUiModel
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.domain.repository.LibraryEntriesRepository
-import io.github.drumber.kitsune.domain.repository.UserRepository
-import io.github.drumber.kitsune.domain.service.Filter
-import io.github.drumber.kitsune.exception.InvalidDataException
+import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryModificationState.NOT_SYNCHRONIZED
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
+import io.github.drumber.kitsune.data.repository.LibraryRepository
+import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.domain.library.GetLibraryEntriesWithModificationsPagerUseCase
+import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult
+import io.github.drumber.kitsune.domain.library.SearchLibraryEntriesWithLocalModificationsPagerUseCase
+import io.github.drumber.kitsune.domain.library.SynchronizeLocalLibraryModificationsUseCase
+import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCase
+import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryRatingUseCase
+import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.library.InternalAction.LibraryUpdateOperationEnd
 import io.github.drumber.kitsune.ui.library.InternalAction.LibraryUpdateOperationStart
 import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibrarySynchronizationResult
 import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibraryUpdateResult
-import io.github.drumber.kitsune.util.formatUtcDate
-import io.github.drumber.kitsune.util.getLocalCalendar
-import io.github.drumber.kitsune.util.logE
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
@@ -52,7 +45,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -60,10 +52,14 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 class LibraryViewModel(
-    val userRepository: UserRepository,
-    private val libraryEntriesRepository: LibraryEntriesRepository,
-    private val libraryManager: LibraryManager,
-    libraryModificationDao: LibraryEntryModificationDao
+    private val userRepository: UserRepository,
+    private val getLocalUserId: GetLocalUserIdUseCase,
+    private val libraryRepository: LibraryRepository,
+    private val getLibraryEntriesWithModifications: GetLibraryEntriesWithModificationsPagerUseCase,
+    private val searchLibraryEntriesWithModification: SearchLibraryEntriesWithLocalModificationsPagerUseCase,
+    private val updateLibraryEntryProgress: UpdateLibraryEntryProgressUseCase,
+    private val updateLibraryEntryRating: UpdateLibraryEntryRatingUseCase,
+    private val synchronizeLocalLibraryModifications: SynchronizeLocalLibraryModificationsUseCase
 ) : ViewModel() {
 
     val state: StateFlow<UiState>
@@ -85,9 +81,11 @@ class LibraryViewModel(
     val libraryChangeResultFlow: Flow<LibraryChangeResult>
 
     val notSynchronizedLibraryEntryModifications =
-        libraryModificationDao.getLibraryEntryModificationsWithStateLiveData(NOT_SYNCHRONIZED)
+        libraryRepository.getLibraryEntryModificationsByStateAsLiveData(NOT_SYNCHRONIZED)
 
     private val libraryProgressUpdateJobs = ConcurrentHashMap<String, Job>()
+
+    val localUser = userRepository.localUser
 
     init {
         val initialFilter = FilterState(
@@ -133,37 +131,13 @@ class LibraryViewModel(
                 }
             }
 
-        val libraryEntryModificationsFlow =
-            libraryModificationDao.getAllLibraryEntryModificationsLiveData()
-                .asFlow()
-                .shareIn(
-                    scope = viewModelScope,
-                    replay = 1,
-                    started = SharingStarted.Lazily
-                )
-                .onStart { emit(emptyList()) }
-
         pagingDataFlow = searches
             .mapNotNull { createLibraryEntryFilter(it.filter) }
-            .flatMapLatest { getPagingLibraryEntriesFlow(it) }
-            .cachedIn(viewModelScope)
-            // combine with local library entry modifications
-            .combine(libraryEntryModificationsFlow, ::Pair)
-            .map { (pagingData, modifications) ->
-                pagingData.map { model ->
-                    when (model) {
-                        !is LibraryEntryWrapper -> model
-                        else -> modifications
-                            .find { it.id == model.libraryEntry.id }
-                            ?.let {
-                                model.copy(
-                                    libraryModification = it.toLibraryEntryModification(),
-                                    isSynchronizing = it.state == SYNCHRONIZING
-                                )
-                            } ?: model
-                    }
-                }
+            .flatMapLatest { filter ->
+                getPagingLibraryEntriesFlow(filter)
+                    .insertSeparators(filter)
             }
+            .cachedIn(viewModelScope)
 
         state = combine(
             searches,
@@ -191,45 +165,55 @@ class LibraryViewModel(
         }
     }
 
+    fun hasUser() = userRepository.hasLocalUser()
+
     private fun getPagingLibraryEntriesFlow(
         filter: LibraryEntryFilter
-    ): Flow<PagingData<LibraryEntryUiModel>> {
-        val pagingDataFlow = if (filter.isFilteredBySearchQuery()) {
+    ): Flow<PagingData<LibraryEntryWithModification>> {
+        return if (filter.isFilteredBySearchQuery()) {
             // if filter contains a search query, then search directly using the paging source
-            libraryEntriesRepository.searchLibraryEntries(
+            searchLibraryEntriesWithModification(
                 Kitsu.DEFAULT_PAGE_SIZE_LIBRARY,
-                filter.buildFilter()
+                filter.buildFilter(),
+                viewModelScope
             )
         } else {
-            // otherwise use the paging source supplied by Room
-            libraryEntriesRepository.libraryEntries(Kitsu.DEFAULT_PAGE_SIZE_LIBRARY, filter)
-                .map { pagingSource -> pagingSource.map { it.toLibraryEntry() } }
+            // otherwise use the default paging source
+            getLibraryEntriesWithModifications(
+                Kitsu.DEFAULT_PAGE_SIZE_LIBRARY,
+                filter,
+                viewModelScope
+            )
         }
-        return pagingDataFlow
-            .map { pagingData ->
-                pagingData.map { LibraryEntryWrapper(it, null, false) }
-            }
-            .map {
-                it.insertSeparators(TerminalSeparatorType.SOURCE_COMPLETE) { before: LibraryEntryWrapper?, after: LibraryEntryWrapper? ->
-                    // do not insert separators if currently searching
-                    if (filter.isFilteredBySearchQuery()) return@insertSeparators null
+    }
 
-                    when {
-                        after?.status == null -> null
-                        before == null || before.status != after.status ->
-                            LibraryEntryUiModel.StatusSeparatorModel(
-                                after.status!!,
-                                filter.kind == LibraryEntryKind.Manga
-                            )
+    private fun Flow<PagingData<LibraryEntryWithModification>>.insertSeparators(
+        filter: LibraryEntryFilter
+    ): Flow<PagingData<LibraryEntryUiModel>> {
+        return map { pagingData ->
+            pagingData.map { LibraryEntryUiModel.EntryModel(it) }
+        }.map {
+            it.insertSeparators(TerminalSeparatorType.SOURCE_COMPLETE) { before, after ->
+                when {
+                    // do not insert separators if library is currently searched
+                    filter.isFilteredBySearchQuery() -> null
 
-                        else -> null
-                    }
+                    after?.entry?.libraryEntry?.status == null -> null
+
+                    before == null || before.entry.libraryEntry.status != after.entry.libraryEntry.status ->
+                        LibraryEntryUiModel.StatusSeparatorModel(
+                            status = after.entry.libraryEntry.status,
+                            isMangaSelected = filter.kind == LibraryEntryKind.Manga
+                        )
+
+                    else -> null
                 }
             }
+        }
     }
 
     private fun createLibraryEntryFilter(filter: FilterState): LibraryEntryFilter? {
-        return userRepository.user?.id?.let { userId ->
+        return getLocalUserId()?.let { userId ->
             val requestFilter = Filter()
                 .filter("user_id", userId)
                 .sort("status", "-progressed_at")
@@ -256,7 +240,7 @@ class LibraryViewModel(
     }
 
     fun invalidatePagingSource() {
-        libraryEntriesRepository.invalidatePagingSources()
+        libraryRepository.invalidatePagingSources()
     }
 
     fun setLibraryEntryKind(kind: LibraryEntryKind) {
@@ -276,56 +260,39 @@ class LibraryViewModel(
     fun synchronizeOfflineLibraryUpdates() {
         acceptInternalAction(LibraryUpdateOperationStart)
         viewModelScope.launch(Dispatchers.IO) {
-            val librarySyncResults = libraryManager.pushAllStoredLocalModificationsToService()
+            val librarySyncResults = synchronizeLocalLibraryModifications()
             acceptInternalAction(InternalAction.LibrarySynchronizationResult(librarySyncResults.values.toList()))
         }.invokeOnCompletion {
             acceptInternalAction(LibraryUpdateOperationEnd)
         }
     }
 
-    fun markEpisodeWatched(libraryEntryWrapper: LibraryEntryWrapper) {
-        val newProgress = libraryEntryWrapper.progress?.plus(1)
+    fun markEpisodeWatched(libraryEntryWrapper: LibraryEntryWithModification) {
+        val currentProgress = libraryEntryWrapper.progress ?: 0
+        val newProgress = currentProgress + 1
         updateLibraryProgress(libraryEntryWrapper.libraryEntry, newProgress)
     }
 
-    fun markEpisodeUnwatched(libraryEntryWrapper: LibraryEntryWrapper) {
-        if (libraryEntryWrapper.progress == 0) return
-        val newProgress = libraryEntryWrapper.progress?.minus(1)
+    fun markEpisodeUnwatched(libraryEntryWrapper: LibraryEntryWithModification) {
+        val currentProgress = libraryEntryWrapper.progress ?: 0
+        if (currentProgress == 0) return
+        val newProgress = currentProgress - 1
         updateLibraryProgress(libraryEntryWrapper.libraryEntry, newProgress)
     }
 
-    private fun updateLibraryProgress(libraryEntry: LibraryEntry, newProgress: Int?) {
-        // set startedAt date when starting consuming library entry
-        val startedAt = if (
-            libraryEntry.startedAt.isNullOrBlank() &&
-            newProgress == 1 &&
-            (libraryEntry.progress ?: 0) == 0
-        ) {
-            getLocalCalendar().formatUtcDate()
-        } else {
-            null
-        }
-
-        val modification = LocalLibraryEntryModification.withIdAndNulls(
-            libraryEntry.id ?: throw InvalidDataException("Library entry ID cannot be 'null'.")
-        ).copy(progress = newProgress, startedAt = startedAt)
-
-        val ongoingJob = libraryProgressUpdateJobs[modification.id]
+    private fun updateLibraryProgress(libraryEntry: LibraryEntry, newProgress: Int) {
+        val ongoingJob = libraryProgressUpdateJobs[libraryEntry.id]
         val job = viewModelScope.launch(Dispatchers.IO) {
             ongoingJob?.cancelAndJoin() // wait until ongoing update call is cancelled
-            try {
-                updateLibraryEntry(modification)
-            } catch (e: CancellationException) {
-                // request was cancelled by a subsequent update call
-                return@launch
-            } catch (e: Exception) {
-                logE("Failed to update library entry progress.", e)
+            performLibraryEntryUpdate {
+                updateLibraryEntryProgress(libraryEntry, newProgress)
             }
         }
-        libraryProgressUpdateJobs[modification.id] = job
+
+        libraryProgressUpdateJobs[libraryEntry.id] = job
         job.invokeOnCompletion {
-            if (libraryProgressUpdateJobs[modification.id] == job) {
-                libraryProgressUpdateJobs.remove(modification.id)
+            if (libraryProgressUpdateJobs[libraryEntry.id] == job) {
+                libraryProgressUpdateJobs.remove(libraryEntry.id)
             }
         }
     }
@@ -334,35 +301,29 @@ class LibraryViewModel(
     var lastRatedLibraryEntry: LibraryEntry? = null
 
     fun updateRating(rating: Int?) {
-        val libraryEntry = lastRatedLibraryEntry?.toLocalLibraryEntry() ?: return
-
-        val updatedRating = rating ?: -1 // '-1' will be mapped to 'null' by the json serializer
-        val modification = LocalLibraryEntryModification.withIdAndNulls(libraryEntry.id)
-            .copy(ratingTwenty = updatedRating)
+        val libraryEntry = lastRatedLibraryEntry ?: return
 
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                updateLibraryEntry(modification)
-            } catch (e: Exception) {
-                logE("Failed to update library entry rating.")
+            performLibraryEntryUpdate {
+                updateLibraryEntryRating(libraryEntry, rating)
             }
         }
     }
 
-    private suspend fun updateLibraryEntry(modification: LocalLibraryEntryModification) {
+    private suspend fun performLibraryEntryUpdate(block: suspend () -> LibraryEntryUpdateResult) {
         acceptInternalAction(LibraryUpdateOperationStart)
         val updateResult = try {
-            libraryManager.updateLibraryEntry(modification)
+            block()
         } finally {
             acceptInternalAction(LibraryUpdateOperationEnd)
         }
         acceptInternalAction(InternalAction.LibraryUpdateResult(updateResult))
 
-        if (updateResult is SynchronizationResult.Success) {
-            scrollToUpdatedEntry(updateResult.libraryEntry.id)
+        if (updateResult is LibraryEntryUpdateResult.Success) {
+            scrollToUpdatedEntry(updateResult.updatedLibraryEntry.id)
         }
 
-        if (updateResult is SynchronizationResult.Success && state.value.filter.searchQuery.isNotBlank()) {
+        if (updateResult is LibraryEntryUpdateResult.Success && state.value.filter.searchQuery.isNotBlank()) {
             // trigger new search to show the updated data
             withContext(Dispatchers.Main) {
                 triggerAdapterUpdate()
@@ -405,16 +366,16 @@ data class FilterState(
 )
 
 sealed class LibraryChangeResult {
-    data class LibraryUpdateResult(val result: SynchronizationResult) : LibraryChangeResult()
-    data class LibrarySynchronizationResult(val results: List<SynchronizationResult>) :
+    data class LibraryUpdateResult(val result: LibraryEntryUpdateResult) : LibraryChangeResult()
+    data class LibrarySynchronizationResult(val results: List<LibraryEntryUpdateResult>) :
         LibraryChangeResult()
 }
 
 private sealed class InternalAction {
     data object LibraryUpdateOperationStart : InternalAction()
     data object LibraryUpdateOperationEnd : InternalAction()
-    data class LibraryUpdateResult(val result: SynchronizationResult) : InternalAction()
-    data class LibrarySynchronizationResult(val results: List<SynchronizationResult>) :
+    data class LibraryUpdateResult(val result: LibraryEntryUpdateResult) : InternalAction()
+    data class LibrarySynchronizationResult(val results: List<LibraryEntryUpdateResult>) :
         InternalAction()
 }
 

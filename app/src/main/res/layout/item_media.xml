@@ -7,7 +7,7 @@
         <import type="android.text.TextUtils" />
         <variable
             name="data"
-            type="io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter" />
+            type="io.github.drumber.kitsune.data.presentation.model.media.Media" />
         <variable
             name="overlayTagText"
             type="String" />
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <io.github.drumber.kitsune.ui.widget.MediaItemCard
+        <io.github.drumber.kitsune.ui.component.MediaItemCard
             android:id="@+id/card_media"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/media_item_height_large"
@@ -90,7 +90,7 @@
 
             </RelativeLayout>
 
-        </io.github.drumber.kitsune.ui.widget.MediaItemCard>
+        </io.github.drumber.kitsune.ui.component.MediaItemCard>
 
     </FrameLayout>
 

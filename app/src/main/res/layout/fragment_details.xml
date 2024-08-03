@@ -4,18 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <import type="android.text.TextUtils" />
-
-        <import type="io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter" />
+        <import type="io.github.drumber.kitsune.data.presentation.model.media.Anime" />
 
         <variable
             name="data"
-            type="io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter" />
+            type="io.github.drumber.kitsune.data.presentation.model.media.Media" />
 
         <variable
             name="libraryEntry"
-            type="io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryAdapter" />
+            type="io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification" />
     </data>
 
     <FrameLayout
@@ -129,7 +127,7 @@
                             android:layout_below="@id/iv_thumbnail"
                             android:layout_alignParentStart="true"
                             android:layout_marginTop="10dp"
-                            android:text="@{data.publishingYear + ` • ` + data.subtype}"
+                            android:text="@{data.publishingYearText + ` • ` + data.subtypeFormatted}"
                             tools:text="2002 • TV" />
 
                         <LinearLayout
@@ -218,7 +216,7 @@
                         style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{data.isAnime() ? @string/title_episodes : @string/title_chapters}"
+                        android:text="@{data instanceof Anime ? @string/title_episodes : @string/title_chapters}"
                         android:textAllCaps="false" />
 
                     <Button

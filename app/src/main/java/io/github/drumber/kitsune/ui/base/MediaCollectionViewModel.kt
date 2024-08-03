@@ -5,9 +5,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Defaults
-import io.github.drumber.kitsune.domain.model.MediaSelector
-import io.github.drumber.kitsune.domain.model.infrastructure.media.BaseMedia
-import io.github.drumber.kitsune.domain.service.Filter
+import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
+import io.github.drumber.kitsune.data.presentation.model.media.identifier
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -42,20 +43,21 @@ abstract class MediaCollectionViewModel : ViewModel() {
         }
     }
 
-    val dataSource: Flow<PagingData<out BaseMedia>> = mediaSelectorFlow
+    val dataSource: Flow<PagingData<out Media>> = mediaSelectorFlow
         .filterNotNull()
         .distinctUntilChanged()
         .flatMapLatest { selector ->
             // copy the filter and limit the fields of the response model to only the required ones
             val mediaSelector = with(selector) {
                 copy(
-                    filter = Filter(filter.options.toMutableMap())
-                        .fields(mediaType.type, *Defaults.MINIMUM_COLLECTION_FIELDS)
+                    filterOptions = Filter(filterOptions.toMutableMap())
+                        .fields(mediaType.identifier, *Defaults.MINIMUM_COLLECTION_FIELDS)
+                        .options
                 )
             }
             getData(mediaSelector)
         }.cachedIn(viewModelScope)
 
-    abstract fun getData(mediaSelector: MediaSelector): Flow<PagingData<BaseMedia>>
+    abstract fun getData(mediaSelector: MediaSelector): Flow<PagingData<Media>>
 
 }

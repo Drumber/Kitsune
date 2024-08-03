@@ -4,17 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.drumber.kitsune.domain.model.ui.media.CategoryNode
-import io.github.drumber.kitsune.domain.model.preference.CategoryPrefWrapper
-import io.github.drumber.kitsune.domain.service.Filter
-import io.github.drumber.kitsune.domain.service.category.CategoryService
+import io.github.drumber.kitsune.data.presentation.model.media.category.CategoryNode
+import io.github.drumber.kitsune.data.repository.CategoryRepository
+import io.github.drumber.kitsune.preference.CategoryPrefWrapper
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.util.network.ResponseData
 import io.github.drumber.kitsune.util.logE
+import io.github.drumber.kitsune.util.network.ResponseData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class CategoriesViewModel(private val categoryService: CategoryService) : ViewModel() {
+class CategoriesViewModel(private val categoryRepository: CategoryRepository) : ViewModel() {
 
     var treeViewSavedState: String? = null
 
@@ -48,19 +48,14 @@ class CategoriesViewModel(private val categoryService: CategoryService) : ViewMo
         get() = _categoryNodes
 
     fun fetchChildCategories(parent: CategoryNode?) {
-        val parentId = if (parent == null || parent.category.id == null) {
-            "_none"
-        } else {
-            parent.category.id
-        }
+        val parentId = parent?.category?.id ?: "_none"
         val filter = Filter()
             .filter("parent_id", parentId)
             .pageLimit(500)
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = categoryService.allCategories(filter.options)
-                response.get()?.let { categories ->
+                categoryRepository.getAllCategories(filter)?.let { categories ->
                     val nodes = categories.map {
                         CategoryNode(it)
                     }

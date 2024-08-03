@@ -10,14 +10,15 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.common.media.MediaType
+import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
+import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.FragmentMediaListBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
-import io.github.drumber.kitsune.domain.model.MediaType
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.base.MediaCollectionFragment
 import io.github.drumber.kitsune.ui.base.MediaCollectionViewModel
 import io.github.drumber.kitsune.util.extensions.navigateSafe
-import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -43,9 +44,10 @@ class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) 
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
-        binding.rvMedia.initMarginWindowInsetsListener(
+        binding.rvMedia.initPaddingWindowInsetsListener(
             left = true,
             right = true,
+            bottom = true,
             consume = false
         )
 
@@ -59,8 +61,8 @@ class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) 
         }
     }
 
-    override fun onMediaClicked(view: View, model: MediaAdapter) {
-        val action = MediaListFragmentDirections.actionMediaListFragmentToDetailsFragment(model)
+    override fun onMediaClicked(view: View, model: Media) {
+        val action = MediaListFragmentDirections.actionMediaListFragmentToDetailsFragment(model.toMediaDto())
         val detailsTransitionName = getString(R.string.details_poster_transition_name)
         val extras = FragmentNavigatorExtras(view to detailsTransitionName)
         findNavController().navigateSafe(R.id.media_list_fragment, action, extras)

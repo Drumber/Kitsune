@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.databinding.SheetManageLibraryBinding
 
 class ManageLibraryBottomSheet : BottomSheetDialogFragment() {

@@ -31,17 +31,19 @@ import com.algolia.search.model.response.ResponseSearch
 import com.algolia.search.model.search.Query
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.Repository
-import io.github.drumber.kitsune.domain.manager.SearchProvider
-import io.github.drumber.kitsune.domain.model.FilterCollection
-import io.github.drumber.kitsune.domain.model.infrastructure.algolia.SearchType
-import io.github.drumber.kitsune.domain.model.infrastructure.algolia.search.MediaSearchResult
-import io.github.drumber.kitsune.domain.model.toCombinedMap
-import io.github.drumber.kitsune.domain.model.toFilterCollection
-import io.github.drumber.kitsune.domain.repository.AlgoliaKeyRepository
-import io.github.drumber.kitsune.exception.SearchProviderUnavailableException
+import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toMedia
+import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
+import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaMediaSearchResult
+import io.github.drumber.kitsune.domain.algolia.FilterCollection
+import io.github.drumber.kitsune.domain.algolia.SearchProvider
+import io.github.drumber.kitsune.domain.algolia.toCombinedMap
+import io.github.drumber.kitsune.domain.algolia.toFilterCollection
+import io.github.drumber.kitsune.data.common.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.widget.algolia.range.CustomFilterRangeConnector
-import io.github.drumber.kitsune.ui.widget.algolia.SeasonListPresenter
+import io.github.drumber.kitsune.ui.component.algolia.SeasonListPresenter
+import io.github.drumber.kitsune.ui.component.algolia.range.CustomFilterRangeConnector
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logI
 import kotlinx.coroutines.flow.flatMapLatest
@@ -60,7 +62,7 @@ class SearchViewModel(
 
     private var filterState: FilterState? = null
 
-    private val searchPaginator = MutableLiveData<Paginator<MediaSearchResult>>()
+    private val searchPaginator = MutableLiveData<Paginator<Media>>()
 
     private val _filtersLiveData = MutableLiveData<Filters?>()
     val filtersLiveData get() = _filtersLiveData as LiveData<Filters?>
@@ -116,7 +118,7 @@ class SearchViewModel(
                         ),
                         transformer = { hit ->
                             when (searchType) {
-                                SearchType.Media -> json.decodeFromJsonElement<MediaSearchResult>(hit.json)
+                                SearchType.Media -> json.decodeFromJsonElement<AlgoliaMediaSearchResult>(hit.json).toMedia()
                                 else -> throw IllegalStateException("Search type '$searchType' is not supported.")
                             }
                         }
@@ -154,7 +156,7 @@ class SearchViewModel(
         }
     }
 
-    private fun createSearchBox(searcher: HitsSearcher, paginator: Paginator<MediaSearchResult>) {
+    private fun createSearchBox(searcher: HitsSearcher, paginator: Paginator<Media>) {
         val searchBox = SearchBoxConnector(searcher)
         connectionHandler += searchBox
         connectionHandler += searchBox.connectPaginator(paginator)

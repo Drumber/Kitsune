@@ -12,16 +12,15 @@ import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.common.media.MediaType
+import io.github.drumber.kitsune.data.presentation.dto.toMedia
+import io.github.drumber.kitsune.data.presentation.dto.toMediaUnitDto
+import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.databinding.FragmentMediaListBinding
 import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Anime
-import io.github.drumber.kitsune.domain.model.infrastructure.media.Manga
-import io.github.drumber.kitsune.domain.model.infrastructure.media.unit.MediaUnit
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
-import io.github.drumber.kitsune.domain.model.ui.media.MediaUnitAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter
 import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
-import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbarOnFailure
 import kotlinx.coroutines.flow.collectLatest
@@ -45,24 +44,24 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.setMedia(args.media)
-        args.libraryEntryId?.let { viewModel.setLibraryEntryId(it) }
+        viewModel.setMedia(args.media.toMedia())
 
         binding.collapsingToolbar.initWindowInsetsListener(consume = false)
         binding.toolbar.apply {
             initWindowInsetsListener(consume = false)
             title = getString(
-                when (args.media) {
-                    is Anime -> R.string.title_episodes
-                    is Manga -> R.string.title_chapters
+                when (args.media.type) {
+                    MediaType.Anime -> R.string.title_episodes
+                    MediaType.Manga -> R.string.title_chapters
                 }
             )
             setNavigationOnClickListener { findNavController().navigateUp() }
         }
 
-        binding.rvMedia.initMarginWindowInsetsListener(
+        binding.rvMedia.initPaddingWindowInsetsListener(
             left = true,
             right = true,
+            bottom = true,
             consume = false
         )
 
@@ -72,16 +71,16 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
             }
         }
 
-        val resourceAdapter = MediaAdapter.fromMedia(args.media)
         val adapter = MediaUnitPagingAdapter(
             Glide.with(this),
-            resourceAdapter.posterImage,
-            args.libraryEntryId != null,
+            args.media.toMedia().posterImageUrl,
+            viewModel.libraryEntryWrapper.value != null,
             this
         )
         setRecyclerViewAdapter(adapter)
 
         viewModel.libraryEntryWrapper.observe(viewLifecycleOwner) {
+            adapter.setIsWatchedCheckboxEnabled(it != null)
             it?.progress?.let { progress ->
                 adapter.updateLibraryWatchCount(progress)
             }
@@ -102,10 +101,8 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
     private fun showDetailsBottomSheet(mediaUnit: MediaUnit) {
         val sheetMediaUnit = MediaUnitDetailsBottomSheet()
         sheetMediaUnit.arguments = bundleOf(
-            MediaUnitDetailsBottomSheet.BUNDLE_MEDIA_UNIT_ADAPTER to MediaUnitAdapter.fromMediaUnit(
-                mediaUnit
-            ),
-            MediaUnitDetailsBottomSheet.BUNDLE_THUMBNAIL to MediaAdapter.fromMedia(args.media).posterImage
+            MediaUnitDetailsBottomSheet.BUNDLE_MEDIA_UNIT_ADAPTER to mediaUnit.toMediaUnitDto(),
+            MediaUnitDetailsBottomSheet.BUNDLE_THUMBNAIL to args.media.toMedia().posterImageUrl
         )
         sheetMediaUnit.show(parentFragmentManager, MediaUnitDetailsBottomSheet.TAG)
     }

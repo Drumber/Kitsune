@@ -7,11 +7,12 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.SortFilter
-import io.github.drumber.kitsune.domain.model.MediaType
-import io.github.drumber.kitsune.domain.service.Filter
-import io.github.drumber.kitsune.domain.service.anime.AnimeService
-import io.github.drumber.kitsune.domain.service.manga.MangaService
-import io.github.drumber.kitsune.exception.ReceivedDataException
+import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.common.exception.NoDataException
+import io.github.drumber.kitsune.data.common.media.MediaType
+import io.github.drumber.kitsune.data.presentation.model.media.identifier
+import io.github.drumber.kitsune.data.repository.AnimeRepository
+import io.github.drumber.kitsune.data.repository.MangaRepository
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logV
 import io.github.drumber.kitsune.util.network.ResponseData
@@ -20,8 +21,8 @@ import kotlinx.coroutines.launch
 import kotlin.collections.set
 
 class MainFragmentViewModel(
-    private val animeService: AnimeService,
-    private val mangaService: MangaService
+    private val animeRepository: AnimeRepository,
+    private val mangaRepository: MangaRepository
 ) : ViewModel() {
 
     private val animeReload = MutableLiveData(Any())
@@ -37,46 +38,46 @@ class MainFragmentViewModel(
     private val animeExploreSections = mutableMapOf(
         // trending
         createAnimeExploreEntry(TRENDING) {
-            animeService.trending(Filter().limit(10).options).get()
+            animeRepository.getTrending(Filter().limit(10))
         },
         // top airing
         createAnimeExploreEntry(TOP_AIRING) {
-            animeService.allAnime(FILTER_TOP_AIRING.options).get()
+            animeRepository.getAllAnime(FILTER_TOP_AIRING)
         },
         // top upcoming
         createAnimeExploreEntry(TOP_UPCOMING) {
-            animeService.allAnime(FILTER_TOP_UPCOMING.options).get()
+            animeRepository.getAllAnime(FILTER_TOP_UPCOMING)
         },
         // highest rated
         createAnimeExploreEntry(HIGHEST_RATED) {
-            animeService.allAnime(FILTER_HIGHEST_RATED.options).get()
+            animeRepository.getAllAnime(FILTER_HIGHEST_RATED)
         },
         // most popular
         createAnimeExploreEntry(MOST_POPULAR) {
-            animeService.allAnime(FILTER_MOST_POPULAR.options).get()
+            animeRepository.getAllAnime(FILTER_MOST_POPULAR)
         }
     )
 
     private val mangaExploreSections = mutableMapOf(
         // trending
         createMangaExploreEntry(TRENDING) {
-            mangaService.trending(Filter().limit(10).options).get()
+            mangaRepository.getTrending(Filter().limit(10))
         },
         // top airing
         createMangaExploreEntry(TOP_AIRING) {
-            mangaService.allManga(FILTER_TOP_AIRING.options).get()
+            mangaRepository.getAllManga(FILTER_TOP_AIRING)
         },
         // top upcoming
         createMangaExploreEntry(TOP_UPCOMING) {
-            mangaService.allManga(FILTER_TOP_UPCOMING.options).get()
+            mangaRepository.getAllManga(FILTER_TOP_UPCOMING)
         },
         // highest rated
         createMangaExploreEntry(HIGHEST_RATED) {
-            mangaService.allManga(FILTER_HIGHEST_RATED.options).get()
+            mangaRepository.getAllManga(FILTER_HIGHEST_RATED)
         },
         // most popular
         createMangaExploreEntry(MOST_POPULAR) {
-            mangaService.allManga(FILTER_MOST_POPULAR.options).get()
+            mangaRepository.getAllManga(FILTER_MOST_POPULAR)
         }
     )
 
@@ -143,7 +144,7 @@ class MainFragmentViewModel(
 
     private suspend fun <T> processCall(call: suspend () -> List<T>?): ResponseData<List<T>> {
         return try {
-            val data = call() ?: throw ReceivedDataException("Received data is 'null'.")
+            val data = call() ?: throw NoDataException("Received data is 'null'.")
             ResponseData.Success(data)
         } catch (e: Exception) {
             logE("Failed to load data.", e)
@@ -171,7 +172,7 @@ class MainFragmentViewModel(
             pageLimit(10)
             filterType?.let { filter("status", it) }
             sort(sortBy.queryParam)
-            fields(type.type, *Defaults.MINIMUM_COLLECTION_FIELDS)
+            fields(type.identifier, *Defaults.MINIMUM_COLLECTION_FIELDS)
         }
     }
 

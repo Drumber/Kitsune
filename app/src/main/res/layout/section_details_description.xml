@@ -6,7 +6,7 @@
     <data>
         <variable
             name="data"
-            type="io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter" />
+            type="io.github.drumber.kitsune.data.presentation.model.media.Media" />
     </data>
 
     <LinearLayout

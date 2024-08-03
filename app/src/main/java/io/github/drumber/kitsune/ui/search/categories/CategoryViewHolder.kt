@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.core.view.isVisible
 import com.unnamed.b.atv.model.TreeNode
-import io.github.drumber.kitsune.domain.model.ui.media.CategoryNode
+import io.github.drumber.kitsune.data.presentation.model.media.category.CategoryNode
 import io.github.drumber.kitsune.databinding.ItemCategoryNodeBinding
 
 class CategoryViewHolder(

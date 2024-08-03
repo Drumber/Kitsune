@@ -10,8 +10,9 @@ Unofficial android app for [Kitsu.io](https://kitsu.io). Discover new Anime and 
 - View Anime and Manga details including Episodes/Chapters and Characters
 - Manage your Kitsu Library and account settings
 - Cached Library for offline use
-- Light, Purple and Dark app theme
+- Multiple dark and light app themes
 - Material 3 Design
+- Home screen widget
 
 #### Missing features
 - Reactions/Comments

@@ -15,12 +15,14 @@ import androidx.core.view.doOnPreDraw
 import androidx.core.view.isEmpty
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -34,21 +36,24 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.databinding.FragmentLibraryBinding
-import io.github.drumber.kitsune.domain.model.common.library.LibraryStatus
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryKind
-import io.github.drumber.kitsune.domain.model.ui.library.LibraryEntryWrapper
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.LibraryEntriesAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
+import io.github.drumber.kitsune.ui.component.ResponsiveGridLayoutManager
 import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibrarySynchronizationResult
 import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibraryUpdateResult
-import io.github.drumber.kitsune.util.rating.RatingSystemUtil
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
+import io.github.drumber.kitsune.util.extensions.toPx
+import io.github.drumber.kitsune.util.rating.RatingSystemUtil
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbarOnAnyFailure
@@ -120,6 +125,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
                 left = true,
                 top = true,
                 right = true,
+                bottom = true,
                 consume = false
             )
 
@@ -131,20 +137,24 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         val initialToolbarScrollFlags =
             (binding.toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags
 
-        viewModel.userRepository.userLiveData.observe(viewLifecycleOwner) { user ->
-            val isLoggedIn = user != null
-            binding.apply {
-                setMenuVisibility(isLoggedIn)
-                rvLibraryEntries.isVisible = isLoggedIn
-                nsvNotLoggedIn.isVisible = !isLoggedIn
-                scrollViewFilter.isVisible = isLoggedIn
-                // disable toolbar scrolling if library is not shown (not logged in)
-                (toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags =
-                    if (isLoggedIn) {
-                        initialToolbarScrollFlags
-                    } else {
-                        AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.localUser.collectLatest { user ->
+                    val isLoggedIn = user != null
+                    binding.apply {
+                        setMenuVisibility(isLoggedIn)
+                        rvLibraryEntries.isVisible = isLoggedIn
+                        nsvNotLoggedIn.isVisible = !isLoggedIn
+                        scrollViewFilter.isVisible = isLoggedIn
+                        // disable toolbar scrolling if library is not shown (not logged in)
+                        (toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags =
+                            if (isLoggedIn) {
+                                initialToolbarScrollFlags
+                            } else {
+                                AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
+                            }
                     }
+                }
             }
         }
 
@@ -277,26 +287,34 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         adapter.addLoadStateListener { state ->
             lastLoadState = state
             if (view?.parent != null) {
-                val isNotLoading =
-                    state.mediator?.refresh is LoadState.NotLoading || state.source.refresh is LoadState.NotLoading
+                val isSearching = viewModel.state.value.filter.searchQuery.isNotBlank()
+                val isNotLoading = when {
+                    adapter.itemCount < 1 -> state.refresh is LoadState.NotLoading
+
+                    isSearching -> state.source.refresh is LoadState.NotLoading
+
+                    else -> state.mediator?.refresh !is LoadState.Loading
+                            || state.source.refresh is LoadState.NotLoading
+                }
+
                 binding.apply {
                     rvLibraryEntries.isVisible = isNotLoading
                     layoutLoading.apply {
                         root.isVisible = !isNotLoading
                         progressBar.isVisible = state.refresh is LoadState.Loading
-                        btnRetry.isVisible = state.refresh is LoadState.Error
-                        tvError.isVisible = state.refresh is LoadState.Error
+                        btnRetry.isVisible = state.mediator?.refresh is LoadState.Error
+                        tvError.isVisible = state.mediator?.refresh is LoadState.Error
+                    }
 
-                        if (state.refresh is LoadState.NotLoading
-                            && state.append.endOfPaginationReached
-                            && adapter.itemCount < 1
-                        ) {
-                            root.isVisible = true
-                            tvNoData.isVisible = true
-                            rvLibraryEntries.isVisible = false
-                        } else {
-                            tvNoData.isVisible = false
-                        }
+                    if (state.refresh is LoadState.NotLoading
+                        && state.append.endOfPaginationReached
+                        && adapter.itemCount < 1
+                    ) {
+                        layoutLoading.root.isVisible = true
+                        layoutLoading.tvNoData.isVisible = true
+                        rvLibraryEntries.isVisible = false
+                    } else {
+                        layoutLoading.tvNoData.isVisible = false
                     }
 
                     swipeRefreshLayout.isRefreshing =
@@ -306,11 +324,22 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         }
 
         binding.rvLibraryEntries.apply {
+            initPaddingWindowInsetsListener(bottom = true, consume = false)
             this.adapter = adapter.withLoadStateHeaderAndFooter(
                 header = ResourceLoadStateAdapter(adapter),
                 footer = ResourceLoadStateAdapter(adapter)
             )
-            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            layoutManager = ResponsiveGridLayoutManager(context, 350.toPx(), 1).apply {
+                spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int {
+                        return if (adapter.getItemViewType(position) == R.layout.item_library_entry) {
+                            1
+                        } else {
+                            spanCount
+                        }
+                    }
+                }
+            }
             // disable change animation to prevent "blinking"
             (itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
 
@@ -340,8 +369,9 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
             viewLifecycleOwner.lifecycleScope.launch {
                 shouldScrollToTop.collect { shouldScroll ->
-                    if (shouldScroll)
+                    if (shouldScroll) {
                         scrollToPosition(0)
+                    }
                 }
             }
         }
@@ -359,8 +389,10 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         viewModel.doRefreshListener = { adapter.refresh() }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.pagingDataFlow.collectLatest {
-                adapter.submitData(it)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.pagingDataFlow.collect {
+                    adapter.submitData(it)
+                }
             }
         }
 
@@ -376,7 +408,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
             if (!shouldScroll || isLoading) return@addOnPagesUpdatedListener
 
             val indexOfUpdatedEntry = adapter.snapshot()
-                .indexOfFirst { (it as? LibraryEntryWrapper)?.libraryEntry?.id == viewModel.scrollToUpdatedEntryId }
+                .indexOfFirst { (it as? LibraryEntryUiModel.EntryModel)?.entry?.id == viewModel.scrollToUpdatedEntryId }
 
             if (indexOfUpdatedEntry != -1) {
                 binding.rvLibraryEntries.scrollToPosition(indexOfUpdatedEntry)
@@ -385,7 +417,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         }
 
         viewModel.notSynchronizedLibraryEntryModifications.observe(viewLifecycleOwner) {
-            if (!viewModel.userRepository.hasUser)
+            if (!viewModel.hasUser())
                 return@observe
 
             viewModel.invalidatePagingSource()
@@ -403,20 +435,19 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         }
     }
 
-    override fun onItemClicked(view: View, item: LibraryEntryWrapper) {
-        val media = item.libraryEntry.anime ?: item.libraryEntry.manga
+    override fun onItemClicked(view: View, item: LibraryEntryWithModification) {
+        val media = item.libraryEntry.media
         if (media != null) {
-            val mediaAdapter = MediaAdapter.fromMedia(media)
             val detailsTransitionName = getString(R.string.details_poster_transition_name)
             val extras =
                 FragmentNavigatorExtras(view.findViewById<View>(R.id.iv_thumbnail) to detailsTransitionName)
             val action =
-                LibraryFragmentDirections.actionLibraryFragmentToDetailsFragment(mediaAdapter)
+                LibraryFragmentDirections.actionLibraryFragmentToDetailsFragment(media.toMediaDto())
             findNavController().navigateSafe(R.id.library_fragment, action, extras)
         }
     }
 
-    override fun onItemLongClicked(item: LibraryEntryWrapper) {
+    override fun onItemLongClicked(item: LibraryEntryWithModification) {
         val action =
             LibraryFragmentDirections.actionLibraryFragmentToLibraryEditEntryFragment(
                 item.libraryEntry.id ?: return,
@@ -425,21 +456,19 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         findNavController().navigateSafe(R.id.library_fragment, action)
     }
 
-    override fun onEpisodeWatchedClicked(item: LibraryEntryWrapper) {
+    override fun onEpisodeWatchedClicked(item: LibraryEntryWithModification) {
         viewModel.markEpisodeWatched(item)
     }
 
-    override fun onEpisodeUnwatchedClicked(item: LibraryEntryWrapper) {
+    override fun onEpisodeUnwatchedClicked(item: LibraryEntryWithModification) {
         viewModel.markEpisodeUnwatched(item)
     }
 
-    override fun onRatingClicked(item: LibraryEntryWrapper) {
+    override fun onRatingClicked(item: LibraryEntryWithModification) {
         viewModel.lastRatedLibraryEntry = item.libraryEntry
-        val mediaAdapter =
-            (item.libraryEntry.anime ?: item.libraryEntry.manga)?.let { MediaAdapter.fromMedia(it) }
 
         val action = LibraryFragmentDirections.actionLibraryFragmentToRatingBottomSheet(
-            title = mediaAdapter?.title ?: "",
+            title = item.media?.title ?: "",
             ratingTwenty = item.ratingTwenty ?: -1,
             ratingResultKey = RESULT_KEY_RATING,
             removeResultKey = RESULT_KEY_REMOVE_RATING,
@@ -501,7 +530,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     }
 
     override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
-        if (!viewModel.userRepository.hasUser)
+        if (!viewModel.hasUser())
             return
 
         inflater.inflate(R.menu.library_menu, menu)

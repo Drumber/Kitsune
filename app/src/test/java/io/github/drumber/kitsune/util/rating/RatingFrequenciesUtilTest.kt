@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.util.rating
 
-import io.github.drumber.kitsune.domain.model.common.media.RatingFrequencies
-import io.github.drumber.kitsune.domain.model.infrastructure.user.RatingSystemPreference
+import io.github.drumber.kitsune.data.common.media.RatingFrequencies
+import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
 import io.github.drumber.kitsune.util.rating.RatingFrequenciesUtil.calculateAverageRating
 import io.github.drumber.kitsune.util.rating.RatingFrequenciesUtil.transformToRatingSystem
 import org.assertj.core.api.Assertions.assertThat
@@ -14,9 +14,9 @@ class RatingFrequenciesUtilTest {
         // given
         val ratings = ratingFrequencies(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
         val parameters = mapOf(
-            RatingSystemPreference.Simple to listOf(27, 63, 99, 20),
-            RatingSystemPreference.Regular to listOf(5, 9, 13, 17, 21, 25, 29, 33, 37, 20),
-            RatingSystemPreference.Advanced to listOf(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+            LocalRatingSystemPreference.Simple to listOf(27, 63, 99, 20),
+            LocalRatingSystemPreference.Regular to listOf(5, 9, 13, 17, 21, 25, 29, 33, 37, 20),
+            LocalRatingSystemPreference.Advanced to listOf(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
         )
 
         parameters.forEach { (ratingSystem, expectedOutput) ->
@@ -35,17 +35,17 @@ class RatingFrequenciesUtilTest {
             TestScenario(
                 input = ratingFrequencies(10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10),
                 expectedOutput = mapOf(
-                    RatingSystemPreference.Simple to 2.5,
-                    RatingSystemPreference.Regular to 2.75,
-                    RatingSystemPreference.Advanced to 5.5
+                    LocalRatingSystemPreference.Simple to 2.5,
+                    LocalRatingSystemPreference.Regular to 2.75,
+                    LocalRatingSystemPreference.Advanced to 5.5
                 )
             ),
             TestScenario(
                 input = ratingFrequencies(1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 3, 1, 4, 1, 0, 0, 0, 1, 1),
                 expectedOutput = mapOf(
-                    RatingSystemPreference.Simple to 2.3125,
-                    RatingSystemPreference.Regular to 2.9375,
-                    RatingSystemPreference.Advanced to 6.0
+                    LocalRatingSystemPreference.Simple to 2.3125,
+                    LocalRatingSystemPreference.Regular to 2.9375,
+                    LocalRatingSystemPreference.Advanced to 6.0
                 )
             )
         )

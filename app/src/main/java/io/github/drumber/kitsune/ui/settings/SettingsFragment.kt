@@ -21,15 +21,16 @@ import io.github.drumber.kitsune.AppLocales
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.data.presentation.model.appupdate.UpdateCheckResult
+import io.github.drumber.kitsune.data.repository.AppUpdateRepository
+import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
+import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference
+import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
+import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
-import io.github.drumber.kitsune.domain.manager.GitHubUpdateChecker
-import io.github.drumber.kitsune.domain.model.infrastructure.user.RatingSystemPreference
-import io.github.drumber.kitsune.domain.model.infrastructure.user.SfwFilterPreference
-import io.github.drumber.kitsune.domain.model.infrastructure.user.TitleLanguagePreference
-import io.github.drumber.kitsune.domain.model.infrastructure.user.User
-import io.github.drumber.kitsune.domain.model.preference.StartPagePref
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.preference.StartPagePref
 import io.github.drumber.kitsune.ui.base.BasePreferenceFragment
 import io.github.drumber.kitsune.ui.permissions.isNotificationPermissionGranted
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
@@ -44,7 +45,7 @@ class SettingsFragment : BasePreferenceFragment() {
 
     private val viewModel: SettingsViewModel by viewModel()
 
-    private val updateChecker: GitHubUpdateChecker by inject()
+    private val appUpdateRepository: AppUpdateRepository by inject()
 
     // this result listener will be called on requesting notification permission after the
     // 'check for updates on launch' permission was changed and notification permission is not granted
@@ -192,8 +193,8 @@ class SettingsFragment : BasePreferenceFragment() {
         ).show()
 
         lifecycleScope.launch {
-            when (val result = updateChecker.checkForUpdates()) {
-                is GitHubUpdateChecker.UpdateCheckerResult.NewVersion -> {
+            when (val result = appUpdateRepository.checkForUpdates()) {
+                is UpdateCheckResult.NewVersion -> {
                     val release = result.release
                     Notifications.showNewVersion(requireContext(), release)
 
@@ -209,7 +210,7 @@ class SettingsFragment : BasePreferenceFragment() {
                         .show()
                 }
 
-                is GitHubUpdateChecker.UpdateCheckerResult.NoNewVersion -> {
+                is UpdateCheckResult.NoNewVersion -> {
                     Toast.makeText(
                         requireContext(),
                         R.string.info_update_no_new_version_available,
@@ -217,7 +218,7 @@ class SettingsFragment : BasePreferenceFragment() {
                     ).show()
                 }
 
-                is GitHubUpdateChecker.UpdateCheckerResult.Failed -> {
+                is UpdateCheckResult.Error -> {
                     Toast.makeText(
                         requireContext(),
                         R.string.info_update_failed,
@@ -232,11 +233,11 @@ class SettingsFragment : BasePreferenceFragment() {
         viewModel.userModel.observe(this) { user ->
             //---- Title Language Preference
             findPreference<ListPreference>(R.string.preference_key_titles)?.apply {
-                entryValues = TitleLanguagePreference.entries.map { it.name }.toTypedArray()
+                entryValues = LocalTitleLanguagePreference.entries.map { it.name }.toTypedArray()
                 setDefaultValue(KitsunePref.titles.name)
                 value = KitsunePref.titles.name
                 setOnPreferenceChangeListener { _, newValue ->
-                    val titlesPref = TitleLanguagePreference.valueOf(newValue.toString())
+                    val titlesPref = LocalTitleLanguagePreference.valueOf(newValue.toString())
                     KitsunePref.titles = titlesPref
 
                     // Title preference can be also changed without being logged in.
@@ -245,7 +246,9 @@ class SettingsFragment : BasePreferenceFragment() {
                         updateUserIfChanged(
                             value,
                             newValue,
-                            User(user.id, titleLanguagePreference = titlesPref)
+                            LocalUser.empty(user.id).copy(
+                                titleLanguagePreference = titlesPref
+                            )
                         )
                     }
                     true
@@ -263,7 +266,7 @@ class SettingsFragment : BasePreferenceFragment() {
                     updateUserIfChanged(
                         value,
                         newValue,
-                        User(user.id, country = newValue as String)
+                        LocalUser.empty(user.id).copy(country = newValue as String)
                     )
                     true
                 }
@@ -280,27 +283,26 @@ class SettingsFragment : BasePreferenceFragment() {
             //---- Adult Content
             findPreference<ListPreference>(R.string.preference_key_sfw_filter)?.apply {
                 value = user?.sfwFilterPreference?.name
-                entryValues = SfwFilterPreference.entries.map { it.name }.toTypedArray()
+                entryValues = LocalSfwFilterPreference.entries.map { it.name }.toTypedArray()
                 setOnPreferenceChangeListener { _, newValue ->
                     if (user == null) return@setOnPreferenceChangeListener false
                     updateUserIfChanged(
                         value,
                         newValue,
-                        User(
-                            user.id,
-                            sfwFilterPreference = SfwFilterPreference.valueOf(newValue as String)
+                        LocalUser.empty(user.id).copy(
+                            sfwFilterPreference = LocalSfwFilterPreference.valueOf(newValue as String)
                         )
                     )
                     true
                 }
                 requireUserLoggedIn(user) {
                     val filterPreference =
-                        it.value?.let { filter -> SfwFilterPreference.valueOf(filter) }
+                        it.value?.let { filter -> LocalSfwFilterPreference.valueOf(filter) }
                     getString(
                         when (filterPreference) {
-                            SfwFilterPreference.SFW -> R.string.preference_adult_content_description_sfw
-                            SfwFilterPreference.NSFW_SOMETIMES -> R.string.preference_adult_content_description_sometimes
-                            SfwFilterPreference.NSFW_EVERYWHERE -> R.string.preference_adult_content_description_everywhere
+                            LocalSfwFilterPreference.SFW -> R.string.preference_adult_content_description_sfw
+                            LocalSfwFilterPreference.NSFW_SOMETIMES -> R.string.preference_adult_content_description_sometimes
+                            LocalSfwFilterPreference.NSFW_EVERYWHERE -> R.string.preference_adult_content_description_everywhere
                             else -> R.string.no_information
                         }
                     )
@@ -310,16 +312,15 @@ class SettingsFragment : BasePreferenceFragment() {
             //---- Rating System
             findPreference<ListPreference>(R.string.preference_key_rating_system)?.apply {
                 entryValues =
-                    RatingSystemPreference.entries.reversed().map { it.name }.toTypedArray()
+                    LocalRatingSystemPreference.entries.reversed().map { it.name }.toTypedArray()
                 value = user?.ratingSystem?.name
                 setOnPreferenceChangeListener { _, newValue ->
                     if (user == null) return@setOnPreferenceChangeListener false
                     updateUserIfChanged(
                         value,
                         newValue,
-                        User(
-                            user.id,
-                            ratingSystem = RatingSystemPreference.valueOf(newValue as String)
+                        LocalUser.empty(user.id).copy(
+                            ratingSystem = LocalRatingSystemPreference.valueOf(newValue as String)
                         )
                     )
                     true
@@ -332,7 +333,7 @@ class SettingsFragment : BasePreferenceFragment() {
                 text = user?.name
                 setOnPreferenceChangeListener { _, newValue ->
                     if (user == null) return@setOnPreferenceChangeListener false
-                    updateUserIfChanged(text, newValue, User(user.id, name = newValue as String))
+                    updateUserIfChanged(text, newValue, LocalUser.empty(user.id).copy(name = newValue as String))
                     true
                 }
                 requireUserLoggedIn(user) { it.text }
@@ -343,7 +344,7 @@ class SettingsFragment : BasePreferenceFragment() {
                 text = user?.slug
                 setOnPreferenceChangeListener { _, newValue ->
                     if (user == null) return@setOnPreferenceChangeListener false
-                    updateUserIfChanged(text, newValue, User(user.id, slug = newValue as String))
+                    updateUserIfChanged(text, newValue, LocalUser.empty(user.id).copy(slug = newValue as String))
                     true
                 }
                 requireUserLoggedIn(user) {
@@ -356,14 +357,14 @@ class SettingsFragment : BasePreferenceFragment() {
         }
     }
 
-    private fun updateUserIfChanged(oldValue: Any?, newValue: Any?, user: User) {
+    private fun updateUserIfChanged(oldValue: Any?, newValue: Any?, user: LocalUser) {
         if (oldValue != newValue) {
             viewModel.updateUser(user)
         }
     }
 
     private inline fun <reified T : Preference> T.requireUserLoggedIn(
-        user: User?,
+        user: LocalUser?,
         @StringRes messageRes: Int = R.string.preference_not_logged_in,
         summaryProvider: Preference.SummaryProvider<T>? = null
     ) {

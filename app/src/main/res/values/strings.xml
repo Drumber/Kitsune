@@ -2,7 +2,6 @@
 <resources>
     <string name="app_name" translatable="false">Kitsune</string>
     <string name="github_repo_url" translatable="false">https://github.com/Drumber/Kitsune</string>
-    <!-- Navigation Titles -->
     <string name="nav_home">Home</string>
     <string name="nav_search">Search</string>
     <string name="nav_library">Library</string>
@@ -359,6 +358,11 @@
     <string name="profile_avatar_image_description">Profile picture</string>
     <string name="profile_link_url">URL or Username</string>
     <string name="notification_updates">Application Updates</string>
+
+    <string name="widget_description">Library progress</string>
+    <string name="widget_empty_text">There is no active tracked item in your library</string>
+    <string name="widget_empty_action">Open Library</string>
+
     <string name="unit_episode">Episode %d</string>
     <string name="unit_chapter">Chapter %d</string>
     <!-- Unit Plurals -->

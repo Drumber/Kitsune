@@ -1,0 +1,656 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 3,
+    "identityHash": "7979a798f0004298608e29c0014d940d",
+    "entities": [
+      {
+        "tableName": "library_entries",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `updatedAt` TEXT, `startedAt` TEXT, `finishedAt` TEXT, `progressedAt` TEXT, `status` INTEGER, `progress` INTEGER, `reconsuming` INTEGER, `reconsumeCount` INTEGER, `volumesOwned` INTEGER, `ratingTwenty` INTEGER, `notes` TEXT, `privateEntry` INTEGER, `reactionSkipped` TEXT, `media_id` TEXT, `media_type` TEXT, `media_description` TEXT, `media_titles` TEXT, `media_canonicalTitle` TEXT, `media_abbreviatedTitles` TEXT, `media_averageRating` TEXT, `media_popularityRank` INTEGER, `media_ratingRank` INTEGER, `media_startDate` TEXT, `media_endDate` TEXT, `media_nextRelease` TEXT, `media_tba` TEXT, `media_status` TEXT, `media_ageRating` TEXT, `media_ageRatingGuide` TEXT, `media_nsfw` INTEGER, `media_animeSubtype` TEXT, `media_totalLength` INTEGER, `media_episodeCount` INTEGER, `media_episodeLength` INTEGER, `media_mangaSubtype` TEXT, `media_chapterCount` INTEGER, `media_volumeCount` INTEGER, `media_serialization` TEXT, `media_rating_r2` TEXT, `media_rating_r3` TEXT, `media_rating_r4` TEXT, `media_rating_r5` TEXT, `media_rating_r6` TEXT, `media_rating_r7` TEXT, `media_rating_r8` TEXT, `media_rating_r9` TEXT, `media_rating_r10` TEXT, `media_rating_r11` TEXT, `media_rating_r12` TEXT, `media_rating_r13` TEXT, `media_rating_r14` TEXT, `media_rating_r15` TEXT, `media_rating_r16` TEXT, `media_rating_r17` TEXT, `media_rating_r18` TEXT, `media_rating_r19` TEXT, `media_rating_r20` TEXT, `media_poster_tiny` TEXT, `media_poster_small` TEXT, `media_poster_medium` TEXT, `media_poster_large` TEXT, `media_poster_original` TEXT, `media_poster_meta_tiny_width` INTEGER, `media_poster_meta_tiny_height` INTEGER, `media_poster_meta_small_width` INTEGER, `media_poster_meta_small_height` INTEGER, `media_poster_meta_medium_width` INTEGER, `media_poster_meta_medium_height` INTEGER, `media_poster_meta_large_width` INTEGER, `media_poster_meta_large_height` INTEGER, `media_cover_tiny` TEXT, `media_cover_small` TEXT, `media_cover_medium` TEXT, `media_cover_large` TEXT, `media_cover_original` TEXT, `media_cover_meta_tiny_width` INTEGER, `media_cover_meta_tiny_height` INTEGER, `media_cover_meta_small_width` INTEGER, `media_cover_meta_small_height` INTEGER, `media_cover_meta_medium_width` INTEGER, `media_cover_meta_medium_height` INTEGER, `media_cover_meta_large_width` INTEGER, `media_cover_meta_large_height` INTEGER, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "startedAt",
+            "columnName": "startedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "finishedAt",
+            "columnName": "finishedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "progressedAt",
+            "columnName": "progressedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "progress",
+            "columnName": "progress",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reconsuming",
+            "columnName": "reconsuming",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reconsumeCount",
+            "columnName": "reconsumeCount",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "volumesOwned",
+            "columnName": "volumesOwned",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ratingTwenty",
+            "columnName": "ratingTwenty",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "privateEntry",
+            "columnName": "privateEntry",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reactionSkipped",
+            "columnName": "reactionSkipped",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.id",
+            "columnName": "media_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.type",
+            "columnName": "media_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.description",
+            "columnName": "media_description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.titles",
+            "columnName": "media_titles",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.canonicalTitle",
+            "columnName": "media_canonicalTitle",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.abbreviatedTitles",
+            "columnName": "media_abbreviatedTitles",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.averageRating",
+            "columnName": "media_averageRating",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.popularityRank",
+            "columnName": "media_popularityRank",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingRank",
+            "columnName": "media_ratingRank",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.startDate",
+            "columnName": "media_startDate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.endDate",
+            "columnName": "media_endDate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.nextRelease",
+            "columnName": "media_nextRelease",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.tba",
+            "columnName": "media_tba",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.status",
+            "columnName": "media_status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ageRating",
+            "columnName": "media_ageRating",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ageRatingGuide",
+            "columnName": "media_ageRatingGuide",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.nsfw",
+            "columnName": "media_nsfw",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.animeSubtype",
+            "columnName": "media_animeSubtype",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.totalLength",
+            "columnName": "media_totalLength",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.episodeCount",
+            "columnName": "media_episodeCount",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.episodeLength",
+            "columnName": "media_episodeLength",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.mangaSubtype",
+            "columnName": "media_mangaSubtype",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.chapterCount",
+            "columnName": "media_chapterCount",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.volumeCount",
+            "columnName": "media_volumeCount",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.serialization",
+            "columnName": "media_serialization",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r2",
+            "columnName": "media_rating_r2",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r3",
+            "columnName": "media_rating_r3",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r4",
+            "columnName": "media_rating_r4",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r5",
+            "columnName": "media_rating_r5",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r6",
+            "columnName": "media_rating_r6",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r7",
+            "columnName": "media_rating_r7",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r8",
+            "columnName": "media_rating_r8",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r9",
+            "columnName": "media_rating_r9",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r10",
+            "columnName": "media_rating_r10",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r11",
+            "columnName": "media_rating_r11",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r12",
+            "columnName": "media_rating_r12",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r13",
+            "columnName": "media_rating_r13",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r14",
+            "columnName": "media_rating_r14",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r15",
+            "columnName": "media_rating_r15",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r16",
+            "columnName": "media_rating_r16",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r17",
+            "columnName": "media_rating_r17",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r18",
+            "columnName": "media_rating_r18",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r19",
+            "columnName": "media_rating_r19",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.ratingFrequencies.r20",
+            "columnName": "media_rating_r20",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.posterImage.tiny",
+            "columnName": "media_poster_tiny",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.posterImage.small",
+            "columnName": "media_poster_small",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.posterImage.medium",
+            "columnName": "media_poster_medium",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.posterImage.large",
+            "columnName": "media_poster_large",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.posterImage.original",
+            "columnName": "media_poster_original",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.posterImage.meta.dimensions.tiny.width",
+            "columnName": "media_poster_meta_tiny_width",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.posterImage.meta.dimensions.tiny.height",
+            "columnName": "media_poster_meta_tiny_height",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.posterImage.meta.dimensions.small.width",
+            "columnName": "media_poster_meta_small_width",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.posterImage.meta.dimensions.small.height",
+            "columnName": "media_poster_meta_small_height",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.posterImage.meta.dimensions.medium.width",
+            "columnName": "media_poster_meta_medium_width",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.posterImage.meta.dimensions.medium.height",
+            "columnName": "media_poster_meta_medium_height",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.posterImage.meta.dimensions.large.width",
+            "columnName": "media_poster_meta_large_width",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.posterImage.meta.dimensions.large.height",
+            "columnName": "media_poster_meta_large_height",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.coverImage.tiny",
+            "columnName": "media_cover_tiny",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.coverImage.small",
+            "columnName": "media_cover_small",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.coverImage.medium",
+            "columnName": "media_cover_medium",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.coverImage.large",
+            "columnName": "media_cover_large",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.coverImage.original",
+            "columnName": "media_cover_original",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.coverImage.meta.dimensions.tiny.width",
+            "columnName": "media_cover_meta_tiny_width",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.coverImage.meta.dimensions.tiny.height",
+            "columnName": "media_cover_meta_tiny_height",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.coverImage.meta.dimensions.small.width",
+            "columnName": "media_cover_meta_small_width",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.coverImage.meta.dimensions.small.height",
+            "columnName": "media_cover_meta_small_height",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.coverImage.meta.dimensions.medium.width",
+            "columnName": "media_cover_meta_medium_width",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.coverImage.meta.dimensions.medium.height",
+            "columnName": "media_cover_meta_medium_height",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.coverImage.meta.dimensions.large.width",
+            "columnName": "media_cover_meta_large_width",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "media.coverImage.meta.dimensions.large.height",
+            "columnName": "media_cover_meta_large_height",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "library_entries_modifications",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `createTime` INTEGER NOT NULL, `state` TEXT NOT NULL, `startedAt` TEXT, `finishedAt` TEXT, `status` INTEGER, `progress` INTEGER, `reconsumeCount` INTEGER, `volumesOwned` INTEGER, `ratingTwenty` INTEGER, `notes` TEXT, `privateEntry` INTEGER, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createTime",
+            "columnName": "createTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "state",
+            "columnName": "state",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startedAt",
+            "columnName": "startedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "finishedAt",
+            "columnName": "finishedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "progress",
+            "columnName": "progress",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reconsumeCount",
+            "columnName": "reconsumeCount",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "volumesOwned",
+            "columnName": "volumesOwned",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ratingTwenty",
+            "columnName": "ratingTwenty",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "privateEntry",
+            "columnName": "privateEntry",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "remote_keys",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`resourceId` TEXT NOT NULL COLLATE NOCASE, `remoteKeyType` TEXT NOT NULL, `prevPageKey` INTEGER, `nextPageKey` INTEGER, PRIMARY KEY(`resourceId`))",
+        "fields": [
+          {
+            "fieldPath": "resourceId",
+            "columnName": "resourceId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "remoteKeyType",
+            "columnName": "remoteKeyType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "prevPageKey",
+            "columnName": "prevPageKey",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nextPageKey",
+            "columnName": "nextPageKey",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "resourceId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7979a798f0004298608e29c0014d940d')"
+    ]
+  }
+}

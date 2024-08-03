@@ -5,24 +5,24 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.domain.model.infrastructure.user.User
-import io.github.drumber.kitsune.domain.repository.UserRepository
-import io.github.drumber.kitsune.domain.service.user.UserService
-import io.github.drumber.kitsune.exception.ReceivedDataException
+import io.github.drumber.kitsune.data.common.exception.NoDataException
+import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
+import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     private val userRepository: UserRepository,
-    private val userService: UserService
+    isUserLoggedIn: IsUserLoggedInUseCase
 ) : ViewModel() {
 
-    val userModel = userRepository.userLiveData.map { it }
+    val userModel = userRepository.localUser.asLiveData().map { it }
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean>
@@ -31,28 +31,29 @@ class SettingsViewModel(
     var errorMessageListener: ((ErrorMessage) -> Unit)? = null
 
     init {
-        // make sure cached user data is up-to-date
-        viewModelScope.launch(Dispatchers.IO) {
-            userRepository.updateUserCache()
+        if (isUserLoggedIn()) {
+            // make sure cached user data is up-to-date
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    userRepository.fetchAndStoreLocalUserFromNetwork()
+                } catch (e: Exception) {
+                    logE("Failed to update local user model from network.", e)
+                }
+            }
         }
     }
 
-    fun updateUser(user: User) {
-        if (user.id.isNullOrBlank()) {
-            errorMessageListener?.invoke(ErrorMessage(R.string.error_invalid_user))
-            return
-        }
+    fun updateUser(user: LocalUser) {
         _isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = userService.updateUser(user.id, JSONAPIDocument(user))
-                response.get()?.let { updatedUser ->
-                    userRepository.updateUserModel(updatedUser)
-                } ?: throw ReceivedDataException("Received user data is null.")
+                userRepository.updateUser(user.id, user)
+                    ?: throw NoDataException("Received user data is null.")
+                userRepository.fetchAndStoreLocalUserFromNetwork()
             } catch (e: Exception) {
                 logE("Failed to update user settings.", e)
                 errorMessageListener?.invoke(ErrorMessage(R.string.error_user_update_failed))
-                // trigger to reset preference values from the user model
+                // workaround to trigger an update to reset preference values from the user model
                 (userModel as MutableLiveData).postValue(userModel.value)
             } finally {
                 _isLoading.postValue(false)

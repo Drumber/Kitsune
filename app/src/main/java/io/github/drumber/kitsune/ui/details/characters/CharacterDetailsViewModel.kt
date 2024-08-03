@@ -2,15 +2,13 @@ package io.github.drumber.kitsune.ui.details.characters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.constants.Defaults
-import io.github.drumber.kitsune.domain.model.infrastructure.character.Character
-import io.github.drumber.kitsune.domain.model.infrastructure.user.Favorite
-import io.github.drumber.kitsune.domain.model.infrastructure.user.User
-import io.github.drumber.kitsune.domain.repository.UserRepository
-import io.github.drumber.kitsune.domain.service.Filter
-import io.github.drumber.kitsune.domain.service.character.CharacterService
-import io.github.drumber.kitsune.domain.service.user.FavoriteService
+import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.presentation.model.character.Character
+import io.github.drumber.kitsune.data.presentation.model.user.Favorite
+import io.github.drumber.kitsune.data.repository.CharacterRepository
+import io.github.drumber.kitsune.data.repository.FavoriteRepository
+import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -21,9 +19,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class CharacterDetailsViewModel(
-    private val service: CharacterService,
-    private val userRepository: UserRepository,
-    private val favoriteService: FavoriteService
+    private val characterRepository: CharacterRepository,
+    private val getLocalUserId: GetLocalUserIdUseCase,
+    private val favoriteRepository: FavoriteRepository
 ) : ViewModel() {
 
     private val _characterFlow = MutableSharedFlow<Character>(
@@ -51,14 +49,14 @@ class CharacterDetailsViewModel(
             _characterFlow.emit(character)
 
             launch(Dispatchers.IO) fetchFavorite@{
-                val characterId = character.id ?: return@fetchFavorite
+                val characterId = character.id
                 val favorite = fetchFavorite(characterId)
                 _favoriteFlow.emit(favorite)
             }
 
             launch(Dispatchers.IO) fetchFullCharacter@{
                 // fetch full character model
-                val characterId = character.id ?: return@fetchFullCharacter
+                val characterId = character.id
                 _uiState.emit(UiState(isLoadingMediaCharacters = true))
                 val fullCharacter = try {
                     fetchCharacterData(characterId)
@@ -79,7 +77,7 @@ class CharacterDetailsViewModel(
             .fields("media", *Defaults.MINIMUM_COLLECTION_FIELDS)
 
         return try {
-            service.getCharacter(id, filter.options).get()
+            characterRepository.getCharacter(id, filter)
         } catch (e: Exception) {
             logE("Failed to fetch character data.", e)
             null
@@ -87,7 +85,7 @@ class CharacterDetailsViewModel(
     }
 
     private suspend fun fetchFavorite(characterId: String): Favorite? {
-        val userId = userRepository.user?.id ?: return null
+        val userId = getLocalUserId() ?: return null
 
         val filter = Filter()
             .filter("user_id", userId)
@@ -95,7 +93,7 @@ class CharacterDetailsViewModel(
             .filter("item_type", "Character")
 
         return try {
-            favoriteService.allFavorites(filter.options).get()?.firstOrNull()
+            favoriteRepository.getAllFavorites(filter)?.firstOrNull()
         } catch (e: Exception) {
             logE("Failed to fetch favorites.", e)
             null
@@ -104,7 +102,7 @@ class CharacterDetailsViewModel(
 
     fun toggleFavorite(): Boolean {
         val characterId = characterFlow.replayCache.firstOrNull()?.id ?: return false
-        val userId = userRepository.user?.id ?: return false
+        val userId = getLocalUserId() ?: return false
         val favorite = favoriteFlow.replayCache.firstOrNull()
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -114,22 +112,17 @@ class CharacterDetailsViewModel(
                 _favoriteFlow.emit(addedFavorite)
             } else {
                 val favoriteId = favorite.id
-                    ?: return@launch _favoriteFlow.emit(favorite)
                 if (removeFromFavorites(favoriteId)) {
                     _favoriteFlow.emit(null)
                 }
             }
-
-            // trigger user model update to show updated favorites on the profile fragment
-            userRepository.user?.let { userRepository.updateUserModel(it) }
         }
         return favorite == null
     }
 
     private suspend fun addToFavorites(userId: String, characterId: String): Favorite? {
-        val newFavorite = Favorite(item = Character(id = characterId), user = User(id = userId))
         return try {
-            favoriteService.postFavorite(JSONAPIDocument(newFavorite)).get()
+            favoriteRepository.createCharacterFavorite(userId, characterId)
         } catch (e: Exception) {
             logE("Failed to post favorite.", e)
             null
@@ -138,8 +131,7 @@ class CharacterDetailsViewModel(
 
     private suspend fun removeFromFavorites(favoriteId: String): Boolean {
         return try {
-            val response = favoriteService.deleteFavorite(favoriteId)
-            response.isSuccessful
+            favoriteRepository.deleteFavorite(favoriteId)
         } catch (e: Exception) {
             logE("Failed to delete favorite.", e)
             false

@@ -5,21 +5,19 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.RequestManager
+import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
-import io.github.drumber.kitsune.domain.mapper.toMedia
-import io.github.drumber.kitsune.domain.model.infrastructure.algolia.search.MediaSearchResult
-import io.github.drumber.kitsune.domain.model.ui.media.MediaAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder
-import io.github.drumber.kitsune.ui.adapter.MediaViewHolder.TagData
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 
 class MediaSearchPagingAdapter(
     private val glide: RequestManager,
-    private val listener: OnItemClickListener<MediaSearchResult>? = null
-) : PagingDataAdapter<MediaSearchResult, MediaViewHolder>(MediaSearchComparator) {
+    private val listener: OnItemClickListener<Media>? = null
+) : PagingDataAdapter<Media, MediaViewHolder>(MediaSearchComparator) {
 
     override fun onBindViewHolder(holder: MediaViewHolder, position: Int) {
-        getItem(position)?.let { holder.bind(MediaAdapter.fromMedia(it.toMedia())) }
+        if (position >= itemCount) return
+        getItem(position)?.let { holder.bind(it) }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaViewHolder {
@@ -29,18 +27,17 @@ class MediaSearchPagingAdapter(
         return MediaViewHolder(
             binding,
             glide,
-            TagData.Subtype
-        ) { position ->
+            showSubtype = true
+        ) { _, position ->
             getItem(position)?.let { item -> listener?.onItemClick(binding.cardMedia, item) }
         }
     }
 
-    object MediaSearchComparator : DiffUtil.ItemCallback<MediaSearchResult>() {
-        override fun areItemsTheSame(oldItem: MediaSearchResult, newItem: MediaSearchResult) =
-            oldItem.id == newItem.id
+    object MediaSearchComparator : DiffUtil.ItemCallback<Media>() {
+        override fun areItemsTheSame(oldItem: Media, newItem: Media) =
+            oldItem.mediaType == newItem.mediaType && oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: MediaSearchResult, newItem: MediaSearchResult) =
+        override fun areContentsTheSame(oldItem: Media, newItem: Media) =
             oldItem == newItem
     }
-
 }

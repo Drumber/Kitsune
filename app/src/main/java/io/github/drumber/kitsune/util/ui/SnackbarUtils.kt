@@ -4,7 +4,10 @@ import android.view.View
 import androidx.annotation.StringRes
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.domain.manager.library.SynchronizationResult
+import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.NotFound
+import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult
+import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Failure
+import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Success
 
 fun showSnackbar(
     parent: View,
@@ -26,17 +29,19 @@ fun showSnackbar(
     return showSnackbar(parent, parent.resources.getText(stringRes), duration)
 }
 
-fun SynchronizationResult.showSnackbarOnFailure(parent: View): Snackbar? {
+fun LibraryEntryUpdateResult.showSnackbarOnFailure(parent: View): Snackbar? {
     val stringRes = when (this) {
-        is SynchronizationResult.Success -> return null
-        is SynchronizationResult.Failed -> R.string.error_library_update_failed
-        is SynchronizationResult.NotFound -> R.string.error_library_update_not_found
+        is Success -> return null
+        is Failure -> when (reason) {
+            NotFound -> R.string.error_library_update_not_found
+            else -> R.string.error_library_update_failed
+        }
     }
     return showSnackbar(parent, stringRes)
 }
 
-fun List<SynchronizationResult>.showSnackbarOnAnyFailure(parent: View): Snackbar? {
-    val failedCount = count { it !is SynchronizationResult.Success }
+fun List<LibraryEntryUpdateResult>.showSnackbarOnAnyFailure(parent: View): Snackbar? {
+    val failedCount = count { it !is Success }
     if (failedCount == 0) return null
     val stringRes = when (failedCount) {
         1 -> R.string.error_library_update_failed

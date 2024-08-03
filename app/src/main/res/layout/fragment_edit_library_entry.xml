@@ -158,7 +158,7 @@
                         android:ellipsize="end"
                         android:text="@string/library_edit_progress" />
 
-                    <io.github.drumber.kitsune.ui.widget.CustomNumberSpinner
+                    <io.github.drumber.kitsune.ui.component.CustomNumberSpinner
                         android:id="@+id/spinner_progress"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -185,7 +185,7 @@
                         android:ellipsize="end"
                         android:text="@string/library_edit_volumes"/>
 
-                    <io.github.drumber.kitsune.ui.widget.CustomNumberSpinner
+                    <io.github.drumber.kitsune.ui.component.CustomNumberSpinner
                         android:id="@+id/spinner_volumes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -212,7 +212,7 @@
                         android:layout_marginEnd="8dp"
                         android:text="@string/library_edit_rewatch_count" />
 
-                    <io.github.drumber.kitsune.ui.widget.CustomNumberSpinner
+                    <io.github.drumber.kitsune.ui.component.CustomNumberSpinner
                         android:id="@+id/spinner_reconsume"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
