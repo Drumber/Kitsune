@@ -99,7 +99,6 @@ class LibraryEntriesAdapter(
             }
 
             glide.load(libraryEntry.media?.posterImageUrl)
-                .centerCrop()
                 .placeholder(R.drawable.ic_insert_photo_48)
                 .into(binding.ivThumbnail)
 

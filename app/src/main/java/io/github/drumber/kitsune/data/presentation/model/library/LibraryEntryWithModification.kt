@@ -41,7 +41,12 @@ data class LibraryEntryWithModification(
         get() = modification?.ratingTwenty ?: libraryEntry.ratingTwenty
 
     val ratingFormatted: String?
-        get() = ratingTwenty?.formatRatingTwenty()
+        get() = ratingTwenty?.let {
+            when {
+                it == -1 -> null
+                else -> it.formatRatingTwenty()
+            }
+        }
 
     val hasRating: Boolean
         get() = ratingTwenty != null
