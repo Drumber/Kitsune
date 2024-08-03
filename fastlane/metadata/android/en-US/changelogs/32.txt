@@ -3,3 +3,6 @@
 * Display library with multiple columns on large screens
 * Enabled APK minification to reduce the app size
 * Bug fixes
+* Updated French translations by @IsAy15
+* Added Spanish translations by @Kiimby (21% translated)
+* Added Portuguese translations by @AsmodeumX (4% translated)
