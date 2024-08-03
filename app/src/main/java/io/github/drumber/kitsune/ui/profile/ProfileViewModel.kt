@@ -44,7 +44,7 @@ class ProfileViewModel(
             }
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
+            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 60000L),
             initialValue = userRepository.localUser.value?.toUser()
         )
 
