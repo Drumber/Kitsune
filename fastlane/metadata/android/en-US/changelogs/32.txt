@@ -1,0 +1,5 @@
+* Major code refactoring to increase the maintainability and expandability of the app
+* Added home screen widget
+* Display library with multiple columns on large screens
+* Enabled APK minification to reduce the app size
+* Bug fixes
