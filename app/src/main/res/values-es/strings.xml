@@ -58,4 +58,14 @@
     <string name="action_select_profile_link_site">Seleccionar enlace</string>
     <string name="action_edit_profile_link">Editar enlace de perfil</string>
     <string name="hint_mark_not_watched">Marcar como no visto.</string>
+    <string name="dialog_notification_permission_rejected_title">Permiso rechazado</string>
+    <string name="dialog_notification_permission_rejected">No recibirás notificaciones ni se te informará sobre las actualizaciones de la aplicación.</string>
+    <string name="dialog_request_notification_permission_title">Permitir notificaciones</string>
+    <string name="dialog_request_notification_permission">Permitir notificaciones push para recibir notificaciones cuando se lanza una nueva versión de la aplicación.</string>
+    <string name="error_resource_loading">No se pudieron cargar los datos.</string>
+    <string name="error_image_loading">No se pudo cargar la imagen.</string>
+    <string name="error_mapping_loading">No se pudieron cargar las asignaciones para sitios externos.</string>
+    <string name="error_nothing_found">Sin resultados.</string>
+    <string name="error_invalid_user">Usuario no válido. ¿Has iniciado sesión?</string>
+    <string name="error_user_update_failed">No se pudieron actualizar los datos del usuario.</string>
 </resources>
