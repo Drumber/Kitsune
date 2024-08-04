@@ -18,11 +18,7 @@ jobs:
       - name: Install build-tools 34.0.0
         run: echo y | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --install "build-tools;34.0.0" "platforms;android-34"
       - name: Uninstall build-tools 35.0.0
-        run: echo y | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --uninstall "build-tools;35.0.0"
-      - name: List installed build-tools
-        run: /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --list_installed
-      - name: List android SDK files
-        run: ls -Rl /usr/local/lib/android
+        run: echo y | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --uninstall "build-tools;35.0.0" "platforms;android-35"
       - name: Build release with Gradle
         uses: gradle/gradle-build-action@v2
         with:
