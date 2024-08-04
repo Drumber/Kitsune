@@ -45,6 +45,7 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("debug")
+            vcsInfo.include = false
         }
 
         getByName("debug") {
