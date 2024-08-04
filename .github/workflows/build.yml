@@ -15,6 +15,10 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+      - name: Install build-tools 34.0.0
+        run: echo y | sdkmanager --install "build-tools;34.0.0" "platforms;34.0.0
+      - name: Uninstall build-tools 35.0.0
+        run: echo y | sdkmanager --uninstall "build-tools;35.0.0"
       - name: Build release with Gradle
         uses: gradle/gradle-build-action@v2
         with:
