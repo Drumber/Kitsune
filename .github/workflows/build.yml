@@ -16,7 +16,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Install build-tools 34.0.0
-        run: echo y | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --install "build-tools;34.0.0" "platforms;34.0.0"
+        run: echo y | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --install "build-tools;34.0.0" "platforms;android-34"
       - name: Uninstall build-tools 35.0.0
         run: echo y | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --uninstall "build-tools;35.0.0"
       - name: Build release with Gradle
