@@ -279,4 +279,12 @@
     <string name="library_edit_finished">Terminado</string>
     <string name="library_edit_no_date_set">Sin fecha</string>
     <string name="library_edit_notes">Notas Personales</string>
+    <string name="info_log_in_required">Ingresa para acceder a todas las funciones.</string>
+    <string name="info_image_saved_in_gallery">Imagen guardada en galería.</string>
+    <string name="info_update_checking_new_version">Buscando nueva versión…</string>
+    <string name="info_update_new_version_available">Nueva versión disponible.</string>
+    <string name="info_update_new_version_available_text">Disponible la versión %s de Kitsu.</string>
+    <string name="info_update_no_new_version_available">No hay nueva versión disponible.</string>
+    <string name="info_update_failed">Error al buscar nueva versión.</string>
+    <string name="info_logged_out_token_expired">Token de acceso expirado. Por favor ingresa de nuevo.</string>
 </resources>
