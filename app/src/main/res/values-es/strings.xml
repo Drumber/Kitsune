@@ -323,4 +323,43 @@
     <string name="profile_link_url">URL o Nombre de Usuario</string>
     <string name="notification_updates">Actualizaciones de la Aplicación</string>
     <string name="widget_description">Progreso de la biblioteca</string>
+    <string name="unit_episode">Episodio %d</string>
+    <plurals name="unit_pages">
+        <item quantity="one">%s Página</item>
+        <item quantity="many">%s Páginas</item>
+        <item quantity="other">%s Páginas</item>
+    </plurals>
+    <string name="unit_chapter">Capítulo %d</string>
+    <plurals name="duration_seconds">
+        <item quantity="one">%s segundo</item>
+        <item quantity="many">%s segundos</item>
+        <item quantity="other">%s segundos</item>
+    </plurals>
+    <plurals name="duration_minutes">
+        <item quantity="one">%s minuto</item>
+        <item quantity="many">%s minutos</item>
+        <item quantity="other">%s minutos</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%s hora</item>
+        <item quantity="many">%s horas</item>
+        <item quantity="other">%s horas</item>
+    </plurals>
+    <plurals name="duration_days">
+        <item quantity="one">%s día</item>
+        <item quantity="many">%s días</item>
+        <item quantity="other">%s días</item>
+    </plurals>
+    <plurals name="duration_months">
+        <item quantity="one">%s mes</item>
+        <item quantity="many">%s meses</item>
+        <item quantity="other">%s meses</item>
+    </plurals>
+    <plurals name="duration_years">
+        <item quantity="one">%s año</item>
+        <item quantity="many">%s años</item>
+        <item quantity="other">%s años</item>
+    </plurals>
+    <string name="widget_empty_text">No hay elementos en seguimiento en la biblioteca</string>
+    <string name="widget_empty_action">Abrir biblioteca</string>
 </resources>
