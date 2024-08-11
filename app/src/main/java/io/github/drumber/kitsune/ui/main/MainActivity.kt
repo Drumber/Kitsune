@@ -259,10 +259,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     /** Checks if the activity was launched using an app link, */
     private fun isLaunchedByDeepLink(): Boolean {
-        val flags = intent.flags
-        val isNewTask = flags and Intent.FLAG_ACTIVITY_NEW_TASK != 0 &&
-                flags and Intent.FLAG_ACTIVITY_CLEAR_TASK != 0
-        return (intent.action == Intent.ACTION_VIEW && intent.data != null) || isNewTask
+        return intent.action == Intent.ACTION_VIEW && intent.data != null
     }
 
     override fun onNewIntent(intent: Intent?) {
