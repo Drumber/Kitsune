@@ -266,7 +266,7 @@
     <string name="login_failed">Anmeldung ist fehlgeschlagen</string>
     <string name="status_logging_in">Wird angemeldet…</string>
     <string name="logged_in_success">Als %s angemeldet.</string>
-    <string name="login_no_account">Du hast kein Benutzerkonto? Erstelle eins auf <a href="https://kitsu.io">kitsu.io</a>.</string>
+    <string name="login_no_account">Du hast kein Benutzerkonto? Erstelle eins auf <a href="https://kitsu.app">kitsu.app</a>.</string>
     <string name="library_not_started">Nicht begonnen</string>
     <string name="library_not_rated">Nicht bewertet</string>
     <string name="library_not_logged_in_title">Anmelden, um auf deine Bibliothek zuzugreifen</string>

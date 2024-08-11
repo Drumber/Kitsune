@@ -21,6 +21,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder
 import io.github.drumber.kitsune.ui.adapter.paging.CharacterPagingAdapter.CharacterViewHolder
 import io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter.MediaUnitViewHolder
@@ -148,7 +149,7 @@ class NavigationTest : KoinComponent {
     fun shouldNavigateToDetailsAndSubPages() {
         activityRule.scenario.onActivity { activity ->
             val navController = activity.findNavController(R.id.nav_host_fragment)
-            navController.navigate(Uri.parse("https://kitsu.io/anime/12"))
+            navController.navigate(Uri.parse("${Kitsu.BASE_URL}/anime/12"))
         }
 
         onView(isRoot()).perform(waitForView(R.id.tv_description, 30.seconds))

@@ -290,7 +290,7 @@
     <string name="status_logging_in">Connexion…</string>
     <string name="action_sign_in">S\'inscrire</string>
     <string name="action_log_in">Se connecter</string>
-    <string name="login_no_account">Vous n\'avez pas de compte ? Créez en un <a href="https://kitsu.io">kitsu.io</a>.</string>
+    <string name="login_no_account">Vous n\'avez pas de compte ? Créez en un <a href="https://kitsu.app">kitsu.app</a>.</string>
     <string name="library_not_logged_in_title">Connectez vous pour accéder à votre bibliothèque</string>
     <string name="library_edit_volumes">Volumes</string>
     <string name="library_not_logged_in_text">Connectez-vous à votre compte Kitsu pour gérer votre bibliothèque et accéder à toutes les fonctionnalités.</string>

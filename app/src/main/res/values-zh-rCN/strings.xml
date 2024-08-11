@@ -21,7 +21,7 @@
     <string name="preference_check_for_updates_description">在每次启动时检查新的应用版本。</string>
     <string name="sort_average_rating_asc">评分稀烂</string>
     <string name="profile_waifu_or_husbando">老婆/老公</string>
-    <string name="login_no_account">没有帐户？在<a href="https://kitsu.io">kitsu.io</a>上创建一个。</string>
+    <string name="login_no_account">没有帐户？在<a href="https://kitsu.app">kitsu.app</a>上创建一个。</string>
     <string name="info_image_saved_in_gallery">图片保存图库成功。</string>
     <string name="info_logged_out_token_expired">您的访问令牌已过期。请重新登录。</string>
     <plurals name="duration_hours">

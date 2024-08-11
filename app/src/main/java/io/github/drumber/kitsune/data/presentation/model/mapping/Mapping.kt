@@ -1,5 +1,7 @@
 package io.github.drumber.kitsune.data.presentation.model.mapping
 
+import io.github.drumber.kitsune.constants.Kitsu
+
 data class Mapping(
     val id: String,
     val externalSite: String?,
@@ -19,8 +21,8 @@ fun Mapping.getSiteName() = when (externalSite) {
 }
 
 fun Mapping.getExternalUrl() = when (externalSite) {
-    "kitsu/anime" -> "https://kitsu.io/anime/$externalId"
-    "kitsu/manga" -> "https://kitsu.io/manga/$externalId"
+    "kitsu/anime" -> "${Kitsu.BASE_URL}/anime/$externalId"
+    "kitsu/manga" -> "${Kitsu.BASE_URL}/manga/$externalId"
     "anidb" -> "https://anidb.net/anime/$externalId"
     "anilist/anime" -> "https://anilist.co/anime/$externalId"
     "anilist/manga" -> "https://anilist.co/manga/$externalId"
