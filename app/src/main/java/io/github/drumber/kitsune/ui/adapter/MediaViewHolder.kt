@@ -5,6 +5,7 @@ import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
+import io.github.drumber.kitsune.util.fixImageUrl
 
 class MediaViewHolder(
     private val binding: ItemMediaBinding,
@@ -19,7 +20,7 @@ class MediaViewHolder(
             false -> null
             true -> data.subtypeFormatted
         }
-        glide.load(data.posterImageUrl)
+        glide.load(data.posterImageUrl?.fixImageUrl())
             .placeholder(R.drawable.ic_insert_photo_48)
             .into(binding.ivThumbnail)
     }
