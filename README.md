@@ -3,7 +3,7 @@
 <h1>Kitsune</h1>
 </div>
 
-Unofficial android app for [Kitsu.io](https://kitsu.io). Discover new Anime and Manga and manage your Library.
+Unofficial android app for [Kitsu.app](https://kitsu.app) (Kitsu.io). Discover new Anime and Manga and manage your Library.
 
 ## Features
 - Explore and search Anime and Manga, even without an account
