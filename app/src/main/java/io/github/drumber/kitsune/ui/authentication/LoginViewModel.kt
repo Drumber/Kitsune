@@ -29,7 +29,7 @@ class LoginViewModel(private val logInUser: LogInUserUseCase) : ViewModel() {
             val result = logInUser(username, password)
 
             if(result is LoginResult.Error) {
-                logE("Failed to login to Kitsu.io.", result.exception)
+                logE("Failed to login to Kitsu.", result.exception)
             }
 
             withContext(Dispatchers.Main) {

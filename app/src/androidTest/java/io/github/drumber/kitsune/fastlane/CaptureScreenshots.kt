@@ -19,6 +19,7 @@ import androidx.test.rule.GrantPermissionRule
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.AppTheme
+import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.main.MainActivity
 import io.github.drumber.kitsune.utils.OkHttpIdlingResource
@@ -142,7 +143,7 @@ class CaptureScreenshots : KoinComponent {
     private fun takeDetailsScreenshot(prefix: String) {
         activityRule.scenario.onActivity { activity ->
             val navController = activity.findNavController(R.id.nav_host_fragment)
-            navController.navigate(Uri.parse("https://kitsu.io/anime/12"))
+            navController.navigate(Uri.parse("${Kitsu.BASE_URL}/anime/12"))
         }
 
         onView(isRoot()).perform(waitForView(R.id.tv_description, 30.seconds))

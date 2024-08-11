@@ -256,7 +256,7 @@
     <string name="login_failed">"Giriş başarısız"</string>
     <string name="status_logging_in">Giriş…</string>
     <string name="logged_in_success">Olarak oturum açtı %s.</string>
-    <string name="login_no_account">Hesabınız yok mu? Bir tane oluşturun <a href="https://kitsu.io">kitsu.io</a>.</string>
+    <string name="login_no_account">Hesabınız yok mu? Bir tane oluşturun <a href="https://kitsu.app">kitsu.app</a>.</string>
     <string name="not_logged_in">Giriş yapılamadı</string>
     <string name="library_not_started">Başlatılamadı</string>
     <string name="library_not_rated">Derecelendirilmemiş</string>

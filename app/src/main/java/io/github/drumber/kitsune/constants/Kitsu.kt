@@ -8,7 +8,7 @@ object Kitsu {
 
     const val ALGOLIA_APP_ID = "AWQO5J657S"
 
-    const val API_HOST = "kitsu.io"
+    const val API_HOST = "kitsu.app"
     const val API_URL = "https://$API_HOST/api/edge/"
     const val OAUTH_URL = "https://$API_HOST/api/oauth/"
     const val BASE_URL = "https://$API_HOST"

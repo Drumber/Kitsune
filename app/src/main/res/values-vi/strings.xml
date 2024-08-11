@@ -266,7 +266,7 @@
     <string name="preference_github_repo">Kho lưu trữ GitHub</string>
     <string name="action_log_in">Đăng nhập</string>
     <string name="invalid_username">Không phải là một địa chỉ e-mail hợp lệ</string>
-    <string name="login_no_account">Không có tài khoản? Tạo một cái trên <a href="https://kitsu.io">kitsu.io</a>.</string>
+    <string name="login_no_account">Không có tài khoản? Tạo một cái trên <a href="https://kitsu.app">kitsu.app</a>.</string>
     <string name="library_edit_start_rewatch">Bắt đầu xem lại</string>
     <string name="library_edit_no_date_set">Chưa đặt ngày</string>
     <string name="library_edit_notes">Ghi chú cá nhân</string>
