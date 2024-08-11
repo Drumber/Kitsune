@@ -1,0 +1,7 @@
+Note: The API domain has changed from kitsu.io to kitsu.app. Official statement: https://kitsu.app/posts/9837041
+
+* Updated Kitsu domain (moved from kitsu.io to kitsu.app)
+* Fixed app shortcuts
+* Updated Spanish translation by @Kiimby
+* Updated Turkish translation by @oersen
+* Updated Portuguese translation by Jonathan
