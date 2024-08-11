@@ -256,7 +256,7 @@
     <string name="login_failed">Error al iniciar sesión</string>
     <string name="status_logging_in">Iniciando sesión…</string>
     <string name="logged_in_success">Iniciado como %s.</string>
-    <string name="login_no_account">¿No tienes cuenta? Crea una en <a href="https://kitsu.io">kitsu.io</a>.</string>
+    <string name="login_no_account">¿No tienes cuenta? Crea una en <a href="https://kitsu.app">kitsu.app</a>.</string>
     <string name="not_logged_in">No se ha iniciado sesión</string>
     <string name="library_not_started">Sin Iniciar</string>
     <string name="library_not_rated">Sin Calificar</string>
