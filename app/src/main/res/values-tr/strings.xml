@@ -137,9 +137,9 @@
     <string name="data_kitsu_score">Kitsu Skoru %s%%</string>
     <string name="data_length_total">%s toplam</string>
     <string name="data_length_each">%d geçen dakika</string>
-    <string name="data_title_english">English</string>
-    <string name="data_title_japanese">Japanese</string>
-    <string name="data_title_japanese_romaji">Japanese (Romaji)</string>
+    <string name="data_title_english">İngilizce</string>
+    <string name="data_title_japanese">Japonca</string>
+    <string name="data_title_japanese_romaji">Japonca (Romaji)</string>
     <string name="data_abbreviated_titles">Eş Anlamlılar</string>
     <string name="data_other_names">Ayrıca şöyle bilinir</string>
     <string name="data_title_type">Tipi</string>
@@ -355,4 +355,7 @@
         <item quantity="other">%s yıllar</item>
     </plurals>
     <string name="preference_language_default">varsayılan dil</string>
+    <string name="widget_description">Kütüphane ilerlemesi</string>
+    <string name="widget_empty_text">Kütüphanenizde izlenen etkin bir öge yok</string>
+    <string name="widget_empty_action">Kütüphaneyi Aç</string>
 </resources>
