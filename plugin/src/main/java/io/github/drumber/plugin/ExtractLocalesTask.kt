@@ -14,7 +14,6 @@ abstract class ExtractLocalesTask : DefaultTask() {
 
     companion object {
         const val DEFAULT_LANG_CODE = "en-US"
-        const val DEFAULT_PACKAGE = "io.github.drumber.kitsune"
         const val CLASS_NAME = "AppLocales"
     }
 
@@ -28,7 +27,7 @@ abstract class ExtractLocalesTask : DefaultTask() {
     abstract val outputDir: DirectoryProperty
 
     init {
-        packageName.convention(DEFAULT_PACKAGE)
+        packageName.convention(CustomPlugin.DEFAULT_PACKAGE)
     }
 
     @TaskAction
