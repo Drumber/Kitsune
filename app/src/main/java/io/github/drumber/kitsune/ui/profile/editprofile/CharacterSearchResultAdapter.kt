@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.character.CharacterSearchResult
 import io.github.drumber.kitsune.databinding.ItemCharacterSearchResultBinding
+import io.github.drumber.kitsune.util.fixImageUrl
 
 class CharacterSearchResultAdapter(private val onCharacterClicked: (CharacterSearchResult) -> Unit) :
     RecyclerView.Adapter<CharacterSearchResultAdapter.CharacterSearchResultViewHolder>(),
@@ -51,7 +52,7 @@ class CharacterSearchResultAdapter(private val onCharacterClicked: (CharacterSea
                 tvMedia.isVisible = !character.primaryMediaTitle.isNullOrBlank()
 
                 Glide.with(root)
-                    .load(character.image?.originalOrDown())
+                    .load(character.image?.originalOrDown()?.fixImageUrl())
                     .placeholder(R.drawable.character_placeholder)
                     .into(ivCharacter)
 
