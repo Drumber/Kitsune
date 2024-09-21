@@ -75,8 +75,8 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 
-    packagingOptions {
-        excludes += "META-INF/*.kotlin_module"
+    packaging {
+        resources.excludes += "META-INF/*.kotlin_module"
     }
 
     testOptions {
