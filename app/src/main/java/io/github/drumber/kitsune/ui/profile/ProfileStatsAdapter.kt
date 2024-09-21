@@ -105,7 +105,7 @@ class ProfileStatsAdapter(dataSet: List<ProfileStatsData>) :
                         context.getString(
                             R.string.profile_stats_completed,
                             completed,
-                            percentiles.times(100).roundToInt()
+                            percentiles.times(100).roundToInt().coerceIn(0..99)
                         )
                     } else {
                         null
