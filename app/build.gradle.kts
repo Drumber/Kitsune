@@ -14,13 +14,13 @@ val screenshotMode: String by project
 
 android {
     namespace = "io.github.drumber.kitsune"
-    compileSdk = 34
-    buildToolsVersion = "34.0.0"
+    compileSdk = 35
+    buildToolsVersion = "35.0.0"
 
     defaultConfig {
         applicationId = "io.github.drumber.kitsune"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 33
         versionName = "2.0.1"
 

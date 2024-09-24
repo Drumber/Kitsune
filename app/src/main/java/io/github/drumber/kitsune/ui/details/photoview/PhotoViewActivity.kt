@@ -33,7 +33,11 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ActivityPhotoViewBinding
 import io.github.drumber.kitsune.ui.base.BaseActivity
-import io.github.drumber.kitsune.util.extensions.*
+import io.github.drumber.kitsune.util.extensions.clearLightNavigationBar
+import io.github.drumber.kitsune.util.extensions.clearLightStatusBar
+import io.github.drumber.kitsune.util.extensions.isNightMode
+import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
+import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.saveImageInGallery
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +47,6 @@ import java.io.IOException
 
 class PhotoViewActivity : BaseActivity(
     R.layout.activity_photo_view,
-    edgeToEdge = true,
     updateSystemUiColors = false,
     setAppTheme = false
 ) {

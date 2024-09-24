@@ -18,12 +18,10 @@ import com.google.android.material.elevation.SurfaceColors
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.main.MainActivity
-import io.github.drumber.kitsune.util.extensions.clearLightNavigationBar
 import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
 
 abstract class BaseActivity(
     @LayoutRes contentLayoutId: Int,
-    private val edgeToEdge: Boolean = true,
     private val updateSystemUiColors: Boolean = true,
     private val setAppTheme: Boolean = true
 ) : AppCompatActivity(contentLayoutId) {
@@ -59,11 +57,7 @@ abstract class BaseActivity(
         // set app bar color in recent apps overview
         setAppTaskColor(SurfaceColors.SURFACE_0.getColor(this))
 
-        if (edgeToEdge) {
-            initEdgeToEdge()
-        } else {
-            clearLightNavigationBar()
-        }
+        initEdgeToEdge()
     }
 
     override fun onResume() {

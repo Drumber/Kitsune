@@ -16,7 +16,7 @@ import io.github.drumber.kitsune.databinding.ActivityAuthenticationBinding
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AuthenticationActivity : BaseActivity(R.layout.activity_authentication, false) {
+class AuthenticationActivity : BaseActivity(R.layout.activity_authentication) {
 
     companion object {
         const val EXTRA_LOGGED_OUT = "extra_logged_out"
