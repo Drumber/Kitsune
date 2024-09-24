@@ -117,6 +117,20 @@ fun View.initImePaddingWindowInsetsListener(subtractSystemBarInset: Boolean = tr
     }
 }
 
+fun View.initHeightWindowInsetsListener(
+    useBottomInset: Boolean = false,
+    consume: Boolean = true
+) {
+    val initialHeight = height
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
+        val insets = windowInsets.getSystemBarsAndCutoutInsets()
+        view.updateLayoutParams {
+            height = initialHeight + if (useBottomInset) insets.bottom else insets.top
+        }
+        if (consume) WindowInsetsCompat.CONSUMED else windowInsets
+    }
+}
+
 fun WindowInsetsCompat.getSystemBarsAndCutoutInsets() = getInsets(
     WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
 )

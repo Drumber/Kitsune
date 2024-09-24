@@ -40,6 +40,9 @@ import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.saveImageInGallery
+import io.github.drumber.kitsune.util.ui.initHeightWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -143,6 +146,10 @@ class PhotoViewActivity : BaseActivity(
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(args.imageUrl))
                 startActivity(intent)
             }
+
+            statusBarBackground.initHeightWindowInsetsListener(consume = false)
+            progressIndicator.initMarginWindowInsetsListener(top = true, consume = false)
+            fullscreenContentControls.initPaddingWindowInsetsListener(left = true, right = true, bottom = true, consume = false)
         }
 
         binding.haulerView.setOnDragDismissedListener { finish() }
@@ -197,6 +204,7 @@ class PhotoViewActivity : BaseActivity(
         WindowInsetsControllerCompat(window, binding.root)
             .hide(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
         binding.fullscreenContentControls.isVisible = false
+        binding.statusBarBackground.isVisible = false
     }
 
     private fun showSystemUi() {
@@ -204,6 +212,7 @@ class PhotoViewActivity : BaseActivity(
         WindowInsetsControllerCompat(window, binding.root)
             .show(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
         binding.fullscreenContentControls.isVisible = true
+        binding.statusBarBackground.isVisible = true
     }
 
     private fun toggleSystemUi() {
