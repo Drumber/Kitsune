@@ -36,7 +36,6 @@ import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.util.extensions.clearLightNavigationBar
 import io.github.drumber.kitsune.util.extensions.clearLightStatusBar
 import io.github.drumber.kitsune.util.extensions.isNightMode
-import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.saveImageInGallery
@@ -78,11 +77,6 @@ class PhotoViewActivity : BaseActivity(
         binding = ActivityPhotoViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setStatusBarColorRes(R.color.translucent_system_overlay)
-        if (Build.VERSION.SDK_INT >= 27) {
-            window.navigationBarColor =
-                ContextCompat.getColor(this, R.color.translucent_system_overlay)
-        }
         if (!isNightMode()) {
             clearLightStatusBar()
             clearLightNavigationBar()
@@ -149,7 +143,12 @@ class PhotoViewActivity : BaseActivity(
 
             statusBarBackground.initHeightWindowInsetsListener(consume = false)
             progressIndicator.initMarginWindowInsetsListener(top = true, consume = false)
-            fullscreenContentControls.initPaddingWindowInsetsListener(left = true, right = true, bottom = true, consume = false)
+            fullscreenContentControls.initPaddingWindowInsetsListener(
+                left = true,
+                right = true,
+                bottom = true,
+                consume = false
+            )
         }
 
         binding.haulerView.setOnDragDismissedListener { finish() }
