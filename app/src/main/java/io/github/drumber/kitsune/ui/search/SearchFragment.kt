@@ -70,10 +70,10 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
         binding.apply {
             root.initPaddingWindowInsetsListener(
                 left = true,
+                top = true,
                 right = true,
                 consume = false
             )
-            searchWrapper.initPaddingWindowInsetsListener(top = true, consume = false)
             rvMedia.initPaddingWindowInsetsListener(bottom = true, consume = false)
         }
 
@@ -164,7 +164,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
             val filterCount = filters?.getFilters()?.size ?: 0
             binding.btnFilter.post {
                 binding.btnFilter.overlay.clear()
-                val badgeDrawable = BadgeDrawable.create(requireContext()).apply {
+                val badgeDrawable = BadgeDrawable.create(binding.btnFilter.context).apply {
                     isVisible = filterCount > 0
                     number = filterCount
                 }
