@@ -35,6 +35,7 @@ import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.shape.MaterialShapeDrawable
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
@@ -51,11 +52,9 @@ import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibrarySynchroni
 import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibraryUpdateResult
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
-import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
 import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.rating.RatingSystemUtil
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbarOnAnyFailure
 import io.github.drumber.kitsune.util.ui.showSnackbarOnFailure
 import kotlinx.coroutines.flow.collectLatest
@@ -103,18 +102,17 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         requireActivity().addMenuProvider(this, viewLifecycleOwner)
 
         binding.apply {
-            toolbar.initWindowInsetsListener(consume = false)
+            appBarLayout.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(context)
+            toolbar.initPaddingWindowInsetsListener(
+                left = true,
+                right = true,
+                consume = false
+            )
             scrollViewFilter.initPaddingWindowInsetsListener(
                 left = true,
                 right = true,
                 consume = false
             )
-            appBarLayout.addOnOffsetChangedListener { _, verticalOffset ->
-                val shouldSetStatusBarTransparent = verticalOffset >= -30
-                if (isStatusBarTransparent == shouldSetStatusBarTransparent)
-                    return@addOnOffsetChangedListener
-                setStatusBarTransparent(shouldSetStatusBarTransparent)
-            }
 
             swipeRefreshLayout.initPaddingWindowInsetsListener(
                 left = true,
@@ -193,11 +191,6 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
         initFilterChips()
         initRecyclerView()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        setStatusBarTransparent(isStatusBarTransparent)
     }
 
     private fun initFilterChips() {
@@ -577,16 +570,6 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     override fun onNavigationItemReselected(item: MenuItem) {
         binding.rvLibraryEntries.smoothScrollToPosition(0)
         binding.appBarLayout.setExpanded(true)
-    }
-
-    private fun setStatusBarTransparent(setTransparent: Boolean) {
-        requireActivity().setStatusBarColorRes(
-            if (setTransparent)
-                android.R.color.transparent
-            else
-                R.color.translucent_status_bar
-        )
-        isStatusBarTransparent = setTransparent
     }
 
     override fun onDestroyView() {
