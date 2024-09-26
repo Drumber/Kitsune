@@ -14,6 +14,7 @@ import com.google.android.material.textfield.TextInputLayout
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ActivityAuthenticationBinding
 import io.github.drumber.kitsune.ui.base.BaseActivity
+import io.github.drumber.kitsune.util.ui.initImePaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -112,6 +113,7 @@ class AuthenticationActivity : BaseActivity(R.layout.activity_authentication) {
             }
 
             nsvContent.initPaddingWindowInsetsListener(left = true, right = true, bottom = true, consume = false)
+            root.initImePaddingWindowInsetsListener()
         }
     }
 
