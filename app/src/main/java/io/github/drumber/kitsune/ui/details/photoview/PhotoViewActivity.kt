@@ -49,7 +49,6 @@ import java.io.IOException
 
 class PhotoViewActivity : BaseActivity(
     R.layout.activity_photo_view,
-    updateSystemUiColors = false,
     setAppTheme = false
 ) {
 
@@ -156,10 +155,10 @@ class PhotoViewActivity : BaseActivity(
             // fade background alpha on drag
             val alpha = (1.0f - rawOffset) * 255.0f
             val color = Color.argb(alpha.toInt(), 0, 0, 0)
-            binding.photoBackground.setBackgroundColor(color)
+            binding.root.setBackgroundColor(color)
         }
         // reset background color
-        binding.photoBackground.setBackgroundColor(Color.BLACK)
+        binding.root.setBackgroundColor(Color.BLACK)
     }
 
     private fun onImageLoadFailed(exit: Boolean) {
