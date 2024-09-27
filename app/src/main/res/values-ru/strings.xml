@@ -14,7 +14,6 @@
     <string name="action_unselect_all">Снять все выделения</string>
     <string name="action_read_more">Читать ещё</string>
     <string name="action_show_more">Показать ещё</string>
-    <string name="action_read_less"></string>
     <string name="action_back">Назад</string>
     <string name="action_close">Закрыть</string>
     <string name="action_log_out">Выйти</string>
