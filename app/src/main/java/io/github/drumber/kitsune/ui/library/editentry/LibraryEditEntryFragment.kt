@@ -35,9 +35,9 @@ import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.FragmentEditLibraryEntryBinding
 import io.github.drumber.kitsune.ui.base.BaseDialogFragment
+import io.github.drumber.kitsune.ui.component.CustomNumberSpinner
 import io.github.drumber.kitsune.ui.library.RatingBottomSheet
 import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel.LoadState
-import io.github.drumber.kitsune.ui.component.CustomNumberSpinner
 import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
 import io.github.drumber.kitsune.util.extensions.getResourceId
 import io.github.drumber.kitsune.util.extensions.navigateSafe
@@ -174,7 +174,7 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
 
             binding.tvTitle.text = media?.title
 
-            binding.tvMediaInfo.text = media?.let { "${it.publishingYearText} • ${it.subtypeFormatted}" }
+            binding.tvMediaInfo.text = media?.let { "${it.publishingYearText(binding.root.context)} • ${it.subtypeFormatted}" }
 
             Glide.with(this)
                 .load(media?.posterImageUrl)

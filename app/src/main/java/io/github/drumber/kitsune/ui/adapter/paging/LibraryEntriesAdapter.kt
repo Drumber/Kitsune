@@ -94,9 +94,7 @@ class LibraryEntriesAdapter(
         }
 
         fun bind(libraryEntry: LibraryEntryWithModification) {
-            binding.apply {
-                this.entry = libraryEntry
-            }
+            binding.entry = libraryEntry
 
             glide.load(libraryEntry.media?.posterImageUrl)
                 .placeholder(R.drawable.ic_insert_photo_48)

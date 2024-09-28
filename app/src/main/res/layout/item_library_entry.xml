@@ -86,7 +86,7 @@
                     android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="@{entry.media.publishingYearText + ` • ` + entry.media.subtypeFormatted}"
+                    android:text="@{entry.media.publishingYearText(context) + ` • ` + entry.media.subtypeFormatted}"
                     tools:text="2002 • TV" />
 
                 <TextView

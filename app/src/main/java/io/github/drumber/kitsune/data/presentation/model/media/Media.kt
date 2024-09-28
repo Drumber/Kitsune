@@ -84,10 +84,19 @@ sealed class Media : FavoriteItem {
             is Manga -> subtype
         }?.name.orEmpty().replaceFirstChar(Char::titlecase)
 
-    val publishingYearText: String
+    val publishingYear: Int?
         get() = startDate?.takeIf { it.isNotBlank() }
             ?.parseDate()?.toCalendar()
-            ?.get(Calendar.YEAR)?.toString() ?: "-"
+            ?.get(Calendar.YEAR)
+
+    fun publishingYearText(context: Context): String {
+        val publishingYear = publishingYear
+        return when {
+            publishingYear != null -> publishingYear.toString()
+            status == ReleaseStatus.TBA -> context.getString(R.string.status_tba)
+            else -> "-"
+        }
+    }
 
     @get:StringRes
     val seasonStringRes: Int
