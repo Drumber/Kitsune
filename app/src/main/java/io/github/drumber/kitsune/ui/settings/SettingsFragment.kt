@@ -16,7 +16,9 @@ import androidx.preference.ListPreference
 import androidx.preference.ListPreference.SimpleSummaryProvider
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
+import com.google.android.material.color.MaterialColors
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.AppLocales
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
@@ -53,6 +55,10 @@ class SettingsFragment : BasePreferenceFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+
         requestNotificationPermissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
                 val preference =
@@ -169,6 +175,9 @@ class SettingsFragment : BasePreferenceFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val colorBackground = MaterialColors.getColor(view, android.R.attr.colorBackground)
+        view.setBackgroundColor(colorBackground)
+
         val binding = FragmentPreferenceBinding.bind(view)
 
         viewModel.errorMessageListener = {

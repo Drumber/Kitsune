@@ -1,10 +1,13 @@
 package io.github.drumber.kitsune.ui.settings
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.ListPreference
 import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.color.DynamicColors
+import com.google.android.material.color.MaterialColors
+import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.constants.MediaItemSize
@@ -16,6 +19,18 @@ import org.koin.android.ext.android.inject
 class AppearanceFragment : BasePreferenceFragment(R.string.nav_appearance) {
 
     private val updateLibraryWidget: UpdateLibraryWidgetUseCase by inject()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val colorBackground = MaterialColors.getColor(view, android.R.attr.colorBackground)
+        view.setBackgroundColor(colorBackground)
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.sharedPreferencesName = getString(R.string.preference_file_key)

@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.color.MaterialColors
+import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentAppLogsBinding
@@ -20,15 +22,24 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 class AppLogsFragment : Fragment(R.layout.fragment_app_logs) {
 
     private val binding: FragmentAppLogsBinding by viewBinding()
     private val viewModel: AppLogsViewModel by viewModel()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val colorBackground = MaterialColors.getColor(view, android.R.attr.colorBackground)
+        view.setBackgroundColor(colorBackground)
 
         binding.toolbar.initWindowInsetsListener(consume = false)
         binding.nestedScrollView.initPaddingWindowInsetsListener(
