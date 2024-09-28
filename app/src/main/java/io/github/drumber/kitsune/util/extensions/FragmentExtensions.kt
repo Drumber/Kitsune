@@ -13,7 +13,7 @@ import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
 import androidx.navigation.fragment.findNavController
-import io.github.drumber.kitsune.ui.details.photoview.PhotoViewActivityDirections
+import io.github.drumber.kitsune.ui.photoview.PhotoViewActivityDirections
 
 /**
  * Checks if the current destination of the back stack is equal to the specified destination id.

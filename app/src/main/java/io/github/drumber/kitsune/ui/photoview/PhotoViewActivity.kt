@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.details.photoview
+package io.github.drumber.kitsune.ui.photoview
 
 import android.Manifest
 import android.annotation.SuppressLint

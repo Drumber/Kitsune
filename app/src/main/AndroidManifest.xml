@@ -43,7 +43,7 @@
                 android:resource="@xml/shortcuts" />
         </activity>
         <activity
-            android:name=".ui.details.photoview.PhotoViewActivity"
+            android:name=".ui.photoview.PhotoViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:theme="@style/Theme.Kitsune.DayNight.FullScreen" />
