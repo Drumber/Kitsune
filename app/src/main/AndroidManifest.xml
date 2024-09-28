@@ -20,7 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kitsune.DayNight"
         android:hasFragileUserData="true"
-        tools:targetApi="s">
+        android:enableOnBackInvokedCallback="false"
+        tools:targetApi="tiramisu">
         <profileable
             android:shell="true"
             tools:targetApi="q" />
