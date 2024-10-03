@@ -96,6 +96,15 @@ dependencies {
     implementation(libs.androidx.constraint.layout)
     implementation(libs.androidx.core.splashscreen)
 
+    // Compose
+    val composeBom = platform(libs.androidx.compose.bom)
+    implementation(composeBom)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material3.adaptive)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+
     // SwipeRefresh layout
     implementation(libs.androidx.swiperefreshlayout)
 
@@ -228,6 +237,11 @@ dependencies {
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.espresso.contrib)
+
+    // Compose tests
+    androidTestImplementation(composeBom)
+    androidTestImplementation(libs.androidx.compose.ui.test)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
     testImplementation(libs.insert.koin.test.junit4)

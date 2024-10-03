@@ -2,6 +2,7 @@
 aboutLibraries = "11.1.3"
 agp = "8.7.0"
 algoliaInstantSearch = "3.1.3"
+androidxActivity = "1.9.2"
 androidxFragment = "1.8.4"
 androidxGlance = "1.1.0"
 androidxLifecycle = "2.8.6"
@@ -15,6 +16,7 @@ appCompat = "1.7.0"
 archUnit = "1.3.0"
 assertj = "3.26.3"
 circleImageView = "3.1.0"
+composeBom = "2024.09.03"
 composeCompiler = "1.5.14"
 constraintLayout = "2.1.4"
 coreKtx = "1.13.1"
@@ -58,11 +60,19 @@ algolia-instantsearch-android-paging3 = { module = "com.algolia:instantsearch-an
 algolia-instantsearch-coroutines = { module = "com.algolia:instantsearch-coroutines-extensions", version.ref = "algoliaInstantSearch" }
 android-gradle-api = { module = "com.android.tools.build:gradle-api", version.ref = "agp" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appCompat" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-material3-adaptive = { module = "androidx.compose.material3.adaptive:adaptive" }
+androidx-compose-ui-test = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling" }
 androidx-constraint-layout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintLayout" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashScreen" }
-androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
 androidx-espresso-contrib = { module = "androidx.test.espresso:espresso-contrib", version.ref = "espressoCore" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "androidxFragment" }
 androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "androidxGlance" }
 androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "androidxGlance" }
