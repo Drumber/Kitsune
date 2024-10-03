@@ -43,6 +43,9 @@
                 android:resource="@xml/shortcuts" />
         </activity>
         <activity
+            android:name=".ui.onboarding.OnboardingActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.photoview.PhotoViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"

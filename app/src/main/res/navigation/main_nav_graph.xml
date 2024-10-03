@@ -230,4 +230,12 @@
     <action
         android:id="@+id/action_global_photo_view_activity"
         app:destination="@id/photo_view_activity" /><action android:id="@+id/action_global_details_fragment" app:destination="@id/details_fragment"/>
+    <activity
+        android:id="@+id/onboardingActivity"
+        android:name="io.github.drumber.kitsune.ui.onboarding.OnboardingActivity"
+        android:label="OnboardingActivity" />
+    <action
+        android:id="@+id/action_global_onboardingActivity"
+        app:destination="@id/onboardingActivity"
+        app:launchSingleTop="true" />
 </navigation>

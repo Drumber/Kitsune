@@ -45,6 +45,7 @@ import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.details.DetailsFragmentArgs
 import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
+import io.github.drumber.kitsune.ui.onboarding.OnboardingActivityDirections
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
 import io.github.drumber.kitsune.ui.permissions.showNotificationPermissionRejectedDialog
 import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
@@ -211,6 +212,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
 
         requestRequiredPermissions()
+
+        // TODO: just for testing, remove later
+        val action = OnboardingActivityDirections.actionGlobalOnboardingActivity()
+        navController.navigate(action)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -262,9 +267,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         return intent.action == Intent.ACTION_VIEW && intent.data != null
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (!navController.handleDeepLink(intent) && intent != null) {
+        if (!navController.handleDeepLink(intent)) {
             handleIntentAction(intent)
         }
     }
