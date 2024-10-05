@@ -10,6 +10,7 @@ import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel
 import io.github.drumber.kitsune.ui.main.MainActivityViewModel
 import io.github.drumber.kitsune.ui.main.MainFragmentViewModel
 import io.github.drumber.kitsune.ui.medialist.MediaListViewModel
+import io.github.drumber.kitsune.ui.onboarding.OnboardingViewModel
 import io.github.drumber.kitsune.ui.profile.ProfileViewModel
 import io.github.drumber.kitsune.ui.profile.editprofile.EditProfileViewModel
 import io.github.drumber.kitsune.ui.search.SearchViewModel
@@ -20,6 +21,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
+    viewModel { OnboardingViewModel(get(), get()) }
     viewModel { MainActivityViewModel() }
     viewModel { MainFragmentViewModel(get(), get()) }
     viewModel { SearchViewModel(get()) }

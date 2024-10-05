@@ -152,6 +152,7 @@ dependencies {
     implementation(libs.bumptech.glide)
     ksp(libs.bumptech.glide.ksp)
     implementation(libs.bumptech.glide.okhttp3)
+    implementation(libs.bumptech.glide.compose)
 
     // Koin DI
     implementation(libs.insert.koin.android)

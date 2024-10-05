@@ -12,8 +12,12 @@ data class Image(
         return small ?: medium ?: large ?: original
     }
 
+    fun largeOrDown(): String? {
+        return large ?: medium ?: small ?: tiny
+    }
+
     fun originalOrDown(): String? {
-        return original ?: large ?: medium ?: small ?: tiny
+        return original ?: largeOrDown()
     }
 }
 
