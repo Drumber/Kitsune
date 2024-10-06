@@ -45,7 +45,7 @@ fun ImageSlideshow(
 
     val context = LocalContext.current
 
-    val scaleAnimation = remember { Animatable(1f) }
+    val scaleAnimation = remember { Animatable(1.1f) }
     val xAnimation = remember { Animatable(0f) }
     val yAnimation = remember { Animatable(0f) }
 
@@ -54,13 +54,13 @@ fun ImageSlideshow(
         awaitAll(
             async {
                 scaleAnimation.animateTo(
-                    targetValue = 1.2f - scaleAnimation.value + 1f,
+                    targetValue = 1.3f - scaleAnimation.value + 1.1f,
                     animationSpec = tween(ANIMATION_TRANSFORM_DURATION, easing = Ease)
                 )
             },
             async {
                 xAnimation.animateTo(
-                    targetValue = (15f - xAnimation.value) * (if (Random.nextInt() % 2 == 0) 1 else -1),
+                    targetValue = (10f - xAnimation.value) * (if (Random.nextInt() % 2 == 0) 1 else -1),
                     animationSpec = tween(ANIMATION_TRANSFORM_DURATION, easing = LinearEasing)
                 )
             },

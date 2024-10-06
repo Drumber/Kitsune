@@ -363,6 +363,16 @@
     <string name="widget_empty_text">There is no active tracked item in your library</string>
     <string name="widget_empty_action">Open Library</string>
 
+    <string name="onboarding_welcome_title">Welcome to Kitsune!</string>
+    <string name="onboarding_welcome_subtitle">Your personal anime and manga companion.</string>
+    <string name="onboarding_welcome_feature_search">Search</string>
+    <string name="onboarding_welcome_feature_search_description">Find your favorite anime and manga.</string>
+    <string name="onboarding_welcome_feature_explore">Explore</string>
+    <string name="onboarding_welcome_feature_explore_description">Discover new and trending titles.</string>
+    <string name="onboarding_welcome_feature_track">Track</string>
+    <string name="onboarding_welcome_feature_track_description">Keep track of what you\'ve watched and read.</string>
+    <string name="onboarding_welcome_action">Get Started</string>
+
     <string name="unit_episode">Episode %d</string>
     <string name="unit_chapter">Chapter %d</string>
     <!-- Unit Plurals -->

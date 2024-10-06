@@ -355,4 +355,13 @@
     <string name="widget_description">Bibliotheksfortschritte</string>
     <string name="widget_empty_text">Keine aktiven Einträge in der Bibliothek vorhanden</string>
     <string name="widget_empty_action">Bibliothek öffnen</string>
+    <string name="onboarding_welcome_title">Willkommen zu Kitsune!</string>
+    <string name="onboarding_welcome_subtitle">Dein persönlicher Begleiter für Anime und Manga.</string>
+    <string name="onboarding_welcome_feature_search">Suchen</string>
+    <string name="onboarding_welcome_feature_search_description">Finde deine Lieblings-Anime und -Manga.</string>
+    <string name="onboarding_welcome_feature_explore">Entdecken</string>
+    <string name="onboarding_welcome_feature_explore_description">Entdecke neue und angesagte Titel.</string>
+    <string name="onboarding_welcome_feature_track">Verfolgen</string>
+    <string name="onboarding_welcome_feature_track_description">Behalte im Auge, was du geschaut und gelesen hast.</string>
+    <string name="onboarding_welcome_action">Los geht\'s</string>
 </resources>
