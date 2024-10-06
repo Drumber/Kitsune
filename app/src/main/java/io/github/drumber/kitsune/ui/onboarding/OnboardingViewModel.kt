@@ -6,6 +6,7 @@ import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
+import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,11 +16,14 @@ import kotlinx.coroutines.launch
 
 class OnboardingViewModel(
     private val animeRepository: AnimeRepository,
-    private val mangaRepository: MangaRepository
+    private val mangaRepository: MangaRepository,
+    userRepository: UserRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(OnboardingUiState())
     val uiSate = _uiState.asStateFlow()
+
+    val localUser = userRepository.localUser
 
     init {
         loadPosterImages()

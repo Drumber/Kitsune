@@ -41,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.asFlow
 import com.chibatching.kotpref.livedata.asLiveData
+import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.onboarding.components.LoginPage
@@ -56,7 +57,12 @@ class OnboardingActivity : BaseActivity(0) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge(navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT))
+        enableEdgeToEdge(
+            navigationBarStyle = SystemBarStyle.auto(
+                Color.TRANSPARENT,
+                Color.TRANSPARENT
+            )
+        )
 
         setContent {
             val useDynamicColorTheme by KitsunePref.asLiveData(KitsunePref::useDynamicColorTheme)
@@ -73,13 +79,18 @@ class OnboardingActivity : BaseActivity(0) {
             }
 
             val uiState by viewModel.uiSate.collectAsState()
+            val localUser by viewModel.localUser.collectAsState()
 
             KitsuneTheme(dynamicColor = useDynamicColorTheme, darkTheme = isDarkModeEnabled) {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     contentWindowInsets = WindowInsets.safeDrawing
                 ) { innerPadding ->
-                    OnboardingTour(uiState = uiState, contentPadding = innerPadding)
+                    OnboardingTour(
+                        uiState = uiState,
+                        localUser = localUser,
+                        contentPadding = innerPadding
+                    )
                 }
             }
         }
@@ -89,6 +100,7 @@ class OnboardingActivity : BaseActivity(0) {
 @Composable
 fun OnboardingTour(
     uiState: OnboardingUiState = OnboardingUiState(),
+    localUser: LocalUser? = null,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     val pagerState = rememberPagerState(pageCount = { 3 })
@@ -126,10 +138,11 @@ fun OnboardingTour(
 
                     1 -> LoginPage(
                         modifier = Modifier.padding(contentPaddingWithoutBottom),
-                        onBackClicked = {
+                        localUser = localUser,
+                        onBack = {
                             coroutineScope.launch { pagerState.animateScrollToPage(0) }
                         },
-                        onSkipClicked = {
+                        onNext = {
                             coroutineScope.launch { pagerState.animateScrollToPage(2) }
                         }
                     )

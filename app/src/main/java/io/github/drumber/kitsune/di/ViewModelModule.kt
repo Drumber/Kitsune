@@ -21,7 +21,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    viewModel { OnboardingViewModel(get(), get()) }
+    viewModel { OnboardingViewModel(get(), get(), get()) }
     viewModel { MainActivityViewModel() }
     viewModel { MainFragmentViewModel(get(), get()) }
     viewModel { SearchViewModel(get()) }
