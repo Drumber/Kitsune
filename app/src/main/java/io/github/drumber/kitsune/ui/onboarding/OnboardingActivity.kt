@@ -125,7 +125,13 @@ fun OnboardingTour(
                     )
 
                     1 -> LoginPage(
-                        modifier = Modifier.padding(contentPaddingWithoutBottom)
+                        modifier = Modifier.padding(contentPaddingWithoutBottom),
+                        onBackClicked = {
+                            coroutineScope.launch { pagerState.animateScrollToPage(0) }
+                        },
+                        onSkipClicked = {
+                            coroutineScope.launch { pagerState.animateScrollToPage(2) }
+                        }
                     )
 
                     2 -> SetupPage(

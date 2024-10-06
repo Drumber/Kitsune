@@ -23,7 +23,7 @@ fun SetupPage(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun SetupPagePreview() {
+private fun SetupPagePreview() {
     KitsuneTheme {
         SetupPage()
     }

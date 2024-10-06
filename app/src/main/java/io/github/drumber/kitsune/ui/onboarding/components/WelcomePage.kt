@@ -110,7 +110,7 @@ fun WelcomePage(
 }
 
 @Composable
-fun HeaderSection(modifier: Modifier = Modifier, isCompact: Boolean = false) {
+private fun HeaderSection(modifier: Modifier = Modifier, isCompact: Boolean = false) {
     val maxLogoHeight = if (isCompact) 100.dp else 180.dp
 
     Column(
@@ -154,7 +154,7 @@ fun HeaderSection(modifier: Modifier = Modifier, isCompact: Boolean = false) {
 }
 
 @Composable
-fun FeatureSection(modifier: Modifier = Modifier) {
+private fun FeatureSection(modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         FeatureItem(
             icon = painterResource(R.drawable.ic_search_24),
@@ -175,7 +175,7 @@ fun FeatureSection(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun FeatureItem(icon: Painter, title: String, description: String) {
+private fun FeatureItem(icon: Painter, title: String, description: String) {
     Row(
         verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 8.dp)
     ) {
@@ -203,7 +203,7 @@ fun FeatureItem(icon: Painter, title: String, description: String) {
 }
 
 @Composable
-fun GetStartedButton(modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
+private fun GetStartedButton(modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
     Button(
         modifier = modifier, onClick = onClick
     ) {
@@ -214,7 +214,7 @@ fun GetStartedButton(modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
 @PreviewScreenSizes
 @Preview(showBackground = true, heightDp = 780, widthDp = 390)
 @Composable
-fun WelcomePagePreview() {
+private fun WelcomePagePreview() {
     KitsuneTheme {
         WelcomePage(uiState = OnboardingUiState())
     }
