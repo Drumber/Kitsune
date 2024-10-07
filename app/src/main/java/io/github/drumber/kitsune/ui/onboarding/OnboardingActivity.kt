@@ -1,6 +1,8 @@
 package io.github.drumber.kitsune.ui.onboarding
 
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -26,23 +28,36 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.asFlow
 import com.chibatching.kotpref.livedata.asLiveData
+import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.onboarding.components.LoginPage
 import io.github.drumber.kitsune.ui.onboarding.components.SetupPage
@@ -81,6 +96,8 @@ class OnboardingActivity : BaseActivity(0) {
             val uiState by viewModel.uiSate.collectAsState()
             val localUser by viewModel.localUser.collectAsState()
 
+            var openCreateAccountForwardDialog by remember { mutableStateOf(false) }
+
             KitsuneTheme(dynamicColor = useDynamicColorTheme, darkTheme = isDarkModeEnabled) {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -89,8 +106,23 @@ class OnboardingActivity : BaseActivity(0) {
                     OnboardingTour(
                         uiState = uiState,
                         localUser = localUser,
-                        contentPadding = innerPadding
+                        contentPadding = innerPadding,
+                        onNavigateToLogin = {
+                            startActivity(Intent(this, AuthenticationActivity::class.java))
+                        },
+                        onNavigateToCreateAccount = {
+                            openCreateAccountForwardDialog = true
+                        }
                     )
+                    if (openCreateAccountForwardDialog) {
+                        CreateAccountForwardDialog(
+                            onDismissRequest = { openCreateAccountForwardDialog = false },
+                            onConfirmation = {
+                                openCreateAccountForwardDialog = false
+                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Kitsu.BASE_URL)))
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -98,10 +130,12 @@ class OnboardingActivity : BaseActivity(0) {
 }
 
 @Composable
-fun OnboardingTour(
+private fun OnboardingTour(
     uiState: OnboardingUiState = OnboardingUiState(),
     localUser: LocalUser? = null,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    onNavigateToLogin: () -> Unit = {},
+    onNavigateToCreateAccount: () -> Unit = {}
 ) {
     val pagerState = rememberPagerState(pageCount = { 3 })
     val contentPaddingWithoutBottom = PaddingValues(
@@ -144,7 +178,9 @@ fun OnboardingTour(
                         },
                         onNext = {
                             coroutineScope.launch { pagerState.animateScrollToPage(2) }
-                        }
+                        },
+                        onLoginClicked = onNavigateToLogin,
+                        onCreateAccountClicked = onNavigateToCreateAccount
                     )
 
                     2 -> SetupPage(
@@ -163,7 +199,7 @@ fun OnboardingTour(
 }
 
 @Composable
-fun PageIndicator(modifier: Modifier, pagerState: PagerState) {
+private fun PageIndicator(modifier: Modifier, pagerState: PagerState) {
     Row(
         modifier
             .wrapContentHeight()
@@ -188,9 +224,32 @@ fun PageIndicator(modifier: Modifier, pagerState: PagerState) {
     }
 }
 
+@Composable
+private fun CreateAccountForwardDialog(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit
+) {
+    AlertDialog(
+        title = { Text(text = stringResource(R.string.onboarding_login_forward_dialog_title)) },
+        text = { Text(text = stringResource(R.string.onboarding_login_forward_dialog_message, Kitsu.API_HOST)) },
+        icon = { Icon(imageVector = Icons.Default.Info, contentDescription = null) },
+        onDismissRequest = onDismissRequest,
+        confirmButton = {
+            TextButton(onClick = onConfirmation) {
+                Text(text = stringResource(R.string.action_ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text(text = stringResource(R.string.action_cancel))
+            }
+        }
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
-fun OnboardingTourPreview() {
+private fun OnboardingTourPreview() {
     KitsuneTheme {
         OnboardingTour()
     }

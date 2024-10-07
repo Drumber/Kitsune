@@ -252,6 +252,14 @@ private fun BottomSection(
 @Composable
 private fun LoginPagePreview() {
     KitsuneTheme {
+        LoginPage(localUser = null)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun LoginPageAuthenticatedPreview() {
+    KitsuneTheme {
         LoginPage(localUser = LocalUser.empty(""))
     }
 }
