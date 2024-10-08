@@ -18,20 +18,21 @@ fun KitsuneTheme(
 ) {
     val context = LocalContext.current
     val layoutDirection = LocalLayoutDirection.current
-    var (colorScheme, typography, shapes) = createMdc3Theme(
+    val (_, typography, shapes) = createMdc3Theme(
         context = context,
-        layoutDirection = layoutDirection
+        layoutDirection = layoutDirection,
+        readColorScheme = false
     )
 
     val useDynamicColor = dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-    colorScheme = when {
+    val colorScheme = when {
         useDynamicColor && darkTheme -> dynamicDarkColorScheme(context)
         useDynamicColor && !darkTheme -> dynamicLightColorScheme(context)
-        else -> colorScheme
+        else -> obtainColorScheme(context)
     }
 
     MaterialTheme(
-        colorScheme = colorScheme!!,
+        colorScheme = colorScheme,
         typography = typography!!,
         shapes = shapes!!,
         content = content

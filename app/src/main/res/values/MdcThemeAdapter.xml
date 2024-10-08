@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MdcThemeAdapter">
+        <attr name="isMaterial3Theme"/>
+
+        <attr name="colorPrimary"/>
+        <attr name="colorOnPrimary"/>
+        <attr name="colorPrimaryInverse"/>
+        <attr name="colorPrimaryContainer"/>
+        <attr name="colorOnPrimaryContainer"/>
+        <attr name="colorSecondary"/>
+        <attr name="colorOnSecondary"/>
+        <attr name="colorSecondaryContainer"/>
+        <attr name="colorOnSecondaryContainer"/>
+        <attr name="colorTertiary"/>
+        <attr name="colorOnTertiary"/>
+        <attr name="colorTertiaryContainer"/>
+        <attr name="colorOnTertiaryContainer"/>
+        <attr name="android:colorBackground"/>
+        <attr name="colorOnBackground"/>
+        <attr name="colorSurface"/>
+        <attr name="colorOnSurface"/>
+        <attr name="colorSurfaceVariant"/>
+        <attr name="colorOnSurfaceVariant"/>
+        <attr name="elevationOverlayColor"/>
+        <attr name="colorSurfaceInverse"/>
+        <attr name="colorOnSurfaceInverse"/>
+        <attr name="colorSurfaceBright"/>
+        <attr name="colorSurfaceContainer"/>
+        <attr name="colorSurfaceContainerHigh"/>
+        <attr name="colorSurfaceContainerHighest"/>
+        <attr name="colorSurfaceContainerLow"/>
+        <attr name="colorSurfaceContainerLowest"/>
+        <attr format="color" name="colorSurfaceDim"/>
+        <attr name="colorOutline"/>
+        <attr name="colorOutlineVariant"/>
+        <attr name="colorError"/>
+        <attr name="colorOnError"/>
+        <attr name="colorErrorContainer"/>
+        <attr name="colorOnErrorContainer"/>
+        <attr name="scrimBackground"/>
+
+        <attr name="fontFamily"/>
+        <attr name="android:fontFamily"/>
+        <attr name="textAppearanceDisplayLarge"/>
+        <attr name="textAppearanceDisplayMedium"/>
+        <attr name="textAppearanceDisplaySmall"/>
+        <attr name="textAppearanceHeadlineLarge"/>
+        <attr name="textAppearanceHeadlineMedium"/>
+        <attr name="textAppearanceHeadlineSmall"/>
+        <attr name="textAppearanceTitleLarge"/>
+        <attr name="textAppearanceTitleMedium"/>
+        <attr name="textAppearanceTitleSmall"/>
+        <attr name="textAppearanceBodyLarge"/>
+        <attr name="textAppearanceBodyMedium"/>
+        <attr name="textAppearanceBodySmall"/>
+        <attr name="textAppearanceLabelLarge"/>
+        <attr name="textAppearanceLabelMedium"/>
+        <attr name="textAppearanceLabelSmall"/>
+
+        <attr name="shapeAppearanceCornerExtraSmall"/>
+        <attr name="shapeAppearanceCornerSmall"/>
+        <attr name="shapeAppearanceCornerMedium"/>
+        <attr name="shapeAppearanceCornerLarge"/>
+        <attr name="shapeAppearanceCornerExtraLarge"/>
+
+        <attr name="isLightTheme"/>
+    </declare-styleable>
+</resources>
