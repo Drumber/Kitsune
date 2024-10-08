@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -40,8 +41,8 @@ fun ImageSlideshow(
     modifier: Modifier = Modifier,
     imagePresenter: ImagePresenter
 ) {
-    var currentImage by remember { mutableStateOf(imagePresenter.getNextImage()) }
-    var nextImage by remember { mutableStateOf(imagePresenter.getNextImage()) }
+    var currentImage by rememberSaveable(imagePresenter) { mutableStateOf(imagePresenter.getNextImage()) }
+    var nextImage by rememberSaveable(imagePresenter) { mutableStateOf(imagePresenter.getNextImage()) }
 
     val context = LocalContext.current
 

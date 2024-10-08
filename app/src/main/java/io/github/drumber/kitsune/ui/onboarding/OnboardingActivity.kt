@@ -29,7 +29,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -150,6 +150,12 @@ private fun OnboardingTour(
         end = contentPadding.calculateEndPadding(LocalLayoutDirection.current),
         bottom = contentPadding.calculateBottomPadding()
     )
+    val contentPaddingWithoutTopAndBottom = PaddingValues(
+        start = contentPadding.calculateStartPadding(LocalLayoutDirection.current),
+        top = 0.dp,
+        end = contentPadding.calculateEndPadding(LocalLayoutDirection.current),
+        bottom = 0.dp
+    )
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -184,7 +190,7 @@ private fun OnboardingTour(
                     )
 
                     2 -> SetupPage(
-                        modifier = Modifier.padding(contentPaddingWithoutBottom)
+                        modifier = Modifier.padding(contentPaddingWithoutTopAndBottom)
                     )
                 }
             }
@@ -232,7 +238,7 @@ private fun CreateAccountForwardDialog(
     AlertDialog(
         title = { Text(text = stringResource(R.string.onboarding_login_forward_dialog_title)) },
         text = { Text(text = stringResource(R.string.onboarding_login_forward_dialog_message, Kitsu.API_HOST)) },
-        icon = { Icon(imageVector = Icons.Default.Info, contentDescription = null) },
+        icon = { Icon(imageVector = Icons.Outlined.Info, contentDescription = null) },
         onDismissRequest = onDismissRequest,
         confirmButton = {
             TextButton(onClick = onConfirmation) {
