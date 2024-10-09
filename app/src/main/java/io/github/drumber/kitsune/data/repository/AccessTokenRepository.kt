@@ -8,6 +8,9 @@ import io.github.drumber.kitsune.data.source.network.auth.model.ObtainAccessToke
 import io.github.drumber.kitsune.data.source.network.auth.model.RefreshAccessToken
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logI
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.Date
@@ -21,6 +24,14 @@ class AccessTokenRepository(
 
     private var isAccessTokenLoaded = false
     private var cachedAccessToken: LocalAccessToken? = null
+
+    private val _accessTokenState by lazy {
+        MutableStateFlow(
+            if (hasAccessToken()) AccessTokenState.PRESENT
+            else AccessTokenState.NOT_PRESENT
+        )
+    }
+    val accessTokenState get() = _accessTokenState.asStateFlow()
 
     fun getAccessToken(): LocalAccessToken? {
         if (!isAccessTokenLoaded) {
@@ -41,6 +52,7 @@ class AccessTokenRepository(
         mutex.withLock {
             cachedAccessToken = null
             localAccessTokenDataSource.clearAccessToken()
+            _accessTokenState.update { AccessTokenState.NOT_PRESENT }
         }
     }
 
@@ -53,6 +65,7 @@ class AccessTokenRepository(
                 )
             ).toLocalAccessToken()
             storeAccessToken(accessToken)
+            _accessTokenState.update { AccessTokenState.PRESENT }
             return accessToken
         }
     }
@@ -82,5 +95,10 @@ class AccessTokenRepository(
     private fun storeAccessToken(accessToken: LocalAccessToken) {
         localAccessTokenDataSource.storeAccessToken(accessToken)
         cachedAccessToken = accessToken
+    }
+
+    enum class AccessTokenState {
+        NOT_PRESENT,
+        PRESENT
     }
 }

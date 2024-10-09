@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.data.repository
 
+import io.github.drumber.kitsune.data.repository.AccessTokenRepository.AccessTokenState
 import io.github.drumber.kitsune.data.source.local.auth.AccessTokenLocalDataSource
 import io.github.drumber.kitsune.data.source.local.auth.model.LocalAccessToken
 import io.github.drumber.kitsune.data.source.network.auth.AccessTokenNetworkDataSource
@@ -109,6 +110,7 @@ class AccessTokenRepositoryTest {
             // then
             verify(localAccessTokenDataSource).clearAccessToken()
             assertThat(accessTokenRepository.getAccessToken()).isNull()
+            assertThat(accessTokenRepository.accessTokenState.value).isEqualTo(AccessTokenState.NOT_PRESENT)
         }
     }
 
@@ -152,6 +154,8 @@ class AccessTokenRepositoryTest {
 
             assertThat(actualAccessToken).usingRecursiveComparison().isEqualTo(accessToken)
             assertThat(accessTokenRepository.getAccessToken()).isEqualTo(actualAccessToken)
+
+            assertThat(accessTokenRepository.accessTokenState.value).isEqualTo(AccessTokenState.PRESENT)
         }
     }
 
@@ -252,6 +256,49 @@ class AccessTokenRepositoryTest {
             assertThat(firstAccessToken.await()).isEqualTo(localAccessTokenDataSource.loadAccessToken())
             assertThat(firstAccessToken.await()).isEqualTo(secondAccessToken.await())
         }
+    }
+
+    @Test
+    fun shouldAccessTokenStateEmitPresent() {
+        // given
+        val accessToken = LocalAccessToken(
+            accessToken = faker.lorem().word(),
+            createdAt = faker.number().randomNumber(),
+            expiresIn = faker.number().randomNumber(),
+            refreshToken = faker.lorem().word()
+        )
+
+        val localAccessTokenDataSource = FakeAccessTokenLocalDataSource(accessToken)
+        val accessTokenRepository = AccessTokenRepository(
+            localAccessTokenDataSource = localAccessTokenDataSource,
+            remoteAccessTokenDataSource = mock(stubOnly = true)
+        )
+
+        // when
+        val accessTokenState = useMockedAndroidLogger {
+            accessTokenRepository.accessTokenState.value
+        }
+
+        // then
+        assertThat(accessTokenState).isEqualTo(AccessTokenState.PRESENT)
+    }
+
+    @Test
+    fun shouldAccessTokenStateEmitNotPresent() {
+        // given
+        val localAccessTokenDataSource = FakeAccessTokenLocalDataSource()
+        val accessTokenRepository = AccessTokenRepository(
+            localAccessTokenDataSource = localAccessTokenDataSource,
+            remoteAccessTokenDataSource = mock(stubOnly = true)
+        )
+
+        // when
+        val accessTokenState = useMockedAndroidLogger {
+            accessTokenRepository.accessTokenState.value
+        }
+
+        // then
+        assertThat(accessTokenState).isEqualTo(AccessTokenState.NOT_PRESENT)
     }
 
 

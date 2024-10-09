@@ -61,9 +61,6 @@ class AuthenticationActivity : BaseActivity(R.layout.activity_authentication) {
                 updateUiWithUser(loginResult.success)
 
                 setResult(Activity.RESULT_OK)
-
-                // Start new clean main activity and destroy login activity once successful
-                startNewMainActivity()
                 finish()
             }
         }

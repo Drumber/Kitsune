@@ -2,7 +2,6 @@ package io.github.drumber.kitsune.ui.base
 
 import android.app.ActivityManager
 import android.content.Context
-import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
@@ -17,7 +16,6 @@ import com.google.android.material.color.DynamicColors
 import com.google.android.material.elevation.SurfaceColors
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.main.MainActivity
 import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
 
 abstract class BaseActivity(
@@ -63,12 +61,6 @@ abstract class BaseActivity(
     override fun onResume() {
         super.onResume()
         checkAppTheme()
-    }
-
-    fun startNewMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
     }
 
     private fun checkAppTheme() {

@@ -51,7 +51,6 @@ import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
 import io.github.drumber.kitsune.ui.adapter.CharacterAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
-import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.component.chart.PieChartStyle
 import io.github.drumber.kitsune.util.extensions.navigateSafe
@@ -468,10 +467,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
     private fun onLogOut() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.logOut()
-            (requireActivity() as BaseActivity).apply {
-                startNewMainActivity()
-                finish()
-            }
         }
     }
 

@@ -22,7 +22,7 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel { OnboardingViewModel(get(), get(), get()) }
-    viewModel { MainActivityViewModel() }
+    viewModel { MainActivityViewModel(get(), get()) }
     viewModel { MainFragmentViewModel(get(), get()) }
     viewModel { SearchViewModel(get()) }
     viewModel { MediaListViewModel(get(), get()) }

@@ -36,7 +36,6 @@ import io.github.drumber.kitsune.constants.IntentAction.OPEN_MEDIA
 import io.github.drumber.kitsune.constants.IntentAction.SHORTCUT_LIBRARY
 import io.github.drumber.kitsune.constants.IntentAction.SHORTCUT_SEARCH
 import io.github.drumber.kitsune.constants.IntentAction.SHORTCUT_SETTINGS
-import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.databinding.ActivityMainBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.preference.StartPagePref
@@ -55,7 +54,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity(R.layout.activity_main) {
@@ -79,10 +77,22 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         window.sharedElementsUseOverlay = false
         super.onCreate(savedInstanceState)
 
-        val userRepository = get<UserRepository>()
         lifecycleScope.launch {
-            userRepository.userReLogInPrompt.collectLatest {
-                promptUserReLogin()
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.reLoginPrompt.collectLatest {
+                    promptUserReLogin()
+                }
+            }
+        }
+
+        val initialLoginState = viewModel.isLoggedIn()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isLoggedInFlow.collectLatest { isLoggedIn ->
+                    if (initialLoginState != isLoggedIn) {
+                        startNewMainActivity()
+                    }
+                }
             }
         }
 
@@ -149,7 +159,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    userRepository.localUser
+                    viewModel.localUser
                         .map { it?.avatar?.originalOrDown() }
                         .distinctUntilChanged()
                         .collectLatest { avatarUrl ->
@@ -255,6 +265,12 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         val intent = Intent(this, AuthenticationActivity::class.java)
         intent.putExtra(AuthenticationActivity.EXTRA_LOGGED_OUT, true)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
+    }
+
+    private fun startNewMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
 
