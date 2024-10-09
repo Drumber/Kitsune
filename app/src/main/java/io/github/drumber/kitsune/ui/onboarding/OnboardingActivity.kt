@@ -53,6 +53,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.asFlow
 import com.chibatching.kotpref.livedata.asLiveData
+import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
@@ -60,7 +61,7 @@ import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.onboarding.components.LoginPage
-import io.github.drumber.kitsune.ui.onboarding.components.SetupPage
+import io.github.drumber.kitsune.ui.onboarding.components.SetupPageAdapter
 import io.github.drumber.kitsune.ui.onboarding.components.WelcomePage
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 import kotlinx.coroutines.launch
@@ -112,6 +113,10 @@ class OnboardingActivity : BaseActivity(0) {
                         },
                         onNavigateToCreateAccount = {
                             openCreateAccountForwardDialog = true
+                        },
+                        onFinish = {
+                            KitsunePref.onboardingFinishedVersionCode = BuildConfig.VERSION_CODE
+                            finish()
                         }
                     )
                     if (openCreateAccountForwardDialog) {
@@ -135,7 +140,8 @@ private fun OnboardingTour(
     localUser: LocalUser? = null,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     onNavigateToLogin: () -> Unit = {},
-    onNavigateToCreateAccount: () -> Unit = {}
+    onNavigateToCreateAccount: () -> Unit = {},
+    onFinish: () -> Unit = {}
 ) {
     val pagerState = rememberPagerState(pageCount = { 3 })
     val contentPaddingWithoutBottom = PaddingValues(
@@ -149,12 +155,6 @@ private fun OnboardingTour(
         top = 0.dp,
         end = contentPadding.calculateEndPadding(LocalLayoutDirection.current),
         bottom = contentPadding.calculateBottomPadding()
-    )
-    val contentPaddingWithoutTopAndBottom = PaddingValues(
-        start = contentPadding.calculateStartPadding(LocalLayoutDirection.current),
-        top = 0.dp,
-        end = contentPadding.calculateEndPadding(LocalLayoutDirection.current),
-        bottom = 0.dp
     )
 
     val coroutineScope = rememberCoroutineScope()
@@ -189,8 +189,9 @@ private fun OnboardingTour(
                         onCreateAccountClicked = onNavigateToCreateAccount
                     )
 
-                    2 -> SetupPage(
-                        modifier = Modifier.padding(contentPaddingWithoutTopAndBottom)
+                    2 -> SetupPageAdapter(
+                        modifier = Modifier.padding(contentPaddingWithoutBottom),
+                        onFinishClicked = onFinish
                     )
                 }
             }
@@ -237,7 +238,14 @@ private fun CreateAccountForwardDialog(
 ) {
     AlertDialog(
         title = { Text(text = stringResource(R.string.onboarding_login_forward_dialog_title)) },
-        text = { Text(text = stringResource(R.string.onboarding_login_forward_dialog_message, Kitsu.API_HOST)) },
+        text = {
+            Text(
+                text = stringResource(
+                    R.string.onboarding_login_forward_dialog_message,
+                    Kitsu.API_HOST
+                )
+            )
+        },
         icon = { Icon(imageVector = Icons.Outlined.Info, contentDescription = null) },
         onDismissRequest = onDismissRequest,
         confirmButton = {

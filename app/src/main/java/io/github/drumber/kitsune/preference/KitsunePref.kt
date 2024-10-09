@@ -118,6 +118,9 @@ object KitsunePref : KotprefModel(), KoinComponent {
     var lastLibraryFetchForWidget by longPref(default = -1L)
 
 
+    var onboardingFinishedVersionCode by intPref(default = -1)
+
+
     private fun Any.toJsonString(): String {
         val objectMapper: ObjectMapper = get()
         return objectMapper.writeValueAsString(this)

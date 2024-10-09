@@ -13,10 +13,13 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -36,9 +39,11 @@ fun PreferenceCard(
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
-            Column {
+            Column(modifier = Modifier.weight(1f, true)) {
                 CompositionLocalProvider(
                     LocalTextStyle provides LocalTextStyle.current.merge(MaterialTheme.typography.bodyLarge)
                 ) {
@@ -58,4 +63,20 @@ fun PreferenceCard(
             }
         }
     }
+}
+
+@Preview(showBackground = false)
+@Composable
+private fun PreferenceCardPreview() {
+    PreferenceCard(
+        title = { Text("Check for Updates") },
+        description = { Text("Get notified when a new release is available on GitHub.") },
+        action = {
+            Switch(
+                checked = false,
+                onCheckedChange = {}
+            )
+        },
+        onClick = {}
+    )
 }
