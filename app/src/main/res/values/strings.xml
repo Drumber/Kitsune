@@ -383,6 +383,7 @@
     <string name="onboarding_login_forward_dialog_message">You will be redirected to %1$s where you can create a new account.</string>
     <string name="onboarding_setup_title">Initial Setup</string>
     <string name="onboarding_setup_subtitle">Set your preferred settings to get started. You can change them anytime later in the settings.</string>
+    <string name="onboarding_setup_notification_permission_notice">Notification permission is required.</string>
     <string name="onboarding_setup_updates">Check for Updates</string>
     <string name="onboarding_setup_updates_description">Get notified when a new release is available on GitHub.</string>
     <string name="onboarding_setup_title_language">Title Language</string>

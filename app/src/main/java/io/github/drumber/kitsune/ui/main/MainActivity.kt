@@ -44,7 +44,7 @@ import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.details.DetailsFragmentArgs
 import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
-import io.github.drumber.kitsune.ui.onboarding.OnboardingActivityDirections
+import io.github.drumber.kitsune.ui.onboarding.OnboardingActivity
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
 import io.github.drumber.kitsune.ui.permissions.showNotificationPermissionRejectedDialog
 import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
@@ -164,7 +164,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                         .distinctUntilChanged()
                         .collectLatest { avatarUrl ->
                             if (avatarUrl.isNullOrBlank()) {
-                                menu.findItem(R.id.profile_fragment).setIcon(R.drawable.selector_profile)
+                                menu.findItem(R.id.profile_fragment)
+                                    .setIcon(R.drawable.selector_profile)
                                 return@collectLatest
                             }
                             Glide.with(this@MainActivity)
@@ -221,11 +222,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
         }
 
-        requestRequiredPermissions()
-
-        // TODO: just for testing, remove later
-        val action = OnboardingActivityDirections.actionGlobalOnboardingActivity()
-        navController.navigate(action)
+        if (shouldStartOnboarding()) {
+            startOnboardingActivity()
+        } else {
+            requestRequiredPermissions()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -270,6 +271,16 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     private fun startNewMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+    }
+
+    private fun shouldStartOnboarding(): Boolean {
+        return KitsunePref.onboardingFinishedVersionCode == -1
+    }
+
+    private fun startOnboardingActivity() {
+        val intent = Intent(this, OnboardingActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }

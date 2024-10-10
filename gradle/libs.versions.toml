@@ -57,7 +57,8 @@ treeView = "1.2.9"
 viewBindingDelegate = "1.5.9"
 
 [libraries]
-accompanist = { module = "com.google.accompanist:accompanist-themeadapter-material3", version.ref = "accompanist"}
+accompanist-themeadapter-material3 = { module = "com.google.accompanist:accompanist-themeadapter-material3", version.ref = "accompanist"}
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist"}
 algolia-instantsearch-android = { module = "com.algolia:instantsearch-android", version.ref = "algoliaInstantSearch" }
 algolia-instantsearch-android-paging3 = { module = "com.algolia:instantsearch-android-paging3", version.ref = "algoliaInstantSearch" }
 algolia-instantsearch-coroutines = { module = "com.algolia:instantsearch-coroutines-extensions", version.ref = "algoliaInstantSearch" }
