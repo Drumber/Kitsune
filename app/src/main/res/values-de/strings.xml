@@ -7,6 +7,7 @@
     <string name="title_categories">Kategorien</string>
     <string name="title_description">Beschreibung</string>
     <string name="action_read_less">Weniger anzeigen</string>
+    <string name="action_continue">Fortfahren</string>
     <string name="action_close">Schließen</string>
     <string name="action_open_external">Auf externer Seite öffnen</string>
     <string name="action_remove">Entfernen</string>
@@ -63,6 +64,7 @@
     <string name="preference_adult_content_description_sometimes">Medien mit R18+ Altersbeschränkung sind sichtbar, aber Beiträge mit NSFW Kennzeichnung werden im globalen Feed versteckt.</string>
     <string name="preference_app_version_description">Klicken, um nach Aktualisierungen zu suchen.</string>
     <string name="action_log_in_to_kitsu">Bei Kitsu anmelden</string>
+    <string name="action_create_account">Account erstellen</string>
     <string name="invalid_username">Keine gültige E-Mail Adresse</string>
     <string name="not_logged_in">Nicht angemeldet</string>
     <string name="app_logs_no_data">Keine Protokolle verfügbar.</string>
@@ -316,6 +318,7 @@
     <string name="profile_avatar_image_description">Profilbild</string>
     <string name="profile_link_url">URL oder Benutzername</string>
     <string name="notification_updates">Anwendungsaktualisierungen</string>
+    <string name="onboarding_setup_action">Einrichtung abschließen</string>
     <string name="unit_episode">Episode %d</string>
     <string name="unit_chapter">Kapitel %d</string>
     <plurals name="unit_pages">
@@ -364,4 +367,19 @@
     <string name="onboarding_welcome_feature_track">Verfolgen</string>
     <string name="onboarding_welcome_feature_track_description">Behalte im Auge, was du geschaut und gelesen hast.</string>
     <string name="onboarding_welcome_action">Los geht\'s</string>
+    <string name="action_skip">Überspringen</string>
+    <string name="action_next">Weiter</string>
+    <string name="onboarding_login_title">Bei Kitsu anmelden</string>
+    <string name="onboarding_login_subtitle">Melde dich mit deinem Kitsu-Account an oder erstelle einen neuen Account, um auf alle Funktionen zugreifen zu können.</string>
+    <string name="onboarding_login_is_logged_in">Du bist angemeldet</string>
+    <string name="onboarding_login_forward_dialog_title">Account erstellen</string>
+    <string name="onboarding_login_forward_dialog_message">Du wirst zu %1$s weitergeleitet, wo du einen neuen Account erstellen kannst.</string>
+    <string name="onboarding_setup_title">Ersteinrichtung</string>
+    <string name="onboarding_setup_subtitle">Lege deine bevorzugten Einstellungen fest, um loszulegen. Du kannst sie später jederzeit in den Einstellungen ändern.</string>
+    <string name="onboarding_setup_notification_permission_notice">Berechtigung für Benachrichtigungen ist erforderlich.</string>
+    <string name="onboarding_setup_updates">Auf Aktualisierungen prüfen</string>
+    <string name="onboarding_setup_updates_description">Erhalte eine Benachrichtigung, wenn eine neue Version auf GitHub verfügbar ist.</string>
+    <string name="onboarding_setup_title_language">Titel Sprache</string>
+    <string name="onboarding_setup_title_language_description">Wähle deine bevorzugte Sprache für Titel aus.</string>
+    <string name="onboarding_setup_title_language_selected">Ausgewählt: %1$s</string>
 </resources>
