@@ -2,39 +2,55 @@ package io.github.drumber.kitsune.ui.onboarding.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.asFlow
 import com.chibatching.kotpref.livedata.asLiveData
+import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
+import kotlinx.coroutines.flow.map
 
 @Composable
 fun SetupPageAdapter(
     modifier: Modifier = Modifier,
-    onFinishClicked: () -> Unit = {}
+    onFinishClicked: () -> Unit = {},
+    onBack: () -> Unit = {}
 ) {
     val checkForUpdatesPreference by KitsunePref
         .asLiveData(KitsunePref::checkForUpdatesOnStart)
@@ -44,35 +60,48 @@ fun SetupPageAdapter(
         KitsunePref.checkForUpdatesOnStart = value
     }
 
+    val titleLanguages = LocalTitleLanguagePreference.entries.map { it.name }
+    val selectedTitleLanguageIndex by KitsunePref.getTitleLanguageAsFlow()
+        .map { it.ordinal }
+        .collectAsState(KitsunePref.titles.ordinal)
+    val selectTitleLanguage = { index: Int ->
+        KitsunePref.titles = LocalTitleLanguagePreference.entries[index]
+    }
+
     SetupPage(
         modifier = modifier,
         onFinishClicked = onFinishClicked,
+        onBackClicked = onBack,
         checkForUpdatesPreference = checkForUpdatesPreference,
-        onCheckForUpdatesPreferenceChanged = updateCheckForUpdatesPreference
+        onCheckForUpdatesPreferenceChanged = updateCheckForUpdatesPreference,
+        titleLanguages = titleLanguages,
+        selectedTitleLanguageIndex = selectedTitleLanguageIndex,
+        onTitleLanguageSelected = selectTitleLanguage
     )
 }
 
 @Composable
-fun SetupPage(
+private fun SetupPage(
     modifier: Modifier = Modifier,
     onFinishClicked: () -> Unit = {},
+    onBackClicked: () -> Unit = {},
     checkForUpdatesPreference: Boolean = false,
     onCheckForUpdatesPreferenceChanged: (Boolean) -> Unit = {},
     titleLanguages: List<String> = emptyList(),
-    selectedTitleLanguage: String = "",
-    onTitleLanguageSelected: (String) -> Unit = {}
+    selectedTitleLanguageIndex: Int = 0,
+    onTitleLanguageSelected: (Int) -> Unit = {}
 ) {
     val backgroundGradient = listOf(
         MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
         MaterialTheme.colorScheme.surface
     )
 
-    var openSelectTitleLanguageDialog by remember { mutableStateOf(false) }
+    var openSelectTitleLanguageDialog by rememberSaveable { mutableStateOf(false) }
 
     if (openSelectTitleLanguageDialog) {
         SelectTitleLanguageDialog(
             titleLanguages = titleLanguages,
-            selectedTitleLanguage = selectedTitleLanguage,
+            selectedIndex = selectedTitleLanguageIndex,
             onTitleLanguageSelected = {
                 onTitleLanguageSelected(it)
                 openSelectTitleLanguageDialog = false
@@ -81,45 +110,65 @@ fun SetupPage(
         )
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(backgroundGradient))
-            .verticalScroll(state = rememberScrollState())
-            .then(modifier)
-            .padding(16.dp)
+            .background(Brush.verticalGradient(backgroundGradient)),
+        contentAlignment = Alignment.Center
     ) {
-        HeaderSection()
-        Spacer(modifier = Modifier.height(32.dp))
-        PreferenceCard(
-            title = { Text("Check for Updates") },
-            description = { Text("Get notified when a new release is available on GitHub.") },
-            action = {
-                Switch(
-                    checked = checkForUpdatesPreference,
-                    onCheckedChange = onCheckForUpdatesPreferenceChanged
-                )
-            },
-            onClick = {
-                onCheckForUpdatesPreferenceChanged(!checkForUpdatesPreference)
-            }
-        )
-        Spacer(Modifier.height(12.dp))
-        PreferenceCard(
-            title = { Text("Title Language") },
-            description = { Text("Select your preferred language for titles.") },
-            onClick = {}
-        )
-        Spacer(
-            Modifier
-                .height(12.dp)
-                .weight(1f)
-        )
-        Button(
-            onClick = onFinishClicked,
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .widthIn(min = 0.dp, max = 500.dp)
+                .verticalScroll(state = rememberScrollState())
+                .then(modifier)
+                .padding(16.dp)
         ) {
-            Text(text = "Finish Setup")
+            Spacer(Modifier.weight(1f))
+            HeaderSection()
+            Spacer(modifier = Modifier.height(32.dp))
+            PreferenceCard(
+                title = { Text(stringResource(R.string.onboarding_setup_updates)) },
+                description = { Text(stringResource(R.string.onboarding_setup_updates_description)) },
+                action = {
+                    Switch(
+                        checked = checkForUpdatesPreference,
+                        onCheckedChange = onCheckForUpdatesPreferenceChanged
+                    )
+                },
+                onClick = {
+                    onCheckForUpdatesPreferenceChanged(!checkForUpdatesPreference)
+                }
+            )
+            Spacer(Modifier.height(12.dp))
+            PreferenceCard(
+                title = { Text(stringResource(R.string.onboarding_setup_title_language)) },
+                description = {
+                    Text(stringResource(R.string.onboarding_setup_title_language_description))
+                    if (selectedTitleLanguageIndex in titleLanguages.indices) {
+                        Text(
+                            stringResource(
+                                R.string.onboarding_setup_title_language_selected,
+                                titleLanguages[selectedTitleLanguageIndex]
+                            )
+                        )
+                    }
+                },
+                onClick = { openSelectTitleLanguageDialog = true }
+            )
+            Spacer(Modifier.weight(1f))
+            Spacer(Modifier.height(32.dp))
+            Button(
+                onClick = onFinishClicked,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = stringResource(R.string.onboarding_setup_action))
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            OnboardingNavigationControls(
+                hideNextButton = true,
+                onBackClicked = onBackClicked
+            )
         }
     }
 }
@@ -132,14 +181,14 @@ private fun HeaderSection(modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         Text(
-            text = "First Setup",
+            text = stringResource(R.string.onboarding_setup_title),
             style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Set your preferred settings to get started. You can change them anytime later in the settings.",
+            text = stringResource(R.string.onboarding_setup_subtitle),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center
         )
@@ -149,11 +198,53 @@ private fun HeaderSection(modifier: Modifier = Modifier) {
 @Composable
 private fun SelectTitleLanguageDialog(
     titleLanguages: List<String>,
-    selectedTitleLanguage: String,
-    onTitleLanguageSelected: (String) -> Unit,
+    selectedIndex: Int,
+    onTitleLanguageSelected: (Int) -> Unit,
     onDismiss: () -> Unit
 ) {
-    // TODO: Implement dialog
+    var tmpSelectedOption by remember { mutableIntStateOf(selectedIndex) }
+
+    CustomDialog(
+        title = { Text(stringResource(R.string.onboarding_setup_title_language)) },
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = { onTitleLanguageSelected(tmpSelectedOption) }) {
+                Text(stringResource(R.string.action_ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.action_cancel))
+            }
+        }
+    ) { contentPadding ->
+        Column(modifier = Modifier.selectableGroup()) {
+            titleLanguages.forEachIndexed { index, language ->
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .selectable(
+                            selected = index == tmpSelectedOption,
+                            onClick = { tmpSelectedOption = index },
+                            role = Role.RadioButton
+                        )
+                        .padding(contentPadding),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = index == tmpSelectedOption,
+                        onClick = null
+                    )
+                    Text(
+                        text = language,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true)
@@ -161,5 +252,18 @@ private fun SelectTitleLanguageDialog(
 private fun SetupPagePreview() {
     KitsuneTheme {
         SetupPage()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SelectTitleLanguageDialogPreview() {
+    KitsuneTheme {
+        SelectTitleLanguageDialog(
+            titleLanguages = listOf("Canonical", "Romaji", "English"),
+            selectedIndex = 2,
+            onTitleLanguageSelected = {},
+            onDismiss = {}
+        )
     }
 }

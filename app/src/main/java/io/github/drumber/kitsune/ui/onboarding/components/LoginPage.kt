@@ -12,16 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -111,10 +107,11 @@ fun LoginPage(
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
-        BottomSection(
-            hideSkip = localUser != null,
+        OnboardingNavigationControls(
+            hideNextButton = localUser != null,
             onBackClicked = onBack,
-            onSkipClicked = onNext
+            onNextClicked = onNext,
+            nextText = stringResource(R.string.action_skip)
         )
     }
 }
@@ -127,14 +124,14 @@ private fun HeaderSection(modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         Text(
-            text = "Login to Kitsu",
+            text = stringResource(R.string.onboarding_login_title),
             style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Login to your Kitsu account or create a new account to get access to all features.",
+            text = stringResource(R.string.onboarding_login_subtitle),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center
         )
@@ -172,12 +169,12 @@ private fun LoggedInUserSection(
                 Column {
                     Text(
                         style = MaterialTheme.typography.titleMedium,
-                        text = localUser.name ?: "Unknown"
+                        text = localUser.name ?: stringResource(R.string.no_information)
                     )
                     Spacer(Modifier.height(2.dp))
                     Text(
                         style = MaterialTheme.typography.bodySmall,
-                        text = "You are logged in"
+                        text = stringResource(R.string.onboarding_login_is_logged_in)
                     )
                 }
             }
@@ -187,7 +184,7 @@ private fun LoggedInUserSection(
             onClick = onNextClicked,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Continue")
+            Text(text = stringResource(R.string.action_continue))
         }
     }
 }
@@ -209,7 +206,7 @@ private fun ActionSection(
             enabled = !isDisabled,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Login")
+            Text(text = stringResource(R.string.action_log_in))
         }
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedButton(
@@ -217,33 +214,7 @@ private fun ActionSection(
             enabled = !isDisabled,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Create account")
-        }
-    }
-}
-
-@Composable
-private fun BottomSection(
-    modifier: Modifier = Modifier,
-    hideSkip: Boolean = false,
-    onBackClicked: () -> Unit = {},
-    onSkipClicked: () -> Unit = {}
-) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = modifier.fillMaxWidth()
-    ) {
-        TextButton(onClick = onBackClicked) {
-            Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
-            Spacer(Modifier.width(6.dp))
-            Text("Back")
-        }
-        if (!hideSkip) {
-            TextButton(onClick = onSkipClicked) {
-                Text("Skip")
-                Spacer(Modifier.width(6.dp))
-                Icon(Icons.AutoMirrored.Default.ArrowForward, contentDescription = null)
-            }
+            Text(text = stringResource(R.string.action_create_account))
         }
     }
 }

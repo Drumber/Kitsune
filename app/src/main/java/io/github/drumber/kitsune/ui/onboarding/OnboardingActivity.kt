@@ -191,6 +191,9 @@ private fun OnboardingTour(
 
                     2 -> SetupPageAdapter(
                         modifier = Modifier.padding(contentPaddingWithoutBottom),
+                        onBack = {
+                            coroutineScope.launch { pagerState.animateScrollToPage(1) }
+                        },
                         onFinishClicked = onFinish
                     )
                 }

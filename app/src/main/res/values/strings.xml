@@ -23,6 +23,9 @@
     <string name="action_show_less">Show less</string>
     <string name="action_view">View</string>
     <string name="action_back">Back</string>
+    <string name="action_skip">Skip</string>
+    <string name="action_next">Next</string>
+    <string name="action_continue">Continue</string>
     <string name="action_close">Close</string>
     <string name="action_log_out">Log out</string>
     <string name="action_share_profile_url">Share Profile</string>
@@ -288,6 +291,7 @@
     <string name="action_sign_in">Sign in</string>
     <string name="action_log_in">Log in</string>
     <string name="action_log_in_to_kitsu">Log in to Kitsu</string>
+    <string name="action_create_account">Create account</string>
     <string name="invalid_username">Not a valid email address</string>
     <string name="login_failed">"Login failed"</string>
     <string name="status_logging_in">Logging in…</string>
@@ -372,8 +376,19 @@
     <string name="onboarding_welcome_feature_track">Track</string>
     <string name="onboarding_welcome_feature_track_description">Keep track of what you\'ve watched and read.</string>
     <string name="onboarding_welcome_action">Get Started</string>
+    <string name="onboarding_login_title">Log in to Kitsu</string>
+    <string name="onboarding_login_subtitle">Login to your Kitsu account or create a new account to get access to all features.</string>
+    <string name="onboarding_login_is_logged_in">You are logged in</string>
     <string name="onboarding_login_forward_dialog_title">Create Account</string>
     <string name="onboarding_login_forward_dialog_message">You will be redirected to %1$s where you can create a new account.</string>
+    <string name="onboarding_setup_title">Initial Setup</string>
+    <string name="onboarding_setup_subtitle">Set your preferred settings to get started. You can change them anytime later in the settings.</string>
+    <string name="onboarding_setup_updates">Check for Updates</string>
+    <string name="onboarding_setup_updates_description">Get notified when a new release is available on GitHub.</string>
+    <string name="onboarding_setup_title_language">Title Language</string>
+    <string name="onboarding_setup_title_language_description">Select your preferred language for titles.</string>
+    <string name="onboarding_setup_title_language_selected">Selected: %1$s</string>
+    <string name="onboarding_setup_action">Finish Setup</string>
 
     <string name="unit_episode">Episode %d</string>
     <string name="unit_chapter">Chapter %d</string>

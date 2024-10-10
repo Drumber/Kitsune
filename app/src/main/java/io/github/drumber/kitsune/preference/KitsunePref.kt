@@ -1,9 +1,11 @@
 package io.github.drumber.kitsune.preference
 
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.asFlow
 import com.chibatching.kotpref.KotprefModel
 import com.chibatching.kotpref.enumpref.enumOrdinalPref
 import com.chibatching.kotpref.enumpref.enumValuePref
+import com.chibatching.kotpref.livedata.asLiveData
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -17,6 +19,7 @@ import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemP
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
 import io.github.drumber.kitsune.domain.algolia.FilterCollection
 import io.github.drumber.kitsune.util.logE
+import kotlinx.coroutines.flow.combine
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -73,7 +76,7 @@ object KitsunePref : KotprefModel(), KoinComponent {
         key = R.string.preference_key_force_legacy_image_picker
     )
 
-    // TODO: ask the user at the first start whether he wants to enable the update checker
+
     var checkForUpdatesOnStart by booleanPref(
         false,
         key = R.string.preference_key_check_for_updates_on_start
@@ -138,4 +141,9 @@ object KitsunePref : KotprefModel(), KoinComponent {
         }
     }
 
+    fun getTitleLanguageAsFlow() = KitsunePref.asLiveData(KitsunePref::titlesIntern)
+        .asFlow()
+        .combine(userRepository.localUser) { preference, localUser ->
+            localUser?.titleLanguagePreference ?: preference
+        }
 }
