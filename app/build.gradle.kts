@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.aboutlibraries.plugin)
     alias(libs.plugins.jetbrains.kotlin.parcelize)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.apollo.graphql.plugin)
     id("kitsune-plugin")
 }
 
@@ -103,6 +104,18 @@ aboutLibraries {
     excludeFields = arrayOf("generated")
 }
 
+apollo {
+    service("kitsu") {
+        packageName.set("io.github.drumber.kitsune.data.source.graphql")
+        introspection {
+            endpointUrl.set("https://kitsu.app/api/graphql")
+            schemaFile.set(file("src/main/graphql/schema.graphqls"))
+        }
+
+        mapScalarToKotlinString("ISO8601DateTime")
+    }
+}
+
 dependencies {
     // Android core and support libs
     implementation(libs.androidx.core.ktx)
@@ -175,6 +188,9 @@ dependencies {
 
     // jsonapi-converter
     implementation(libs.jasminb.jsonapi)
+
+    // Apollo GraphQL
+    implementation(libs.apollo.graphql.runtime)
 
     // Jackson
     implementation(libs.fasterxml.jackson.databind)
