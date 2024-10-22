@@ -224,7 +224,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
         if (shouldStartOnboarding()) {
             startOnboardingActivity()
-        } else {
+        } else if (KitsunePref.checkForUpdatesOnStart) {
             requestRequiredPermissions()
         }
     }
