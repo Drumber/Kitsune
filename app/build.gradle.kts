@@ -27,6 +27,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("boolean", "SCREENSHOT_MODE_ENABLED", screenshotMode)
+        buildConfigField("boolean", "INSTRUMENTED_TEST", "false")
     }
 
     androidResources {
@@ -51,6 +52,12 @@ android {
         getByName("debug") {
             applicationIdSuffix = ".debug"
             isDebuggable = true
+        }
+
+        create("instrumented") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".instrumented"
+            buildConfigField("boolean", "INSTRUMENTED_TEST", "true")
         }
     }
 
@@ -81,6 +88,7 @@ android {
 
     testOptions {
         animationsDisabled = true
+        testBuildType = "instrumented"
     }
 }
 

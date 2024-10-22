@@ -30,6 +30,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.navigationrail.NavigationRailView
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
+import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.IntentAction.OPEN_LIBRARY
 import io.github.drumber.kitsune.constants.IntentAction.OPEN_MEDIA
@@ -276,7 +277,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     }
 
     private fun shouldStartOnboarding(): Boolean {
-        return KitsunePref.onboardingFinishedVersionCode == -1
+        return !BuildConfig.INSTRUMENTED_TEST && KitsunePref.onboardingFinishedVersionCode == -1
     }
 
     private fun startOnboardingActivity() {
