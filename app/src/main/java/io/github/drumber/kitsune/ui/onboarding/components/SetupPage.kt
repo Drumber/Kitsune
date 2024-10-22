@@ -4,11 +4,9 @@ import android.Manifest
 import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -136,18 +134,20 @@ private fun SetupPage(
         )
     }
 
-    Box(
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(backgroundGradient)),
-        contentAlignment = Alignment.Center
+            .background(Brush.verticalGradient(backgroundGradient))
+            .then(modifier)
+            .padding(16.dp)
     ) {
         Column(
             modifier = Modifier
-                .fillMaxHeight()
+                .weight(1f)
                 .widthIn(min = 0.dp, max = 500.dp)
                 .verticalScroll(state = rememberScrollState())
-                .then(modifier)
                 .padding(16.dp)
         ) {
             Spacer(Modifier.weight(1f))
@@ -210,11 +210,11 @@ private fun SetupPage(
                 Text(text = stringResource(R.string.onboarding_setup_action))
             }
             Spacer(modifier = Modifier.height(8.dp))
-            OnboardingNavigationControls(
-                hideNextButton = true,
-                onBackClicked = onBackClicked
-            )
         }
+        OnboardingNavigationControls(
+            hideNextButton = true,
+            onBackClicked = onBackClicked
+        )
     }
 }
 
