@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.ui.onboarding.components
 
+import android.provider.Settings
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Ease
@@ -51,29 +52,31 @@ fun ImageSlideshow(
     val yAnimation = remember { Animatable(0f) }
 
     var animationKey by remember { mutableIntStateOf(0) }
-    LaunchedEffect(animationKey) {
-        awaitAll(
-            async {
-                scaleAnimation.animateTo(
-                    targetValue = 1.3f - scaleAnimation.value + 1.1f,
-                    animationSpec = tween(ANIMATION_TRANSFORM_DURATION, easing = Ease)
-                )
-            },
-            async {
-                xAnimation.animateTo(
-                    targetValue = (10f - xAnimation.value) * (if (Random.nextInt() % 2 == 0) 1 else -1),
-                    animationSpec = tween(ANIMATION_TRANSFORM_DURATION, easing = LinearEasing)
-                )
-            },
-            async {
-                yAnimation.animateTo(
-                    targetValue = (15f - yAnimation.value) * (if (Random.nextInt() % 2 == 0) 1 else -1),
-                    animationSpec = tween(ANIMATION_TRANSFORM_DURATION, easing = LinearEasing)
-                )
-            }
-        )
+    if (isAnimationsEnabled()) {
+        LaunchedEffect(animationKey) {
+            awaitAll(
+                async {
+                    scaleAnimation.animateTo(
+                        targetValue = 1.3f - scaleAnimation.value + 1.1f,
+                        animationSpec = tween(ANIMATION_TRANSFORM_DURATION, easing = Ease)
+                    )
+                },
+                async {
+                    xAnimation.animateTo(
+                        targetValue = (10f - xAnimation.value) * (if (Random.nextInt() % 2 == 0) 1 else -1),
+                        animationSpec = tween(ANIMATION_TRANSFORM_DURATION, easing = LinearEasing)
+                    )
+                },
+                async {
+                    yAnimation.animateTo(
+                        targetValue = (15f - yAnimation.value) * (if (Random.nextInt() % 2 == 0) 1 else -1),
+                        animationSpec = tween(ANIMATION_TRANSFORM_DURATION, easing = LinearEasing)
+                    )
+                }
+            )
 
-        animationKey = (++animationKey) % 2
+            animationKey = (++animationKey) % 2
+        }
     }
 
     LaunchedEffect(currentImage) {
@@ -108,6 +111,30 @@ fun ImageSlideshow(
                     }
             )
         }
+    }
+}
+
+@Composable
+private fun isAnimationsEnabled(): Boolean {
+    val context = LocalContext.current
+    return remember {
+        val windowAnimationScale = Settings.Global.getFloat(
+            context.contentResolver,
+            Settings.Global.WINDOW_ANIMATION_SCALE,
+            1f
+        )
+        val transitionAnimationScale = Settings.Global.getFloat(
+            context.contentResolver,
+            Settings.Global.TRANSITION_ANIMATION_SCALE,
+            1f
+        )
+        val animatorDurationScale = Settings.Global.getFloat(
+            context.contentResolver,
+            Settings.Global.ANIMATOR_DURATION_SCALE,
+            1f
+        )
+
+        windowAnimationScale != 0f && transitionAnimationScale != 0f && animatorDurationScale != 0f
     }
 }
 
