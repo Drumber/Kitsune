@@ -212,8 +212,14 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             else -> null
         }
 
+        if (savedInstanceState == null) {
+            onCreateWithoutSavedInstanceState()
+        }
+    }
+
+    private fun onCreateWithoutSavedInstanceState() {
         // override start fragment, but only on clean launch and when not launched by a deep link
-        if (savedInstanceState == null && !isLaunchedByDeepLink()) {
+        if (!isLaunchedByDeepLink()) {
             overrideStartDestination = getShortcutStartDestinationId()
             // if the app wasn't launched from an app shortcut
             // and the user has specified a custom start page

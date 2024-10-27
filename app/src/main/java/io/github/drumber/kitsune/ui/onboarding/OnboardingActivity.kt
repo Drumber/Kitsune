@@ -60,9 +60,9 @@ import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
-import io.github.drumber.kitsune.ui.onboarding.components.LoginPage
-import io.github.drumber.kitsune.ui.onboarding.components.SetupPageAdapter
-import io.github.drumber.kitsune.ui.onboarding.components.WelcomePage
+import io.github.drumber.kitsune.ui.onboarding.pages.LoginPage
+import io.github.drumber.kitsune.ui.onboarding.pages.SetupPageAdapter
+import io.github.drumber.kitsune.ui.onboarding.pages.WelcomePage
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel

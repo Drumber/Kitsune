@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.onboarding
+package io.github.drumber.kitsune.ui.onboarding.components
 
 interface ImagePresenter {
     fun hasNextImage(): Boolean

@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.onboarding.components
+package io.github.drumber.kitsune.ui.onboarding.pages
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,6 +37,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
+import io.github.drumber.kitsune.ui.onboarding.components.OnboardingNavigationControls
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 
 @Composable

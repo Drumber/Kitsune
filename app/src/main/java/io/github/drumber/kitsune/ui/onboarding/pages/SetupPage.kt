@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.onboarding.components
+package io.github.drumber.kitsune.ui.onboarding.pages
 
 import android.Manifest
 import android.os.Build
@@ -51,6 +51,9 @@ import com.google.accompanist.permissions.shouldShowRationale
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.ui.onboarding.components.CustomDialog
+import io.github.drumber.kitsune.ui.onboarding.components.OnboardingNavigationControls
+import io.github.drumber.kitsune.ui.onboarding.components.PreferenceCard
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 import kotlinx.coroutines.flow.map
 
@@ -141,13 +144,12 @@ private fun SetupPage(
             .fillMaxSize()
             .background(Brush.verticalGradient(backgroundGradient))
             .then(modifier)
-            .padding(16.dp)
     ) {
         Column(
             modifier = Modifier
                 .weight(1f)
-                .widthIn(min = 0.dp, max = 500.dp)
                 .verticalScroll(state = rememberScrollState())
+                .widthIn(min = 0.dp, max = 500.dp)
                 .padding(16.dp)
         ) {
             Spacer(Modifier.weight(1f))
@@ -213,7 +215,10 @@ private fun SetupPage(
         }
         OnboardingNavigationControls(
             hideNextButton = true,
-            onBackClicked = onBackClicked
+            onBackClicked = onBackClicked,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 16.dp)
         )
     }
 }

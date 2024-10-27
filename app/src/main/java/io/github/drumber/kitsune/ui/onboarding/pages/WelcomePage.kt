@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.onboarding.components
+package io.github.drumber.kitsune.ui.onboarding.pages
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -42,7 +42,8 @@ import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.ui.onboarding.OnboardingUiState
-import io.github.drumber.kitsune.ui.onboarding.RandomImagePresenter
+import io.github.drumber.kitsune.ui.onboarding.components.RandomImagePresenter
+import io.github.drumber.kitsune.ui.onboarding.components.ImageSlideshow
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 
 @Composable

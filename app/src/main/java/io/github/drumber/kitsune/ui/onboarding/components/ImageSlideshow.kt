@@ -26,8 +26,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import io.github.drumber.kitsune.ui.onboarding.EmptyImagePresenter
-import io.github.drumber.kitsune.ui.onboarding.ImagePresenter
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
