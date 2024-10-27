@@ -40,8 +40,8 @@ fun ImageSlideshow(
     modifier: Modifier = Modifier,
     imagePresenter: ImagePresenter
 ) {
-    var currentImage by rememberSaveable(imagePresenter) { mutableStateOf(imagePresenter.getNextImage()) }
-    var nextImage by rememberSaveable(imagePresenter) { mutableStateOf(imagePresenter.getNextImage()) }
+    var currentImage by rememberSaveable { mutableStateOf(imagePresenter.getNextImage()) }
+    var nextImage by rememberSaveable { mutableStateOf(imagePresenter.getNextImage()) }
 
     val context = LocalContext.current
 
@@ -78,12 +78,14 @@ fun ImageSlideshow(
     }
 
     LaunchedEffect(currentImage) {
-        delay(8000)
-        currentImage = nextImage
-        nextImage = imagePresenter.getNextImage()
+        // preload next image
         Glide.with(context)
             .load(nextImage)
             .preload()
+
+        delay(8000)
+        currentImage = nextImage
+        nextImage = imagePresenter.getNextImage()
     }
 
     Crossfade(

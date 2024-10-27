@@ -1,5 +1,9 @@
 package io.github.drumber.kitsune.ui.onboarding.pages
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -42,8 +46,8 @@ import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.ui.onboarding.OnboardingUiState
-import io.github.drumber.kitsune.ui.onboarding.components.RandomImagePresenter
 import io.github.drumber.kitsune.ui.onboarding.components.ImageSlideshow
+import io.github.drumber.kitsune.ui.onboarding.components.RandomImagePresenter
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 
 @Composable
@@ -54,7 +58,7 @@ fun WelcomePage(
     onNextClicked: () -> Unit = {}
 ) {
     val overlayGradient = listOf(
-        MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.8f), MaterialTheme.colorScheme.surface
+        MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.75f), MaterialTheme.colorScheme.surface
     )
 
     val imagePresenter = remember(uiState.backgroundImages) {
@@ -64,7 +68,11 @@ fun WelcomePage(
     val isVerticalLayout = windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.COMPACT
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (imagePresenter.hasNextImage()) {
+        AnimatedVisibility(
+            visible = imagePresenter.hasNextImage(),
+            enter = fadeIn(tween(durationMillis = 800)),
+            exit = fadeOut()
+        ) {
             ImageSlideshow(modifier = Modifier.fillMaxSize(), imagePresenter = imagePresenter)
         }
         Column(
