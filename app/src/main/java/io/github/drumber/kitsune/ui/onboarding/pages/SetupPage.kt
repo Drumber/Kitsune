@@ -50,6 +50,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
+import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.onboarding.components.CustomDialog
 import io.github.drumber.kitsune.ui.onboarding.components.OnboardingNavigationControls
@@ -61,6 +62,7 @@ import kotlinx.coroutines.flow.map
 @Composable
 fun SetupPageAdapter(
     modifier: Modifier = Modifier,
+    localUser: LocalUser? = null,
     onFinishClicked: () -> Unit = {},
     onBack: () -> Unit = {}
 ) {
@@ -100,6 +102,7 @@ fun SetupPageAdapter(
         showNotificationPermissionNotice = shouldShouldNotificationPermissionNotice,
         checkForUpdatesPreference = checkForUpdatesPreference,
         onCheckForUpdatesPreferenceChanged = updateCheckForUpdatesPreference,
+        hideTitleLanguagePreference = localUser != null,
         titleLanguages = titleLanguages,
         selectedTitleLanguageIndex = selectedTitleLanguageIndex,
         onTitleLanguageSelected = selectTitleLanguage
@@ -114,6 +117,7 @@ private fun SetupPage(
     showNotificationPermissionNotice: Boolean = false,
     checkForUpdatesPreference: Boolean = false,
     onCheckForUpdatesPreferenceChanged: (Boolean) -> Unit = {},
+    hideTitleLanguagePreference: Boolean = false,
     titleLanguages: List<String> = emptyList(),
     selectedTitleLanguageIndex: Int = 0,
     onTitleLanguageSelected: (Int) -> Unit = {}
@@ -187,22 +191,24 @@ private fun SetupPage(
                     onCheckForUpdatesPreferenceChanged(!checkForUpdatesPreference)
                 }
             )
-            Spacer(Modifier.height(12.dp))
-            PreferenceCard(
-                title = { Text(stringResource(R.string.onboarding_setup_title_language)) },
-                description = {
-                    Text(stringResource(R.string.onboarding_setup_title_language_description))
-                    if (selectedTitleLanguageIndex in titleLanguages.indices) {
-                        Text(
-                            stringResource(
-                                R.string.onboarding_setup_title_language_selected,
-                                titleLanguages[selectedTitleLanguageIndex]
+            if (!hideTitleLanguagePreference) {
+                Spacer(Modifier.height(12.dp))
+                PreferenceCard(
+                    title = { Text(stringResource(R.string.onboarding_setup_title_language)) },
+                    description = {
+                        Text(stringResource(R.string.onboarding_setup_title_language_description))
+                        if (selectedTitleLanguageIndex in titleLanguages.indices) {
+                            Text(
+                                stringResource(
+                                    R.string.onboarding_setup_title_language_selected,
+                                    titleLanguages[selectedTitleLanguageIndex]
+                                )
                             )
-                        )
-                    }
-                },
-                onClick = { openSelectTitleLanguageDialog = true }
-            )
+                        }
+                    },
+                    onClick = { openSelectTitleLanguageDialog = true }
+                )
+            }
             Spacer(Modifier.weight(1f))
             Spacer(Modifier.height(32.dp))
             Button(
