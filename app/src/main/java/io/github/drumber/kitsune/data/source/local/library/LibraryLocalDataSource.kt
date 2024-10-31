@@ -200,6 +200,10 @@ class LibraryLocalDataSource(
     suspend fun getRemoteKeyByResourceId(resourceId: String, remoteKeyType: RemoteKeyType) =
         remoteKeyDao.getRemoteKeyByResourceId(resourceId, remoteKeyType)
 
+    suspend fun deleteRemoteKeyByResourceId(resourceId: String, remoteKeyType: RemoteKeyType) {
+        remoteKeyDao.deleteByResourceId(resourceId, remoteKeyType)
+    }
+
     //********************************************************************************************//
     // Utilities
     //********************************************************************************************//

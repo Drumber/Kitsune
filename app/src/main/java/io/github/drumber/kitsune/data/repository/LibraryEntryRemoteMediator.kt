@@ -44,8 +44,18 @@ class LibraryEntryRemoteMediator(
                     // will call this method again if RemoteKeys becomes non-null.
                     // If remoteKeys is NOT NULL but its prevKey is null, that means we've reached
                     // the end of pagination for append.
-                    val nextKey = remoteKeys?.nextPageKey
+                    var nextKey = remoteKeys?.nextPageKey
                         ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+
+                    state.pages.lastOrNull()?.prevKey?.let { prevPage ->
+                        // last page is equal or greater than reported next page: RemoteKey is out of sync
+                        if (prevPage >= nextKey) {
+                            localDataSource.deleteRemoteKeyByResourceId(remoteKeys.resourceId, remoteKeys.remoteKeyType)
+                            getRemoteKeyForLastItem(state)?.nextPageKey?.let {
+                                nextKey = it
+                            } ?: return MediatorResult.Success(endOfPaginationReached = false)
+                        }
+                    }
                     nextKey
                 }
             }
@@ -107,8 +117,14 @@ class LibraryEntryRemoteMediator(
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, LocalLibraryEntry>): RemoteKeyEntity? {
         // Get the last page that was retrieved, that contained items.
-        // From that last page, get the last item
-        return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
+        // From that last page, get the last item that has a valid remote key.
+        return state.pages.lastOrNull { it.data.isNotEmpty() }?.data
+            ?.lastOrNull { libraryEntry ->
+                localDataSource.getRemoteKeyByResourceId(
+                    libraryEntry.id,
+                    RemoteKeyType.LibraryEntry
+                ) != null
+            }
             ?.let { libraryEntry ->
                 // Get the remote keys of the last item retrieved
                 localDataSource.getRemoteKeyByResourceId(

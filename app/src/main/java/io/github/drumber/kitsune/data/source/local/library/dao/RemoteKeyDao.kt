@@ -11,7 +11,7 @@ import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyType
 interface RemoteKeyDao {
 
     @Query("SELECT * FROM remote_keys WHERE resourceId = :resourceId AND remoteKeyType = :remoteKeyType")
-    suspend fun getRemoteKeyByResourceId(resourceId: String, remoteKeyType: RemoteKeyType): RemoteKeyEntity
+    suspend fun getRemoteKeyByResourceId(resourceId: String, remoteKeyType: RemoteKeyType): RemoteKeyEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertALl(key: List<RemoteKeyEntity>)
