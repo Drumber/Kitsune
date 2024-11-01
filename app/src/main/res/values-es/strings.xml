@@ -362,4 +362,31 @@
     </plurals>
     <string name="widget_empty_text">No hay elementos en seguimiento en la biblioteca</string>
     <string name="widget_empty_action">Abrir biblioteca</string>
+    <string name="action_skip">Omitir</string>
+    <string name="action_next">Siguiente</string>
+    <string name="action_continue">Continuar</string>
+    <string name="onboarding_welcome_title">¡Bienvenido/-a a Kitsune!</string>
+    <string name="onboarding_welcome_subtitle">Tu compañero personal de anime y manga.</string>
+    <string name="onboarding_welcome_feature_search">Buscar</string>
+    <string name="onboarding_welcome_feature_search_description">Encuentra tu anime y manga favorito.</string>
+    <string name="onboarding_welcome_feature_explore">Explorar</string>
+    <string name="onboarding_welcome_feature_explore_description">Descubre títulos nuevos y de moda.</string>
+    <string name="onboarding_welcome_feature_track">Pista</string>
+    <string name="onboarding_welcome_feature_track_description">Mantén un registro de lo que has visto y leído.</string>
+    <string name="onboarding_welcome_action">Empezar</string>
+    <string name="onboarding_login_title">Iniciar sesión en Kitsu</string>
+    <string name="onboarding_login_subtitle">Inicia sesión en tu cuenta de Kitsu o crea una nueva cuenta para tener acceso a todas las funciones.</string>
+    <string name="onboarding_login_forward_dialog_title">Crear una cuenta</string>
+    <string name="onboarding_login_forward_dialog_message">Serás redirigido a %1$s donde podrás crear una nueva cuenta.</string>
+    <string name="onboarding_setup_title">Configuración inicial</string>
+    <string name="onboarding_setup_notification_permission_notice">Se requiere permiso de notificación.</string>
+    <string name="onboarding_setup_updates">Buscar actualizaciones</string>
+    <string name="onboarding_setup_updates_description">Recibe notificaciones cuando una nueva versión esté disponible en GitHub.</string>
+    <string name="onboarding_setup_title_language">Idioma del título</string>
+    <string name="onboarding_setup_title_language_description">Selecciona el idioma preferido para los títulos.</string>
+    <string name="onboarding_setup_action">Finalizar configuración</string>
+    <string name="action_create_account">Crear una cuenta</string>
+    <string name="onboarding_login_is_logged_in">Has iniciado sesión en</string>
+    <string name="onboarding_setup_subtitle">Establece tus preferencias para comenzar. Puede cambiarlas en cualquier momento más tarde en las configuraciones.</string>
+    <string name="onboarding_setup_title_language_selected">Seleccionado: %1$s</string>
 </resources>
