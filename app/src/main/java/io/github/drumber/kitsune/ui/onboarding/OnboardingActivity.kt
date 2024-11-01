@@ -272,3 +272,11 @@ private fun OnboardingTourPreview() {
         OnboardingTour()
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun CreateAccountForwardDialogPreview() {
+    KitsuneTheme {
+        CreateAccountForwardDialog({}, {})
+    }
+}
