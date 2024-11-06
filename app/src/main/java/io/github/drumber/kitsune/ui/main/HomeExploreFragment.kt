@@ -6,8 +6,7 @@ import androidx.annotation.StringRes
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
-import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
@@ -23,8 +22,9 @@ import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.component.ExploreSection
-import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.ui.main.MainFragmentViewModel.NavigationAction
 import io.github.drumber.kitsune.util.network.ResponseData
+import kotlinx.coroutines.launch
 import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
@@ -211,19 +211,18 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         val glide = Glide.with(this)
 
         val section = ExploreSection(glide, title, null, this) {
-            val action =
-                MainFragmentDirections.actionMainFragmentToMediaListFragment(mediaSelector, title)
-            findNavController().navigateSafe(R.id.main_fragment, action)
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.navigate(NavigationAction.OpenMediaList(mediaSelector, title))
+            }
         }
         section.bindView(view)
         return section
     }
 
     override fun onItemClick(view: View, item: Media) {
-        val action = MainFragmentDirections.actionMainFragmentToDetailsFragment(item.toMediaDto())
-        val detailsTransitionName = getString(R.string.details_poster_transition_name)
-        val extras = FragmentNavigatorExtras(view to detailsTransitionName)
-        findNavController().navigateSafe(R.id.main_fragment, action, extras)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.navigate(NavigationAction.OpenMediaDetails(item.toMediaDto(), view))
+        }
     }
 
 }

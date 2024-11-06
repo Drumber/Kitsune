@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.ui.main
 
+import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
@@ -10,6 +11,8 @@ import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.common.media.MediaType
+import io.github.drumber.kitsune.data.presentation.dto.MediaDto
+import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
 import io.github.drumber.kitsune.data.presentation.model.media.identifier
 import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
@@ -17,13 +20,23 @@ import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logV
 import io.github.drumber.kitsune.util.network.ResponseData
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.collections.set
 
 class MainFragmentViewModel(
     private val animeRepository: AnimeRepository,
     private val mangaRepository: MangaRepository
 ) : ViewModel() {
+
+    private val _navigationAction = MutableSharedFlow<NavigationAction>()
+    val navigationAction = _navigationAction.asSharedFlow()
+
+    suspend fun navigate(action: NavigationAction) = withContext(Dispatchers.Main) {
+        _navigationAction.emit(action)
+    }
 
     private val animeReload = MutableLiveData(Any())
     private val mangaReload = MutableLiveData(Any())
@@ -33,7 +46,8 @@ class MainFragmentViewModel(
     private var animeReloadMap = mutableMapOf<String, Boolean>()
     private var mangaReloadMap = mutableMapOf<String, Boolean>()
 
-    var reloadFinishedListener: (() -> Unit)? = null
+    private val _reloadFinished = MutableSharedFlow<Boolean>()
+    val reloadFinished = _reloadFinished.asSharedFlow()
 
     private val animeExploreSections = mutableMapOf(
         // trending
@@ -133,7 +147,7 @@ class MainFragmentViewModel(
         )
         if (!isSomeEntryReloading()) {
             viewModelScope.launch(Dispatchers.Main) {
-                reloadFinishedListener?.invoke()
+                _reloadFinished.emit(true)
             }
         }
     }
@@ -150,6 +164,11 @@ class MainFragmentViewModel(
             logE("Failed to load data.", e)
             ResponseData.Error(e)
         }
+    }
+
+    sealed interface NavigationAction {
+        data class OpenMediaList(val mediaSelector: MediaSelector, val title: String) : NavigationAction
+        data class OpenMediaDetails(val mediaDto: MediaDto, val sharedElement: View) : NavigationAction
     }
 
     companion object {

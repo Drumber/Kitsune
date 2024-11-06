@@ -9,6 +9,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.color.MaterialColors
+import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
@@ -39,10 +41,19 @@ class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) 
     override val resourceLoadingBinding: LayoutResourceLoadingBinding
         get() = binding.layoutLoading
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
+
+        val colorBackground = MaterialColors.getColor(view, android.R.attr.colorBackground)
+        view.setBackgroundColor(colorBackground)
 
         binding.rvMedia.initPaddingWindowInsetsListener(
             left = true,
