@@ -47,7 +47,11 @@
             app:launchSingleTop="true" />
         <action
             android:id="@+id/action_profile_fragment_to_settings_nav_graph"
-            app:destination="@id/settings_nav_graph" />
+            app:destination="@id/settings_nav_graph"
+            app:enterAnim="@animator/scale_enter_anim"
+            app:exitAnim="@animator/scale_exit_anim"
+            app:popEnterAnim="@animator/scale_pop_enter_anim"
+            app:popExitAnim="@animator/scale_pop_exit_anim" />
         <action
             android:id="@+id/action_profile_fragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
