@@ -38,6 +38,7 @@ import io.github.drumber.kitsune.constants.IntentAction.SHORTCUT_LIBRARY
 import io.github.drumber.kitsune.constants.IntentAction.SHORTCUT_SEARCH
 import io.github.drumber.kitsune.constants.IntentAction.SHORTCUT_SETTINGS
 import io.github.drumber.kitsune.databinding.ActivityMainBinding
+import io.github.drumber.kitsune.domain.work.UpdateLibraryWidgetUseCase
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.preference.StartPagePref
 import io.github.drumber.kitsune.preference.getDestinationId
@@ -55,6 +56,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity(R.layout.activity_main) {
@@ -62,6 +64,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private val viewModel: MainActivityViewModel by viewModel()
 
     private val binding: ActivityMainBinding by viewBinding()
+
+    private val updateLibraryWidget by inject<UpdateLibraryWidgetUseCase>()
 
     private lateinit var navController: NavController
 
@@ -91,6 +95,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.isLoggedInFlow.collectLatest { isLoggedIn ->
                     if (initialLoginState != isLoggedIn) {
+                        updateLibraryWidget(this@MainActivity)
                         startNewMainActivity()
                     }
                 }

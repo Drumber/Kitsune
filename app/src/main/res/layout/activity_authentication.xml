@@ -54,6 +54,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:text="@string/title_login"
                     android:textAppearance="?attr/textAppearanceHeadlineMedium"
                     android:textColor="?attr/colorSecondary"
@@ -63,6 +64,7 @@
                     android:id="@+id/tv_additional_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:visibility="gone"
                     tools:text="Your access token has expired. Please log in again."
                     tools:visibility="visible"

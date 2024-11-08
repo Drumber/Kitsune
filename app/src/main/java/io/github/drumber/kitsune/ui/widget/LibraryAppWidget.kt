@@ -70,7 +70,10 @@ import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.media.identifier
+import io.github.drumber.kitsune.data.repository.AccessTokenRepository
+import io.github.drumber.kitsune.data.repository.AccessTokenRepository.AccessTokenState
 import io.github.drumber.kitsune.data.repository.LibraryRepository
+import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCase
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.details.DetailsFragmentArgs
@@ -78,9 +81,11 @@ import io.github.drumber.kitsune.ui.main.MainActivity
 import io.github.drumber.kitsune.ui.widget.KitsuneWidgetTheme.applyTheme
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancelFutureOnCancellation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -97,6 +102,8 @@ class LibraryAppWidget : GlanceAppWidget(), KoinComponent {
         private const val POSTER_IMG_HEIGHT = 85
     }
 
+    private val isLoggedIn: IsUserLoggedInUseCase by inject()
+    private val accessTokenRepository: AccessTokenRepository by inject()
     private val libraryRepository: LibraryRepository by inject()
     private val updateLibraryEntryProgress: UpdateLibraryEntryProgressUseCase by inject()
 
@@ -330,6 +337,7 @@ class LibraryAppWidget : GlanceAppWidget(), KoinComponent {
     }
 
     private suspend fun loadData(): List<LibraryEntryWithModification> {
+        if (!isLoggedIn()) return emptyList()
         return try {
             libraryRepository.getLibraryEntriesWithModificationsByStatus(
                 listOf(LibraryStatus.Current)
@@ -340,11 +348,18 @@ class LibraryAppWidget : GlanceAppWidget(), KoinComponent {
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun getDataFlow(): Flow<List<LibraryEntryWithModification>> {
         return try {
-            libraryRepository.getLibraryEntriesWithModificationsByStatusAsFlow(
-                listOf(LibraryStatus.Current)
-            ).map { it.take(LibraryWidget.MAX_ITEM_COUNT) }
+            accessTokenRepository.accessTokenState.flatMapLatest { state ->
+                if (state == AccessTokenState.PRESENT) {
+                    libraryRepository.getLibraryEntriesWithModificationsByStatusAsFlow(
+                        listOf(LibraryStatus.Current)
+                    ).map { it.take(LibraryWidget.MAX_ITEM_COUNT) }
+                } else {
+                    emptyFlow()
+                }
+            }
         } catch (e: Exception) {
             logE("Failed to get library entries flow.", e)
             emptyFlow()
