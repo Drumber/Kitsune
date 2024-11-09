@@ -235,7 +235,7 @@ dependencies {
 
     // Glide Transformations (only used for demo screenshots)
     if (screenshotMode.toBoolean()) {
-        debugImplementation(libs.wasabeef.glide.transformations)
+        implementation(libs.wasabeef.glide.transformations)
     }
 
     // Tests

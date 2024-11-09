@@ -26,7 +26,7 @@ platform :android do
   lane :build_and_screengrab do
     build_android_app(
       task: 'assemble',
-      build_type: 'Debug',
+      build_type: 'Instrumented',
       properties: {
         'screenshotMode' => 'true'
       }
@@ -46,11 +46,11 @@ platform :android do
     screengrab(
       output_directory: 'fastlane/screenshots',
       use_timestamp_suffix: false,
-      app_package_name: 'io.github.drumber.kitsune.debug',
-      tests_package_name: 'io.github.drumber.kitsune.debug.test',
+      app_package_name: 'io.github.drumber.kitsune.instrumented',
+      tests_package_name: 'io.github.drumber.kitsune.instrumented.test',
       use_tests_in_packages: 'io.github.drumber.kitsune.fastlane',
-      app_apk_path: 'app/build/outputs/apk/debug/app-debug.apk',
-      tests_apk_path: 'app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk',
+      app_apk_path: 'app/build/outputs/apk/instrumented/app-instrumented.apk',
+      tests_apk_path: 'app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk',
       reinstall_app: true,
       clear_previous_screenshots: true
     )
