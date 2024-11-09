@@ -33,7 +33,11 @@
             app:uri="kitsune://search" />
         <action
             android:id="@+id/action_search_fragment_to_facet_fragment"
-            app:destination="@id/facet_fragment" />
+            app:destination="@id/facet_fragment"
+            app:enterAnim="@animator/scale_enter_anim"
+            app:exitAnim="@animator/scale_exit_anim"
+            app:popEnterAnim="@animator/scale_pop_enter_anim"
+            app:popExitAnim="@animator/scale_pop_exit_anim" />
     </fragment>
 
     <fragment
