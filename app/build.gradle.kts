@@ -21,8 +21,8 @@ android {
         applicationId = "io.github.drumber.kitsune"
         minSdk = 26
         targetSdk = 35
-        versionCode = 33
-        versionName = "2.0.1"
+        versionCode = 34
+        versionName = "2.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 

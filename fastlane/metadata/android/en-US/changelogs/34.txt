@@ -1,0 +1,10 @@
+* Added support for Android 15
+* Added onboarding on first launch
+* Added more transition animations between screens
+* Added Russian translation by @Xapitonov
+* Updated Spanish translation by gallegonovato
+* Updated Portuguese translation by Crono
+* Updated French translation by @GitSpoon
+* Updated German translation
+* Fixed widget not updated on login and logout
+* Bug fixes and small improvements
