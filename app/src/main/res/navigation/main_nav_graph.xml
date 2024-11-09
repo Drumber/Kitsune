@@ -77,10 +77,18 @@
             app:launchSingleTop="false" />
         <action
             android:id="@+id/action_details_fragment_to_episodes_fragment"
-            app:destination="@id/episodes_fragment" />
+            app:destination="@id/episodes_fragment"
+            app:enterAnim="@animator/scale_enter_anim"
+            app:exitAnim="@animator/scale_exit_anim"
+            app:popEnterAnim="@animator/scale_pop_enter_anim"
+            app:popExitAnim="@animator/scale_pop_exit_anim" />
         <action
             android:id="@+id/action_details_fragment_to_characters_fragment"
-            app:destination="@id/characters_fragment" />
+            app:destination="@id/characters_fragment"
+            app:enterAnim="@animator/scale_enter_anim"
+            app:exitAnim="@animator/scale_exit_anim"
+            app:popEnterAnim="@animator/scale_pop_enter_anim"
+            app:popExitAnim="@animator/scale_pop_exit_anim" />
         <action
             android:id="@+id/action_details_fragment_to_libraryEditEntryFragment"
             app:destination="@id/libraryEditEntryFragment" />
