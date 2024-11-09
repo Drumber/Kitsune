@@ -159,6 +159,8 @@ class NavigationTest : KoinComponent {
 
         fun goBack() {
             onView(isRoot()).perform(pressBack())
+            Thread.sleep(500)
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
             onView(isRoot()).perform(pressBack())
         }
 
