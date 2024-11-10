@@ -21,8 +21,8 @@ android {
         applicationId = "io.github.drumber.kitsune"
         minSdk = 26
         targetSdk = 35
-        versionCode = 34
-        versionName = "2.0.2"
+        versionCode = 35
+        versionName = "2.0.2-1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -84,6 +84,11 @@ android {
 
     packaging {
         resources.excludes += "META-INF/*.kotlin_module"
+    }
+
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
     }
 
     testOptions {
