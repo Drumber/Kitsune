@@ -197,8 +197,8 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         connectionHandler.clear()
+        super.onDestroyView()
     }
 
     companion object {

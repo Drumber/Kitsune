@@ -573,8 +573,8 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
     }
 
     override fun onDestroyView() {
+        connectionHandler.clear()
         super.onDestroyView()
         _binding = null
-        connectionHandler.clear()
     }
 }

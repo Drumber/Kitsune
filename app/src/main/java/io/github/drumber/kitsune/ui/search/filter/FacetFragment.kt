@@ -243,8 +243,8 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         connection.clear()
+        super.onDestroyView()
     }
 
 }

@@ -389,8 +389,8 @@ class SettingsFragment : BasePreferenceFragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         viewModel.errorMessageListener = null
+        super.onDestroyView()
     }
 
 }
