@@ -4,10 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuProvider
@@ -25,7 +27,6 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.algolia.instantsearch.core.searcher.Debouncer
 import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
@@ -69,11 +70,10 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     LibraryEntriesAdapter.LibraryEntryActionListener,
     NavigationBarView.OnItemReselectedListener {
 
-    private val binding: FragmentLibraryBinding by viewBinding()
+    private var _binding: FragmentLibraryBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: LibraryViewModel by viewModel()
-
-    private var isStatusBarTransparent = false
 
     private var offlineLibraryModificationsAmount = 0
     private lateinit var offlineLibraryUpdateBadge: BadgeDrawable
@@ -91,6 +91,15 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         offlineLibraryUpdateBadge = BadgeDrawable.create(requireContext())
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentLibraryBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -443,7 +452,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     override fun onItemLongClicked(item: LibraryEntryWithModification) {
         val action =
             LibraryFragmentDirections.actionLibraryFragmentToLibraryEditEntryFragment(
-                item.libraryEntry.id ?: return,
+                item.libraryEntry.id,
                 RESULT_KEY_EDIT_ENTRY_UPDATED
             )
         findNavController().navigateSafe(R.id.library_fragment, action)
@@ -576,6 +585,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         viewModel.doRefreshListener = null
         (requireActivity() as AppCompatActivity).setSupportActionBar(null)
         super.onDestroyView()
+        _binding = null
     }
 
 }

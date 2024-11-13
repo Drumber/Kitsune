@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
 import android.view.Window
-import androidx.annotation.LayoutRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -19,10 +18,9 @@ import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.extensions.setStatusBarColorRes
 
 abstract class BaseActivity(
-    @LayoutRes contentLayoutId: Int,
     private val updateSystemUiColors: Boolean = true,
     private val setAppTheme: Boolean = true
-) : AppCompatActivity(contentLayoutId) {
+) : AppCompatActivity() {
 
     @StyleRes
     private var appliedThemeRes: Int = -1

@@ -3,13 +3,14 @@ package io.github.drumber.kitsune.ui.settings
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.BuildConfig
@@ -26,13 +27,23 @@ import java.util.Date
 
 class AppLogsFragment : Fragment(R.layout.fragment_app_logs) {
 
-    private val binding: FragmentAppLogsBinding by viewBinding()
+    private var _binding: FragmentAppLogsBinding? = null
+    private val binding get() = _binding!!
     private val viewModel: AppLogsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentAppLogsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -111,4 +122,8 @@ class AppLogsFragment : Fragment(R.layout.fragment_app_logs) {
         directory.listFiles { file: File -> file.isFile }?.forEach { it.delete() }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

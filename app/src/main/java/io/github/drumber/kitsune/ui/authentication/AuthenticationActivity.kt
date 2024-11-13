@@ -9,7 +9,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.textfield.TextInputLayout
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ActivityAuthenticationBinding
@@ -19,7 +18,7 @@ import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AuthenticationActivity : BaseActivity(R.layout.activity_authentication) {
+class AuthenticationActivity : BaseActivity() {
 
     companion object {
         const val EXTRA_LOGGED_OUT = "extra_logged_out"
@@ -27,10 +26,12 @@ class AuthenticationActivity : BaseActivity(R.layout.activity_authentication) {
 
     private val viewModel: LoginViewModel by viewModel()
 
-    private val binding: ActivityAuthenticationBinding by viewBinding()
+    private lateinit var binding: ActivityAuthenticationBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityAuthenticationBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         if (intent.getBooleanExtra(EXTRA_LOGGED_OUT, false)) {
             showWasLoggedOutInfo()

@@ -1,13 +1,14 @@
 package io.github.drumber.kitsune.ui.main
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.common.Filter
@@ -30,12 +31,22 @@ import org.koin.androidx.navigation.koinNavGraphViewModel
 class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
     OnItemClickListener<Media> {
 
-    private val binding: FragmentHomeExploreBinding by viewBinding()
+    private var _binding: FragmentHomeExploreBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: MainFragmentViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
 
     companion object {
         const val BUNDLE_MEDIA_TYPE = "bundle_media_type"
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentHomeExploreBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -225,4 +236,8 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

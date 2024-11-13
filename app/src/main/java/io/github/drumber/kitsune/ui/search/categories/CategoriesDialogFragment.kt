@@ -2,11 +2,12 @@ package io.github.drumber.kitsune.ui.search.categories
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.unnamed.b.atv.model.TreeNode
 import com.unnamed.b.atv.view.AndroidTreeView
@@ -22,7 +23,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CategoriesDialogFragment : BaseDialogFragment(R.layout.fragment_categories) {
 
-    private val binding: FragmentCategoriesBinding by viewBinding()
+    private var _binding: FragmentCategoriesBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: CategoriesViewModel by viewModel()
 
@@ -30,6 +32,15 @@ class CategoriesDialogFragment : BaseDialogFragment(R.layout.fragment_categories
 
     private lateinit var treeView: AndroidTreeView
     private lateinit var treeRoot: TreeNode
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentCategoriesBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -233,6 +244,11 @@ class CategoriesDialogFragment : BaseDialogFragment(R.layout.fragment_categories
 
     fun setOnDismissListener(listener: DialogInterface.OnDismissListener) {
         onDismissListener = listener
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

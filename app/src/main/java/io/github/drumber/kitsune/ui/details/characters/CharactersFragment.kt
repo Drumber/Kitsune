@@ -1,8 +1,10 @@
 package io.github.drumber.kitsune.ui.details.characters
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -10,7 +12,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.dto.toCharacterDto
@@ -29,7 +30,8 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters) 
 
     private val args: CharactersFragmentArgs by navArgs()
 
-    private val binding: FragmentCharactersBinding by viewBinding()
+    private var _binding: FragmentCharactersBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: CharactersViewModel by viewModel()
 
@@ -38,6 +40,15 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters) 
 
     override val resourceLoadingBinding: LayoutResourceLoadingBinding
         get() = binding.layoutLoading
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentCharactersBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -110,4 +121,8 @@ class CharactersFragment : BaseCollectionFragment(R.layout.fragment_characters) 
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

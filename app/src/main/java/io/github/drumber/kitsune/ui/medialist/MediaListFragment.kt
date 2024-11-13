@@ -1,14 +1,15 @@
 package io.github.drumber.kitsune.ui.medialist
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
@@ -28,7 +29,8 @@ class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) 
 
     private val args: MediaListFragmentArgs by navArgs()
 
-    private val binding: FragmentMediaListBinding by viewBinding()
+    private var _binding: FragmentMediaListBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: MediaListViewModel by viewModel()
 
@@ -45,6 +47,15 @@ class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) 
         super.onCreate(savedInstanceState)
         enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentMediaListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -90,5 +101,10 @@ class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) 
 
     override fun getMediaType(): MediaType {
         return args.mediaSelector.mediaType
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

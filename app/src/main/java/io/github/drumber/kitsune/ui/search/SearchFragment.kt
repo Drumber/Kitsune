@@ -38,7 +38,6 @@ import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.In
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotAvailable
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotInitialized
 import io.github.drumber.kitsune.util.extensions.navigateSafe
-import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -70,7 +69,6 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        logD("SearchFragment - onCreateView $this")
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -210,9 +208,9 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
     }
 
     override fun onDestroyView() {
-        logD("SearchFragment - onDestroyView $this")
         connectionHandler.clear()
         super.onDestroyView()
+        _binding = null
     }
 
     companion object {

@@ -1,10 +1,11 @@
 package io.github.drumber.kitsune.ui.settings
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.transition.MaterialSharedAxis
 import com.mikepenz.aboutlibraries.LibsBuilder
@@ -14,12 +15,22 @@ import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 
 class OSLibrariesFragment : Fragment(R.layout.fragment_os_libraries) {
 
-    private val binding: FragmentOsLibrariesBinding by viewBinding()
+    private var _binding: FragmentOsLibrariesBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentOsLibrariesBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,4 +55,8 @@ class OSLibrariesFragment : Fragment(R.layout.fragment_os_libraries) {
             .commit()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

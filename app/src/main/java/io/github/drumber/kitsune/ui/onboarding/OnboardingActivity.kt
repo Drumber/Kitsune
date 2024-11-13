@@ -67,7 +67,7 @@ import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class OnboardingActivity : BaseActivity(0) {
+class OnboardingActivity : BaseActivity() {
 
     private val viewModel: OnboardingViewModel by viewModel()
 

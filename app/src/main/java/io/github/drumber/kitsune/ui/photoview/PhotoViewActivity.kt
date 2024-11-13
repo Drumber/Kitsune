@@ -47,10 +47,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
 
-class PhotoViewActivity : BaseActivity(
-    R.layout.activity_photo_view,
-    setAppTheme = false
-) {
+class PhotoViewActivity : BaseActivity(setAppTheme = false) {
 
     private lateinit var binding: ActivityPhotoViewBinding
 

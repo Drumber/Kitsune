@@ -1,8 +1,10 @@
 package io.github.drumber.kitsune.ui.search.filter
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -12,7 +14,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.algolia.instantsearch.android.filter.facet.FacetListAdapter
 import com.algolia.instantsearch.android.list.autoScrollToStart
 import com.algolia.instantsearch.core.connection.ConnectionHandler
@@ -23,6 +24,9 @@ import com.google.android.material.slider.RangeSlider
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentFilterFacetBinding
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.ui.component.ExpandableLayout
+import io.github.drumber.kitsune.ui.component.algolia.range.IntNumberRangeView
+import io.github.drumber.kitsune.ui.component.algolia.range.connectView
 import io.github.drumber.kitsune.ui.main.FragmentDecorationPreference
 import io.github.drumber.kitsune.ui.search.SearchViewModel
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.Error
@@ -30,9 +34,6 @@ import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.In
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotAvailable
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotInitialized
 import io.github.drumber.kitsune.ui.search.categories.CategoriesDialogFragment
-import io.github.drumber.kitsune.ui.component.ExpandableLayout
-import io.github.drumber.kitsune.ui.component.algolia.range.IntNumberRangeView
-import io.github.drumber.kitsune.ui.component.algolia.range.connectView
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
@@ -43,11 +44,21 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
 
     override val hasTransparentStatusBar = true
 
-    private val binding: FragmentFilterFacetBinding by viewBinding()
+    private var _binding: FragmentFilterFacetBinding? = null
+    private val binding get() = _binding!!
 
     private val connection = ConnectionHandler()
 
     private val viewModel: SearchViewModel by activityViewModel()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentFilterFacetBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -245,6 +256,7 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
     override fun onDestroyView() {
         connection.clear()
         super.onDestroyView()
+        _binding = null
     }
 
 }
