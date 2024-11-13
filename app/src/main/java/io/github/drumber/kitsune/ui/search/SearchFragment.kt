@@ -3,8 +3,10 @@ package io.github.drumber.kitsune.ui.search
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
@@ -12,7 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.algolia.instantsearch.android.searchbox.SearchBoxViewAppCompat
 import com.algolia.instantsearch.core.connection.AbstractConnection
 import com.algolia.instantsearch.core.connection.ConnectionHandler
@@ -37,6 +38,7 @@ import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.In
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotAvailable
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotInitialized
 import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -50,7 +52,8 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
 
     override val hasTransparentStatusBar = false
 
-    private val binding: FragmentSearchBinding by viewBinding()
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: SearchViewModel by activityViewModel()
 
@@ -61,6 +64,16 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
         get() = binding.layoutLoading
 
     private val connectionHandler = ConnectionHandler()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        logD("SearchFragment - onCreateView $this")
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -197,6 +210,7 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
     }
 
     override fun onDestroyView() {
+        logD("SearchFragment - onDestroyView $this")
         connectionHandler.clear()
         super.onDestroyView()
     }
