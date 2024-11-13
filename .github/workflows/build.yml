@@ -1,6 +1,13 @@
 name: Build app
 
-on: [ workflow_dispatch, workflow_call ]
+on:
+  workflow_dispatch:
+    inputs:
+      buildVariant:
+        description: 'App build variant'
+        required: false
+        default: 'release'
+  workflow_call:
 
 permissions:
   contents: read
@@ -15,14 +22,17 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Install build-tools 34.0.0
-        run: echo y | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --install "build-tools;34.0.0" "platforms;android-34"
-      - name: Uninstall build-tools 35.0.0
-        run: echo y | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --uninstall "build-tools;35.0.0" "platforms;android-35"
+      - name: Set gradle build task
+        run: |
+          if [ -z "${{ github.event.inputs.buildVariant }}" ]; then
+            echo "build_task='assembleRelease'" >> "$GITHUB_ENV"
+          else
+            echo "build_task=${{ github.event.inputs.buildVariant }}" >> "$GITHUB_ENV"
+          fi
       - name: Build release with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: assembleRelease
+          arguments: "$build_task"
       - name: Upload release apk
         uses: actions/upload-artifact@v4
         with:
