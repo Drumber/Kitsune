@@ -54,7 +54,6 @@ screengrab = "2.1.1"
 swiperefreshlayout = "1.1.0"
 testRules = "1.6.1"
 treeView = "1.2.9"
-viewBindingDelegate = "1.5.9"
 
 [libraries]
 accompanist-themeadapter-material3 = { module = "com.google.accompanist:accompanist-themeadapter-material3", version.ref = "accompanist"}
@@ -126,7 +125,6 @@ jetbrains-kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-co
 jetbrains-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 jetbrains-kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 junit = { module = "junit:junit", version.ref = "junit" }
-kirich1409-viewbindingpropertydelegate = { module = "com.github.kirich1409:viewbindingpropertydelegate", version.ref = "viewBindingDelegate" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorClient" }
 mikepenz-aboutlibraries = { module = "com.mikepenz:aboutlibraries", version.ref = "aboutLibraries" }
 mikepenz-aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutLibraries" }

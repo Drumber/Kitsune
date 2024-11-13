@@ -173,9 +173,6 @@ dependencies {
     implementation(libs.insert.koin.android)
     implementation(libs.insert.koin.androidx.navigation)
 
-    // View binding delegate
-    implementation(libs.kirich1409.viewbindingpropertydelegate)
-
     // jsonapi-converter
     implementation(libs.jasminb.jsonapi)
 

@@ -2,7 +2,6 @@ package io.github.drumber.kitsune
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import by.kirich1409.viewbindingdelegate.ViewBindingPropertyDelegate
 import com.algolia.instantsearch.core.InstantSearchTelemetry
 import com.chibatching.kotpref.Kotpref
 import com.chibatching.kotpref.livedata.asLiveData
@@ -50,8 +49,6 @@ class KitsuneApplication : Application() {
         performMigrations()
 
         Kotpref.init(this)
-
-        ViewBindingPropertyDelegate.strictMode = false
 
         KitsunePref.asLiveData(KitsunePref::darkMode).observeForever {
             AppCompatDelegate.setDefaultNightMode(it.toInt())
