@@ -25,7 +25,7 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
-          name: app-release-unsigned
+          name: app-unsigned
       - run: mv *.apk unsigned.apk
       - name: Set asset URL
         id: set_asset_url

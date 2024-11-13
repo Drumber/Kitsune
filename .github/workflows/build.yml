@@ -29,13 +29,13 @@ jobs:
           else
             echo "build_task=${{ github.event.inputs.buildVariant }}" >> "$GITHUB_ENV"
           fi
-      - name: Build release with Gradle
+      - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: "$build_task"
-      - name: Upload release apk
+          arguments: ${{ env.build_task }}
+      - name: Upload apk
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-unsigned
-          path: app/build/outputs/apk/release/*.apk
+          name: app-unsigned
+          path: app/build/outputs/apk/**/*.apk
           if-no-files-found: error
