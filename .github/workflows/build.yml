@@ -27,7 +27,7 @@ jobs:
           if [ -z "${{ github.event.inputs.buildVariant }}" ]; then
             echo "build_task='assembleRelease'" >> "$GITHUB_ENV"
           else
-            echo "build_task=${{ github.event.inputs.buildVariant }}" >> "$GITHUB_ENV"
+            echo "build_task=assemble${{ github.event.inputs.buildVariant }}" >> "$GITHUB_ENV"
           fi
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
