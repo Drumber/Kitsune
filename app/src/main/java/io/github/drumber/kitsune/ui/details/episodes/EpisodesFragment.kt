@@ -6,21 +6,25 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.presentation.dto.toMedia
 import io.github.drumber.kitsune.data.presentation.dto.toMediaUnitDto
 import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.databinding.FragmentMediaListBinding
-import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
 import io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter
-import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
+import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
+import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbarOnFailure
@@ -28,8 +32,9 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
-    MediaUnitPagingAdapter.MediaUnitActionListener {
+class EpisodesFragment : Fragment(R.layout.fragment_media_list),
+    MediaUnitPagingAdapter.MediaUnitActionListener,
+    NavigationBarView.OnItemReselectedListener {
 
     private val args: EpisodesFragmentArgs by navArgs()
 
@@ -37,12 +42,6 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
     private val binding get() = _binding!!
 
     private val viewModel: EpisodesViewModel by viewModel()
-
-    override val recyclerView: RecyclerView
-        get() = binding.rvMedia
-
-    override val resourceLoadingBinding: LayoutResourceLoadingBinding
-        get() = binding.layoutLoading
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,8 +76,10 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
         )
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.libraryUpdateResultFlow.collectLatest {
-                it.showSnackbarOnFailure(binding.rvMedia)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.libraryUpdateResultFlow.collectLatest {
+                    it.showSnackbarOnFailure(binding.rvMedia)
+                }
             }
         }
 
@@ -88,7 +89,26 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
             viewModel.libraryEntryWrapper.value != null,
             this
         )
-        setRecyclerViewAdapter(adapter)
+        binding.rvMedia.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = ResourceLoadStateAdapter(adapter),
+            footer = ResourceLoadStateAdapter(adapter)
+        )
+        binding.rvMedia.layoutManager =
+            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+
+        binding.layoutLoading.btnRetry.setOnClickListener { adapter.retry() }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                adapter.loadStateFlow.collectLatest { loadState ->
+                    binding.layoutLoading.updateLoadState(
+                        binding.rvMedia,
+                        adapter.itemCount,
+                        loadState
+                    )
+                }
+            }
+        }
 
         viewModel.libraryEntryWrapper.observe(viewLifecycleOwner) {
             adapter.setIsWatchedCheckboxEnabled(it != null)
@@ -98,15 +118,12 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.dataSource.collectLatest { data ->
-                adapter.submitData(data)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.dataSource.collectLatest { data ->
+                    adapter.submitData(data)
+                }
             }
         }
-    }
-
-    override fun initRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
     }
 
     private fun showDetailsBottomSheet(mediaUnit: MediaUnit) {
@@ -127,8 +144,8 @@ class EpisodesFragment : BaseCollectionFragment(R.layout.fragment_media_list),
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        if (recyclerView.canScrollVertically(-1)) {
-            super.onNavigationItemReselected(item)
+        if (binding.rvMedia.canScrollVertically(-1)) {
+            binding.rvMedia.smoothScrollToPosition(0)
             binding.appBarLayout.setExpanded(true)
         } else {
             findNavController().navigateUp()
