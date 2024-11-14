@@ -136,7 +136,7 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
     }
 
     override fun onDestroyView() {
-        binding.viewPagerExplore.adapter = null
+        _binding?.viewPagerExplore?.adapter = null
         super.onDestroyView()
         _binding = null
     }
