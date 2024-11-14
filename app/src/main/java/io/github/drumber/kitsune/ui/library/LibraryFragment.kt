@@ -49,6 +49,7 @@ import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.component.ResponsiveGridLayoutManager
+import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibrarySynchronizationResult
 import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibraryUpdateResult
 import io.github.drumber.kitsune.util.extensions.navigateSafe
@@ -166,21 +167,25 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.libraryChangeResultFlow.collectLatest {
-                when (it) {
-                    is LibraryUpdateResult -> it.result.showSnackbarOnFailure(binding.rvLibraryEntries)
-                    is LibrarySynchronizationResult -> it.results.showSnackbarOnAnyFailure(binding.rvLibraryEntries)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.libraryChangeResultFlow.collectLatest {
+                    when (it) {
+                        is LibraryUpdateResult -> it.result.showSnackbarOnFailure(binding.rvLibraryEntries)
+                        is LibrarySynchronizationResult -> it.results.showSnackbarOnAnyFailure(binding.rvLibraryEntries)
+                    }
                 }
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.state
-                .map { it.isLibraryUpdateOperationInProgress }
-                .distinctUntilChanged()
-                .collectLatest {
-                    binding.progressIndicator.visibility = if (it) View.VISIBLE else View.INVISIBLE
-                }
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state
+                    .map { it.isLibraryUpdateOperationInProgress }
+                    .distinctUntilChanged()
+                    .collectLatest {
+                        binding.progressIndicator.visibility = if (it) View.VISIBLE else View.INVISIBLE
+                    }
+            }
         }
 
         setFragmentResultListener(RESULT_KEY_RATING) { _, bundle ->
@@ -204,42 +209,46 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
     private fun initFilterChips() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.state
-                .map { it.filter.kind }
-                .distinctUntilChanged()
-                .collectLatest { kind ->
-                    binding.chipMediaKind.setText(
-                        when (kind) {
-                            LibraryEntryKind.Anime -> R.string.anime
-                            LibraryEntryKind.Manga -> R.string.manga
-                            else -> R.string.library_kind_all
-                        }
-                    )
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state
+                    .map { it.filter.kind }
+                    .distinctUntilChanged()
+                    .collectLatest { kind ->
+                        binding.chipMediaKind.setText(
+                            when (kind) {
+                                LibraryEntryKind.Anime -> R.string.anime
+                                LibraryEntryKind.Manga -> R.string.manga
+                                else -> R.string.library_kind_all
+                            }
+                        )
 
-                    binding.chipCurrent.setText(
-                        if (kind == LibraryEntryKind.Manga) R.string.library_status_reading
-                        else R.string.library_status_watching
-                    )
-                    binding.chipPlanned.setText(
-                        if (kind == LibraryEntryKind.Manga) R.string.library_status_planned_manga
-                        else R.string.library_status_planned
-                    )
-                }
+                        binding.chipCurrent.setText(
+                            if (kind == LibraryEntryKind.Manga) R.string.library_status_reading
+                            else R.string.library_status_watching
+                        )
+                        binding.chipPlanned.setText(
+                            if (kind == LibraryEntryKind.Manga) R.string.library_status_planned_manga
+                            else R.string.library_status_planned
+                        )
+                    }
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.state
-                .map { it.filter.libraryStatus }
-                .distinctUntilChanged()
-                .collectLatest { status ->
-                    binding.apply {
-                        chipCurrent.isChecked = status.contains(LibraryStatus.Current)
-                        chipPlanned.isChecked = status.contains(LibraryStatus.Planned)
-                        chipCompleted.isChecked = status.contains(LibraryStatus.Completed)
-                        chipOnHold.isChecked = status.contains(LibraryStatus.OnHold)
-                        chipDropped.isChecked = status.contains(LibraryStatus.Dropped)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state
+                    .map { it.filter.libraryStatus }
+                    .distinctUntilChanged()
+                    .collectLatest { status ->
+                        binding.apply {
+                            chipCurrent.isChecked = status.contains(LibraryStatus.Current)
+                            chipPlanned.isChecked = status.contains(LibraryStatus.Planned)
+                            chipCompleted.isChecked = status.contains(LibraryStatus.Completed)
+                            chipOnHold.isChecked = status.contains(LibraryStatus.OnHold)
+                            chipDropped.isChecked = status.contains(LibraryStatus.Dropped)
+                        }
                     }
-                }
+            }
         }
 
         binding.apply {
@@ -300,24 +309,13 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
                 }
 
                 binding.apply {
-                    rvLibraryEntries.isVisible = isNotLoading
-                    layoutLoading.apply {
-                        root.isVisible = !isNotLoading
-                        progressBar.isVisible = state.refresh is LoadState.Loading
-                        btnRetry.isVisible = state.mediator?.refresh is LoadState.Error
-                        tvError.isVisible = state.mediator?.refresh is LoadState.Error
-                    }
-
-                    if (state.refresh is LoadState.NotLoading
-                        && state.append.endOfPaginationReached
-                        && adapter.itemCount < 1
-                    ) {
-                        layoutLoading.root.isVisible = true
-                        layoutLoading.tvNoData.isVisible = true
-                        rvLibraryEntries.isVisible = false
-                    } else {
-                        layoutLoading.tvNoData.isVisible = false
-                    }
+                    layoutLoading.updateLoadState(
+                        rvLibraryEntries,
+                        adapter.itemCount,
+                        state,
+                        useRemoteMediator = true,
+                        checkIsNotLoading = { isNotLoading }
+                    )
 
                     swipeRefreshLayout.isRefreshing =
                         swipeRefreshLayout.isRefreshing && state.source.refresh is LoadState.Loading
@@ -370,9 +368,11 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
             ).distinctUntilChanged()
 
             viewLifecycleOwner.lifecycleScope.launch {
-                shouldScrollToTop.collect { shouldScroll ->
-                    if (shouldScroll) {
-                        scrollToPosition(0)
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    shouldScrollToTop.collectLatest { shouldScroll ->
+                        if (shouldScroll) {
+                            scrollToPosition(0)
+                        }
                     }
                 }
             }
@@ -583,7 +583,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
     override fun onDestroyView() {
         viewModel.doRefreshListener = null
-        (requireActivity() as AppCompatActivity).setSupportActionBar(null)
+        (activity as? AppCompatActivity)?.setSupportActionBar(null)
         super.onDestroyView()
         _binding = null
     }

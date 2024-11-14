@@ -147,6 +147,7 @@ class MainActivity : BaseActivity() {
                     if (item.itemId == selectedItemId
                         && fragments.size > 0
                         && fragments[0] is NavigationBarView.OnItemReselectedListener
+                        && fragments[0].lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
                     ) {
                         (fragments[0] as NavigationBarView.OnItemReselectedListener).onNavigationItemReselected(
                             item
