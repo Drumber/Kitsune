@@ -10,10 +10,12 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.algolia.instantsearch.android.searchbox.SearchBoxViewAppCompat
 import com.algolia.instantsearch.core.connection.AbstractConnection
 import com.algolia.instantsearch.core.connection.ConnectionHandler
@@ -28,10 +30,13 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.FragmentSearchBinding
-import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.paging.MediaSearchPagingAdapter
-import io.github.drumber.kitsune.ui.base.BaseCollectionFragment
+import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
+import io.github.drumber.kitsune.ui.component.LoadStateSpanSizeLookup
+import io.github.drumber.kitsune.ui.component.ResponsiveGridLayoutManager
+import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.ui.main.FragmentDecorationPreference
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.Error
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.Initialized
@@ -44,7 +49,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import java.lang.ref.WeakReference
 
-class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
+class SearchFragment : Fragment(R.layout.fragment_search),
     FragmentDecorationPreference,
     OnItemClickListener<Media>,
     NavigationBarView.OnItemReselectedListener {
@@ -55,12 +60,6 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
     private val binding get() = _binding!!
 
     private val viewModel: SearchViewModel by activityViewModel()
-
-    override val recyclerView: RecyclerView
-        get() = binding.rvMedia
-
-    override val resourceLoadingBinding: LayoutResourceLoadingBinding
-        get() = binding.layoutLoading
 
     private val connectionHandler = ConnectionHandler()
 
@@ -88,20 +87,48 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
             rvMedia.initPaddingWindowInsetsListener(bottom = true, consume = false)
         }
 
-        val adapter = MediaSearchPagingAdapter(Glide.with(this), this)
-        setRecyclerViewAdapter(adapter)
-        recyclerView.itemAnimator = null
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.searchResultSource.collectLatest {
-                adapter.submitData(it)
-            }
-        }
-
+        initRecyclerView()
         initSearchBar()
         observeSearchBox()
         observeFilters()
         initSearchProviderStatusLayout()
+    }
+
+    private fun initRecyclerView() {
+        val adapter = MediaSearchPagingAdapter(Glide.with(this), this)
+        val columnWidth = resources.getDimension(KitsunePref.mediaItemSize.widthRes) +
+                2 * resources.getDimension(R.dimen.media_item_margin)
+        val gridLayout = ResponsiveGridLayoutManager(requireContext(), columnWidth.toInt(), 2)
+        gridLayout.spanSizeLookup = LoadStateSpanSizeLookup(adapter, gridLayout)
+
+        binding.rvMedia.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = ResourceLoadStateAdapter(adapter),
+            footer = ResourceLoadStateAdapter(adapter)
+        )
+        binding.rvMedia.layoutManager = gridLayout
+        binding.rvMedia.itemAnimator = null
+
+        binding.layoutLoading.btnRetry.setOnClickListener { adapter.retry() }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                adapter.loadStateFlow.collectLatest { loadState ->
+                    binding.layoutLoading.updateLoadState(
+                        binding.rvMedia,
+                        adapter.itemCount,
+                        loadState
+                    )
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.searchResultSource.collectLatest {
+                    adapter.submitData(it)
+                }
+            }
+        }
     }
 
     private fun initSearchBar() {
@@ -145,9 +172,9 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
             val searchBoxView = SearchBoxViewAppCompat(binding.searchView)
             connectionHandler += searchBox.connectView(searchBoxView)
             connectionHandler += SearchResponseListener(searchBox) {
-                recyclerView.post {
+                binding.rvMedia.post {
                     // scroll to top when searching
-                    recyclerView.scrollToPosition(0)
+                    binding.rvMedia.scrollToPosition(0)
                     binding.appBarLayout.setExpanded(true)
                 }
             }
@@ -193,8 +220,8 @@ class SearchFragment : BaseCollectionFragment(R.layout.fragment_search),
 
     override fun onNavigationItemReselected(item: MenuItem) {
         binding.appBarLayout.setExpanded(true)
-        if (recyclerView.canScrollVertically(-1)) {
-            super.onNavigationItemReselected(item)
+        if (binding.rvMedia.canScrollVertically(-1)) {
+            binding.rvMedia.smoothScrollToPosition(0)
         } else {
             focusSearchView()
         }
