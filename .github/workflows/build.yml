@@ -33,9 +33,11 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: ${{ env.build_task }}
+      - name: Copy apk files
+        run: mkdir -p ./artifacts && cp app/build/outputs/apk/**/*.apk ./artifacts/
       - name: Upload apk
         uses: actions/upload-artifact@v4
         with:
           name: app-unsigned
-          path: app/build/outputs/apk/**/*.apk
+          path: artifacts/*.apk
           if-no-files-found: error
