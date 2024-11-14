@@ -6,26 +6,40 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.RecyclerView
+import androidx.paging.PagingData
+import androidx.paging.PagingDataAdapter
+import com.bumptech.glide.Glide
 import com.google.android.material.color.MaterialColors
+import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.FragmentMediaListBinding
-import io.github.drumber.kitsune.databinding.LayoutResourceLoadingBinding
-import io.github.drumber.kitsune.ui.base.MediaCollectionFragment
-import io.github.drumber.kitsune.ui.base.MediaCollectionViewModel
+import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.ui.adapter.paging.AnimeAdapter
+import io.github.drumber.kitsune.ui.adapter.paging.MangaAdapter
+import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
+import io.github.drumber.kitsune.ui.component.LoadStateSpanSizeLookup
+import io.github.drumber.kitsune.ui.component.ResponsiveGridLayoutManager
+import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) {
+class MediaListFragment : Fragment(R.layout.fragment_media_list),
+    NavigationBarView.OnItemReselectedListener {
 
     private val args: MediaListFragmentArgs by navArgs()
 
@@ -33,15 +47,6 @@ class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) 
     private val binding get() = _binding!!
 
     private val viewModel: MediaListViewModel by viewModel()
-
-    override val collectionViewModel: MediaCollectionViewModel
-        get() = viewModel
-
-    override val recyclerView: RecyclerView
-        get() = binding.rvMedia
-
-    override val resourceLoadingBinding: LayoutResourceLoadingBinding
-        get() = binding.layoutLoading
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,26 +86,67 @@ class MediaListFragment : MediaCollectionFragment(R.layout.fragment_media_list) 
             title = args.title
             setNavigationOnClickListener { findNavController().navigateUp() }
         }
+
+        initRecyclerView()
     }
 
-    override fun onMediaClicked(view: View, model: Media) {
-        val action = MediaListFragmentDirections.actionMediaListFragmentToDetailsFragment(model.toMediaDto())
+    private fun initRecyclerView() {
+        val glide = Glide.with(this)
+
+        val adapter = when (args.mediaSelector.mediaType) {
+            MediaType.Anime -> AnimeAdapter(glide, this::onMediaClicked)
+            MediaType.Manga -> MangaAdapter(glide, this::onMediaClicked)
+        } as PagingDataAdapter<Media, *>
+
+        val columnWidth = resources.getDimension(KitsunePref.mediaItemSize.widthRes) +
+                2 * resources.getDimension(R.dimen.media_item_margin)
+        val gridLayout = ResponsiveGridLayoutManager(requireContext(), columnWidth.toInt(), 2)
+        gridLayout.spanSizeLookup = LoadStateSpanSizeLookup(adapter, gridLayout)
+
+        binding.rvMedia.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = ResourceLoadStateAdapter(adapter),
+            footer = ResourceLoadStateAdapter(adapter)
+        )
+        binding.rvMedia.layoutManager = gridLayout
+
+        binding.layoutLoading.btnRetry.setOnClickListener { adapter.retry() }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                adapter.loadStateFlow.collectLatest { loadStates ->
+                    binding.layoutLoading.updateLoadState(
+                        binding.rvMedia,
+                        adapter.itemCount,
+                        loadStates
+                    )
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.dataSource.collectLatest { data ->
+                    adapter.submitData(data as PagingData<Media>)
+                }
+            }
+        }
+    }
+
+    fun onMediaClicked(view: View, model: Media) {
+        val action =
+            MediaListFragmentDirections.actionMediaListFragmentToDetailsFragment(model.toMediaDto())
         val detailsTransitionName = getString(R.string.details_poster_transition_name)
         val extras = FragmentNavigatorExtras(view to detailsTransitionName)
         findNavController().navigateSafe(R.id.media_list_fragment, action, extras)
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        if (recyclerView.canScrollVertically(-1)) {
+        if (binding.rvMedia.canScrollVertically(-1)) {
+            binding.rvMedia.smoothScrollToPosition(0)
             binding.appBarLayout.setExpanded(true)
-            super.onNavigationItemReselected(item)
         } else {
             findNavController().navigateUp()
         }
-    }
-
-    override fun getMediaType(): MediaType {
-        return args.mediaSelector.mediaType
     }
 
     override fun onDestroyView() {
