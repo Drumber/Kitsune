@@ -489,6 +489,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
             // restore previous search view state
             menuItem.expandActionView()
             searchView.post {
+                if (!isAdded) return@post
                 searchView.setQuery(searchQueryText, false)
             }
         }
@@ -503,6 +504,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 searchView.post {
+                    if (!isAdded) return@post
                     // empty search queries triggered on collapse will be ignored
                     if (!searchView.isIconified) {
                         searchDebouncer.debounce(lifecycleScope) {
@@ -523,6 +525,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
                 viewModel.searchLibrary("")
                 binding.rvLibraryEntries.apply {
                     post {
+                        if (!isAdded) return@post
                         scrollToPosition(0)
                     }
                 }

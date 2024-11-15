@@ -173,6 +173,7 @@ class SearchFragment : Fragment(R.layout.fragment_search),
             connectionHandler += searchBox.connectView(searchBoxView)
             connectionHandler += SearchResponseListener(searchBox) {
                 binding.rvMedia.post {
+                    if (!isAdded) return@post
                     // scroll to top when searching
                     binding.rvMedia.scrollToPosition(0)
                     binding.appBarLayout.setExpanded(true)
@@ -201,6 +202,7 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         viewModel.filtersLiveData.observe(viewLifecycleOwner) { filters ->
             val filterCount = filters?.getFilters()?.size ?: 0
             binding.btnFilter.post {
+                if (!isAdded) return@post
                 binding.btnFilter.overlay.clear()
                 val badgeDrawable = BadgeDrawable.create(binding.btnFilter.context).apply {
                     isVisible = filterCount > 0

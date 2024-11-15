@@ -65,6 +65,7 @@ abstract class BasePreferenceFragment(
                     setText(preference.text)
                     requestFocus()
                     post {
+                        if (!isAdded) return@post
                         val imm = requireContext()
                             .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                         imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)

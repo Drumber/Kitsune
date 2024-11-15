@@ -49,6 +49,7 @@ class RatingBottomSheet : BottomSheetDialogFragment() {
                         val coercedRatingTwenty = ratingSystem.convertToRatingTwenty(rating)
                             .coerceIn(1..20)
                         ratingBar.post {
+                            if (!isAdded) return@post
                             ratingBar.rating = ratingSystem.convertFrom(coercedRatingTwenty)
                         }
                     }

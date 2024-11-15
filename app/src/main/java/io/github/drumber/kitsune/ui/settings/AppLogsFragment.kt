@@ -80,6 +80,7 @@ class AppLogsFragment : Fragment(R.layout.fragment_app_logs) {
 
                 if (savedInstanceState == null) {
                     nestedScrollView.post {
+                        if (!isAdded) return@post
                         nestedScrollView.fullScroll(View.FOCUS_DOWN)
                     }
                 }
