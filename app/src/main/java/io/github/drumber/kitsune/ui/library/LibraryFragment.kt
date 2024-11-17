@@ -295,30 +295,34 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
         var lastLoadState: CombinedLoadStates? = null
 
-        adapter.addLoadStateListener { state ->
-            lastLoadState = state
-            if (view?.parent != null) {
-                val isSearching = viewModel.state.value.filter.searchQuery.isNotBlank()
-                val isNotLoading = when {
-                    adapter.itemCount < 1 -> state.refresh is LoadState.NotLoading
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                adapter.loadStateFlow.collectLatest { state ->
+                    lastLoadState = state
+                    if (view?.parent == null) return@collectLatest
 
-                    isSearching -> state.source.refresh is LoadState.NotLoading
+                    val isSearching = viewModel.state.value.filter.searchQuery.isNotBlank()
+                    val isNotLoading = when {
+                        adapter.itemCount < 1 -> state.refresh is LoadState.NotLoading
 
-                    else -> state.mediator?.refresh !is LoadState.Loading
-                            || state.source.refresh is LoadState.NotLoading
-                }
+                        isSearching -> state.source.refresh is LoadState.NotLoading
 
-                binding.apply {
-                    layoutLoading.updateLoadState(
-                        rvLibraryEntries,
-                        adapter.itemCount,
-                        state,
-                        useRemoteMediator = true,
-                        checkIsNotLoading = { isNotLoading }
-                    )
+                        else -> state.mediator?.refresh !is LoadState.Loading
+                                || state.source.refresh is LoadState.NotLoading
+                    }
 
-                    swipeRefreshLayout.isRefreshing =
-                        swipeRefreshLayout.isRefreshing && state.source.refresh is LoadState.Loading
+                    binding.apply {
+                        layoutLoading.updateLoadState(
+                            rvLibraryEntries,
+                            adapter.itemCount,
+                            state,
+                            useRemoteMediator = true,
+                            checkIsNotLoading = { isNotLoading }
+                        )
+
+                        swipeRefreshLayout.isRefreshing =
+                            swipeRefreshLayout.isRefreshing && state.source.refresh is LoadState.Loading
+                    }
                 }
             }
         }
@@ -332,10 +336,10 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
             layoutManager = ResponsiveGridLayoutManager(context, 350.toPx(), 1).apply {
                 spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                     override fun getSpanSize(position: Int): Int {
-                        return if (adapter.getItemViewType(position) == R.layout.item_library_entry) {
-                            1
-                        } else {
+                        return if (adapter.getItemViewType(position) == R.layout.item_library_status_separator) {
                             spanCount
+                        } else {
+                            1
                         }
                     }
                 }
