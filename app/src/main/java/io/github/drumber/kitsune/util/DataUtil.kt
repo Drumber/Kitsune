@@ -5,6 +5,7 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.common.Titles
 import io.github.drumber.kitsune.data.common.en
 import io.github.drumber.kitsune.data.common.enJp
+import io.github.drumber.kitsune.data.common.enUs
 import io.github.drumber.kitsune.data.common.jaJp
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
 import io.github.drumber.kitsune.preference.KitsunePref
@@ -41,11 +42,11 @@ object DataUtil {
     fun getTitle(title: Titles?, canonical: String?): String? {
         return when (KitsunePref.titles) {
             LocalTitleLanguagePreference.Canonical -> canonical.nb()
-                ?: title?.enJp.nb() ?: title?.en.nb() ?: title?.jaJp
+                ?: title?.enJp.nb() ?: title?.en.nb() ?: title?.enUs.nb() ?: title?.jaJp
             LocalTitleLanguagePreference.Romanized -> title?.enJp.nb()
-                ?: canonical.nb() ?: title?.en.nb() ?: title?.jaJp
+                ?: canonical.nb() ?: title?.en.nb() ?: title?.enUs.nb() ?: title?.jaJp
             LocalTitleLanguagePreference.English -> title?.en.nb()
-                ?: canonical.nb() ?: title?.enJp.nb() ?: title?.jaJp
+                ?: title?.enUs.nb() ?: canonical.nb() ?: title?.enJp.nb() ?: title?.jaJp
         }
     }
 
