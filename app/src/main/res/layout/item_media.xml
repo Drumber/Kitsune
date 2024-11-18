@@ -83,6 +83,7 @@
                         android:paddingVertical="2dp"
                         android:textAppearance="@style/TextAppearance.Kitsune.SubtypeBadge"
                         android:maxLines="1"
+                        android:ellipsize="end"
                         android:text="@{overlayTagText}"
                         tools:text="TV" />
 
