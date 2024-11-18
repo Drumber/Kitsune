@@ -1,0 +1,6 @@
+* Fixed a potential crash when navigating back to the search screen
+* Fixed english title is not displayed if only 'en_us' title is available
+* Fixed text overflow for overlay text on media posters
+* Added Italian translations by NicolaBortoletto
+* Updated Spanish translations by gallegonovato and @Kiimby
+* Updated Vietnamese translations by @ngocanhtve
