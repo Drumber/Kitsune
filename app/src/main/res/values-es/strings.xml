@@ -171,7 +171,7 @@
     <string name="relationship_adaptation">Adaptación</string>
     <string name="relationship_summary">Resumen</string>
     <string name="relationship_full_story">Historia completa</string>
-    <string name="relationship_spinoff">Spin-off</string>
+    <string name="relationship_spinoff">Serie derivada de</string>
     <string name="relationship_character">Personaje</string>
     <string name="relationship_other">Otro</string>
     <string name="section_trending">Populares esta semana</string>
@@ -376,7 +376,7 @@
     <string name="onboarding_welcome_action">Empezar</string>
     <string name="onboarding_login_title">Iniciar sesión en Kitsu</string>
     <string name="onboarding_login_subtitle">Inicia sesión en tu cuenta de Kitsu o crea una nueva cuenta para tener acceso a todas las funciones.</string>
-    <string name="onboarding_login_forward_dialog_title">Crear una cuenta</string>
+    <string name="onboarding_login_forward_dialog_title">Crea una cuenta</string>
     <string name="onboarding_login_forward_dialog_message">Serás redirigido a %1$s donde podrás crear una nueva cuenta.</string>
     <string name="onboarding_setup_title">Configuración inicial</string>
     <string name="onboarding_setup_notification_permission_notice">Se requiere permiso de notificación.</string>
