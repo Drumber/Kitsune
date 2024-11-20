@@ -12,7 +12,7 @@
     <string name="action_cancel">Отмена</string>
     <string name="action_reset_filter">Сброс фильтра</string>
     <string name="action_unselect_all">Снять все выделения</string>
-    <string name="action_read_more">Читать ещё</string>
+    <string name="action_read_more">Развернуть</string>
     <string name="action_show_more">Показать ещё</string>
     <string name="action_back">Назад</string>
     <string name="action_close">Закрыть</string>
@@ -40,7 +40,7 @@
     <string name="action_edit_profile_link">Правка ссылки профиля</string>
     <string name="action_select_profile_link_site">Выберите сайт</string>
     <string name="hint_search">Поиск</string>
-    <string name="hint_search_characters">Поиск символов</string>
+    <string name="hint_search_characters">Найти персонажей</string>
     <string name="hint_mark_watched">Пометить, как смотрели.</string>
     <string name="hint_mark_not_watched">Пометить, как не смотрел.</string>
     <string name="hint_rating">Рейтинг</string>
@@ -70,13 +70,13 @@
     <string name="error_something_wrong">Опс, что-то пошло не так!</string>
     <string name="error_requires_notification_permission">Требуется разрешение на уведомление.</string>
     <string name="anime">Аниме</string>
-    <string name="action_read_less">Читать далее</string>
+    <string name="action_read_less">Свернуть</string>
     <string name="action_show_less">Показать далее</string>
     <string name="action_view">Вид</string>
     <string name="action_dismiss">Отклонить</string>
     <string name="dialog_notification_permission_rejected">Вы не будете получать уведомления и не будете информированы об обновлениях приложения.</string>
     <string name="error_mapping_loading">Не удалось загрузить сопоставления для внешних сайтов.</string>
-    <string name="error_invalid_user">Недействительный пользователь. Вы вошли в систему?</string>
+    <string name="error_invalid_user">Неизвестный пользователь. Вы вошли в систему?</string>
     <string name="error_user_update_failed">Не удалось обновить данные пользователя.</string>
     <string name="error_user_delete_waifu_failed">Не удалось удалить Waifu/Husbando.</string>
     <string name="error_user_update_image_failed">Не удалось обновить изображение профиля или обложку.</string>
@@ -136,7 +136,7 @@
     <string name="data_title_published">Опубликовано</string>
     <string name="data_rank">Ранг #%d</string>
     <string name="data_popularity">Популярность #%d</string>
-    <string name="data_kitsu_score">Баллы Kitsu %s%%</string>
+    <string name="data_kitsu_score">Оценка на Kitsu %s%%</string>
     <string name="data_length_each">%d минут каждый</string>
     <string name="data_title_aired">В эфире</string>
     <string name="data_title_tba">Ожидается</string>
@@ -168,7 +168,7 @@
     <string name="section_top_upcoming_manga">Лучшие ожидаемые манга</string>
     <string name="section_highest_rated_manga">Высоко оцененные манга</string>
     <string name="section_most_popular_manga">Самые популярные манга</string>
-    <string name="preference_category_ui">Интерфейс пользователя</string>
+    <string name="preference_category_ui">Интерфейс</string>
     <string name="preference_category_account">Аккаунт</string>
     <string name="preference_category_advanced">Расширенный</string>
     <string name="preference_appearance_description">Смените тему и включите темный режим.</string>
@@ -183,8 +183,8 @@
     <string name="preference_app_theme">Тема</string>
     <string name="preference_dynamic_color_theme">Использовать динамический цвет</string>
     <string name="preference_dynamic_color_theme_description">Адаптироваться к системной теме.</string>
-    <string name="preference_app_theme_default">По умолчанию</string>
-    <string name="preference_app_theme_purple">Пурпурный</string>
+    <string name="preference_app_theme_default">Базовый</string>
+    <string name="preference_app_theme_purple">Лиловый</string>
     <string name="preference_app_theme_green">Зеленый</string>
     <string name="preference_media_item_size">Размер изображения плаката</string>
     <string name="preference_media_item_size_small">Маленький</string>
@@ -236,7 +236,7 @@
     <string name="status_logging_in">Вход в систему…</string>
     <string name="logged_in_success">Вход выполнен как %s.</string>
     <string name="login_no_account">У вас нет аккаунта? Создайте его на <a href="https://kitsu.app">kitsu.app</a>.</string>
-    <string name="not_logged_in">Вход выполнен</string>
+    <string name="not_logged_in">Вход не выполнен</string>
     <string name="library_not_started">Не начато</string>
     <string name="library_not_rated">Не оценено</string>
     <string name="invalid_username">Недействительный адрес электронной почты</string>
@@ -286,7 +286,7 @@
     <string name="unit_chapter">Глава %d</string>
     <string name="unit_episode">Эпизод %d</string>
     <string name="section_top_airing_manga">Лучшие издания манги</string>
-    <string name="preference_app_theme_blue">Голубой</string>
+    <string name="preference_app_theme_blue">Синий</string>
     <string name="preference_media_item_size_medium">Средний</string>
     <string name="library_not_logged_in_text">Войдите в свой аккаунт Kitsu, чтобы управлять библиотекой и получить доступ ко всем функциям.</string>
     <string name="library_edit_finished">Завершено</string>
@@ -301,4 +301,67 @@
     <string name="profile_not_logged_in_text">Войдите в свой аккаунт Kitsu или создайте новый аккаунт, чтобы получить доступ ко всем функциям.</string>
     <string name="profile_anime_stats">Статистика аниме</string>
     <string name="app_logs_no_data">Нет доступных записей.</string>
+    <string name="nav_os_libraries">Библиотеки с открытым кодом</string>
+    <string name="dialog_request_notification_permission">Получать уведомления о выпуске новой версии приложения.</string>
+    <string name="relationship_alternative_setting">Доп. настройки</string>
+    <string name="relationship_alternative_version">"Доп  версия"</string>
+    <string name="relationship_summary">Сводка</string>
+    <string name="preference_sfw_filter_limit_to_feed">Ограничить следующий ленту</string>
+    <string name="profile_data_gender">Пол</string>
+    <string name="widget_empty_action">Открыть библиотеку</string>
+    <plurals name="duration_months">
+        <item quantity="one">%s месяц</item>
+        <item quantity="few">%s месяцев</item>
+        <item quantity="many"></item>
+        <item quantity="other"></item>
+    </plurals>
+    <plurals name="duration_years">
+        <item quantity="one">%s год</item>
+        <item quantity="few">%s лет</item>
+        <item quantity="many"></item>
+        <item quantity="other"></item>
+    </plurals>
+    <string name="action_next">Далее</string>
+    <string name="action_create_account">Создать аккаунт</string>
+    <string name="profile_stats_time_spent_total">%s всего.</string>
+    <string name="profile_stats_completed">%1$d завершено. Более <b>%2$d%%</b> пользователей.</string>
+    <string name="profile_data_location">Локация</string>
+    <string name="profile_data_private">Это секрет.</string>
+    <string name="profile_gender_custom">Личный</string>
+    <string name="profile_find_waifu">Найдите своего особого человека</string>
+    <string name="onboarding_welcome_title">Добро пожаловать в Kitsune!</string>
+    <string name="onboarding_welcome_subtitle">Ваш личный компаньон по аниме и манге.</string>
+    <string name="onboarding_welcome_feature_search">Поиск</string>
+    <string name="onboarding_welcome_feature_explore">Проводник</string>
+    <plurals name="duration_hours">
+        <item quantity="one">%s час</item>
+        <item quantity="few">%s часов</item>
+        <item quantity="many"></item>
+        <item quantity="other"></item>
+    </plurals>
+    <plurals name="duration_days">
+        <item quantity="one">%s день</item>
+        <item quantity="few">%s дней</item>
+        <item quantity="many"></item>
+        <item quantity="other"></item>
+    </plurals>
+    <plurals name="duration_minutes">
+        <item quantity="one">%s минута</item>
+        <item quantity="few">%s минут</item>
+        <item quantity="many"></item>
+        <item quantity="other"></item>
+    </plurals>
+    <string name="action_continue">Продолжить</string>
+    <string name="action_skip">Пропустить</string>
+    <string name="preference_force_legacy_image_picker">Принудительный отбор старых фотографий</string>
+    <string name="preference_app_logs_description">Смотрите и делитесь сообщениями журнала приложения.</string>
+    <string name="preference_open_source_libraries_description">Список всех используемых библиотек с открытым исходным кодом.</string>
+    <string name="profile_stats_anime_watch_time">%s потрачено на просмотр аниме.</string>
+    <string name="profile_data_waifu">Waifu</string>
+    <string name="profile_data_join_date_ago">%s назад</string>
+    <string name="profile_data_husbando">Husbando</string>
+    <string name="profile_data_bio">Биография</string>
+    <string name="widget_description">Прогресс библиотеки</string>
+    <string name="widget_empty_text">В вашей библиотеке нет активного отслеживаемого объекта</string>
+    <string name="onboarding_welcome_feature_search_description">Найдите свое любимое аниме и мангу.</string>
 </resources>
