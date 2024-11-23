@@ -3,6 +3,8 @@ package io.github.drumber.kitsune.di
 import android.content.Context
 import android.os.Parcelable
 import com.algolia.search.model.filter.Filter
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.network.okHttpClient
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.MapperFeature
@@ -36,6 +38,7 @@ val networkModule = module {
     single(named("images")) { createHttpClientBuilder(false).build() }
     single { createObjectMapper() }
     factory<AuthenticationInterceptor> { AuthenticationInterceptorImpl(get()) }
+    single { createApolloClient(get()) }
 }
 
 fun createHttpClientBuilder(addLoggingInterceptor: Boolean = true) = OkHttpClient.Builder()
@@ -130,3 +133,8 @@ inline fun <reified T> createService(
         .build()
         .create(T::class.java)
 }
+
+private fun createApolloClient(httpClient: OkHttpClient) = ApolloClient.Builder()
+    .serverUrl(Kitsu.GRAPHQL_URL)
+    .okHttpClient(httpClient)
+    .build()

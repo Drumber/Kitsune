@@ -10,6 +10,7 @@ object Kitsu {
 
     const val API_HOST = "kitsu.app"
     const val API_URL = "https://$API_HOST/api/edge/"
+    const val GRAPHQL_URL = "https://$API_HOST/api/graphql"
     const val OAUTH_URL = "https://$API_HOST/api/oauth/"
     const val BASE_URL = "https://$API_HOST"
     const val USER_URL_PREFIX = "$BASE_URL/users/"
