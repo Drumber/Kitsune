@@ -16,13 +16,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.asFlow
+import androidx.navigation.findNavController
 import com.chibatching.kotpref.livedata.asLiveData
+import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NewLibraryFragment : Fragment() {
+
+    private val viewModel: NewLibraryViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,13 +51,23 @@ class NewLibraryFragment : Fragment() {
                     else -> isSystemInDarkTheme()
                 }
 
+                val currentLibraryEntries by viewModel.currentLibraryEntries.collectAsState()
+
                 KitsuneTheme(dynamicColor = useDynamicColorTheme, darkTheme = isDarkModeEnabled) {
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
                         contentWindowInsets = WindowInsets.safeDrawing,
-                        topBar = { LibraryTopBar() }
+                        topBar = { LibraryTopBar(modifier = Modifier.padding(horizontal = 8.dp)) }
                     ) { innerPadding ->
-                        LibraryContent(modifier = Modifier.padding(innerPadding))
+                        LibraryContent(
+                            modifier = Modifier.padding(innerPadding),
+                            currentLibraryEntries = currentLibraryEntries,
+                            onItemClick = { libraryEntry ->
+                                val mediaDto = libraryEntry.media?.toMediaDto() ?: return@LibraryContent
+                                val action = NewLibraryFragmentDirections.actionNewLibraryFragmentToDetailsFragment(mediaDto)
+                                findNavController().navigate(action)
+                            }
+                        )
                     }
                 }
             }

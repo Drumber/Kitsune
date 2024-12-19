@@ -144,6 +144,9 @@
         <action
             android:id="@+id/action_library_fragment_to_ratingBottomSheet"
             app:destination="@id/ratingBottomSheet" />
+        <action
+            android:id="@+id/action_library_fragment_to_newLibraryFragment"
+            app:destination="@id/newLibraryFragment" />
     </fragment>
     <fragment
         android:id="@+id/episodes_fragment"
@@ -254,4 +257,12 @@
         android:id="@+id/action_global_onboardingActivity"
         app:destination="@id/onboardingActivity"
         app:launchSingleTop="true" />
+    <fragment
+        android:id="@+id/newLibraryFragment"
+        android:name="io.github.drumber.kitsune.ui.library_new.NewLibraryFragment"
+        android:label="NewLibraryFragment" >
+        <action
+            android:id="@+id/action_newLibraryFragment_to_details_fragment"
+            app:destination="@id/details_fragment" />
+    </fragment>
 </navigation>

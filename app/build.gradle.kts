@@ -113,6 +113,7 @@ apollo {
         }
 
         mapScalarToKotlinString("ISO8601DateTime")
+        mapScalarToKotlinString("Date")
     }
 }
 

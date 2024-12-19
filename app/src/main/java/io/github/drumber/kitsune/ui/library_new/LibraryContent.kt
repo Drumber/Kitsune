@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -21,14 +23,19 @@ import io.github.drumber.kitsune.ui.library_new.composables.toLibraryEntryWithNe
 @Composable
 fun LibraryContent(
     modifier: Modifier = Modifier,
-    currentLibraryEntries: List<LibraryEntryWithModificationAndNextUnit> = emptyList()
+    currentLibraryEntries: List<LibraryEntryWithModificationAndNextUnit> = emptyList(),
+    onItemClick: (LibraryEntryWithModification) -> Unit = {},
 ) {
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
             .then(modifier)
     ) {
-        CurrentLibraryEntriesShelf(Modifier.fillMaxWidth(), currentLibraryEntries)
+        CurrentLibraryEntriesShelf(
+            modifier = Modifier.fillMaxWidth(),
+            libraryEntries = currentLibraryEntries,
+            onItemClick = onItemClick
+        )
         Spacer(Modifier.height(16.dp))
         // upcoming media calendar/list
         // want to watch shelf
@@ -41,6 +48,7 @@ fun LibraryContent(
 private fun CurrentLibraryEntriesShelf(
     modifier: Modifier = Modifier,
     libraryEntries: List<LibraryEntryWithModificationAndNextUnit> = emptyList(),
+    onItemClick: (LibraryEntryWithModification) -> Unit = {},
     onDecrementProgress: (LibraryEntryWithModification) -> Unit = {},
     onIncrementProgress: (LibraryEntryWithModification) -> Unit = {},
     onRatingClick: (LibraryEntryWithModification) -> Unit = {}
@@ -49,9 +57,13 @@ private fun CurrentLibraryEntriesShelf(
         items(libraryEntries) {
             LibraryEntryWithNextUnitItem(
                 data = it.toLibraryEntryWithNextUnitData(LocalContext.current),
+                onCardClick = { onItemClick(it.libraryEntryWithModification) },
                 onDecrementProgress = { onDecrementProgress(it.libraryEntryWithModification) },
                 onIncrementProgress = { onIncrementProgress(it.libraryEntryWithModification) },
-                onRatingClick = { onRatingClick(it.libraryEntryWithModification) }
+                onRatingClick = { onRatingClick(it.libraryEntryWithModification) },
+                modifier = Modifier
+                    .size(width = 380.dp, height = 220.dp)
+                    .padding(8.dp)
             )
         }
     }

@@ -12,7 +12,7 @@
         android:title="@string/nav_search" />
 
     <item
-        android:id="@+id/library_fragment"
+        android:id="@+id/newLibraryFragment"
         android:icon="@drawable/selector_library"
         android:title="@string/nav_library" />
 

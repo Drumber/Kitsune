@@ -7,6 +7,7 @@ import io.github.drumber.kitsune.ui.details.characters.CharactersViewModel
 import io.github.drumber.kitsune.ui.details.episodes.EpisodesViewModel
 import io.github.drumber.kitsune.ui.library.LibraryViewModel
 import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel
+import io.github.drumber.kitsune.ui.library_new.NewLibraryViewModel
 import io.github.drumber.kitsune.ui.main.MainActivityViewModel
 import io.github.drumber.kitsune.ui.main.MainFragmentViewModel
 import io.github.drumber.kitsune.ui.medialist.MediaListViewModel
@@ -38,4 +39,6 @@ val viewModelModule = module {
     viewModel { CharacterDetailsViewModel(get(), get(), get()) }
     viewModel { SettingsViewModel(get(), get()) }
     viewModel { AppLogsViewModel() }
+
+    viewModel { NewLibraryViewModel(get(), get()) }
 }

@@ -18,15 +18,19 @@ import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntryMo
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryModificationState
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryStatus
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toNetworkLibraryStatus
+import io.github.drumber.kitsune.data.mapper.graphql.GraphQlLibraryMapper.toLibraryEntriesWithModificationAndNextUnit
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModificationAndNextUnit
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryModificationState
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.source.graphql.library.LibraryApolloDataSource
+import io.github.drumber.kitsune.data.source.graphql.type.LibraryEntryStatusEnum
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
@@ -44,6 +48,7 @@ import retrofit2.HttpException
 
 class LibraryRepository(
     private val remoteLibraryDataSource: LibraryNetworkDataSource,
+    private val apolloLibraryDataSource: LibraryApolloDataSource,
     private val localLibraryDataSource: LibraryLocalDataSource,
     private val libraryChangeListener: LibraryChangeListener,
     private val coroutineScope: CoroutineScope
@@ -51,6 +56,11 @@ class LibraryRepository(
 
     private val filterForFullLibraryEntry
         get() = Filter().include("anime", "manga")
+
+    suspend fun getCurrentLibraryEntriesWithNextUnit(): List<LibraryEntryWithModificationAndNextUnit>? {
+        return apolloLibraryDataSource.getLibraryEntriesWithNextUnit(pageSize = 10, status = listOf(LibraryEntryStatusEnum.CURRENT))
+            ?.toLibraryEntriesWithModificationAndNextUnit()
+    }
 
     suspend fun addNewLibraryEntry(
         userId: String,

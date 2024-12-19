@@ -19,6 +19,7 @@ import io.github.drumber.kitsune.data.repository.MediaUnitRepository
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.repository.WidgetLibraryChangeListener
+import io.github.drumber.kitsune.data.source.graphql.library.LibraryApolloDataSource
 import io.github.drumber.kitsune.data.source.local.auth.AccessTokenLocalDataSource
 import io.github.drumber.kitsune.data.source.local.auth.AccessTokenPreference
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
@@ -236,10 +237,12 @@ val dataModule = module {
         )
     }
     single { LibraryNetworkDataSource(get()) }
+    single { LibraryApolloDataSource(get()) }
     single { LibraryLocalDataSource(get()) }
     single<LibraryChangeListener> { WidgetLibraryChangeListener(androidApplication(), get()) }
     single {
         LibraryRepository(
+            get(),
             get(),
             get(),
             get(),

@@ -1,6 +1,8 @@
 package io.github.drumber.kitsune.ui.library_new
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -8,8 +10,10 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 
@@ -26,10 +30,14 @@ fun LibraryTopBar(
     state: LibraryTopBarState = LibraryTopBarState(),
     onSearchQueryChange: (String) -> Unit = { },
     onSearchSubmit: (String) -> Unit = { },
-    onSearchToggle: (Boolean) -> Unit = { }
+    onSearchToggle: (Boolean) -> Unit = { },
+    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets
 ) {
     SearchBar(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .windowInsetsPadding(windowInsets)
+            .fillMaxWidth()
+            .clipToBounds(),
         inputField = {
             SearchBarDefaults.InputField(
                 query = state.query,

@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -42,16 +43,20 @@ import io.github.drumber.kitsune.ui.composables.SmallPoster
 fun LibraryEntryWithNextUnitItem(
     modifier: Modifier = Modifier,
     data: LibraryEntryWithNextUnitData,
+    onCardClick: () -> Unit = {},
     onDecrementProgress: () -> Unit = {},
     onIncrementProgress: () -> Unit = {},
     onRatingClick: () -> Unit = {}
 ) {
     val overlayGradient = listOf(
-        CardDefaults.cardColors().containerColor.copy(alpha = 0.75f),
+        CardDefaults.cardColors().containerColor.copy(alpha = 0.6f),
         CardDefaults.cardColors().containerColor
     )
 
-    Card(modifier) {
+    Card(
+        modifier = modifier.clipToBounds(),
+        onClick = onCardClick
+    ) {
         Box {
             GlideImage(
                 data.coverImageModel,
@@ -63,7 +68,7 @@ fun LibraryEntryWithNextUnitItem(
                 Modifier
                     .fillMaxSize()
                     .background(Brush.verticalGradient(overlayGradient))
-                    .padding(start = 16.dp, bottom = 16.dp),
+                    .padding(start = 12.dp, bottom = 12.dp),
                 verticalAlignment = Alignment.Bottom
             ) {
                 SmallPoster(data.posterImageModel, elevated = true)
@@ -79,7 +84,7 @@ fun LibraryEntryWithNextUnitItem(
                         onIncrementProgress = onIncrementProgress,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 4.dp, end = 16.dp)
+                            .padding(top = 4.dp, end = 12.dp)
                     )
                 }
             }
@@ -102,7 +107,7 @@ private fun Content(
         Text(
             data.mediaTitle ?: stringResource(R.string.no_information),
             style = MaterialTheme.typography.titleMedium,
-            maxLines = 1,
+            maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )
         if (subtypeAndYear.isNotBlank()) {
@@ -113,7 +118,7 @@ private fun Content(
                 overflow = TextOverflow.Ellipsis
             )
         }
-        Spacer(Modifier.height(4.dp))
+        Spacer(Modifier.height(8.dp))
         if (data.nextUnitTitle != null) {
             Text(
                 style = MaterialTheme.typography.bodySmall,
@@ -128,6 +133,7 @@ private fun Content(
                     append(data.nextUnitTitle)
                 }
             )
+            Spacer(Modifier.height(4.dp))
         }
         LibraryEntryProgressAction(
             modifier = Modifier.fillMaxWidth(),
@@ -209,7 +215,7 @@ fun LibraryEntryWithModificationAndNextUnit.toLibraryEntryWithNextUnitData(conte
         nextUnitNumberFormatted = nextUnit?.numberText(context)
     )
 
-@Preview(heightDp = 200)
+@Preview(heightDp = 220)
 @Composable
 private fun LibraryEntryWithNextUnitItemPreview() {
     LibraryEntryWithNextUnitItem(
