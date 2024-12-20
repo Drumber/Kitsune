@@ -2,6 +2,7 @@ query GetLibraryEntriesWithNextUnit(
     $pageSize: Int = 20
     $cursor: String
     $status: [LibraryEntryStatusEnum!]
+    $mediaType: MediaTypeEnum
     $sort: LibraryEntrySortEnum = UPDATED_AT
     $sortDirection: SortDirection = DESCENDING
 ) {
@@ -11,6 +12,7 @@ query GetLibraryEntriesWithNextUnit(
                 first: $pageSize
                 after: $cursor
                 status: $status
+                mediaType: $mediaType
                 sort: {
                     on: $sort
                     direction: $sortDirection
@@ -72,6 +74,7 @@ query GetLibraryEntriesWithNextUnit(
                 }
                 pageInfo {
                     hasNextPage
+                    startCursor
                     endCursor
                 }
             }

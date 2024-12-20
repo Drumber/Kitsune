@@ -8,6 +8,9 @@ import io.github.drumber.kitsune.data.mapper.LibraryMapper.toNetworkLibraryStatu
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
+import io.github.drumber.kitsune.data.repository.library.LibraryChangeListener
+import io.github.drumber.kitsune.data.repository.library.LibraryRepository
+import io.github.drumber.kitsune.data.source.graphql.library.LibraryApolloDataSource
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState.NOT_SYNCHRONIZED
@@ -63,6 +66,7 @@ class LibraryRepositoryTest {
 
         val libraryRepository = LibraryRepository(
             remoteDataSource,
+            mock<LibraryApolloDataSource>(),
             localDataSource,
             NoOpLibraryChangeListener,
             backgroundScope
@@ -103,6 +107,7 @@ class LibraryRepositoryTest {
 
         val libraryRepository = LibraryRepository(
             remoteDataSource,
+            mock<LibraryApolloDataSource>(),
             localDataSource,
             NoOpLibraryChangeListener,
             backgroundScope + SupervisorJob()
@@ -133,6 +138,7 @@ class LibraryRepositoryTest {
 
         val libraryRepository = LibraryRepository(
             remoteDataSource,
+            mock<LibraryApolloDataSource>(),
             localDataSource,
             NoOpLibraryChangeListener,
             backgroundScope
@@ -160,6 +166,7 @@ class LibraryRepositoryTest {
 
         val libraryRepository = LibraryRepository(
             remoteDataSource,
+            mock<LibraryApolloDataSource>(),
             localDataSource,
             NoOpLibraryChangeListener,
             backgroundScope
@@ -189,6 +196,7 @@ class LibraryRepositoryTest {
 
         val libraryRepository = LibraryRepository(
             remoteDataSource,
+            mock<LibraryApolloDataSource>(),
             localDataSource,
             NoOpLibraryChangeListener,
             backgroundScope
@@ -216,6 +224,7 @@ class LibraryRepositoryTest {
 
         val libraryRepository = LibraryRepository(
             remoteDataSource,
+            mock<LibraryApolloDataSource>(),
             localDataSource,
             NoOpLibraryChangeListener,
             backgroundScope
@@ -251,6 +260,7 @@ class LibraryRepositoryTest {
 
         val libraryRepository = LibraryRepository(
             remoteDataSource,
+            mock<LibraryApolloDataSource>(),
             localDataSource,
             NoOpLibraryChangeListener,
             backgroundScope
@@ -295,6 +305,7 @@ class LibraryRepositoryTest {
 
         val libraryRepository = LibraryRepository(
             remoteDataSource,
+            mock<LibraryApolloDataSource>(),
             localDataSource,
             NoOpLibraryChangeListener,
             backgroundScope
@@ -325,6 +336,7 @@ class LibraryRepositoryTest {
 
         val libraryRepository = LibraryRepository(
             remoteDataSource,
+            mock<LibraryApolloDataSource>(),
             localDataSource,
             NoOpLibraryChangeListener,
             backgroundScope + SupervisorJob()
@@ -371,6 +383,7 @@ class LibraryRepositoryTest {
 
         val libraryRepository = LibraryRepository(
             remoteDataSource,
+            mock<LibraryApolloDataSource>(),
             localDataSource,
             NoOpLibraryChangeListener,
             backgroundScope + SupervisorJob()

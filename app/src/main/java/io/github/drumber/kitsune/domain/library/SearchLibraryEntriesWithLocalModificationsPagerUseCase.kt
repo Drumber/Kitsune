@@ -5,7 +5,7 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
-import io.github.drumber.kitsune.data.repository.LibraryRepository
+import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine

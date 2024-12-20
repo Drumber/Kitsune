@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.repository
+package io.github.drumber.kitsune.data.repository.library
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -44,14 +44,14 @@ class LibraryEntryRemoteMediator(
                     // will call this method again if RemoteKeys becomes non-null.
                     // If remoteKeys is NOT NULL but its prevKey is null, that means we've reached
                     // the end of pagination for append.
-                    var nextKey = remoteKeys?.nextPageKey
+                    var nextKey = remoteKeys?.nextPageKey?.toIntOrNull()
                         ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
 
                     state.pages.lastOrNull()?.prevKey?.let { prevPage ->
                         // last page is equal or greater than reported next page: RemoteKey is out of sync
                         if (prevPage >= nextKey) {
                             localDataSource.deleteRemoteKeyByResourceId(remoteKeys.resourceId, remoteKeys.remoteKeyType)
-                            getRemoteKeyForLastItem(state)?.nextPageKey?.let {
+                            getRemoteKeyForLastItem(state)?.nextPageKey?.toIntOrNull()?.let {
                                 nextKey = it
                             } ?: return MediatorResult.Success(endOfPaginationReached = false)
                         }
@@ -78,7 +78,7 @@ class LibraryEntryRemoteMediator(
                 }
 
                 val remoteKeys = data.map {
-                    RemoteKeyEntity(it.id, RemoteKeyType.LibraryEntry, pageData.prev, pageData.next)
+                    RemoteKeyEntity(it.id, RemoteKeyType.LibraryEntry, pageData.prev?.toString(), pageData.next?.toString())
                 }
                 remoteKeyDao().insertALl(remoteKeys)
             }

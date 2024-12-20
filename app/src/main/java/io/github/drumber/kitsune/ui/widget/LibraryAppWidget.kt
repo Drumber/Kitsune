@@ -72,7 +72,7 @@ import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.media.identifier
 import io.github.drumber.kitsune.data.repository.AccessTokenRepository
 import io.github.drumber.kitsune.data.repository.AccessTokenRepository.AccessTokenState
-import io.github.drumber.kitsune.data.repository.LibraryRepository
+import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCase
 import io.github.drumber.kitsune.preference.KitsunePref

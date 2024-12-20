@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.domain.library
 
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
-import io.github.drumber.kitsune.data.repository.LibraryRepository
+import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import io.github.drumber.kitsune.testutils.libraryEntry
 import io.github.drumber.kitsune.testutils.onSuspend
 import kotlinx.coroutines.test.runTest

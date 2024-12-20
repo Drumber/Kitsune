@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.domain.library
 
-import io.github.drumber.kitsune.data.repository.LibraryRepository
+import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 
 class SynchronizeLocalLibraryModificationsUseCase(
     private val libraryRepository: LibraryRepository,

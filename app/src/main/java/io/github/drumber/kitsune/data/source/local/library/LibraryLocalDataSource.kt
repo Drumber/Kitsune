@@ -3,12 +3,17 @@ package io.github.drumber.kitsune.data.source.local.library
 import androidx.paging.PagingSource
 import androidx.room.withTransaction
 import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions
+import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions.SortBy
+import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions.SortDirection
 import io.github.drumber.kitsune.data.source.local.LocalDatabase
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryWithModificationAndNextMediaUnit
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMedia.MediaType
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus
+import io.github.drumber.kitsune.data.source.local.library.model.LocalNextMediaUnit
 import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyType
 
 class LibraryLocalDataSource(
@@ -21,6 +26,10 @@ class LibraryLocalDataSource(
         get() = database.libraryEntryModificationDao()
     private val libraryEntryWithModificationDao
         get() = database.libraryEntryWithModificationDao()
+    private val libraryEntryWithModificationAndNextMediaUnitDao
+        get() = database.libraryEntryWithModificationAndNextMediaUnitDao()
+    private val nextMediaUnitDao
+        get() = database.nextMediaUnitDao()
     private val remoteKeyDao
         get() = database.remoteKeyDao()
 
@@ -144,6 +153,17 @@ class LibraryLocalDataSource(
         }
     }
 
+    fun getLibraryEntriesWithModificationAndNextUnitAsPagingSource(
+        filter: LibraryFilterOptions
+    ): PagingSource<Int, LocalLibraryEntryWithModificationAndNextMediaUnit> {
+        return libraryEntryWithModificationAndNextMediaUnitDao.getByFilterAsPagingSource(
+            filter.status,
+            filter.mediaType,
+            filter.sortBy ?: SortBy.UPDATED_AT,
+            filter.sortDirection ?: SortDirection.DESC
+        )
+    }
+
     //********************************************************************************************//
     // LibraryEntryModification related methods
     //********************************************************************************************//
@@ -191,6 +211,14 @@ class LibraryLocalDataSource(
             libraryEntryDao.deleteSingleById(libraryEntryId)
             libraryEntryModificationDao.deleteSingleById(libraryEntryId)
         }
+    }
+
+    //********************************************************************************************//
+    // NextMediaUnit related methods
+    //********************************************************************************************//
+
+    suspend fun insertNextMediaUnit(nextMediaUnit: LocalNextMediaUnit) {
+        nextMediaUnitDao.insertSingle(nextMediaUnit)
     }
 
     //********************************************************************************************//

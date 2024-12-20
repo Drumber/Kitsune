@@ -4,7 +4,7 @@ import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
-import io.github.drumber.kitsune.data.repository.LibraryRepository
+import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.util.logE
 

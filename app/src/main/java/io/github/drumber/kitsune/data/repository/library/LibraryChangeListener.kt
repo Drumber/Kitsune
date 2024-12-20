@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.repository
+package io.github.drumber.kitsune.data.repository.library
 
 import android.content.Context
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry

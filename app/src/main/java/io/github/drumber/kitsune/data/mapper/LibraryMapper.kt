@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.data.mapper
 
+import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
 import io.github.drumber.kitsune.data.mapper.ImageMapper.toLocalImage
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toAnime
@@ -8,17 +9,21 @@ import io.github.drumber.kitsune.data.mapper.MediaMapper.toManga
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toMangaSubtype
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toRatingFrequencies
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toReleaseStatus
+import io.github.drumber.kitsune.data.mapper.MediaUnitMapper.toMediaUnit
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModificationAndNextUnit
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryModificationState
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.ReactionSkip
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
+import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryWithModificationAndNextMediaUnit
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMedia
-import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMedia.MediaType
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus
 import io.github.drumber.kitsune.data.source.local.library.model.LocalReactionSkip
@@ -91,6 +96,24 @@ object LibraryMapper {
         }
     )
 
+    fun LibraryEntry.toLocalLibraryEntry() = LocalLibraryEntry(
+        id = id,
+        updatedAt = updatedAt,
+        startedAt = startedAt,
+        finishedAt = finishedAt,
+        progressedAt = progressedAt,
+        status = status?.toLocalLibraryStatus(),
+        progress = progress,
+        reconsuming = reconsuming,
+        reconsumeCount = reconsumeCount,
+        volumesOwned = volumesOwned,
+        ratingTwenty = ratingTwenty,
+        notes = notes,
+        privateEntry = privateEntry,
+        reactionSkipped = reactionSkipped?.toLocalReactionSkip(),
+        media = media?.toLocalLibraryMedia()
+    )
+
     fun LocalLibraryEntryModification.toLibraryEntryModification() = LibraryEntryModification(
         id = id,
         createTime = createTime,
@@ -121,9 +144,18 @@ object LibraryMapper {
         privateEntry = privateEntry,
     )
 
+    fun LocalLibraryEntryWithModificationAndNextMediaUnit.toLibraryEntryWithModificationAndNextUnit() =
+        LibraryEntryWithModificationAndNextUnit(
+            libraryEntryWithModification = LibraryEntryWithModification(
+                libraryEntry = libraryEntry.toLibraryEntry(),
+                modification = libraryEntryModification?.toLibraryEntryModification()
+            ),
+            nextUnit = libraryEntry.media?.type?.let { nextMediaUnit?.toMediaUnit(it) }
+        )
+
     fun LocalLibraryMedia.toMedia() = when (type) {
-        MediaType.Anime -> toAnime()
-        MediaType.Manga -> toManga()
+        LocalLibraryMedia.MediaType.Anime -> toAnime()
+        LocalLibraryMedia.MediaType.Manga -> toManga()
     }
 
     fun LocalLibraryMedia.toAnime() = Anime(
@@ -194,7 +226,7 @@ object LibraryMapper {
 
     fun NetworkAnime.toLocalLibraryMedia() = LocalLibraryMedia(
         id = id,
-        type = MediaType.Anime,
+        type = LocalLibraryMedia.MediaType.Anime,
         description = description,
         titles = titles,
         canonicalTitle = canonicalTitle,
@@ -225,7 +257,7 @@ object LibraryMapper {
 
     fun NetworkManga.toLocalLibraryMedia() = LocalLibraryMedia(
         id = id,
-        type = MediaType.Manga,
+        type = LocalLibraryMedia.MediaType.Manga,
         description = description,
         titles = titles,
         canonicalTitle = canonicalTitle,
@@ -253,6 +285,78 @@ object LibraryMapper {
         volumeCount = volumeCount,
         serialization = serialization
     )
+
+    fun Media.toLocalLibraryMedia() = when (this) {
+        is Anime -> toLocalLibraryMedia()
+        is Manga -> toLocalLibraryMedia()
+    }
+
+    fun Anime.toLocalLibraryMedia() = LocalLibraryMedia(
+        id = id,
+        type = mediaType.toLocalMediaType(),
+        description = description,
+        titles = titles,
+        canonicalTitle = canonicalTitle,
+        abbreviatedTitles = abbreviatedTitles,
+        averageRating = averageRating,
+        ratingFrequencies = ratingFrequencies,
+        popularityRank = popularityRank,
+        ratingRank = ratingRank,
+        startDate = startDate,
+        endDate = endDate,
+        nextRelease = nextRelease,
+        tba = tba,
+        status = status,
+        ageRating = ageRating,
+        ageRatingGuide = ageRatingGuide,
+        nsfw = nsfw,
+        posterImage = posterImage?.toLocalImage(),
+        coverImage = coverImage?.toLocalImage(),
+        animeSubtype = subtype,
+        totalLength = totalLength,
+        episodeCount = episodeCount,
+        episodeLength = episodeLength,
+        mangaSubtype = null,
+        chapterCount = null,
+        volumeCount = null,
+        serialization = null
+    )
+
+    fun Manga.toLocalLibraryMedia() = LocalLibraryMedia(
+        id = id,
+        type = mediaType.toLocalMediaType(),
+        description = description,
+        titles = titles,
+        canonicalTitle = canonicalTitle,
+        abbreviatedTitles = abbreviatedTitles,
+        averageRating = averageRating,
+        ratingFrequencies = ratingFrequencies,
+        popularityRank = popularityRank,
+        ratingRank = ratingRank,
+        startDate = startDate,
+        endDate = endDate,
+        nextRelease = nextRelease,
+        tba = tba,
+        status = status,
+        ageRating = ageRating,
+        ageRatingGuide = ageRatingGuide,
+        nsfw = nsfw,
+        posterImage = posterImage?.toLocalImage(),
+        coverImage = coverImage?.toLocalImage(),
+        animeSubtype = null,
+        totalLength = null,
+        episodeCount = null,
+        episodeLength = null,
+        mangaSubtype = subtype,
+        chapterCount = chapterCount,
+        volumeCount = volumeCount,
+        serialization = serialization
+    )
+
+    fun MediaType.toLocalMediaType(): LocalLibraryMedia.MediaType = when (this) {
+        MediaType.Anime -> LocalLibraryMedia.MediaType.Anime
+        MediaType.Manga -> LocalLibraryMedia.MediaType.Manga
+    }
 
     fun NetworkReactionSkip.toLocalReactionSkip(): LocalReactionSkip = when (this) {
         NetworkReactionSkip.Unskipped -> LocalReactionSkip.Unskipped
@@ -310,6 +414,12 @@ object LibraryMapper {
         LocalReactionSkip.Unskipped -> ReactionSkip.Unskipped
         LocalReactionSkip.Skipped -> ReactionSkip.Skipped
         LocalReactionSkip.Ignored -> ReactionSkip.Ignored
+    }
+
+    fun ReactionSkip.toLocalReactionSkip(): LocalReactionSkip = when (this) {
+        ReactionSkip.Unskipped -> LocalReactionSkip.Unskipped
+        ReactionSkip.Skipped -> LocalReactionSkip.Skipped
+        ReactionSkip.Ignored -> LocalReactionSkip.Ignored
     }
 
     fun LocalLibraryModificationState.toLibraryModificationState(): LibraryModificationState =

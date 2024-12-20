@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.repository
+package io.github.drumber.kitsune.data.repository.library
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
@@ -11,14 +11,16 @@ import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.common.exception.NotFoundException
 import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntryModification
+import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntryWithModificationAndNextUnit
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntryModification
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryModificationState
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryStatus
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toNetworkLibraryStatus
-import io.github.drumber.kitsune.data.mapper.graphql.GraphQlLibraryMapper.toLibraryEntriesWithModificationAndNextUnit
+import io.github.drumber.kitsune.data.mapper.graphql.toLibraryEntriesWithModificationAndNextUnit
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
@@ -30,7 +32,6 @@ import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.source.graphql.library.LibraryApolloDataSource
-import io.github.drumber.kitsune.data.source.graphql.type.LibraryEntryStatusEnum
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
@@ -58,8 +59,10 @@ class LibraryRepository(
         get() = Filter().include("anime", "manga")
 
     suspend fun getCurrentLibraryEntriesWithNextUnit(): List<LibraryEntryWithModificationAndNextUnit>? {
-        return apolloLibraryDataSource.getLibraryEntriesWithNextUnit(pageSize = 10, status = listOf(LibraryEntryStatusEnum.CURRENT))
-            ?.toLibraryEntriesWithModificationAndNextUnit()
+        return apolloLibraryDataSource.getLibraryEntriesWithNextUnit(
+            pageSize = 10,
+            filter = LibraryFilterOptions(status = listOf(LibraryStatus.Current))
+        )?.toLibraryEntriesWithModificationAndNextUnit()
     }
 
     suspend fun addNewLibraryEntry(
@@ -362,6 +365,23 @@ class LibraryRepository(
         }
     ).flow.map { pagingData ->
         pagingData.map { it.toLibraryEntry() }
+    }
+
+    @OptIn(ExperimentalPagingApi::class)
+    fun libraryEntriesWithNextMediaUnitPager(pageSize: Int, filter: LibraryFilterOptions) = Pager(
+        config = PagingConfig(
+            pageSize = pageSize,
+            maxSize = Repository.MAX_CACHED_ITEMS
+        ),
+        remoteMediator = LibraryEntryWithNextMediaUnitRemoteMediator(
+            filter,
+            pageSize,
+            apolloLibraryDataSource,
+            localLibraryDataSource
+        ),
+        pagingSourceFactory = { localLibraryDataSource.getLibraryEntriesWithModificationAndNextUnitAsPagingSource(filter) }
+    ).flow.map { pagingData ->
+        pagingData.map { it.toLibraryEntryWithModificationAndNextUnit() }
     }
 
     fun invalidatePagingSources() {
