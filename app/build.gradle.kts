@@ -275,6 +275,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.room.testing)
     testImplementation(libs.insert.koin.test.junit4)
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.datafaker)
