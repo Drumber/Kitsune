@@ -6,6 +6,7 @@ import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
 import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions
 import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions.SortBy
 import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions.SortDirection
+import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryStatus
 import io.github.drumber.kitsune.data.source.local.LocalDatabase
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
@@ -66,12 +67,8 @@ class LibraryLocalDataSource(
 
     suspend fun insertLibraryEntryIfUpdatedAtIsNewer(libraryEntry: LocalLibraryEntry): Boolean {
         libraryEntry.verifyIsValidLibraryEntry()
-        if (libraryEntry.updatedAt.isNullOrBlank()) {
-            insertLibraryEntry(libraryEntry)
-            return true
-        }
         return database.withTransaction {
-            val hasNewerEntry = libraryEntryDao.hasLibraryEntryWhereUpdatedAtIsAfter(
+            val hasNewerEntry = !libraryEntry.updatedAt.isNullOrBlank() && libraryEntryDao.hasLibraryEntryWhereUpdatedAtIsAfter(
                 libraryEntry.id,
                 libraryEntry.updatedAt
             )
@@ -157,7 +154,7 @@ class LibraryLocalDataSource(
         filter: LibraryFilterOptions
     ): PagingSource<Int, LocalLibraryEntryWithModificationAndNextMediaUnit> {
         return libraryEntryWithModificationAndNextMediaUnitDao.getByFilterAsPagingSource(
-            filter.status,
+            filter.status?.map { it.toLocalLibraryStatus() } ?: LocalLibraryStatus.entries,
             filter.mediaType,
             filter.sortBy ?: SortBy.UPDATED_AT,
             filter.sortDirection ?: SortDirection.DESC

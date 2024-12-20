@@ -51,8 +51,6 @@ class NewLibraryFragment : Fragment() {
                     else -> isSystemInDarkTheme()
                 }
 
-                val currentLibraryEntries by viewModel.currentLibraryEntries.collectAsState()
-
                 KitsuneTheme(dynamicColor = useDynamicColorTheme, darkTheme = isDarkModeEnabled) {
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
@@ -61,7 +59,7 @@ class NewLibraryFragment : Fragment() {
                     ) { innerPadding ->
                         LibraryContent(
                             modifier = Modifier.padding(innerPadding),
-                            currentLibraryEntries = currentLibraryEntries,
+                            currentLibraryEntries = viewModel.currentLibraryEntriesPager,
                             onItemClick = { libraryEntry ->
                                 val mediaDto = libraryEntry.media?.toMediaDto() ?: return@LibraryContent
                                 val action = NewLibraryFragmentDirections.actionNewLibraryFragmentToDetailsFragment(mediaDto)

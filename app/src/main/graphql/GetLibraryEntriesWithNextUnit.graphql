@@ -20,6 +20,16 @@ query GetLibraryEntriesWithNextUnit(
             ) {
                 nodes {
                     id
+                    createdAt
+                    updatedAt
+                    progressedAt
+                    startedAt
+                    finishedAt
+                    notes
+                    reconsumeCount
+                    reconsuming
+                    private
+                    volumesOwned
                     status
                     progress
                     rating

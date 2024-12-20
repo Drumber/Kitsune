@@ -36,18 +36,18 @@ fun GetLibraryEntriesWithNextUnitQuery.Node.toLibraryEntriesWithModificationAndN
 
 fun GetLibraryEntriesWithNextUnitQuery.Node.toLibraryEntry() = LibraryEntry(
     id = id,
-    updatedAt = null,
-    startedAt = null,
-    finishedAt = null,
-    progressedAt = null,
+    updatedAt = updatedAt,
+    startedAt = startedAt,
+    finishedAt = finishedAt,
+    progressedAt = progressedAt,
     status = status.toLibraryStatus(),
     progress = progress,
-    reconsuming = null,
-    reconsumeCount = null,
-    volumesOwned = null,
+    reconsuming = reconsuming,
+    reconsumeCount = reconsumeCount,
+    volumesOwned = volumesOwned,
     ratingTwenty = rating,
-    notes = null,
-    privateEntry = null,
+    notes = notes,
+    privateEntry = private,
     reactionSkipped = null,
     media = media.toMedia()
 )
