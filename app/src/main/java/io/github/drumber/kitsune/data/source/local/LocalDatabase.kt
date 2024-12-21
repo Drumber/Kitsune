@@ -24,7 +24,7 @@ import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyEntity
         LocalNextMediaUnit::class,
         RemoteKeyEntity::class
     ],
-    version = 5,
+    version = 4,
     exportSchema = true
 )
 @TypeConverters(LocalLibraryConverters::class)

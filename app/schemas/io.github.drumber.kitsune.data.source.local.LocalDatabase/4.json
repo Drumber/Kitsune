@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "689d6d3674c4fb4e319effa89d008b1f",
+    "identityHash": "b683f00d0de3f40955509ebdf624083a",
     "entities": [
       {
         "tableName": "library_entries",
@@ -754,7 +754,7 @@
       },
       {
         "tableName": "remote_keys",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`resourceId` TEXT NOT NULL COLLATE NOCASE, `remoteKeyType` TEXT NOT NULL, `prevPageKey` INTEGER, `nextPageKey` INTEGER, PRIMARY KEY(`resourceId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`resourceId` TEXT NOT NULL COLLATE NOCASE, `remoteKeyType` TEXT NOT NULL, `prevPageKey` TEXT, `nextPageKey` TEXT, PRIMARY KEY(`resourceId`, `remoteKeyType`), FOREIGN KEY(`resourceId`) REFERENCES `library_entries`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "resourceId",
@@ -771,30 +771,43 @@
           {
             "fieldPath": "prevPageKey",
             "columnName": "prevPageKey",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": false
           },
           {
             "fieldPath": "nextPageKey",
             "columnName": "nextPageKey",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": false
           }
         ],
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "resourceId"
+            "resourceId",
+            "remoteKeyType"
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "library_entries",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "resourceId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '689d6d3674c4fb4e319effa89d008b1f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b683f00d0de3f40955509ebdf624083a')"
     ]
   }
 }

@@ -3,10 +3,10 @@ package io.github.drumber.kitsune.data.source.local.library.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "remote_keys",
+    primaryKeys = ["resourceId", "remoteKeyType"],
     foreignKeys = [
         ForeignKey(
             entity = LocalLibraryEntry::class,
@@ -18,7 +18,6 @@ import androidx.room.PrimaryKey
     ]
 )
 data class RemoteKeyEntity(
-    @PrimaryKey
     @ColumnInfo(collate = ColumnInfo.NOCASE)
     val resourceId: String,
     val remoteKeyType: RemoteKeyType,

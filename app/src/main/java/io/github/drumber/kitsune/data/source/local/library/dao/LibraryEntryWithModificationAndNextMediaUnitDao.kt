@@ -23,8 +23,8 @@ interface LibraryEntryWithModificationAndNextMediaUnitDao {
               ORDER BY
                 CASE :sortBy
                     WHEN 'STATUS' THEN status
-                    WHEN 'STARTED_AT' THEN startedAt
-                    WHEN 'UPDATED_AT' THEN updatedAt
+                    WHEN 'STARTED_AT' THEN DATETIME(startedAt)
+                    WHEN 'UPDATED_AT' THEN DATETIME(updatedAt)
                     WHEN 'PROGRESS' THEN progress
                     WHEN 'RATING' THEN ratingTwenty
                 END

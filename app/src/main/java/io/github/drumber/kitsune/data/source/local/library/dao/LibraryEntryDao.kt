@@ -4,10 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMedia
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus
@@ -74,10 +73,10 @@ interface LibraryEntryDao {
     @Query("SELECT * FROM library_entries WHERE id = :id")
     fun getLibraryEntryAsLiveData(id: String): LiveData<LocalLibraryEntry?>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     suspend fun insertAll(libraryEntry: List<LocalLibraryEntry>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     suspend fun insertSingle(libraryEntry: LocalLibraryEntry)
 
     @Update
