@@ -30,8 +30,8 @@ val domainModule = module {
     factory { UpdateLocalUserUseCase(get(), get(), get()) }
 
     // Library
-    factory { GetLibraryEntriesWithModificationsPagerUseCase(get()) }
-    factory { SearchLibraryEntriesWithLocalModificationsPagerUseCase(get()) }
+    factory { GetLibraryEntriesWithModificationsPagerUseCase(get(), get()) }
+    factory { SearchLibraryEntriesWithLocalModificationsPagerUseCase(get(), get()) }
     factory { SynchronizeLocalLibraryModificationsUseCase(get(), get()) }
     factory { UpdateLibraryEntryProgressUseCase(get()) }
     factory { UpdateLibraryEntryRatingUseCase(get()) }

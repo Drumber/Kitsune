@@ -5,13 +5,15 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
+import io.github.drumber.kitsune.data.repository.library.LibraryPagingRepository
 import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
 class GetLibraryEntriesWithModificationsPagerUseCase(
-    private val libraryRepository: LibraryRepository
+    private val libraryRepository: LibraryRepository,
+    private val libraryPagingRepository: LibraryPagingRepository
 ) {
 
     operator fun invoke(
@@ -19,7 +21,7 @@ class GetLibraryEntriesWithModificationsPagerUseCase(
         filter: LibraryEntryFilter,
         cacheScope: CoroutineScope
     ): Flow<PagingData<LibraryEntryWithModification>> {
-        return libraryRepository.libraryEntriesPager(pageSize, filter)
+        return libraryPagingRepository.libraryEntriesPager(pageSize, filter)
             .cachedIn(cacheScope)
             .combine(libraryRepository.getLibraryEntryModificationsAsFlow()) { pagingData, modifications ->
                 pagingData.map { entry ->

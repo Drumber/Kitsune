@@ -11,13 +11,14 @@ import io.github.drumber.kitsune.data.repository.CastingRepository
 import io.github.drumber.kitsune.data.repository.CategoryRepository
 import io.github.drumber.kitsune.data.repository.CharacterRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
-import io.github.drumber.kitsune.data.repository.library.LibraryChangeListener
-import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
 import io.github.drumber.kitsune.data.repository.MappingRepository
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.data.repository.library.LibraryChangeListener
+import io.github.drumber.kitsune.data.repository.library.LibraryPagingRepository
+import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import io.github.drumber.kitsune.data.repository.library.WidgetLibraryChangeListener
 import io.github.drumber.kitsune.data.source.graphql.library.LibraryApolloDataSource
 import io.github.drumber.kitsune.data.source.local.auth.AccessTokenLocalDataSource
@@ -245,10 +246,10 @@ val dataModule = module {
             get(),
             get(),
             get(),
-            get(),
             CoroutineScope(SupervisorJob() + Dispatchers.Default)
         )
     }
+    single { LibraryPagingRepository(get(), get(), get()) }
 
     // App Update
     factory {

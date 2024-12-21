@@ -16,8 +16,9 @@ import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiM
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryModificationState.NOT_SYNCHRONIZED
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
-import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.data.repository.library.LibraryPagingRepository
+import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import io.github.drumber.kitsune.domain.library.GetLibraryEntriesWithModificationsPagerUseCase
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult
 import io.github.drumber.kitsune.domain.library.SearchLibraryEntriesWithLocalModificationsPagerUseCase
@@ -55,6 +56,7 @@ class LibraryViewModel(
     private val userRepository: UserRepository,
     private val getLocalUserId: GetLocalUserIdUseCase,
     private val libraryRepository: LibraryRepository,
+    private val libraryPagingRepository: LibraryPagingRepository,
     private val getLibraryEntriesWithModifications: GetLibraryEntriesWithModificationsPagerUseCase,
     private val searchLibraryEntriesWithModification: SearchLibraryEntriesWithLocalModificationsPagerUseCase,
     private val updateLibraryEntryProgress: UpdateLibraryEntryProgressUseCase,
@@ -240,7 +242,7 @@ class LibraryViewModel(
     }
 
     fun invalidatePagingSource() {
-        libraryRepository.invalidatePagingSources()
+        libraryPagingRepository.invalidateAll()
     }
 
     fun setLibraryEntryKind(kind: LibraryEntryKind) {

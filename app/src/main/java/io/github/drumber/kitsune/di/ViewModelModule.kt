@@ -28,7 +28,7 @@ val viewModelModule = module {
     viewModel { SearchViewModel(get()) }
     viewModel { MediaListViewModel(get(), get()) }
     viewModel { CategoriesViewModel(get()) }
-    viewModel { LibraryViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { LibraryViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { LibraryEditEntryViewModel(get(), get()) }
     viewModel { LoginViewModel(get()) }
     viewModel { ProfileViewModel(get(), get()) }
@@ -40,5 +40,5 @@ val viewModelModule = module {
     viewModel { SettingsViewModel(get(), get()) }
     viewModel { AppLogsViewModel() }
 
-    viewModel { NewLibraryViewModel(get(), get()) }
+    viewModel { NewLibraryViewModel(get()) }
 }
