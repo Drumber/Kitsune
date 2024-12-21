@@ -168,7 +168,7 @@ class LocalNextMediaUnitTest {
             { sortBy, direction ->
                 val libraryEntriesWithNextMediaUnit =
                     libraryEntryWithModificationAndNextMediaUnitDao.getByFilterAsPagingSource(
-                        status = null,
+                        status = LocalLibraryStatus.entries,
                         mediaType = null,
                         sortBy = sortBy,
                         sortDirection = direction
