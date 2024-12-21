@@ -22,6 +22,7 @@ fun LibraryEntryProgressBar(
 
     LinearProgressIndicator(
         progress = { animatedProgress },
+        drawStopIndicator = {},
         modifier = modifier
     )
 }

@@ -5,18 +5,25 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
+import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModificationAndNextUnit
 import io.github.drumber.kitsune.ui.library_new.composables.LibraryEntryWithNextUnitItem
@@ -59,24 +66,61 @@ private fun CurrentLibraryEntriesShelf(
 ) {
     val lazyPagingItems = libraryEntries.collectAsLazyPagingItems()
 
-    LazyRow(modifier) {
-        items(count = lazyPagingItems.itemCount) { index ->
-            val item = lazyPagingItems[index]
-
-            if (item == null) {
-                // TODO: show placeholder
-                Text("Placeholder", Modifier.padding(16.dp))
-            } else {
-                LibraryEntryWithNextUnitItem(
-                    data = item.toLibraryEntryWithNextUnitData(LocalContext.current),
-                    onCardClick = { onItemClick(item.libraryEntryWithModification) },
-                    onDecrementProgress = { onDecrementProgress(item.libraryEntryWithModification) },
-                    onIncrementProgress = { onIncrementProgress(item.libraryEntryWithModification) },
-                    onRatingClick = { onRatingClick(item.libraryEntryWithModification) },
+    LazyRow(
+        modifier = modifier.height(220.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (lazyPagingItems.loadState.refresh == LoadState.Loading) {
+            item {
+                CircularProgressIndicator(
                     modifier = Modifier
-                        .size(width = 380.dp, height = 220.dp)
-                        .padding(8.dp)
+                        .fillParentMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally)
                 )
+            }
+        } else if (lazyPagingItems.loadState.isIdle && lazyPagingItems.itemCount == 0) {
+            item {
+                Text(
+                    text = stringResource(R.string.no_data_available),
+                    modifier = Modifier
+                        .fillParentMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally)
+                        .padding(16.dp)
+                )
+            }
+        } else {
+            items(
+                count = lazyPagingItems.itemCount,
+                key = lazyPagingItems.itemKey { it.libraryEntryWithModification.id }
+            ) { index ->
+                val item = lazyPagingItems[index]
+
+                if (item == null) {
+                    // TODO: show placeholder
+                    Text("Placeholder", Modifier.padding(16.dp))
+                } else {
+                    LibraryEntryWithNextUnitItem(
+                        data = item.toLibraryEntryWithNextUnitData(LocalContext.current),
+                        onCardClick = { onItemClick(item.libraryEntryWithModification) },
+                        onDecrementProgress = { onDecrementProgress(item.libraryEntryWithModification) },
+                        onIncrementProgress = { onIncrementProgress(item.libraryEntryWithModification) },
+                        onRatingClick = { onRatingClick(item.libraryEntryWithModification) },
+                        modifier = Modifier
+                            .width(380.dp)
+                            .fillParentMaxHeight()
+                            .padding(8.dp)
+                    )
+                }
+            }
+
+            if (lazyPagingItems.loadState.append == LoadState.Loading) {
+                item {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .wrapContentWidth(Alignment.CenterHorizontally)
+                    )
+                }
             }
         }
     }

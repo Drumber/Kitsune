@@ -50,7 +50,9 @@ class LibraryEntryWithNextMediaUnitRemoteMediator(
                 ?: throw NoDataException("Received data is 'null'.")
 
             localDataSource.runDatabaseTransaction {
-                // TODO: clear old library entries
+                if (loadType == LoadType.REFRESH) {
+                    // TODO: clear old library entries
+                }
 
                 data.forEach {
                     localDataSource.insertLibraryEntryIfUpdatedAtIsNewer(it.libraryEntryWithModification.libraryEntry.toLocalLibraryEntry())
