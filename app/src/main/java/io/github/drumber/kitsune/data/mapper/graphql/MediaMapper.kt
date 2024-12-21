@@ -1,10 +1,12 @@
 package io.github.drumber.kitsune.data.mapper.graphql
 
 import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions
+import io.github.drumber.kitsune.data.common.media.AgeRating
 import io.github.drumber.kitsune.data.common.media.AnimeSubtype
 import io.github.drumber.kitsune.data.common.media.MangaSubtype
 import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.common.media.ReleaseStatus
+import io.github.drumber.kitsune.data.source.graphql.type.AgeRatingEnum
 import io.github.drumber.kitsune.data.source.graphql.type.AnimeSubtypeEnum
 import io.github.drumber.kitsune.data.source.graphql.type.LibraryEntrySortEnum
 import io.github.drumber.kitsune.data.source.graphql.type.MangaSubtypeEnum
@@ -58,4 +60,12 @@ fun LibraryFilterOptions.SortBy.toLibraryEntrySortEnum() = when (this) {
 fun LibraryFilterOptions.SortDirection.toSortDirection() = when (this) {
     LibraryFilterOptions.SortDirection.ASC -> SortDirection.ASCENDING
     LibraryFilterOptions.SortDirection.DESC -> SortDirection.DESCENDING
+}
+
+fun AgeRatingEnum.toAgeRating() = when (this) {
+    AgeRatingEnum.G -> AgeRating.G
+    AgeRatingEnum.PG -> AgeRating.PG
+    AgeRatingEnum.R -> AgeRating.R
+    AgeRatingEnum.R18 -> AgeRating.R18
+    AgeRatingEnum.UNKNOWN__ -> null
 }

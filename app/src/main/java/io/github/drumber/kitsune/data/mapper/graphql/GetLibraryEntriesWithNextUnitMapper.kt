@@ -17,7 +17,7 @@ fun GetLibraryEntriesWithNextUnitQuery.Node.toLibraryEntriesWithModificationAndN
             libraryEntryFragment.toLibraryEntry(),
             null
         ),
-        nextUnit?.toMediaUnit(libraryEntryFragment.media.type)
+        nextUnit?.toMediaUnit(libraryEntryFragment.media.libraryMediaFragment.type)
     )
 
 fun GetLibraryEntriesWithNextUnitQuery.NextUnit.toMediaUnit(mediaType: String) =

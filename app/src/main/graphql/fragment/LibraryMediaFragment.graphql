@@ -1,0 +1,35 @@
+fragment LibraryMediaFragment on Media {
+    id
+    type
+    description
+    titles {
+        ...TitlesFragment
+    }
+    averageRating
+    userCountRank
+    averageRatingRank
+    startDate
+    endDate
+    nextRelease
+    tba
+    status
+    ageRating
+    ageRatingGuide
+    posterImage {
+        ...FullImageFragment
+    }
+    bannerImage {
+        ...FullImageFragment
+    }
+    ...on Anime {
+        animeSubtype: subtype
+        totalLength
+        episodeCount
+        episodeLength
+    }
+    ...on Manga {
+        mangaSubtype: subtype
+        chapterCount
+        volumeCount
+    }
+}

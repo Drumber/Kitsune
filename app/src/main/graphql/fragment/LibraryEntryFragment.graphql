@@ -14,27 +14,6 @@ fragment LibraryEntryFragment on LibraryEntry {
     progress
     rating
     media {
-        id
-        type
-        slug
-        startDate
-        status
-        titles {
-            ...TitlesFragment
-        }
-        bannerImage {
-            ...FullImageFragment
-        }
-        posterImage {
-            ...FullImageFragment
-        }
-        ...on Anime {
-            animeSubtype: subtype
-            episodeCount
-        }
-        ...on Manga {
-            mangaSubtype: subtype
-            chapterCount
-        }
+        ...LibraryMediaFragment
     }
 }
