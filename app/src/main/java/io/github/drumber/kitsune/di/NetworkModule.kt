@@ -18,6 +18,7 @@ import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.util.json.AlgoliaFacetValueDeserializer
 import io.github.drumber.kitsune.util.json.AlgoliaNumericValueDeserializer
 import io.github.drumber.kitsune.util.json.IgnoreParcelablePropertyMixin
+import io.github.drumber.kitsune.util.network.AcceptLanguageHeaderInterceptor
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptor
 import io.github.drumber.kitsune.util.network.AuthenticationInterceptorImpl
 import io.github.drumber.kitsune.util.network.UserAgentInterceptor
@@ -43,6 +44,7 @@ val networkModule = module {
 
 fun createHttpClientBuilder(addLoggingInterceptor: Boolean = true) = OkHttpClient.Builder()
     .addInterceptor(createUserAgentInterceptor())
+    .addInterceptor(AcceptLanguageHeaderInterceptor())
     .apply {
         if (addLoggingInterceptor) {
             addNetworkInterceptor(createHttpLoggingInterceptor())
