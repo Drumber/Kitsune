@@ -40,5 +40,5 @@ val viewModelModule = module {
     viewModel { SettingsViewModel(get(), get()) }
     viewModel { AppLogsViewModel() }
 
-    viewModel { NewLibraryViewModel(get()) }
+    viewModel { NewLibraryViewModel(get(), get()) }
 }

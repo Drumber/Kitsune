@@ -36,6 +36,9 @@ fun LibraryContent(
     modifier: Modifier = Modifier,
     currentLibraryEntries: Flow<PagingData<LibraryEntryWithModificationAndNextUnit>> = emptyFlow(),
     onItemClick: (LibraryEntryWithModification) -> Unit = {},
+    onIncrementProgress: (LibraryEntryWithModification) -> Unit = {},
+    onRatingClick: (LibraryEntryWithModification) -> Unit = {},
+    onEditClick: (LibraryEntryWithModification) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -45,7 +48,10 @@ fun LibraryContent(
         CurrentLibraryEntriesShelf(
             modifier = Modifier.fillMaxWidth(),
             libraryEntries = currentLibraryEntries,
-            onItemClick = onItemClick
+            onItemClick = onItemClick,
+            onIncrementProgress = onIncrementProgress,
+            onRatingClick = onRatingClick,
+            onEditClick = onEditClick
         )
         Spacer(Modifier.height(16.dp))
         // upcoming media calendar/list
@@ -60,14 +66,14 @@ private fun CurrentLibraryEntriesShelf(
     modifier: Modifier = Modifier,
     libraryEntries: Flow<PagingData<LibraryEntryWithModificationAndNextUnit>> = emptyFlow(),
     onItemClick: (LibraryEntryWithModification) -> Unit = {},
-    onDecrementProgress: (LibraryEntryWithModification) -> Unit = {},
     onIncrementProgress: (LibraryEntryWithModification) -> Unit = {},
-    onRatingClick: (LibraryEntryWithModification) -> Unit = {}
+    onRatingClick: (LibraryEntryWithModification) -> Unit = {},
+    onEditClick: (LibraryEntryWithModification) -> Unit = {},
 ) {
     val lazyPagingItems = libraryEntries.collectAsLazyPagingItems()
 
     LazyRow(
-        modifier = modifier.height(220.dp),
+        modifier = modifier.height(230.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (lazyPagingItems.loadState.refresh == LoadState.Loading) {
@@ -102,9 +108,9 @@ private fun CurrentLibraryEntriesShelf(
                     LibraryEntryWithNextUnitItem(
                         data = item.toLibraryEntryWithNextUnitData(LocalContext.current),
                         onCardClick = { onItemClick(item.libraryEntryWithModification) },
-                        onDecrementProgress = { onDecrementProgress(item.libraryEntryWithModification) },
                         onIncrementProgress = { onIncrementProgress(item.libraryEntryWithModification) },
                         onRatingClick = { onRatingClick(item.libraryEntryWithModification) },
+                        onEditClick = { onEditClick(item.libraryEntryWithModification) },
                         modifier = Modifier
                             .width(380.dp)
                             .fillParentMaxHeight()

@@ -1,9 +1,11 @@
 package io.github.drumber.kitsune.ui.library_new.composables
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -30,16 +32,27 @@ fun LibraryEntryRatingButton(
         tooltip = { PlainTooltip { Text(stringResource(R.string.hint_rating)) } },
         state = rememberTooltipState()
     ) {
-        TextButton(onClick = onClick) {
-            val iconRes = if (hasRating) R.drawable.ic_star_24 else R.drawable.ic_star_outline_24
-            if (ratingFormatted != null) {
-                Text(ratingFormatted)
+        if (hasRating) {
+            TextButton(
+                onClick = onClick,
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Text(ratingFormatted ?: "-")
                 Spacer(Modifier.width(4.dp))
+                Icon(
+                    painterResource(R.drawable.ic_star_24),
+                    contentDescription = null
+                )
             }
-            Icon(
-                painterResource(iconRes),
-                contentDescription = null
-            )
+        } else {
+            IconButton(
+                onClick = onClick
+            ) {
+                Icon(
+                    painterResource(R.drawable.ic_star_outline_24),
+                    contentDescription = null
+                )
+            }
         }
     }
 }

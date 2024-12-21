@@ -14,16 +14,23 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -44,9 +51,9 @@ fun LibraryEntryWithNextUnitItem(
     modifier: Modifier = Modifier,
     data: LibraryEntryWithNextUnitData,
     onCardClick: () -> Unit = {},
-    onDecrementProgress: () -> Unit = {},
     onIncrementProgress: () -> Unit = {},
-    onRatingClick: () -> Unit = {}
+    onRatingClick: () -> Unit = {},
+    onEditClick: () -> Unit = {}
 ) {
     val overlayGradient = listOf(
         CardDefaults.cardColors().containerColor.copy(alpha = 0.6f),
@@ -75,12 +82,16 @@ fun LibraryEntryWithNextUnitItem(
                 Spacer(Modifier.padding(8.dp))
                 Column(Modifier.fillMaxSize()) {
                     Row(Modifier.align(Alignment.End)) {
-                        TopSection(data.hasRating, data.ratingFormatted, onRatingClick)
+                        TopSection(
+                            hasRating = data.hasRating,
+                            ratingFormatted = data.ratingFormatted,
+                            onRatingClick = onRatingClick,
+                            onEditClick = onEditClick
+                        )
                     }
                     Spacer(Modifier.weight(1f))
                     Content(
                         data = data,
-                        onDecrementProgress = onDecrementProgress,
                         onIncrementProgress = onIncrementProgress,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -96,7 +107,6 @@ fun LibraryEntryWithNextUnitItem(
 private fun Content(
     modifier: Modifier = Modifier,
     data: LibraryEntryWithNextUnitData,
-    onDecrementProgress: () -> Unit,
     onIncrementProgress: () -> Unit
 ) {
     val subtypeAndYear =
@@ -111,6 +121,7 @@ private fun Content(
             overflow = TextOverflow.Ellipsis
         )
         if (subtypeAndYear.isNotBlank()) {
+            Spacer(Modifier.height(4.dp))
             Text(
                 subtypeAndYear,
                 style = MaterialTheme.typography.bodySmall,
@@ -135,13 +146,12 @@ private fun Content(
             )
             Spacer(Modifier.height(4.dp))
         }
-        LibraryEntryProgressAction(
+        LibraryEntryProgressSingleAction(
             modifier = Modifier.fillMaxWidth(),
             hasStartedConsuming = data.hasStartedConsuming,
             canProgress = data.canConsume,
             progress = data.progress ?: 0,
             unitCountFormatted = data.unitCountFormatted,
-            onMinusClick = onDecrementProgress,
             onPlusClick = onIncrementProgress
         )
         if (data.hasUnitCount) {
@@ -159,17 +169,41 @@ private fun Content(
 private fun TopSection(
     hasRating: Boolean,
     ratingFormatted: String?,
-    onRatingClick: () -> Unit
+    onRatingClick: () -> Unit,
+    onEditClick: () -> Unit
 ) {
+    var menuExpanded by remember { mutableStateOf(false) }
+
     LibraryEntryRatingButton(
         hasRating,
         ratingFormatted,
         onClick = onRatingClick
     )
-    IconButton(
-        onClick = { /* TODO */ }
-    ) {
-        Icon(Icons.Default.MoreVert, contentDescription = null)
+    Box {
+        IconButton(onClick = { menuExpanded = !menuExpanded }) {
+            Icon(Icons.Default.MoreVert, contentDescription = null)
+        }
+        DropdownMenu(
+            expanded = menuExpanded,
+            onDismissRequest = { menuExpanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("Edit entry") },
+                leadingIcon = { Icon(painterResource(R.drawable.ic_edit_24), null) },
+                onClick = {
+                    menuExpanded = false
+                    onEditClick()
+                }
+            )
+            DropdownMenuItem(
+                text = { Text("Pin entry") },
+                leadingIcon = { Icon(painterResource(R.drawable.ic_push_pin_24), null) },
+                onClick = {
+                    menuExpanded = false
+                    // TODO: action
+                }
+            )
+        }
     }
 }
 
@@ -220,7 +254,7 @@ fun LibraryEntryWithModificationAndNextUnit.toLibraryEntryWithNextUnitData(conte
 private fun LibraryEntryWithNextUnitItemPreview() {
     LibraryEntryWithNextUnitItem(
         data = LibraryEntryWithNextUnitData(
-            mediaTitle = "Media Title",
+            mediaTitle = "Media Title looooooong jhjghjh jhgjhfjg jhjf",
             mediaSubtypeFormatted = "TV",
             mediaPublishingYearFormatted = "2017",
             nextUnitTitle = "Next unit tile with looooong text",

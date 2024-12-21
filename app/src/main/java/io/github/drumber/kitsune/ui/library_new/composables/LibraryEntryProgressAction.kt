@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.ui.library_new.composables
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.material3.Button
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,14 +30,15 @@ fun LibraryEntryProgressAction(
         modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            if (hasStartedConsuming) "$progress/$unitCountFormatted"
-            else stringResource(R.string.library_not_started)
+        LibraryEntryProgressLabel(
+            hasStartedConsuming = hasStartedConsuming,
+            progress = progress,
+            unitCountFormatted = unitCountFormatted
         )
         Spacer(Modifier.weight(1f))
         OutlinedIconButton(
             onClick = onMinusClick,
-            shape = MaterialTheme.shapes.small,
+            shape = MaterialTheme.shapes.medium,
             enabled = hasStartedConsuming
         ) {
             Icon(
@@ -46,7 +48,7 @@ fun LibraryEntryProgressAction(
         }
         FilledIconButton(
             onClick = onPlusClick,
-            shape = MaterialTheme.shapes.small,
+            shape = MaterialTheme.shapes.medium,
             enabled = canProgress
         ) {
             Icon(
@@ -55,6 +57,49 @@ fun LibraryEntryProgressAction(
             )
         }
     }
+}
+
+@Composable
+fun LibraryEntryProgressSingleAction(
+    hasStartedConsuming: Boolean,
+    canProgress: Boolean,
+    progress: Int,
+    unitCountFormatted: String?,
+    onPlusClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        LibraryEntryProgressLabel(
+            hasStartedConsuming = hasStartedConsuming,
+            progress = progress,
+            unitCountFormatted = unitCountFormatted
+        )
+        Spacer(Modifier.weight(1f))
+        Button(
+            onClick = onPlusClick,
+            enabled = canProgress,
+        ) {
+            Icon(
+                painterResource(R.drawable.ic_plus_1_24),
+                contentDescription = stringResource(R.string.hint_mark_watched)
+            )
+        }
+    }
+}
+
+@Composable
+private fun LibraryEntryProgressLabel(
+    hasStartedConsuming: Boolean,
+    progress: Int,
+    unitCountFormatted: String?
+) {
+    Text(
+        if (hasStartedConsuming) "$progress/$unitCountFormatted"
+        else stringResource(R.string.library_not_started)
+    )
 }
 
 @Preview(showBackground = true, widthDp = 200)
@@ -92,6 +137,18 @@ private fun LibraryEntryProgressActionFinishedPreview() {
         progress = 12,
         unitCountFormatted = "12",
         onMinusClick = {},
+        onPlusClick = {}
+    )
+}
+
+@Preview(showBackground = true, widthDp = 200)
+@Composable
+private fun LibraryEntryProgressSingleActionPreview() {
+    LibraryEntryProgressSingleAction(
+        hasStartedConsuming = true,
+        canProgress = true,
+        progress = 10,
+        unitCountFormatted = "12",
         onPlusClick = {}
     )
 }

@@ -264,5 +264,11 @@
         <action
             android:id="@+id/action_newLibraryFragment_to_details_fragment"
             app:destination="@id/details_fragment" />
+        <action
+            android:id="@+id/action_newLibraryFragment_to_libraryEditEntryFragment"
+            app:destination="@id/libraryEditEntryFragment" />
+        <action
+            android:id="@+id/action_newLibraryFragment_to_ratingBottomSheet"
+            app:destination="@id/ratingBottomSheet" />
     </fragment>
 </navigation>

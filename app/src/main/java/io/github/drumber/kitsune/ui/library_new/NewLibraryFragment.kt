@@ -24,6 +24,7 @@ import com.chibatching.kotpref.livedata.asLiveData
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
+import io.github.drumber.kitsune.util.rating.RatingSystemUtil
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NewLibraryFragment : Fragment() {
@@ -61,9 +62,36 @@ class NewLibraryFragment : Fragment() {
                             modifier = Modifier.padding(innerPadding),
                             currentLibraryEntries = viewModel.currentLibraryEntriesPager,
                             onItemClick = { libraryEntry ->
-                                val mediaDto = libraryEntry.media?.toMediaDto() ?: return@LibraryContent
-                                val action = NewLibraryFragmentDirections.actionNewLibraryFragmentToDetailsFragment(mediaDto)
+                                val mediaDto =
+                                    libraryEntry.media?.toMediaDto() ?: return@LibraryContent
+                                val action =
+                                    NewLibraryFragmentDirections.actionNewLibraryFragmentToDetailsFragment(
+                                        mediaDto
+                                    )
                                 findNavController().navigate(action)
+                            },
+                            onEditClick = { libraryEntry ->
+                                val action =
+                                    NewLibraryFragmentDirections.actionNewLibraryFragmentToLibraryEditEntryFragment(
+                                        libraryEntry.id
+                                    )
+                                findNavController().navigate(action)
+                            },
+                            onRatingClick = { libraryEntry ->
+                                val media = libraryEntry.media
+                                // TODO: handle fragment result and update library entry
+                                val action =
+                                    NewLibraryFragmentDirections.actionNewLibraryFragmentToRatingBottomSheet(
+                                        title = media?.title ?: "",
+                                        ratingTwenty = libraryEntry.ratingTwenty ?: -1,
+                                        ratingResultKey = "TODO",
+                                        removeResultKey = "TODO",
+                                        ratingSystem = RatingSystemUtil.getRatingSystem()
+                                    )
+                                findNavController().navigate(action)
+                            },
+                            onIncrementProgress = { libraryEntryWithModification ->
+                                viewModel.incrementProgress(libraryEntryWithModification)
                             }
                         )
                     }
