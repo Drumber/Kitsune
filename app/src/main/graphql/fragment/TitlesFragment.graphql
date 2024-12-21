@@ -1,0 +1,5 @@
+fragment TitlesFragment on TitlesList {
+    canonical
+    romanized
+    localized
+}

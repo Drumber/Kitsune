@@ -1,0 +1,40 @@
+fragment LibraryEntryFragment on LibraryEntry {
+    id
+    createdAt
+    updatedAt
+    progressedAt
+    startedAt
+    finishedAt
+    notes
+    reconsumeCount
+    reconsuming
+    private
+    volumesOwned
+    status
+    progress
+    rating
+    media {
+        id
+        type
+        slug
+        startDate
+        status
+        titles {
+            ...TitlesFragment
+        }
+        bannerImage {
+            ...FullImageFragment
+        }
+        posterImage {
+            ...FullImageFragment
+        }
+        ...on Anime {
+            animeSubtype: subtype
+            episodeCount
+        }
+        ...on Manga {
+            mangaSubtype: subtype
+            chapterCount
+        }
+    }
+}

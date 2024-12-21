@@ -1,0 +1,9 @@
+fragment FullImageFragment on Image {
+    views {
+        url
+        name
+    }
+    original {
+        url
+    }
+}

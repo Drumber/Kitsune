@@ -1,0 +1,44 @@
+query GetLibraryEntriesWithNextUnit(
+    $pageSize: Int = 20
+    $cursor: String
+    $status: [LibraryEntryStatusEnum!]
+    $mediaType: MediaTypeEnum
+    $sort: LibraryEntrySortEnum = UPDATED_AT
+    $sortDirection: SortDirection = DESCENDING
+) {
+    currentProfile {
+        library {
+            all(
+                first: $pageSize
+                after: $cursor
+                status: $status
+                mediaType: $mediaType
+                sort: {
+                    on: $sort
+                    direction: $sortDirection
+                }
+            ) {
+                nodes {
+                    ...LibraryEntryFragment
+                    nextUnit {
+                        id
+                        number
+                        thumbnail {
+                            original {
+                                url
+                            }
+                        }
+                        titles {
+                            ...TitlesFragment
+                        }
+                    }
+                }
+                pageInfo {
+                    hasNextPage
+                    startCursor
+                    endCursor
+                }
+            }
+        }
+    }
+}
