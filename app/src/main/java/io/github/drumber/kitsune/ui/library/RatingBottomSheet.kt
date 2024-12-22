@@ -88,12 +88,20 @@ class RatingBottomSheet : BottomSheetDialogFragment() {
 
     private fun onRateClicked() {
         val ratingTwenty = binding.ratingBar.rating.toRatingTwentyFrom(ratingSystem)
-        setFragmentResult(args.ratingResultKey, bundleOf(BUNDLE_RATING to ratingTwenty))
+        val resultBundle = bundleOf(
+            BUNDLE_RATING to ratingTwenty,
+            BUNDLE_ENTRY_ID to args.entryId
+        )
+        setFragmentResult(args.ratingResultKey, resultBundle)
         dismiss()
     }
 
     private fun onRemoveRatingClicked() {
-        setFragmentResult(args.removeResultKey, bundleOf(BUNDLE_RATING to null))
+        val resultBundle = bundleOf(
+            BUNDLE_RATING to null,
+            BUNDLE_ENTRY_ID to args.entryId
+        )
+        setFragmentResult(args.removeResultKey, resultBundle)
         dismiss()
     }
 
@@ -104,6 +112,7 @@ class RatingBottomSheet : BottomSheetDialogFragment() {
 
     companion object {
         const val BUNDLE_RATING = "rating_bundle_key"
+        const val BUNDLE_ENTRY_ID = "entry_id_bundle_key"
     }
 
 }

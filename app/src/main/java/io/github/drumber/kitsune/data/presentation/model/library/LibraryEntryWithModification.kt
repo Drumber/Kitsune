@@ -49,7 +49,7 @@ data class LibraryEntryWithModification(
         }
 
     val hasRating: Boolean
-        get() = ratingTwenty != null
+        get() = ratingTwenty != null && ratingTwenty != -1
 
     val status
         get() = modification?.status ?: libraryEntry.status

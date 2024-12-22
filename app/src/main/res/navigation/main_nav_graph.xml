@@ -229,6 +229,11 @@
         <argument
             android:name="ratingSystem"
             app:argType="io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference" />
+        <argument
+            android:name="entryId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </dialog>
     <include app:graph="@navigation/settings_nav_graph" />
     <dialog

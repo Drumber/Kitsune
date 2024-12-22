@@ -254,7 +254,7 @@ fun LibraryEntryWithModificationAndNextUnit.toLibraryEntryWithNextUnitData(conte
 private fun LibraryEntryWithNextUnitItemPreview() {
     LibraryEntryWithNextUnitItem(
         data = LibraryEntryWithNextUnitData(
-            mediaTitle = "Media Title looooooong jhjghjh jhgjhfjg jhjf",
+            mediaTitle = "Media Title looooooong over two lines",
             mediaSubtypeFormatted = "TV",
             mediaPublishingYearFormatted = "2017",
             nextUnitTitle = "Next unit tile with looooong text",

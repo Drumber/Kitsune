@@ -8,12 +8,14 @@ import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWit
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.repository.library.LibraryPagingRepository
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCase
+import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryRatingUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class NewLibraryViewModel(
     libraryPagingRepository: LibraryPagingRepository,
-    private val updateLibraryEntryProgress: UpdateLibraryEntryProgressUseCase
+    private val updateLibraryEntryProgress: UpdateLibraryEntryProgressUseCase,
+    private val updateLibraryEntryRating: UpdateLibraryEntryRatingUseCase
 ) : ViewModel() {
 
     val currentLibraryEntriesPager = libraryPagingRepository.libraryEntriesWithNextMediaUnitPager(
@@ -31,6 +33,12 @@ class NewLibraryViewModel(
                 libraryEntryWithModification.libraryEntry,
                 currentProgress + 1
             )
+        }
+    }
+
+    fun updateRating(libraryEntryId: String, ratingTwenty: Int?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            updateLibraryEntryRating(libraryEntryId, ratingTwenty)
         }
     }
 }

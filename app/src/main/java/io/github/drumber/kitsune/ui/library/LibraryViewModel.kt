@@ -55,7 +55,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class LibraryViewModel(
     private val userRepository: UserRepository,
     private val getLocalUserId: GetLocalUserIdUseCase,
-    private val libraryRepository: LibraryRepository,
+    libraryRepository: LibraryRepository,
     private val libraryPagingRepository: LibraryPagingRepository,
     private val getLibraryEntriesWithModifications: GetLibraryEntriesWithModificationsPagerUseCase,
     private val searchLibraryEntriesWithModification: SearchLibraryEntriesWithLocalModificationsPagerUseCase,
@@ -307,7 +307,7 @@ class LibraryViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             performLibraryEntryUpdate {
-                updateLibraryEntryRating(libraryEntry, rating)
+                updateLibraryEntryRating(libraryEntry.id, rating)
             }
         }
     }

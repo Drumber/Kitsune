@@ -18,11 +18,13 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.asFlow
 import androidx.navigation.findNavController
 import com.chibatching.kotpref.livedata.asLiveData
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.ui.library.RatingBottomSheet
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 import io.github.drumber.kitsune.util.rating.RatingSystemUtil
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -30,6 +32,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class NewLibraryFragment : Fragment() {
 
     private val viewModel: NewLibraryViewModel by viewModel()
+
+    companion object {
+        const val RESULT_KEY_RATING = "new_library_rating_result_key"
+        const val RESULT_KEY_REMOVE_RATING = "new_library_remove_rating_result_key"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,14 +86,14 @@ class NewLibraryFragment : Fragment() {
                             },
                             onRatingClick = { libraryEntry ->
                                 val media = libraryEntry.media
-                                // TODO: handle fragment result and update library entry
                                 val action =
                                     NewLibraryFragmentDirections.actionNewLibraryFragmentToRatingBottomSheet(
                                         title = media?.title ?: "",
                                         ratingTwenty = libraryEntry.ratingTwenty ?: -1,
-                                        ratingResultKey = "TODO",
-                                        removeResultKey = "TODO",
-                                        ratingSystem = RatingSystemUtil.getRatingSystem()
+                                        ratingResultKey = RESULT_KEY_RATING,
+                                        removeResultKey = RESULT_KEY_REMOVE_RATING,
+                                        ratingSystem = RatingSystemUtil.getRatingSystem(),
+                                        entryId = libraryEntry.id
                                     )
                                 findNavController().navigate(action)
                             },
@@ -96,6 +103,25 @@ class NewLibraryFragment : Fragment() {
                         )
                     }
                 }
+            }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setFragmentResultListener(RESULT_KEY_RATING) { _, bundle ->
+            val rating = bundle.getInt(RatingBottomSheet.BUNDLE_RATING, -1)
+            val libraryEntryId = bundle.getString(RatingBottomSheet.BUNDLE_ENTRY_ID)
+            if (rating != -1 && libraryEntryId != null) {
+                viewModel.updateRating(libraryEntryId, rating)
+            }
+        }
+
+        setFragmentResultListener(RESULT_KEY_REMOVE_RATING) { _, bundle ->
+            val libraryEntryId = bundle.getString(RatingBottomSheet.BUNDLE_ENTRY_ID)
+            if (libraryEntryId != null) {
+                viewModel.updateRating(libraryEntryId, null)
             }
         }
     }
