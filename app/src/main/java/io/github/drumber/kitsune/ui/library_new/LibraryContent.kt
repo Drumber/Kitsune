@@ -1,7 +1,11 @@
 package io.github.drumber.kitsune.ui.library_new
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,6 +23,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
+import androidx.compose.ui.unit.min
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -72,60 +78,64 @@ private fun CurrentLibraryEntriesShelf(
 ) {
     val lazyPagingItems = libraryEntries.collectAsLazyPagingItems()
 
-    LazyRow(
-        modifier = modifier.height(230.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (lazyPagingItems.loadState.refresh == LoadState.Loading) {
-            item {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .fillParentMaxWidth()
-                        .wrapContentWidth(Alignment.CenterHorizontally)
-                )
+    Box(modifier = modifier.height(230.dp)) {
+        when {
+            lazyPagingItems.loadState.refresh == LoadState.Loading -> {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
-        } else if (lazyPagingItems.loadState.isIdle && lazyPagingItems.itemCount == 0) {
-            item {
+
+            lazyPagingItems.loadState.isIdle && lazyPagingItems.itemCount == 0 -> {
                 Text(
                     text = stringResource(R.string.no_data_available),
                     modifier = Modifier
-                        .fillParentMaxWidth()
-                        .wrapContentWidth(Alignment.CenterHorizontally)
+                        .align(Alignment.Center)
                         .padding(16.dp)
                 )
             }
-        } else {
-            items(
-                count = lazyPagingItems.itemCount,
-                key = lazyPagingItems.itemKey { it.libraryEntryWithModification.id }
-            ) { index ->
-                val item = lazyPagingItems[index]
 
-                if (item == null) {
-                    // TODO: show placeholder
-                    Text("Placeholder", Modifier.padding(16.dp))
-                } else {
-                    LibraryEntryWithNextUnitItem(
-                        data = item.toLibraryEntryWithNextUnitData(LocalContext.current),
-                        onCardClick = { onItemClick(item.libraryEntryWithModification) },
-                        onIncrementProgress = { onIncrementProgress(item.libraryEntryWithModification) },
-                        onRatingClick = { onRatingClick(item.libraryEntryWithModification) },
-                        onEditClick = { onEditClick(item.libraryEntryWithModification) },
-                        modifier = Modifier
-                            .width(380.dp)
-                            .fillParentMaxHeight()
-                            .padding(8.dp)
-                    )
-                }
-            }
+            else -> {
+                BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+                    // preferred item width is 380dp,
+                    // but can shrink to parent width (maxWidth from BoxWithConstraints)
+                    // with a minimum of 350dp
+                    val itemWidth = max(350.dp, min(380.dp, maxWidth))
 
-            if (lazyPagingItems.loadState.append == LoadState.Loading) {
-                item {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .wrapContentWidth(Alignment.CenterHorizontally)
-                    )
+                    LazyRow(modifier = Modifier.fillMaxSize()) {
+                        items(
+                            count = lazyPagingItems.itemCount,
+                            key = lazyPagingItems.itemKey { it.libraryEntryWithModification.id },
+                        ) { index ->
+                            val item = lazyPagingItems[index]
+
+                            if (item == null) {
+                                // TODO: show placeholder
+                                Text("Placeholder", Modifier.padding(16.dp))
+                            } else {
+                                LibraryEntryWithNextUnitItem(
+                                    data = item.toLibraryEntryWithNextUnitData(LocalContext.current),
+                                    onCardClick = { onItemClick(item.libraryEntryWithModification) },
+                                    onIncrementProgress = { onIncrementProgress(item.libraryEntryWithModification) },
+                                    onRatingClick = { onRatingClick(item.libraryEntryWithModification) },
+                                    onEditClick = { onEditClick(item.libraryEntryWithModification) },
+                                    modifier = Modifier
+                                        .width(itemWidth)
+                                        .fillMaxHeight()
+                                        .padding(8.dp)
+                                        .animateItem()
+                                )
+                            }
+                        }
+
+                        if (lazyPagingItems.loadState.append == LoadState.Loading) {
+                            item {
+                                CircularProgressIndicator(
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .wrapContentWidth(Alignment.CenterHorizontally)
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
