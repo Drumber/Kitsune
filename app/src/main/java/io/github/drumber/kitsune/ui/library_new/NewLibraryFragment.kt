@@ -22,6 +22,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.asFlow
 import androidx.navigation.findNavController
 import com.chibatching.kotpref.livedata.asLiveData
+import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.library.RatingBottomSheet
@@ -66,7 +67,9 @@ class NewLibraryFragment : Fragment() {
                         topBar = { LibraryTopBar(modifier = Modifier.padding(horizontal = 8.dp)) }
                     ) { innerPadding ->
                         LibraryContent(
-                            modifier = Modifier.padding(innerPadding),
+                            modifier = Modifier
+                                .padding(innerPadding)
+                                .padding(top = 8.dp),
                             currentLibraryEntries = viewModel.currentLibraryEntriesPager,
                             onItemClick = { libraryEntry ->
                                 val mediaDto =
@@ -99,6 +102,10 @@ class NewLibraryFragment : Fragment() {
                             },
                             onIncrementProgress = { libraryEntryWithModification ->
                                 viewModel.incrementProgress(libraryEntryWithModification)
+                            },
+                            onNavigateToStatus = { /* TODO */ },
+                            onNavigateToWholeLibrary = {
+                                findNavController().navigate(R.id.library_fragment)
                             }
                         )
                     }
