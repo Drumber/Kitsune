@@ -19,19 +19,7 @@ query GetLibraryEntriesWithNextUnit(
                 }
             ) {
                 nodes {
-                    ...LibraryEntryFragment
-                    nextUnit {
-                        id
-                        number
-                        thumbnail {
-                            original {
-                                url
-                            }
-                        }
-                        titles {
-                            ...TitlesFragment
-                        }
-                    }
+                    ...LibraryEntryWithNextUnitFragment
                 }
                 pageInfo {
                     hasNextPage

@@ -1,0 +1,15 @@
+fragment LibraryEntryWithNextUnitFragment on LibraryEntry {
+    ...LibraryEntryFragment
+    nextUnit {
+        id
+        number
+        thumbnail {
+            original {
+                url
+            }
+        }
+        titles {
+            ...TitlesFragment
+        }
+    }
+}

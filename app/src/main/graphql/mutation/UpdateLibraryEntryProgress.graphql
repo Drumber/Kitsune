@@ -1,0 +1,9 @@
+mutation UpdateLibraryEntryProgress($entryId: ID!, $progress: Int!) {
+    libraryEntry {
+        updateProgressById(input: { id: $entryId, progress: $progress }) {
+            libraryEntry {
+                ...LibraryEntryWithNextUnitFragment
+            }
+        }
+    }
+}

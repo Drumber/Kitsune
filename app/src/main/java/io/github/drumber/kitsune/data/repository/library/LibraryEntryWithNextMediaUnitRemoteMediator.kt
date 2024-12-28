@@ -7,7 +7,7 @@ import androidx.paging.RemoteMediator
 import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry
-import io.github.drumber.kitsune.data.mapper.graphql.toLibraryEntriesWithModificationAndNextUnit
+import io.github.drumber.kitsune.data.mapper.graphql.toLibraryEntriesWithNextUnit
 import io.github.drumber.kitsune.data.mapper.graphql.toLocalNextMediaUnit
 import io.github.drumber.kitsune.data.source.graphql.library.LibraryApolloDataSource
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
@@ -46,7 +46,7 @@ class LibraryEntryWithNextMediaUnitRemoteMediator(
             ) ?: throw NoDataException("Received data is 'null'.")
 
             val pageInfo = pageData.pageInfo
-            val data = pageData.toLibraryEntriesWithModificationAndNextUnit()
+            val data = pageData.toLibraryEntriesWithNextUnit()
                 ?: throw NoDataException("Received data is 'null'.")
 
             localDataSource.runDatabaseTransaction {
@@ -55,14 +55,14 @@ class LibraryEntryWithNextMediaUnitRemoteMediator(
                 }
 
                 data.forEach {
-                    localDataSource.insertLibraryEntryIfUpdatedAtIsNewer(it.libraryEntryWithModification.libraryEntry.toLocalLibraryEntry())
+                    localDataSource.insertLibraryEntryIfUpdatedAtIsNewer(it.libraryEntry.toLocalLibraryEntry())
                     if (it.nextUnit != null) {
-                        localDataSource.insertNextMediaUnit(it.nextUnit.toLocalNextMediaUnit(it.libraryEntryWithModification.id))
+                        localDataSource.insertNextMediaUnit(it.nextUnit.toLocalNextMediaUnit(it.libraryEntry.id))
                     }
                 }
 
                 val remoteKeys = data
-                    .map { it.libraryEntryWithModification.libraryEntry.toLocalLibraryEntry() }
+                    .map { it.libraryEntry.toLocalLibraryEntry() }
                     .map {
                         RemoteKeyEntity(
                             it.id,

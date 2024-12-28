@@ -13,6 +13,8 @@ import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntryMo
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryModificationState
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryStatus
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toNetworkLibraryStatus
+import io.github.drumber.kitsune.data.mapper.graphql.toLibraryEntryWithNextUnit
+import io.github.drumber.kitsune.data.mapper.graphql.toLocalNextMediaUnit
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
@@ -22,6 +24,7 @@ import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.source.graphql.library.LibraryApolloDataSource
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
@@ -37,6 +40,7 @@ import retrofit2.HttpException
 
 class LibraryRepository(
     private val remoteLibraryDataSource: LibraryNetworkDataSource,
+    private val apolloLibraryDataSource: LibraryApolloDataSource,
     private val localLibraryDataSource: LibraryLocalDataSource,
     private val libraryChangeListener: LibraryChangeListener,
     private val coroutineScope: CoroutineScope
@@ -134,6 +138,52 @@ class LibraryRepository(
             throw e
         } finally {
             libraryChangeListener.onUpdateLibraryEntry(libraryEntryModification, libraryEntry)
+        }
+    }
+
+    suspend fun updateLibraryEntryProgress(libraryEntryId: String, progress: Int): LibraryEntry {
+        val modification = LibraryEntryModification.withIdAndNulls(libraryEntryId).copy(
+            progress = progress,
+            state = LibraryModificationState.SYNCHRONIZING
+        )
+        var libraryEntry: LibraryEntry? = null
+
+        return try {
+            coroutineScope.async {
+                localLibraryDataSource.insertLibraryEntryModification(modification.toLocalLibraryEntryModification())
+            }.await()
+
+            val updatedLibraryEntryWithNextUnit =
+                apolloLibraryDataSource.updateProgress(libraryEntryId, progress)
+                    ?.toLibraryEntryWithNextUnit()
+                    ?: throw NoDataException("Received library entry for ID '${libraryEntryId}' is 'null'.")
+            coroutineScope.async {
+                if (isLibraryEntryNotOlderThanInDatabase(updatedLibraryEntryWithNextUnit.libraryEntry.toLocalLibraryEntry())) {
+                    localLibraryDataSource.updateLibraryEntryAndDeleteModification(
+                        updatedLibraryEntryWithNextUnit.libraryEntry.toLocalLibraryEntry(),
+                        modification.toLocalLibraryEntryModification()
+                    )
+                }
+                if (updatedLibraryEntryWithNextUnit.nextUnit != null) {
+                    localLibraryDataSource.insertNextMediaUnit(
+                        updatedLibraryEntryWithNextUnit.nextUnit.toLocalNextMediaUnit(
+                            libraryEntryId
+                        )
+                    )
+                }
+            }.await()
+            updatedLibraryEntryWithNextUnit.libraryEntry.also { libraryEntry = it }
+        } catch (e: NotFoundException) {
+            localLibraryDataSource.deleteLibraryEntryAndAnyModification(modification.id)
+            throw e
+        } catch (e: Exception) {
+            insertLocalModificationOrDeleteIfSameAsLibraryEntry(
+                modification.copy(state = LibraryModificationState.NOT_SYNCHRONIZED)
+                    .toLocalLibraryEntryModification()
+            )
+            throw e
+        } finally {
+            libraryChangeListener.onUpdateLibraryEntry(modification, libraryEntry)
         }
     }
 

@@ -9,6 +9,8 @@ import io.github.drumber.kitsune.data.mapper.graphql.toMediaTypeEnum
 import io.github.drumber.kitsune.data.mapper.graphql.toSortDirection
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.source.graphql.GetLibraryEntriesWithNextUnitQuery
+import io.github.drumber.kitsune.data.source.graphql.UpdateLibraryEntryProgressMutation
+import io.github.drumber.kitsune.data.source.graphql.fragment.LibraryEntryWithNextUnitFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -32,6 +34,17 @@ class LibraryApolloDataSource(
                     sortDirection = Optional.presentIfNotNull(filter.sortDirection?.toSortDirection())
                 )
             ).execute().data?.currentProfile?.library?.all
+        }
+    }
+
+    suspend fun updateProgress(
+        libraryEntryId: String,
+        progress: Int
+    ): LibraryEntryWithNextUnitFragment? {
+        return withContext(Dispatchers.IO) {
+            val mutation = UpdateLibraryEntryProgressMutation(libraryEntryId, progress)
+            client.mutation(mutation)
+                .execute().data?.libraryEntry?.updateProgressById?.libraryEntry?.libraryEntryWithNextUnitFragment
         }
     }
 }

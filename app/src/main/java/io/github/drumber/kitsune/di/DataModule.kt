@@ -246,6 +246,7 @@ val dataModule = module {
             get(),
             get(),
             get(),
+            get(),
             CoroutineScope(SupervisorJob() + Dispatchers.Default)
         )
     }

@@ -1,32 +1,56 @@
 package io.github.drumber.kitsune.domain.library
 
+import io.github.drumber.kitsune.data.common.exception.NotFoundException
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
+import io.github.drumber.kitsune.data.repository.library.LibraryRepository
+import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.NetworkError
+import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.NotFound
+import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.UnknownException
+import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Failure
+import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Success
 import io.github.drumber.kitsune.util.formatUtcDate
 import io.github.drumber.kitsune.util.getLocalCalendar
+import java.io.IOException
+import kotlin.coroutines.cancellation.CancellationException
 
 class UpdateLibraryEntryProgressUseCase(
-    private val updateLibraryEntry: UpdateLibraryEntryUseCase
+    private val updateLibraryEntry: UpdateLibraryEntryUseCase,
+    private val libraryRepository: LibraryRepository
 ) {
 
     suspend operator fun invoke(
         libraryEntry: LibraryEntry,
         newProgress: Int
     ): LibraryEntryUpdateResult {
-        var modification = LibraryEntryModification.withIdAndNulls(libraryEntry.id)
-            .copy(progress = newProgress)
-
         // set startedAt date when starting consuming library entry
         if (
             libraryEntry.startedAt.isNullOrBlank() &&
             newProgress == 1 &&
             (libraryEntry.progress ?: 0) == 0
         ) {
-            modification = modification.copy(
+            val modification = LibraryEntryModification.withIdAndNulls(libraryEntry.id).copy(
+                progress = newProgress,
                 startedAt = getLocalCalendar().formatUtcDate()
             )
+
+            return updateLibraryEntry(modification)
         }
 
-        return updateLibraryEntry(modification)
+        return try {
+            val updatedLibraryEntry = libraryRepository.updateLibraryEntryProgress(
+                libraryEntryId = libraryEntry.id,
+                progress = newProgress
+            )
+            Success(updatedLibraryEntry)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: NotFoundException) {
+            Failure(NotFound)
+        } catch (e: IOException) {
+            Failure(NetworkError(e))
+        } catch (e: Exception) {
+            Failure(UnknownException(e))
+        }
     }
 }
