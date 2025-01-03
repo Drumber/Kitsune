@@ -1,6 +1,8 @@
 package io.github.drumber.kitsune.ui.library_new
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
@@ -14,9 +16,11 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.SearchBar
@@ -26,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -86,8 +91,19 @@ fun LibraryTopBar(
         onDragStopped = { velocity ->
             scrollBehavior.nestedScrollConnection.onPostFling(Velocity.Zero, Velocity(0f, velocity))
         },
-        enabled = isDraggableEnabled
+        enabled = !state.isSearching && isDraggableEnabled
     )
+
+    val heightOffsetAnimation = remember(state.isSearching) {
+        Animatable(scrollBehavior.state.heightOffset)
+    }
+    LaunchedEffect(state.isSearching) {
+        if (state.isSearching) {
+            heightOffsetAnimation.animateTo(scrollBehavior.state.heightOffsetLimit, tween()) {
+                scrollBehavior.state.heightOffset = value
+            }
+        }
+    }
 
     Surface(
         modifier = modifier,
@@ -119,7 +135,20 @@ fun LibraryTopBar(
                         expanded = state.isSearching,
                         onExpandedChange = onSearchToggle,
                         placeholder = { Text("Search in your library") },
-                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) }
+                        leadingIcon = {
+                            if (state.isSearching) {
+                                IconButton(
+                                    onClick = { onSearchToggle(false) }
+                                ) {
+                                    Icon(
+                                        Icons.AutoMirrored.Default.ArrowBack,
+                                        contentDescription = null
+                                    )
+                                }
+                            } else {
+                                Icon(Icons.Default.Search, contentDescription = null)
+                            }
+                        }
                     )
                 },
                 expanded = state.isSearching,

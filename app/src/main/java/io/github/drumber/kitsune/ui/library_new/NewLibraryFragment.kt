@@ -18,6 +18,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.ComposeView
@@ -69,6 +72,8 @@ class NewLibraryFragment : Fragment() {
 
                 val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
+                var topBarState by remember { mutableStateOf(LibraryTopBarState()) }
+
                 KitsuneTheme(dynamicColor = useDynamicColorTheme, darkTheme = isDarkModeEnabled) {
                     Scaffold(
                         modifier = Modifier
@@ -77,9 +82,19 @@ class NewLibraryFragment : Fragment() {
                         contentWindowInsets = WindowInsets.safeDrawing,
                         topBar = {
                             LibraryTopBar(
+                                state = topBarState,
                                 modifier = Modifier.fillMaxWidth(),
                                 scrollBehavior = scrollBehavior,
-                                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
+                                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
+                                onSearchToggle = { isSearching ->
+                                    topBarState = topBarState.copy(isSearching = isSearching)
+                                },
+                                onSearchQueryChange = { query ->
+                                    topBarState = topBarState.copy(query = query)
+                                },
+                                onSearchSubmit = { query ->
+                                    // TODO
+                                }
                             )
                         }
                     ) { innerPadding ->
