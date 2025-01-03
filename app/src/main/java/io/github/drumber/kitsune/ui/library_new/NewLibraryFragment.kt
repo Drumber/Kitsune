@@ -7,13 +7,19 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
@@ -39,6 +45,7 @@ class NewLibraryFragment : Fragment() {
         const val RESULT_KEY_REMOVE_RATING = "new_library_remove_rating_result_key"
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -60,11 +67,21 @@ class NewLibraryFragment : Fragment() {
                     else -> isSystemInDarkTheme()
                 }
 
+                val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
                 KitsuneTheme(dynamicColor = useDynamicColorTheme, darkTheme = isDarkModeEnabled) {
                     Scaffold(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .nestedScroll(scrollBehavior.nestedScrollConnection),
                         contentWindowInsets = WindowInsets.safeDrawing,
-                        topBar = { LibraryTopBar(modifier = Modifier.padding(horizontal = 8.dp)) }
+                        topBar = {
+                            LibraryTopBar(
+                                modifier = Modifier.fillMaxWidth(),
+                                scrollBehavior = scrollBehavior,
+                                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
+                            )
+                        }
                     ) { innerPadding ->
                         LibraryContent(
                             modifier = Modifier
