@@ -12,7 +12,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.constants.MediaItemSize
-import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.common.library.LibraryEntryMediaType
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
@@ -101,7 +101,7 @@ object KitsunePref : KotprefModel(), KoinComponent {
         get() = ::searchCategoriesJson.fromJsonString(emptyList())
 
 
-    var libraryEntryKind by enumValuePref(LibraryEntryKind.All)
+    var libraryEntryKind by enumValuePref(LibraryEntryMediaType.All)
 
     private var libraryEntryStatusJson by stringPref("[]")
 

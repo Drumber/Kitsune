@@ -51,7 +51,8 @@ class LibraryPagingRepository(
             maxSize = Repository.MAX_CACHED_ITEMS
         ),
         remoteMediator = LibraryEntryRemoteMediator(
-            filter.pageSize(pageSize),
+            filter,
+            pageSize,
             remoteLibraryDataSource,
             localLibraryDataSource
         ),

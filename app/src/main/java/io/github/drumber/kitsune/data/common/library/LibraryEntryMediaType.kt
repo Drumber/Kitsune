@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.common.library
 
-enum class LibraryEntryKind {
+enum class LibraryEntryMediaType {
     All,
     Anime,
     Manga

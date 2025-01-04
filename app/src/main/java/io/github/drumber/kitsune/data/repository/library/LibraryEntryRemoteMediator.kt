@@ -6,14 +6,16 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.common.exception.NoDataException
+import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry
+import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryFilterOptions
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
+import io.github.drumber.kitsune.data.presentation.model.library.toLibraryFilterOptions
 import io.github.drumber.kitsune.data.source.local.LocalDatabase
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyEntity
-import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyType
 import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.parseUtcDate
@@ -21,9 +23,13 @@ import io.github.drumber.kitsune.util.parseUtcDate
 @OptIn(ExperimentalPagingApi::class)
 class LibraryEntryRemoteMediator(
     private val filter: LibraryEntryFilter,
+    private val pageSize: Int,
     private val networkDataSource: LibraryNetworkDataSource,
     private val localDataSource: LibraryLocalDataSource
 ) : RemoteMediator<Int, LocalLibraryEntry>() {
+
+    // TODO: Remove after migration to new library filter options
+    private val filterOptions = filter.toLibraryFilterOptions()
 
     /**
      * Implementation based on android paging example from
@@ -38,19 +44,19 @@ class LibraryEntryRemoteMediator(
                 LoadType.REFRESH -> Kitsu.DEFAULT_PAGE_OFFSET
                 LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
                 LoadType.APPEND -> {
-                    val remoteKeys = getRemoteKeyForLastItem(state)
+                    val remoteKey = getRemoteKeyForLastItem(state)
                     // If remoteKeys is null, that means the refresh result is not in the database yet.
                     // We can return Success with `endOfPaginationReached = false` because Paging
                     // will call this method again if RemoteKeys becomes non-null.
                     // If remoteKeys is NOT NULL but its prevKey is null, that means we've reached
                     // the end of pagination for append.
-                    var nextKey = remoteKeys?.nextPageKey?.toIntOrNull()
-                        ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                    var nextKey = remoteKey?.nextPageKey?.toIntOrNull()
+                        ?: return MediatorResult.Success(endOfPaginationReached = remoteKey != null)
 
                     state.pages.lastOrNull()?.prevKey?.let { prevPage ->
                         // last page is equal or greater than reported next page: RemoteKey is out of sync
                         if (prevPage >= nextKey) {
-                            localDataSource.deleteRemoteKeyByResourceId(remoteKeys.resourceId, remoteKeys.remoteKeyType)
+                            localDataSource.deleteRemoteKey(remoteKey)
                             getRemoteKeyForLastItem(state)?.nextPageKey?.toIntOrNull()?.let {
                                 nextKey = it
                             } ?: return MediatorResult.Success(endOfPaginationReached = false)
@@ -61,7 +67,7 @@ class LibraryEntryRemoteMediator(
             }
 
             val pageData = networkDataSource.getAllLibraryEntries(
-                filter.buildFilter().pageOffset(pageOffset)
+                filter.buildFilter().pageLimit(pageSize).pageOffset(pageOffset)
             )
             val data = pageData.data?.map { it.toLocalLibraryEntry() }
                 ?: throw NoDataException("Received data is 'null'.")
@@ -70,7 +76,7 @@ class LibraryEntryRemoteMediator(
                 // only clear database on REFRESH
                 if (loadType == LoadType.REFRESH) {
                     logD("Clearing filtered library entries and corresponding remote keys from database.")
-                    clearLibraryEntriesForFilterIgnoringNewerLibraryEntries(filter, data)
+                    clearLibraryEntriesForFilterIgnoringNewerLibraryEntries(filterOptions, data)
                 }
 
                 data.forEach { libraryEntry ->
@@ -78,7 +84,12 @@ class LibraryEntryRemoteMediator(
                 }
 
                 val remoteKeys = data.map {
-                    RemoteKeyEntity(it.id, RemoteKeyType.LibraryEntry, pageData.prev?.toString(), pageData.next?.toString())
+                    RemoteKeyEntity(
+                        resourceId = it.id,
+                        filterOptions = filterOptions.toLocalLibraryFilterOptions(),
+                        prevPageKey = pageData.prev?.toString(),
+                        nextPageKey = pageData.next?.toString()
+                    )
                 }
                 remoteKeyDao().insertALl(remoteKeys)
             }
@@ -90,13 +101,13 @@ class LibraryEntryRemoteMediator(
     }
 
     private suspend fun LocalDatabase.clearLibraryEntriesForFilterIgnoringNewerLibraryEntries(
-        filter: LibraryEntryFilter,
+        filter: LibraryFilterOptions,
         data: List<LocalLibraryEntry>
     ) {
         // clear all library entries in database with the selected kind and status
         val libraryEntriesToBeCleared = localDataSource.getLibraryEntriesByKindAndStatus(
-            filter.kind,
-            filter.libraryStatus.map { it.toLocalLibraryStatus() }
+            filter.mediaType,
+            filter.status?.map { it.toLocalLibraryStatus() } ?: emptyList()
         ).filter { existingLibraryEntry ->
             // do not clear library entries from database that are newer than the ones received
             val updatedAtOfExistingEntry = existingLibraryEntry.updatedAt
@@ -112,7 +123,7 @@ class LibraryEntryRemoteMediator(
 
         libraryEntryDao().deleteAll(libraryEntriesToBeCleared)
         val remoteKeyIdsToClear = libraryEntriesToBeCleared.map { it.id }
-        remoteKeyDao().deleteAllByResourceId(remoteKeyIdsToClear, RemoteKeyType.LibraryEntry)
+        localDataSource.deleteAllRemoteKeysByResourceId(remoteKeyIdsToClear, filter)
     }
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, LocalLibraryEntry>): RemoteKeyEntity? {
@@ -122,14 +133,14 @@ class LibraryEntryRemoteMediator(
             ?.lastOrNull { libraryEntry ->
                 localDataSource.getRemoteKeyByResourceId(
                     libraryEntry.id,
-                    RemoteKeyType.LibraryEntry
+                    filterOptions
                 ) != null
             }
             ?.let { libraryEntry ->
                 // Get the remote keys of the last item retrieved
                 localDataSource.getRemoteKeyByResourceId(
                     libraryEntry.id,
-                    RemoteKeyType.LibraryEntry
+                    filterOptions
                 )
             }
     }

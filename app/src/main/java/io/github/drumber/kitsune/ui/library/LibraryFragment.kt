@@ -38,7 +38,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.shape.MaterialShapeDrawable
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.common.library.LibraryEntryMediaType
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
@@ -216,18 +216,18 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
                     .collectLatest { kind ->
                         binding.chipMediaKind.setText(
                             when (kind) {
-                                LibraryEntryKind.Anime -> R.string.anime
-                                LibraryEntryKind.Manga -> R.string.manga
+                                LibraryEntryMediaType.Anime -> R.string.anime
+                                LibraryEntryMediaType.Manga -> R.string.manga
                                 else -> R.string.library_kind_all
                             }
                         )
 
                         binding.chipCurrent.setText(
-                            if (kind == LibraryEntryKind.Manga) R.string.library_status_reading
+                            if (kind == LibraryEntryMediaType.Manga) R.string.library_status_reading
                             else R.string.library_status_watching
                         )
                         binding.chipPlanned.setText(
-                            if (kind == LibraryEntryKind.Manga) R.string.library_status_planned_manga
+                            if (kind == LibraryEntryMediaType.Manga) R.string.library_status_planned_manga
                             else R.string.library_status_planned
                         )
                     }
@@ -281,7 +281,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
             .setTitle(R.string.title_media_type)
             .setSingleChoiceItems(items, prevSelected) { dialog, which ->
                 if (which != prevSelected) {
-                    val kind = LibraryEntryKind.entries[which]
+                    val kind = LibraryEntryMediaType.entries[which]
                     viewModel.setLibraryEntryKind(kind)
                 }
                 dialog.dismiss()

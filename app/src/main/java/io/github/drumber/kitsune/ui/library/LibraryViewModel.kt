@@ -9,7 +9,7 @@ import androidx.paging.insertSeparators
 import androidx.paging.map
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.common.Filter
-import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.common.library.LibraryEntryMediaType
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel
@@ -205,7 +205,7 @@ class LibraryViewModel(
                     before == null || before.entry.libraryEntry.status != after.entry.libraryEntry.status ->
                         LibraryEntryUiModel.StatusSeparatorModel(
                             status = after.entry.libraryEntry.status,
-                            isMangaSelected = filter.kind == LibraryEntryKind.Manga
+                            isMangaSelected = filter.kind == LibraryEntryMediaType.Manga
                         )
 
                     else -> null
@@ -245,7 +245,7 @@ class LibraryViewModel(
         libraryPagingRepository.invalidateAll()
     }
 
-    fun setLibraryEntryKind(kind: LibraryEntryKind) {
+    fun setLibraryEntryKind(kind: LibraryEntryMediaType) {
         KitsunePref.libraryEntryKind = kind
         val currentFilter = state.value.filter
         acceptAction(UiAction.Filter(currentFilter.copy(kind = kind)))
@@ -362,7 +362,7 @@ data class UiState(
 )
 
 data class FilterState(
-    val kind: LibraryEntryKind = LibraryEntryKind.All,
+    val kind: LibraryEntryMediaType = LibraryEntryMediaType.All,
     val libraryStatus: List<LibraryStatus> = emptyList(),
     val searchQuery: String = "",
 )

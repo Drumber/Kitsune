@@ -1,11 +1,10 @@
 package io.github.drumber.kitsune.data.common.library
 
-import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 
 data class LibraryFilterOptions(
     val status: List<LibraryStatus>? = null,
-    val mediaType: MediaType? = null,
+    val mediaType: LibraryEntryMediaType = LibraryEntryMediaType.All,
     val sortBy: SortBy? = null,
     val sortDirection: SortDirection? = null
 ) {

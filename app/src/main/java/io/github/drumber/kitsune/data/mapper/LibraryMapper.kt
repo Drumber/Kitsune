@@ -1,5 +1,7 @@
 package io.github.drumber.kitsune.data.mapper
 
+import io.github.drumber.kitsune.data.common.library.LibraryEntryMediaType
+import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions
 import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
 import io.github.drumber.kitsune.data.mapper.ImageMapper.toLocalImage
@@ -23,6 +25,7 @@ import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryWithModificationAndNextMediaUnit
+import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryFilterOptions
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMedia
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus
@@ -433,4 +436,17 @@ object LibraryMapper {
             LibraryModificationState.SYNCHRONIZING -> LocalLibraryModificationState.SYNCHRONIZING
             LibraryModificationState.NOT_SYNCHRONIZED -> LocalLibraryModificationState.NOT_SYNCHRONIZED
         }
+
+    fun LibraryEntryMediaType.toMediaType() = when (this) {
+        LibraryEntryMediaType.Anime -> MediaType.Anime
+        LibraryEntryMediaType.Manga -> MediaType.Manga
+        LibraryEntryMediaType.All -> null
+    }
+
+    fun LibraryFilterOptions.toLocalLibraryFilterOptions() = LocalLibraryFilterOptions(
+        mediaType = mediaType.name,
+        status = status?.map { it.name },
+        sortBy = sortBy?.name,
+        sortDirection = sortDirection?.name
+    )
 }

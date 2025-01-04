@@ -1,10 +1,11 @@
 package io.github.drumber.kitsune.data.presentation.model.library
 
 import io.github.drumber.kitsune.data.common.Filter
-import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.common.library.LibraryEntryMediaType
+import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions
 
 data class LibraryEntryFilter(
-    val kind: LibraryEntryKind,
+    val kind: LibraryEntryMediaType,
     val libraryStatus: List<LibraryStatus>,
     private val initialFilter: Filter = Filter()
 ) {
@@ -14,7 +15,7 @@ data class LibraryEntryFilter(
     }
 
     fun buildFilter() = Filter(initialFilter.options.toMutableMap()).apply {
-            if (kind != LibraryEntryKind.All) {
+            if (kind != LibraryEntryMediaType.All) {
                 filter("kind", kind.name.lowercase())
             }
             if (libraryStatus.isNotEmpty()) {
@@ -23,9 +24,14 @@ data class LibraryEntryFilter(
             }
         }
 
-    fun isFiltered() = kind != LibraryEntryKind.All || libraryStatus.isNotEmpty()
+    fun isFiltered() = kind != LibraryEntryMediaType.All || libraryStatus.isNotEmpty()
 
     /** Checks if the initial filter has a 'title' filter applied. */
     fun isFilteredBySearchQuery() = initialFilter.hasFilterAttribute("title")
 
 }
+
+fun LibraryEntryFilter.toLibraryFilterOptions() = LibraryFilterOptions(
+    mediaType = kind,
+    status = libraryStatus
+)

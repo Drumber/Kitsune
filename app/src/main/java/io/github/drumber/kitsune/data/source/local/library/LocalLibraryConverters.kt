@@ -8,7 +8,6 @@ import io.github.drumber.kitsune.data.common.media.MangaSubtype
 import io.github.drumber.kitsune.data.common.media.ReleaseStatus
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus
 import io.github.drumber.kitsune.data.source.local.library.model.LocalReactionSkip
-import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyType
 import io.github.drumber.kitsune.di.createObjectMapper
 
 class LocalLibraryConverters {
@@ -148,24 +147,6 @@ class LocalLibraryConverters {
 
     @TypeConverter
     fun stringToReactionSkip(json: String?): LocalReactionSkip? {
-        return if (json != null) {
-            objectMapper.readValue(json)
-        } else {
-            null
-        }
-    }
-
-    @TypeConverter
-    fun remoteKeyTypeToString(remoteKeyType: RemoteKeyType?): String? {
-        return if (remoteKeyType != null) {
-            objectMapper.writeValueAsString(remoteKeyType)
-        } else {
-            null
-        }
-    }
-
-    @TypeConverter
-    fun stringToRemoteKeyType(json: String?): RemoteKeyType? {
         return if (json != null) {
             objectMapper.readValue(json)
         } else {

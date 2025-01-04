@@ -2,11 +2,13 @@ package io.github.drumber.kitsune.data.source.local.library
 
 import androidx.paging.PagingSource
 import androidx.room.withTransaction
-import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.common.library.LibraryEntryMediaType
 import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions
 import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions.SortBy
 import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions.SortDirection
+import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryFilterOptions
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryStatus
+import io.github.drumber.kitsune.data.mapper.LibraryMapper.toMediaType
 import io.github.drumber.kitsune.data.source.local.LocalDatabase
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
@@ -15,7 +17,7 @@ import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMed
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus
 import io.github.drumber.kitsune.data.source.local.library.model.LocalNextMediaUnit
-import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyType
+import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyEntity
 
 class LibraryLocalDataSource(
     private val database: LocalDatabase
@@ -68,10 +70,11 @@ class LibraryLocalDataSource(
     suspend fun insertLibraryEntryIfUpdatedAtIsNewer(libraryEntry: LocalLibraryEntry): Boolean {
         libraryEntry.verifyIsValidLibraryEntry()
         return database.withTransaction {
-            val hasNewerEntry = !libraryEntry.updatedAt.isNullOrBlank() && libraryEntryDao.hasLibraryEntryWhereUpdatedAtIsAfter(
-                libraryEntry.id,
-                libraryEntry.updatedAt
-            )
+            val hasNewerEntry =
+                !libraryEntry.updatedAt.isNullOrBlank() && libraryEntryDao.hasLibraryEntryWhereUpdatedAtIsAfter(
+                    libraryEntry.id,
+                    libraryEntry.updatedAt
+                )
             if (!hasNewerEntry) {
                 libraryEntryDao.insertSingle(libraryEntry)
                 true
@@ -83,31 +86,31 @@ class LibraryLocalDataSource(
     }
 
     suspend fun getLibraryEntriesByKindAndStatus(
-        kind: LibraryEntryKind,
+        kind: LibraryEntryMediaType,
         status: List<LocalLibraryStatus>
     ): List<LocalLibraryEntry> {
         val hasStatus = status.isNotEmpty()
         return with(libraryEntryDao) {
             when {
-                kind == LibraryEntryKind.Anime && hasStatus -> getAllLibraryEntriesByTypeAndStatus(
+                kind == LibraryEntryMediaType.Anime && hasStatus -> getAllLibraryEntriesByTypeAndStatus(
                     MediaType.Anime,
                     status
                 )
 
-                kind == LibraryEntryKind.Anime && !hasStatus -> getAllLibraryEntriesByType(
+                kind == LibraryEntryMediaType.Anime && !hasStatus -> getAllLibraryEntriesByType(
                     MediaType.Anime
                 )
 
-                kind == LibraryEntryKind.Manga && hasStatus -> getAllLibraryEntriesByTypeAndStatus(
+                kind == LibraryEntryMediaType.Manga && hasStatus -> getAllLibraryEntriesByTypeAndStatus(
                     MediaType.Manga,
                     status
                 )
 
-                kind == LibraryEntryKind.Manga && !hasStatus -> getAllLibraryEntriesByType(
+                kind == LibraryEntryMediaType.Manga && !hasStatus -> getAllLibraryEntriesByType(
                     MediaType.Manga
                 )
 
-                kind == LibraryEntryKind.All && hasStatus -> getAllLibraryEntriesByStatus(
+                kind == LibraryEntryMediaType.All && hasStatus -> getAllLibraryEntriesByStatus(
                     status
                 )
 
@@ -117,31 +120,31 @@ class LibraryLocalDataSource(
     }
 
     fun getLibraryEntriesByKindAndStatusAsPagingSource(
-        kind: LibraryEntryKind,
+        kind: LibraryEntryMediaType,
         status: List<LocalLibraryStatus>
     ): PagingSource<Int, LocalLibraryEntry> {
         val hasStatus = status.isNotEmpty()
         return with(libraryEntryDao) {
             when {
-                kind == LibraryEntryKind.Anime && hasStatus -> allLibraryEntriesByTypeAndStatusPagingSource(
+                kind == LibraryEntryMediaType.Anime && hasStatus -> allLibraryEntriesByTypeAndStatusPagingSource(
                     MediaType.Anime,
                     status
                 )
 
-                kind == LibraryEntryKind.Anime && !hasStatus -> allLibraryEntriesByTypePagingSource(
+                kind == LibraryEntryMediaType.Anime && !hasStatus -> allLibraryEntriesByTypePagingSource(
                     MediaType.Anime
                 )
 
-                kind == LibraryEntryKind.Manga && hasStatus -> allLibraryEntriesByTypeAndStatusPagingSource(
+                kind == LibraryEntryMediaType.Manga && hasStatus -> allLibraryEntriesByTypeAndStatusPagingSource(
                     MediaType.Manga,
                     status
                 )
 
-                kind == LibraryEntryKind.Manga && !hasStatus -> allLibraryEntriesByTypePagingSource(
+                kind == LibraryEntryMediaType.Manga && !hasStatus -> allLibraryEntriesByTypePagingSource(
                     MediaType.Manga
                 )
 
-                kind == LibraryEntryKind.All && hasStatus -> allLibraryEntriesByStatusPagingSource(
+                kind == LibraryEntryMediaType.All && hasStatus -> allLibraryEntriesByStatusPagingSource(
                     status
                 )
 
@@ -155,7 +158,7 @@ class LibraryLocalDataSource(
     ): PagingSource<Int, LocalLibraryEntryWithModificationAndNextMediaUnit> {
         return libraryEntryWithModificationAndNextMediaUnitDao.getByFilterAsPagingSource(
             filter.status?.map { it.toLocalLibraryStatus() } ?: LocalLibraryStatus.entries,
-            filter.mediaType,
+            filter.mediaType.toMediaType(),
             filter.sortBy ?: SortBy.UPDATED_AT,
             filter.sortDirection ?: SortDirection.DESC
         )
@@ -222,12 +225,28 @@ class LibraryLocalDataSource(
     // RemoteKey related methods
     //********************************************************************************************//
 
-    suspend fun getRemoteKeyByResourceId(resourceId: String, remoteKeyType: RemoteKeyType) =
-        remoteKeyDao.getRemoteKeyByResourceId(resourceId, remoteKeyType)
+    suspend fun getRemoteKeyByResourceId(resourceId: String, filter: LibraryFilterOptions) =
+        remoteKeyDao.getRemoteKeyByResourceId(
+            resourceId,
+            filter.toLocalLibraryFilterOptions().serialize()
+        )
 
-    suspend fun deleteRemoteKeyByResourceId(resourceId: String, remoteKeyType: RemoteKeyType) {
-        remoteKeyDao.deleteByResourceId(resourceId, remoteKeyType)
-    }
+    suspend fun deleteRemoteKey(remoteKey: RemoteKeyEntity) =
+        remoteKeyDao.deleteSingle(remoteKey)
+
+    suspend fun deleteRemoteKeyByResourceId(resourceId: String, filter: LibraryFilterOptions) =
+        remoteKeyDao.deleteByResourceId(
+            resourceId,
+            filter.toLocalLibraryFilterOptions().serialize()
+        )
+
+    suspend fun deleteAllRemoteKeysByResourceId(
+        resourceIds: List<String>,
+        filter: LibraryFilterOptions
+    ) = remoteKeyDao.deleteAllByResourceId(
+        resourceIds,
+        filter.toLocalLibraryFilterOptions().serialize()
+    )
 
     //********************************************************************************************//
     // Utilities

@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.data.source.graphql.library
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions
+import io.github.drumber.kitsune.data.mapper.LibraryMapper.toMediaType
 import io.github.drumber.kitsune.data.mapper.graphql.toLibraryEntrySortEnum
 import io.github.drumber.kitsune.data.mapper.graphql.toLibraryEntryStatusEnum
 import io.github.drumber.kitsune.data.mapper.graphql.toMediaTypeEnum
@@ -29,7 +30,7 @@ class LibraryApolloDataSource(
                     cursor = Optional.presentIfNotNull(cursor),
                     pageSize = Optional.present(pageSize),
                     status = Optional.presentIfNotNull(filter.status?.map(LibraryStatus::toLibraryEntryStatusEnum)),
-                    mediaType = Optional.presentIfNotNull(filter.mediaType?.toMediaTypeEnum()),
+                    mediaType = Optional.presentIfNotNull(filter.mediaType.toMediaType()?.toMediaTypeEnum()),
                     sort = Optional.presentIfNotNull(filter.sortBy?.toLibraryEntrySortEnum()),
                     sortDirection = Optional.presentIfNotNull(filter.sortDirection?.toSortDirection())
                 )

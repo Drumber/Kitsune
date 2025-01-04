@@ -7,13 +7,13 @@ import androidx.paging.RemoteMediator
 import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry
+import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryFilterOptions
 import io.github.drumber.kitsune.data.mapper.graphql.toLibraryEntriesWithNextUnit
 import io.github.drumber.kitsune.data.mapper.graphql.toLocalNextMediaUnit
 import io.github.drumber.kitsune.data.source.graphql.library.LibraryApolloDataSource
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryWithModificationAndNextMediaUnit
 import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyEntity
-import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyType
 
 @OptIn(ExperimentalPagingApi::class)
 class LibraryEntryWithNextMediaUnitRemoteMediator(
@@ -66,7 +66,7 @@ class LibraryEntryWithNextMediaUnitRemoteMediator(
                     .map {
                         RemoteKeyEntity(
                             it.id,
-                            RemoteKeyType.LibraryEntryWithNextMediaUnit,
+                            filter.toLocalLibraryFilterOptions(),
                             pageInfo.startCursor,
                             pageInfo.endCursor
                         )
@@ -87,14 +87,14 @@ class LibraryEntryWithNextMediaUnitRemoteMediator(
             ?.lastOrNull { libraryEntryWrapper ->
                 localDataSource.getRemoteKeyByResourceId(
                     libraryEntryWrapper.libraryEntry.id,
-                    RemoteKeyType.LibraryEntryWithNextMediaUnit
+                    filter
                 ) != null
             }
             ?.let { libraryEntryWrapper ->
                 // Get the remote keys of the last item retrieved
                 localDataSource.getRemoteKeyByResourceId(
                     libraryEntryWrapper.libraryEntry.id,
-                    RemoteKeyType.LibraryEntryWithNextMediaUnit
+                    filter
                 )
             }
     }

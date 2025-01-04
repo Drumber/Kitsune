@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.domain.library
 
 import io.github.drumber.kitsune.data.common.Filter
-import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.common.library.LibraryEntryMediaType
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.repository.library.LibraryRepository
@@ -22,7 +22,7 @@ class FetchLibraryEntriesForWidgetUseCase(
             .include("anime", "manga")
 
         val filter = LibraryEntryFilter(
-            kind = LibraryEntryKind.All,
+            kind = LibraryEntryMediaType.All,
             libraryStatus = listOf(LibraryStatus.Current),
             initialFilter = requestFilter
         ).pageSize(count)

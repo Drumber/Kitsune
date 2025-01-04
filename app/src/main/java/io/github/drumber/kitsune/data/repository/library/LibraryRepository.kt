@@ -5,7 +5,7 @@ import androidx.lifecycle.map
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.common.exception.NotFoundException
-import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
+import io.github.drumber.kitsune.data.common.library.LibraryEntryMediaType
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntryModification
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry
@@ -196,7 +196,7 @@ class LibraryRepository(
         }
 
         val filter = LibraryEntryFilter(
-            kind = LibraryEntryKind.All,
+            kind = LibraryEntryMediaType.All,
             libraryStatus = emptyList(),
             initialFilter = requestFilter
         )
