@@ -6,7 +6,7 @@ import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.data.source.local.library.model.LocalNextMediaUnit
 
 fun MediaUnit.toLocalNextMediaUnit(libraryEntryId: String) = LocalNextMediaUnit(
-    id = id.require(),
+    unitId = id.require(),
     libraryEntryId = libraryEntryId,
     titles = titles,
     canonicalTitle = canonicalTitle,

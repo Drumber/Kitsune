@@ -1,6 +1,5 @@
 package io.github.drumber.kitsune.data.source.local.library.model
 
-import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -22,9 +21,8 @@ import io.github.drumber.kitsune.data.common.Titles
 )
 data class LocalNextMediaUnit(
     @PrimaryKey
-    val id: String,
-    @ColumnInfo(index = true)
     val libraryEntryId: String,
+    val unitId: String,
     val titles: Titles?,
     val canonicalTitle: String?,
     val number: Int?,

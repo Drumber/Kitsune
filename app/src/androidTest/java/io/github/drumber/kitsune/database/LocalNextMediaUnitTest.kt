@@ -64,7 +64,7 @@ class LocalNextMediaUnitTest {
         nextMediaUnitDao.insertSingle(localNextMediaUnit)
 
         // then
-        val getNextMediaUnit = nextMediaUnitDao.getSingle(localNextMediaUnit.id)
+        val getNextMediaUnit = nextMediaUnitDao.getSingle(localNextMediaUnit.unitId)
         assertThat(getNextMediaUnit, `is`(equalTo(localNextMediaUnit)))
     }
 
@@ -92,7 +92,7 @@ class LocalNextMediaUnitTest {
         libraryEntryDao.deleteSingle(localLibraryEntry)
 
         // then
-        val getNextMediaUnit = nextMediaUnitDao.getSingle(localNextMediaUnit.id)
+        val getNextMediaUnit = nextMediaUnitDao.getSingle(localNextMediaUnit.unitId)
         assertThat(getNextMediaUnit, `is`(nullValue()))
     }
 
@@ -238,7 +238,7 @@ class LocalNextMediaUnitTest {
 
     private fun createLocalNextMediaUnit(id: String = "nmu1", libraryEntryId: String) =
         LocalNextMediaUnit(
-            id = id,
+            unitId = id,
             libraryEntryId = libraryEntryId,
             titles = null,
             canonicalTitle = null,

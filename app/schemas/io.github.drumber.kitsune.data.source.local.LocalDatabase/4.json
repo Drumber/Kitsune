@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "b683f00d0de3f40955509ebdf624083a",
+    "identityHash": "0621f06e28b2eb2ba9aa1432e75a47aa",
     "entities": [
       {
         "tableName": "library_entries",
@@ -610,17 +610,17 @@
       },
       {
         "tableName": "next_media_units",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `libraryEntryId` TEXT NOT NULL, `titles` TEXT, `canonicalTitle` TEXT, `number` INTEGER, `thumbnail_tiny` TEXT, `thumbnail_small` TEXT, `thumbnail_medium` TEXT, `thumbnail_large` TEXT, `thumbnail_original` TEXT, `thumbnail_meta_tiny_width` INTEGER, `thumbnail_meta_tiny_height` INTEGER, `thumbnail_meta_small_width` INTEGER, `thumbnail_meta_small_height` INTEGER, `thumbnail_meta_medium_width` INTEGER, `thumbnail_meta_medium_height` INTEGER, `thumbnail_meta_large_width` INTEGER, `thumbnail_meta_large_height` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`libraryEntryId`) REFERENCES `library_entries`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`libraryEntryId` TEXT NOT NULL, `unitId` TEXT NOT NULL, `titles` TEXT, `canonicalTitle` TEXT, `number` INTEGER, `thumbnail_tiny` TEXT, `thumbnail_small` TEXT, `thumbnail_medium` TEXT, `thumbnail_large` TEXT, `thumbnail_original` TEXT, `thumbnail_meta_tiny_width` INTEGER, `thumbnail_meta_tiny_height` INTEGER, `thumbnail_meta_small_width` INTEGER, `thumbnail_meta_small_height` INTEGER, `thumbnail_meta_medium_width` INTEGER, `thumbnail_meta_medium_height` INTEGER, `thumbnail_meta_large_width` INTEGER, `thumbnail_meta_large_height` INTEGER, PRIMARY KEY(`libraryEntryId`), FOREIGN KEY(`libraryEntryId`) REFERENCES `library_entries`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "libraryEntryId",
+            "columnName": "libraryEntryId",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "libraryEntryId",
-            "columnName": "libraryEntryId",
+            "fieldPath": "unitId",
+            "columnName": "unitId",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -724,20 +724,10 @@
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "id"
+            "libraryEntryId"
           ]
         },
-        "indices": [
-          {
-            "name": "index_next_media_units_libraryEntryId",
-            "unique": false,
-            "columnNames": [
-              "libraryEntryId"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_next_media_units_libraryEntryId` ON `${TABLE_NAME}` (`libraryEntryId`)"
-          }
-        ],
+        "indices": [],
         "foreignKeys": [
           {
             "table": "library_entries",
@@ -807,7 +797,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b683f00d0de3f40955509ebdf624083a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0621f06e28b2eb2ba9aa1432e75a47aa')"
     ]
   }
 }

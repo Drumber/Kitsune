@@ -46,7 +46,7 @@ object MediaUnitMapper {
     }
 
     fun LocalNextMediaUnit.toEpisode() = Episode(
-        id = id,
+        id = unitId,
         description = null,
         titles = titles,
         canonicalTitle = canonicalTitle,
@@ -59,7 +59,7 @@ object MediaUnitMapper {
     )
 
     fun LocalNextMediaUnit.toChapter() = Chapter(
-        id = id,
+        id = unitId,
         description = null,
         titles = titles,
         canonicalTitle = canonicalTitle,

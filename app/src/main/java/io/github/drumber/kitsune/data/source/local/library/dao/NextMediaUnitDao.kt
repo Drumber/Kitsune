@@ -9,8 +9,8 @@ import io.github.drumber.kitsune.data.source.local.library.model.LocalNextMediaU
 @Dao
 interface NextMediaUnitDao {
 
-    @Query("SELECT * FROM next_media_units WHERE id = :id")
-    suspend fun getSingle(id: String): LocalNextMediaUnit?
+    @Query("SELECT * FROM next_media_units WHERE unitId = :unitId")
+    suspend fun getSingle(unitId: String): LocalNextMediaUnit?
 
     @Upsert
     suspend fun insertSingle(nextMediaUnits: LocalNextMediaUnit)
