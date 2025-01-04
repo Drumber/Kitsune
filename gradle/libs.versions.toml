@@ -62,6 +62,7 @@ accompanist-permissions = { module = "com.google.accompanist:accompanist-permiss
 algolia-instantsearch-android = { module = "com.algolia:instantsearch-android", version.ref = "algoliaInstantSearch" }
 algolia-instantsearch-android-paging3 = { module = "com.algolia:instantsearch-android-paging3", version.ref = "algoliaInstantSearch" }
 algolia-instantsearch-coroutines = { module = "com.algolia:instantsearch-coroutines-extensions", version.ref = "algoliaInstantSearch" }
+android-gradle = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 android-gradle-api = { module = "com.android.tools.build:gradle-api", version.ref = "agp" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appCompat" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
@@ -147,6 +148,7 @@ zhanghai-materialratingbar = { module = "me.zhanghai.android.materialratingbar:l
 [plugins]
 aboutlibraries-plugin = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutLibraries" }
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 androidx-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidxNavigation" }
 apollo-graphql-plugin = { id = "com.apollographql.apollo", version.ref = "apollo-graphql" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

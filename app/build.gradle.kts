@@ -15,13 +15,13 @@ val screenshotMode: String by project
 
 android {
     namespace = "io.github.drumber.kitsune"
-    compileSdk = 35
+    compileSdk = ProjectConfig.COMPILE_SDK
     buildToolsVersion = "35.0.0"
 
     defaultConfig {
         applicationId = "io.github.drumber.kitsune"
-        minSdk = 26
-        targetSdk = 35
+        minSdk = ProjectConfig.MIN_SDK
+        targetSdk = ProjectConfig.TARGET_SDK
         versionCode = 37
         versionName = "2.0.4"
 
@@ -64,12 +64,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = ProjectConfig.JAVA_VERSION
+        targetCompatibility = ProjectConfig.JAVA_VERSION
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = ProjectConfig.KOTLIN_JVM_TARGET
         freeCompilerArgs += listOf("-opt-in=kotlin.RequiresOptIn")
     }
 
@@ -118,6 +118,10 @@ apollo {
 }
 
 dependencies {
+    implementation(project(":domain"))
+    implementation(project(":adapters"))
+    implementation(project(":data"))
+
     // Android core and support libs
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
