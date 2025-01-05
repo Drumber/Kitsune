@@ -7,7 +7,7 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.shared.Kitsu
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
@@ -19,7 +19,7 @@ import io.github.drumber.kitsune.data.repository.MediaUnitRepository.MediaUnitTy
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCase
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
-import io.github.drumber.kitsune.util.logE
+import io.github.drumber.kitsune.shared.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

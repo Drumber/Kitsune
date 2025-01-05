@@ -79,7 +79,7 @@ import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.details.DetailsFragmentArgs
 import io.github.drumber.kitsune.ui.main.MainActivity
 import io.github.drumber.kitsune.ui.widget.KitsuneWidgetTheme.applyTheme
-import io.github.drumber.kitsune.util.logE
+import io.github.drumber.kitsune.shared.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancelFutureOnCancellation

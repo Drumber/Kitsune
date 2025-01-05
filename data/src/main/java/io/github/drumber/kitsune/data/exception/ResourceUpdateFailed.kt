@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.common.exception
+package io.github.drumber.kitsune.data.exception
 
 class ResourceUpdateFailed : Exception {
     constructor() : super()

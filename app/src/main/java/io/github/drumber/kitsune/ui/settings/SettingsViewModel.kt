@@ -9,11 +9,11 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.common.exception.NoDataException
+import io.github.drumber.kitsune.data.exception.NoDataException
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
-import io.github.drumber.kitsune.util.logE
+import io.github.drumber.kitsune.shared.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

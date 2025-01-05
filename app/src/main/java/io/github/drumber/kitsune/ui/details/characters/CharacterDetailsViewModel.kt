@@ -9,7 +9,7 @@ import io.github.drumber.kitsune.data.presentation.model.user.Favorite
 import io.github.drumber.kitsune.data.repository.CharacterRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
-import io.github.drumber.kitsune.util.logE
+import io.github.drumber.kitsune.shared.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow

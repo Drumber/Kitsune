@@ -17,8 +17,8 @@ import io.github.drumber.kitsune.data.presentation.model.mapping.getExternalUrl
 import io.github.drumber.kitsune.data.presentation.model.mapping.getSiteName
 import io.github.drumber.kitsune.databinding.ItemMediaMappingBinding
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
-import io.github.drumber.kitsune.util.logD
-import io.github.drumber.kitsune.util.logE
+import io.github.drumber.kitsune.shared.logD
+import io.github.drumber.kitsune.shared.logE
 
 class MediaMappingsAdapter(
     private val context: Context,

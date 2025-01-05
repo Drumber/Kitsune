@@ -41,7 +41,7 @@ import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BaseDialogFragment
 import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.shared.formatDate
-import io.github.drumber.kitsune.util.logE
+import io.github.drumber.kitsune.shared.logE
 import io.github.drumber.kitsune.shared.parseDate
 import io.github.drumber.kitsune.shared.toDate
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId

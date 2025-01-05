@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.repository
 
-import io.github.drumber.kitsune.data.common.exception.NotFoundException
+import io.github.drumber.kitsune.data.exception.NotFoundException
 import io.github.drumber.kitsune.data.common.library.LibraryStatus
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry

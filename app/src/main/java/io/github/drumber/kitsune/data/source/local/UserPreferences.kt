@@ -7,7 +7,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
-import io.github.drumber.kitsune.util.logD
+import io.github.drumber.kitsune.shared.logD
 
 class UserPreferences(context: Context, private val objectMapper: ObjectMapper) : UserLocalDataSource {
 

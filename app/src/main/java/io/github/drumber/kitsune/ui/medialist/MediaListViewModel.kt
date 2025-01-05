@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Defaults
-import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.shared.Kitsu
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.FilterOptions
 import io.github.drumber.kitsune.data.common.media.MediaType

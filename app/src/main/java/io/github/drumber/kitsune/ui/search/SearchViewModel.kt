@@ -29,7 +29,7 @@ import com.algolia.search.model.Attribute
 import com.algolia.search.model.filter.Filter
 import com.algolia.search.model.response.ResponseSearch
 import com.algolia.search.model.search.Query
-import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.shared.Kitsu
 import io.github.drumber.kitsune.constants.Repository
 import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toMedia
 import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
@@ -40,12 +40,12 @@ import io.github.drumber.kitsune.domain.algolia.FilterCollection
 import io.github.drumber.kitsune.domain.algolia.SearchProvider
 import io.github.drumber.kitsune.domain.algolia.toCombinedMap
 import io.github.drumber.kitsune.domain.algolia.toFilterCollection
-import io.github.drumber.kitsune.data.common.exception.SearchProviderUnavailableException
+import io.github.drumber.kitsune.data.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.component.algolia.SeasonListPresenter
 import io.github.drumber.kitsune.ui.component.algolia.range.CustomFilterRangeConnector
-import io.github.drumber.kitsune.util.logE
-import io.github.drumber.kitsune.util.logI
+import io.github.drumber.kitsune.shared.logE
+import io.github.drumber.kitsune.shared.logI
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json

@@ -16,7 +16,7 @@ import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSourc
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryWithModificationAndNextMediaUnit
 import io.github.drumber.kitsune.data.source.local.mapper.toLocalLibraryStatus
-import io.github.drumber.kitsune.data.source.jsonapi.library.LibraryEntryPagingDataSource
+import io.github.drumber.kitsune.data.paging.library.LibraryEntryPagingDataSource
 import io.github.drumber.kitsune.data.utils.InvalidatingPagingSourceFactory
 import kotlinx.coroutines.flow.map
 

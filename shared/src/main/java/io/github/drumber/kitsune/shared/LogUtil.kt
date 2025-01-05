@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.util
+package io.github.drumber.kitsune.shared
 
 import android.util.Log
 

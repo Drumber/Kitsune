@@ -15,7 +15,7 @@ import com.algolia.search.model.search.Query
 import com.algolia.search.model.search.RemoveStopWords
 import com.algolia.search.model.search.RemoveWordIfNoResults
 import io.github.drumber.kitsune.data.common.Filter
-import io.github.drumber.kitsune.data.common.exception.NoDataException
+import io.github.drumber.kitsune.data.exception.NoDataException
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
 import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
 import io.github.drumber.kitsune.data.presentation.model.character.Character
@@ -27,8 +27,8 @@ import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.character.LocalCharacter
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.domain.algolia.SearchProvider
-import io.github.drumber.kitsune.util.logD
-import io.github.drumber.kitsune.util.logE
+import io.github.drumber.kitsune.shared.logD
+import io.github.drumber.kitsune.shared.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

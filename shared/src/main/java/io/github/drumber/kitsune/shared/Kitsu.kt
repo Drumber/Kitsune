@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.constants
+package io.github.drumber.kitsune.shared
 
 object Kitsu {
 

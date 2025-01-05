@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.data.common.Filter
-import io.github.drumber.kitsune.data.common.exception.NoDataException
-import io.github.drumber.kitsune.data.common.exception.ResourceUpdateFailed
+import io.github.drumber.kitsune.data.exception.NoDataException
+import io.github.drumber.kitsune.data.exception.ResourceUpdateFailed
 import io.github.drumber.kitsune.data.common.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
@@ -27,9 +27,9 @@ import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.LibraryUpdateResult
-import io.github.drumber.kitsune.util.logD
-import io.github.drumber.kitsune.util.logE
-import io.github.drumber.kitsune.util.logW
+import io.github.drumber.kitsune.shared.logD
+import io.github.drumber.kitsune.shared.logE
+import io.github.drumber.kitsune.shared.logW
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

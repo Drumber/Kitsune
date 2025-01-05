@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.presentation.model.mapping
 
-import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.shared.Kitsu
 
 data class Mapping(
     val id: String,

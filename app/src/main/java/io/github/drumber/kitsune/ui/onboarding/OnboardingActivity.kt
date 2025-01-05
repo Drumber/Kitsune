@@ -55,7 +55,7 @@ import androidx.lifecycle.asFlow
 import com.chibatching.kotpref.livedata.asLiveData
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.shared.Kitsu
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity

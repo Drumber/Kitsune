@@ -1,11 +1,11 @@
 package io.github.drumber.kitsune.util.network
 
-import io.github.drumber.kitsune.constants.Kitsu.API_HOST
+import io.github.drumber.kitsune.shared.Kitsu.API_HOST
 import io.github.drumber.kitsune.data.repository.AccessTokenRepository
 import io.github.drumber.kitsune.domain.auth.RefreshAccessTokenUseCase
 import io.github.drumber.kitsune.domain.auth.RefreshResult
-import io.github.drumber.kitsune.util.logD
-import io.github.drumber.kitsune.util.logI
+import io.github.drumber.kitsune.shared.logD
+import io.github.drumber.kitsune.shared.logI
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Interceptor

@@ -37,7 +37,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialContainerTransform
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.addTransform
-import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.shared.Kitsu
 import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.Titles
@@ -75,7 +75,7 @@ import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.extensions.toPx
-import io.github.drumber.kitsune.util.logW
+import io.github.drumber.kitsune.shared.logW
 import io.github.drumber.kitsune.util.rating.RatingFrequenciesUtil.calculateAverageRating
 import io.github.drumber.kitsune.util.rating.RatingFrequenciesUtil.transformToRatingSystem
 import io.github.drumber.kitsune.util.rating.RatingSystemUtil.convertFrom

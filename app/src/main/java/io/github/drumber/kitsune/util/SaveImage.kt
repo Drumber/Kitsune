@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import io.github.drumber.kitsune.shared.formatDate
+import io.github.drumber.kitsune.shared.logD
 import java.util.*
 
 fun Context.saveImageInGallery(image: Bitmap, imageName: String? = null): Boolean {

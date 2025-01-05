@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.data.repository
 
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.data.common.Filter
-import io.github.drumber.kitsune.data.common.exception.NoDataException
+import io.github.drumber.kitsune.data.exception.NoDataException
 import io.github.drumber.kitsune.data.mapper.ProfileLinksMapper.toProfileLink
 import io.github.drumber.kitsune.data.mapper.UserMapper.toLocalUser
 import io.github.drumber.kitsune.data.mapper.UserMapper.toNetworkUser

@@ -7,8 +7,8 @@ import io.github.drumber.kitsune.constants.Repository
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toManga
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.source.jsonapi.media.MangaNetworkDataSource
-import io.github.drumber.kitsune.data.source.jsonapi.media.MangaPagingDataSource
-import io.github.drumber.kitsune.data.source.jsonapi.media.TrendingMangaPagingDataSource
+import io.github.drumber.kitsune.data.paging.media.MangaPagingDataSource
+import io.github.drumber.kitsune.data.paging.media.TrendingMangaPagingDataSource
 import io.github.drumber.kitsune.data.common.Filter
 import kotlinx.coroutines.flow.map
 

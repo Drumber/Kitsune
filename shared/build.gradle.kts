@@ -1,15 +1,24 @@
 plugins {
-    id("java-library")
-    alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.jetbrains.kotlin.android)
 }
 
-java {
-    sourceCompatibility = ProjectConfig.JAVA_VERSION
-    targetCompatibility = ProjectConfig.JAVA_VERSION
-}
+android {
+    namespace = "io.github.drumber.kitsune.shared"
+    compileSdk = ProjectConfig.COMPILE_SDK
 
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(ProjectConfig.KOTLIN_JVM_TARGET)
+    defaultConfig {
+        minSdk = ProjectConfig.MIN_SDK
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
+    }
+
+    compileOptions {
+        sourceCompatibility = ProjectConfig.JAVA_VERSION
+        targetCompatibility = ProjectConfig.JAVA_VERSION
+    }
+    kotlinOptions {
+        jvmTarget = ProjectConfig.KOTLIN_JVM_TARGET
     }
 }

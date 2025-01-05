@@ -1,9 +1,10 @@
-package io.github.drumber.kitsune.data.source.jsonapi.media
+package io.github.drumber.kitsune.data.paging.media
 
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.source.jsonapi.PageData
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.unit.NetworkChapter
-import io.github.drumber.kitsune.data.source.jsonapi.BasePagingDataSource
+import io.github.drumber.kitsune.data.paging.BasePagingDataSource
+import io.github.drumber.kitsune.data.source.jsonapi.media.ChapterNetworkDataSource
 
 class ChapterPagingDataSource(
     private val dataSource: ChapterNetworkDataSource,

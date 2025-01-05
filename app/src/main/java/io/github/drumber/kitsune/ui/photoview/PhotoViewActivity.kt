@@ -37,7 +37,7 @@ import io.github.drumber.kitsune.util.extensions.clearLightNavigationBar
 import io.github.drumber.kitsune.util.extensions.clearLightStatusBar
 import io.github.drumber.kitsune.util.extensions.isNightMode
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
-import io.github.drumber.kitsune.util.logE
+import io.github.drumber.kitsune.shared.logE
 import io.github.drumber.kitsune.util.saveImageInGallery
 import io.github.drumber.kitsune.util.ui.initHeightWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener

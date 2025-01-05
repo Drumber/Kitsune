@@ -9,7 +9,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.source.local.auth.AccessTokenLocalDataSource
 import io.github.drumber.kitsune.data.source.local.auth.model.LocalAccessToken
-import io.github.drumber.kitsune.util.logI
+import io.github.drumber.kitsune.shared.logI
 
 class AccessTokenPreference(
     context: Context,

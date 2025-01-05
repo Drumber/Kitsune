@@ -1,9 +1,10 @@
-package io.github.drumber.kitsune.data.source.jsonapi.library
+package io.github.drumber.kitsune.data.paging.library
 
 import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.paging.BasePagingDataSource
 import io.github.drumber.kitsune.data.source.jsonapi.PageData
+import io.github.drumber.kitsune.data.source.jsonapi.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.jsonapi.library.model.NetworkLibraryEntry
-import io.github.drumber.kitsune.data.source.jsonapi.BasePagingDataSource
 
 class LibraryEntryPagingDataSource(
     private val dataSource: LibraryNetworkDataSource,

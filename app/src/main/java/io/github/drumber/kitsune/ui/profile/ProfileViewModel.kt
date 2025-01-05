@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.data.common.Filter
-import io.github.drumber.kitsune.data.common.exception.NoDataException
+import io.github.drumber.kitsune.data.exception.NoDataException
 import io.github.drumber.kitsune.data.mapper.UserMapper.toUser
 import io.github.drumber.kitsune.data.presentation.model.user.User
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.domain.auth.LogOutUserUseCase
-import io.github.drumber.kitsune.util.logE
+import io.github.drumber.kitsune.shared.logE
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

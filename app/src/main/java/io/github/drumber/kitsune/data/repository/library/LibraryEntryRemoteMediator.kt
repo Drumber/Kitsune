@@ -4,8 +4,8 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.data.common.exception.NoDataException
+import io.github.drumber.kitsune.shared.Kitsu
+import io.github.drumber.kitsune.data.exception.NoDataException
 import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryFilterOptions
@@ -17,7 +17,7 @@ import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEnt
 import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyEntity
 import io.github.drumber.kitsune.data.source.local.mapper.toLocalLibraryStatus
 import io.github.drumber.kitsune.shared.parseUtcDate
-import io.github.drumber.kitsune.util.logD
+import io.github.drumber.kitsune.shared.logD
 
 @OptIn(ExperimentalPagingApi::class)
 class LibraryEntryRemoteMediator(

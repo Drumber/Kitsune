@@ -24,12 +24,25 @@ android {
 }
 
 dependencies {
+    implementation(project(":shared"))
     implementation(project(":data:common"))
     implementation(project(":data:source:local"))
     implementation(project(":data:source:jsonapi"))
     implementation(project(":data:source:graphql"))
 
+    // Core dependencies
+    implementation(libs.jetbrains.kotlinx.coroutines.core)
+
+    // Paging
+    implementation(libs.androidx.paging.runtime.ktx)
+
+    // Test
     testImplementation(libs.junit)
+    testImplementation(libs.jetbrains.kotlinx.coroutines.test)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.androidx.room.testing)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.datafaker)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
