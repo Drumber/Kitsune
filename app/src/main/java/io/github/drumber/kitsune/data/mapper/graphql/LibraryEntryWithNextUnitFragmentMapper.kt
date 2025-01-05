@@ -1,10 +1,11 @@
 package io.github.drumber.kitsune.data.mapper.graphql
 
-import io.github.drumber.kitsune.data.common.Image
+import io.github.drumber.kitsune.data.common.model.Image
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithNextUnit
 import io.github.drumber.kitsune.data.presentation.model.media.unit.Chapter
 import io.github.drumber.kitsune.data.presentation.model.media.unit.Episode
 import io.github.drumber.kitsune.data.source.graphql.fragment.LibraryEntryWithNextUnitFragment
+import io.github.drumber.kitsune.data.source.graphql.mapper.toTitles
 
 fun LibraryEntryWithNextUnitFragment.toLibraryEntryWithNextUnit() = LibraryEntryWithNextUnit(
     libraryEntry = libraryEntryFragment.toLibraryEntry(),

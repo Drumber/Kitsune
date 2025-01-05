@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.common
+package io.github.drumber.kitsune.data.common.model
 
 data class Image(
     val tiny: String?,

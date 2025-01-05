@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.repository.library
 
 import android.content.Context
-import io.github.drumber.kitsune.data.common.library.LibraryStatus
+import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
 import io.github.drumber.kitsune.domain.work.UpdateLibraryWidgetUseCase

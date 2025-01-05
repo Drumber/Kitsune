@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.data.presentation.model.media
 
 import android.os.Parcelable
 import io.github.drumber.kitsune.data.common.FilterOptions
-import io.github.drumber.kitsune.data.common.media.MediaType
+import io.github.drumber.kitsune.data.common.model.media.MediaType
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

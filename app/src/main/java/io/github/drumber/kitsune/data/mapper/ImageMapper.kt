@@ -1,9 +1,9 @@
 package io.github.drumber.kitsune.data.mapper
 
-import io.github.drumber.kitsune.data.common.Image
-import io.github.drumber.kitsune.data.common.ImageDimension
-import io.github.drumber.kitsune.data.common.ImageDimensions
-import io.github.drumber.kitsune.data.common.ImageMeta
+import io.github.drumber.kitsune.data.common.model.Image
+import io.github.drumber.kitsune.data.common.model.ImageDimension
+import io.github.drumber.kitsune.data.common.model.ImageDimensions
+import io.github.drumber.kitsune.data.common.model.ImageMeta
 import io.github.drumber.kitsune.data.source.local.library.model.LocalDimension
 import io.github.drumber.kitsune.data.source.local.library.model.LocalDimensions
 import io.github.drumber.kitsune.data.source.local.library.model.LocalImage

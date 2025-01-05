@@ -5,8 +5,8 @@ import androidx.lifecycle.map
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.exception.NoDataException
 import io.github.drumber.kitsune.data.exception.NotFoundException
-import io.github.drumber.kitsune.data.common.library.LibraryEntryMediaType
-import io.github.drumber.kitsune.data.common.library.LibraryStatus
+import io.github.drumber.kitsune.data.common.model.library.LibraryEntryMediaType
+import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntryModification
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry
@@ -23,7 +23,7 @@ import io.github.drumber.kitsune.data.presentation.model.library.LibraryModifica
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.presentation.model.media.Media
-import io.github.drumber.kitsune.data.source.graphql.library.LibraryApolloDataSource
+import io.github.drumber.kitsune.data.source.graphql.LibraryApolloDataSource
 import io.github.drumber.kitsune.data.source.jsonapi.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.jsonapi.library.model.NetworkLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource

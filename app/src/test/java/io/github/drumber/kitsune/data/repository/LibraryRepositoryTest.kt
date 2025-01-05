@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.repository
 
 import io.github.drumber.kitsune.data.exception.NotFoundException
-import io.github.drumber.kitsune.data.common.library.LibraryStatus
+import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntryModification
@@ -10,7 +10,7 @@ import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
 import io.github.drumber.kitsune.data.repository.library.LibraryChangeListener
 import io.github.drumber.kitsune.data.repository.library.LibraryRepository
-import io.github.drumber.kitsune.data.source.graphql.library.LibraryApolloDataSource
+import io.github.drumber.kitsune.data.source.graphql.LibraryApolloDataSource
 import io.github.drumber.kitsune.data.source.jsonapi.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.jsonapi.library.model.NetworkLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource

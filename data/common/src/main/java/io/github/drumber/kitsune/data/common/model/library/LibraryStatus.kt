@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.common.library
+package io.github.drumber.kitsune.data.common.model.library
 
 enum class LibraryStatus {
     Current,

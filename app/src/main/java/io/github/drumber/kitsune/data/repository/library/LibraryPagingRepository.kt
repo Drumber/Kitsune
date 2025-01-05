@@ -6,17 +6,17 @@ import androidx.paging.PagingConfig
 import androidx.paging.map
 import io.github.drumber.kitsune.constants.Repository
 import io.github.drumber.kitsune.data.common.Filter
-import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions
+import io.github.drumber.kitsune.data.common.model.library.LibraryFilterOptions
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntryWithModificationAndNextUnit
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
-import io.github.drumber.kitsune.data.source.graphql.library.LibraryApolloDataSource
 import io.github.drumber.kitsune.data.source.jsonapi.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryWithModificationAndNextMediaUnit
 import io.github.drumber.kitsune.data.source.local.mapper.toLocalLibraryStatus
 import io.github.drumber.kitsune.data.paging.library.LibraryEntryPagingDataSource
+import io.github.drumber.kitsune.data.source.graphql.LibraryApolloDataSource
 import io.github.drumber.kitsune.data.utils.InvalidatingPagingSourceFactory
 import kotlinx.coroutines.flow.map
 

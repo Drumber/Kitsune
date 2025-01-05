@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.source.jsonapi.media.model.unit
 
-import io.github.drumber.kitsune.data.common.Image
-import io.github.drumber.kitsune.data.common.Titles
+import io.github.drumber.kitsune.data.common.model.Image
+import io.github.drumber.kitsune.data.common.model.Titles
 
 sealed interface NetworkMediaUnit {
     val id: String?

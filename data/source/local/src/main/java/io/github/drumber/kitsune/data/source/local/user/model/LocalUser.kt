@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.source.local.user.model
 
-import io.github.drumber.kitsune.data.common.Image
-import io.github.drumber.kitsune.data.common.user.UserThemePreference
+import io.github.drumber.kitsune.data.common.model.Image
+import io.github.drumber.kitsune.data.common.model.user.UserThemePreference
 import io.github.drumber.kitsune.data.source.local.character.LocalCharacter
 
 data class LocalUser(

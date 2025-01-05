@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="io.github.drumber.kitsune.data.common.library.LibraryStatus" />
+        <import type="io.github.drumber.kitsune.data.common.model.library.LibraryStatus" />
         <variable
             name="title"
             type="String" />

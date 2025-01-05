@@ -1,11 +1,11 @@
 package io.github.drumber.kitsune.data.mapper
 
-import io.github.drumber.kitsune.data.common.Image
-import io.github.drumber.kitsune.data.common.ImageDimension
-import io.github.drumber.kitsune.data.common.ImageDimensions
-import io.github.drumber.kitsune.data.common.ImageMeta
-import io.github.drumber.kitsune.data.common.media.AnimeSubtype
-import io.github.drumber.kitsune.data.common.media.MangaSubtype
+import io.github.drumber.kitsune.data.common.model.Image
+import io.github.drumber.kitsune.data.common.model.ImageDimension
+import io.github.drumber.kitsune.data.common.model.ImageDimensions
+import io.github.drumber.kitsune.data.common.model.ImageMeta
+import io.github.drumber.kitsune.data.common.model.media.AnimeSubtype
+import io.github.drumber.kitsune.data.common.model.media.MangaSubtype
 import io.github.drumber.kitsune.data.presentation.model.algolia.AlgoliaKey
 import io.github.drumber.kitsune.data.presentation.model.algolia.AlgoliaKeyCollection
 import io.github.drumber.kitsune.data.presentation.model.character.CharacterSearchResult

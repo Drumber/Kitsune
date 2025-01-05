@@ -20,7 +20,7 @@ import io.github.drumber.kitsune.data.repository.library.LibraryChangeListener
 import io.github.drumber.kitsune.data.repository.library.LibraryPagingRepository
 import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import io.github.drumber.kitsune.data.repository.library.WidgetLibraryChangeListener
-import io.github.drumber.kitsune.data.source.graphql.library.LibraryApolloDataSource
+import io.github.drumber.kitsune.data.source.graphql.LibraryApolloDataSource
 import io.github.drumber.kitsune.data.source.jsonapi.algoliakey.AlgoliaKeyNetworkDataSource
 import io.github.drumber.kitsune.data.source.jsonapi.algoliakey.api.AlgoliaKeyApi
 import io.github.drumber.kitsune.data.source.jsonapi.appupdate.AppReleaseNetworkDataSource

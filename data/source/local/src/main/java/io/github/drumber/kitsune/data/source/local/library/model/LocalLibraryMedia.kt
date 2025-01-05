@@ -1,12 +1,12 @@
 package io.github.drumber.kitsune.data.source.local.library.model
 
 import androidx.room.Embedded
-import io.github.drumber.kitsune.data.common.Titles
-import io.github.drumber.kitsune.data.common.media.AgeRating
-import io.github.drumber.kitsune.data.common.media.AnimeSubtype
-import io.github.drumber.kitsune.data.common.media.MangaSubtype
-import io.github.drumber.kitsune.data.common.media.RatingFrequencies
-import io.github.drumber.kitsune.data.common.media.ReleaseStatus
+import io.github.drumber.kitsune.data.common.model.Titles
+import io.github.drumber.kitsune.data.common.model.media.AgeRating
+import io.github.drumber.kitsune.data.common.model.media.AnimeSubtype
+import io.github.drumber.kitsune.data.common.model.media.MangaSubtype
+import io.github.drumber.kitsune.data.common.model.media.RatingFrequencies
+import io.github.drumber.kitsune.data.common.model.media.ReleaseStatus
 
 data class LocalLibraryMedia(
     val id: String,

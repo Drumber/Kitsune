@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.common.media.MediaType
+import io.github.drumber.kitsune.data.common.model.media.MediaType
 import io.github.drumber.kitsune.data.presentation.dto.toMedia
 import io.github.drumber.kitsune.data.presentation.dto.toMediaUnitDto
 import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit

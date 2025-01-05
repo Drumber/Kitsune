@@ -1,17 +1,15 @@
-package io.github.drumber.kitsune.data.source.graphql.library
+package io.github.drumber.kitsune.data.source.graphql
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
-import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions
-import io.github.drumber.kitsune.data.common.library.LibraryStatus
+import io.github.drumber.kitsune.data.common.model.library.LibraryFilterOptions
+import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.common.mapper.toMediaType
-import io.github.drumber.kitsune.data.mapper.graphql.toLibraryEntrySortEnum
-import io.github.drumber.kitsune.data.mapper.graphql.toLibraryEntryStatusEnum
-import io.github.drumber.kitsune.data.mapper.graphql.toMediaTypeEnum
-import io.github.drumber.kitsune.data.mapper.graphql.toSortDirection
-import io.github.drumber.kitsune.data.source.graphql.GetLibraryEntriesWithNextUnitQuery
-import io.github.drumber.kitsune.data.source.graphql.UpdateLibraryEntryProgressMutation
 import io.github.drumber.kitsune.data.source.graphql.fragment.LibraryEntryWithNextUnitFragment
+import io.github.drumber.kitsune.data.source.graphql.mapper.toLibraryEntrySortEnum
+import io.github.drumber.kitsune.data.source.graphql.mapper.toLibraryEntryStatusEnum
+import io.github.drumber.kitsune.data.source.graphql.mapper.toMediaTypeEnum
+import io.github.drumber.kitsune.data.source.graphql.mapper.toSortDirection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

@@ -1,8 +1,8 @@
 package io.github.drumber.kitsune.data.presentation.model.media.unit
 
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.common.Image
-import io.github.drumber.kitsune.data.common.Titles
+import io.github.drumber.kitsune.data.common.model.Image
+import io.github.drumber.kitsune.data.common.model.Titles
 
 data class Chapter(
     override val id: String,

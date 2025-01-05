@@ -12,8 +12,8 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.constants.MediaItemSize
-import io.github.drumber.kitsune.data.common.library.LibraryEntryMediaType
-import io.github.drumber.kitsune.data.common.library.LibraryStatus
+import io.github.drumber.kitsune.data.common.model.library.LibraryEntryMediaType
+import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference

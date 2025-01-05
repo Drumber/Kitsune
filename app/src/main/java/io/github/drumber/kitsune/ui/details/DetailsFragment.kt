@@ -40,11 +40,11 @@ import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.shared.Kitsu
 import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.data.common.Filter
-import io.github.drumber.kitsune.data.common.Titles
-import io.github.drumber.kitsune.data.common.en
-import io.github.drumber.kitsune.data.common.library.LibraryStatus
-import io.github.drumber.kitsune.data.common.media.MediaType
-import io.github.drumber.kitsune.data.common.withoutCommonTitles
+import io.github.drumber.kitsune.data.common.model.Titles
+import io.github.drumber.kitsune.data.common.model.en
+import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
+import io.github.drumber.kitsune.data.common.model.media.MediaType
+import io.github.drumber.kitsune.data.common.model.withoutCommonTitles
 import io.github.drumber.kitsune.data.presentation.dto.toMedia
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.getStringRes

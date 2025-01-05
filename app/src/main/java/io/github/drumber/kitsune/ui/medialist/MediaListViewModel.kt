@@ -8,7 +8,7 @@ import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.shared.Kitsu
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.FilterOptions
-import io.github.drumber.kitsune.data.common.media.MediaType
+import io.github.drumber.kitsune.data.common.model.media.MediaType
 import io.github.drumber.kitsune.data.common.toFilter
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector

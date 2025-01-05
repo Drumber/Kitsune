@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.aboutlibraries.plugin)
     alias(libs.plugins.jetbrains.kotlin.parcelize)
     alias(libs.plugins.jetbrains.kotlin.serialization)
-    alias(libs.plugins.apollo.graphql.plugin)
     id("kitsune-plugin")
 }
 
@@ -105,19 +104,6 @@ aboutLibraries {
     excludeFields = arrayOf("generated")
 }
 
-apollo {
-    service("kitsu") {
-        packageName.set("io.github.drumber.kitsune.data.source.graphql")
-        introspection {
-            endpointUrl.set("https://kitsu.app/api/graphql")
-            schemaFile.set(file("src/main/graphql/schema.graphqls"))
-        }
-
-        mapScalarToKotlinString("ISO8601DateTime")
-        mapScalarToKotlinString("Date")
-    }
-}
-
 dependencies {
     implementation(project(":shared"))
     implementation(project(":domain"))
@@ -125,6 +111,7 @@ dependencies {
     implementation(project(":data:common"))
     implementation(project(":data:source:local"))
     implementation(project(":data:source:jsonapi"))
+    implementation(project(":data:source:graphql"))
     implementation(project(":data:source:algolia"))
 
     // Android core and support libs

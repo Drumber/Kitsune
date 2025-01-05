@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.presentation.model.character
 
-import io.github.drumber.kitsune.data.common.Image
+import io.github.drumber.kitsune.data.common.model.Image
 
 data class CharacterSearchResult(
     val id: String,

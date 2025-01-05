@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.common.Filter
-import io.github.drumber.kitsune.data.common.media.MediaType
+import io.github.drumber.kitsune.data.common.model.media.MediaType
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector

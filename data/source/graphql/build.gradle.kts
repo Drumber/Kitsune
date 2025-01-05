@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.apollo.graphql.plugin)
 }
 
 android {
@@ -23,11 +24,36 @@ android {
     }
 }
 
+apollo {
+    service("kitsu") {
+        packageName.set("io.github.drumber.kitsune.data.source.graphql")
+        introspection {
+            endpointUrl.set("https://kitsu.app/api/graphql")
+            schemaFile.set(file("src/main/graphql/schema.graphqls"))
+        }
+
+        mapScalarToKotlinString("ISO8601DateTime")
+        mapScalarToKotlinString("Date")
+    }
+}
+
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.google.android.material)
+    implementation(project(":shared"))
+    implementation(project(":data:common"))
+
+    // Core dependencies
+    implementation(libs.jetbrains.kotlinx.coroutines.core)
+
+    // Apollo GraphQL
+    implementation(libs.apollo.graphql.runtime)
+
+    // Test
     testImplementation(libs.junit)
+    testImplementation(libs.jetbrains.kotlinx.coroutines.test)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.androidx.room.testing)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.datafaker)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

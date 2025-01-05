@@ -1,9 +1,9 @@
 package io.github.drumber.kitsune.data.mapper
 
-import io.github.drumber.kitsune.data.common.media.AnimeSubtype
-import io.github.drumber.kitsune.data.common.media.MangaSubtype
-import io.github.drumber.kitsune.data.common.media.RatingFrequencies
-import io.github.drumber.kitsune.data.common.media.ReleaseStatus
+import io.github.drumber.kitsune.data.common.model.media.AnimeSubtype
+import io.github.drumber.kitsune.data.common.model.media.MangaSubtype
+import io.github.drumber.kitsune.data.common.model.media.RatingFrequencies
+import io.github.drumber.kitsune.data.common.model.media.ReleaseStatus
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga

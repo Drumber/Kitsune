@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.presentation.model.library
 
-import io.github.drumber.kitsune.data.common.library.LibraryStatus
+import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
 
 sealed class LibraryEntryUiModel {
     data class StatusSeparatorModel(

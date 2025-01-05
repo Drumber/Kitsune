@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.testutils
 
-import io.github.drumber.kitsune.data.common.user.UserThemePreference
+import io.github.drumber.kitsune.data.common.model.user.UserThemePreference
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkFavorite
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkFavoriteItem
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkRatingSystemPreference

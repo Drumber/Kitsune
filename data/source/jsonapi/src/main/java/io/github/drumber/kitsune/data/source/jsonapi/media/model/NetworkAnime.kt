@@ -3,9 +3,9 @@ package io.github.drumber.kitsune.data.source.jsonapi.media.model
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
-import io.github.drumber.kitsune.data.common.Image
-import io.github.drumber.kitsune.data.common.Titles
-import io.github.drumber.kitsune.data.common.media.AgeRating
+import io.github.drumber.kitsune.data.common.model.Image
+import io.github.drumber.kitsune.data.common.model.Titles
+import io.github.drumber.kitsune.data.common.model.media.AgeRating
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.category.NetworkCategory
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.production.NetworkAnimeProduction
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.relationship.NetworkMediaRelationship

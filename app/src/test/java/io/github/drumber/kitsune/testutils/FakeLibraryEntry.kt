@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.testutils
 
-import io.github.drumber.kitsune.data.common.library.LibraryStatus
+import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.ReactionSkip
 import io.github.drumber.kitsune.data.presentation.model.media.Media

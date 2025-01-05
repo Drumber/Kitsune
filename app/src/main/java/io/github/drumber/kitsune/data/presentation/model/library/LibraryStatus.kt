@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.presentation.model.library
 
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.common.library.LibraryStatus
+import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
 
 fun LibraryStatus.getStringResId(isAnime: Boolean = true) = when (this) {
     LibraryStatus.Completed -> R.string.library_status_completed

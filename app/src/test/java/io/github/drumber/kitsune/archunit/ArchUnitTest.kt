@@ -69,7 +69,7 @@ class ArchUnitTest {
     fun other_layers_should_not_depend_on_data_sources_directly() {
         noClasses()
             .that()
-            .resideOutsideOfPackages("..data.source..", "..data.repository..", "..di..")
+            .resideOutsideOfPackages("..data.source..", "..data.repository..", "..data.paging..", "..di..")
             .should()
             .dependOnClassesThat(
                 resideInAPackage("..data.source..")

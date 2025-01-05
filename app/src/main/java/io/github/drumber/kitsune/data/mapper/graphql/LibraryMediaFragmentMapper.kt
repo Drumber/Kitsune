@@ -3,6 +3,12 @@ package io.github.drumber.kitsune.data.mapper.graphql
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.source.graphql.fragment.LibraryMediaFragment
+import io.github.drumber.kitsune.data.source.graphql.mapper.toAgeRating
+import io.github.drumber.kitsune.data.source.graphql.mapper.toAnimeSubtype
+import io.github.drumber.kitsune.data.source.graphql.mapper.toImage
+import io.github.drumber.kitsune.data.source.graphql.mapper.toMangaSubtype
+import io.github.drumber.kitsune.data.source.graphql.mapper.toReleaseStatus
+import io.github.drumber.kitsune.data.source.graphql.mapper.toTitles
 
 fun LibraryMediaFragment.toMedia() = when (type) {
     "Anime" -> toAnime()
