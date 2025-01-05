@@ -19,10 +19,12 @@ dependencyResolutionManagement {
 
 rootProject.name = "Kitsune"
 include(":app")
-include(":domain")
-include(":adapters")
-include(":data")
 include(":widget")
+include(":domain")
+include(":data")
+include(":data:common")
 include(":data:source:local")
 include(":data:source:jsonapi")
 include(":data:source:graphql")
+include(":data:source:algolia")
+include(":shared")

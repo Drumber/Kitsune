@@ -1,16 +1,18 @@
 package io.github.drumber.kitsune.testutils
 
+import io.github.drumber.kitsune.data.common.Image
 import io.github.drumber.kitsune.data.common.ImageDimension
 import io.github.drumber.kitsune.data.common.ImageDimensions
+import io.github.drumber.kitsune.data.common.ImageMeta
 import net.datafaker.Faker
 
-fun image(faker: Faker) = io.github.drumber.kitsune.data.common.Image(
+fun image(faker: Faker) = Image(
     tiny = faker.internet().image(),
     small = faker.internet().image(),
     medium = faker.internet().image(),
     large = faker.internet().image(),
     original = faker.internet().image(),
-    meta = io.github.drumber.kitsune.data.common.ImageMeta(
+    meta = ImageMeta(
         ImageDimensions(
             tiny = ImageDimension(faker.number().positive(), faker.number().positive()),
             small = ImageDimension(faker.number().positive(), faker.number().positive()),

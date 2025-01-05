@@ -13,14 +13,14 @@ import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemP
 import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
-import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
-import io.github.drumber.kitsune.data.source.network.media.model.NetworkMedia
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavoriteItem
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkRatingSystemPreference
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkSfwFilterPreference
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkTitleLanguagePreference
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
+import io.github.drumber.kitsune.data.source.jsonapi.character.model.NetworkCharacter
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkMedia
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkFavorite
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkFavoriteItem
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkRatingSystemPreference
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkSfwFilterPreference
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkTitleLanguagePreference
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkUser
 
 object UserMapper {
 

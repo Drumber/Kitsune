@@ -1,5 +1,7 @@
 package io.github.drumber.kitsune.data.presentation.model.library
 
+import io.github.drumber.kitsune.data.common.library.LibraryStatus
+
 data class LibraryEntryModification(
     val id: String,
 

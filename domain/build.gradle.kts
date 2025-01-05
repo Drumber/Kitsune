@@ -14,15 +14,6 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
     compileOptions {
         sourceCompatibility = ProjectConfig.JAVA_VERSION
         targetCompatibility = ProjectConfig.JAVA_VERSION
@@ -33,7 +24,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":adapters"))
     implementation(project(":data"))
 
     implementation(libs.androidx.core.ktx)

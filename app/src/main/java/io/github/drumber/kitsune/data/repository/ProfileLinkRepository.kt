@@ -5,10 +5,10 @@ import io.github.drumber.kitsune.data.mapper.ProfileLinksMapper.toProfileLink
 import io.github.drumber.kitsune.data.mapper.ProfileLinksMapper.toProfileLinkSite
 import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLink
 import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLinkSite
-import io.github.drumber.kitsune.data.source.network.user.ProfileLinkNetworkDataSource
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
-import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
-import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
+import io.github.drumber.kitsune.data.source.jsonapi.user.ProfileLinkNetworkDataSource
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkUser
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.profilelinks.NetworkProfileLink
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.profilelinks.NetworkProfileLinkSite
 
 class ProfileLinkRepository(
     private val remoteProfileLinkDataSource: ProfileLinkNetworkDataSource

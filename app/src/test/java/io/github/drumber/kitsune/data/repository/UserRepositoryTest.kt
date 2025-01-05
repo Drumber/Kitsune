@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.repository
 
+import io.github.drumber.kitsune.data.source.jsonapi.user.UserNetworkDataSource
 import io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource
-import io.github.drumber.kitsune.data.source.network.user.UserNetworkDataSource
 import io.github.drumber.kitsune.testutils.localUser
 import io.github.drumber.kitsune.testutils.networkUser
 import io.github.drumber.kitsune.testutils.onSuspend

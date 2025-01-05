@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.mapper
 
 import io.github.drumber.kitsune.data.source.local.auth.model.LocalAccessToken
-import io.github.drumber.kitsune.data.source.network.auth.model.NetworkAccessToken
+import io.github.drumber.kitsune.data.source.jsonapi.auth.model.NetworkAccessToken
 
 object AuthMapper {
     fun NetworkAccessToken.toLocalAccessToken() = LocalAccessToken(

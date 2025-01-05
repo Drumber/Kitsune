@@ -3,13 +3,13 @@ package io.github.drumber.kitsune.data.repository
 import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.mapper.UserMapper.toFavorite
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
-import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
-import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime
-import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga
-import io.github.drumber.kitsune.data.source.network.user.FavoriteNetworkDataSource
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavoriteItem
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
+import io.github.drumber.kitsune.data.source.jsonapi.character.model.NetworkCharacter
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkAnime
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkManga
+import io.github.drumber.kitsune.data.source.jsonapi.user.FavoriteNetworkDataSource
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkFavorite
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkFavoriteItem
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkUser
 import io.github.drumber.kitsune.data.common.Filter
 
 class FavoriteRepository(

@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.mapper
 
-import io.github.drumber.kitsune.data.common.library.LibraryEntryMediaType
 import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions
+import io.github.drumber.kitsune.data.common.library.LibraryStatus
 import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
 import io.github.drumber.kitsune.data.mapper.ImageMapper.toLocalImage
@@ -17,11 +17,15 @@ import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryMod
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModificationAndNextUnit
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryModificationState
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.ReactionSkip
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.source.jsonapi.library.model.NetworkLibraryEntry
+import io.github.drumber.kitsune.data.source.jsonapi.library.model.NetworkLibraryStatus
+import io.github.drumber.kitsune.data.source.jsonapi.library.model.NetworkReactionSkip
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkAnime
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkManga
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryWithModificationAndNextMediaUnit
@@ -30,11 +34,7 @@ import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMed
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus
 import io.github.drumber.kitsune.data.source.local.library.model.LocalReactionSkip
-import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry
-import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryStatus
-import io.github.drumber.kitsune.data.source.network.library.model.NetworkReactionSkip
-import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime
-import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga
+import io.github.drumber.kitsune.data.source.local.mapper.toLocalLibraryStatus
 
 object LibraryMapper {
     fun LocalLibraryEntry.toLibraryEntry() = LibraryEntry(
@@ -71,8 +71,8 @@ object LibraryMapper {
         privateEntry = privateEntry,
         reactionSkipped = reactionSkipped?.toReactionSkip(),
         media = when {
-            anime != null -> anime.toAnime()
-            manga != null -> manga.toManga()
+            anime != null -> anime?.toAnime()
+            manga != null -> manga?.toManga()
             else -> null
         }
     )
@@ -93,8 +93,8 @@ object LibraryMapper {
         privateEntry = privateEntry,
         reactionSkipped = reactionSkipped?.toLocalReactionSkip(),
         media = when {
-            anime != null -> anime.toLocalLibraryMedia()
-            manga != null -> manga.toLocalLibraryMedia()
+            anime != null -> anime?.toLocalLibraryMedia()
+            manga != null -> manga?.toLocalLibraryMedia()
             else -> null
         }
     )
@@ -383,14 +383,6 @@ object LibraryMapper {
         NetworkLibraryStatus.Dropped -> LibraryStatus.Dropped
     }
 
-    fun LibraryStatus.toLocalLibraryStatus(): LocalLibraryStatus = when (this) {
-        LibraryStatus.Current -> LocalLibraryStatus.Current
-        LibraryStatus.Planned -> LocalLibraryStatus.Planned
-        LibraryStatus.Completed -> LocalLibraryStatus.Completed
-        LibraryStatus.OnHold -> LocalLibraryStatus.OnHold
-        LibraryStatus.Dropped -> LocalLibraryStatus.Dropped
-    }
-
     fun LibraryStatus.toNetworkLibraryStatus(): NetworkLibraryStatus = when (this) {
         LibraryStatus.Current -> NetworkLibraryStatus.Current
         LibraryStatus.Planned -> NetworkLibraryStatus.Planned
@@ -436,12 +428,6 @@ object LibraryMapper {
             LibraryModificationState.SYNCHRONIZING -> LocalLibraryModificationState.SYNCHRONIZING
             LibraryModificationState.NOT_SYNCHRONIZED -> LocalLibraryModificationState.NOT_SYNCHRONIZED
         }
-
-    fun LibraryEntryMediaType.toMediaType() = when (this) {
-        LibraryEntryMediaType.Anime -> MediaType.Anime
-        LibraryEntryMediaType.Manga -> MediaType.Manga
-        LibraryEntryMediaType.All -> null
-    }
 
     fun LibraryFilterOptions.toLocalLibraryFilterOptions() = LocalLibraryFilterOptions(
         mediaType = mediaType.name,

@@ -1,22 +1,24 @@
 package io.github.drumber.kitsune.data.repository
 
 import io.github.drumber.kitsune.data.common.exception.NotFoundException
+import io.github.drumber.kitsune.data.common.library.LibraryStatus
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntryModification
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toNetworkLibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.repository.library.LibraryChangeListener
 import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import io.github.drumber.kitsune.data.source.graphql.library.LibraryApolloDataSource
+import io.github.drumber.kitsune.data.source.jsonapi.library.LibraryNetworkDataSource
+import io.github.drumber.kitsune.data.source.jsonapi.library.model.NetworkLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState.NOT_SYNCHRONIZED
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState.SYNCHRONIZING
-import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
-import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry
+import io.github.drumber.kitsune.shared.DATE_FORMAT_ISO
+import io.github.drumber.kitsune.shared.formatDate
 import io.github.drumber.kitsune.testutils.anime
 import io.github.drumber.kitsune.testutils.assertThatThrownBy
 import io.github.drumber.kitsune.testutils.localLibraryEntry
@@ -24,8 +26,6 @@ import io.github.drumber.kitsune.testutils.network.FakeHttpException
 import io.github.drumber.kitsune.testutils.networkLibraryEntry
 import io.github.drumber.kitsune.testutils.onSuspend
 import io.github.drumber.kitsune.testutils.useMockedAndroidLogger
-import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
-import io.github.drumber.kitsune.util.formatDate
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.plus
 import kotlinx.coroutines.test.runTest

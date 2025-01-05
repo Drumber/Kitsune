@@ -3,10 +3,10 @@ package io.github.drumber.kitsune.testutils
 import io.github.drumber.kitsune.data.presentation.model.character.Character
 import io.github.drumber.kitsune.data.presentation.model.character.MediaCharacter
 import io.github.drumber.kitsune.data.presentation.model.character.MediaCharacterRole
+import io.github.drumber.kitsune.data.source.jsonapi.character.model.NetworkCharacter
+import io.github.drumber.kitsune.data.source.jsonapi.character.model.NetworkMediaCharacter
+import io.github.drumber.kitsune.data.source.jsonapi.character.model.NetworkMediaCharacterRole
 import io.github.drumber.kitsune.data.source.local.character.LocalCharacter
-import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
-import io.github.drumber.kitsune.data.source.network.character.model.NetworkMediaCharacter
-import io.github.drumber.kitsune.data.source.network.character.model.NetworkMediaCharacterRole
 import net.datafaker.Faker
 
 fun networkCharacter(faker: Faker) = NetworkCharacter(

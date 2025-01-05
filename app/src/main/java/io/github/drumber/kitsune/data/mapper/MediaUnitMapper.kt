@@ -5,9 +5,9 @@ import io.github.drumber.kitsune.data.presentation.model.media.unit.Chapter
 import io.github.drumber.kitsune.data.presentation.model.media.unit.Episode
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMedia
 import io.github.drumber.kitsune.data.source.local.library.model.LocalNextMediaUnit
-import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkChapter
-import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkEpisode
-import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkMediaUnit
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.unit.NetworkChapter
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.unit.NetworkEpisode
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.unit.NetworkMediaUnit
 
 object MediaUnitMapper {
     fun NetworkMediaUnit.toMediaUnit() = when (this) {

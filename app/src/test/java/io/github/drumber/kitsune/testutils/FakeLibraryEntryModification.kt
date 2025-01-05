@@ -1,10 +1,10 @@
 package io.github.drumber.kitsune.testutils
 
+import io.github.drumber.kitsune.data.common.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus
-import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
+import io.github.drumber.kitsune.shared.DATE_FORMAT_ISO
 import net.datafaker.Faker
 
 fun libraryEntryModification(faker: Faker) = LibraryEntryModification(

@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.mapper
 
 import io.github.drumber.kitsune.data.mapper.AuthMapper.toLocalAccessToken
-import io.github.drumber.kitsune.data.source.network.auth.model.NetworkAccessToken
+import io.github.drumber.kitsune.data.source.jsonapi.auth.model.NetworkAccessToken
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test

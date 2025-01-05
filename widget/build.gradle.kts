@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "io.github.drumber.kitsune.domain"
+    namespace = "io.github.drumber.kitsune.widget"
     compileSdk = ProjectConfig.COMPILE_SDK
 
     defaultConfig {

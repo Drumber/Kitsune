@@ -34,16 +34,16 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toCharacterSearchResult
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
 import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLinkSite
-import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaCharacterSearchResult
+import io.github.drumber.kitsune.data.source.algolia.AlgoliaCharacterSearchResult
 import io.github.drumber.kitsune.databinding.FragmentEditProfileBinding
 import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BaseDialogFragment
 import io.github.drumber.kitsune.util.DataUtil
-import io.github.drumber.kitsune.util.formatDate
+import io.github.drumber.kitsune.shared.formatDate
 import io.github.drumber.kitsune.util.logE
-import io.github.drumber.kitsune.util.parseDate
-import io.github.drumber.kitsune.util.toDate
+import io.github.drumber.kitsune.shared.parseDate
+import io.github.drumber.kitsune.shared.toDate
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
 import io.github.drumber.kitsune.util.ui.initImePaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
@@ -343,7 +343,7 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
                     binding.chipGroupProfileLinks.removeViews(0, indexOfAddChip)
                 }
 
-                profileLinks.sortedByDescending { it.site.id?.toIntOrNull() }.forEach { link ->
+                profileLinks.sortedByDescending { it.site.id.toIntOrNull() }.forEach { link ->
                     val chipBinding = ItemProfileSiteChipBinding.inflate(
                         layoutInflater,
                         binding.chipGroupProfileLinks,

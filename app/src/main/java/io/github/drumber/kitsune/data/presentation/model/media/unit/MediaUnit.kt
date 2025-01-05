@@ -5,9 +5,9 @@ import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import io.github.drumber.kitsune.data.common.Image
 import io.github.drumber.kitsune.data.common.Titles
+import io.github.drumber.kitsune.shared.formatDate
+import io.github.drumber.kitsune.shared.parseDate
 import io.github.drumber.kitsune.util.DataUtil
-import io.github.drumber.kitsune.util.formatDate
-import io.github.drumber.kitsune.util.parseDate
 import java.text.SimpleDateFormat
 
 sealed interface MediaUnit {

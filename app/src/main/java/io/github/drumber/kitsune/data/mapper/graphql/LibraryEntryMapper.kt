@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.mapper.graphql
 
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
+import io.github.drumber.kitsune.data.common.library.LibraryStatus
 import io.github.drumber.kitsune.data.source.graphql.type.LibraryEntryStatusEnum
 
 fun LibraryEntryStatusEnum.toLibraryStatus() = when (this) {

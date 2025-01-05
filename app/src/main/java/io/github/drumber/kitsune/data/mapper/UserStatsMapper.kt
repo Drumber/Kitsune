@@ -5,12 +5,12 @@ import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStats
 import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsData.AmountConsumedData
 import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsData.CategoryBreakdownData
 import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsKind
-import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkAmountConsumedPercentiles
-import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStats
-import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStatsData
-import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStatsData.NetworkAmountConsumedData
-import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStatsData.NetworkCategoryBreakdownData
-import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStatsKind
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.stats.NetworkAmountConsumedPercentiles
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.stats.NetworkUserStats
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.stats.NetworkUserStatsData
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.stats.NetworkUserStatsData.NetworkAmountConsumedData
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.stats.NetworkUserStatsData.NetworkCategoryBreakdownData
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.stats.NetworkUserStatsKind
 
 object UserStatsMapper {
     fun NetworkUserStats.toUserStats() = UserStats(

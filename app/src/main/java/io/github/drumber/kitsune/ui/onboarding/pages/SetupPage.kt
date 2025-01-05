@@ -56,7 +56,6 @@ import io.github.drumber.kitsune.ui.onboarding.components.CustomDialog
 import io.github.drumber.kitsune.ui.onboarding.components.OnboardingNavigationControls
 import io.github.drumber.kitsune.ui.onboarding.components.PreferenceCard
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
-import kotlinx.coroutines.flow.map
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -88,9 +87,8 @@ fun SetupPageAdapter(
     }
 
     val titleLanguages = LocalTitleLanguagePreference.entries.map { it.name }
-    val selectedTitleLanguageIndex by KitsunePref.getTitleLanguageAsFlow()
-        .map { it.ordinal }
-        .collectAsState(KitsunePref.titles.ordinal)
+    val selectedTitleLanguage by KitsunePref.getTitleLanguageAsFlow()
+        .collectAsState(KitsunePref.titles)
     val selectTitleLanguage = { index: Int ->
         KitsunePref.titles = LocalTitleLanguagePreference.entries[index]
     }
@@ -104,7 +102,7 @@ fun SetupPageAdapter(
         onCheckForUpdatesPreferenceChanged = updateCheckForUpdatesPreference,
         hideTitleLanguagePreference = localUser != null,
         titleLanguages = titleLanguages,
-        selectedTitleLanguageIndex = selectedTitleLanguageIndex,
+        selectedTitleLanguageIndex = selectedTitleLanguage.ordinal,
         onTitleLanguageSelected = selectTitleLanguage
     )
 }

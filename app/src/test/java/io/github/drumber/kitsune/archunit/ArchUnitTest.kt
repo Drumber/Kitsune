@@ -46,7 +46,7 @@ class ArchUnitTest {
                                 "..data.source.local.user.model..",
                                 "..data.source.local.character..",
                                 // temporary exclusion: Algolia character search is used in EditProfileFragment
-                                "..data.source.network.algolia.model.search.."
+                                "..data.source.algolia.."
                             )
                         )
                     )

@@ -11,15 +11,15 @@ import io.github.drumber.kitsune.data.presentation.model.algolia.AlgoliaKeyColle
 import io.github.drumber.kitsune.data.presentation.model.character.CharacterSearchResult
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
-import io.github.drumber.kitsune.data.source.network.algolia.model.NetworkAlgoliaKey
-import io.github.drumber.kitsune.data.source.network.algolia.model.NetworkAlgoliaKeyCollection
-import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaCharacterSearchResult
-import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaDimension
-import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaDimensions
-import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaImage
-import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaImageMeta
-import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaMediaSearchKind
-import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaMediaSearchResult
+import io.github.drumber.kitsune.data.source.algolia.AlgoliaCharacterSearchResult
+import io.github.drumber.kitsune.data.source.algolia.AlgoliaDimension
+import io.github.drumber.kitsune.data.source.algolia.AlgoliaDimensions
+import io.github.drumber.kitsune.data.source.algolia.AlgoliaImage
+import io.github.drumber.kitsune.data.source.algolia.AlgoliaImageMeta
+import io.github.drumber.kitsune.data.source.algolia.AlgoliaMediaSearchKind
+import io.github.drumber.kitsune.data.source.algolia.AlgoliaMediaSearchResult
+import io.github.drumber.kitsune.data.source.jsonapi.algoliakey.model.NetworkAlgoliaKey
+import io.github.drumber.kitsune.data.source.jsonapi.algoliakey.model.NetworkAlgoliaKeyCollection
 
 object AlgoliaMapper {
     fun NetworkAlgoliaKeyCollection.toAlgoliaKeyCollection() = AlgoliaKeyCollection(
@@ -119,6 +119,7 @@ object AlgoliaMapper {
     )
 
     fun AlgoliaImageMeta.toImageMeta() = ImageMeta(dimensions?.toDimensions())
+
     fun AlgoliaDimensions.toDimensions() = ImageDimensions(
         tiny?.toDimension(), small?.toDimension(), medium?.toDimension(), large?.toDimension()
     )

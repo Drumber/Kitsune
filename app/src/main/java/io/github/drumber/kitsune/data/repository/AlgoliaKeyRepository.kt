@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.data.repository
 
 import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toAlgoliaKeyCollection
 import io.github.drumber.kitsune.data.presentation.model.algolia.AlgoliaKeyCollection
-import io.github.drumber.kitsune.data.source.network.algolia.AlgoliaKeyNetworkDataSource
+import io.github.drumber.kitsune.data.source.jsonapi.algoliakey.AlgoliaKeyNetworkDataSource
 
 class AlgoliaKeyRepository(
     private val remoteAlgoliaKeyDataSource: AlgoliaKeyNetworkDataSource

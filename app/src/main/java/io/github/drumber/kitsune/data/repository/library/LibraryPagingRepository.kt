@@ -9,14 +9,14 @@ import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntryWithModificationAndNextUnit
-import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
 import io.github.drumber.kitsune.data.source.graphql.library.LibraryApolloDataSource
+import io.github.drumber.kitsune.data.source.jsonapi.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryWithModificationAndNextMediaUnit
-import io.github.drumber.kitsune.data.source.network.library.LibraryEntryPagingDataSource
-import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
+import io.github.drumber.kitsune.data.source.local.mapper.toLocalLibraryStatus
+import io.github.drumber.kitsune.data.source.jsonapi.library.LibraryEntryPagingDataSource
 import io.github.drumber.kitsune.data.utils.InvalidatingPagingSourceFactory
 import kotlinx.coroutines.flow.map
 

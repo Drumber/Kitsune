@@ -35,7 +35,7 @@ import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toMedia
 import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
-import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaMediaSearchResult
+import io.github.drumber.kitsune.data.source.algolia.AlgoliaMediaSearchResult
 import io.github.drumber.kitsune.domain.algolia.FilterCollection
 import io.github.drumber.kitsune.domain.algolia.SearchProvider
 import io.github.drumber.kitsune.domain.algolia.toCombinedMap

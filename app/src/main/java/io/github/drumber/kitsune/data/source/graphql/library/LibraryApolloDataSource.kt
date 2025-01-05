@@ -3,12 +3,12 @@ package io.github.drumber.kitsune.data.source.graphql.library
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions
-import io.github.drumber.kitsune.data.mapper.LibraryMapper.toMediaType
+import io.github.drumber.kitsune.data.common.library.LibraryStatus
+import io.github.drumber.kitsune.data.common.mapper.toMediaType
 import io.github.drumber.kitsune.data.mapper.graphql.toLibraryEntrySortEnum
 import io.github.drumber.kitsune.data.mapper.graphql.toLibraryEntryStatusEnum
 import io.github.drumber.kitsune.data.mapper.graphql.toMediaTypeEnum
 import io.github.drumber.kitsune.data.mapper.graphql.toSortDirection
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.source.graphql.GetLibraryEntriesWithNextUnitQuery
 import io.github.drumber.kitsune.data.source.graphql.UpdateLibraryEntryProgressMutation
 import io.github.drumber.kitsune.data.source.graphql.fragment.LibraryEntryWithNextUnitFragment

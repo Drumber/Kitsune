@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.mapper
 
 import io.github.drumber.kitsune.data.presentation.model.mapping.Mapping
-import io.github.drumber.kitsune.data.source.network.mapping.model.NetworkMapping
+import io.github.drumber.kitsune.data.source.jsonapi.mapping.model.NetworkMapping
 
 object MappingMapper {
     fun NetworkMapping.toMapping() = Mapping(

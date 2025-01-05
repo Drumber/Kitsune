@@ -18,23 +18,23 @@ import io.github.drumber.kitsune.data.presentation.model.media.relationship.Medi
 import io.github.drumber.kitsune.data.presentation.model.media.relationship.MediaRelationshipRole
 import io.github.drumber.kitsune.data.presentation.model.media.streamer.Streamer
 import io.github.drumber.kitsune.data.presentation.model.media.streamer.StreamingLink
-import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime
-import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnimeSubtype
-import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga
-import io.github.drumber.kitsune.data.source.network.media.model.NetworkMangaSubtype
-import io.github.drumber.kitsune.data.source.network.media.model.NetworkMedia
-import io.github.drumber.kitsune.data.source.network.media.model.NetworkRatingFrequencies
-import io.github.drumber.kitsune.data.source.network.media.model.NetworkReleaseStatus
-import io.github.drumber.kitsune.data.source.network.media.model.category.NetworkCategory
-import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkAnimeProduction
-import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkAnimeProductionRole
-import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkCasting
-import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkPerson
-import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkProducer
-import io.github.drumber.kitsune.data.source.network.media.model.relationship.NetworkMediaRelationship
-import io.github.drumber.kitsune.data.source.network.media.model.relationship.NetworkMediaRelationshipRole
-import io.github.drumber.kitsune.data.source.network.media.model.streamer.NetworkStreamer
-import io.github.drumber.kitsune.data.source.network.media.model.streamer.NetworkStreamingLink
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkAnime
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkAnimeSubtype
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkManga
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkMangaSubtype
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkMedia
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkRatingFrequencies
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkReleaseStatus
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.category.NetworkCategory
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.production.NetworkAnimeProduction
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.production.NetworkAnimeProductionRole
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.production.NetworkCasting
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.production.NetworkPerson
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.production.NetworkProducer
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.relationship.NetworkMediaRelationship
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.relationship.NetworkMediaRelationshipRole
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.streamer.NetworkStreamer
+import io.github.drumber.kitsune.data.source.jsonapi.media.model.streamer.NetworkStreamingLink
 
 object MediaMapper {
     fun NetworkMedia.toMedia(): Media = when (this) {

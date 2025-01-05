@@ -1,8 +1,8 @@
 package io.github.drumber.kitsune.data.repository
 
-import io.github.drumber.kitsune.data.source.network.algolia.AlgoliaKeyNetworkDataSource
-import io.github.drumber.kitsune.data.source.network.algolia.model.NetworkAlgoliaKey
-import io.github.drumber.kitsune.data.source.network.algolia.model.NetworkAlgoliaKeyCollection
+import io.github.drumber.kitsune.data.source.jsonapi.algoliakey.AlgoliaKeyNetworkDataSource
+import io.github.drumber.kitsune.data.source.jsonapi.algoliakey.model.NetworkAlgoliaKey
+import io.github.drumber.kitsune.data.source.jsonapi.algoliakey.model.NetworkAlgoliaKeyCollection
 import io.github.drumber.kitsune.testutils.onSuspend
 import kotlinx.coroutines.runBlocking
 import net.datafaker.Faker

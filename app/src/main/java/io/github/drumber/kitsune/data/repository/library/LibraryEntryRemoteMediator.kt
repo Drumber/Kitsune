@@ -9,16 +9,15 @@ import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.common.library.LibraryFilterOptions
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryFilterOptions
-import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
 import io.github.drumber.kitsune.data.presentation.model.library.toLibraryFilterOptions
-import io.github.drumber.kitsune.data.source.local.LocalDatabase
+import io.github.drumber.kitsune.data.source.jsonapi.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyEntity
-import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
+import io.github.drumber.kitsune.data.source.local.mapper.toLocalLibraryStatus
+import io.github.drumber.kitsune.shared.parseUtcDate
 import io.github.drumber.kitsune.util.logD
-import io.github.drumber.kitsune.util.parseUtcDate
 
 @OptIn(ExperimentalPagingApi::class)
 class LibraryEntryRemoteMediator(
@@ -100,7 +99,7 @@ class LibraryEntryRemoteMediator(
         }
     }
 
-    private suspend fun LocalDatabase.clearLibraryEntriesForFilterIgnoringNewerLibraryEntries(
+    private suspend fun io.github.drumber.kitsune.data.source.local.LocalDatabase.clearLibraryEntriesForFilterIgnoringNewerLibraryEntries(
         filter: LibraryFilterOptions,
         data: List<LocalLibraryEntry>
     ) {

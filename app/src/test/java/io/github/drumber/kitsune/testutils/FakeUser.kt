@@ -1,19 +1,19 @@
 package io.github.drumber.kitsune.testutils
 
 import io.github.drumber.kitsune.data.common.user.UserThemePreference
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkFavorite
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkFavoriteItem
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkRatingSystemPreference
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkSfwFilterPreference
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkTitleLanguagePreference
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkUser
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.profilelinks.NetworkProfileLink
+import io.github.drumber.kitsune.data.source.jsonapi.user.model.profilelinks.NetworkProfileLinkSite
 import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavoriteItem
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkRatingSystemPreference
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkSfwFilterPreference
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkTitleLanguagePreference
-import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
-import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
-import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
-import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
+import io.github.drumber.kitsune.shared.DATE_FORMAT_ISO
 import net.datafaker.Faker
 
 fun networkUser(faker: Faker) = NetworkUser(

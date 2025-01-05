@@ -16,12 +16,12 @@ import io.github.drumber.kitsune.data.presentation.model.media.category.Category
 import io.github.drumber.kitsune.data.presentation.model.media.production.AnimeProductionRole
 import io.github.drumber.kitsune.data.presentation.model.media.relationship.MediaRelationship
 import io.github.drumber.kitsune.data.presentation.model.user.FavoriteItem
+import io.github.drumber.kitsune.shared.formatDate
+import io.github.drumber.kitsune.shared.parseDate
+import io.github.drumber.kitsune.shared.toCalendar
 import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.util.TimeUtil
 import io.github.drumber.kitsune.util.extensions.format
-import io.github.drumber.kitsune.util.formatDate
-import io.github.drumber.kitsune.util.parseDate
-import io.github.drumber.kitsune.util.toCalendar
 import java.util.Calendar
 
 sealed class Media : FavoriteItem {

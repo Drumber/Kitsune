@@ -58,6 +58,7 @@ android {
 
         create("instrumented") {
             initWith(getByName("debug"))
+            matchingFallbacks.add("debug")
             applicationIdSuffix = ".instrumented"
             buildConfigField("boolean", "INSTRUMENTED_TEST", "true")
         }
@@ -118,9 +119,13 @@ apollo {
 }
 
 dependencies {
+    implementation(project(":shared"))
     implementation(project(":domain"))
-    implementation(project(":adapters"))
     implementation(project(":data"))
+    implementation(project(":data:common"))
+    implementation(project(":data:source:local"))
+    implementation(project(":data:source:jsonapi"))
+    implementation(project(":data:source:algolia"))
 
     // Android core and support libs
     implementation(libs.androidx.core.ktx)
