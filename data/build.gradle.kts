@@ -44,6 +44,9 @@ dependencies {
     // Retrofit
     implementation(libs.squareup.retrofit2.retrofit)
 
+    // Algolia Instantsearch
+    implementation(libs.algolia.instantsearch.android)
+
     // Test
     testImplementation(libs.junit)
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)

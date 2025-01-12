@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.repository
+package io.github.drumber.kitsune.data.repository.algolia
 
 import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toAlgoliaKeyCollection
 import io.github.drumber.kitsune.data.model.algolia.AlgoliaKeyCollection

@@ -6,8 +6,8 @@ import io.github.drumber.kitsune.shared.constants.Defaults
 import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.model.character.Character
 import io.github.drumber.kitsune.data.model.user.Favorite
-import io.github.drumber.kitsune.data.repository.CharacterRepository
-import io.github.drumber.kitsune.data.repository.FavoriteRepository
+import io.github.drumber.kitsune.data.repository.media.CharacterRepository
+import io.github.drumber.kitsune.data.repository.media.FavoriteRepository
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.shared.logE
 import kotlinx.coroutines.Dispatchers

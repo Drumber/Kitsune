@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.model.media.Media
-import io.github.drumber.kitsune.data.repository.AnimeRepository
-import io.github.drumber.kitsune.data.repository.MangaRepository
+import io.github.drumber.kitsune.data.repository.media.AnimeRepository
+import io.github.drumber.kitsune.data.repository.media.MangaRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.shared.logE
 import kotlinx.coroutines.Dispatchers

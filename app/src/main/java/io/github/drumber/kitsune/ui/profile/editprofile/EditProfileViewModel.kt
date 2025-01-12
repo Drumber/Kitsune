@@ -24,12 +24,12 @@ import io.github.drumber.kitsune.data.model.user.profilelinks.ProfileLinkSite
 import io.github.drumber.kitsune.data.presentation.dto.ProfileLinkSiteDto
 import io.github.drumber.kitsune.data.presentation.dto.toProfileLinkSite
 import io.github.drumber.kitsune.data.presentation.dto.toProfileLinkSiteDto
-import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
+import io.github.drumber.kitsune.data.repository.algolia.AlgoliaKeyRepository
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.character.LocalCharacter
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
-import io.github.drumber.kitsune.domain.algolia.SearchProvider
+import io.github.drumber.kitsune.data.repository.algolia.AlgoliaSearchProvider
 import io.github.drumber.kitsune.shared.logD
 import io.github.drumber.kitsune.shared.logE
 import kotlinx.coroutines.Dispatchers
@@ -89,7 +89,7 @@ class EditProfileViewModel(
 
     private val acceptLoadingState: (LoadingState) -> Unit
 
-    private val searchProvider: SearchProvider
+    private val searchProvider: AlgoliaSearchProvider
     private val connectionHandler = ConnectionHandler()
     private val _searchBoxConnectorFlow = MutableSharedFlow<SearchBoxConnector<ResponseSearch>>(1)
     val searchBoxConnectorFlow
@@ -192,7 +192,7 @@ class EditProfileViewModel(
             viewModelScope.launch { _loadingStateFlow.emit(loadingState) }
         }
 
-        searchProvider = SearchProvider(algoliaKeyRepository)
+        searchProvider = AlgoliaSearchProvider(algoliaKeyRepository)
 
         user?.id?.let { initProfileLinks(it) }
 

@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.domain.algolia
+package io.github.drumber.kitsune.data.repository.algolia
 
 import com.algolia.instantsearch.searcher.hits.HitsSearcher
 import com.algolia.instantsearch.searcher.hits.SearchForQuery
@@ -8,19 +8,18 @@ import com.algolia.search.model.APIKey
 import com.algolia.search.model.ApplicationID
 import com.algolia.search.model.IndexName
 import com.algolia.search.model.search.Query
-import io.github.drumber.kitsune.BuildConfig
-import io.github.drumber.kitsune.shared.constants.Kitsu
 import io.github.drumber.kitsune.data.exception.InvalidDataException
 import io.github.drumber.kitsune.data.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.data.model.algolia.SearchType
-import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
+import io.github.drumber.kitsune.shared.constants.Kitsu
 import io.github.drumber.kitsune.shared.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 
-class SearchProvider(
-    private val algoliaKeyRepository: AlgoliaKeyRepository
+class AlgoliaSearchProvider(
+    private val algoliaKeyRepository: AlgoliaKeyRepository,
+    private val logLevel: LogLevel = LogLevel.Info
 ) {
 
     private var clientSearch: ClientSearch? = null
@@ -44,7 +43,6 @@ class SearchProvider(
         val apiKey = algoliaKey?.key ?: throw InvalidDataException("Algolia API Key is null.")
         val apiIndex = algoliaKey.index ?: throw InvalidDataException("Algolia index is null.")
 
-        val logLevel = if (BuildConfig.DEBUG) LogLevel.Headers else LogLevel.Info
         val client = ClientSearch(ApplicationID(Kitsu.ALGOLIA_APP_ID), APIKey(apiKey), logLevel)
 
         val searcher = HitsSearcher(

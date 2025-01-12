@@ -15,10 +15,10 @@ import io.github.drumber.kitsune.data.model.mapping.Mapping
 import io.github.drumber.kitsune.data.model.media.Anime
 import io.github.drumber.kitsune.data.model.media.Media
 import io.github.drumber.kitsune.data.model.user.Favorite
-import io.github.drumber.kitsune.data.repository.AnimeRepository
-import io.github.drumber.kitsune.data.repository.FavoriteRepository
-import io.github.drumber.kitsune.data.repository.MangaRepository
-import io.github.drumber.kitsune.data.repository.MappingRepository
+import io.github.drumber.kitsune.data.repository.media.AnimeRepository
+import io.github.drumber.kitsune.data.repository.media.FavoriteRepository
+import io.github.drumber.kitsune.data.repository.media.MangaRepository
+import io.github.drumber.kitsune.data.repository.media.MappingRepository
 import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult

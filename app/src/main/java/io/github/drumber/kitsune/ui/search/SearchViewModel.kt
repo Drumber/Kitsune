@@ -29,23 +29,23 @@ import com.algolia.search.model.Attribute
 import com.algolia.search.model.filter.Filter
 import com.algolia.search.model.response.ResponseSearch
 import com.algolia.search.model.search.Query
-import io.github.drumber.kitsune.shared.constants.Kitsu
-import io.github.drumber.kitsune.shared.constants.Repository
+import io.github.drumber.kitsune.data.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toMedia
 import io.github.drumber.kitsune.data.model.algolia.SearchType
 import io.github.drumber.kitsune.data.model.media.Media
-import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
+import io.github.drumber.kitsune.data.presentation.FilterCollection
+import io.github.drumber.kitsune.data.presentation.toCombinedMap
+import io.github.drumber.kitsune.data.presentation.toFilterCollection
+import io.github.drumber.kitsune.data.repository.algolia.AlgoliaKeyRepository
+import io.github.drumber.kitsune.data.repository.algolia.AlgoliaSearchProvider
 import io.github.drumber.kitsune.data.source.algolia.AlgoliaMediaSearchResult
-import io.github.drumber.kitsune.domain.algolia.FilterCollection
-import io.github.drumber.kitsune.domain.algolia.SearchProvider
-import io.github.drumber.kitsune.domain.algolia.toCombinedMap
-import io.github.drumber.kitsune.domain.algolia.toFilterCollection
-import io.github.drumber.kitsune.data.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.component.algolia.SeasonListPresenter
-import io.github.drumber.kitsune.ui.component.algolia.range.CustomFilterRangeConnector
+import io.github.drumber.kitsune.shared.constants.Kitsu
+import io.github.drumber.kitsune.shared.constants.Repository
 import io.github.drumber.kitsune.shared.logE
 import io.github.drumber.kitsune.shared.logI
+import io.github.drumber.kitsune.ui.component.algolia.SeasonListPresenter
+import io.github.drumber.kitsune.ui.component.algolia.range.CustomFilterRangeConnector
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -56,7 +56,7 @@ class SearchViewModel(
     algoliaKeyRepository: AlgoliaKeyRepository
 ) : ViewModel() {
 
-    private val searchProvider = SearchProvider(algoliaKeyRepository)
+    private val searchProvider = AlgoliaSearchProvider(algoliaKeyRepository)
 
     private val searchSelector = MutableLiveData<Pair<SearchType, HitsSearcher>>()
 

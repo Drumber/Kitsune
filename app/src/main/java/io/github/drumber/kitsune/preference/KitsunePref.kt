@@ -17,7 +17,7 @@ import io.github.drumber.kitsune.data.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
-import io.github.drumber.kitsune.domain.algolia.FilterCollection
+import io.github.drumber.kitsune.data.presentation.FilterCollection
 import io.github.drumber.kitsune.shared.logE
 import kotlinx.coroutines.flow.combine
 import org.koin.core.component.KoinComponent

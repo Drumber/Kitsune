@@ -2,16 +2,16 @@ package io.github.drumber.kitsune.di
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.drumber.kitsune.data.repository.AccessTokenRepository
-import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
-import io.github.drumber.kitsune.data.repository.AnimeRepository
+import io.github.drumber.kitsune.data.repository.algolia.AlgoliaKeyRepository
+import io.github.drumber.kitsune.data.repository.media.AnimeRepository
 import io.github.drumber.kitsune.data.repository.AppUpdateRepository
-import io.github.drumber.kitsune.data.repository.CastingRepository
-import io.github.drumber.kitsune.data.repository.CategoryRepository
-import io.github.drumber.kitsune.data.repository.CharacterRepository
-import io.github.drumber.kitsune.data.repository.FavoriteRepository
-import io.github.drumber.kitsune.data.repository.MangaRepository
-import io.github.drumber.kitsune.data.repository.MappingRepository
-import io.github.drumber.kitsune.data.repository.MediaUnitRepository
+import io.github.drumber.kitsune.data.repository.media.CastingRepository
+import io.github.drumber.kitsune.data.repository.media.CategoryRepository
+import io.github.drumber.kitsune.data.repository.media.CharacterRepository
+import io.github.drumber.kitsune.data.repository.media.FavoriteRepository
+import io.github.drumber.kitsune.data.repository.media.MangaRepository
+import io.github.drumber.kitsune.data.repository.media.MappingRepository
+import io.github.drumber.kitsune.data.repository.media.MediaUnitRepository
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.repository.library.LibraryChangeListener

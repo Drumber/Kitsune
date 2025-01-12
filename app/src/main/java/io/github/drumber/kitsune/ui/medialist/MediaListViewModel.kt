@@ -14,8 +14,8 @@ import io.github.drumber.kitsune.data.model.media.Media
 import io.github.drumber.kitsune.data.presentation.MediaSelector
 import io.github.drumber.kitsune.data.presentation.RequestType
 import io.github.drumber.kitsune.data.presentation.identifier
-import io.github.drumber.kitsune.data.repository.AnimeRepository
-import io.github.drumber.kitsune.data.repository.MangaRepository
+import io.github.drumber.kitsune.data.repository.media.AnimeRepository
+import io.github.drumber.kitsune.data.repository.media.MangaRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

@@ -9,8 +9,8 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.shared.constants.Kitsu
 import io.github.drumber.kitsune.data.model.media.production.Casting
-import io.github.drumber.kitsune.data.repository.AnimeRepository
-import io.github.drumber.kitsune.data.repository.CastingRepository
+import io.github.drumber.kitsune.data.repository.media.AnimeRepository
+import io.github.drumber.kitsune.data.repository.media.CastingRepository
 import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.shared.logE
 import kotlinx.coroutines.Dispatchers

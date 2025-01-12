@@ -14,8 +14,8 @@ import io.github.drumber.kitsune.data.model.media.Manga
 import io.github.drumber.kitsune.data.model.media.Media
 import io.github.drumber.kitsune.data.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.data.repository.library.LibraryRepository
-import io.github.drumber.kitsune.data.repository.MediaUnitRepository
-import io.github.drumber.kitsune.data.repository.MediaUnitRepository.MediaUnitType
+import io.github.drumber.kitsune.data.repository.media.MediaUnitRepository
+import io.github.drumber.kitsune.data.repository.media.MediaUnitRepository.MediaUnitType
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCase
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase

@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.repository
+package io.github.drumber.kitsune.data.repository.media
 
 import io.github.drumber.kitsune.data.mapper.MappingMapper.toMapping
 import io.github.drumber.kitsune.data.model.Filter

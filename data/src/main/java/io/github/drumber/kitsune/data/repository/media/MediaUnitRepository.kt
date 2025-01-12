@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.repository
+package io.github.drumber.kitsune.data.repository.media
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
