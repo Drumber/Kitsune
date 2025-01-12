@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.ui.adapter
 import android.view.View
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.model.media.Media
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
 import io.github.drumber.kitsune.util.fixImageUrl
 

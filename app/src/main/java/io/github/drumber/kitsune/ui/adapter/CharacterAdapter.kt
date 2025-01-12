@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.presentation.model.character.Character
+import io.github.drumber.kitsune.data.model.character.Character
 import io.github.drumber.kitsune.databinding.ItemSingleCharacterBinding
 import java.util.concurrent.CopyOnWriteArrayList
 

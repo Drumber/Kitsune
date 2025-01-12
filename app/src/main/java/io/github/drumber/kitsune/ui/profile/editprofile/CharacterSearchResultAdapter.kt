@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.algolia.instantsearch.core.hits.HitsView
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.presentation.model.character.CharacterSearchResult
+import io.github.drumber.kitsune.data.model.character.CharacterSearchResult
 import io.github.drumber.kitsune.databinding.ItemCharacterSearchResultBinding
 import io.github.drumber.kitsune.util.fixImageUrl
 

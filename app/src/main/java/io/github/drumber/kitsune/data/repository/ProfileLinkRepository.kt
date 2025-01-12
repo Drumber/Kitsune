@@ -3,8 +3,8 @@ package io.github.drumber.kitsune.data.repository
 import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.mapper.ProfileLinksMapper.toProfileLink
 import io.github.drumber.kitsune.data.mapper.ProfileLinksMapper.toProfileLinkSite
-import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLink
-import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLinkSite
+import io.github.drumber.kitsune.data.model.user.profilelinks.ProfileLink
+import io.github.drumber.kitsune.data.model.user.profilelinks.ProfileLinkSite
 import io.github.drumber.kitsune.data.source.jsonapi.user.ProfileLinkNetworkDataSource
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkUser
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.profilelinks.NetworkProfileLink

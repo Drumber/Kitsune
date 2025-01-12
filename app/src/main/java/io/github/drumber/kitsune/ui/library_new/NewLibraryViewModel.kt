@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.data.model.library.LibraryFilterOptions
 import io.github.drumber.kitsune.data.model.library.LibraryStatus
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
+import io.github.drumber.kitsune.data.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.repository.library.LibraryPagingRepository
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCase
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryRatingUseCase

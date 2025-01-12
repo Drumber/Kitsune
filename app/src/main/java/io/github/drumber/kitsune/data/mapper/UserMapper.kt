@@ -6,9 +6,9 @@ import io.github.drumber.kitsune.data.mapper.CharacterMapper.toNetworkCharacter
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toMedia
 import io.github.drumber.kitsune.data.mapper.ProfileLinksMapper.toProfileLink
 import io.github.drumber.kitsune.data.mapper.UserStatsMapper.toUserStats
-import io.github.drumber.kitsune.data.presentation.model.user.Favorite
-import io.github.drumber.kitsune.data.presentation.model.user.FavoriteItem
-import io.github.drumber.kitsune.data.presentation.model.user.User
+import io.github.drumber.kitsune.data.model.user.Favorite
+import io.github.drumber.kitsune.data.model.user.FavoriteItem
+import io.github.drumber.kitsune.data.model.user.User
 import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference

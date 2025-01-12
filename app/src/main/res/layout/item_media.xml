@@ -8,7 +8,7 @@
         <import type="io.github.drumber.kitsune.data.presentation.extension.MediaExtensionsKt" />
         <variable
             name="data"
-            type="io.github.drumber.kitsune.data.presentation.model.media.Media" />
+            type="io.github.drumber.kitsune.data.model.media.Media" />
         <variable
             name="overlayTagText"
             type="String" />

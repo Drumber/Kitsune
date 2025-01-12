@@ -20,7 +20,7 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.media.MediaType
 import io.github.drumber.kitsune.data.presentation.dto.toMedia
 import io.github.drumber.kitsune.data.presentation.dto.toMediaUnitDto
-import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
+import io.github.drumber.kitsune.data.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.databinding.FragmentMediaListBinding
 import io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter

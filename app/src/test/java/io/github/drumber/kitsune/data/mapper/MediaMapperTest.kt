@@ -3,9 +3,9 @@ package io.github.drumber.kitsune.data.mapper
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toAnime
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toManga
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toMedia
-import io.github.drumber.kitsune.data.presentation.model.media.Anime
-import io.github.drumber.kitsune.data.presentation.model.media.Manga
-import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.model.media.Anime
+import io.github.drumber.kitsune.data.model.media.Manga
+import io.github.drumber.kitsune.data.model.media.Media
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkMedia
 import io.github.drumber.kitsune.testutils.networkAnime
 import io.github.drumber.kitsune.testutils.networkManga

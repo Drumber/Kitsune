@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.drumber.kitsune.data.presentation.model.media.category.CategoryNode
+import io.github.drumber.kitsune.data.model.media.category.CategoryNode
 import io.github.drumber.kitsune.data.repository.CategoryRepository
 import io.github.drumber.kitsune.preference.CategoryPrefWrapper
 import io.github.drumber.kitsune.data.model.Filter

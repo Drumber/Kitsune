@@ -6,8 +6,8 @@ import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntryModification
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toNetworkLibraryStatus
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
+import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.library.LibraryEntryModification
 import io.github.drumber.kitsune.data.repository.library.LibraryChangeListener
 import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import io.github.drumber.kitsune.data.source.graphql.LibraryApolloDataSource

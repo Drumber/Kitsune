@@ -10,7 +10,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.presentation.model.appupdate.AppRelease
+import io.github.drumber.kitsune.data.model.appupdate.AppRelease
 import io.github.drumber.kitsune.notification.NotificationChannels.CHANNEL_UPDATE_CHECKER
 
 object Notifications {

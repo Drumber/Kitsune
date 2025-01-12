@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.data.repository
 
 import io.github.drumber.kitsune.data.model.media.MediaType
 import io.github.drumber.kitsune.data.mapper.UserMapper.toFavorite
-import io.github.drumber.kitsune.data.presentation.model.user.Favorite
+import io.github.drumber.kitsune.data.model.user.Favorite
 import io.github.drumber.kitsune.data.source.jsonapi.character.model.NetworkCharacter
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkAnime
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkManga

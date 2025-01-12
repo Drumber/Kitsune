@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.domain.library
 
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
+import io.github.drumber.kitsune.data.model.library.LibraryEntryModification
 
 class UpdateLibraryEntryRatingUseCase(
     private val updateLibraryEntry: UpdateLibraryEntryUseCase

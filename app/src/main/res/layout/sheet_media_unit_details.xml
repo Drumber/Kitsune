@@ -7,7 +7,7 @@
         <import type="io.github.drumber.kitsune.data.presentation.extension.MediaUnitExtensionsKt" />
         <variable
             name="mediaUnit"
-            type="io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit" />
+            type="io.github.drumber.kitsune.data.model.media.unit.MediaUnit" />
     </data>
 
     <androidx.core.widget.NestedScrollView

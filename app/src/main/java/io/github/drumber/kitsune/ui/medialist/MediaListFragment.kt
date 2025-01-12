@@ -22,7 +22,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.media.MediaType
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
-import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.model.media.Media
 import io.github.drumber.kitsune.databinding.FragmentMediaListBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.paging.AnimeAdapter

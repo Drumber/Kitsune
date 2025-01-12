@@ -6,7 +6,7 @@ import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.exception.NoDataException
 import io.github.drumber.kitsune.data.mapper.UserMapper.toUser
-import io.github.drumber.kitsune.data.presentation.model.user.User
+import io.github.drumber.kitsune.data.model.user.User
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.domain.auth.LogOutUserUseCase
 import io.github.drumber.kitsune.shared.logE

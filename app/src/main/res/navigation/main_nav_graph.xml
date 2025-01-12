@@ -121,7 +121,7 @@
             app:launchSingleTop="true" />
         <argument
             android:name="mediaSelector"
-            app:argType="io.github.drumber.kitsune.data.presentation.model.media.MediaSelector" />
+            app:argType="io.github.drumber.kitsune.data.presentation.MediaSelector" />
         <argument
             android:name="title"
             app:argType="string" />

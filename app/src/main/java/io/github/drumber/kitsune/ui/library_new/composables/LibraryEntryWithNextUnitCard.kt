@@ -47,7 +47,7 @@ import io.github.drumber.kitsune.data.presentation.extension.numberText
 import io.github.drumber.kitsune.data.presentation.extension.publishingYearText
 import io.github.drumber.kitsune.data.presentation.extension.ratingFormatted
 import io.github.drumber.kitsune.data.presentation.extension.title
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModificationAndNextUnit
+import io.github.drumber.kitsune.data.model.library.LibraryEntryWithModificationAndNextUnit
 import io.github.drumber.kitsune.ui.composables.SmallPoster
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -247,8 +247,8 @@ fun LibraryEntryWithModificationAndNextUnit.toLibraryEntryWithNextUnitData(conte
         mediaSubtypeFormatted = libraryEntryWithModification.media?.subtypeFormatted,
         mediaPublishingYearFormatted = libraryEntryWithModification
             .media?.publishingYearText(context),
-        nextUnitTitle = when (nextUnit != null && nextUnit.hasValidTitle()) {
-            true -> nextUnit.title(context)
+        nextUnitTitle = when (nextUnit != null && nextUnit?.hasValidTitle() == true) {
+            true -> nextUnit?.title(context)
             false -> nextUnit?.numberText(context)
         },
         nextUnitNumberFormatted = nextUnit?.numberText(context)

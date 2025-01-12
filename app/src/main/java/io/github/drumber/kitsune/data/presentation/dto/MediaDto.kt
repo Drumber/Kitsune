@@ -5,9 +5,9 @@ import io.github.drumber.kitsune.data.model.Titles
 import io.github.drumber.kitsune.data.model.media.AgeRating
 import io.github.drumber.kitsune.data.model.media.MediaType
 import io.github.drumber.kitsune.data.model.media.ReleaseStatus
-import io.github.drumber.kitsune.data.presentation.model.media.Anime
-import io.github.drumber.kitsune.data.presentation.model.media.Manga
-import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.model.media.Anime
+import io.github.drumber.kitsune.data.model.media.Manga
+import io.github.drumber.kitsune.data.model.media.Media
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

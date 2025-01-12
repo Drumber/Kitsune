@@ -20,8 +20,8 @@ import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.data.model.Titles
 import io.github.drumber.kitsune.data.presentation.dto.toCharacter
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
-import io.github.drumber.kitsune.data.presentation.model.character.Character
-import io.github.drumber.kitsune.data.presentation.model.character.MediaCharacter
+import io.github.drumber.kitsune.data.model.character.Character
+import io.github.drumber.kitsune.data.model.character.MediaCharacter
 import io.github.drumber.kitsune.databinding.ItemDetailsInfoRowBinding
 import io.github.drumber.kitsune.databinding.SheetCharacterDetailsBinding
 import io.github.drumber.kitsune.ui.adapter.MediaCharacterAdapter
@@ -122,7 +122,7 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
                 openPhotoViewActivity(
                     imageUrl,
                     fullCharacter.name,
-                    fullCharacter.image.smallOrHigher(),
+                    fullCharacter.image?.smallOrHigher(),
                     binding.ivCharacter
                 )
             }

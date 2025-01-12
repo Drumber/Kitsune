@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.domain.library
 import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.model.library.LibraryEntryMediaType
 import io.github.drumber.kitsune.data.model.library.LibraryStatus
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
+import io.github.drumber.kitsune.data.model.library.LibraryEntryFilter
 import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.shared.logE

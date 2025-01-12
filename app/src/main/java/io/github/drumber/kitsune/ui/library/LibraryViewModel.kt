@@ -11,11 +11,11 @@ import io.github.drumber.kitsune.shared.Kitsu
 import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.model.library.LibraryEntryMediaType
 import io.github.drumber.kitsune.data.model.library.LibraryStatus
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
+import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.library.LibraryEntryFilter
 import io.github.drumber.kitsune.data.presentation.LibraryEntryUiModel
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryModificationState.NOT_SYNCHRONIZED
+import io.github.drumber.kitsune.data.model.library.LibraryEntryWithModification
+import io.github.drumber.kitsune.data.model.library.LibraryModificationState.NOT_SYNCHRONIZED
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.repository.library.LibraryPagingRepository
 import io.github.drumber.kitsune.data.repository.library.LibraryRepository
@@ -204,7 +204,7 @@ class LibraryViewModel(
 
                     before == null || before.entry.libraryEntry.status != after.entry.libraryEntry.status ->
                         LibraryEntryUiModel.StatusSeparatorModel(
-                            status = after.entry.libraryEntry.status,
+                            status = after.entry.libraryEntry.status!!,
                             isMangaSelected = filter.kind == LibraryEntryMediaType.Manga
                         )
 

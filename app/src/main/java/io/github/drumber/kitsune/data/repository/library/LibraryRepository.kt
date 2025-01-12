@@ -15,14 +15,14 @@ import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryModific
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toNetworkLibraryStatus
 import io.github.drumber.kitsune.data.mapper.graphql.toLibraryEntryWithNextUnit
 import io.github.drumber.kitsune.data.mapper.graphql.toLocalNextMediaUnit
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryModificationState
-import io.github.drumber.kitsune.data.presentation.model.media.Anime
-import io.github.drumber.kitsune.data.presentation.model.media.Manga
-import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.library.LibraryEntryFilter
+import io.github.drumber.kitsune.data.model.library.LibraryEntryModification
+import io.github.drumber.kitsune.data.model.library.LibraryEntryWithModification
+import io.github.drumber.kitsune.data.model.library.LibraryModificationState
+import io.github.drumber.kitsune.data.model.media.Anime
+import io.github.drumber.kitsune.data.model.media.Manga
+import io.github.drumber.kitsune.data.model.media.Media
 import io.github.drumber.kitsune.data.source.graphql.LibraryApolloDataSource
 import io.github.drumber.kitsune.data.source.jsonapi.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.jsonapi.library.model.NetworkLibraryEntry
@@ -166,7 +166,7 @@ class LibraryRepository(
                 }
                 if (updatedLibraryEntryWithNextUnit.nextUnit != null) {
                     localLibraryDataSource.insertNextMediaUnit(
-                        updatedLibraryEntryWithNextUnit.nextUnit.toLocalNextMediaUnit(
+                        updatedLibraryEntryWithNextUnit.nextUnit!!.toLocalNextMediaUnit(
                             libraryEntryId
                         )
                     )

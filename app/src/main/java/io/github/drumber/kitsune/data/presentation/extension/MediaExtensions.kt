@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.annotation.StringRes
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.media.ReleaseStatus
-import io.github.drumber.kitsune.data.presentation.model.media.Anime
-import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.model.media.Anime
+import io.github.drumber.kitsune.data.model.media.Media
 import io.github.drumber.kitsune.shared.formatDate
 import io.github.drumber.kitsune.shared.parseDate
 import io.github.drumber.kitsune.shared.toCalendar

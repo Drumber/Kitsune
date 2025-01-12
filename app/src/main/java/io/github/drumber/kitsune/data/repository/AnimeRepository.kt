@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.map
 import io.github.drumber.kitsune.constants.Repository
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toAnime
-import io.github.drumber.kitsune.data.presentation.model.media.Anime
+import io.github.drumber.kitsune.data.model.media.Anime
 import io.github.drumber.kitsune.data.source.jsonapi.media.AnimeNetworkDataSource
 import io.github.drumber.kitsune.data.paging.media.AnimePagingDataSource
 import io.github.drumber.kitsune.data.paging.media.TrendingAnimePagingDataSource

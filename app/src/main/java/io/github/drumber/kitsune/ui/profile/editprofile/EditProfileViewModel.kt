@@ -14,13 +14,16 @@ import com.algolia.search.model.response.ResponseSearch
 import com.algolia.search.model.search.Query
 import com.algolia.search.model.search.RemoveStopWords
 import com.algolia.search.model.search.RemoveWordIfNoResults
-import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.exception.NoDataException
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
-import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
-import io.github.drumber.kitsune.data.presentation.model.character.Character
-import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLink
-import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLinkSite
+import io.github.drumber.kitsune.data.model.Filter
+import io.github.drumber.kitsune.data.model.algolia.SearchType
+import io.github.drumber.kitsune.data.model.character.Character
+import io.github.drumber.kitsune.data.model.user.profilelinks.ProfileLink
+import io.github.drumber.kitsune.data.model.user.profilelinks.ProfileLinkSite
+import io.github.drumber.kitsune.data.presentation.dto.ProfileLinkSiteDto
+import io.github.drumber.kitsune.data.presentation.dto.toProfileLinkSite
+import io.github.drumber.kitsune.data.presentation.dto.toProfileLinkSiteDto
 import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
@@ -358,7 +361,7 @@ class EditProfileViewModel(
             null -> localProfileLinkEntry.copy(
                 id = remoteProfileLink.id,
                 url = remoteProfileLink.url ?: localProfileLinkEntry.url,
-                site = remoteProfileLink.profileLinkSite ?: localProfileLinkEntry.site
+                site = remoteProfileLink.profileLinkSite?.toProfileLinkSiteDto() ?: localProfileLinkEntry.site
             )
 
             // update initialProfileLinkEntry with remoteProfileLink
@@ -379,7 +382,7 @@ class EditProfileViewModel(
             ProfileLink(
                 id = profileLinkEntry.id ?: "",
                 url = profileLinkEntry.url,
-                profileLinkSite = profileLinkEntry.site,
+                profileLinkSite = profileLinkEntry.site.toProfileLinkSite(),
                 user = null
             )
         )
@@ -439,7 +442,7 @@ class EditProfileViewModel(
             val userProfileLinks = fetchUserProfileLinks(userId).mapNotNull { profileLink ->
                 val url = profileLink.url ?: return@mapNotNull null
                 val site = profileLink.profileLinkSite ?: return@mapNotNull null
-                ProfileLinkEntry(profileLink.id, url, site)
+                ProfileLinkEntry(profileLink.id, url, site.toProfileLinkSiteDto())
             }
             initialProfileLinksFlow.emit(userProfileLinks)
             acceptLoadingState(LoadingState.NotLoading)
@@ -525,7 +528,7 @@ data class ProfileImageContainer(
 data class ProfileLinkEntry(
     val id: String? = null,
     val url: String,
-    val site: ProfileLinkSite
+    val site: ProfileLinkSiteDto
 ) : Parcelable
 
 sealed class ProfileLinkAction {

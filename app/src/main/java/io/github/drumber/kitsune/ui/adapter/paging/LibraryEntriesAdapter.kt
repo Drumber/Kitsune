@@ -12,7 +12,7 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.LibraryEntryUiModel
 import io.github.drumber.kitsune.data.presentation.LibraryEntryUiModel.EntryModel
 import io.github.drumber.kitsune.data.presentation.LibraryEntryUiModel.StatusSeparatorModel
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
+import io.github.drumber.kitsune.data.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.extension.getStringResId
 import io.github.drumber.kitsune.databinding.ItemLibraryEntryBinding
 import io.github.drumber.kitsune.databinding.ItemLibraryStatusSeparatorBinding

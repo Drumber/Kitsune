@@ -32,9 +32,9 @@ import io.github.drumber.kitsune.data.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.extension.publishingYearText
 import io.github.drumber.kitsune.data.presentation.extension.title
 import io.github.drumber.kitsune.data.presentation.extension.getStringResId
-import io.github.drumber.kitsune.data.presentation.model.media.Anime
-import io.github.drumber.kitsune.data.presentation.model.media.Manga
-import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.model.media.Anime
+import io.github.drumber.kitsune.data.model.media.Manga
+import io.github.drumber.kitsune.data.model.media.Media
 import io.github.drumber.kitsune.databinding.FragmentEditLibraryEntryBinding
 import io.github.drumber.kitsune.shared.DATE_FORMAT_ISO
 import io.github.drumber.kitsune.shared.formatDate
@@ -255,13 +255,13 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
                     ?: getString(R.string.library_edit_no_date_set)
                 fieldStarted.editText?.setText(startedText)
                 btnResetStarted.isVisible = libraryEntry.modification?.startedAt != null
-                        && libraryEntry.modification.startedAt != viewModel.uneditedLibraryEntryWrapper?.startedAt
+                        && libraryEntry.modification?.startedAt != viewModel.uneditedLibraryEntryWrapper?.startedAt
 
                 val finishedText = libraryEntry.finishedAt?.parseUtcDate()?.formatDate()
                     ?: getString(R.string.library_edit_no_date_set)
                 fieldFinished.editText?.setText(finishedText)
                 btnResetFinished.isVisible = libraryEntry.modification?.finishedAt != null
-                        && libraryEntry.modification.finishedAt != viewModel.uneditedLibraryEntryWrapper?.finishedAt
+                        && libraryEntry.modification?.finishedAt != viewModel.uneditedLibraryEntryWrapper?.finishedAt
 
                 fieldNotes.editText?.apply {
                     if (text.toString() != (libraryEntry.notes ?: "")) {

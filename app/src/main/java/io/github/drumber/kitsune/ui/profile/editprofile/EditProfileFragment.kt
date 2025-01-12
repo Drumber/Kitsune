@@ -33,17 +33,17 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toCharacterSearchResult
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
-import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLinkSite
+import io.github.drumber.kitsune.data.presentation.dto.ProfileLinkSiteDto
 import io.github.drumber.kitsune.data.source.algolia.AlgoliaCharacterSearchResult
 import io.github.drumber.kitsune.databinding.FragmentEditProfileBinding
 import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.base.BaseDialogFragment
-import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.shared.formatDate
 import io.github.drumber.kitsune.shared.logE
 import io.github.drumber.kitsune.shared.parseDate
 import io.github.drumber.kitsune.shared.toDate
+import io.github.drumber.kitsune.ui.base.BaseDialogFragment
+import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
 import io.github.drumber.kitsune.util.ui.initImePaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
@@ -117,7 +117,7 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
             val linkSite = BundleCompat.getParcelable(
                 bundle,
                 SelectProfileLinkSiteBottomSheet.BUNDLE_PROFILE_LINK_SITE,
-                ProfileLinkSite::class.java
+                ProfileLinkSiteDto::class.java
             ) ?: return@setFragmentResultListener
 
             openEditProfileLinkBottomSheet(ProfileLinkEntry(null, "", linkSite), true)

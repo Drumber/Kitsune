@@ -3,8 +3,8 @@ package io.github.drumber.kitsune.domain.library
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
+import io.github.drumber.kitsune.data.model.library.LibraryEntryFilter
+import io.github.drumber.kitsune.data.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.repository.library.LibraryPagingRepository
 import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import kotlinx.coroutines.CoroutineScope

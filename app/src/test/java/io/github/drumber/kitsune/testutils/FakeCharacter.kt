@@ -1,8 +1,8 @@
 package io.github.drumber.kitsune.testutils
 
-import io.github.drumber.kitsune.data.presentation.model.character.Character
-import io.github.drumber.kitsune.data.presentation.model.character.MediaCharacter
-import io.github.drumber.kitsune.data.presentation.model.character.MediaCharacterRole
+import io.github.drumber.kitsune.data.model.character.Character
+import io.github.drumber.kitsune.data.model.character.MediaCharacter
+import io.github.drumber.kitsune.data.model.character.MediaCharacterRole
 import io.github.drumber.kitsune.data.source.jsonapi.character.model.NetworkCharacter
 import io.github.drumber.kitsune.data.source.jsonapi.character.model.NetworkMediaCharacter
 import io.github.drumber.kitsune.data.source.jsonapi.character.model.NetworkMediaCharacterRole

@@ -6,8 +6,8 @@ import io.github.drumber.kitsune.data.model.media.AnimeSubtype
 import io.github.drumber.kitsune.data.model.media.MangaSubtype
 import io.github.drumber.kitsune.data.model.media.RatingFrequencies
 import io.github.drumber.kitsune.data.model.media.ReleaseStatus
-import io.github.drumber.kitsune.data.presentation.model.media.Anime
-import io.github.drumber.kitsune.data.presentation.model.media.Manga
+import io.github.drumber.kitsune.data.model.media.Anime
+import io.github.drumber.kitsune.data.model.media.Manga
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkAnime
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkAnimeSubtype
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkManga

@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
+import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.library.LibraryEntryModification
+import io.github.drumber.kitsune.data.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.NotFound
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Failure

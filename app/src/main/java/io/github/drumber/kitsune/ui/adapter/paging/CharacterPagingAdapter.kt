@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.presentation.model.character.Character
-import io.github.drumber.kitsune.data.presentation.model.media.production.Casting
+import io.github.drumber.kitsune.data.model.character.Character
+import io.github.drumber.kitsune.data.model.media.production.Casting
 import io.github.drumber.kitsune.databinding.ItemCharacterBinding
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 

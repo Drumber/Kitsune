@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.algolia.instantsearch.core.InstantSearchTelemetry
 import com.chibatching.kotpref.Kotpref
 import com.chibatching.kotpref.livedata.asLiveData
-import io.github.drumber.kitsune.data.presentation.model.appupdate.UpdateCheckResult
+import io.github.drumber.kitsune.data.model.appupdate.UpdateCheckResult
 import io.github.drumber.kitsune.data.repository.AppUpdateRepository
 import io.github.drumber.kitsune.di.appModule
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase

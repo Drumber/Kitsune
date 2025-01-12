@@ -1,0 +1,43 @@
+package io.github.drumber.kitsune.data.model.library
+
+import io.github.drumber.kitsune.data.model.Filter
+
+data class LibraryEntryFilter(
+    val kind: LibraryEntryMediaType,
+    val libraryStatus: List<LibraryStatus>,
+    private val initialFilter: Filter = Filter()
+) {
+
+    fun pageSize(pageSize: Int): LibraryEntryFilter {
+        return copy(initialFilter = Filter(initialFilter.options.toMutableMap()).pageLimit(pageSize))
+    }
+
+    fun buildFilter() = Filter(initialFilter.options.toMutableMap()).apply {
+            if (kind != LibraryEntryMediaType.All) {
+                filter("kind", kind.name.lowercase())
+            }
+            if (libraryStatus.isNotEmpty()) {
+                val status = libraryStatus.joinToString(",") { it.getFilterValue() }
+                filter("status", status)
+            }
+        }
+
+    fun isFiltered() = kind != LibraryEntryMediaType.All || libraryStatus.isNotEmpty()
+
+    /** Checks if the initial filter has a 'title' filter applied. */
+    fun isFilteredBySearchQuery() = initialFilter.hasFilterAttribute("title")
+
+}
+
+private fun LibraryStatus.getFilterValue() = when (this) {
+    LibraryStatus.Current -> "current"
+    LibraryStatus.Planned -> "planned"
+    LibraryStatus.Completed -> "completed"
+    LibraryStatus.OnHold -> "on_hold"
+    LibraryStatus.Dropped -> "dropped"
+}
+
+fun LibraryEntryFilter.toLibraryFilterOptions() = LibraryFilterOptions(
+    mediaType = kind,
+    status = libraryStatus
+)

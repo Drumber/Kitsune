@@ -23,7 +23,7 @@ import io.github.drumber.kitsune.AppLocales
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.shared.Kitsu
-import io.github.drumber.kitsune.data.presentation.model.appupdate.UpdateCheckResult
+import io.github.drumber.kitsune.data.model.appupdate.UpdateCheckResult
 import io.github.drumber.kitsune.data.repository.AppUpdateRepository
 import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference

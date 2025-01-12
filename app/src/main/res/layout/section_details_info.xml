@@ -5,12 +5,12 @@
     <data>
         <import type="android.text.TextUtils" />
         <import type="io.github.drumber.kitsune.data.presentation.extension.MediaExtensionsKt" />
-        <import type="io.github.drumber.kitsune.data.presentation.model.media.Anime" />
-        <import type="io.github.drumber.kitsune.data.presentation.model.media.production.AnimeProductionRole" />
+        <import type="io.github.drumber.kitsune.data.model.media.Anime" />
+        <import type="io.github.drumber.kitsune.data.model.media.production.AnimeProductionRole" />
 
         <variable
             name="data"
-            type="io.github.drumber.kitsune.data.presentation.model.media.Media" />
+            type="io.github.drumber.kitsune.data.model.media.Media" />
     </data>
 
     <TableLayout

@@ -8,7 +8,7 @@
         <import type="android.text.TextUtils" />
         <variable
             name="user"
-            type="io.github.drumber.kitsune.data.presentation.model.user.User" />
+            type="io.github.drumber.kitsune.data.model.user.User" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

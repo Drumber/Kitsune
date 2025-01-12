@@ -6,11 +6,11 @@ import io.github.drumber.kitsune.data.model.ImageDimensions
 import io.github.drumber.kitsune.data.model.ImageMeta
 import io.github.drumber.kitsune.data.model.media.AnimeSubtype
 import io.github.drumber.kitsune.data.model.media.MangaSubtype
-import io.github.drumber.kitsune.data.presentation.model.algolia.AlgoliaKey
-import io.github.drumber.kitsune.data.presentation.model.algolia.AlgoliaKeyCollection
-import io.github.drumber.kitsune.data.presentation.model.character.CharacterSearchResult
-import io.github.drumber.kitsune.data.presentation.model.media.Anime
-import io.github.drumber.kitsune.data.presentation.model.media.Manga
+import io.github.drumber.kitsune.data.model.algolia.AlgoliaKey
+import io.github.drumber.kitsune.data.model.algolia.AlgoliaKeyCollection
+import io.github.drumber.kitsune.data.model.character.CharacterSearchResult
+import io.github.drumber.kitsune.data.model.media.Anime
+import io.github.drumber.kitsune.data.model.media.Manga
 import io.github.drumber.kitsune.data.source.algolia.AlgoliaCharacterSearchResult
 import io.github.drumber.kitsune.data.source.algolia.AlgoliaDimension
 import io.github.drumber.kitsune.data.source.algolia.AlgoliaDimensions

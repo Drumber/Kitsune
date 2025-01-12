@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.presentation.model.media.unit.Chapter
-import io.github.drumber.kitsune.data.presentation.model.media.unit.Episode
-import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
+import io.github.drumber.kitsune.data.model.media.unit.Chapter
+import io.github.drumber.kitsune.data.model.media.unit.Episode
+import io.github.drumber.kitsune.data.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.shared.formatDate
 import io.github.drumber.kitsune.shared.parseDate
 import io.github.drumber.kitsune.util.DataUtil

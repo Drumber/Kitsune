@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.data.presentation.dto
 
 import android.os.Parcelable
 import io.github.drumber.kitsune.data.model.Titles
-import io.github.drumber.kitsune.data.presentation.model.character.Character
+import io.github.drumber.kitsune.data.model.character.Character
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

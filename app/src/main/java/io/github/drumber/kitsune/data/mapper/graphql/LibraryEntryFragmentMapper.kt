@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.mapper.graphql
 
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.source.graphql.fragment.LibraryEntryFragment
 import io.github.drumber.kitsune.data.source.graphql.mapper.toLibraryStatus
 

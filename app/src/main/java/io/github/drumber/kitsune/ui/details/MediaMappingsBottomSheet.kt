@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import io.github.drumber.kitsune.data.presentation.model.mapping.getExternalUrl
+import io.github.drumber.kitsune.data.presentation.extension.getExternalUrl
 import io.github.drumber.kitsune.databinding.SheetMediaMappingsBinding
 import io.github.drumber.kitsune.ui.adapter.MediaMappingsAdapter
 import kotlinx.coroutines.flow.collectLatest

@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.ui.adapter
 import android.view.View
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.presentation.model.media.relationship.MediaRelationship
+import io.github.drumber.kitsune.data.model.media.relationship.MediaRelationship
 import io.github.drumber.kitsune.data.presentation.extension.getStringRes
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
 import io.github.drumber.kitsune.ui.adapter.AbstractMediaRecyclerViewAdapter.AbstractMediaViewHolder

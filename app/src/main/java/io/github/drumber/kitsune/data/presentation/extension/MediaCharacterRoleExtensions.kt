@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.data.presentation.extension
 
 import androidx.annotation.StringRes
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.presentation.model.character.MediaCharacterRole
+import io.github.drumber.kitsune.data.model.character.MediaCharacterRole
 
 @StringRes
 fun MediaCharacterRole.getStringRes() = when (this) {

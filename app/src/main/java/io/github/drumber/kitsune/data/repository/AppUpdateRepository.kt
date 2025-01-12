@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.data.repository
 
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.data.mapper.AppUpdateMapper.toAppRelease
-import io.github.drumber.kitsune.data.presentation.model.appupdate.UpdateCheckResult
+import io.github.drumber.kitsune.data.model.appupdate.UpdateCheckResult
 import io.github.drumber.kitsune.data.source.jsonapi.appupdate.AppReleaseNetworkDataSource
 import io.github.drumber.kitsune.shared.logE
 

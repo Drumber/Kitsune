@@ -9,10 +9,10 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.shared.Kitsu
 import io.github.drumber.kitsune.data.model.Filter
-import io.github.drumber.kitsune.data.presentation.model.media.Anime
-import io.github.drumber.kitsune.data.presentation.model.media.Manga
-import io.github.drumber.kitsune.data.presentation.model.media.Media
-import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
+import io.github.drumber.kitsune.data.model.media.Anime
+import io.github.drumber.kitsune.data.model.media.Manga
+import io.github.drumber.kitsune.data.model.media.Media
+import io.github.drumber.kitsune.data.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository.MediaUnitType

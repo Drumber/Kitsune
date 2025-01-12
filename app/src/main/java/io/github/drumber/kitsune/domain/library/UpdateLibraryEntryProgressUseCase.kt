@@ -1,8 +1,8 @@
 package io.github.drumber.kitsune.domain.library
 
 import io.github.drumber.kitsune.data.exception.NotFoundException
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
+import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.library.LibraryEntryModification
 import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.NetworkError
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.NotFound

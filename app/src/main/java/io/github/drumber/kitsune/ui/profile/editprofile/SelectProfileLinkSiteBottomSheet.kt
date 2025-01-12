@@ -10,7 +10,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLinkSite
+import io.github.drumber.kitsune.data.model.user.profilelinks.ProfileLinkSite
+import io.github.drumber.kitsune.data.presentation.dto.toProfileLinkSiteDto
 import io.github.drumber.kitsune.databinding.ItemListOptionBinding
 import io.github.drumber.kitsune.databinding.SheetSelectProfileLinkSiteBinding
 import io.github.drumber.kitsune.util.ItemClickListener
@@ -75,7 +76,7 @@ class SelectProfileLinkSiteBottomSheet : BottomSheetDialogFragment() {
     private fun onItemClicked(linkSite: ProfileLinkSite) {
         setFragmentResult(
             PROFILE_SITE_SELECTED_REQUEST_KEY,
-            bundleOf(BUNDLE_PROFILE_LINK_SITE to linkSite)
+            bundleOf(BUNDLE_PROFILE_LINK_SITE to linkSite.toProfileLinkSiteDto())
         )
         dismiss()
     }

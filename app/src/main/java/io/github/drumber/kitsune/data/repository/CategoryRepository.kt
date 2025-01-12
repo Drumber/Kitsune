@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.repository
 
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toCategory
-import io.github.drumber.kitsune.data.presentation.model.media.category.Category
+import io.github.drumber.kitsune.data.model.media.category.Category
 import io.github.drumber.kitsune.data.source.jsonapi.media.CategoryNetworkDataSource
 import io.github.drumber.kitsune.data.model.Filter
 

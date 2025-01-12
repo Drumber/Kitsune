@@ -1,9 +1,9 @@
 package io.github.drumber.kitsune.testutils
 
 import io.github.drumber.kitsune.data.model.library.LibraryStatus
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
-import io.github.drumber.kitsune.data.presentation.model.library.ReactionSkip
-import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.library.ReactionSkip
+import io.github.drumber.kitsune.data.model.media.Media
 import io.github.drumber.kitsune.data.source.jsonapi.library.model.NetworkLibraryEntry
 import io.github.drumber.kitsune.data.source.jsonapi.library.model.NetworkLibraryStatus
 import io.github.drumber.kitsune.data.source.jsonapi.library.model.NetworkReactionSkip

@@ -32,8 +32,8 @@ import com.algolia.search.model.search.Query
 import io.github.drumber.kitsune.shared.Kitsu
 import io.github.drumber.kitsune.constants.Repository
 import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toMedia
-import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
-import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.model.algolia.SearchType
+import io.github.drumber.kitsune.data.model.media.Media
 import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.data.source.algolia.AlgoliaMediaSearchResult
 import io.github.drumber.kitsune.domain.algolia.FilterCollection

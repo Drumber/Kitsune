@@ -12,8 +12,8 @@ import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.exception.NoDataException
 import io.github.drumber.kitsune.data.model.media.MediaType
 import io.github.drumber.kitsune.data.presentation.dto.MediaDto
-import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
-import io.github.drumber.kitsune.data.presentation.model.media.identifier
+import io.github.drumber.kitsune.data.presentation.MediaSelector
+import io.github.drumber.kitsune.data.presentation.identifier
 import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
 import io.github.drumber.kitsune.shared.logE

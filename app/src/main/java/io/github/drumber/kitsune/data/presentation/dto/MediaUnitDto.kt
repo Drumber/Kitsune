@@ -3,9 +3,9 @@ package io.github.drumber.kitsune.data.presentation.dto
 import android.os.Parcelable
 import io.github.drumber.kitsune.data.model.Titles
 import io.github.drumber.kitsune.data.presentation.dto.MediaUnitDto.UnitType
-import io.github.drumber.kitsune.data.presentation.model.media.unit.Chapter
-import io.github.drumber.kitsune.data.presentation.model.media.unit.Episode
-import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
+import io.github.drumber.kitsune.data.model.media.unit.Chapter
+import io.github.drumber.kitsune.data.model.media.unit.Episode
+import io.github.drumber.kitsune.data.model.media.unit.MediaUnit
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

@@ -12,13 +12,13 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.presentation.model.mapping.Mapping
-import io.github.drumber.kitsune.data.presentation.model.mapping.getExternalUrl
-import io.github.drumber.kitsune.data.presentation.model.mapping.getSiteName
+import io.github.drumber.kitsune.data.model.mapping.Mapping
+import io.github.drumber.kitsune.data.presentation.extension.getExternalUrl
+import io.github.drumber.kitsune.data.presentation.extension.getSiteName
 import io.github.drumber.kitsune.databinding.ItemMediaMappingBinding
-import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 import io.github.drumber.kitsune.shared.logD
 import io.github.drumber.kitsune.shared.logE
+import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 
 class MediaMappingsAdapter(
     private val context: Context,

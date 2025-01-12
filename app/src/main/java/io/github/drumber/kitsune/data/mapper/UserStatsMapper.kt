@@ -1,10 +1,10 @@
 package io.github.drumber.kitsune.data.mapper
 
-import io.github.drumber.kitsune.data.presentation.model.user.stats.AmountConsumedPercentiles
-import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStats
-import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsData.AmountConsumedData
-import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsData.CategoryBreakdownData
-import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsKind
+import io.github.drumber.kitsune.data.model.user.stats.AmountConsumedPercentiles
+import io.github.drumber.kitsune.data.model.user.stats.UserStats
+import io.github.drumber.kitsune.data.model.user.stats.UserStatsData.AmountConsumedData
+import io.github.drumber.kitsune.data.model.user.stats.UserStatsData.CategoryBreakdownData
+import io.github.drumber.kitsune.data.model.user.stats.UserStatsKind
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.stats.NetworkAmountConsumedPercentiles
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.stats.NetworkUserStats
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.stats.NetworkUserStatsData

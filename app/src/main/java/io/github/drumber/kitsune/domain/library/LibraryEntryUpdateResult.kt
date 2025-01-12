@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.domain.library
 
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
+import io.github.drumber.kitsune.data.model.library.LibraryEntry
 
 sealed class LibraryEntryUpdateResult {
     data class Success(val updatedLibraryEntry: LibraryEntry) : LibraryEntryUpdateResult()

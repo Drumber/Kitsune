@@ -1,8 +1,8 @@
 package io.github.drumber.kitsune.data.mapper
 
 import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
-import io.github.drumber.kitsune.data.presentation.model.media.unit.Chapter
-import io.github.drumber.kitsune.data.presentation.model.media.unit.Episode
+import io.github.drumber.kitsune.data.model.media.unit.Chapter
+import io.github.drumber.kitsune.data.model.media.unit.Episode
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMedia
 import io.github.drumber.kitsune.data.source.local.library.model.LocalNextMediaUnit
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.unit.NetworkChapter

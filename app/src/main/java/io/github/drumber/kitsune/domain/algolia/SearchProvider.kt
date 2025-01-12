@@ -12,7 +12,7 @@ import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.shared.Kitsu
 import io.github.drumber.kitsune.data.exception.InvalidDataException
 import io.github.drumber.kitsune.data.exception.SearchProviderUnavailableException
-import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
+import io.github.drumber.kitsune.data.model.algolia.SearchType
 import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.shared.logE
 import kotlinx.coroutines.Dispatchers

@@ -10,7 +10,7 @@
         <import type="androidx.core.content.ContextCompat" />
         <variable
             name="entry"
-            type="io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification" />
+            type="io.github.drumber.kitsune.data.model.library.LibraryEntryWithModification" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

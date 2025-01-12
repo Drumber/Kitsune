@@ -14,9 +14,9 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.model.media.MediaType
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
-import io.github.drumber.kitsune.data.presentation.model.media.Media
-import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
-import io.github.drumber.kitsune.data.presentation.model.media.RequestType
+import io.github.drumber.kitsune.data.model.media.Media
+import io.github.drumber.kitsune.data.presentation.MediaSelector
+import io.github.drumber.kitsune.data.presentation.RequestType
 import io.github.drumber.kitsune.databinding.FragmentHomeExploreBinding
 import io.github.drumber.kitsune.databinding.SectionMainExploreBinding
 import io.github.drumber.kitsune.preference.KitsunePref

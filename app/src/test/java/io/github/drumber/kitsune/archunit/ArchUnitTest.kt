@@ -80,18 +80,6 @@ class ArchUnitTest {
     }
 
     @Test
-    fun presentation_model_classes_should_not_depend_on_data_sources() {
-        noClasses()
-            .that()
-            .resideInAPackage("..data.presentation.model..")
-            .should()
-            .dependOnClassesThat()
-            .resideInAPackage("..data.source..")
-            .because("presentation model classes should not depend on data sources")
-            .check(NON_TEST_CLASSES)
-    }
-
-    @Test
     fun common_classes_should_not_depend_on_data_sources() {
         noClasses()
             .that()

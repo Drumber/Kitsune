@@ -12,7 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.unnamed.b.atv.model.TreeNode
 import com.unnamed.b.atv.view.AndroidTreeView
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.presentation.model.media.category.CategoryNode
+import io.github.drumber.kitsune.data.model.media.category.CategoryNode
 import io.github.drumber.kitsune.databinding.FragmentCategoriesBinding
 import io.github.drumber.kitsune.preference.CategoryPrefWrapper
 import io.github.drumber.kitsune.ui.base.BaseDialogFragment

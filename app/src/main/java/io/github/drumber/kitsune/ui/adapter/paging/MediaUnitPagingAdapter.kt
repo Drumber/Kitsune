@@ -11,7 +11,7 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.extension.hasValidTitle
 import io.github.drumber.kitsune.data.presentation.extension.numberText
 import io.github.drumber.kitsune.data.presentation.extension.title
-import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
+import io.github.drumber.kitsune.data.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.databinding.ItemEpisodeBinding
 import kotlin.math.max
 

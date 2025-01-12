@@ -7,8 +7,8 @@ import io.github.drumber.kitsune.data.mapper.ProfileLinksMapper.toProfileLink
 import io.github.drumber.kitsune.data.mapper.UserMapper.toLocalUser
 import io.github.drumber.kitsune.data.mapper.UserMapper.toNetworkUser
 import io.github.drumber.kitsune.data.mapper.UserMapper.toUser
-import io.github.drumber.kitsune.data.presentation.model.user.User
-import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLink
+import io.github.drumber.kitsune.data.model.user.User
+import io.github.drumber.kitsune.data.model.user.profilelinks.ProfileLink
 import io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.data.source.jsonapi.user.UserNetworkDataSource
