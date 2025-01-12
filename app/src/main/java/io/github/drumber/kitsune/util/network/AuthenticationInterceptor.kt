@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.util.network
 
-import io.github.drumber.kitsune.shared.Kitsu.API_HOST
+import io.github.drumber.kitsune.shared.constants.Kitsu.API_HOST
 import io.github.drumber.kitsune.data.repository.AccessTokenRepository
 import io.github.drumber.kitsune.domain.auth.RefreshAccessTokenUseCase
 import io.github.drumber.kitsune.domain.auth.RefreshResult

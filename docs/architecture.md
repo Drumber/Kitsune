@@ -43,6 +43,7 @@ The data layer is divided into the following modules:
 ```
 data (root)
 common
+model
 source
   - local
   - JSON:API
@@ -53,7 +54,6 @@ source
 The data (root) module contains the following packages:
 
 ```
-- presentation
-- repository
-- mapper
+mapper
+repository
 ```

@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import io.github.drumber.kitsune.data.exception.NoDataException
 import io.github.drumber.kitsune.data.source.jsonapi.PageData
-import io.github.drumber.kitsune.shared.Kitsu
+import io.github.drumber.kitsune.shared.constants.Kitsu
 import io.github.drumber.kitsune.shared.logE
 
 abstract class BasePagingDataSource<Value : Any> : PagingSource<Int, Value>() {

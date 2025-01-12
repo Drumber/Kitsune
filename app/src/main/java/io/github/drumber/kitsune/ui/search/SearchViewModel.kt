@@ -29,8 +29,8 @@ import com.algolia.search.model.Attribute
 import com.algolia.search.model.filter.Filter
 import com.algolia.search.model.response.ResponseSearch
 import com.algolia.search.model.search.Query
-import io.github.drumber.kitsune.shared.Kitsu
-import io.github.drumber.kitsune.constants.Repository
+import io.github.drumber.kitsune.shared.constants.Kitsu
+import io.github.drumber.kitsune.shared.constants.Repository
 import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toMedia
 import io.github.drumber.kitsune.data.model.algolia.SearchType
 import io.github.drumber.kitsune.data.model.media.Media

@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.ui.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.drumber.kitsune.constants.Defaults
+import io.github.drumber.kitsune.shared.constants.Defaults
 import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.exception.NoDataException
 import io.github.drumber.kitsune.data.mapper.UserMapper.toUser

@@ -1,8 +1,6 @@
 package io.github.drumber.kitsune.di
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.github.drumber.kitsune.constants.GitHub
-import io.github.drumber.kitsune.shared.Kitsu
 import io.github.drumber.kitsune.data.repository.AccessTokenRepository
 import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.data.repository.AnimeRepository
@@ -19,7 +17,7 @@ import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.repository.library.LibraryChangeListener
 import io.github.drumber.kitsune.data.repository.library.LibraryPagingRepository
 import io.github.drumber.kitsune.data.repository.library.LibraryRepository
-import io.github.drumber.kitsune.data.repository.library.WidgetLibraryChangeListener
+import io.github.drumber.kitsune.data.WidgetLibraryChangeListener
 import io.github.drumber.kitsune.data.source.graphql.LibraryApolloDataSource
 import io.github.drumber.kitsune.data.source.jsonapi.algoliakey.AlgoliaKeyNetworkDataSource
 import io.github.drumber.kitsune.data.source.jsonapi.algoliakey.api.AlgoliaKeyApi
@@ -78,6 +76,8 @@ import io.github.drumber.kitsune.data.source.local.UserPreferences
 import io.github.drumber.kitsune.data.source.local.auth.AccessTokenLocalDataSource
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
 import io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource
+import io.github.drumber.kitsune.shared.constants.GitHub
+import io.github.drumber.kitsune.shared.constants.Kitsu
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

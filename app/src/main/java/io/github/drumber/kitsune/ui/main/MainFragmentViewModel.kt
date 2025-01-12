@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
-import io.github.drumber.kitsune.constants.Defaults
+import io.github.drumber.kitsune.shared.constants.Defaults
 import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.exception.NoDataException

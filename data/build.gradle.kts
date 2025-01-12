@@ -38,6 +38,12 @@ dependencies {
     // Paging
     implementation(libs.androidx.paging.runtime.ktx)
 
+    // Room
+    implementation(libs.androidx.room.runtime)
+
+    // Retrofit
+    implementation(libs.squareup.retrofit2.retrofit)
+
     // Test
     testImplementation(libs.junit)
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
@@ -45,6 +51,7 @@ dependencies {
     testImplementation(libs.androidx.room.testing)
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.datafaker)
+    testImplementation(libs.insert.koin.test.junit4)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

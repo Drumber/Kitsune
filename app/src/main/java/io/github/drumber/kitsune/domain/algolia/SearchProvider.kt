@@ -9,7 +9,7 @@ import com.algolia.search.model.ApplicationID
 import com.algolia.search.model.IndexName
 import com.algolia.search.model.search.Query
 import io.github.drumber.kitsune.BuildConfig
-import io.github.drumber.kitsune.shared.Kitsu
+import io.github.drumber.kitsune.shared.constants.Kitsu
 import io.github.drumber.kitsune.data.exception.InvalidDataException
 import io.github.drumber.kitsune.data.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.data.model.algolia.SearchType

@@ -7,7 +7,7 @@ import androidx.paging.TerminalSeparatorType
 import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import androidx.paging.map
-import io.github.drumber.kitsune.shared.Kitsu
+import io.github.drumber.kitsune.shared.constants.Kitsu
 import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.model.library.LibraryEntryMediaType
 import io.github.drumber.kitsune.data.model.library.LibraryStatus

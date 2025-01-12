@@ -32,7 +32,7 @@ import com.google.android.material.elevation.SurfaceColors
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.shared.Kitsu
+import io.github.drumber.kitsune.shared.constants.Kitsu
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.data.presentation.dto.toCharacterDto
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto

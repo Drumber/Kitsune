@@ -22,7 +22,6 @@ import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.AppLocales
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.shared.Kitsu
 import io.github.drumber.kitsune.data.model.appupdate.UpdateCheckResult
 import io.github.drumber.kitsune.data.repository.AppUpdateRepository
 import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
@@ -33,6 +32,7 @@ import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.preference.StartPagePref
+import io.github.drumber.kitsune.shared.constants.Kitsu
 import io.github.drumber.kitsune.ui.base.BasePreferenceFragment
 import io.github.drumber.kitsune.ui.permissions.isNotificationPermissionGranted
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
@@ -202,7 +202,7 @@ class SettingsFragment : BasePreferenceFragment() {
         ).show()
 
         lifecycleScope.launch {
-            when (val result = appUpdateRepository.checkForUpdates()) {
+            when (val result = appUpdateRepository.checkForUpdates(BuildConfig.VERSION_NAME)) {
                 is UpdateCheckResult.NewVersion -> {
                     val release = result.release
                     Notifications.showNewVersion(requireContext(), release)

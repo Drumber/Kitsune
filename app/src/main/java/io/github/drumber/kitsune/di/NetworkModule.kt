@@ -14,7 +14,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.github.jasminb.jsonapi.ResourceConverter
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.BuildConfig
-import io.github.drumber.kitsune.shared.Kitsu
+import io.github.drumber.kitsune.shared.constants.Kitsu
 import io.github.drumber.kitsune.util.json.AlgoliaFacetValueDeserializer
 import io.github.drumber.kitsune.util.json.AlgoliaNumericValueDeserializer
 import io.github.drumber.kitsune.util.json.IgnoreParcelablePropertyMixin

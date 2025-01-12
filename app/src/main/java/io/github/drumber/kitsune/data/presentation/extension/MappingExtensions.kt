@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.presentation.extension
 
 import io.github.drumber.kitsune.data.model.mapping.Mapping
-import io.github.drumber.kitsune.shared.Kitsu
+import io.github.drumber.kitsune.shared.constants.Kitsu
 
 fun Mapping.getSiteName() = when (externalSite) {
     "kitsu/anime", "kitsu/manga" -> "Kitsu"
