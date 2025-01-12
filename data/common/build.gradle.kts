@@ -13,3 +13,7 @@ kotlin {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(ProjectConfig.KOTLIN_JVM_TARGET)
     }
 }
+
+dependencies {
+    implementation(project(":data:model"))
+}

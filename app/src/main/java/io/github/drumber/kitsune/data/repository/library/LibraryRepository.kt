@@ -2,11 +2,11 @@ package io.github.drumber.kitsune.data.repository.library
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
-import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.exception.NoDataException
 import io.github.drumber.kitsune.data.exception.NotFoundException
-import io.github.drumber.kitsune.data.common.model.library.LibraryEntryMediaType
-import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
+import io.github.drumber.kitsune.data.model.library.LibraryEntryMediaType
+import io.github.drumber.kitsune.data.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntryModification
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry

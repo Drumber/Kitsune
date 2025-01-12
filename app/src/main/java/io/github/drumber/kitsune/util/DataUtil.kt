@@ -2,11 +2,11 @@ package io.github.drumber.kitsune.util
 
 import android.content.Context
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.common.model.Titles
-import io.github.drumber.kitsune.data.common.model.en
-import io.github.drumber.kitsune.data.common.model.enJp
-import io.github.drumber.kitsune.data.common.model.enUs
-import io.github.drumber.kitsune.data.common.model.jaJp
+import io.github.drumber.kitsune.data.model.Titles
+import io.github.drumber.kitsune.data.model.en
+import io.github.drumber.kitsune.data.model.enJp
+import io.github.drumber.kitsune.data.model.enUs
+import io.github.drumber.kitsune.data.model.jaJp
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.shared.formatDate

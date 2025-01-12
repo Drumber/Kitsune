@@ -1,9 +1,9 @@
 package io.github.drumber.kitsune.data.presentation.model.library
 
-import io.github.drumber.kitsune.data.common.Filter
-import io.github.drumber.kitsune.data.common.model.library.LibraryEntryMediaType
-import io.github.drumber.kitsune.data.common.model.library.LibraryFilterOptions
-import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
+import io.github.drumber.kitsune.data.model.Filter
+import io.github.drumber.kitsune.data.model.library.LibraryEntryMediaType
+import io.github.drumber.kitsune.data.model.library.LibraryFilterOptions
+import io.github.drumber.kitsune.data.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.extension.getFilterValue
 
 data class LibraryEntryFilter(

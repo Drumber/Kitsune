@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.source.jsonapi.media
 
-import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.source.jsonapi.media.api.CategoryApi
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.category.NetworkCategory
 import kotlinx.coroutines.Dispatchers

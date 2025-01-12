@@ -2,9 +2,9 @@ package io.github.drumber.kitsune.data.source.graphql
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
-import io.github.drumber.kitsune.data.common.model.library.LibraryFilterOptions
-import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
-import io.github.drumber.kitsune.data.common.mapper.toMediaType
+import io.github.drumber.kitsune.data.model.library.LibraryFilterOptions
+import io.github.drumber.kitsune.data.model.library.LibraryStatus
+import io.github.drumber.kitsune.data.common.toMediaType
 import io.github.drumber.kitsune.data.source.graphql.fragment.LibraryEntryWithNextUnitFragment
 import io.github.drumber.kitsune.data.source.graphql.mapper.toLibraryEntrySortEnum
 import io.github.drumber.kitsune.data.source.graphql.mapper.toLibraryEntryStatusEnum

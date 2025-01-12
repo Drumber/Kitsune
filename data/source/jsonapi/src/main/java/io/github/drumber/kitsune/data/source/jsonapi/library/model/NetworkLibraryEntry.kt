@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
-import io.github.drumber.kitsune.data.common.model.media.MediaType
+import io.github.drumber.kitsune.data.model.media.MediaType
 import io.github.drumber.kitsune.data.source.jsonapi.NullableIntSerializer
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkAnime
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkManga

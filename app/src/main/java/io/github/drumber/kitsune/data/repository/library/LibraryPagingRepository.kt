@@ -5,8 +5,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.map
 import io.github.drumber.kitsune.constants.Repository
-import io.github.drumber.kitsune.data.common.Filter
-import io.github.drumber.kitsune.data.common.model.library.LibraryFilterOptions
+import io.github.drumber.kitsune.data.model.Filter
+import io.github.drumber.kitsune.data.model.library.LibraryFilterOptions
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLibraryEntryWithModificationAndNextUnit
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter

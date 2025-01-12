@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.data.presentation.extension
 
 import androidx.annotation.StringRes
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
+import io.github.drumber.kitsune.data.model.library.LibraryStatus
 
 @StringRes
 fun LibraryStatus.getStringResId(isAnime: Boolean = true) = when (this) {

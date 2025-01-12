@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.source.jsonapi.testutils
 
-import io.github.drumber.kitsune.data.common.model.Titles
-import io.github.drumber.kitsune.data.common.model.media.AgeRating
+import io.github.drumber.kitsune.data.model.Titles
+import io.github.drumber.kitsune.data.model.media.AgeRating
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkAnime
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkAnimeSubtype
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkManga

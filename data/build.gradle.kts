@@ -25,7 +25,7 @@ android {
 
 dependencies {
     implementation(project(":shared"))
-    implementation(project(":data:common"))
+    implementation(project(":data:model"))
     implementation(project(":data:source:local"))
     implementation(project(":data:source:jsonapi"))
     implementation(project(":data:source:graphql"))

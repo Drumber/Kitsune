@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.source.jsonapi.user
 
-import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.source.jsonapi.user.api.ProfileLinkApi
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.profilelinks.NetworkProfileLink
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.profilelinks.NetworkProfileLinkSite

@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.source.local.character
 
-import io.github.drumber.kitsune.data.common.model.Titles
-import io.github.drumber.kitsune.data.common.model.Image
+import io.github.drumber.kitsune.data.model.Titles
+import io.github.drumber.kitsune.data.model.Image
 
 data class LocalCharacter(
     val id: String,

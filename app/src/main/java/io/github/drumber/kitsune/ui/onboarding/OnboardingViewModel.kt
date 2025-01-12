@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.ui.onboarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository

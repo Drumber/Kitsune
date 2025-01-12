@@ -33,7 +33,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
+import io.github.drumber.kitsune.data.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModificationAndNextUnit
 import io.github.drumber.kitsune.ui.library_new.composables.LibraryEntryWithNextUnitItem

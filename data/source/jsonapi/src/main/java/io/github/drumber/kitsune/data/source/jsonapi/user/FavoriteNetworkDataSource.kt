@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.source.jsonapi.user
 
 import com.github.jasminb.jsonapi.JSONAPIDocument
-import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.source.jsonapi.user.api.FavoriteApi
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkFavorite
 import kotlinx.coroutines.Dispatchers

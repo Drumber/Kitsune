@@ -1,10 +1,10 @@
 package io.github.drumber.kitsune.data.presentation.dto
 
 import android.os.Parcelable
-import io.github.drumber.kitsune.data.common.model.Titles
-import io.github.drumber.kitsune.data.common.model.media.AgeRating
-import io.github.drumber.kitsune.data.common.model.media.MediaType
-import io.github.drumber.kitsune.data.common.model.media.ReleaseStatus
+import io.github.drumber.kitsune.data.model.Titles
+import io.github.drumber.kitsune.data.model.media.AgeRating
+import io.github.drumber.kitsune.data.model.media.MediaType
+import io.github.drumber.kitsune.data.model.media.ReleaseStatus
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.presentation.model.media.Media

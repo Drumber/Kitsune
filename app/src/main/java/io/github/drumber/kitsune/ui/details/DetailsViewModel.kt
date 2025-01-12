@@ -5,10 +5,10 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.exception.NoDataException
 import io.github.drumber.kitsune.data.exception.ResourceUpdateFailed
-import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
+import io.github.drumber.kitsune.data.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.model.mapping.Mapping

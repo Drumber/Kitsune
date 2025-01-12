@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.presentation.model.user
 
-import io.github.drumber.kitsune.data.common.model.Image
+import io.github.drumber.kitsune.data.model.Image
 import io.github.drumber.kitsune.data.presentation.model.character.Character
 import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLink
 import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStats

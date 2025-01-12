@@ -3,8 +3,8 @@ package io.github.drumber.kitsune.data.source.jsonapi.user.model
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
-import io.github.drumber.kitsune.data.common.model.Image
-import io.github.drumber.kitsune.data.common.model.user.UserThemePreference
+import io.github.drumber.kitsune.data.model.Image
+import io.github.drumber.kitsune.data.model.user.UserThemePreference
 import io.github.drumber.kitsune.data.source.jsonapi.character.model.NetworkCharacter
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.profilelinks.NetworkProfileLink
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.stats.NetworkUserStats

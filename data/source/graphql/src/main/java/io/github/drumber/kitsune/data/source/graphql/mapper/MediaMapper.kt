@@ -1,11 +1,11 @@
 package io.github.drumber.kitsune.data.source.graphql.mapper
 
-import io.github.drumber.kitsune.data.common.model.library.LibraryFilterOptions
-import io.github.drumber.kitsune.data.common.model.media.AgeRating
-import io.github.drumber.kitsune.data.common.model.media.AnimeSubtype
-import io.github.drumber.kitsune.data.common.model.media.MangaSubtype
-import io.github.drumber.kitsune.data.common.model.media.MediaType
-import io.github.drumber.kitsune.data.common.model.media.ReleaseStatus
+import io.github.drumber.kitsune.data.model.library.LibraryFilterOptions
+import io.github.drumber.kitsune.data.model.media.AgeRating
+import io.github.drumber.kitsune.data.model.media.AnimeSubtype
+import io.github.drumber.kitsune.data.model.media.MangaSubtype
+import io.github.drumber.kitsune.data.model.media.MediaType
+import io.github.drumber.kitsune.data.model.media.ReleaseStatus
 import io.github.drumber.kitsune.data.source.graphql.type.AgeRatingEnum
 import io.github.drumber.kitsune.data.source.graphql.type.AnimeSubtypeEnum
 import io.github.drumber.kitsune.data.source.graphql.type.LibraryEntrySortEnum

@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.presentation.model.character
 
-import io.github.drumber.kitsune.data.common.model.Image
-import io.github.drumber.kitsune.data.common.model.Titles
+import io.github.drumber.kitsune.data.model.Image
+import io.github.drumber.kitsune.data.model.Titles
 import io.github.drumber.kitsune.data.presentation.model.user.FavoriteItem
 
 data class Character(

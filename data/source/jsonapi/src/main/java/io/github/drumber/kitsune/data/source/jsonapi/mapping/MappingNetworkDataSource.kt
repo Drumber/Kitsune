@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.source.jsonapi.mapping
 
-import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.source.jsonapi.mapping.api.MappingApi
 import io.github.drumber.kitsune.data.source.jsonapi.mapping.model.NetworkMapping
 import kotlinx.coroutines.Dispatchers

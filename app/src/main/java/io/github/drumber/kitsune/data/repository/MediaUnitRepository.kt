@@ -9,7 +9,7 @@ import io.github.drumber.kitsune.data.source.jsonapi.media.ChapterNetworkDataSou
 import io.github.drumber.kitsune.data.paging.media.ChapterPagingDataSource
 import io.github.drumber.kitsune.data.source.jsonapi.media.EpisodeNetworkDataSource
 import io.github.drumber.kitsune.data.paging.media.EpisodePagingDataSource
-import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.model.Filter
 import kotlinx.coroutines.flow.map
 
 class MediaUnitRepository(

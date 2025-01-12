@@ -17,7 +17,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.addTransform
-import io.github.drumber.kitsune.data.common.model.Titles
+import io.github.drumber.kitsune.data.model.Titles
 import io.github.drumber.kitsune.data.presentation.dto.toCharacter
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.model.character.Character

@@ -14,7 +14,7 @@ import com.algolia.search.model.response.ResponseSearch
 import com.algolia.search.model.search.Query
 import com.algolia.search.model.search.RemoveStopWords
 import com.algolia.search.model.search.RemoveWordIfNoResults
-import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.exception.NoDataException
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
 import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType

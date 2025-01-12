@@ -11,7 +11,7 @@ import io.github.drumber.kitsune.shared.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.media.production.Casting
 import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.CastingRepository
-import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.shared.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

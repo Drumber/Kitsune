@@ -1,8 +1,8 @@
 package io.github.drumber.kitsune.data.mapper
 
-import io.github.drumber.kitsune.data.common.model.library.LibraryFilterOptions
-import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
-import io.github.drumber.kitsune.data.common.model.media.MediaType
+import io.github.drumber.kitsune.data.model.library.LibraryFilterOptions
+import io.github.drumber.kitsune.data.model.library.LibraryStatus
+import io.github.drumber.kitsune.data.model.media.MediaType
 import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
 import io.github.drumber.kitsune.data.mapper.ImageMapper.toLocalImage
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toAnime

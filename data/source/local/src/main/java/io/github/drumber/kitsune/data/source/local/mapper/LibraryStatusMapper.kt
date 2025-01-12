@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.source.local.mapper
 
-import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
+import io.github.drumber.kitsune.data.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus
 
 fun LibraryStatus.toLocalLibraryStatus(): LocalLibraryStatus = when (this) {

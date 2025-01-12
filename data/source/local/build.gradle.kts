@@ -31,6 +31,7 @@ android {
 
 dependencies {
     implementation(project(":shared"))
+    implementation(project(":data:model"))
     implementation(project(":data:common"))
 
     // Core dependencies

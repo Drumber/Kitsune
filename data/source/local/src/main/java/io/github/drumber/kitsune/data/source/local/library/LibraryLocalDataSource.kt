@@ -2,11 +2,11 @@ package io.github.drumber.kitsune.data.source.local.library
 
 import androidx.paging.PagingSource
 import androidx.room.withTransaction
-import io.github.drumber.kitsune.data.common.model.library.LibraryEntryMediaType
-import io.github.drumber.kitsune.data.common.model.library.LibraryFilterOptions
-import io.github.drumber.kitsune.data.common.model.library.LibraryFilterOptions.SortBy
-import io.github.drumber.kitsune.data.common.model.library.LibraryFilterOptions.SortDirection
-import io.github.drumber.kitsune.data.common.mapper.toMediaType
+import io.github.drumber.kitsune.data.model.library.LibraryEntryMediaType
+import io.github.drumber.kitsune.data.model.library.LibraryFilterOptions
+import io.github.drumber.kitsune.data.model.library.LibraryFilterOptions.SortBy
+import io.github.drumber.kitsune.data.model.library.LibraryFilterOptions.SortDirection
+import io.github.drumber.kitsune.data.common.toMediaType
 import io.github.drumber.kitsune.data.source.local.LocalDatabase
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModification

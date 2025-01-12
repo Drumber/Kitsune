@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.source.jsonapi.library
 
 import com.github.jasminb.jsonapi.JSONAPIDocument
-import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.source.jsonapi.PageData
 import io.github.drumber.kitsune.data.source.jsonapi.library.api.LibraryEntryApi
 import io.github.drumber.kitsune.data.source.jsonapi.library.model.NetworkLibraryEntry

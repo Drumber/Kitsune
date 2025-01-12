@@ -1,9 +1,9 @@
 package io.github.drumber.kitsune.data.source.jsonapi.testutils
 
-import io.github.drumber.kitsune.data.common.model.Image
-import io.github.drumber.kitsune.data.common.model.ImageDimension
-import io.github.drumber.kitsune.data.common.model.ImageDimensions
-import io.github.drumber.kitsune.data.common.model.ImageMeta
+import io.github.drumber.kitsune.data.model.Image
+import io.github.drumber.kitsune.data.model.ImageDimension
+import io.github.drumber.kitsune.data.model.ImageDimensions
+import io.github.drumber.kitsune.data.model.ImageMeta
 import net.datafaker.Faker
 
 fun image(faker: Faker) = Image(

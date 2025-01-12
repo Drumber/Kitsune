@@ -26,7 +26,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":data:common"))
+    implementation(project(":data:model"))
 
     // Kotlin coroutines
     implementation(libs.jetbrains.kotlinx.coroutines.core)

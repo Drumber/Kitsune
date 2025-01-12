@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.common
+package io.github.drumber.kitsune.data.model
 
 data class Filter(val options: FilterOptions = mutableMapOf()) {
 

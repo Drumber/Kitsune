@@ -8,8 +8,8 @@ import androidx.room.withTransaction
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import io.github.drumber.kitsune.data.common.model.library.LibraryFilterOptions.SortBy
-import io.github.drumber.kitsune.data.common.model.library.LibraryFilterOptions.SortDirection
+import io.github.drumber.kitsune.data.model.library.LibraryFilterOptions.SortBy
+import io.github.drumber.kitsune.data.model.library.LibraryFilterOptions.SortDirection
 import io.github.drumber.kitsune.data.source.local.library.dao.LibraryEntryDao
 import io.github.drumber.kitsune.data.source.local.library.dao.LibraryEntryWithModificationAndNextMediaUnitDao
 import io.github.drumber.kitsune.data.source.local.library.dao.NextMediaUnitDao

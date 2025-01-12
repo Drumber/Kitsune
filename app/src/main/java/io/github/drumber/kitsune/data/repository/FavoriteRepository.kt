@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.repository
 
-import io.github.drumber.kitsune.data.common.model.media.MediaType
+import io.github.drumber.kitsune.data.model.media.MediaType
 import io.github.drumber.kitsune.data.mapper.UserMapper.toFavorite
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
 import io.github.drumber.kitsune.data.source.jsonapi.character.model.NetworkCharacter
@@ -10,7 +10,7 @@ import io.github.drumber.kitsune.data.source.jsonapi.user.FavoriteNetworkDataSou
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkFavorite
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkFavoriteItem
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkUser
-import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.model.Filter
 
 class FavoriteRepository(
     private val remoteFavoriteDataSource: FavoriteNetworkDataSource

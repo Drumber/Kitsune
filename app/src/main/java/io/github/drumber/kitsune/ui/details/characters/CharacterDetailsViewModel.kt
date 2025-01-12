@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.ui.details.characters
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.constants.Defaults
-import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.presentation.model.character.Character
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
 import io.github.drumber.kitsune.data.repository.CharacterRepository

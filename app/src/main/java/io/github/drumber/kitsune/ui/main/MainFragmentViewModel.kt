@@ -8,9 +8,9 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.constants.SortFilter
-import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.exception.NoDataException
-import io.github.drumber.kitsune.data.common.model.media.MediaType
+import io.github.drumber.kitsune.data.model.media.MediaType
 import io.github.drumber.kitsune.data.presentation.dto.MediaDto
 import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
 import io.github.drumber.kitsune.data.presentation.model.media.identifier

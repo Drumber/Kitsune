@@ -4,9 +4,9 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import io.github.drumber.kitsune.data.common.model.library.LibraryFilterOptions
-import io.github.drumber.kitsune.data.common.model.library.LibraryFilterOptions.SortDirection
-import io.github.drumber.kitsune.data.common.model.media.MediaType
+import io.github.drumber.kitsune.data.model.library.LibraryFilterOptions
+import io.github.drumber.kitsune.data.model.library.LibraryFilterOptions.SortDirection
+import io.github.drumber.kitsune.data.model.media.MediaType
 import io.github.drumber.kitsune.data.source.local.library.dao.LibraryEntryDao.Companion.ORDER_BY_STATUS
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryWithModificationAndNextMediaUnit
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus

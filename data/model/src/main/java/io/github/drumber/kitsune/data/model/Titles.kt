@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.common.model
+package io.github.drumber.kitsune.data.model
 
 typealias Titles = Map<String, String?>
 

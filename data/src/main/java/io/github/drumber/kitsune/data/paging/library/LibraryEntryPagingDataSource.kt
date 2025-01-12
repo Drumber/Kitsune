@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.paging.library
 
-import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.paging.BasePagingDataSource
 import io.github.drumber.kitsune.data.source.jsonapi.PageData
 import io.github.drumber.kitsune.data.source.jsonapi.library.LibraryNetworkDataSource

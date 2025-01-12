@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.mapper.graphql
 
-import io.github.drumber.kitsune.data.common.model.Image
+import io.github.drumber.kitsune.data.model.Image
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithNextUnit
 import io.github.drumber.kitsune.data.presentation.model.media.unit.Chapter
 import io.github.drumber.kitsune.data.presentation.model.media.unit.Episode

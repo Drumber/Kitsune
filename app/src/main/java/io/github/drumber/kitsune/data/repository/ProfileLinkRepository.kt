@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.repository
 
-import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.mapper.ProfileLinksMapper.toProfileLink
 import io.github.drumber.kitsune.data.mapper.ProfileLinksMapper.toProfileLinkSite
 import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLink

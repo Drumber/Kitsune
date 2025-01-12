@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.source.graphql.mapper
 
-import io.github.drumber.kitsune.data.common.model.Image
+import io.github.drumber.kitsune.data.model.Image
 import io.github.drumber.kitsune.data.source.graphql.fragment.FullImageFragment
 
 fun FullImageFragment.toImage() = views.toImage(original.url)

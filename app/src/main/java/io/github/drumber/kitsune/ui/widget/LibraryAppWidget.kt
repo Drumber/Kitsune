@@ -65,7 +65,7 @@ import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.constants.IntentAction.OPEN_LIBRARY
 import io.github.drumber.kitsune.constants.IntentAction.OPEN_MEDIA
 import io.github.drumber.kitsune.constants.LibraryWidget
-import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
+import io.github.drumber.kitsune.data.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.extension.title
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry

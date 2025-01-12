@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.source.graphql.mapper
 
-import io.github.drumber.kitsune.data.common.model.Titles
+import io.github.drumber.kitsune.data.model.Titles
 import io.github.drumber.kitsune.data.source.graphql.fragment.TitlesFragment
 
 fun TitlesFragment.toTitles(): Titles? {

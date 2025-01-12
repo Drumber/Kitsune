@@ -3,8 +3,8 @@ package io.github.drumber.kitsune.data.source.jsonapi.character.model
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
-import io.github.drumber.kitsune.data.common.model.Image
-import io.github.drumber.kitsune.data.common.model.Titles
+import io.github.drumber.kitsune.data.model.Image
+import io.github.drumber.kitsune.data.model.Titles
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkFavoriteItem
 
 @Type("characters")

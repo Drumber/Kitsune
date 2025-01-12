@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.data.presentation.extension
 import android.content.Context
 import androidx.annotation.StringRes
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.common.model.media.ReleaseStatus
+import io.github.drumber.kitsune.data.model.media.ReleaseStatus
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.shared.formatDate

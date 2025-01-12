@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.presentation.dto
 
 import android.os.Parcelable
-import io.github.drumber.kitsune.data.common.model.Titles
+import io.github.drumber.kitsune.data.model.Titles
 import io.github.drumber.kitsune.data.presentation.dto.MediaUnitDto.UnitType
 import io.github.drumber.kitsune.data.presentation.model.media.unit.Chapter
 import io.github.drumber.kitsune.data.presentation.model.media.unit.Episode

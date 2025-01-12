@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.source.jsonapi.media
 
-import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.source.jsonapi.PageData
 import io.github.drumber.kitsune.data.source.jsonapi.media.api.AnimeApi
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkAnime

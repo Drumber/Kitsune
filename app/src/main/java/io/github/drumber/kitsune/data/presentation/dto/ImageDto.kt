@@ -1,10 +1,10 @@
 package io.github.drumber.kitsune.data.presentation.dto
 
 import android.os.Parcelable
-import io.github.drumber.kitsune.data.common.model.Image
-import io.github.drumber.kitsune.data.common.model.ImageDimension
-import io.github.drumber.kitsune.data.common.model.ImageDimensions
-import io.github.drumber.kitsune.data.common.model.ImageMeta
+import io.github.drumber.kitsune.data.model.Image
+import io.github.drumber.kitsune.data.model.ImageDimension
+import io.github.drumber.kitsune.data.model.ImageDimensions
+import io.github.drumber.kitsune.data.model.ImageMeta
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

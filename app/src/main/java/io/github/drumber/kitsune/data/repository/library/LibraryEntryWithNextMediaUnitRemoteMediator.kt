@@ -5,7 +5,7 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import io.github.drumber.kitsune.data.exception.NoDataException
-import io.github.drumber.kitsune.data.common.model.library.LibraryFilterOptions
+import io.github.drumber.kitsune.data.model.library.LibraryFilterOptions
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryEntry
 import io.github.drumber.kitsune.data.mapper.LibraryMapper.toLocalLibraryFilterOptions
 import io.github.drumber.kitsune.data.mapper.graphql.toLibraryEntriesWithNextUnit

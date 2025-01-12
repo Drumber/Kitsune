@@ -20,7 +20,7 @@ import com.google.android.material.color.MaterialColors
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.common.model.media.MediaType
+import io.github.drumber.kitsune.data.model.media.MediaType
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.FragmentMediaListBinding

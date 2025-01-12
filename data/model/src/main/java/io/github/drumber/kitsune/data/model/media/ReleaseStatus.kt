@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.common.model.media
+package io.github.drumber.kitsune.data.model.media
 
 enum class ReleaseStatus {
     Current,

@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.source.algolia
 
-import io.github.drumber.kitsune.data.common.model.Titles
+import io.github.drumber.kitsune.data.model.Titles
 import kotlinx.serialization.Serializable
 
 @Serializable
