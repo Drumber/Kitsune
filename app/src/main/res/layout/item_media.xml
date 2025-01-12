@@ -5,6 +5,7 @@
 
     <data>
         <import type="android.text.TextUtils" />
+        <import type="io.github.drumber.kitsune.data.presentation.extension.MediaExtensionsKt" />
         <variable
             name="data"
             type="io.github.drumber.kitsune.data.presentation.model.media.Media" />
@@ -59,7 +60,7 @@
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:padding="10dp"
-                    android:text="@{data.title}"
+                    android:text="@{MediaExtensionsKt.getTitle(data)}"
                     android:textColor="@color/white"
                     tools:text="Title" />
 

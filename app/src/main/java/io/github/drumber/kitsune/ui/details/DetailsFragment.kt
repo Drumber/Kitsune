@@ -37,7 +37,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialContainerTransform
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.addTransform
-import io.github.drumber.kitsune.shared.Kitsu
 import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.model.Titles
@@ -47,8 +46,9 @@ import io.github.drumber.kitsune.data.common.model.media.MediaType
 import io.github.drumber.kitsune.data.common.model.withoutCommonTitles
 import io.github.drumber.kitsune.data.presentation.dto.toMedia
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
-import io.github.drumber.kitsune.data.presentation.getStringRes
-import io.github.drumber.kitsune.data.presentation.model.library.getStringResId
+import io.github.drumber.kitsune.data.presentation.extension.title
+import io.github.drumber.kitsune.data.presentation.extension.getStringRes
+import io.github.drumber.kitsune.data.presentation.extension.getStringResId
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.presentation.model.media.Media
@@ -58,6 +58,8 @@ import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemP
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.databinding.ItemDetailsInfoRowBinding
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.shared.Kitsu
+import io.github.drumber.kitsune.shared.logW
 import io.github.drumber.kitsune.ui.adapter.MediaRelationshipRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
@@ -75,7 +77,6 @@ import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.extensions.toPx
-import io.github.drumber.kitsune.shared.logW
 import io.github.drumber.kitsune.util.rating.RatingFrequenciesUtil.calculateAverageRating
 import io.github.drumber.kitsune.util.rating.RatingFrequenciesUtil.transformToRatingSystem
 import io.github.drumber.kitsune.util.rating.RatingSystemUtil.convertFrom

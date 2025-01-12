@@ -5,6 +5,8 @@
 
     <data>
         <import type="io.github.drumber.kitsune.util.ui.BindingAdapter" />
+        <import type="io.github.drumber.kitsune.data.presentation.extension.MediaExtensionsKt" />
+        <import type="io.github.drumber.kitsune.data.presentation.extension.LibraryEntryWithModificationExtensionsKt" />
         <import type="androidx.core.content.ContextCompat" />
         <variable
             name="entry"
@@ -60,7 +62,7 @@
                         android:ellipsize="end"
                         android:maxLines="3"
                         android:layout_marginBottom="8dp"
-                        android:text="@{entry.media.title}"
+                        android:text="@{MediaExtensionsKt.getTitle(entry.media)}"
                         tools:text="Some Title" />
 
                     <com.google.android.material.button.MaterialButton
@@ -70,7 +72,7 @@
                         android:layout_marginStart="2dp"
                         app:icon="@{entry.hasRating ? @drawable/ic_star_24 : @drawable/ic_star_outline_24}"
                         app:iconGravity="end"
-                        android:text="@{entry.ratingFormatted}"
+                        android:text="@{LibraryEntryWithModificationExtensionsKt.getRatingFormatted(entry)}"
                         app:iconPadding="@{entry.hasRating ? @dimen/icon_button_padding : @dimen/zero_dp}"
                         tools:icon="@drawable/ic_star_24"
                         tools:text="5"
@@ -86,7 +88,7 @@
                     android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="@{entry.media.publishingYearText(context) + ` • ` + entry.media.subtypeFormatted}"
+                    android:text="@{MediaExtensionsKt.publishingYearText(entry.media, context) + ` • ` + entry.media.subtypeFormatted}"
                     tools:text="2002 • TV" />
 
                 <TextView

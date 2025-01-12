@@ -33,6 +33,7 @@ import androidx.navigation.findNavController
 import com.chibatching.kotpref.livedata.asLiveData
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
+import io.github.drumber.kitsune.data.presentation.extension.title
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.library.RatingBottomSheet
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme

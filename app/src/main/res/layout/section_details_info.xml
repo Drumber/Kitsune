@@ -4,6 +4,7 @@
 
     <data>
         <import type="android.text.TextUtils" />
+        <import type="io.github.drumber.kitsune.data.presentation.extension.MediaExtensionsKt" />
         <import type="io.github.drumber.kitsune.data.presentation.model.media.Anime" />
         <import type="io.github.drumber.kitsune.data.presentation.model.media.production.AnimeProductionRole" />
 
@@ -59,21 +60,21 @@
         <include
             layout="@layout/item_details_info_row"
             app:title="@{@string/data_title_status}"
-            app:value='@{data != null ? context.getString(data.statusStringRes) : ""}' />
+            app:value='@{data != null ? context.getString(MediaExtensionsKt.getStatusStringRes(data)) : ""}' />
 
         <!-- Aired Date -->
         <include
             layout="@layout/item_details_info_row"
-            app:isVisible="@{TextUtils.isEmpty(data.tba) &amp;&amp; !TextUtils.isEmpty(data.airedText)}"
+            app:isVisible="@{TextUtils.isEmpty(data.tba) &amp;&amp; !TextUtils.isEmpty(MediaExtensionsKt.getAiredText(data))}"
             app:title="@{data instanceof Anime ? @string/data_title_aired : @string/data_title_published}"
-            app:value="@{data.airedText}" />
+            app:value="@{MediaExtensionsKt.getAiredText(data)}" />
 
         <!-- Season -->
         <include
             layout="@layout/item_details_info_row"
-            app:isVisible="@{TextUtils.isEmpty(data.tba) &amp;&amp; !TextUtils.isEmpty(data.seasonYear) &amp;&amp; data instanceof Anime}"
+            app:isVisible="@{TextUtils.isEmpty(data.tba) &amp;&amp; !TextUtils.isEmpty(MediaExtensionsKt.getSeasonYear(data)) &amp;&amp; data instanceof Anime}"
             app:title="@{@string/data_title_season}"
-            app:value='@{data != null ? context.getString(data.seasonStringRes) + ` ` + data.seasonYear : ""}' />
+            app:value='@{data != null ? context.getString(MediaExtensionsKt.getSeasonStringRes(data)) + ` ` + MediaExtensionsKt.getSeasonYear(data) : ""}' />
 
         <!-- TBA (Expected Date) -->
         <include
@@ -120,9 +121,9 @@
         <!-- Length -->
         <include
             layout="@layout/item_details_info_row"
-            app:isVisible="@{!TextUtils.isEmpty(data.lengthText(context))}"
+            app:isVisible="@{!TextUtils.isEmpty(MediaExtensionsKt.lengthText(data, context))}"
             app:title="@{@string/data_title_length}"
-            app:value="@{data.lengthText(context)}" />
+            app:value="@{MediaExtensionsKt.lengthText(data, context)}" />
 
         <!-- Producers (Anime) -->
         <include

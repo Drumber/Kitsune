@@ -9,6 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.dto.MediaUnitDto
 import io.github.drumber.kitsune.data.presentation.dto.toMediaUnit
+import io.github.drumber.kitsune.data.presentation.extension.title
 import io.github.drumber.kitsune.databinding.SheetMediaUnitDetailsBinding
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 

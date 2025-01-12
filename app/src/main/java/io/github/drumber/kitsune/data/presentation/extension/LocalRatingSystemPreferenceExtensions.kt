@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.data.presentation
+package io.github.drumber.kitsune.data.presentation.extension
 
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference

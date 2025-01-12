@@ -42,6 +42,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
+import io.github.drumber.kitsune.data.presentation.extension.title
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 
 data class LibraryTopBarState(

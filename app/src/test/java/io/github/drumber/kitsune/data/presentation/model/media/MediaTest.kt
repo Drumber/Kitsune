@@ -1,6 +1,8 @@
 package io.github.drumber.kitsune.data.presentation.model.media
 
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.presentation.extension.seasonStringRes
+import io.github.drumber.kitsune.data.presentation.extension.seasonYear
 import io.github.drumber.kitsune.testutils.anime
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat

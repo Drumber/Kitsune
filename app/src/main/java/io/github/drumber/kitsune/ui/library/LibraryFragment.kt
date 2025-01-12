@@ -41,7 +41,8 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.common.model.library.LibraryEntryMediaType
 import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel
+import io.github.drumber.kitsune.data.presentation.extension.title
+import io.github.drumber.kitsune.data.presentation.LibraryEntryUiModel
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.databinding.FragmentLibraryBinding
 import io.github.drumber.kitsune.ui.adapter.paging.LibraryEntriesAdapter

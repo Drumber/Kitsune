@@ -6,6 +6,7 @@
     <data>
         <import type="android.text.TextUtils" />
         <import type="io.github.drumber.kitsune.data.presentation.model.media.Anime" />
+        <import type="io.github.drumber.kitsune.data.presentation.extension.MediaExtensionsKt" />
 
         <variable
             name="data"
@@ -75,7 +76,7 @@
                         app:menu="@menu/details_menu"
                         app:navigationContentDescription="@string/action_back"
                         app:navigationIcon="@drawable/ic_arrow_back_24"
-                        app:title="@{data.title}"
+                        app:title="@{MediaExtensionsKt.getTitle(data)}"
                         tools:title="Some Title" />
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -127,7 +128,7 @@
                             android:layout_below="@id/iv_thumbnail"
                             android:layout_alignParentStart="true"
                             android:layout_marginTop="10dp"
-                            android:text="@{data.publishingYearText(context) + ` • ` + data.subtypeFormatted}"
+                            android:text="@{MediaExtensionsKt.publishingYearText(data, context) + ` • ` + data.subtypeFormatted}"
                             tools:text="2002 • TV" />
 
                         <LinearLayout

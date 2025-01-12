@@ -1,8 +1,10 @@
-package io.github.drumber.kitsune.data.presentation.model.library
+package io.github.drumber.kitsune.data.presentation.extension
 
+import androidx.annotation.StringRes
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
 
+@StringRes
 fun LibraryStatus.getStringResId(isAnime: Boolean = true) = when (this) {
     LibraryStatus.Completed -> R.string.library_status_completed
     LibraryStatus.Current -> if (isAnime) R.string.library_status_watching else R.string.library_status_reading

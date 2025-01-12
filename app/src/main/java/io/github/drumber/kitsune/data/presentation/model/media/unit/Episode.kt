@@ -1,6 +1,5 @@
 package io.github.drumber.kitsune.data.presentation.model.media.unit
 
-import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.common.model.Image
 import io.github.drumber.kitsune.data.common.model.Titles
 
@@ -19,12 +18,6 @@ data class Episode(
 
     override val thumbnail: Image?
 ) : MediaUnit {
-
-    override val numberStringRes
-        get() = R.string.unit_episode
-
-    override val lengthStringRes: Int
-        get() = R.plurals.duration_minutes
 
     override val date: String?
         get() = airdate

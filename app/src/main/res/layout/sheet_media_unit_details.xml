@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="io.github.drumber.kitsune.data.presentation.extension.MediaUnitExtensionsKt" />
         <variable
             name="mediaUnit"
             type="io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit" />
@@ -45,7 +46,7 @@
                     android:maxLines="3"
                     android:ellipsize="end"
                     android:textColor="@color/white"
-                    android:text="@{mediaUnit.title(context)}"
+                    android:text="@{MediaUnitExtensionsKt.title(mediaUnit, context)}"
                     tools:text="Some Title" />
 
             </FrameLayout>
@@ -63,7 +64,7 @@
                     android:gravity="center"
                     android:layout_weight="1"
                     android:layout_marginHorizontal="10dp"
-                    android:text="@{mediaUnit.hasValidTitle ? mediaUnit.numberText(context) : null}"
+                    android:text="@{MediaUnitExtensionsKt.hasValidTitle(mediaUnit) ? MediaUnitExtensionsKt.numberText(mediaUnit, context) : null}"
                     tools:text="Episode 2" />
 
                 <TextView
@@ -72,7 +73,7 @@
                     android:gravity="center"
                     android:layout_weight="1"
                     android:layout_marginHorizontal="10dp"
-                    android:text="@{mediaUnit.formatDate()}"
+                    android:text="@{MediaUnitExtensionsKt.formatDate(mediaUnit)}"
                     tools:text="21/1/1" />
 
                 <TextView
@@ -81,7 +82,7 @@
                     android:gravity="center"
                     android:layout_weight="1"
                     android:layout_marginHorizontal="10dp"
-                    android:text="@{mediaUnit.length(context)}"
+                    android:text="@{MediaUnitExtensionsKt.length(mediaUnit, context)}"
                     tools:text="23 minutes" />
 
             </LinearLayout>

@@ -13,7 +13,7 @@ import io.github.drumber.kitsune.data.common.model.library.LibraryEntryMediaType
 import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryFilter
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel
+import io.github.drumber.kitsune.data.presentation.LibraryEntryUiModel
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryModificationState.NOT_SYNCHRONIZED
 import io.github.drumber.kitsune.data.repository.UserRepository

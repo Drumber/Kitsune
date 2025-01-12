@@ -42,6 +42,11 @@ import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.presentation.extension.hasValidTitle
+import io.github.drumber.kitsune.data.presentation.extension.numberText
+import io.github.drumber.kitsune.data.presentation.extension.publishingYearText
+import io.github.drumber.kitsune.data.presentation.extension.ratingFormatted
+import io.github.drumber.kitsune.data.presentation.extension.title
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModificationAndNextUnit
 import io.github.drumber.kitsune.ui.composables.SmallPoster
 

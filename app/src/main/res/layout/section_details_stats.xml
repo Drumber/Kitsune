@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="io.github.drumber.kitsune.data.presentation.extension.MediaExtensionsKt" />
         <variable
             name="data"
             type="io.github.drumber.kitsune.data.presentation.model.media.Media" />
@@ -23,8 +24,8 @@
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             tools:text="Kitsu Score 83.03%"
-            app:isVisible="@{data.avgRatingFormatted != null}"
-            android:text="@{@string/data_kitsu_score(data.avgRatingFormatted)}" />
+            app:isVisible="@{MediaExtensionsKt.getAvgRatingFormatted(data) != null}"
+            android:text="@{@string/data_kitsu_score(MediaExtensionsKt.getAvgRatingFormatted(data))}" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -58,7 +59,7 @@
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             tools:text="Currently Airing"
-            android:text='@{data != null ? context.getString(data.statusStringRes) : ""}' />
+            android:text='@{data != null ? context.getString(MediaExtensionsKt.getStatusStringRes(data)) : ""}' />
 
     </LinearLayout>
 

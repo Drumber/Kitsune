@@ -1,7 +1,6 @@
 package io.github.drumber.kitsune.data.presentation.model.library
 
 import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
-import io.github.drumber.kitsune.util.rating.RatingSystemUtil.formatRatingTwenty
 
 data class LibraryEntryWithModification(
     val libraryEntry: LibraryEntry,
@@ -40,14 +39,6 @@ data class LibraryEntryWithModification(
 
     val ratingTwenty
         get() = modification?.ratingTwenty ?: libraryEntry.ratingTwenty
-
-    val ratingFormatted: String?
-        get() = ratingTwenty?.let {
-            when {
-                it == -1 -> null
-                else -> it.formatRatingTwenty()
-            }
-        }
 
     val hasRating: Boolean
         get() = ratingTwenty != null && ratingTwenty != -1

@@ -67,6 +67,7 @@ import io.github.drumber.kitsune.constants.IntentAction.OPEN_MEDIA
 import io.github.drumber.kitsune.constants.LibraryWidget
 import io.github.drumber.kitsune.data.common.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
+import io.github.drumber.kitsune.data.presentation.extension.title
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.model.media.identifier
@@ -76,10 +77,10 @@ import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCase
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.shared.logE
 import io.github.drumber.kitsune.ui.details.DetailsFragmentArgs
 import io.github.drumber.kitsune.ui.main.MainActivity
 import io.github.drumber.kitsune.ui.widget.KitsuneWidgetTheme.applyTheme
-import io.github.drumber.kitsune.shared.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancelFutureOnCancellation
