@@ -46,7 +46,7 @@ dependencies {
     implementation(libs.jetbrains.kotlinx.coroutines.core)
 
     // Apollo GraphQL
-    implementation(libs.apollo.graphql.runtime)
+    api(libs.apollo.graphql.runtime)
 
     // Test
     testImplementation(libs.junit)

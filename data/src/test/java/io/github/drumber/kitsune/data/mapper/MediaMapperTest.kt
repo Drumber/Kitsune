@@ -7,8 +7,8 @@ import io.github.drumber.kitsune.data.model.media.Anime
 import io.github.drumber.kitsune.data.model.media.Manga
 import io.github.drumber.kitsune.data.model.media.Media
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkMedia
-import io.github.drumber.kitsune.testutils.networkAnime
-import io.github.drumber.kitsune.testutils.networkManga
+import io.github.drumber.kitsune.data.testutils.networkAnime
+import io.github.drumber.kitsune.data.testutils.networkManga
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test

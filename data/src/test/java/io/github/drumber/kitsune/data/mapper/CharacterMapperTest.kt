@@ -2,8 +2,8 @@ package io.github.drumber.kitsune.data.mapper
 
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toLocalCharacter
-import io.github.drumber.kitsune.testutils.localCharacter
-import io.github.drumber.kitsune.testutils.networkCharacter
+import io.github.drumber.kitsune.data.testutils.localCharacter
+import io.github.drumber.kitsune.data.testutils.networkCharacter
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test

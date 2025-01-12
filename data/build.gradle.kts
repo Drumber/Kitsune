@@ -26,9 +26,11 @@ android {
 dependencies {
     implementation(project(":shared"))
     implementation(project(":data:model"))
+    implementation(project(":data:common"))
     implementation(project(":data:source:local"))
     implementation(project(":data:source:jsonapi"))
     implementation(project(":data:source:graphql"))
+    implementation(project(":data:source:algolia"))
 
     // Core dependencies
     implementation(libs.jetbrains.kotlinx.coroutines.core)
