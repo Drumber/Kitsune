@@ -2,8 +2,8 @@ package io.github.drumber.kitsune.domain.auth
 
 import io.github.drumber.kitsune.data.repository.AccessTokenRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
-import io.github.drumber.kitsune.testutils.onSuspend
-import io.github.drumber.kitsune.testutils.useMockedAndroidLogger
+import io.github.drumber.kitsune.domain.testutils.onSuspend
+import io.github.drumber.kitsune.domain.testutils.useMockedAndroidLogger
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.mockito.kotlin.doNothing

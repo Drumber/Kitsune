@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.domain.user
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.domain.auth.RefreshAccessTokenIfExpiredUseCase
-import io.github.drumber.kitsune.testutils.onSuspend
+import io.github.drumber.kitsune.domain.testutils.onSuspend
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.mockito.kotlin.doReturn

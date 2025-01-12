@@ -1,10 +1,10 @@
 package io.github.drumber.kitsune.domain.library
 
-import io.github.drumber.kitsune.data.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.model.library.LibraryEntryModification
+import io.github.drumber.kitsune.data.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.repository.library.LibraryRepository
-import io.github.drumber.kitsune.testutils.libraryEntry
-import io.github.drumber.kitsune.testutils.onSuspend
+import io.github.drumber.kitsune.domain.testutils.libraryEntry
+import io.github.drumber.kitsune.domain.testutils.onSuspend
 import kotlinx.coroutines.test.runTest
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat

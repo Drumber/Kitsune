@@ -38,6 +38,12 @@ dependencies {
     // WorkManager
     implementation(libs.androidx.workmanager)
 
+    // Paging
+    implementation(libs.androidx.paging.runtime.ktx)
+
+    // Retrofit
+    implementation(libs.squareup.retrofit2.retrofit)
+
     // Test
     testImplementation(libs.junit)
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
