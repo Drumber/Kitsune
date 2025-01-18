@@ -6,6 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import com.google.accompanist.themeadapter.material3.createMdc3Theme
@@ -31,10 +32,14 @@ fun KitsuneTheme(
         else -> obtainColorScheme(context)
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = typography!!,
-        shapes = shapes!!,
-        content = content
-    )
+    val libraryStatusColors = getLibraryStatusColors(darkTheme, colorScheme)
+
+    CompositionLocalProvider(LocalLibraryStatusColors provides libraryStatusColors) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = typography!!,
+            shapes = shapes!!,
+            content = content
+        )
+    }
 }

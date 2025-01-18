@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -19,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -26,6 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.library.LibraryStatus
+import io.github.drumber.kitsune.ui.theme.KitsuneTheme
+import io.github.drumber.kitsune.ui.theme.LibraryStatusColors
+import io.github.drumber.kitsune.ui.theme.LocalLibraryStatusColors
 
 @Composable
 fun LibraryNavigationActions(
@@ -104,6 +109,7 @@ fun LibraryNavigationActions(
                             .weight(1f)
                             .fillMaxHeight(),
                         painter = action.icon,
+                        colors = LocalLibraryStatusColors.current.getCardColorsFor(action.status),
                         text = stringResource(action.labelAnime),
                         onClick = { onActionClick(action.status) }
                     )
@@ -112,6 +118,7 @@ fun LibraryNavigationActions(
                             .weight(1f)
                             .fillMaxHeight(),
                         painter = action.icon,
+                        colors = LocalLibraryStatusColors.current.getCardColorsFor(action.status),
                         text = stringResource(action.labelManga),
                         onClick = { onActionClick(action.status) }
                     )
@@ -133,11 +140,13 @@ private fun LibraryActionCard(
     modifier: Modifier = Modifier,
     painter: Painter,
     text: String,
+    colors: CardColors = CardDefaults.elevatedCardColors(),
     onClick: () -> Unit
 ) {
     ElevatedCard(
         modifier = modifier,
         shape = CardDefaults.elevatedShape,
+        colors = colors,
         onClick = onClick,
     ) {
         Row(
@@ -156,6 +165,23 @@ private fun LibraryActionCard(
     }
 }
 
+@Composable
+private fun LibraryStatusColors.getCardColorsFor(status: LibraryStatus): CardColors {
+    val (containerColor, contentColor) = when (status) {
+        LibraryStatus.Current -> currentContainer to onCurrentContainer
+        LibraryStatus.Planned -> plannedContainer to onPlannedContainer
+        LibraryStatus.Completed -> completedContainer to onCompletedContainer
+        LibraryStatus.OnHold -> onHoldContainer to onOnHoldContainer
+        LibraryStatus.Dropped -> droppedContainer to onDroppedContainer
+    }
+
+    return CardDefaults.elevatedCardColors(
+        containerColor = containerColor.copy(alpha = 0.7f)
+            .compositeOver(CardDefaults.elevatedCardColors().containerColor),
+        contentColor = contentColor
+    )
+}
+
 private data class LibraryAction(
     val icon: Painter,
     val status: LibraryStatus,
@@ -166,5 +192,7 @@ private data class LibraryAction(
 @Preview(showBackground = true)
 @Composable
 private fun LibraryNavigationActionsPreview() {
-    LibraryNavigationActions()
+    KitsuneTheme(darkTheme = false) {
+        LibraryNavigationActions()
+    }
 }
