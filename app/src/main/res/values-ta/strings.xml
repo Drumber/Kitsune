@@ -28,10 +28,10 @@
     </plurals>
     <plurals name="duration_months">
         <item quantity="one">%s மாதம்</item>
-        <item quantity="other">%மாதங்கள்</item>
+        <item quantity="other">%s மாதங்கள்</item>
     </plurals>
     <plurals name="duration_years">
-        <item quantity="one">%s</item>
+        <item quantity="one">%s ஆண்டுகள்</item>
         <item quantity="other">%s ஆண்டுகள்</item>
     </plurals>
     <string name="nav_home">வீடு</string>
@@ -135,7 +135,7 @@
     <string name="library_action_edit">நூலக நுழைவைத் திருத்தவும்</string>
     <string name="data_rank">தரவரிசை #%d</string>
     <string name="data_popularity">புகழ் #%d</string>
-    <string name="data_kitsu_score">கிட்சு கள் இந்த % s %</string>
+    <string name="data_kitsu_score">கிட்சு கள் இந்த %s%%</string>
     <string name="data_length_total">மொத்தம்</string>
     <string name="data_length_each">ஒவ்வொன்றும் %d நிமிடங்கள்</string>
     <string name="data_title_english">ஆங்கிலம்</string>
@@ -232,7 +232,7 @@
     <string name="onboarding_login_subtitle">உங்கள் கிட்சு கணக்கில் உள்நுழைக அல்லது அனைத்து அம்சங்களையும் அணுக புதிய கணக்கை உருவாக்கவும்.</string>
     <string name="onboarding_login_forward_dialog_title">கணக்கை உருவாக்கவும்</string>
     <string name="preference_app_version">பதிப்பு செய்தி</string>
-    <string name="dialog_remove_from_library_msg"><b>%s </b> உங்கள் நூலகத்திலிருந்து அகற்றப்படும்.</string>
+    <string name="dialog_remove_from_library_msg">&lt;b&gt;%s&lt;/b&gt; உங்கள் நூலகத்திலிருந்து அகற்றப்படும்.</string>
     <string name="dialog_notification_permission_rejected_title">இசைவு நிராகரிக்கப்பட்டது</string>
     <string name="dialog_notification_permission_rejected">உங்களுக்கு அறிவிப்புகள் கிடைக்காது, பயன்பாட்டு புதுப்பிப்புகள் குறித்து தெரிவிக்கப்படாது.</string>
     <string name="dialog_request_notification_permission_title">அறிவிப்புகளை அனுமதிக்கவும்</string>
@@ -340,7 +340,7 @@
     <string name="profile_manga_stats">மங்கா புள்ளிவிவரங்கள்</string>
     <string name="profile_stats_anime_watch_time">%s அனிமேசைப் பார்த்து செலவிட்டன.</string>
     <string name="profile_stats_manga_chapters_read">%d அத்தியாயங்கள் படிக்கின்றன.</string>
-    <string name="profile_stats_completed">%1$d முடிந்தது. <b>%2$d %% </b> பயனர்களின்.</string>
+    <string name="profile_stats_completed">%1$d முடிந்தது. &lt;b&gt;%2$d%%&lt;/b&gt; பயனர்களின்.</string>
     <string name="profile_data_gender">பாலினம்</string>
     <string name="profile_data_location">இடம்</string>
     <string name="profile_data_birthday">பிறந்த நாள்</string>
@@ -376,10 +376,10 @@
     <string name="unit_chapter">அத்தியாயம் %d</string>
     <plurals name="unit_pages">
         <item quantity="one">%s பக்கம்</item>
-        <item quantity="other">%பக்கங்கள்</item>
+        <item quantity="other">%s பக்கங்கள்</item>
     </plurals>
     <plurals name="duration_seconds">
-        <item quantity="one">%இரண்டாவது</item>
-        <item quantity="other">%வினாடிகள்</item>
+        <item quantity="one">%s இரண்டாவது</item>
+        <item quantity="other">%s வினாடிகள்</item>
     </plurals>
 </resources>
