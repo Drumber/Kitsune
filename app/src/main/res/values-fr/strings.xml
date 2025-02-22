@@ -362,4 +362,14 @@
     <string name="widget_description">Progression de la bibliothèque</string>
     <string name="widget_empty_text">Pas d\'activité suivie dans votre bibliothèque</string>
     <string name="widget_empty_action">Bibliothèque ouverte</string>
+    <string name="action_create_account">Créer un compte</string>
+    <string name="onboarding_welcome_subtitle">Votre compagnon personnel pour les animés et mangas.</string>
+    <string name="onboarding_welcome_feature_search">Rechercher</string>
+    <string name="onboarding_welcome_feature_explore">Explorer</string>
+    <string name="onboarding_welcome_feature_explore_description">Découvrir des titres nouveaux et tendances.</string>
+    <string name="action_skip">Passer</string>
+    <string name="action_next">Suivant</string>
+    <string name="onboarding_welcome_title">Bienvenue sur Kitsune !</string>
+    <string name="action_continue">Continuer</string>
+    <string name="onboarding_welcome_feature_search_description">Trouver vos animés et mangas favoris.</string>
 </resources>

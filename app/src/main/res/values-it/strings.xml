@@ -128,7 +128,7 @@
     <string name="preference_category_ui">Interfaccia utente</string>
     <string name="preference_category_advanced">Avanzate</string>
     <string name="preference_category_about">Informazioni su</string>
-    <string name="preference_appearance_description">Cambia il tema e abilità la modalità scura.</string>
+    <string name="preference_appearance_description">Cambia il tema e abilita la modalità scura.</string>
     <string name="preference_dark_mode_dark">Scuro</string>
     <string name="preference_dark_mode_light">Chiaro</string>
     <string name="preference_dark_mode_follow_system">Segui il sistema</string>
