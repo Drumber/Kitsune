@@ -38,7 +38,7 @@ kotlin = "1.9.25"
 kotlinxCoroutines = { strictly = "1.7.3" }
 kotlinxSerialization = "1.6.3"
 kotpref = "2.13.2"
-ksp = "1.9.24-1.0.20"
+ksp = "1.9.25-1.0.20"
 ktorClient = "1.6.8"
 leakCanary = "2.14"
 material = "1.12.0"
