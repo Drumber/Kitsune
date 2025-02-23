@@ -174,7 +174,7 @@
     <string name="character_role_recurring">Wiederkehrend</string>
     <string name="character_role_cameo">Cameo</string>
     <string name="library_status_watching">Angefangen</string>
-    <string name="library_status_planned">Geplant</string>
+    <string name="library_status_planned">Gemerkt</string>
     <string name="library_status_completed">Abgeschlossen</string>
     <string name="library_status_on_hold">Pausiert</string>
     <string name="library_status_reading">Angefangen</string>
