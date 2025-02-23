@@ -9,10 +9,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.annotation.OptIn
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isEmpty
+import androidx.core.view.isNotEmpty
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Lifecycle
@@ -75,6 +78,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
     private var offlineLibraryModificationsAmount = 0
     private lateinit var offlineLibraryUpdateBadge: BadgeDrawable
+
+    private var searchViewBackPressedCallback: OnBackPressedCallback? = null
 
     private val searchDebouncer by lazy { Debouncer(300L) }
 
@@ -484,7 +489,11 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
     private fun initToolbarMenu(isVisible: Boolean) {
         val toolbar = binding.toolbar
+
+        if (isVisible && toolbar.menu.isNotEmpty()) return
+
         toolbar.menu.clear()
+        searchViewBackPressedCallback?.remove()
 
         if (!isVisible)
             return
@@ -512,8 +521,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
             R.id.menu_synchronize
         )
 
-        val searchView = menu.findItem(R.id.menu_search).actionView as SearchView
-        updateSynchronizationMenuItem(searchView.isIconified)
+        val searchMenuItem = menu.findItem(R.id.menu_search)
+        updateSynchronizationMenuItem(!searchMenuItem.isActionViewExpanded)
     }
 
     @OptIn(ExperimentalBadgeUtils::class)
@@ -559,22 +568,25 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                searchView.post {
-                    if (!isAdded) return@post
-                    // empty search queries triggered on collapse will be ignored
-                    if (!searchView.isIconified) {
-                        searchDebouncer.debounce(lifecycleScope) {
-                            viewModel.searchLibrary(newText ?: "")
-                        }
-                    }
+                searchDebouncer.debounce(lifecycleScope) {
+                    viewModel.searchLibrary(newText ?: "")
                 }
                 return false
             }
         })
 
+        searchViewBackPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            menuItem.isActionViewExpanded
+        ) {
+            menuItem.collapseActionView()
+            isEnabled = false
+        }
+
         menuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 if (isAdded) {
+                    searchViewBackPressedCallback?.isEnabled = true
                     updateSynchronizationMenuItem(false)
                 }
                 return true
@@ -582,12 +594,15 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 viewModel.searchLibrary("")
+                searchViewBackPressedCallback?.isEnabled = false
                 if (isAdded) {
                     updateSynchronizationMenuItem(true)
-                    binding.rvLibraryEntries.apply {
-                        post {
-                            if (!isAdded) return@post
-                            scrollToPosition(0)
+                    if (searchView.query.isNotBlank()) {
+                        binding.rvLibraryEntries.apply {
+                            post {
+                                if (!isAdded) return@post
+                                scrollToPosition(0)
+                            }
                         }
                     }
                 }
@@ -603,6 +618,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
     override fun onDestroyView() {
         viewModel.doRefreshListener = null
+        searchViewBackPressedCallback?.remove()
+        searchViewBackPressedCallback = null
         super.onDestroyView()
         _binding = null
     }
