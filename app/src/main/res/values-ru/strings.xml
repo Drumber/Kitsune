@@ -13,7 +13,7 @@
     <string name="action_reset_filter">Сброс фильтра</string>
     <string name="action_unselect_all">Снять все выделения</string>
     <string name="action_read_more">Развернуть</string>
-    <string name="action_show_more">Показать ещё</string>
+    <string name="action_show_more">См. ещё</string>
     <string name="action_back">Назад</string>
     <string name="action_close">Закрыть</string>
     <string name="action_log_out">Выйти</string>
@@ -289,7 +289,7 @@
     <string name="preference_app_theme_blue">Синий</string>
     <string name="preference_media_item_size_medium">Средний</string>
     <string name="library_not_logged_in_text">Войдите в свой аккаунт Kitsu, чтобы управлять библиотекой и получить доступ ко всем функциям.</string>
-    <string name="library_edit_finished">Завершено</string>
+    <string name="library_edit_finished">Окончено</string>
     <string name="info_update_new_version_available">Доступна новая версия.</string>
     <string name="info_image_saved_in_gallery">Изображение успешно сохранено в галерее.</string>
     <string name="library_status_planned">Хочу посмотреть</string>
@@ -304,7 +304,7 @@
     <string name="nav_os_libraries">Библиотеки с открытым кодом</string>
     <string name="dialog_request_notification_permission">Получать уведомления о выпуске новой версии приложения.</string>
     <string name="relationship_alternative_setting">Доп. настройки</string>
-    <string name="relationship_alternative_version">"Доп  версия"</string>
+    <string name="relationship_alternative_version">Альтернативная версия</string>
     <string name="relationship_summary">Сводка</string>
     <string name="preference_sfw_filter_limit_to_feed">Ограничить следующий ленту</string>
     <string name="profile_data_gender">Пол</string>
@@ -312,14 +312,14 @@
     <plurals name="duration_months">
         <item quantity="one">%s месяц</item>
         <item quantity="few">%s месяцев</item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <plurals name="duration_years">
         <item quantity="one">%s год</item>
         <item quantity="few">%s лет</item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <string name="action_next">Далее</string>
     <string name="action_create_account">Создать аккаунт</string>
@@ -336,20 +336,20 @@
     <plurals name="duration_hours">
         <item quantity="one">%s час</item>
         <item quantity="few">%s часов</item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <plurals name="duration_days">
         <item quantity="one">%s день</item>
         <item quantity="few">%s дней</item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <plurals name="duration_minutes">
         <item quantity="one">%s минута</item>
         <item quantity="few">%s минут</item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <string name="action_continue">Продолжить</string>
     <string name="action_skip">Пропустить</string>
@@ -364,4 +364,19 @@
     <string name="widget_description">Прогресс библиотеки</string>
     <string name="widget_empty_text">В вашей библиотеке нет активного отслеживаемого объекта</string>
     <string name="onboarding_welcome_feature_search_description">Найдите свое любимое аниме и мангу.</string>
+    <string name="nav_app_logs">Журналы приложения</string>
+    <string name="filter_kind">Детский</string>
+    <string name="onboarding_welcome_feature_track">Трек</string>
+    <string name="onboarding_welcome_feature_track_description">Следите за тем, что вы смотрели и читали.</string>
+    <string name="onboarding_welcome_action">Начать</string>
+    <string name="onboarding_login_title">Войти в Kitsu</string>
+    <string name="onboarding_login_is_logged_in">Вы вошли в систему</string>
+    <string name="onboarding_login_forward_dialog_title">Создать аккаунт</string>
+    <string name="onboarding_login_forward_dialog_message">Вы будете перенаправлены на %1$s, где сможете создать новый аккаунт.</string>
+    <string name="onboarding_setup_subtitle">Для начала работы установите желаемые параметры. Их всегда можно изменить позже в настройках.</string>
+    <string name="onboarding_setup_title">Первоначальная установка</string>
+    <string name="onboarding_setup_notification_permission_notice">Требуется разрешение на уведомление.</string>
+    <string name="onboarding_setup_updates">Проверьте обновления</string>
+    <string name="onboarding_welcome_feature_explore_description">Откройте для себя новые и популярные названия</string>
+    <string name="onboarding_login_subtitle">Войдите в свой аккаунт Kitsu или создайте новый, чтобы получить доступ ко всем функциям.</string>
 </resources>
