@@ -44,7 +44,6 @@ class AppUpdateRepository(
         // split the version strings into semantic version parts
         val localParts = localVersion.replace(regex, "").trim().split(".")
         val remoteParts = remoteVersion.replace(regex, "").trim().split(".")
-        println("localParts: $localParts  remoteParts: $remoteParts")
 
         for (i in 0 until maxOf(localParts.size, remoteParts.size)) {
             val localPart = (localParts.getOrNull(i) ?: "0").toIntOrNull() ?: return null
