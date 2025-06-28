@@ -117,11 +117,11 @@
     <string name="no_data_available">தரவு எதுவும் கிடைக்கவில்லை</string>
     <string name="status_current">தற்போது ஒளிபரப்பாகிறது</string>
     <string name="status_finished">முடிந்தது</string>
-    <string name="status_unreleased">வெளியிடப்பட்டது</string>
+    <string name="status_unreleased">வெளியிடப்பட்டாதது</string>
     <string name="status_upcoming">வரவிருக்கும்</string>
     <string name="character_role_main">முக்கிய</string>
     <string name="character_role_supporting">துணை</string>
-    <string name="character_role_recurring">மீண்டும் மீண்டும்</string>
+    <string name="character_role_recurring">மறுநிகழும்</string>
     <string name="library_status_watching">பார்ப்பது</string>
     <string name="character_role_cameo">கேமியோ</string>
     <string name="library_status_planned">பார்க்க விரும்புகிறேன்</string>
@@ -136,7 +136,7 @@
     <string name="data_rank">தரவரிசை #%d</string>
     <string name="data_popularity">புகழ் #%d</string>
     <string name="data_kitsu_score">கிட்சு கள் இந்த %s%%</string>
-    <string name="data_length_total">மொத்தம்</string>
+    <string name="data_length_total">%s மொத்தம்</string>
     <string name="data_length_each">ஒவ்வொன்றும் %d நிமிடங்கள்</string>
     <string name="data_title_english">ஆங்கிலம்</string>
     <string name="data_title_japanese">சப்பானியர்கள்</string>
