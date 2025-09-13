@@ -19,8 +19,8 @@
         <item quantity="other">%s நிமிடங்கள்</item>
     </plurals>
     <plurals name="duration_hours">
-        <item quantity="one">%s மணி</item>
-        <item quantity="other">%s மணி</item>
+        <item quantity="one">%s மணிநேரம்</item>
+        <item quantity="other">%s மணிநேரங்கள்</item>
     </plurals>
     <plurals name="duration_days">
         <item quantity="one">%s நாள்</item>
@@ -31,7 +31,7 @@
         <item quantity="other">%s மாதங்கள்</item>
     </plurals>
     <plurals name="duration_years">
-        <item quantity="one">%s ஆண்டுகள்</item>
+        <item quantity="one">%s ஆண்டு</item>
         <item quantity="other">%s ஆண்டுகள்</item>
     </plurals>
     <string name="nav_home">வீடு</string>
@@ -335,7 +335,7 @@
     <string name="filter_streamers">ச்ட்ரீமர்கள்</string>
     <string name="filter_age_rating">அகவை மதிப்பீடு</string>
     <string name="profile_not_logged_in_title">இங்கே பார்க்க எதுவும் இல்லை!</string>
-    <string name="profile_not_logged_in_text">உங்கள் கிட்சு கணக்கில் உள்நுழைக அல்லது அனைத்து அம்சங்களையும் அணுக புதிய கணக்கை உருவாக்கவும்.</string>
+    <string name="profile_not_logged_in_text">உங்கள் கிட்சு கணக்கில் உள் நுழைக அல்லது அனைத்து அம்சங்களையும் அணுக புதிய கணக்கை உருவாக்கவும்.</string>
     <string name="profile_anime_stats">அனிம் புள்ளிவிவரங்கள்</string>
     <string name="profile_manga_stats">மங்கா புள்ளிவிவரங்கள்</string>
     <string name="profile_stats_anime_watch_time">%s அனிமேசைப் பார்த்து செலவிட்டன.</string>
