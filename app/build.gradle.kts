@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.jetbrains.kotlin.kapt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.navigation.safeargs)
@@ -14,7 +15,7 @@ val screenshotMode: String by project
 
 android {
     namespace = "io.github.drumber.kitsune"
-    compileSdk = 35
+    compileSdk = 36
     buildToolsVersion = "35.0.0"
 
     defaultConfig {
@@ -77,10 +78,6 @@ android {
         dataBinding = true
         buildConfig = true
         compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 
     packaging {

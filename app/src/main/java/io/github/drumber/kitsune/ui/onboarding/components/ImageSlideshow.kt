@@ -23,7 +23,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.bumptech.glide.Glide
-import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
@@ -98,7 +97,6 @@ fun ImageSlideshow(
             GlideImage(
                 model = image,
                 contentDescription = null,
-                transition = CrossFade,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
