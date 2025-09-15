@@ -6,15 +6,16 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
+import androidx.annotation.OptIn
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.MenuProvider
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isEmpty
+import androidx.core.view.isNotEmpty
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Lifecycle
@@ -68,7 +69,6 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
-    MenuProvider,
     LibraryEntriesAdapter.LibraryEntryActionListener,
     NavigationBarView.OnItemReselectedListener {
 
@@ -79,6 +79,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
     private var offlineLibraryModificationsAmount = 0
     private lateinit var offlineLibraryUpdateBadge: BadgeDrawable
+
+    private var searchViewBackPressedCallback: OnBackPressedCallback? = null
 
     private val searchDebouncer by lazy { Debouncer(300L) }
 
@@ -109,11 +111,9 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
-        requireActivity().addMenuProvider(this, viewLifecycleOwner)
-
         binding.apply {
-            appBarLayout.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(context)
+            appBarLayout.statusBarForeground =
+                MaterialShapeDrawable.createWithElevationOverlay(context)
             toolbar.initPaddingWindowInsetsListener(
                 left = true,
                 right = true,
@@ -151,7 +151,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
                 viewModel.localUser.collectLatest { user ->
                     val isLoggedIn = user != null
                     binding.apply {
-                        setMenuVisibility(isLoggedIn)
+                        initToolbarMenu(isVisible = isLoggedIn)
                         rvLibraryEntries.isVisible = isLoggedIn
                         nsvNotLoggedIn.isVisible = !isLoggedIn
                         scrollViewFilter.isVisible = isLoggedIn
@@ -172,7 +172,9 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
                 viewModel.libraryChangeResultFlow.collectLatest {
                     when (it) {
                         is LibraryUpdateResult -> it.result.showSnackbarOnFailure(binding.rvLibraryEntries)
-                        is LibrarySynchronizationResult -> it.results.showSnackbarOnAnyFailure(binding.rvLibraryEntries)
+                        is LibrarySynchronizationResult -> it.results.showSnackbarOnAnyFailure(
+                            binding.rvLibraryEntries
+                        )
                     }
                 }
             }
@@ -184,7 +186,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
                     .map { it.isLibraryUpdateOperationInProgress }
                     .distinctUntilChanged()
                     .collectLatest {
-                        binding.progressIndicator.visibility = if (it) View.VISIBLE else View.INVISIBLE
+                        binding.progressIndicator.visibility =
+                            if (it) View.VISIBLE else View.INVISIBLE
                     }
             }
         }
@@ -204,6 +207,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
             viewModel.triggerAdapterUpdate()
         }
 
+        initToolbarMenu(isVisible = viewModel.hasUser())
         initFilterChips()
         initRecyclerView()
     }
@@ -429,7 +433,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
             viewModel.invalidatePagingSource()
             offlineLibraryModificationsAmount = it.size
-            requireActivity().invalidateOptionsMenu()
+            updateToolbarMenu(binding.toolbar.menu)
 
             autoSyncDebouncer.debounce(viewLifecycleOwner.lifecycleScope) {
                 // synchronize library if there are offline library updates and network is not metered
@@ -484,6 +488,63 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         findNavController().navigateSafe(R.id.library_fragment, action)
     }
 
+    private fun initToolbarMenu(isVisible: Boolean) {
+        val toolbar = binding.toolbar
+
+        if (isVisible && toolbar.menu.isNotEmpty()) return
+
+        toolbar.menu.clear()
+        searchViewBackPressedCallback?.remove()
+
+        if (!isVisible)
+            return
+
+        toolbar.inflateMenu(R.menu.library_menu)
+        toolbar.setOnMenuItemClickListener { item ->
+            return@setOnMenuItemClickListener if (item.itemId == R.id.menu_synchronize) {
+                viewModel.synchronizeOfflineLibraryUpdates()
+                true
+            } else {
+                false
+            }
+        }
+        initSearchView(toolbar.menu.findItem(R.id.menu_search))
+        updateToolbarMenu(toolbar.menu)
+    }
+
+    @OptIn(ExperimentalBadgeUtils::class)
+    private fun updateToolbarMenu(menu: Menu) {
+        if (menu.isEmpty()) return
+
+        BadgeUtils.detachBadgeDrawable(
+            offlineLibraryUpdateBadge,
+            binding.toolbar,
+            R.id.menu_synchronize
+        )
+
+        val searchMenuItem = menu.findItem(R.id.menu_search)
+        updateSynchronizationMenuItem(!searchMenuItem.isActionViewExpanded)
+    }
+
+    @OptIn(ExperimentalBadgeUtils::class)
+    private fun updateSynchronizationMenuItem(isSearchViewCollapsed: Boolean) {
+        val synchronizeMenuItem = binding.toolbar.menu.findItem(R.id.menu_synchronize) ?: return
+        val showMenuItem = offlineLibraryModificationsAmount > 0 && isSearchViewCollapsed
+        synchronizeMenuItem.isVisible = showMenuItem
+        if (showMenuItem) {
+            offlineLibraryUpdateBadge.apply {
+                isVisible = true
+                number = offlineLibraryModificationsAmount
+            }
+
+            BadgeUtils.attachBadgeDrawable(
+                offlineLibraryUpdateBadge,
+                binding.toolbar,
+                R.id.menu_synchronize
+            )
+        }
+    }
+
     private fun initSearchView(menuItem: MenuItem) {
         val searchView = menuItem.actionView as SearchView
 
@@ -508,80 +569,47 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                searchView.post {
-                    if (!isAdded) return@post
-                    // empty search queries triggered on collapse will be ignored
-                    if (!searchView.isIconified) {
-                        searchDebouncer.debounce(lifecycleScope) {
-                            viewModel.searchLibrary(newText ?: "")
-                        }
-                    }
+                searchDebouncer.debounce(lifecycleScope) {
+                    viewModel.searchLibrary(newText ?: "")
                 }
                 return false
             }
         })
 
+        searchViewBackPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            menuItem.isActionViewExpanded
+        ) {
+            menuItem.collapseActionView()
+            isEnabled = false
+        }
+
         menuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
+                if (isAdded) {
+                    searchViewBackPressedCallback?.isEnabled = true
+                    updateSynchronizationMenuItem(false)
+                }
                 return true
             }
 
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 viewModel.searchLibrary("")
-                binding.rvLibraryEntries.apply {
-                    post {
-                        if (!isAdded) return@post
-                        scrollToPosition(0)
+                searchViewBackPressedCallback?.isEnabled = false
+                if (isAdded) {
+                    updateSynchronizationMenuItem(true)
+                    if (searchView.query.isNotBlank()) {
+                        binding.rvLibraryEntries.apply {
+                            post {
+                                if (!isAdded) return@post
+                                scrollToPosition(0)
+                            }
+                        }
                     }
                 }
                 return true
             }
         })
-    }
-
-    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
-        if (!viewModel.hasUser())
-            return
-
-        inflater.inflate(R.menu.library_menu, menu)
-        menu.findItem(R.id.menu_synchronize).isVisible = offlineLibraryModificationsAmount > 0
-
-        initSearchView(menu.findItem(R.id.menu_search))
-    }
-
-    @ExperimentalBadgeUtils
-    override fun onPrepareMenu(menu: Menu) {
-        if (menu.isEmpty())
-            return
-
-        BadgeUtils.detachBadgeDrawable(
-            offlineLibraryUpdateBadge,
-            binding.toolbar,
-            R.id.menu_synchronize
-        )
-
-        binding.toolbar.menu.findItem(R.id.menu_synchronize).isVisible =
-            offlineLibraryModificationsAmount > 0
-
-        offlineLibraryUpdateBadge.apply {
-            isVisible = offlineLibraryModificationsAmount > 0
-            number = offlineLibraryModificationsAmount
-        }
-
-        BadgeUtils.attachBadgeDrawable(
-            offlineLibraryUpdateBadge,
-            binding.toolbar,
-            R.id.menu_synchronize
-        )
-    }
-
-    override fun onMenuItemSelected(item: MenuItem): Boolean {
-        return if (item.itemId == R.id.menu_synchronize) {
-            viewModel.synchronizeOfflineLibraryUpdates()
-            true
-        } else {
-            false
-        }
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
@@ -591,7 +619,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
     override fun onDestroyView() {
         viewModel.doRefreshListener = null
-        (activity as? AppCompatActivity)?.setSupportActionBar(null)
+        searchViewBackPressedCallback?.remove()
+        searchViewBackPressedCallback = null
         super.onDestroyView()
         _binding = null
     }

@@ -14,6 +14,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
 import androidx.navigation.fragment.findNavController
 import io.github.drumber.kitsune.ui.photoview.PhotoViewActivityDirections
+import io.github.drumber.kitsune.util.logE
 
 /**
  * Checks if the current destination of the back stack is equal to the specified destination id.
@@ -58,7 +59,11 @@ fun Fragment.startUrlShareIntent(url: String, title: String? = null) {
 
 fun Fragment.openUrl(url: String) {
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-    startActivity(intent)
+    try {
+        startActivity(intent)
+    } catch (e: Exception) {
+        logE("Failed to open URL: $url", e)
+    }
 }
 
 fun Fragment.openCharacterOnMAL(malId: Int) {

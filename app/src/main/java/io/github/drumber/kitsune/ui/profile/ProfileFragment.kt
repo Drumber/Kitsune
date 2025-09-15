@@ -1,5 +1,8 @@
 package io.github.drumber.kitsune.ui.profile
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -11,6 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.widget.ImageView
 import androidx.annotation.StringRes
 import androidx.core.view.children
@@ -361,7 +365,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
                     chip.text = siteName
                     chip.setChipIconResource(getProfileSiteLogoResourceId(siteName))
                     chip.setOnClickListener {
-                        profileLink.url?.let { url -> openUrl(url) }
+                        onProfileLinkClicked(profileLink)
                     }
                 }
         }
@@ -467,6 +471,18 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
     private fun onLogOut() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.logOut()
+        }
+    }
+
+    private fun onProfileLinkClicked(profileLink: ProfileLink) {
+        profileLink.url?.let { url ->
+            if (URLUtil.isValidUrl(url)) {
+                openUrl(url)
+            } else {
+                val clipboard = context?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+                val clip = ClipData.newPlainText(profileLink.profileLinkSite?.name ?: "URL", url)
+                clipboard?.setPrimaryClip(clip)
+            }
         }
     }
 

@@ -1,0 +1,6 @@
+* Fixed a crash on the library page
+* Added Tamil translation by @TamilNeram
+* Updated Russian translation by @Xapitonov
+* Updated French translation by @GitSpoon
+* Updated Italian translation by NicolaBortoletto
+* Updated dependencies

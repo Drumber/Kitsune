@@ -6,7 +6,7 @@
         android:id="@+id/menu_synchronize"
         android:title="@string/action_synchronize"
         android:icon="@drawable/ic_sync_24"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_search"

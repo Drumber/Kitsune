@@ -36,6 +36,7 @@ import io.github.drumber.kitsune.shared.constants.Kitsu
 import io.github.drumber.kitsune.ui.base.BasePreferenceFragment
 import io.github.drumber.kitsune.ui.permissions.isNotificationPermissionGranted
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
+import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openUrl
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import kotlinx.coroutines.launch
@@ -148,7 +149,7 @@ class SettingsFragment : BasePreferenceFragment() {
         //---- App Logs
         findPreference<Preference>(R.string.preference_key_app_logs)?.setOnPreferenceClickListener {
             val action = SettingsFragmentDirections.actionSettingsFragmentToAppLogsFragment()
-            findNavController().navigate(action)
+            findNavController().navigateSafe(R.id.settingsFragment, action)
             true
         }
 
@@ -166,7 +167,7 @@ class SettingsFragment : BasePreferenceFragment() {
         //---- Open Source Libraries
         findPreference<Preference>(R.string.preference_key_open_source_libraries)?.setOnPreferenceClickListener {
             val action = SettingsFragmentDirections.actionSettingsFragmentToLibrariesFragment()
-            findNavController().navigate(action)
+            findNavController().navigateSafe(R.id.settingsFragment, action)
             true
         }
 

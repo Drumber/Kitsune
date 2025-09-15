@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.jetbrains.kotlin.kapt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.navigation.safeargs)
@@ -21,8 +22,8 @@ android {
         applicationId = "io.github.drumber.kitsune"
         minSdk = ProjectConfig.MIN_SDK
         targetSdk = ProjectConfig.TARGET_SDK
-        versionCode = 37
-        versionName = "2.0.4"
+        versionCode = 38
+        versionName = "2.0.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -80,10 +81,6 @@ android {
         compose = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
-    }
-
     packaging {
         resources.excludes += "META-INF/*.kotlin_module"
     }
@@ -100,6 +97,7 @@ android {
 }
 
 aboutLibraries {
+    offlineMode = true
     // Remove the "generated" timestamp to allow for reproducible builds
     excludeFields = arrayOf("generated")
 }
