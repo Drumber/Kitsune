@@ -39,6 +39,7 @@
     <string name="action_synchronize">Synchronize</string>
     <string name="action_save_in_gallery">Save in Gallery</string>
     <string name="action_open_in_browser">Open in Browser</string>
+    <string name="action_copy_url">Copy URL</string>
     <string name="action_open_on_mal">Open on MyAnimeList.net</string>
     <string name="action_save_changes">Save Changes</string>
     <string name="action_edit_profile">Edit Profile</string>
@@ -337,6 +338,8 @@
     <string name="filter_age_rating">Age Rating</string>
     <string name="profile_not_logged_in_title">Nothing to see here!</string>
     <string name="profile_not_logged_in_text">Log in to your Kitsu Account or create a new Account to get access to all features.</string>
+    <string name="profile_data_following">%d Following</string>
+    <string name="profile_data_followers">%d Followers</string>
     <string name="profile_anime_stats">Anime Stats</string>
     <string name="profile_manga_stats">Manga Stats</string>
     <string name="profile_stats_anime_watch_time">%s spent watching anime.</string>

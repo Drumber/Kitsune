@@ -1,8 +1,5 @@
 package io.github.drumber.kitsune.ui.profile
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -36,10 +33,7 @@ import com.google.android.material.elevation.SurfaceColors
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.shared.constants.Kitsu
 import io.github.drumber.kitsune.constants.MediaItemSize
-import io.github.drumber.kitsune.data.presentation.dto.toCharacterDto
-import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.model.character.Character
 import io.github.drumber.kitsune.data.model.media.Anime
 import io.github.drumber.kitsune.data.model.media.Manga
@@ -50,13 +44,18 @@ import io.github.drumber.kitsune.data.model.user.profilelinks.ProfileLink
 import io.github.drumber.kitsune.data.model.user.stats.UserStats
 import io.github.drumber.kitsune.data.model.user.stats.UserStatsData
 import io.github.drumber.kitsune.data.model.user.stats.UserStatsKind
+import io.github.drumber.kitsune.data.presentation.dto.toCharacterDto
+import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
 import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
+import io.github.drumber.kitsune.shared.constants.Kitsu
 import io.github.drumber.kitsune.ui.adapter.CharacterAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.component.chart.PieChartStyle
+import io.github.drumber.kitsune.ui.webview.WebViewFragmentDirections
+import io.github.drumber.kitsune.util.extensions.copyToClipboard
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.openUrl
@@ -151,6 +150,13 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
             }
             layoutWaifuRow.root.setOnClickListener(onWaifuClicked)
             layoutWaifuRow.tvValue.setOnClickListener(onWaifuClicked)
+
+            btnFollowing.setOnClickListener {
+                openProfilePageInWebView("following")
+            }
+            btnFollowers.setOnClickListener {
+                openProfilePageInWebView("followers")
+            }
         }
 
         initStatsViewPager()
@@ -479,11 +485,16 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
             if (URLUtil.isValidUrl(url)) {
                 openUrl(url)
             } else {
-                val clipboard = context?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-                val clip = ClipData.newPlainText(profileLink.profileLinkSite?.name ?: "URL", url)
-                clipboard?.setPrimaryClip(clip)
+                copyToClipboard(profileLink.profileLinkSite?.name ?: "URL", url)
             }
         }
+    }
+
+    private fun openProfilePageInWebView(subPage: String) {
+        val user = viewModel.getUser() ?: return
+        val url = "https://kitsu.app/users/${user.slug ?: user.id}/$subPage"
+        val webViewAction = WebViewFragmentDirections.actionGlobalWebViewFragment(url)
+        findNavController().navigateSafe(R.id.profile_fragment, webViewAction)
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {

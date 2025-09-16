@@ -1,5 +1,8 @@
 package io.github.drumber.kitsune.util.extensions
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.res.Resources
 import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +23,12 @@ fun SwipeRefreshLayout.setAppTheme() {
         ElevationOverlayProvider(context).compositeOverlayWithThemeSurfaceColorIfNeeded(8.0f)
     )
     setColorSchemeColors(context.theme.getColor(R.attr.colorPrimary))
+}
+
+fun Context.copyToClipboard(label: String, text: String) {
+    val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+    val clip = ClipData.newPlainText(label, text)
+    clipboard?.setPrimaryClip(clip)
 }
 
 /**

@@ -71,6 +71,10 @@ fun Fragment.openCharacterOnMAL(malId: Int) {
     openUrl(malCharacterUrl)
 }
 
+fun Fragment.copyToClipboard(label: String, text: String) {
+    context?.copyToClipboard(label, text)
+}
+
 fun Fragment.openPhotoViewActivity(
     imageUrl: String,
     title: String? = null,

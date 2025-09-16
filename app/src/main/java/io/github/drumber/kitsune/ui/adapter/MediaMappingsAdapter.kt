@@ -1,8 +1,6 @@
 package io.github.drumber.kitsune.ui.adapter
 
 import android.app.SearchManager
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -18,6 +16,7 @@ import io.github.drumber.kitsune.data.presentation.extension.getSiteName
 import io.github.drumber.kitsune.databinding.ItemMediaMappingBinding
 import io.github.drumber.kitsune.shared.logD
 import io.github.drumber.kitsune.shared.logE
+import io.github.drumber.kitsune.util.extensions.copyToClipboard
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 
 class MediaMappingsAdapter(
@@ -80,11 +79,7 @@ class MediaMappingsAdapter(
 
         binding.root.setOnLongClickListener {
             val url = mapping.getExternalUrl() ?: mapping.externalId ?: return@setOnLongClickListener false
-
-            // copy url to clipboard
-            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText(mapping.getSiteName() ?: "URL", url)
-            clipboard.setPrimaryClip(clip)
+            context.copyToClipboard(mapping.getSiteName() ?: "URL", url)
             return@setOnLongClickListener true
         }
 

@@ -99,6 +99,32 @@
                         tools:visibility="visible"
                         android:orientation="vertical">
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginHorizontal="10dp">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnFollowing"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="?attr/borderlessButtonStyle"
+                                android:textAppearance="?attr/textAppearanceLabelMedium"
+                                android:text="@{@string/profile_data_following(user.followingCount ?? 0)}"
+                                tools:text="12 Following"/>
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnFollowers"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="?attr/borderlessButtonStyle"
+                                android:textAppearance="?attr/textAppearanceLabelMedium"
+                                android:text="@{@string/profile_data_followers(user.followersCount ?? 0)}"
+                                tools:text="39 Followers"/>
+
+                        </LinearLayout>
+
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

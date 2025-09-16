@@ -9,10 +9,6 @@ import io.github.drumber.kitsune.data.mapper.UserStatsMapper.toUserStats
 import io.github.drumber.kitsune.data.model.user.Favorite
 import io.github.drumber.kitsune.data.model.user.FavoriteItem
 import io.github.drumber.kitsune.data.model.user.User
-import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
-import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference
-import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
-import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.data.source.jsonapi.character.model.NetworkCharacter
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkMedia
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkFavorite
@@ -21,6 +17,10 @@ import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkRatingSys
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkSfwFilterPreference
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkTitleLanguagePreference
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkUser
+import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
+import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference
+import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
+import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 
 object UserMapper {
 
@@ -66,6 +66,8 @@ object UserMapper {
         gender = gender,
         birthday = birthday,
         waifuOrHusbando = waifuOrHusbando,
+        followersCount = followersCount,
+        followingCount = followingCount,
         country = country,
         language = language,
         timeZone = timeZone,
@@ -123,6 +125,8 @@ object UserMapper {
         gender = gender,
         birthday = birthday,
         waifuOrHusbando = waifuOrHusbando,
+        followersCount = null,
+        followingCount = null,
         country = country,
         language = language,
         timeZone = timeZone,

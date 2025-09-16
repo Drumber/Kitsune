@@ -276,4 +276,14 @@
             android:id="@+id/action_newLibraryFragment_to_ratingBottomSheet"
             app:destination="@id/ratingBottomSheet" />
     </fragment>
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="io.github.drumber.kitsune.ui.webview.WebViewFragment"
+        android:label="fragment_web_view"
+        tools:layout="@layout/fragment_web_view" >
+        <argument
+            android:name="url"
+            app:argType="string" />
+    </fragment>
+    <action android:id="@+id/action_global_webViewFragment" app:destination="@id/webViewFragment" />
 </navigation>
