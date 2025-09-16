@@ -33,12 +33,13 @@ import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.model.library.LibraryEntryWithModificationAndNextUnit
+import io.github.drumber.kitsune.data.model.library.LibraryStatus
 import io.github.drumber.kitsune.ui.library_new.composables.LibraryEntryWithNextUnitItem
 import io.github.drumber.kitsune.ui.library_new.composables.LibraryNavigationActions
 import io.github.drumber.kitsune.ui.library_new.composables.toLibraryEntryWithNextUnitData
+import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -213,5 +214,7 @@ private fun PlannedLibraryEntriesShelf(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 private fun LibraryContentPreview() {
-    LibraryContent()
+    KitsuneTheme {
+        LibraryContent()
+    }
 }
