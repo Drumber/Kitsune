@@ -76,8 +76,8 @@ import io.github.drumber.kitsune.data.source.local.UserPreferences
 import io.github.drumber.kitsune.data.source.local.auth.AccessTokenLocalDataSource
 import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource
 import io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource
-import io.github.drumber.kitsune.shared.constants.GitHub
-import io.github.drumber.kitsune.shared.constants.Kitsu
+import io.github.drumber.kitsune.core.utils.constants.GitHub
+import io.github.drumber.kitsune.core.utils.constants.Kitsu
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

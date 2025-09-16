@@ -6,9 +6,9 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.media.ReleaseStatus
 import io.github.drumber.kitsune.data.model.media.Anime
 import io.github.drumber.kitsune.data.model.media.Media
-import io.github.drumber.kitsune.shared.formatDate
-import io.github.drumber.kitsune.shared.parseDate
-import io.github.drumber.kitsune.shared.toCalendar
+import io.github.drumber.kitsune.core.utils.formatDate
+import io.github.drumber.kitsune.core.utils.parseDate
+import io.github.drumber.kitsune.core.utils.toCalendar
 import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.util.TimeUtil
 import io.github.drumber.kitsune.util.extensions.format

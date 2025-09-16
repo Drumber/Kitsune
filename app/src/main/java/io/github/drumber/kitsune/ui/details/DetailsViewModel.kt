@@ -27,9 +27,9 @@ import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.LibraryUpdateResult
-import io.github.drumber.kitsune.shared.logD
-import io.github.drumber.kitsune.shared.logE
-import io.github.drumber.kitsune.shared.logW
+import io.github.drumber.kitsune.core.utils.logD
+import io.github.drumber.kitsune.core.utils.logE
+import io.github.drumber.kitsune.core.utils.logW
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

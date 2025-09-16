@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.domain.auth.LogInUserUseCase
 import io.github.drumber.kitsune.domain.auth.LoginResult
-import io.github.drumber.kitsune.shared.logE
+import io.github.drumber.kitsune.core.utils.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

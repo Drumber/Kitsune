@@ -58,8 +58,8 @@ import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemP
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.databinding.ItemDetailsInfoRowBinding
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.shared.constants.Kitsu
-import io.github.drumber.kitsune.shared.logW
+import io.github.drumber.kitsune.core.utils.constants.Kitsu
+import io.github.drumber.kitsune.core.utils.logW
 import io.github.drumber.kitsune.ui.adapter.MediaRelationshipRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity

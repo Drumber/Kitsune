@@ -14,7 +14,7 @@ import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEnt
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMedia
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus
 import io.github.drumber.kitsune.data.source.local.library.model.LocalReactionSkip
-import io.github.drumber.kitsune.shared.DATE_FORMAT_ISO
+import io.github.drumber.kitsune.core.utils.DATE_FORMAT_ISO
 import net.datafaker.Faker
 
 fun libraryEntry(faker: Faker, media: Media? = null) = LibraryEntry(

@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.shared
+package io.github.drumber.kitsune.core.utils
 
 import java.text.ParseException
 import java.text.SimpleDateFormat

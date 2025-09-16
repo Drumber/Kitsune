@@ -2,14 +2,14 @@ package io.github.drumber.kitsune.ui.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.drumber.kitsune.shared.constants.Defaults
+import io.github.drumber.kitsune.core.utils.constants.Defaults
 import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.exception.NoDataException
 import io.github.drumber.kitsune.data.mapper.UserMapper.toUser
 import io.github.drumber.kitsune.data.model.user.User
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.domain.auth.LogOutUserUseCase
-import io.github.drumber.kitsune.shared.logE
+import io.github.drumber.kitsune.core.utils.logE
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

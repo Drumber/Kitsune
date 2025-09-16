@@ -77,7 +77,7 @@ import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCase
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.shared.logE
+import io.github.drumber.kitsune.core.utils.logE
 import io.github.drumber.kitsune.ui.details.DetailsFragmentArgs
 import io.github.drumber.kitsune.ui.main.MainActivity
 import io.github.drumber.kitsune.ui.widget.KitsuneWidgetTheme.applyTheme

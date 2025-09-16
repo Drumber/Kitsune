@@ -13,7 +13,7 @@ import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemP
 import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
-import io.github.drumber.kitsune.shared.DATE_FORMAT_ISO
+import io.github.drumber.kitsune.core.utils.DATE_FORMAT_ISO
 import net.datafaker.Faker
 
 fun networkUser(faker: Faker) = NetworkUser(

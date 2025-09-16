@@ -4,8 +4,8 @@ import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.domain.auth.RefreshAccessTokenIfExpiredUseCase
 import io.github.drumber.kitsune.domain.auth.RefreshResult
-import io.github.drumber.kitsune.shared.logE
-import io.github.drumber.kitsune.shared.logI
+import io.github.drumber.kitsune.core.utils.logE
+import io.github.drumber.kitsune.core.utils.logI
 
 class UpdateLocalUserUseCase(
     private val userRepository: UserRepository,

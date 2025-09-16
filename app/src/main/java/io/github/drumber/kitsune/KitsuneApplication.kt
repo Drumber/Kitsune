@@ -13,9 +13,9 @@ import io.github.drumber.kitsune.domain.user.UpdateLocalUserUseCase
 import io.github.drumber.kitsune.notification.NotificationChannels
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.shared.logE
-import io.github.drumber.kitsune.shared.logI
-import io.github.drumber.kitsune.shared.logW
+import io.github.drumber.kitsune.core.utils.logE
+import io.github.drumber.kitsune.core.utils.logI
+import io.github.drumber.kitsune.core.utils.logW
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

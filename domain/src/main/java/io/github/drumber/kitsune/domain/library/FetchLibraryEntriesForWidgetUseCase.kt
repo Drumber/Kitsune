@@ -6,7 +6,7 @@ import io.github.drumber.kitsune.data.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.model.library.LibraryEntryFilter
 import io.github.drumber.kitsune.data.repository.library.LibraryRepository
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
-import io.github.drumber.kitsune.shared.logE
+import io.github.drumber.kitsune.core.utils.logE
 
 class FetchLibraryEntriesForWidgetUseCase(
     private val libraryRepository: LibraryRepository,

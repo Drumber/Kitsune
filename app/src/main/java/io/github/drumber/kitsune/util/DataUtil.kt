@@ -9,8 +9,8 @@ import io.github.drumber.kitsune.data.model.enUs
 import io.github.drumber.kitsune.data.model.jaJp
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.shared.formatDate
-import io.github.drumber.kitsune.shared.parseDate
+import io.github.drumber.kitsune.core.utils.formatDate
+import io.github.drumber.kitsune.core.utils.parseDate
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale

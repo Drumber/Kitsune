@@ -9,8 +9,8 @@ import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.UnknownException
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Failure
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Success
-import io.github.drumber.kitsune.shared.formatUtcDate
-import io.github.drumber.kitsune.shared.getLocalCalendar
+import io.github.drumber.kitsune.core.utils.formatUtcDate
+import io.github.drumber.kitsune.core.utils.getLocalCalendar
 import java.io.IOException
 import kotlin.coroutines.cancellation.CancellationException
 

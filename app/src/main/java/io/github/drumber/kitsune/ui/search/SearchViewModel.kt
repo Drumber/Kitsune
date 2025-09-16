@@ -40,10 +40,10 @@ import io.github.drumber.kitsune.data.repository.algolia.AlgoliaKeyRepository
 import io.github.drumber.kitsune.data.repository.algolia.AlgoliaSearchProvider
 import io.github.drumber.kitsune.data.source.algolia.AlgoliaMediaSearchResult
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.shared.constants.Kitsu
-import io.github.drumber.kitsune.shared.constants.Repository
-import io.github.drumber.kitsune.shared.logE
-import io.github.drumber.kitsune.shared.logI
+import io.github.drumber.kitsune.core.utils.constants.Kitsu
+import io.github.drumber.kitsune.core.utils.constants.Repository
+import io.github.drumber.kitsune.core.utils.logE
+import io.github.drumber.kitsune.core.utils.logI
 import io.github.drumber.kitsune.ui.component.algolia.SeasonListPresenter
 import io.github.drumber.kitsune.ui.component.algolia.range.CustomFilterRangeConnector
 import kotlinx.coroutines.flow.flatMapLatest

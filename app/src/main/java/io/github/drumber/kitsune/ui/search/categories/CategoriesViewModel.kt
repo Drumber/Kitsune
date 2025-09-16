@@ -9,7 +9,7 @@ import io.github.drumber.kitsune.data.repository.media.CategoryRepository
 import io.github.drumber.kitsune.preference.CategoryPrefWrapper
 import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.shared.logE
+import io.github.drumber.kitsune.core.utils.logE
 import io.github.drumber.kitsune.util.network.ResponseData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

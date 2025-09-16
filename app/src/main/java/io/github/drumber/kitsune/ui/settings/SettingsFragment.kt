@@ -32,7 +32,7 @@ import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.preference.StartPagePref
-import io.github.drumber.kitsune.shared.constants.Kitsu
+import io.github.drumber.kitsune.core.utils.constants.Kitsu
 import io.github.drumber.kitsune.ui.base.BasePreferenceFragment
 import io.github.drumber.kitsune.ui.permissions.isNotificationPermissionGranted
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission

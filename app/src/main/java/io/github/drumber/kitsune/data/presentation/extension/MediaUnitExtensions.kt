@@ -7,8 +7,8 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.model.media.unit.Chapter
 import io.github.drumber.kitsune.data.model.media.unit.Episode
 import io.github.drumber.kitsune.data.model.media.unit.MediaUnit
-import io.github.drumber.kitsune.shared.formatDate
-import io.github.drumber.kitsune.shared.parseDate
+import io.github.drumber.kitsune.core.utils.formatDate
+import io.github.drumber.kitsune.core.utils.parseDate
 import io.github.drumber.kitsune.util.DataUtil
 import java.text.SimpleDateFormat
 

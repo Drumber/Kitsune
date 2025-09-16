@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
-import io.github.drumber.kitsune.shared.constants.Defaults
+import io.github.drumber.kitsune.core.utils.constants.Defaults
 import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.exception.NoDataException
@@ -16,8 +16,8 @@ import io.github.drumber.kitsune.data.presentation.MediaSelector
 import io.github.drumber.kitsune.data.presentation.identifier
 import io.github.drumber.kitsune.data.repository.media.AnimeRepository
 import io.github.drumber.kitsune.data.repository.media.MangaRepository
-import io.github.drumber.kitsune.shared.logE
-import io.github.drumber.kitsune.shared.logV
+import io.github.drumber.kitsune.core.utils.logE
+import io.github.drumber.kitsune.core.utils.logV
 import io.github.drumber.kitsune.util.network.ResponseData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow

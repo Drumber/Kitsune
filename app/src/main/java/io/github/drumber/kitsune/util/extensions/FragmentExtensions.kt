@@ -13,7 +13,7 @@ import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
 import androidx.navigation.fragment.findNavController
-import io.github.drumber.kitsune.shared.logE
+import io.github.drumber.kitsune.core.utils.logE
 import io.github.drumber.kitsune.ui.photoview.PhotoViewActivityDirections
 
 /**

@@ -41,14 +41,14 @@ The data layer contains the data models and data sources and is responsible for 
 The data layer is divided into the following modules:
 
 ```
-data (root)
-common
-model
-source
-  - local
-  - JSON:API
-  - GraphQL
-  - Algolia search
+- data (root)
+  - common
+  - model
+  - source
+    - local
+    - JSON:API
+    - GraphQL
+    - Algolia search
 ```
 
 The data (root) module contains the following packages:

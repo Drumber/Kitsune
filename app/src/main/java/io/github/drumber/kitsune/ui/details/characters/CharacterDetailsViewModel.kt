@@ -2,14 +2,14 @@ package io.github.drumber.kitsune.ui.details.characters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.drumber.kitsune.shared.constants.Defaults
+import io.github.drumber.kitsune.core.utils.constants.Defaults
 import io.github.drumber.kitsune.data.model.Filter
 import io.github.drumber.kitsune.data.model.character.Character
 import io.github.drumber.kitsune.data.model.user.Favorite
 import io.github.drumber.kitsune.data.repository.media.CharacterRepository
 import io.github.drumber.kitsune.data.repository.media.FavoriteRepository
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
-import io.github.drumber.kitsune.shared.logE
+import io.github.drumber.kitsune.core.utils.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow

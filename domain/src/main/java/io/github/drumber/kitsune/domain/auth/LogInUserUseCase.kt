@@ -2,8 +2,8 @@ package io.github.drumber.kitsune.domain.auth
 
 import io.github.drumber.kitsune.data.repository.AccessTokenRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
-import io.github.drumber.kitsune.shared.logE
-import io.github.drumber.kitsune.shared.logI
+import io.github.drumber.kitsune.core.utils.logE
+import io.github.drumber.kitsune.core.utils.logI
 import retrofit2.HttpException
 
 class LogInUserUseCase(

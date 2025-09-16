@@ -13,7 +13,7 @@ import io.github.drumber.kitsune.data.exception.NoDataException
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
-import io.github.drumber.kitsune.shared.logE
+import io.github.drumber.kitsune.core.utils.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

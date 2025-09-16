@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.source.local.library.model
 
 import io.github.drumber.kitsune.data.source.local.testutils.localLibraryEntry
-import io.github.drumber.kitsune.shared.DATE_FORMAT_ISO
+import io.github.drumber.kitsune.core.utils.DATE_FORMAT_ISO
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy

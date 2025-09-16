@@ -23,8 +23,8 @@ import io.github.drumber.kitsune.data.testutils.localLibraryEntry
 import io.github.drumber.kitsune.data.testutils.networkLibraryEntry
 import io.github.drumber.kitsune.data.testutils.onSuspend
 import io.github.drumber.kitsune.data.testutils.useMockedAndroidLogger
-import io.github.drumber.kitsune.shared.DATE_FORMAT_ISO
-import io.github.drumber.kitsune.shared.formatDate
+import io.github.drumber.kitsune.core.utils.DATE_FORMAT_ISO
+import io.github.drumber.kitsune.core.utils.formatDate
 import io.github.drumber.kitsune.testutils.network.FakeHttpException
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.plus

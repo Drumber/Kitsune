@@ -7,7 +7,7 @@ import io.github.drumber.kitsune.data.model.media.Media
 import io.github.drumber.kitsune.data.repository.media.AnimeRepository
 import io.github.drumber.kitsune.data.repository.media.MangaRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
-import io.github.drumber.kitsune.shared.logE
+import io.github.drumber.kitsune.core.utils.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

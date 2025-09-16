@@ -24,7 +24,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":shared"))
+    implementation(project(":core-util"))
     implementation(project(":data:model"))
     implementation(project(":data:common"))
     implementation(project(":data:source:local"))

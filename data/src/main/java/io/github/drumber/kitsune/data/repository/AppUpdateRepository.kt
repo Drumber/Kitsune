@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.data.repository
 import io.github.drumber.kitsune.data.mapper.AppUpdateMapper.toAppRelease
 import io.github.drumber.kitsune.data.model.appupdate.UpdateCheckResult
 import io.github.drumber.kitsune.data.source.jsonapi.appupdate.AppReleaseNetworkDataSource
-import io.github.drumber.kitsune.shared.logE
+import io.github.drumber.kitsune.core.utils.logE
 
 class AppUpdateRepository(
     private val appReleaseDataSource: AppReleaseNetworkDataSource

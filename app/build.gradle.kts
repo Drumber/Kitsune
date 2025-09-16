@@ -103,7 +103,7 @@ aboutLibraries {
 }
 
 dependencies {
-    implementation(project(":shared"))
+    implementation(project(":core-util"))
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation(project(":data:model"))

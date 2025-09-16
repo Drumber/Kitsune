@@ -6,8 +6,8 @@ import io.github.drumber.kitsune.data.source.jsonapi.auth.model.ObtainAccessToke
 import io.github.drumber.kitsune.data.source.jsonapi.auth.model.RefreshAccessToken
 import io.github.drumber.kitsune.data.source.local.auth.AccessTokenLocalDataSource
 import io.github.drumber.kitsune.data.source.local.auth.model.LocalAccessToken
-import io.github.drumber.kitsune.shared.logD
-import io.github.drumber.kitsune.shared.logI
+import io.github.drumber.kitsune.core.utils.logD
+import io.github.drumber.kitsune.core.utils.logI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

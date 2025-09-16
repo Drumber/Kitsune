@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.shared.constants
+package io.github.drumber.kitsune.core.utils.constants
 
 object Repository {
 

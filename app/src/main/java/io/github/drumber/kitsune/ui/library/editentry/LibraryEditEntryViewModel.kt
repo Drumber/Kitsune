@@ -14,7 +14,7 @@ import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Failure
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Success
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryUseCase
 import io.github.drumber.kitsune.data.model.Filter
-import io.github.drumber.kitsune.shared.logE
+import io.github.drumber.kitsune.core.utils.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

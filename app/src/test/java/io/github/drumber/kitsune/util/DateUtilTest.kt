@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.util
 
-import io.github.drumber.kitsune.shared.formatUtcDate
-import io.github.drumber.kitsune.shared.parseUtcDate
+import io.github.drumber.kitsune.core.utils.formatUtcDate
+import io.github.drumber.kitsune.core.utils.parseUtcDate
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import java.time.ZoneOffset

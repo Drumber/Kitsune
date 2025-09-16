@@ -9,7 +9,7 @@ import io.github.drumber.kitsune.data.model.media.Manga
 import io.github.drumber.kitsune.data.paging.media.MangaPagingDataSource
 import io.github.drumber.kitsune.data.paging.media.TrendingMangaPagingDataSource
 import io.github.drumber.kitsune.data.source.jsonapi.media.MangaNetworkDataSource
-import io.github.drumber.kitsune.shared.constants.Repository
+import io.github.drumber.kitsune.core.utils.constants.Repository
 import kotlinx.coroutines.flow.map
 
 class MangaRepository(

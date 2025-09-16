@@ -14,8 +14,8 @@ import io.github.drumber.kitsune.data.model.mapping.Mapping
 import io.github.drumber.kitsune.data.presentation.extension.getExternalUrl
 import io.github.drumber.kitsune.data.presentation.extension.getSiteName
 import io.github.drumber.kitsune.databinding.ItemMediaMappingBinding
-import io.github.drumber.kitsune.shared.logD
-import io.github.drumber.kitsune.shared.logE
+import io.github.drumber.kitsune.core.utils.logD
+import io.github.drumber.kitsune.core.utils.logE
 import io.github.drumber.kitsune.util.extensions.copyToClipboard
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 

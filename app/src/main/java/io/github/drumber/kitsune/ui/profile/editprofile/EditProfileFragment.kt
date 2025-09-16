@@ -38,10 +38,10 @@ import io.github.drumber.kitsune.data.source.algolia.AlgoliaCharacterSearchResul
 import io.github.drumber.kitsune.databinding.FragmentEditProfileBinding
 import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.shared.formatDate
-import io.github.drumber.kitsune.shared.logE
-import io.github.drumber.kitsune.shared.parseDate
-import io.github.drumber.kitsune.shared.toDate
+import io.github.drumber.kitsune.core.utils.formatDate
+import io.github.drumber.kitsune.core.utils.logE
+import io.github.drumber.kitsune.core.utils.parseDate
+import io.github.drumber.kitsune.core.utils.toDate
 import io.github.drumber.kitsune.ui.base.BaseDialogFragment
 import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId

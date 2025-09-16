@@ -8,7 +8,7 @@ import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkManga
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkMangaSubtype
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkRatingFrequencies
 import io.github.drumber.kitsune.data.source.jsonapi.media.model.NetworkReleaseStatus
-import io.github.drumber.kitsune.shared.DATE_FORMAT_ISO
+import io.github.drumber.kitsune.core.utils.DATE_FORMAT_ISO
 import net.datafaker.Faker
 import java.util.Locale
 import java.util.concurrent.TimeUnit

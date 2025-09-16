@@ -15,9 +15,9 @@ import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSourc
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntry
 import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyEntity
 import io.github.drumber.kitsune.data.source.local.mapper.toLocalLibraryStatus
-import io.github.drumber.kitsune.shared.constants.Kitsu
-import io.github.drumber.kitsune.shared.logD
-import io.github.drumber.kitsune.shared.parseUtcDate
+import io.github.drumber.kitsune.core.utils.constants.Kitsu
+import io.github.drumber.kitsune.core.utils.logD
+import io.github.drumber.kitsune.core.utils.parseUtcDate
 
 @OptIn(ExperimentalPagingApi::class)
 class LibraryEntryRemoteMediator(
