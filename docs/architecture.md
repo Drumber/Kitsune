@@ -16,17 +16,16 @@ Dependencies between layers are **unidirectional**, meaning that a layer can onl
 
 The dependencies are as follows: `ui -> domain -> data`
 
-Additionally, common code that is shared between layers is placed in the `shared` module.
+Additionally, common code that is shared between layers is placed in the `core-util` module.
 
 
 ### 0. UI Layer
 
 The UI layer contains code that is responsible for running the application, displaying the user interface and handling user interactions.
 
-The UI layer is divided into the following modules:
+The UI layer consists of the following module:
 
-- `app` - Contains the main application code.
-- `widget` - Contains the home screen widget.
+- `app` - Contains the main application code and the home screen widget.
 
 
 ### 1. Domain Layer
@@ -42,13 +41,12 @@ The data layer is divided into the following modules:
 
 ```
 - data (root)
-  - common
-  - model
-  - source
-    - local
-    - JSON:API
-    - GraphQL
-    - Algolia search
+- model
+- source
+  - local
+  - JSON:API
+  - GraphQL
+  - Algolia search
 ```
 
 The data (root) module contains the following packages:
@@ -57,3 +55,7 @@ The data (root) module contains the following packages:
 mapper
 repository
 ```
+
+### Diagram
+
+![architecture diagram](./Kitsune-Multi-Module-Architecture.png)

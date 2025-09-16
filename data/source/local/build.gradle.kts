@@ -32,7 +32,6 @@ android {
 dependencies {
     implementation(project(":core-util"))
     implementation(project(":data:model"))
-    implementation(project(":data:common"))
 
     // Core dependencies
     implementation(libs.jetbrains.kotlinx.coroutines.core)

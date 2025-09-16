@@ -27,7 +27,6 @@ dependencies {
     implementation(project(":core-util"))
     implementation(project(":data"))
     implementation(project(":data:model"))
-    implementation(project(":data:common"))
     implementation(project(":data:source:local"))
     implementation(project(":data:source:jsonapi"))
     implementation(project(":data:source:graphql"))

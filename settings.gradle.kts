@@ -19,7 +19,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Kitsune"
 include(":app")
-include(":widget")
 include(":domain")
 include(":data")
 include(":data:model")
@@ -28,4 +27,3 @@ include(":data:source:jsonapi")
 include(":data:source:graphql")
 include(":data:source:algolia")
 include(":core-util")
-include(":data:common")
