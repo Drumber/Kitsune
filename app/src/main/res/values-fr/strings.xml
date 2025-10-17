@@ -372,4 +372,21 @@
     <string name="onboarding_welcome_title">Bienvenue sur Kitsune !</string>
     <string name="action_continue">Continuer</string>
     <string name="onboarding_welcome_feature_search_description">Trouver vos animés et mangas favoris.</string>
+    <string name="onboarding_welcome_feature_track">Suivre</string>
+    <string name="onboarding_welcome_feature_track_description">Suivez ce que vous avez lu et regardé.</string>
+    <string name="onboarding_welcome_action">Commencer</string>
+    <string name="onboarding_login_title">Connectez-vous à Kitsu</string>
+    <string name="onboarding_login_subtitle">Connectez-vous à votre compte Kitsu ou créez en un nouveau pour accéder à toutes les fonctionnalités.</string>
+    <string name="onboarding_login_is_logged_in">Connecté</string>
+    <string name="onboarding_login_forward_dialog_title">Créer un compte</string>
+    <string name="onboarding_setup_title_language">Langue des titres</string>
+    <string name="onboarding_setup_title_language_description">Sélectionner la langue d\'affichage des titres.</string>
+    <string name="onboarding_setup_title_language_selected">Sélectionné : %1$s</string>
+    <string name="onboarding_setup_action">Configuration terminée</string>
+    <string name="onboarding_login_forward_dialog_message">Vous allez être redirigé vers %1$s où vous pourrez créer un nouveau compte.</string>
+    <string name="onboarding_setup_title">Configuration initiale</string>
+    <string name="onboarding_setup_subtitle">Choisissez vos paramètres pour commencer. Vous pourrez les changer à n\'importe quel moment dans les paramètres.</string>
+    <string name="onboarding_setup_notification_permission_notice">L\'autorisation de Notification est requise.</string>
+    <string name="onboarding_setup_updates">Vérifier les mises à jour</string>
+    <string name="onboarding_setup_updates_description">Soyez notifié dès qu\'une nouvelle version est disponible sur GitHub.</string>
 </resources>
