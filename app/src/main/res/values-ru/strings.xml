@@ -5,7 +5,7 @@
     <string name="nav_library">Библиотека</string>
     <string name="nav_profile">Профиль</string>
     <string name="nav_settings">Настройки</string>
-    <string name="nav_appearance">Облик</string>
+    <string name="nav_appearance">Внешний вид</string>
     <string name="manga">Манга</string>
     <string name="action_retry">Снова</string>
     <string name="action_ok">ОК</string>
@@ -230,8 +230,8 @@
     <string name="prompt_email">Электронная почта</string>
     <string name="prompt_password">Пароль</string>
     <string name="action_log_in_to_kitsu">Вход в Kitsu</string>
-    <string name="action_log_in">Вход в</string>
-    <string name="action_sign_in">Войти в</string>
+    <string name="action_log_in">Вход</string>
+    <string name="action_sign_in">Войти</string>
     <string name="login_failed">Вход не удался</string>
     <string name="status_logging_in">Вход в систему…</string>
     <string name="logged_in_success">Вход выполнен как %s.</string>
