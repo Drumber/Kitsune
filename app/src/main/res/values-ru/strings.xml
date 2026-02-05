@@ -306,7 +306,7 @@
     <string name="relationship_alternative_setting">Доп. настройки</string>
     <string name="relationship_alternative_version">Альтернативная версия</string>
     <string name="relationship_summary">Сводка</string>
-    <string name="preference_sfw_filter_limit_to_feed">Ограничить следующий ленту</string>
+    <string name="preference_sfw_filter_limit_to_feed">Ограничить лентой подписок</string>
     <string name="profile_data_gender">Пол</string>
     <string name="widget_empty_action">Открыть библиотеку</string>
     <plurals name="duration_months">
@@ -353,7 +353,7 @@
     </plurals>
     <string name="action_continue">Продолжить</string>
     <string name="action_skip">Пропустить</string>
-    <string name="preference_force_legacy_image_picker">Принудительный отбор старых фотографий</string>
+    <string name="preference_force_legacy_image_picker">Использовать старый выбор фотографий</string>
     <string name="preference_app_logs_description">Смотрите и делитесь сообщениями журнала приложения.</string>
     <string name="preference_open_source_libraries_description">Список всех используемых библиотек с открытым исходным кодом.</string>
     <string name="profile_stats_anime_watch_time">%s потрачено на просмотр аниме.</string>
