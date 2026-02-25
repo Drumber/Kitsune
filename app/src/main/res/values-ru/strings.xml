@@ -327,7 +327,7 @@
     <string name="profile_stats_completed">%1$d завершено. Более <b>%2$d%%</b> пользователей.</string>
     <string name="profile_data_location">Локация</string>
     <string name="profile_data_private">Это секрет.</string>
-    <string name="profile_gender_custom">Личный</string>
+    <string name="profile_gender_custom">Ручной</string>
     <string name="profile_find_waifu">Найдите своего особого человека</string>
     <string name="onboarding_welcome_title">Добро пожаловать в Kitsune!</string>
     <string name="onboarding_welcome_subtitle">Ваш личный компаньон по аниме и манге.</string>
@@ -365,7 +365,7 @@
     <string name="widget_empty_text">В вашей библиотеке нет активного отслеживаемого объекта</string>
     <string name="onboarding_welcome_feature_search_description">Найдите свое любимое аниме и мангу.</string>
     <string name="nav_app_logs">Журналы приложения</string>
-    <string name="filter_kind">Детский</string>
+    <string name="filter_kind">Тип</string>
     <string name="onboarding_welcome_feature_track">Трек</string>
     <string name="onboarding_welcome_feature_track_description">Следите за тем, что вы смотрели и читали.</string>
     <string name="onboarding_welcome_action">Начать</string>
