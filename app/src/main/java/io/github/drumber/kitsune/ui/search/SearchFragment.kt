@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.algolia.instantsearch.android.searchbox.SearchBoxViewAppCompat
 import com.algolia.instantsearch.core.connection.AbstractConnection
 import com.algolia.instantsearch.core.connection.ConnectionHandler
@@ -75,7 +76,15 @@ class SearchFragment : Fragment(R.layout.fragment_search),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
-        view.doOnPreDraw { startPostponedEnterTransition() }
+
+        if (findNavController().currentBackStackEntry?.arguments == null) {
+            view.doOnPreDraw { startPostponedEnterTransition() }
+        } else {
+            // safeguard: ensure startPostponedEnterTransition() got called within 200ms
+            view.postDelayed({
+                startPostponedEnterTransition()
+            }, 200)
+        }
 
         binding.apply {
             root.initPaddingWindowInsetsListener(
@@ -118,6 +127,10 @@ class SearchFragment : Fragment(R.layout.fragment_search),
                         adapter.itemCount,
                         loadState
                     )
+
+                    if (loadState.refresh is LoadState.NotLoading) {
+                        binding.rvMedia.doOnPreDraw { startPostponedEnterTransition() }
+                    }
                 }
             }
         }

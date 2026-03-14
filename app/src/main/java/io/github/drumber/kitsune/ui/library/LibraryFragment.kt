@@ -108,7 +108,15 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
-        view.doOnPreDraw { startPostponedEnterTransition() }
+
+        if (!viewModel.hasUser() || findNavController().currentBackStackEntry?.arguments == null) {
+            view.doOnPreDraw { startPostponedEnterTransition() }
+        } else {
+            // safeguard: ensure startPostponedEnterTransition() got called within 200ms
+            view.postDelayed({
+                startPostponedEnterTransition()
+            }, 200)
+        }
 
         binding.apply {
             appBarLayout.statusBarForeground =
@@ -304,6 +312,14 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
                 adapter.loadStateFlow.collectLatest { state ->
                     lastLoadState = state
                     if (view?.parent == null) return@collectLatest
+
+                    if (!state.source.isIdle) {
+                        // start postponed transition immediate if loading from network
+                        view?.doOnPreDraw { startPostponedEnterTransition() }
+                    } else if (state.isIdle) {
+                        // else wait for adapter to idle
+                        view?.doOnPreDraw { startPostponedEnterTransition() }
+                    }
 
                     val isSearching = viewModel.state.value.filter.searchQuery.isNotBlank()
                     val isNotLoading = when {
