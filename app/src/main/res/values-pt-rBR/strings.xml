@@ -118,8 +118,8 @@
     <string name="season_fall">Outono</string>
     <string name="relationship_sequel">Sequência</string>
     <string name="relationship_prequel">Anterior</string>
-    <string name="relationship_alternative_setting">Configuração Alt.</string>
-    <string name="relationship_alternative_version">Versão Alt.</string>
+    <string name="relationship_alternative_setting">Configuração alternativa</string>
+    <string name="relationship_alternative_version">Versão alternativa</string>
     <string name="relationship_spinoff">Spin-off</string>
     <string name="relationship_adaptation">Adaptação</string>
     <string name="relationship_character">Personagem</string>
@@ -145,7 +145,7 @@
     <string name="preference_start_fragment_profile">Perfil</string>
     <string name="preference_start_fragment_description">A página padrão está selecionada pra %s.</string>
     <string name="preference_titles_description">Defina como os títulos das mídias serão mostrados.</string>
-    <string name="preference_titles_canonical">Canonical</string>
+    <string name="preference_titles_canonical">Canônico</string>
     <string name="preference_titles_romanized">Romanizado</string>
     <string name="preference_adult_content_description_sfw">Mídias classificadas como 18+ serão ocultadas.</string>
     <string name="preference_sfw_filter_hide_all">Ocultar todo Conteúdo Adulto</string>
@@ -184,7 +184,7 @@
     <string name="info_image_saved_in_gallery">Imagem salva com sucesso na galeria.</string>
     <string name="info_update_new_version_available_text">Versão %s do Kitsune está disponível.</string>
     <string name="info_update_no_new_version_available">Nenhuma nova versão está disponível.</string>
-    <string name="filter_kind">Tipo</string>
+    <string name="filter_kind">Categoria</string>
     <string name="filter_subtype">Subtipo</string>
     <string name="profile_not_logged_in_title">Nada para ver aqui!</string>
     <string name="profile_not_logged_in_text">Logue na sua conta do Kitsu ou crie uma nova conta para ter acesso a todos os recursos.</string>
@@ -362,4 +362,31 @@
         <item quantity="many">%s meses</item>
         <item quantity="other">%s meses</item>
     </plurals>
+    <string name="action_skip">Pular</string>
+    <string name="action_next">Próximo</string>
+    <string name="action_continue">Continuar</string>
+    <string name="onboarding_welcome_title">Bem-vindo ao Kitsune!</string>
+    <string name="onboarding_welcome_subtitle">Seu companheiro pessoal de animes e mangas.</string>
+    <string name="onboarding_welcome_feature_search">Pesquise</string>
+    <string name="onboarding_welcome_feature_search_description">Encontre seus animes e mangas favoritos.</string>
+    <string name="onboarding_welcome_feature_explore">Explore</string>
+    <string name="onboarding_welcome_feature_explore_description">Descubra títulos novos e em alta.</string>
+    <string name="onboarding_welcome_feature_track">Acompanhe</string>
+    <string name="onboarding_welcome_feature_track_description">Acompanhe o que você assistiu e leu.</string>
+    <string name="onboarding_welcome_action">Comece agora</string>
+    <string name="onboarding_login_title">Faça login no Kitsu</string>
+    <string name="onboarding_login_forward_dialog_message">Você será redirecionado para %1$s, onde poderá criar uma nova conta.</string>
+    <string name="onboarding_setup_title">Configuração Inicial</string>
+    <string name="onboarding_setup_subtitle">Configure suas preferências para começar. Você poderá mudá-las a qualquer momento nas configurações.</string>
+    <string name="onboarding_setup_notification_permission_notice">Permissão de notificação necessária.</string>
+    <string name="onboarding_setup_updates">Verificar Atualizações</string>
+    <string name="onboarding_setup_title_language_description">Selecione seu idioma preferido para títulos.</string>
+    <string name="onboarding_setup_title_language_selected">Selecionado: %1$s</string>
+    <string name="onboarding_setup_action">Concluir Configuração</string>
+    <string name="onboarding_login_subtitle">Faça login na sua conta Kitsu ou crie uma nova para ter acesso a todas as funcionalidades.</string>
+    <string name="onboarding_login_is_logged_in">Você está conectado</string>
+    <string name="onboarding_login_forward_dialog_title">Criar Conta</string>
+    <string name="action_create_account">Criar conta</string>
+    <string name="onboarding_setup_updates_description">Seja notificado quando uma nova versão estiver disponível no GitHub.</string>
+    <string name="onboarding_setup_title_language">Idioma de Títulos</string>
 </resources>
