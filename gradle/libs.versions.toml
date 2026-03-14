@@ -37,7 +37,7 @@ kotlin = "2.2.20"
 kotlinxCoroutines = "1.10.2"
 kotlinxSerialization = "1.9.0"
 kotpref = "2.13.2"
-ksp = "2.3.2"
+ksp = "2.3.6"
 ktorClient = "1.6.8"
 leakCanary = "2.14"
 material = "1.13.0"
@@ -142,11 +142,10 @@ zhanghai-materialratingbar = { module = "me.zhanghai.android.materialratingbar:l
 [plugins]
 aboutlibraries-plugin = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutLibraries" }
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-legacy-kapt = { id = "com.android.legacy-kapt", version.ref = "agp" }
 androidx-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidxNavigation" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 jetbrains-kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

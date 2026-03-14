@@ -1,8 +1,10 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.jetbrains.kotlin.kapt)
+    alias(libs.plugins.android.legacy.kapt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.navigation.safeargs)
     alias(libs.plugins.aboutlibraries.plugin)
@@ -35,10 +37,6 @@ android {
         generateLocaleConfig = true
     }
 
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
-    }
-
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
@@ -68,11 +66,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    kotlinOptions {
-        jvmTarget = "11"
-        freeCompilerArgs += listOf("-opt-in=kotlin.RequiresOptIn")
-    }
-
     buildFeatures {
         viewBinding = true
         dataBinding = true
@@ -93,6 +86,18 @@ android {
         animationsDisabled = true
         testBuildType = "instrumented"
     }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
+        languageVersion = KotlinVersion.KOTLIN_2_2
+        freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
+    }
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 aboutLibraries {
