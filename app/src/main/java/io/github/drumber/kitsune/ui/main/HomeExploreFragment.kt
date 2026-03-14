@@ -80,7 +80,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         buildExploreSectionView(
             MediaType.Anime,
             R.string.section_top_airing_anime,
-            MainFragmentViewModel.FILTER_TOP_AIRING,
+            MainFragmentViewModel.FILTER_TOP_AIRING_ANIME,
             RequestType.ALL,
             binding.sectionTopAiring,
             viewModel.getAnimeExploreLiveData(MainFragmentViewModel.TOP_AIRING) as LiveData<ResponseData<List<Media>>>
@@ -90,7 +90,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         buildExploreSectionView(
             MediaType.Anime,
             R.string.section_top_upcoming_anime,
-            MainFragmentViewModel.FILTER_TOP_UPCOMING,
+            MainFragmentViewModel.FILTER_TOP_UPCOMING_ANIME,
             RequestType.ALL,
             binding.sectionTopUpcoming,
             viewModel.getAnimeExploreLiveData(MainFragmentViewModel.TOP_UPCOMING) as LiveData<ResponseData<List<Media>>>
@@ -100,7 +100,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         buildExploreSectionView(
             MediaType.Anime,
             R.string.section_highest_rated_anime,
-            MainFragmentViewModel.FILTER_HIGHEST_RATED,
+            MainFragmentViewModel.FILTER_HIGHEST_RATED_ANIME,
             RequestType.ALL,
             binding.sectionHighestRated,
             viewModel.getAnimeExploreLiveData(MainFragmentViewModel.HIGHEST_RATED) as LiveData<ResponseData<List<Media>>>
@@ -110,7 +110,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         buildExploreSectionView(
             MediaType.Anime,
             R.string.section_most_popular_anime,
-            MainFragmentViewModel.FILTER_MOST_POPULAR,
+            MainFragmentViewModel.FILTER_MOST_POPULAR_ANIME,
             RequestType.ALL,
             binding.sectionMostPopular,
             viewModel.getAnimeExploreLiveData(MainFragmentViewModel.MOST_POPULAR) as LiveData<ResponseData<List<Media>>>
@@ -132,7 +132,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         buildExploreSectionView(
             MediaType.Manga,
             R.string.section_top_airing_manga,
-            MainFragmentViewModel.FILTER_TOP_AIRING,
+            MainFragmentViewModel.FILTER_TOP_AIRING_MANGA,
             RequestType.ALL,
             binding.sectionTopAiring,
             viewModel.getMangaExploreLiveData(MainFragmentViewModel.TOP_AIRING) as LiveData<ResponseData<List<Media>>>
@@ -142,7 +142,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         buildExploreSectionView(
             MediaType.Manga,
             R.string.section_top_upcoming_manga,
-            MainFragmentViewModel.FILTER_TOP_UPCOMING,
+            MainFragmentViewModel.FILTER_TOP_UPCOMING_MANGA,
             RequestType.ALL,
             binding.sectionTopUpcoming,
             viewModel.getMangaExploreLiveData(MainFragmentViewModel.TOP_UPCOMING) as LiveData<ResponseData<List<Media>>>
@@ -152,7 +152,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         buildExploreSectionView(
             MediaType.Manga,
             R.string.section_highest_rated_manga,
-            MainFragmentViewModel.FILTER_HIGHEST_RATED,
+            MainFragmentViewModel.FILTER_HIGHEST_RATED_MANGA,
             RequestType.ALL,
             binding.sectionHighestRated,
             viewModel.getMangaExploreLiveData(MainFragmentViewModel.HIGHEST_RATED) as LiveData<ResponseData<List<Media>>>
@@ -162,7 +162,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         buildExploreSectionView(
             MediaType.Manga,
             R.string.section_most_popular_manga,
-            MainFragmentViewModel.FILTER_MOST_POPULAR,
+            MainFragmentViewModel.FILTER_MOST_POPULAR_MANGA,
             RequestType.ALL,
             binding.sectionMostPopular,
             viewModel.getMangaExploreLiveData(MainFragmentViewModel.MOST_POPULAR) as LiveData<ResponseData<List<Media>>>
@@ -192,19 +192,36 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         val section = createExploreSection(titleRes, mediaSelector, sectionBinding.root)
 
         liveData.observe(viewLifecycleOwner) { response ->
-            if (response is ResponseData.Success) {
-                section.setData(response.data)
-                sectionBinding.apply {
-                    layoutLoading.root.isVisible = false
-                    rvMedia.isVisible = true
+            when (response) {
+                is ResponseData.Success if response.data.isNotEmpty() -> {
+                    section.setData(response.data)
+                    sectionBinding.apply {
+                        layoutLoading.root.isVisible = false
+                        rvMedia.isVisible = true
+                    }
                 }
-            } else {
-                sectionBinding.apply {
-                    rvMedia.isVisible = false
-                    layoutLoading.apply {
-                        root.isVisible = true
-                        tvError.isVisible = true
-                        progressBar.isVisible = false
+
+                is ResponseData.Success if response.data.isEmpty() -> {
+                    sectionBinding.apply {
+                        rvMedia.isVisible = false
+                        layoutLoading.apply {
+                            root.isVisible = true
+                            tvError.isVisible = false
+                            tvNoData.isVisible = true
+                            progressBar.isVisible = false
+                        }
+                    }
+                }
+
+                else -> {
+                    sectionBinding.apply {
+                        rvMedia.isVisible = false
+                        layoutLoading.apply {
+                            root.isVisible = true
+                            tvError.isVisible = true
+                            tvNoData.isVisible = false
+                            progressBar.isVisible = false
+                        }
                     }
                 }
             }

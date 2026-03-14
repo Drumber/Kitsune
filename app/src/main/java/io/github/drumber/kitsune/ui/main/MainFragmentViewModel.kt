@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.collections.set
 
 class MainFragmentViewModel(
     private val animeRepository: AnimeRepository,
@@ -56,19 +55,19 @@ class MainFragmentViewModel(
         },
         // top airing
         createAnimeExploreEntry(TOP_AIRING) {
-            animeRepository.getAllAnime(FILTER_TOP_AIRING)
+            animeRepository.getAllAnime(FILTER_TOP_AIRING_ANIME)
         },
         // top upcoming
         createAnimeExploreEntry(TOP_UPCOMING) {
-            animeRepository.getAllAnime(FILTER_TOP_UPCOMING)
+            animeRepository.getAllAnime(FILTER_TOP_UPCOMING_ANIME)
         },
         // highest rated
         createAnimeExploreEntry(HIGHEST_RATED) {
-            animeRepository.getAllAnime(FILTER_HIGHEST_RATED)
+            animeRepository.getAllAnime(FILTER_HIGHEST_RATED_ANIME)
         },
         // most popular
         createAnimeExploreEntry(MOST_POPULAR) {
-            animeRepository.getAllAnime(FILTER_MOST_POPULAR)
+            animeRepository.getAllAnime(FILTER_MOST_POPULAR_ANIME)
         }
     )
 
@@ -79,19 +78,19 @@ class MainFragmentViewModel(
         },
         // top airing
         createMangaExploreEntry(TOP_AIRING) {
-            mangaRepository.getAllManga(FILTER_TOP_AIRING)
+            mangaRepository.getAllManga(FILTER_TOP_AIRING_MANGA)
         },
         // top upcoming
         createMangaExploreEntry(TOP_UPCOMING) {
-            mangaRepository.getAllManga(FILTER_TOP_UPCOMING)
+            mangaRepository.getAllManga(FILTER_TOP_UPCOMING_MANGA)
         },
         // highest rated
         createMangaExploreEntry(HIGHEST_RATED) {
-            mangaRepository.getAllManga(FILTER_HIGHEST_RATED)
+            mangaRepository.getAllManga(FILTER_HIGHEST_RATED_MANGA)
         },
         // most popular
         createMangaExploreEntry(MOST_POPULAR) {
-            mangaRepository.getAllManga(FILTER_MOST_POPULAR)
+            mangaRepository.getAllManga(FILTER_MOST_POPULAR_MANGA)
         }
     )
 
@@ -178,15 +177,20 @@ class MainFragmentViewModel(
         const val HIGHEST_RATED = "highest_rated"
         const val MOST_POPULAR = "most_popular"
 
-        val FILTER_TOP_AIRING = createFilter("current")
-        val FILTER_TOP_UPCOMING = createFilter("upcoming")
-        val FILTER_HIGHEST_RATED = createFilter(sortBy = SortFilter.AVERAGE_RATING_DESC)
-        val FILTER_MOST_POPULAR = createFilter(sortBy = SortFilter.POPULARITY_DESC)
+        val FILTER_TOP_AIRING_ANIME get() = createFilter(MediaType.Anime, "current")
+        val FILTER_TOP_UPCOMING_ANIME get() = createFilter(MediaType.Anime, "upcoming")
+        val FILTER_HIGHEST_RATED_ANIME get() = createFilter(MediaType.Anime, sortBy = SortFilter.AVERAGE_RATING_DESC)
+        val FILTER_MOST_POPULAR_ANIME get() = createFilter(MediaType.Anime, sortBy = SortFilter.POPULARITY_DESC)
+
+        val FILTER_TOP_AIRING_MANGA get() = createFilter(MediaType.Manga, "current")
+        val FILTER_TOP_UPCOMING_MANGA get() = createFilter(MediaType.Manga, "upcoming")
+        val FILTER_HIGHEST_RATED_MANGA get() = createFilter(MediaType.Manga, sortBy = SortFilter.AVERAGE_RATING_DESC)
+        val FILTER_MOST_POPULAR_MANGA get() = createFilter(MediaType.Manga, sortBy = SortFilter.POPULARITY_DESC)
 
         private fun createFilter(
+            type: MediaType,
             filterType: String? = null,
-            sortBy: SortFilter = SortFilter.POPULARITY_DESC,
-            type: MediaType = MediaType.Anime
+            sortBy: SortFilter = SortFilter.POPULARITY_DESC
         ) = Filter().apply {
             pageLimit(10)
             filterType?.let { filter("status", it) }
