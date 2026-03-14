@@ -2,10 +2,9 @@ package io.github.drumber.kitsune.data.source.graphql
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
-import io.github.drumber.kitsune.data.model.library.LibraryEntryMediaType
 import io.github.drumber.kitsune.data.model.library.LibraryFilterOptions
 import io.github.drumber.kitsune.data.model.library.LibraryStatus
-import io.github.drumber.kitsune.data.model.media.MediaType
+import io.github.drumber.kitsune.data.model.library.toMediaType
 import io.github.drumber.kitsune.data.source.graphql.fragment.LibraryEntryWithNextUnitFragment
 import io.github.drumber.kitsune.data.source.graphql.mapper.toLibraryEntrySortEnum
 import io.github.drumber.kitsune.data.source.graphql.mapper.toLibraryEntryStatusEnum
@@ -46,11 +45,5 @@ class LibraryApolloDataSource(
             client.mutation(mutation)
                 .execute().data?.libraryEntry?.updateProgressById?.libraryEntry?.libraryEntryWithNextUnitFragment
         }
-    }
-
-    private fun LibraryEntryMediaType.toMediaType() = when (this) {
-        LibraryEntryMediaType.Anime -> MediaType.Anime
-        LibraryEntryMediaType.Manga -> MediaType.Manga
-        LibraryEntryMediaType.All -> null
     }
 }
