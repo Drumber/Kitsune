@@ -16,7 +16,7 @@ val screenshotMode: String by project
 android {
     namespace = "io.github.drumber.kitsune"
     compileSdk = 36
-    buildToolsVersion = "35.0.0"
+    buildToolsVersion = "36.0.0"
 
     defaultConfig {
         applicationId = "io.github.drumber.kitsune"
