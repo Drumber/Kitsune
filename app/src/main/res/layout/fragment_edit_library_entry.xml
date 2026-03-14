@@ -253,12 +253,12 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_reset_started"
+                        android:id="@+id/btn_clear_started"
                         style="?attr/materialIconButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:icon="@drawable/ic_restore_24"
+                        app:icon="@drawable/ic_close_24"
                         app:iconTint="?attr/colorControlNormal" />
 
                 </LinearLayout>
@@ -290,12 +290,12 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_reset_finished"
+                        android:id="@+id/btn_clear_finished"
                         style="?attr/materialIconButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:icon="@drawable/ic_restore_24"
+                        app:icon="@drawable/ic_close_24"
                         app:iconTint="?attr/colorControlNormal" />
 
                 </LinearLayout>
