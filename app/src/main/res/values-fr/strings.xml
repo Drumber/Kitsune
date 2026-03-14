@@ -35,7 +35,7 @@
     <string name="error_image_loading">Échec du chargement de l\'image.</string>
     <string name="error_mapping_loading">Échec du chargement des mappages pour les sites externes.</string>
     <string name="error_search_provider_unavailable">Service de recherche indisponible.</string>
-    <string name="error_library_update_failed">Échec de la mise à jour de l\'entrée de la bibliothèque.</string>
+    <string name="error_library_update_failed">Échec de la mise à jour de l\'entréee de la bibliothèque.</string>
     <string name="error_library_update_not_found">L\'entrée de la bibliothèque n\'existe pas.</string>
     <string name="sort_release_date_desc">Plus récent</string>
     <string name="title_media_type">Type de média</string>
@@ -95,7 +95,7 @@
     <string name="data_title_studios">Studios</string>
     <string name="relationship_side_story">Histoire parallèle</string>
     <string name="data_title_season">Saison</string>
-    <string name="data_title_age_rating">Évalutation</string>
+    <string name="data_title_age_rating">Évaluation</string>
     <string name="data_title_chapters">Chapitres</string>
     <string name="data_title_volumes">Volumes</string>
     <string name="data_title_episodes">Épisodes</string>
@@ -131,7 +131,7 @@
     <string name="preference_titles">Titres</string>
     <string name="preference_category_about">À propos</string>
     <string name="preference_country_summary">Le pays est défini sur %s</string>
-    <string name="preference_appearance_description">Change le theme et active le mode sombre.</string>
+    <string name="preference_appearance_description">Change le thème et active le mode sombre.</string>
     <string name="preference_titles_description">Définissez la manière dont les titres multimédias seront affichés.</string>
     <string name="preference_oled_black_mode">Noir OLED</string>
     <string name="preference_display_name">Pseudo</string>
@@ -147,7 +147,7 @@
     <string name="action_start">Commencer</string>
     <string name="action_delete_profile_link">Supprimer le lien du profil</string>
     <string name="action_update_profile">Mettre à jour le profil</string>
-    <string name="action_edit_profile">Editer le profil</string>
+    <string name="action_edit_profile">Éditer le profil</string>
     <string name="action_rate">Évaluer</string>
     <string name="action_update_rating">Mettre à jour l\'évaluation</string>
     <string name="action_select_profile_link_site">Séléctionner un site</string>
@@ -163,7 +163,7 @@
     <string name="dialog_notification_permission_rejected">Vous n\'aurez pas de notifications et ne serez pas informé des mise à jours de l\'application.</string>
     <string name="dialog_request_notification_permission_title">Autoriser les notifications</string>
     <string name="dialog_request_notification_permission">Autoriser les notifications push pour être notifier quand une mise à jour de l\'application est disponible.</string>
-    <string name="error_resource_loading">Impossible de charger less données.</string>
+    <string name="error_resource_loading">Impossible de charger les données.</string>
     <string name="error_nothing_found">Aucun résultat.</string>
     <string name="error_invalid_user">Utilisateur invalide ? Êtes-vous connecté ?</string>
     <string name="error_something_wrong">Oups, quelque chose a cloché !</string>
@@ -174,14 +174,14 @@
     <string name="error_user_create_profile_link_failed">Échec de la création du lien de profil pour %s.</string>
     <string name="error_user_update_profile_link_failed">Échec de la mise à jour du lien de profil pour %s.</string>
     <string name="error_user_delete_profile_link_failed">Échec de la suppression du lien de profil pour %s.</string>
-    <string name="error_library_update_failed_multiple">Échec de la mise à jour des entrés %d de la bibliothèque.</string>
+    <string name="error_library_update_failed_multiple">Échec de la mise à jour des entrées %d de la bibliothèque.</string>
     <string name="error_library_delete_failed">Échec de la suppression de l\'entrée de la bibliothèque.</string>
     <string name="error_library_add_failed">Échec de l\'ajout à votre bibliothèque.</string>
     <string name="error_requires_notification_permission">Autorisation de notification requise.</string>
     <string name="sort_popularity_desc">Plus populaires</string>
     <string name="sort_popularity_asc">Moins populaires</string>
-    <string name="sort_average_rating_asc">Pires évalutations</string>
-    <string name="sort_average_rating_desc">Meilleurs évalutations</string>
+    <string name="sort_average_rating_asc">Pires évaluations</string>
+    <string name="sort_average_rating_desc">Meilleures évaluations</string>
     <string name="sort_release_date_asc">Plus ancien</string>
     <string name="title_character_appearances">Apparences du personnage</string>
     <string name="title_filter">Filtre</string>
@@ -189,7 +189,7 @@
     <string name="title_description">Description</string>
     <string name="title_details">Détails</string>
     <string name="title_streamer">Liens de streaming</string>
-    <string name="title_ratings">Évalutations</string>
+    <string name="title_ratings">Évaluations</string>
     <string name="title_favorite_characters">Personnages favoris</string>
     <string name="title_more_franchise">Plus de cette série</string>
     <string name="title_favorite_anime">Animés favoris</string>
@@ -209,7 +209,7 @@
     <string name="character_role_main">Principal</string>
     <string name="character_role_supporting">Secondaire</string>
     <string name="title_edit_profile">Éditer le profil</string>
-    <string name="no_data_available">Pas de donnée disponible</string>
+    <string name="no_data_available">Pas de données disponibles</string>
     <string name="status_current_manga">En cours d\'édition</string>
     <string name="status_finished">Terminé</string>
     <string name="status_upcoming">À venir</string>
@@ -220,7 +220,7 @@
     <string name="library_status_planned_manga">Veux lire</string>
     <string name="library_status_reading">En cours de lecture</string>
     <string name="library_action_add">Ajouter à la bibliothèque</string>
-    <string name="library_action_edit">Éditer l\'entré de la bibliothèque</string>
+    <string name="library_action_edit">Éditer l\'entrée de la bibliothèque</string>
     <string name="data_rank">Classement #%d</string>
     <string name="library_action_remove">Retirer de la bibliothèque</string>
     <string name="data_popularity">Popularité #%d</string>
@@ -235,9 +235,9 @@
     <string name="preference_sfw_filter_hide_all">Masquer tout le contenu adulte</string>
     <string name="preference_adult_content_description_everywhere">Les médias classés par âge R18+ seront visibles partout.</string>
     <string name="preference_rating_system_regular">Normal</string>
-    <string name="preference_sfw_filter_limit_to_feed">Limiter au flux suivit</string>
+    <string name="preference_sfw_filter_limit_to_feed">Limiter au flux suivi</string>
     <string name="preference_sfw_filter_show_all">Contenu pour adultes partout</string>
-    <string name="preference_rating_system">Système d\'évalutation</string>
+    <string name="preference_rating_system">Système d\'évaluation</string>
     <string name="preference_rating_system_advanced">Avancé</string>
     <string name="preference_check_for_updates">Vérifier les mise à jour au démarrage</string>
     <string name="preference_app_version">Infos sur la version</string>
@@ -372,4 +372,21 @@
     <string name="onboarding_welcome_title">Bienvenue sur Kitsune !</string>
     <string name="action_continue">Continuer</string>
     <string name="onboarding_welcome_feature_search_description">Trouver vos animés et mangas favoris.</string>
+    <string name="onboarding_welcome_feature_track">Suivre</string>
+    <string name="onboarding_welcome_feature_track_description">Suivez ce que vous avez lu et regardé.</string>
+    <string name="onboarding_welcome_action">Commencer</string>
+    <string name="onboarding_login_title">Connectez-vous à Kitsu</string>
+    <string name="onboarding_login_subtitle">Connectez-vous à votre compte Kitsu ou créez en un nouveau pour accéder à toutes les fonctionnalités.</string>
+    <string name="onboarding_login_is_logged_in">Connecté</string>
+    <string name="onboarding_login_forward_dialog_title">Créer un compte</string>
+    <string name="onboarding_setup_title_language">Langue des titres</string>
+    <string name="onboarding_setup_title_language_description">Sélectionner la langue d\'affichage des titres.</string>
+    <string name="onboarding_setup_title_language_selected">Sélectionné : %1$s</string>
+    <string name="onboarding_setup_action">Configuration terminée</string>
+    <string name="onboarding_login_forward_dialog_message">Vous allez être redirigé vers %1$s où vous pourrez créer un nouveau compte.</string>
+    <string name="onboarding_setup_title">Configuration initiale</string>
+    <string name="onboarding_setup_subtitle">Choisissez vos paramètres pour commencer. Vous pourrez les changer à n\'importe quel moment dans les paramètres.</string>
+    <string name="onboarding_setup_notification_permission_notice">L\'autorisation de Notification est requise.</string>
+    <string name="onboarding_setup_updates">Vérifier les mises à jour</string>
+    <string name="onboarding_setup_updates_description">Soyez notifié dès qu\'une nouvelle version est disponible sur GitHub.</string>
 </resources>

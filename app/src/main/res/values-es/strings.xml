@@ -90,7 +90,7 @@
     <string name="sort_release_date_desc">Último</string>
     <string name="title_character_appearances">Apariciones de los personajes</string>
     <string name="title_categories">Categorías</string>
-    <string name="title_media_type">Tipo de medio</string>
+    <string name="title_media_type">Tipo de contenido</string>
     <string name="title_filter">Filtrar</string>
     <string name="title_description">Descripción</string>
     <string name="title_details">Detalles</string>
@@ -287,7 +287,7 @@
     <string name="info_update_no_new_version_available">No hay nueva versión disponible.</string>
     <string name="info_update_failed">Error al buscar nueva versión.</string>
     <string name="info_logged_out_token_expired">Token de acceso expirado. Por favor ingresa de nuevo.</string>
-    <string name="filter_kind">Tipo de medio</string>
+    <string name="filter_kind">Formato</string>
     <string name="filter_select_categories">Selecciona categorías</string>
     <string name="filter_year">Año</string>
     <string name="filter_avg_rating">Promedio de Calificación</string>
