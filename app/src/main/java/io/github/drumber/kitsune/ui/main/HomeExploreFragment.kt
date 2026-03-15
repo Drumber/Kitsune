@@ -179,6 +179,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
     ): ExploreSection {
         sectionBinding.apply {
             rvMedia.isVisible = false
+            rvMedia.uniqueId = sectionBinding.root.id xor mediaType.ordinal
             layoutLoading.apply {
                 root.layoutParams.height =
                     resources.getDimensionPixelSize(KitsunePref.mediaItemSize.heightRes)
