@@ -41,10 +41,11 @@ class ArchUnitTest {
                 resideInAPackage("..data.source..")
                     .and(
                         not(
-                            // exclusion: local user and character models are allowed in the UI
+                            // exclusion: local user, character models and auth models are allowed in the UI
                             resideInAnyPackage(
                                 "..data.source.local.user.model..",
                                 "..data.source.local.character..",
+                                "..data.source.local.auth.model..",
                                 // temporary exclusion: Algolia character search is used in EditProfileFragment
                                 "..data.source.network.algolia.model.search.."
                             )
