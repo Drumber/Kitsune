@@ -203,7 +203,7 @@ class SettingsFragment : BasePreferenceFragment() {
         ).show()
 
         lifecycleScope.launch {
-            when (val result = appUpdateRepository.checkForUpdates()) {
+            when (val result = appUpdateRepository.checkForUpdates(BuildConfig.VERSION_NAME)) {
                 is UpdateCheckResult.NewVersion -> {
                     val release = result.release
                     Notifications.showNewVersion(requireContext(), release)

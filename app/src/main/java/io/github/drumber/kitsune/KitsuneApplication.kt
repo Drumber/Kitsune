@@ -98,7 +98,7 @@ class KitsuneApplication : Application() {
     private fun checkForNewVersion() {
         applicationScope.launch {
             val updateChecker: AppUpdateRepository = get()
-            val result = updateChecker.checkForUpdates()
+            val result = updateChecker.checkForUpdates(BuildConfig.VERSION_NAME)
             if (result is UpdateCheckResult.NewVersion) {
                 Notifications.showNewVersion(this@KitsuneApplication, result.release)
             }
