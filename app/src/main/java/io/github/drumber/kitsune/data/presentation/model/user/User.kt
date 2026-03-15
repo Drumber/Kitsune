@@ -22,6 +22,9 @@ data class User(
     val birthday: String?,
     val waifuOrHusbando: String?,
 
+    val followersCount: Int?,
+    val followingCount: Int?,
+
     val country: String?,
     val language: String?,
     val timeZone: String?,
