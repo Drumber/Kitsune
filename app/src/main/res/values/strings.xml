@@ -276,7 +276,7 @@
     <string name="preference_force_legacy_image_picker">Force legacy Photo Picker</string>
     <string name="preference_force_legacy_image_picker_description">Use the system file picker instead of the new photo picker.</string>
     <string name="preference_check_for_updates">Check for Updates on Launch</string>
-    <string name="preference_check_for_updates_description">Check for a new app version on every launch.</string>
+    <string name="preference_check_for_updates_description">Check for a new version of the app on startup.</string>
     <string name="preference_app_logs" translatable="false">@string/nav_app_logs</string>
     <string name="preference_app_logs_description">See and share the application log messages.</string>
     <string name="preference_app_version">Version Info</string>
