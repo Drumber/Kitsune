@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="10dp"
+    android:padding="14dp"
     android:foreground="?attr/selectableItemBackground"
     android:gravity="center_vertical"
     android:clickable="true">
@@ -16,33 +16,15 @@
         android:src="@drawable/ic_website"
         android:contentDescription="@null" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/tv_site_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginHorizontal="20dp"
         android:layout_weight="1"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:id="@+id/tv_site_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceListItem"
-            android:maxLines="1"
-            android:ellipsize="end"
-            tools:text="SomeAnimeSite"/>
-
-        <TextView
-            android:id="@+id/tv_site_url"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceListItemSecondary"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            tools:text="https://example.com/anime/123"/>
-
-    </LinearLayout>
+        android:layout_marginHorizontal="20dp"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:maxLines="1"
+        android:ellipsize="end"
+        tools:text="SomeAnimeSite"/>
 
 </LinearLayout>

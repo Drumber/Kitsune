@@ -12,6 +12,7 @@ import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryMod
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.mapping.Mapping
+import io.github.drumber.kitsune.data.presentation.model.mapping.getSiteName
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
@@ -245,11 +246,14 @@ class DetailsViewModel(
             _mappingsSate.value = MediaMappingsSate.Loading
 
             val mappingsState = try {
-                val mappings = if (mediaModel is Anime) {
+                val fetchedMappings = if (mediaModel is Anime) {
                     mappingRepository.getAnimeMappings(mediaModel.id)
                 } else {
                     mappingRepository.getMangaMappings(mediaModel.id)
-                } ?: emptyList()
+                }
+
+                // remove unknown mappings
+                val mappings = fetchedMappings?.filter { it.getSiteName() != null } ?: emptyList()
 
                 val mappingsWithKitsu = mappings + Mapping(
                     id = "",
