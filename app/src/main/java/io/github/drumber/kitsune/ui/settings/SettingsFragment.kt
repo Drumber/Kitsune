@@ -95,11 +95,21 @@ class SettingsFragment : BasePreferenceFragment() {
             val supportedLocales = AppLocales.SUPPORTED_LOCALES
             val selectedLocale = AppCompatDelegate.getApplicationLocales()
                 .getFirstMatch(supportedLocales)
-            val selectedLocaleValue =
-                supportedLocales.find { Locale.forLanguageTag(it).language == selectedLocale?.language }
-            val languageDisplayNames = supportedLocales.map {
-                Locale.forLanguageTag(it)
-                    .getDisplayLanguage(selectedLocale ?: Locale.getDefault())
+            val selectedLocaleValue = supportedLocales.find { tag ->
+                val locale = Locale.forLanguageTag(tag)
+                locale.language == selectedLocale?.language && locale.country == selectedLocale.country
+            }
+            val languageDisplayNames = supportedLocales.map { tag ->
+                val locale = Locale.forLanguageTag(tag)
+                val contextLocale = selectedLocale ?: Locale.getDefault()
+                val languageName = locale.getDisplayLanguage(contextLocale)
+                val countryName = locale.getDisplayCountry(contextLocale)
+
+                if (countryName.isNotBlank()) {
+                    "$languageName ($countryName)"
+                } else {
+                    languageName
+                }
             }.toTypedArray()
             entryValues = arrayOf("", *supportedLocales)
             entries = arrayOf(
