@@ -13,7 +13,7 @@ import io.github.drumber.kitsune.domain.user.UpdateLocalUserUseCase
 import io.github.drumber.kitsune.notification.NotificationChannels
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.util.logD
+import io.github.drumber.kitsune.core.utils.logD
 import io.github.drumber.kitsune.core.utils.logE
 import io.github.drumber.kitsune.core.utils.logI
 import io.github.drumber.kitsune.core.utils.logW

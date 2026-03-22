@@ -6,4 +6,5 @@ object ProjectConfig {
     const val COMPILE_SDK = 36
     val JAVA_VERSION = JavaVersion.VERSION_11
     const val KOTLIN_JVM_TARGET = "11"
+    const val KOTLIN_LANGUAGE_VERSION = "2.2"
 }

@@ -1,6 +1,8 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
 }
 
 android {
@@ -18,8 +20,12 @@ android {
         sourceCompatibility = ProjectConfig.JAVA_VERSION
         targetCompatibility = ProjectConfig.JAVA_VERSION
     }
-    kotlinOptions {
-        jvmTarget = ProjectConfig.KOTLIN_JVM_TARGET
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.fromTarget(ProjectConfig.KOTLIN_JVM_TARGET)
+        languageVersion = KotlinVersion.fromVersion(ProjectConfig.KOTLIN_LANGUAGE_VERSION)
     }
 }
 

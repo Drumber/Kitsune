@@ -1,6 +1,8 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.apollo.graphql.plugin)
@@ -21,14 +23,17 @@ android {
         sourceCompatibility = ProjectConfig.JAVA_VERSION
         targetCompatibility = ProjectConfig.JAVA_VERSION
     }
+}
 
-    kotlinOptions {
-        jvmTarget = ProjectConfig.KOTLIN_JVM_TARGET
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.fromTarget(ProjectConfig.KOTLIN_JVM_TARGET)
+        languageVersion = KotlinVersion.fromVersion(ProjectConfig.KOTLIN_LANGUAGE_VERSION)
     }
+}
 
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
-    }
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 apollo {
@@ -59,7 +64,7 @@ dependencies {
     implementation(libs.androidx.paging.runtime.ktx)
 
     // Room
-    implementation(libs.androidx.room.runtime)
+    api(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.paging)

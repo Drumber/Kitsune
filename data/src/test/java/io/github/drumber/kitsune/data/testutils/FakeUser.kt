@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.data.testutils
 
+import io.github.drumber.kitsune.core.utils.DATE_FORMAT_ISO
 import io.github.drumber.kitsune.data.model.user.UserThemePreference
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkFavorite
 import io.github.drumber.kitsune.data.source.jsonapi.user.model.NetworkFavoriteItem
@@ -13,7 +14,6 @@ import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemP
 import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
-import io.github.drumber.kitsune.core.utils.DATE_FORMAT_ISO
 import net.datafaker.Faker
 
 fun networkUser(faker: Faker) = NetworkUser(
@@ -80,6 +80,8 @@ fun localUser(faker: Faker) = LocalUser(
     gender = faker.gender().types(),
     birthday = faker.date().birthday(DATE_FORMAT_ISO),
     waifuOrHusbando = null,
+    followersCount = faker.number().positive(),
+    followingCount = faker.number().positive(),
     country = faker.country().countryCode2(),
     language = faker.locality().localeString(),
     timeZone = null,

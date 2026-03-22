@@ -91,14 +91,10 @@ android {
 
 kotlin {
     compilerOptions {
-        jvmTarget = ProjectConfig.KOTLIN_JVM_TARGET
-        languageVersion = KotlinVersion.KOTLIN_2_2
+        jvmTarget = JvmTarget.fromTarget(ProjectConfig.KOTLIN_JVM_TARGET)
+        languageVersion = KotlinVersion.fromVersion(ProjectConfig.KOTLIN_LANGUAGE_VERSION)
         freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
     }
-}
-
-ksp {
-    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 aboutLibraries {
@@ -164,12 +160,6 @@ dependencies {
     implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.androidx.paging.compose)
 
-    // Room
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.paging)
-
     // ViewPager
     implementation(libs.androidx.viewpager2)
 
@@ -185,9 +175,6 @@ dependencies {
 
     // jsonapi-converter
     implementation(libs.jasminb.jsonapi)
-
-    // Apollo GraphQL
-    implementation(libs.apollo.graphql.runtime)
 
     // Jackson
     implementation(libs.fasterxml.jackson.databind)
@@ -208,9 +195,6 @@ dependencies {
 
     // Kotlinx serialization
     implementation(libs.jetbrains.kotlinx.serialization)
-
-    // Ktor client
-    implementation(libs.ktor.client.okhttp)
 
     // Kotpref
     implementation(libs.chibatching.kotpref)
