@@ -14,10 +14,22 @@ fun image(faker: Faker) = Image(
     original = faker.internet().image(),
     meta = ImageMeta(
         ImageDimensions(
-            tiny = ImageDimension(faker.number().positive(), faker.number().positive()),
-            small = ImageDimension(faker.number().positive(), faker.number().positive()),
-            medium = ImageDimension(faker.number().positive(), faker.number().positive()),
-            large = ImageDimension(faker.number().positive(), faker.number().positive())
+            tiny = ImageDimension(
+                faker.number().positive(),
+                faker.number().positive()
+            ),
+            small = ImageDimension(
+                faker.number().positive(),
+                faker.number().positive()
+            ),
+            medium = ImageDimension(
+                faker.number().positive(),
+                faker.number().positive()
+            ),
+            large = ImageDimension(
+                faker.number().positive(),
+                faker.number().positive()
+            )
         )
     )
 )

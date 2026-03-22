@@ -27,9 +27,6 @@ dependencies {
     implementation(project(":core-util"))
     implementation(project(":data"))
     implementation(project(":data:model"))
-    implementation(project(":data:source:local"))
-    implementation(project(":data:source:jsonapi"))
-    implementation(project(":data:source:graphql"))
 
     // Core dependencies
     implementation(libs.jetbrains.kotlinx.coroutines.core)

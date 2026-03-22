@@ -18,6 +18,7 @@ import io.github.drumber.kitsune.data.source.local.mapper.toLocalLibraryStatus
 import io.github.drumber.kitsune.core.utils.constants.Kitsu
 import io.github.drumber.kitsune.core.utils.logD
 import io.github.drumber.kitsune.core.utils.parseUtcDate
+import io.github.drumber.kitsune.data.source.local.LocalDatabase
 
 @OptIn(ExperimentalPagingApi::class)
 class LibraryEntryRemoteMediator(
@@ -99,7 +100,7 @@ class LibraryEntryRemoteMediator(
         }
     }
 
-    private suspend fun io.github.drumber.kitsune.data.source.local.LocalDatabase.clearLibraryEntriesForFilterIgnoringNewerLibraryEntries(
+    private suspend fun LocalDatabase.clearLibraryEntriesForFilterIgnoringNewerLibraryEntries(
         filter: LibraryFilterOptions,
         data: List<LocalLibraryEntry>
     ) {

@@ -107,10 +107,6 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation(project(":data:model"))
-    implementation(project(":data:source:local"))
-    implementation(project(":data:source:jsonapi"))
-    implementation(project(":data:source:graphql"))
-    implementation(project(":data:source:algolia"))
 
     // Android core and support libs
     implementation(libs.androidx.core.ktx)

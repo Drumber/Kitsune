@@ -37,11 +37,11 @@ The domain layer contains use cases and reusable business logic for interacting 
 
 The data layer contains the data models and data sources and is responsible for fetching and storing data.
 
-The data layer is divided into the following modules:
+The data layer is divided into the following packages:
 
 ```
-- data (root)
-- model
+- mapper
+- repository
 - source
   - local
   - JSON:API
@@ -49,13 +49,9 @@ The data layer is divided into the following modules:
   - Algolia search
 ```
 
-The data (root) module contains the following packages:
+The data model also contains the `model` module which contains the domain models.
+The separate `model` module prevents domain models to depend on any data source.
 
-```
-mapper
-repository
-```
-
-### Diagram
+### Diagram (outdated)
 
 ![architecture diagram](./Kitsune-Multi-Module-Architecture.png)
