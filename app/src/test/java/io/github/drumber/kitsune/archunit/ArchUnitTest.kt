@@ -81,10 +81,10 @@ class ArchUnitTest {
     }
 
     @Test
-    fun common_classes_should_not_depend_on_data_sources() {
+    fun domain_models_should_not_depend_on_data_sources() {
         noClasses()
             .that()
-            .resideInAPackage("..data.common..")
+            .resideInAPackage("..data.model..")
             .should()
             .dependOnClassesThat()
             .resideInAPackage("..data.source..")
