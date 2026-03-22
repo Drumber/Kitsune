@@ -209,7 +209,7 @@ class MainActivity : BaseActivity() {
 
             // hide bottom navigation if the destination is not a main one
             toggleNavigationBarView(
-                !isDestinationOnMainNavGraph(destination),
+                !isDestinationOnMainNavGraph(destination) || destination.id == R.id.webViewFragment,
                 lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
             )
         }

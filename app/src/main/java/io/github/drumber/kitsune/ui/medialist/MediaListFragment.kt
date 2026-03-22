@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
 import com.bumptech.glide.Glide
@@ -66,7 +67,15 @@ class MediaListFragment : Fragment(R.layout.fragment_media_list),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
-        view.doOnPreDraw { startPostponedEnterTransition() }
+
+        if (findNavController().currentBackStackEntry?.arguments == null) {
+            view.doOnPreDraw { startPostponedEnterTransition() }
+        } else {
+            // safeguard: ensure startPostponedEnterTransition() got called within 200ms
+            view.postDelayed({
+                startPostponedEnterTransition()
+            }, 200)
+        }
 
         val colorBackground = MaterialColors.getColor(view, android.R.attr.colorBackground)
         view.setBackgroundColor(colorBackground)
@@ -119,6 +128,10 @@ class MediaListFragment : Fragment(R.layout.fragment_media_list),
                         adapter.itemCount,
                         loadStates
                     )
+
+                    if (loadStates.refresh is LoadState.NotLoading) {
+                        binding.rvMedia.doOnPreDraw { startPostponedEnterTransition() }
+                    }
                 }
             }
         }

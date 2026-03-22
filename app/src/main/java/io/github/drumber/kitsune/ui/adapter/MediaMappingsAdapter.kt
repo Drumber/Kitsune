@@ -39,7 +39,6 @@ class MediaMappingsAdapter(
 
         val mapping = getItem(position)
         binding.tvSiteName.text = mapping.getSiteName() ?: mapping.externalSite ?: "?"
-        binding.tvSiteUrl.text = mapping.getExternalUrl() ?: mapping.externalId ?: "-"
 
         mapping.getExternalUrl()?.let { url ->
             try {
@@ -56,8 +55,8 @@ class MediaMappingsAdapter(
         binding.root.setOnClickListener {
             val url = mapping.getExternalUrl()
             if (url != null) {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 try {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     context.startActivity(intent)
                 } catch (e: Exception) {
                     logE("Failed to open URL: $url", e)

@@ -13,6 +13,7 @@ import io.github.drumber.kitsune.domain.user.UpdateLocalUserUseCase
 import io.github.drumber.kitsune.notification.NotificationChannels
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.core.utils.logE
 import io.github.drumber.kitsune.core.utils.logI
 import io.github.drumber.kitsune.core.utils.logW
@@ -26,6 +27,8 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
 
 class KitsuneApplication : Application() {
 
@@ -96,12 +99,20 @@ class KitsuneApplication : Application() {
     }
 
     private fun checkForNewVersion() {
+        val lastUpdateCheck = KitsunePref.lastUpdateCheck
+        val now = System.currentTimeMillis().milliseconds
+        if (lastUpdateCheck != -1L && now.minus(lastUpdateCheck.milliseconds) < 24.hours) {
+            logD("Skipping update check, last check was: $lastUpdateCheck")
+            return
+        }
+
         applicationScope.launch {
             val updateChecker: AppUpdateRepository = get()
             val result = updateChecker.checkForUpdates(BuildConfig.VERSION_NAME)
             if (result is UpdateCheckResult.NewVersion) {
                 Notifications.showNewVersion(this@KitsuneApplication, result.release)
             }
+            KitsunePref.lastUpdateCheck = System.currentTimeMillis()
         }
     }
 }

@@ -256,7 +256,7 @@
     <string name="preference_force_legacy_image_picker">Alte Fotoauswahl erzwingen</string>
     <string name="preference_force_legacy_image_picker_description">Verwende die Systemdateiauswahl anstelle der neuen Fotoauswahl.</string>
     <string name="preference_check_for_updates">Beim Start nach Aktualisierungen suchen</string>
-    <string name="preference_check_for_updates_description">Suche bei jedem Start nach einer neuen App Version.</string>
+    <string name="preference_check_for_updates_description">Suche beim Start nach einer neuen Version der App.</string>
     <string name="preference_app_logs_description">Anwendungsprotokolle anzeigen und teilen.</string>
     <string name="preference_app_version">Versions Information</string>
     <string name="preference_github_repo">GitHub Repository</string>

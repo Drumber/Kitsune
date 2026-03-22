@@ -36,6 +36,14 @@ class AppUpdateRepositoryTest(
                 arrayOf("1.0.0", "v1.2.4", true),
                 arrayOf("1.0.0", "v1.2.4", true),
                 arrayOf("1.0.0", "v1.2.4-beta", true),
+                arrayOf("1.0.0-beta1", "1.0.0", true),
+                arrayOf("1.0-beta1", "1.0.0", true),
+                arrayOf("1.0.0-beta2", "1.0.0-beta1", false),
+                arrayOf("1.0.0-beta1", "1.0.0-beta2", true),
+                arrayOf("1.0.0-beta2", "1.0.0-rc1", true),
+                arrayOf("1.0", "1.0.0-beta1", false),
+                arrayOf("1.0.1-beta1", "1.0.0", false),
+                arrayOf("1.0.0-debug", "1.0.0", false)
             )
         }
     }

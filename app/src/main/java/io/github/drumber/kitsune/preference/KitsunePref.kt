@@ -121,6 +121,9 @@ object KitsunePref : KotprefModel(), KoinComponent {
     var lastLibraryFetchForWidget by longPref(default = -1L)
 
 
+    var lastUpdateCheck by longPref(default = -1L)
+
+
     var onboardingFinishedVersionCode by intPref(default = -1)
 
 

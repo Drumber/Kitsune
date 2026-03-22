@@ -98,11 +98,11 @@ class LibraryViewModel(
         val searches = actionStateFlow
             .filterIsInstance<UiAction.Filter>()
             .distinctUntilChanged()
-            .onStart { emit(UiAction.Filter(filter = initialFilter)) }
+            .onStart { emit(UiAction.Filter(initialFilter)) }
         val queriesScrolled = actionStateFlow
-            .filterIsInstance<UiAction.Scroll>()
+            .filterIsInstance<UiAction.Scroll?>()
             .distinctUntilChanged()
-            .onStart { emit(UiAction.Scroll(initialFilter)) }
+            .onStart { emit(null) }
 
         val libraryUpdateOperationsCounter = AtomicInteger(0)
         val internalActionFlow = MutableSharedFlow<InternalAction>()
@@ -148,17 +148,22 @@ class LibraryViewModel(
         ) { search, scroll, internalState ->
             UiState(
                 filter = search.filter,
-                lastFilterScrolled = scroll.currentFilter,
-                hasNotScrolledForCurrentFilter = search.filter != scroll.currentFilter,
+                hasNotScrolledForCurrentFilter = search.filter != scroll?.currentFilter,
                 isLibraryUpdateOperationInProgress = internalState.libraryOperationsCount != 0
             )
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
-            initialValue = UiState(initialFilter, initialFilter)
+            initialValue = UiState(initialFilter)
         )
 
-        acceptAction = { action ->
+        acceptAction = { inputAction ->
+            val action = if (inputAction is UiAction.Filter) {
+                inputAction.copy(filter = inputAction.filter.copy(createTime = System.currentTimeMillis()))
+            } else {
+                inputAction
+            }
+
             viewModelScope.launch { actionStateFlow.emit(action) }
         }
 
@@ -356,8 +361,7 @@ sealed class UiAction {
 
 data class UiState(
     val filter: FilterState,
-    val lastFilterScrolled: FilterState,
-    val hasNotScrolledForCurrentFilter: Boolean = false,
+    val hasNotScrolledForCurrentFilter: Boolean = true,
     val isLibraryUpdateOperationInProgress: Boolean = false
 )
 
@@ -365,6 +369,7 @@ data class FilterState(
     val kind: LibraryEntryMediaType = LibraryEntryMediaType.All,
     val libraryStatus: List<LibraryStatus> = emptyList(),
     val searchQuery: String = "",
+    val createTime: Long = System.currentTimeMillis(),
 )
 
 sealed class LibraryChangeResult {

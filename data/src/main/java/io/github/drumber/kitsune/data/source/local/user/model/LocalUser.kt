@@ -22,6 +22,9 @@ data class LocalUser(
     val birthday: String?,
     val waifuOrHusbando: String?,
 
+    val followersCount: Int?,
+    val followingCount: Int?,
+
     val country: String?,
     val language: String?,
     val timeZone: String?,
@@ -49,6 +52,8 @@ data class LocalUser(
             gender = null,
             birthday = null,
             waifuOrHusbando = null,
+            followersCount = null,
+            followingCount = null,
             country = null,
             language = null,
             timeZone = null,

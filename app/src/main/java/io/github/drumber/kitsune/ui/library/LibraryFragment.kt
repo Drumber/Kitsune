@@ -109,7 +109,15 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
-        view.doOnPreDraw { startPostponedEnterTransition() }
+
+        if (!viewModel.hasUser() || findNavController().currentBackStackEntry?.arguments == null) {
+            view.doOnPreDraw { startPostponedEnterTransition() }
+        } else {
+            // safeguard: ensure startPostponedEnterTransition() got called within 200ms
+            view.postDelayed({
+                startPostponedEnterTransition()
+            }, 200)
+        }
 
         binding.apply {
             appBarLayout.statusBarForeground =
@@ -306,6 +314,14 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
                     lastLoadState = state
                     if (view?.parent == null) return@collectLatest
 
+                    if (!state.source.isIdle) {
+                        // start postponed transition immediate if loading from network
+                        view?.doOnPreDraw { startPostponedEnterTransition() }
+                    } else if (state.isIdle) {
+                        // else wait for adapter to idle
+                        view?.doOnPreDraw { startPostponedEnterTransition() }
+                    }
+
                     val isSearching = viewModel.state.value.filter.searchQuery.isNotBlank()
                     val isNotLoading = when {
                         adapter.itemCount < 1 -> state.refresh is LoadState.NotLoading
@@ -327,6 +343,21 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
                         swipeRefreshLayout.isRefreshing =
                             swipeRefreshLayout.isRefreshing && state.source.refresh is LoadState.Loading
+                    }
+
+                    // Check if a library entry was updated and try to scroll to the item position
+                    val scrollToEntryId = viewModel.scrollToUpdatedEntryId
+                    if (scrollToEntryId != null && state.isIdle) {
+                        val indexOfUpdatedEntry = adapter.snapshot()
+                            .indexOfFirst { (it as? LibraryEntryUiModel.EntryModel)?.entry?.id == scrollToEntryId }
+
+                        if (indexOfUpdatedEntry != -1) {
+                            binding.rvLibraryEntries.scrollToPosition(indexOfUpdatedEntry)
+                            viewModel.hasScrolledToUpdatedEntry()
+                        } else {
+                            // item was not found in paging snapshot, reset scrollToUpdatedEntryId
+                            viewModel.hasScrolledToUpdatedEntry()
+                        }
                     }
                 }
             }
@@ -362,13 +393,12 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
             })
 
             val notLoading = adapter.loadStateFlow
-                .map { it.mediator?.refresh is LoadState.NotLoading || it.source.refresh is LoadState.NotLoading }
+                .map { it.isIdle }
                 .distinctUntilChanged()
 
             val hasNotScrolledForCurrentFilter = viewModel.state
                 .map { it.hasNotScrolledForCurrentFilter }
                 .distinctUntilChanged()
-
 
             val shouldScrollToTop = combine(
                 notLoading,
@@ -404,26 +434,6 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
                 viewModel.pagingDataFlow.collect {
                     adapter.submitData(it)
                 }
-            }
-        }
-
-        // On page update check if the user performed a search or library update.
-        // If so, scroll to the top in case of a search or to the updated entry.
-        adapter.addOnPagesUpdatedListener {
-            val isLoading = lastLoadState?.source?.refresh is LoadState.Loading
-                    || lastLoadState?.mediator?.refresh is LoadState.Loading
-
-            val shouldScroll =
-                !viewModel.scrollToUpdatedEntryId.isNullOrBlank()
-
-            if (!shouldScroll || isLoading) return@addOnPagesUpdatedListener
-
-            val indexOfUpdatedEntry = adapter.snapshot()
-                .indexOfFirst { (it as? LibraryEntryUiModel.EntryModel)?.entry?.id == viewModel.scrollToUpdatedEntryId }
-
-            if (indexOfUpdatedEntry != -1) {
-                binding.rvLibraryEntries.scrollToPosition(indexOfUpdatedEntry)
-                viewModel.hasScrolledToUpdatedEntry()
             }
         }
 

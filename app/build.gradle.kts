@@ -1,8 +1,10 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.jetbrains.kotlin.kapt)
+    alias(libs.plugins.android.legacy.kapt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.navigation.safeargs)
     alias(libs.plugins.aboutlibraries.plugin)
@@ -16,14 +18,14 @@ val screenshotMode: String by project
 android {
     namespace = "io.github.drumber.kitsune"
     compileSdk = ProjectConfig.COMPILE_SDK
-    buildToolsVersion = "35.0.0"
+    buildToolsVersion = "36.0.0"
 
     defaultConfig {
         applicationId = "io.github.drumber.kitsune"
         minSdk = ProjectConfig.MIN_SDK
         targetSdk = ProjectConfig.TARGET_SDK
-        versionCode = 38
-        versionName = "2.0.5"
+        versionCode = 39
+        versionName = "2.0.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -33,10 +35,6 @@ android {
 
     androidResources {
         generateLocaleConfig = true
-    }
-
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
     }
 
     buildTypes {
@@ -69,11 +67,6 @@ android {
         targetCompatibility = ProjectConfig.JAVA_VERSION
     }
 
-    kotlinOptions {
-        jvmTarget = ProjectConfig.KOTLIN_JVM_TARGET
-        freeCompilerArgs += listOf("-opt-in=kotlin.RequiresOptIn")
-    }
-
     buildFeatures {
         viewBinding = true
         dataBinding = true
@@ -94,6 +87,18 @@ android {
         animationsDisabled = true
         testBuildType = "instrumented"
     }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = ProjectConfig.KOTLIN_JVM_TARGET
+        languageVersion = KotlinVersion.KOTLIN_2_2
+        freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
+    }
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 aboutLibraries {

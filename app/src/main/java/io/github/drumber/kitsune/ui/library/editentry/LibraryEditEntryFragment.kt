@@ -254,14 +254,12 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
                 val startedText = libraryEntry.startedAt?.parseUtcDate()?.formatDate()
                     ?: getString(R.string.library_edit_no_date_set)
                 fieldStarted.editText?.setText(startedText)
-                btnResetStarted.isVisible = libraryEntry.modification?.startedAt != null
-                        && libraryEntry.modification?.startedAt != viewModel.uneditedLibraryEntryWrapper?.startedAt
+                btnClearStarted.isVisible = !libraryEntry.startedAt.isNullOrEmpty()
 
                 val finishedText = libraryEntry.finishedAt?.parseUtcDate()?.formatDate()
                     ?: getString(R.string.library_edit_no_date_set)
                 fieldFinished.editText?.setText(finishedText)
-                btnResetFinished.isVisible = libraryEntry.modification?.finishedAt != null
-                        && libraryEntry.modification?.finishedAt != viewModel.uneditedLibraryEntryWrapper?.finishedAt
+                btnClearFinished.isVisible = !libraryEntry.finishedAt.isNullOrEmpty()
 
                 fieldNotes.editText?.apply {
                     if (text.toString() != (libraryEntry.notes ?: "")) {
@@ -366,9 +364,8 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
                 }
             }
 
-            btnResetStarted.setOnClickListener {
-                val oldStartedAt = viewModel.uneditedLibraryEntryWrapper?.startedAt
-                viewModel.updateLibraryEntry { it.copy(startedAt = oldStartedAt) }
+            btnClearStarted.setOnClickListener {
+                viewModel.updateLibraryEntry { it.copy(startedAt = "") }
             }
 
             fieldFinished.editText?.setOnClickListener {
@@ -391,9 +388,8 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
                 }
             }
 
-            btnResetFinished.setOnClickListener {
-                val oldFinishedAt = viewModel.uneditedLibraryEntryWrapper?.finishedAt
-                viewModel.updateLibraryEntry { it.copy(finishedAt = oldFinishedAt) }
+            btnClearFinished.setOnClickListener {
+                viewModel.updateLibraryEntry { it.copy(finishedAt = "") }
             }
 
             fieldNotes.editText?.doAfterTextChanged { text ->

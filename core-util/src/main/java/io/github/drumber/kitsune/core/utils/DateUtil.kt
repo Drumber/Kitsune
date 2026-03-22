@@ -13,11 +13,14 @@ fun String.parseDate(
     format: String = "yyyy-MM-dd",
     timeZoneOfDateString: TimeZone = TimeZone.getDefault()
 ): Date? {
+    if (this.isBlank()) {
+        return null
+    }
     val dateFormat = SimpleDateFormat(format, Locale.getDefault())
     dateFormat.timeZone = timeZoneOfDateString
     return try {
         dateFormat.parse(this)
-    } catch (e: ParseException) {
+    } catch (_: ParseException) {
         null
     }
 }

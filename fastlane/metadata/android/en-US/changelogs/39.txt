@@ -1,0 +1,20 @@
+Improvements
+* Added the ability to clear start and finish dates for library entries
+* Added followers/following counts with an embedded webview (experimental)
+* Improved update checker
+* General UI improvements
+
+Bug Fixes
+* Fixed a crash when opening certain profile links
+* Fixed a crash occurring after restoring app data from backup or performing device-to-device transfer
+
+Localization
+* Added Portuguese translation by @SantosSi
+* Added Afrikaans translation by @MikeWowzoski
+* Updated Russian translation by @Xapitonov, @stokito and @Danil
+* Updated Turkish translation by @Samprenzo
+* Updated Portuguese (Brazil) translation by Lucas
+* Updated Tamil translation by TamilNeram
+* Updated Spanish translation by Kimby
+* Updated French translation by Thibault and @ehainry
+* Updated German translation
