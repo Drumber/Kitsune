@@ -314,12 +314,12 @@
         <item quantity="other">%s شهر</item>
     </plurals>
     <plurals name="duration_years">
-        <item quantity="zero">لا سنوات</item>
-        <item quantity="one">سنة واحدة</item>
-        <item quantity="two">سنتَين</item>
-        <item quantity="few">%s سنوات</item>
-        <item quantity="many">%s سنة</item>
-        <item quantity="other">%s سنة</item>
+        <item quantity="zero">لا أعوام</item>
+        <item quantity="one">عام واحد</item>
+        <item quantity="two">عامَين</item>
+        <item quantity="few">%s أعوام</item>
+        <item quantity="many">%s عام</item>
+        <item quantity="other">%s عام</item>
     </plurals>
     <string name="filter_subtype">النوع الفرعي</string>
     <string name="filter_streamers">منصات البث</string>
