@@ -196,10 +196,10 @@
     <string name="preference_dark_mode_follow_system">اتّبع النظام</string>
     <string name="preference_dark_mode_battery_saver">موفّر البطارية</string>
     <string name="preference_oled_black_mode">أسود OLED</string>
-    <string name="preference_oled_black_mode_description">استخدم خلفية سوداء في الوضع الداكن.</string>
+    <string name="preference_oled_black_mode_description">يستخدم خلفية سوداء في الوضع الداكن.</string>
     <string name="preference_app_theme">السمة</string>
-    <string name="preference_dynamic_color_theme">استخدم الألوان الديناميكية</string>
-    <string name="preference_dynamic_color_theme_description">تكيّف مع سمة النظام.</string>
+    <string name="preference_dynamic_color_theme">استخدام الألوان الديناميكية</string>
+    <string name="preference_dynamic_color_theme_description">يتكيّف مع سمة النظام.</string>
     <string name="preference_app_theme_default">الافتراضي</string>
     <string name="preference_app_theme_purple">أرجواني</string>
     <string name="preference_app_theme_blue">أزرق</string>
@@ -232,7 +232,7 @@
     <string name="preference_adult_content_description_sometimes">ستكون الوسائط المصنّفة R18+ مرئية، ولكن سيتم إخفاء المنشورات التي تحمل علامة NSFW في الموجز العام.</string>
     <string name="preference_adult_content_description_everywhere">ستكون الوسائط المصنّفة R18+ مرئية في أي مكان.</string>
     <string name="preference_sfw_filter_hide_all">إخفاء جميع المحتويات المخصّصة للبالغين</string>
-    <string name="preference_sfw_filter_limit_to_feed">اقتصر على موجز المتابَعين</string>
+    <string name="preference_sfw_filter_limit_to_feed">الاقتصار على موجز المتابَعين</string>
     <string name="preference_sfw_filter_show_all">المحتوى المخصّص للبالغين في أي مكان</string>
     <string name="preference_rating_system">نظام التصنيف</string>
     <string name="preference_rating_system_simple">بسيط</string>
@@ -300,7 +300,7 @@
     <plurals name="duration_days">
         <item quantity="zero">لا أيام</item>
         <item quantity="one">يوم واحد</item>
-        <item quantity="two">يومان</item>
+        <item quantity="two">يومَين</item>
         <item quantity="few">%s أيام</item>
         <item quantity="many">%s يوم</item>
         <item quantity="other">%s يوم</item>
@@ -308,7 +308,7 @@
     <plurals name="duration_months">
         <item quantity="zero">لا أشهر</item>
         <item quantity="one">شهر واحد</item>
-        <item quantity="two">شهرين</item>
+        <item quantity="two">شهرَين</item>
         <item quantity="few">%s أشهر</item>
         <item quantity="many">%s شهر</item>
         <item quantity="other">%s شهر</item>
