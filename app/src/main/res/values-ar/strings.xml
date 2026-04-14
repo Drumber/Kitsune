@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_home">الرئيسية</string>
+    <string name="nav_home">الصفحة الرئيسة</string>
     <string name="nav_search">بحث</string>
     <string name="nav_library">المكتبة</string>
     <string name="nav_profile">الملف الشخصي</string>
@@ -31,8 +31,8 @@
     <string name="action_open_external">فتح على موقع خارجي</string>
     <string name="action_open_external_short">المواقع الخارجية</string>
     <string name="action_share_app_logs">مشاركة السجلات</string>
-    <string name="action_add_to_favorites">إضافة إلى المفضلة</string>
-    <string name="action_remove_from_favorites">إزالة من المفضلة</string>
+    <string name="action_add_to_favorites">إضافة إلى المفضّلة</string>
+    <string name="action_remove_from_favorites">إزالة من المفضّلة</string>
     <string name="action_dismiss">رفض</string>
     <string name="action_synchronize">تزامن</string>
     <string name="action_save_in_gallery">حفظ في المعرض</string>
@@ -105,7 +105,7 @@
     <string name="title_favorite_manga">المانغا المفضّلة</string>
     <string name="title_favorite_characters">الشخصيات المفضّلة</string>
     <string name="title_authentication">المصادقة</string>
-    <string name="title_login">سجّل الدخول إلى حساب Kitsu الخاص بك</string>
+    <string name="title_login">سجّل الدخول إلى حساب كيتسو الخاص بك</string>
     <string name="title_play_trailer">شغّل المقطع الدعائي</string>
     <string name="title_about_me">عني</string>
     <string name="title_episodes">الحلقات</string>
@@ -255,7 +255,7 @@
     <string name="prompt_password">كلمة المرور</string>
     <string name="action_sign_in">سجّل</string>
     <string name="action_log_in">سجّل الدخول</string>
-    <string name="action_log_in_to_kitsu">سجّل الدخول إلى Kitsu</string>
+    <string name="action_log_in_to_kitsu">سجّل الدخول إلى كيتسو</string>
     <string name="action_create_account">إنشاء حساب</string>
     <string name="invalid_username">عنوان بريد إلكتروني غير صالح</string>
     <string name="login_failed">فشل تسجيل الدخول</string>
@@ -266,7 +266,7 @@
     <string name="library_not_started">لم يبدأ بعد</string>
     <string name="library_not_rated">لم يتم التقييم</string>
     <string name="library_not_logged_in_title">سجّل الدخول للوصول إلى مكتبتك</string>
-    <string name="library_not_logged_in_text">سجّل الدخول إلى حساب Kitsu الخاص بك لإدارة مكتبتك والوصول إلى جميع الميزات.</string>
+    <string name="library_not_logged_in_text">سجّل الدخول إلى حساب كيتسو الخاص بك لإدارة مكتبتك والوصول إلى جميع الميزات.</string>
     <string name="library_kind_all">الكل</string>
     <string name="library_not_synchronized">غير متزامن</string>
     <string name="library_edit_status">حالة المكتبة</string>
@@ -288,7 +288,7 @@
     <string name="info_image_saved_in_gallery">تم حفظ الصورة بنجاح في المعرض.</string>
     <string name="info_update_checking_new_version">جارٍ التحقق من وجود إصدار جديد…</string>
     <string name="info_update_new_version_available">يتوفر إصدار جديد.</string>
-    <string name="info_update_new_version_available_text">يتوفر الإصدار %s من Kitsune.</string>
+    <string name="info_update_new_version_available_text">يتوفر الإصدار %s من كيتسونه.</string>
     <string name="info_update_no_new_version_available">لا يوجد إصدار جديد متاح.</string>
     <string name="info_update_failed">فشل التحقق من وجود إصدار جديد.</string>
     <string name="info_logged_out_token_expired">لقد انتهت صلاحية رمز الوصول الخاص بك. الرجاء تسجيل الدخول مرة أخرى.</string>
@@ -325,7 +325,7 @@
     <string name="filter_streamers">منصات البث</string>
     <string name="filter_age_rating">التصنيف العمري</string>
     <string name="profile_not_logged_in_title">لا يوجد شيء هنا!</string>
-    <string name="profile_not_logged_in_text">سجّل الدخول إلى حساب Kitsu الخاص بك أو أنشئ حسابًا جديدًا للوصول إلى جميع الميزات.</string>
+    <string name="profile_not_logged_in_text">سجّل الدخول إلى حساب كيتسو الخاص بك أو أنشئ حسابًا جديدًا للوصول إلى جميع الميزات.</string>
     <string name="profile_data_following">يُتابع %d</string>
     <string name="profile_data_followers">يُتابعه %d</string>
     <string name="profile_anime_stats">إحصائيات الأنمي</string>
@@ -356,7 +356,7 @@
     <string name="widget_description">تقدم المكتبة</string>
     <string name="widget_empty_text">لا يوجد عنصر متتبَّع نشط في مكتبتك</string>
     <string name="widget_empty_action">فتح المكتبة</string>
-    <string name="onboarding_welcome_title">أهلًا بك في Kitsune!</string>
+    <string name="onboarding_welcome_title">أهلًا بك في كيتسونه!</string>
     <string name="onboarding_welcome_subtitle">رفيقك الشخصي في عالم الأنمي والمانغا.</string>
     <string name="onboarding_welcome_feature_search">ابحث</string>
     <string name="onboarding_welcome_feature_search_description">ابحث عن الأنمي والمانغا المفضّلة لديك.</string>
@@ -365,8 +365,8 @@
     <string name="onboarding_welcome_feature_track">تتبَّع</string>
     <string name="onboarding_welcome_feature_track_description">احتفظ بسجل لما شاهدته وقرأته.</string>
     <string name="onboarding_welcome_action">ابدأ الآن</string>
-    <string name="onboarding_login_title">سجّل الدخول إلى Kitsu</string>
-    <string name="onboarding_login_subtitle">سجّل الدخول إلى حساب Kitsu الخاص بك أو أنشئ حسابًا جديدًا للوصول إلى جميع الميزات.</string>
+    <string name="onboarding_login_title">سجّل الدخول إلى كيتسو</string>
+    <string name="onboarding_login_subtitle">سجّل الدخول إلى حساب كيتسو الخاص بك أو أنشئ حسابًا جديدًا للوصول إلى جميع الميزات.</string>
     <string name="onboarding_login_is_logged_in">أنت مسجّل الدخول</string>
     <string name="onboarding_login_forward_dialog_title">إنشاء حساب</string>
     <string name="onboarding_login_forward_dialog_message">سيتم تحويلك إلى %1$s حيث يمكنك إنشاء حساب جديد.</string>
