@@ -327,7 +327,7 @@
     <string name="preference_sfw_filter_show_all">Contenuti per adulti ovunque</string>
     <string name="preference_rating_system_regular">Normale</string>
     <string name="preference_rating_system_advanced">Avanzato</string>
-    <string name="preference_check_for_updates_description">Controlla se è disponibile una nuova versione dell\'app ad ogni avvio.</string>
+    <string name="preference_check_for_updates_description">Controlla se è disponibile una nuova versione dell\'app all\'avvio.</string>
     <string name="preference_app_version_description">Clicca per cercare aggiornamenti.</string>
     <string name="preference_not_logged_in">Devi avere effettuato l\'accesso per modificare questa impostazione.</string>
     <string name="preference_app_logs_description">Vedi e condividi i messaggi log dell\'app.</string>
@@ -389,4 +389,7 @@
         <item quantity="many">%s giorni</item>
         <item quantity="other">%s giorni</item>
     </plurals>
+    <string name="action_copy_url">Copia URL</string>
+    <string name="profile_data_followers">%d Seguaci</string>
+    <string name="profile_data_following">%d Seguiti</string>
 </resources>
