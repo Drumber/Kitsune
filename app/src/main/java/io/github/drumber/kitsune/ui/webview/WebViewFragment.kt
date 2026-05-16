@@ -1,6 +1,5 @@
 package io.github.drumber.kitsune.ui.webview
 
-import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -143,8 +142,7 @@ class WebViewFragment : Fragment() {
             if (request?.url?.host in validKitsuHosts) {
                 return false
             }
-            val browseIntent = Intent(Intent.ACTION_VIEW, request?.url)
-            startActivity(browseIntent)
+            request?.url?.toString()?.let { openUrl(it) }
             return true
         }
 
