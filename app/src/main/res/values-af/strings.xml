@@ -110,6 +110,10 @@
     <string name="title_episodes">Afleverings</string>
     <string name="title_chapters">Hoofstukke</string>
     <string name="title_characters">Karakters</string>
+    <string name="title_posts">Plasings</string>
+    <string name="title_reactions">Reaksies</string>
+    <string name="reactions_upvote_login_required">Meld aan om reaksies op te stem.</string>
+    <string name="reactions_upvote_failed">Kon nie reaksie opstem nie.</string>
     <string name="title_edit_library_entry">Wysig Biblioteekinskrywing</string>
     <string name="title_edit_profile">Wysig Profiel</string>
     <string name="no_information">Onbekend</string>

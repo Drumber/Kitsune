@@ -232,6 +232,10 @@
     <string name="title_details">Detalhes</string>
     <string name="title_favorite_characters">Personagens Favoritos</string>
     <string name="title_characters">Personagens</string>
+    <string name="title_posts">Publicações</string>
+    <string name="title_reactions">Reações</string>
+    <string name="reactions_upvote_login_required">Faça login para votar em reações.</string>
+    <string name="reactions_upvote_failed">Falha ao votar na reação.</string>
     <string name="status_finished">Finalizado</string>
     <string name="character_role_recurring">Recorrente</string>
     <string name="library_status_watching">Assistindo</string>

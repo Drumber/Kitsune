@@ -110,6 +110,10 @@
     <string name="title_episodes">Episódios</string>
     <string name="title_chapters">Capítulos</string>
     <string name="title_characters">Personagens</string>
+    <string name="title_posts">Publicações</string>
+    <string name="title_reactions">Reações</string>
+    <string name="reactions_upvote_login_required">Inicie sessão para votar em reações.</string>
+    <string name="reactions_upvote_failed">Falha ao votar na reação.</string>
     <string name="title_edit_library_entry">Editar entrada da biblioteca</string>
     <string name="title_edit_profile">Editar perfil</string>
     <string name="no_information">Desconhecido</string>

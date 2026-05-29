@@ -201,6 +201,10 @@
     <string name="title_about_me">À propos de moi</string>
     <string name="title_episodes">Épisodes</string>
     <string name="title_characters">Personnages</string>
+    <string name="title_posts">Publications</string>
+    <string name="title_reactions">Réactions</string>
+    <string name="reactions_upvote_login_required">Connectez-vous pour voter pour les réactions.</string>
+    <string name="reactions_upvote_failed">Échec du vote pour la réaction.</string>
     <string name="no_information">Inconnu</string>
     <string name="title_edit_library_entry">Éditer l\'entré de la bibliothèque</string>
     <string name="status_current">En cours de diffusion</string>

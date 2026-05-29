@@ -113,6 +113,10 @@
     <string name="title_episodes">அத்தியாயங்கள்</string>
     <string name="title_chapters">பாடங்கள்</string>
     <string name="title_characters">எழுத்துக்கள்</string>
+    <string name="title_posts">இடுகைகள்</string>
+    <string name="title_reactions">எதிர்வினைகள்</string>
+    <string name="reactions_upvote_login_required">எதிர்வினைகளை மேல்வாக்களிக்க உள்நுழையவும்.</string>
+    <string name="reactions_upvote_failed">எதிர்வினைக்கு மேல்வாக்களிக்க முடியவில்லை.</string>
     <string name="title_edit_library_entry">நூலக நுழைவைத் திருத்தவும்</string>
     <string name="no_data_available">தரவு எதுவும் கிடைக்கவில்லை</string>
     <string name="status_current">தற்போது ஒளிபரப்பாகிறது</string>

@@ -108,6 +108,10 @@
     <string name="title_episodes">Sezonlar</string>
     <string name="title_chapters">Bölümler</string>
     <string name="title_characters">Karakterler</string>
+    <string name="title_posts">Gönderiler</string>
+    <string name="title_reactions">Tepkiler</string>
+    <string name="reactions_upvote_login_required">Tepkileri oylamak için giriş yapın.</string>
+    <string name="reactions_upvote_failed">Tepki oylanamadı.</string>
     <string name="title_edit_library_entry">Kütüphane Girişini Güncelle</string>
     <string name="title_edit_profile">Profili Düzenle</string>
     <string name="no_information">Bilinmeyen</string>

@@ -103,6 +103,10 @@
     <string name="title_authentication">Xác thực</string>
     <string name="title_chapters">Chương</string>
     <string name="title_characters">Nhân vật</string>
+    <string name="title_posts">Bài viết</string>
+    <string name="title_reactions">Phản ứng</string>
+    <string name="reactions_upvote_login_required">Đăng nhập để bình chọn phản ứng.</string>
+    <string name="reactions_upvote_failed">Không thể bình chọn phản ứng.</string>
     <string name="title_edit_library_entry">Chỉnh sửa mục nhập thư viện</string>
     <string name="no_data_available">Không có dữ liệu</string>
     <string name="status_current">Đang phát sóng</string>

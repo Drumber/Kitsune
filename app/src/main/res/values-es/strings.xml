@@ -108,6 +108,10 @@
     <string name="title_edit_library_entry">Editar entrada de la biblioteca</string>
     <string name="title_chapters">Capítulos</string>
     <string name="title_characters">Personajes</string>
+    <string name="title_posts">Publicaciones</string>
+    <string name="title_reactions">Reacciones</string>
+    <string name="reactions_upvote_login_required">Inicia sesión para votar reacciones.</string>
+    <string name="reactions_upvote_failed">No se pudo votar la reacción.</string>
     <string name="title_edit_profile">Editar perfil</string>
     <string name="no_information">Desconocido</string>
     <string name="no_data_available">Sin datos disponibles</string>

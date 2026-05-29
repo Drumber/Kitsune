@@ -83,6 +83,10 @@
     <string name="title_about_me">Su di me</string>
     <string name="title_episodes">Episodi</string>
     <string name="title_characters">Personaggi</string>
+    <string name="title_posts">Post</string>
+    <string name="title_reactions">Reazioni</string>
+    <string name="reactions_upvote_login_required">Accedi per votare le reazioni.</string>
+    <string name="reactions_upvote_failed">Voto della reazione non riuscito.</string>
     <string name="no_information">Sconosciuto</string>
     <string name="no_data_available">Nessun dato disponibile</string>
     <string name="status_current_manga">In pubblicazione</string>

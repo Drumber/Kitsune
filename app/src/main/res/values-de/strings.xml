@@ -161,6 +161,10 @@
     <string name="title_episodes">Episoden</string>
     <string name="title_chapters">Kapitel</string>
     <string name="title_characters">Charaktere</string>
+    <string name="title_posts">Beiträge</string>
+    <string name="title_reactions">Reaktionen</string>
+    <string name="reactions_upvote_login_required">Melde dich an, um Reaktionen positiv zu bewerten.</string>
+    <string name="reactions_upvote_failed">Reaktion konnte nicht positiv bewertet werden.</string>
     <string name="title_edit_library_entry">Bibliothekseintrag bearbeiten</string>
     <string name="no_information">Unbekannt</string>
     <string name="no_data_available">Keine Daten vorhanden</string>

@@ -104,6 +104,10 @@
     <string name="title_episodes">Эпизоды</string>
     <string name="title_chapters">Главы</string>
     <string name="title_characters">Персонажи</string>
+    <string name="title_posts">Публикации</string>
+    <string name="title_reactions">Реакции</string>
+    <string name="reactions_upvote_login_required">Войдите, чтобы голосовать за реакции.</string>
+    <string name="reactions_upvote_failed">Не удалось проголосовать за реакцию.</string>
     <string name="title_edit_library_entry">Правка записи в библиотеке</string>
     <string name="title_edit_profile">Правка профиля</string>
     <string name="no_information">Нет данных</string>

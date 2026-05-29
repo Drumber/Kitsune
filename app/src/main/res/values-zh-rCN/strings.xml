@@ -129,6 +129,10 @@
     <string name="title_episodes">集</string>
     <string name="title_chapters">章</string>
     <string name="title_characters">角色</string>
+    <string name="title_posts">帖子</string>
+    <string name="title_reactions">反应</string>
+    <string name="reactions_upvote_login_required">登录后可为反应点赞。</string>
+    <string name="reactions_upvote_failed">为反应点赞失败。</string>
     <string name="title_edit_library_entry">编辑库条目</string>
     <string name="no_information">未知</string>
     <string name="no_data_available">无可用数据</string>
