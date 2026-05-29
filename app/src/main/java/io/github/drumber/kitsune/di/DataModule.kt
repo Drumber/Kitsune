@@ -11,6 +11,7 @@ import io.github.drumber.kitsune.data.repository.CastingRepository
 import io.github.drumber.kitsune.data.repository.CategoryRepository
 import io.github.drumber.kitsune.data.repository.CharacterRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
+import io.github.drumber.kitsune.data.repository.FeedRepository
 import io.github.drumber.kitsune.data.repository.LibraryChangeListener
 import io.github.drumber.kitsune.data.repository.LibraryRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
@@ -34,6 +35,11 @@ import io.github.drumber.kitsune.data.source.network.character.CharacterNetworkD
 import io.github.drumber.kitsune.data.source.network.character.api.CharacterApi
 import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
 import io.github.drumber.kitsune.data.source.network.character.model.NetworkMediaCharacter
+import io.github.drumber.kitsune.data.source.network.feed.FeedNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.feed.api.FeedApi
+import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivity
+import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivityGroup
+import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.library.api.LibraryEntryApi
 import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry
@@ -257,6 +263,22 @@ val dataModule = module {
     }
     single { AppReleaseNetworkDataSource(get()) }
     single { AppUpdateRepository(get()) }
+
+    // Feed
+    factory {
+        createService<FeedApi>(
+            get(),
+            get(),
+            NetworkActivityGroup::class.java,
+            NetworkActivity::class.java,
+            NetworkPost::class.java,
+            NetworkUser::class.java,
+            NetworkAnime::class.java,
+            NetworkManga::class.java
+        )
+    }
+    single { FeedNetworkDataSource(get()) }
+    single { FeedRepository(get()) }
 }
 
 private fun createAuthService(objectMapper: ObjectMapper) = createService<AuthenticationApi>(

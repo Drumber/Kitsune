@@ -64,6 +64,12 @@
             app:destination="@id/characterDetailsBottomSheet" />
     </fragment>
     <fragment
+        android:id="@+id/feed_fragment"
+        android:name="io.github.drumber.kitsune.ui.feed.FeedFragment"
+        android:label="@string/nav_feed"
+        tools:layout="@layout/fragment_feed" />
+
+    <fragment
         android:id="@+id/details_fragment"
         android:name="io.github.drumber.kitsune.ui.details.DetailsFragment"
         android:label="DetailsFragment">

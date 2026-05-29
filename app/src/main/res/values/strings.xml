@@ -4,6 +4,7 @@
     <string name="github_repo_url" translatable="false">https://github.com/Drumber/Kitsune</string>
     <string name="nav_home">Home</string>
     <string name="nav_search">Search</string>
+    <string name="nav_feed">Feed</string>
     <string name="nav_library">Library</string>
     <string name="nav_profile">Profile</string>
     <string name="nav_settings">Settings</string>
@@ -12,6 +13,12 @@
     <string name="nav_os_libraries">Open Source Libraries</string>
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
+    <string name="feed_tab_global">Global</string>
+    <string name="feed_tab_following">Following</string>
+    <string name="feed_login_required">Log in to see posts from people you follow.</string>
+    <string name="feed_spoiler_warning">Spoiler</string>
+    <string name="feed_unknown_user">Unknown user</string>
+    <string name="feed_post_about">about %1$s</string>
     <string name="action_retry">Retry</string>
     <string name="action_ok">OK</string>
     <string name="action_cancel">Cancel</string>

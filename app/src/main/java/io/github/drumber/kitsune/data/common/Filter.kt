@@ -13,6 +13,9 @@ data class Filter(val options: FilterOptions = mutableMapOf()) {
     /** The index of the first resource to receive. */
     fun pageOffset(offset: Int = Kitsu.DEFAULT_PAGE_OFFSET) = put("page[offset]", offset)
 
+    /** The cursor pointing to the first resource to receive (used for cursor based pagination). */
+    fun pageCursor(cursor: String) = put("page[cursor]", cursor)
+
     /** Return only the specified fields of a resource. */
     fun fields(type: String, vararg fields: String) = put("fields[$type]", fields.joinToString(","))
 

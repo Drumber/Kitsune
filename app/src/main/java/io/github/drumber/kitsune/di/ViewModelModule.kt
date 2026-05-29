@@ -5,6 +5,7 @@ import io.github.drumber.kitsune.ui.details.DetailsViewModel
 import io.github.drumber.kitsune.ui.details.characters.CharacterDetailsViewModel
 import io.github.drumber.kitsune.ui.details.characters.CharactersViewModel
 import io.github.drumber.kitsune.ui.details.episodes.EpisodesViewModel
+import io.github.drumber.kitsune.ui.feed.FeedListViewModel
 import io.github.drumber.kitsune.ui.library.LibraryViewModel
 import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel
 import io.github.drumber.kitsune.ui.main.MainActivityViewModel
@@ -34,6 +35,7 @@ val viewModelModule = module {
     viewModel { EditProfileViewModel(get(), get(), get()) }
     viewModel { DetailsViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { EpisodesViewModel(get(), get(), get(), get()) }
+    viewModel { FeedListViewModel(get(), get()) }
     viewModel { CharactersViewModel(get(), get()) }
     viewModel { CharacterDetailsViewModel(get(), get(), get()) }
     viewModel { SettingsViewModel(get(), get()) }
