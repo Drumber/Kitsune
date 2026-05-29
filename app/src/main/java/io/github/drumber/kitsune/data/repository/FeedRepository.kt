@@ -26,6 +26,17 @@ class FeedRepository(
             feedNetworkDataSource.getTimelineFeed(userId, buildFilter(pageSize, cursor))
         }
 
+    /**
+     * Pager for the activity feed of a single media (anime or manga), matching the posts shown
+     * on the media page of the Kitsu website. The feed id is composed of the capitalized media
+     * type and the media id, e.g. `Anime-1` or `Manga-1`.
+     */
+    fun mediaFeedPager(isAnime: Boolean, mediaId: String, pageSize: Int = Kitsu.DEFAULT_PAGE_SIZE) =
+        feedPager(pageSize) { cursor ->
+            val feedId = "${if (isAnime) "Anime" else "Manga"}-$mediaId"
+            feedNetworkDataSource.getMediaFeed(feedId, buildFilter(pageSize, cursor))
+        }
+
     private fun feedPager(
         pageSize: Int,
         loadPage: suspend (cursor: String?) -> CursorPageData<NetworkActivityGroup>

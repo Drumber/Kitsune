@@ -120,6 +120,10 @@
     <string name="title_episodes">Episodes</string>
     <string name="title_chapters">Chapters</string>
     <string name="title_characters">Characters</string>
+    <string name="title_posts">Posts</string>
+    <string name="title_reactions">Reactions</string>
+    <string name="reactions_upvote_login_required">Log in to upvote reactions.</string>
+    <string name="reactions_upvote_failed">Failed to upvote reaction.</string>
     <string name="title_edit_library_entry">Edit Library Entry</string>
     <string name="title_edit_profile">Edit Profile</string>
     <string name="no_information">Unknown</string>

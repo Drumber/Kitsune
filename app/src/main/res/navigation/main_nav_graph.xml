@@ -100,6 +100,20 @@
             app:popEnterAnim="@animator/scale_pop_enter_anim"
             app:popExitAnim="@animator/scale_pop_exit_anim" />
         <action
+            android:id="@+id/action_details_fragment_to_media_feed_fragment"
+            app:destination="@id/media_feed_fragment"
+            app:enterAnim="@animator/scale_enter_anim"
+            app:exitAnim="@animator/scale_exit_anim"
+            app:popEnterAnim="@animator/scale_pop_enter_anim"
+            app:popExitAnim="@animator/scale_pop_exit_anim" />
+        <action
+            android:id="@+id/action_details_fragment_to_reactions_fragment"
+            app:destination="@id/reactions_fragment"
+            app:enterAnim="@animator/scale_enter_anim"
+            app:exitAnim="@animator/scale_exit_anim"
+            app:popEnterAnim="@animator/scale_pop_enter_anim"
+            app:popExitAnim="@animator/scale_pop_exit_anim" />
+        <action
             android:id="@+id/action_details_fragment_to_libraryEditEntryFragment"
             app:destination="@id/libraryEditEntryFragment" />
         <deepLink
@@ -172,6 +186,28 @@
         <action
             android:id="@+id/action_characters_fragment_to_characterDetailsBottomSheet"
             app:destination="@id/characterDetailsBottomSheet" />
+    </fragment>
+    <fragment
+        android:id="@+id/media_feed_fragment"
+        android:name="io.github.drumber.kitsune.ui.details.feed.MediaFeedFragment"
+        android:label="MediaFeedFragment" >
+        <argument
+            android:name="mediaId"
+            app:argType="string" />
+        <argument
+            android:name="isAnime"
+            app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/reactions_fragment"
+        android:name="io.github.drumber.kitsune.ui.details.reactions.ReactionsFragment"
+        android:label="ReactionsFragment" >
+        <argument
+            android:name="mediaId"
+            app:argType="string" />
+        <argument
+            android:name="isAnime"
+            app:argType="boolean" />
     </fragment>
     <activity
         android:id="@+id/photo_view_activity"

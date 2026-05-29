@@ -228,6 +228,24 @@
                         android:text="@string/title_characters"
                         android:textAllCaps="false" />
 
+                    <Button
+                        android:id="@+id/btn_media_feed"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/title_posts"
+                        android:textAllCaps="false" />
+
+                    <Button
+                        android:id="@+id/btn_reactions"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/title_reactions"
+                        android:textAllCaps="false" />
+
                     <include
                         layout="@layout/section_details_trailer"
                         android:layout_width="match_parent"

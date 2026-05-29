@@ -16,6 +16,7 @@ import io.github.drumber.kitsune.data.repository.LibraryChangeListener
 import io.github.drumber.kitsune.data.repository.LibraryRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
 import io.github.drumber.kitsune.data.repository.MappingRepository
+import io.github.drumber.kitsune.data.repository.MediaReactionRepository
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
@@ -46,6 +47,10 @@ import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibrar
 import io.github.drumber.kitsune.data.source.network.mapping.MappingNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.mapping.api.MappingApi
 import io.github.drumber.kitsune.data.source.network.mapping.model.NetworkMapping
+import io.github.drumber.kitsune.data.source.network.reaction.ReactionNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.reaction.api.MediaReactionApi
+import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReaction
+import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReactionVote
 import io.github.drumber.kitsune.data.source.network.media.AnimeNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.media.CastingNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.media.CategoryNetworkDataSource
@@ -279,6 +284,21 @@ val dataModule = module {
     }
     single { FeedNetworkDataSource(get()) }
     single { FeedRepository(get()) }
+
+    // Media Reactions
+    factory {
+        createService<MediaReactionApi>(
+            get(),
+            get(),
+            NetworkMediaReaction::class.java,
+            NetworkMediaReactionVote::class.java,
+            NetworkUser::class.java,
+            NetworkAnime::class.java,
+            NetworkManga::class.java
+        )
+    }
+    single { ReactionNetworkDataSource(get()) }
+    single { MediaReactionRepository(get()) }
 }
 
 private fun createAuthService(objectMapper: ObjectMapper) = createService<AuthenticationApi>(

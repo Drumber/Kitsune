@@ -24,4 +24,10 @@ class FeedNetworkDataSource(
         }
     }
 
+    suspend fun getMediaFeed(feedId: String, filter: Filter): CursorPageData<NetworkActivityGroup> {
+        return withContext(Dispatchers.IO) {
+            feedApi.getMediaFeed(feedId, filter.options).toCursorPageData()
+        }
+    }
+
 }

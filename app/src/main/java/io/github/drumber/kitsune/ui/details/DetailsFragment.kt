@@ -240,6 +240,22 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 )
                 findNavController().navigate(action)
             }
+            btnMediaFeed.setOnClickListener {
+                val media = viewModel.mediaModel.value ?: return@setOnClickListener
+                val action = DetailsFragmentDirections.actionDetailsFragmentToMediaFeedFragment(
+                    media.id,
+                    media is Anime
+                )
+                findNavController().navigate(action)
+            }
+            btnReactions.setOnClickListener {
+                val media = viewModel.mediaModel.value ?: return@setOnClickListener
+                val action = DetailsFragmentDirections.actionDetailsFragmentToReactionsFragment(
+                    media.id,
+                    media is Anime
+                )
+                findNavController().navigate(action)
+            }
 
             btnEditLibraryEntry.setOnClickListener { showEditLibraryEntryFragment() }
 
