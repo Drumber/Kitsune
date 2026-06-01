@@ -124,6 +124,13 @@
     <string name="title_reactions">Reactions</string>
     <string name="reactions_upvote_login_required">Log in to upvote reactions.</string>
     <string name="reactions_upvote_failed">Failed to upvote reaction.</string>
+    <string name="title_post">Post</string>
+    <string name="title_comments">Comments</string>
+    <string name="hint_add_comment">Add a comment…</string>
+    <string name="action_send">Send</string>
+    <string name="comment_login_required">Log in to like and comment.</string>
+    <string name="comment_posted">Comment posted.</string>
+    <string name="comment_action_failed">Something went wrong. Please try again.</string>
     <string name="title_edit_library_entry">Edit Library Entry</string>
     <string name="title_edit_profile">Edit Profile</string>
     <string name="no_information">Unknown</string>

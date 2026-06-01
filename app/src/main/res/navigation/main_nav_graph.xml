@@ -306,4 +306,16 @@
             app:argType="string" />
     </fragment>
     <action android:id="@+id/action_global_webViewFragment" app:destination="@id/webViewFragment" />
+    <fragment
+        android:id="@+id/post_detail_fragment"
+        android:name="io.github.drumber.kitsune.ui.postdetail.PostDetailFragment"
+        android:label="PostDetailFragment"
+        tools:layout="@layout/fragment_post_detail" >
+        <argument
+            android:name="post"
+            app:argType="io.github.drumber.kitsune.data.presentation.model.feed.Post" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_post_detail_fragment"
+        app:destination="@id/post_detail_fragment" />
 </navigation>

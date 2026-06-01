@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
+import com.github.jasminb.jsonapi.DeserializationFeature as JsonApiDeserializationFeature
 import com.github.jasminb.jsonapi.ResourceConverter
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.BuildConfig
@@ -96,6 +97,10 @@ fun createConverterFactory(
     vararg classes: Class<*>
 ): JSONAPIConverterFactory {
     val resourceConverter = ResourceConverter(objectMapper, *classes)
+    // Feed responses include resource types (e.g. comments, mediaReactions) that are not
+    // registered with every converter. Without this option the converter throws when it
+    // encounters such a type in the `included` section, causing the whole request to fail.
+    resourceConverter.enableDeserializationOption(JsonApiDeserializationFeature.ALLOW_UNKNOWN_INCLUSIONS)
     resourceConverter.setGlobalResolver { url ->
         val request = httpClient.newCall(Request.Builder().url(url).build())
         request.execute().body?.bytes()

@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.ui.adapter.paging
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -13,11 +14,28 @@ import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.ItemPostBinding
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.util.parseUtcDate
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class PostPagingAdapter(
     private val glide: RequestManager,
-    private val listener: OnItemClickListener<Post>? = null
+    private val listener: OnItemClickListener<Post>? = null,
+    private val scope: CoroutineScope? = null,
+    private val avatarProvider: (suspend (Post) -> List<String>)? = null,
+    private val onLikeClick: ((Post, Boolean) -> Unit)? = null
 ) : PagingDataAdapter<Post, PostPagingAdapter.PostViewHolder>(PostComparator) {
+
+    private data class LikeState(val isLiked: Boolean, val count: Int)
+
+    private val likeOverrides = mutableMapOf<String, LikeState>()
+
+    /** Overrides the like state of the post and refreshes the item. */
+    fun setLikeState(postId: String, isLiked: Boolean, count: Int) {
+        likeOverrides[postId] = LikeState(isLiked, count)
+        val index = snapshot().items.indexOfFirst { it.id == postId }
+        if (index != -1) notifyItemChanged(index)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         return PostViewHolder(
@@ -30,8 +48,20 @@ class PostPagingAdapter(
         getItem(position)?.let { holder.bind(it) }
     }
 
+    override fun onViewRecycled(holder: PostViewHolder) {
+        super.onViewRecycled(holder)
+        holder.clear()
+    }
+
     inner class PostViewHolder(private val binding: ItemPostBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        private var avatarJob: Job? = null
+
+        fun clear() {
+            avatarJob?.cancel()
+            avatarJob = null
+        }
 
         fun bind(post: Post) {
             binding.root.setOnClickListener {
@@ -70,8 +100,59 @@ class PostPagingAdapter(
 
             binding.tvSpoilerWarning.isVisible = post.spoiler
 
-            binding.tvLikes.text = post.likesCount.toString()
+            val override = likeOverrides[post.id]
+            val isLiked = override?.isLiked ?: false
+            val likesCount = override?.count ?: post.likesCount
+
+            binding.tvLikes.text = likesCount.toString()
+            binding.ivLike.setImageResource(
+                if (isLiked) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_border_24
+            )
+            binding.layoutLike.setOnClickListener {
+                val current = likeOverrides[post.id]?.isLiked ?: false
+                val currentCount = likeOverrides[post.id]?.count ?: post.likesCount
+                val targetLiked = !current
+                val targetCount = (currentCount + if (targetLiked) 1 else -1).coerceAtLeast(0)
+                setLikeState(post.id, targetLiked, targetCount)
+                onLikeClick?.invoke(post, targetLiked)
+            }
+
             binding.tvComments.text = post.commentsCount.toString()
+
+            bindCommenterAvatars(post)
+        }
+
+        private fun bindCommenterAvatars(post: Post) {
+            avatarJob?.cancel()
+            val avatarViews = listOf(
+                binding.ivCommenter1,
+                binding.ivCommenter2,
+                binding.ivCommenter3
+            )
+            binding.layoutCommenters.isVisible = false
+            avatarViews.forEach { it.isVisible = false }
+
+            if (post.commentsCount <= 0) return
+            val scope = scope ?: return
+            val avatarProvider = avatarProvider ?: return
+
+            avatarJob = scope.launch {
+                val avatars = avatarProvider(post)
+                if (avatars.isEmpty()) return@launch
+                binding.layoutCommenters.isVisible = true
+                avatarViews.forEachIndexed { index, imageView ->
+                    val url = avatars.getOrNull(index)
+                    imageView.isVisible = url != null
+                    if (url != null) loadAvatar(imageView, url)
+                }
+            }
+        }
+
+        private fun loadAvatar(imageView: ImageView, url: String) {
+            glide.load(url)
+                .placeholder(R.drawable.ic_outline_person_24)
+                .circleCrop()
+                .into(imageView)
         }
 
     }

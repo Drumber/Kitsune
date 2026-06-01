@@ -10,6 +10,7 @@ import io.github.drumber.kitsune.data.repository.AppUpdateRepository
 import io.github.drumber.kitsune.data.repository.CastingRepository
 import io.github.drumber.kitsune.data.repository.CategoryRepository
 import io.github.drumber.kitsune.data.repository.CharacterRepository
+import io.github.drumber.kitsune.data.repository.CommentRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
 import io.github.drumber.kitsune.data.repository.FeedRepository
 import io.github.drumber.kitsune.data.repository.LibraryChangeListener
@@ -18,6 +19,7 @@ import io.github.drumber.kitsune.data.repository.MangaRepository
 import io.github.drumber.kitsune.data.repository.MappingRepository
 import io.github.drumber.kitsune.data.repository.MediaReactionRepository
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository
+import io.github.drumber.kitsune.data.repository.PostInteractionRepository
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.repository.WidgetLibraryChangeListener
@@ -36,11 +38,18 @@ import io.github.drumber.kitsune.data.source.network.character.CharacterNetworkD
 import io.github.drumber.kitsune.data.source.network.character.api.CharacterApi
 import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
 import io.github.drumber.kitsune.data.source.network.character.model.NetworkMediaCharacter
+import io.github.drumber.kitsune.data.source.network.comment.CommentNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.comment.api.CommentApi
+import io.github.drumber.kitsune.data.source.network.comment.model.NetworkComment
+import io.github.drumber.kitsune.data.source.network.comment.model.NetworkCommentLike
 import io.github.drumber.kitsune.data.source.network.feed.FeedNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.feed.PostLikeNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.feed.api.FeedApi
+import io.github.drumber.kitsune.data.source.network.feed.api.PostLikeApi
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivity
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivityGroup
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
+import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPostLike
 import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.library.api.LibraryEntryApi
 import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry
@@ -284,6 +293,33 @@ val dataModule = module {
     }
     single { FeedNetworkDataSource(get()) }
     single { FeedRepository(get()) }
+
+    // Comments
+    factory {
+        createService<CommentApi>(
+            get(),
+            get(),
+            NetworkComment::class.java,
+            NetworkCommentLike::class.java,
+            NetworkPost::class.java,
+            NetworkUser::class.java
+        )
+    }
+    single { CommentNetworkDataSource(get()) }
+    single { CommentRepository(get()) }
+
+    // Post Likes
+    factory {
+        createService<PostLikeApi>(
+            get(),
+            get(),
+            NetworkPostLike::class.java,
+            NetworkPost::class.java,
+            NetworkUser::class.java
+        )
+    }
+    single { PostLikeNetworkDataSource(get()) }
+    single { PostInteractionRepository(get()) }
 
     // Media Reactions
     factory {

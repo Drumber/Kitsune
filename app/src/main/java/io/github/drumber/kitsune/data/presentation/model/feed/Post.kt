@@ -1,5 +1,9 @@
 package io.github.drumber.kitsune.data.presentation.model.feed
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Post(
     val id: String,
     val createdAt: String?,
@@ -17,4 +21,4 @@ data class Post(
     val authorAvatarUrl: String?,
 
     val mediaTitle: String?
-)
+) : Parcelable

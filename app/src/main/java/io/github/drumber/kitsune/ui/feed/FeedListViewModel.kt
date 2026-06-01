@@ -5,23 +5,48 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
+import io.github.drumber.kitsune.data.repository.CommentRepository
 import io.github.drumber.kitsune.data.repository.FeedRepository
+import io.github.drumber.kitsune.data.repository.PostInteractionRepository
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
+import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class FeedListViewModel(
     private val feedRepository: FeedRepository,
+    private val commentRepository: CommentRepository,
+    private val postInteractionRepository: PostInteractionRepository,
     private val getLocalUserId: GetLocalUserIdUseCase
 ) : ViewModel() {
 
+    sealed interface LikeEvent {
+        data object LoginRequired : LikeEvent
+        data class Failed(val postId: String, val isLiked: Boolean, val count: Int) : LikeEvent
+    }
+
     private val feedType = MutableStateFlow<FeedType?>(null)
+
+    // Cache of commenter avatar urls keyed by post id, to avoid refetching on rebind.
+    private val commenterAvatarCache = mutableMapOf<String, List<String>>()
+    private val commenterAvatarMutex = Mutex()
+
+    // Known like ids keyed by post id, used to unlike without a lookup.
+    private val postLikeIds = mutableMapOf<String, String?>()
+
+    private val likeEventChannel = Channel<LikeEvent>(Channel.BUFFERED)
+    val likeEvents: Flow<LikeEvent> = likeEventChannel.receiveAsFlow()
 
     fun setFeedType(type: FeedType) {
         if (feedType.value != type) {
@@ -47,5 +72,58 @@ class FeedListViewModel(
             }
         }
     }.cachedIn(viewModelScope)
+
+    /**
+     * Returns up to three distinct commenter avatar urls for the given post, fetching them lazily
+     * and caching the result. Returns an empty list if the post has no comments or on failure.
+     */
+    suspend fun commenterAvatars(post: Post): List<String> {
+        if (post.commentsCount <= 0) return emptyList()
+        commenterAvatarCache[post.id]?.let { return it }
+        return commenterAvatarMutex.withLock {
+            commenterAvatarCache[post.id]?.let { return it }
+            val avatars = try {
+                commentRepository.getTopCommenterAvatars(post.id)
+            } catch (e: Exception) {
+                logE("Failed to load commenter avatars for post '${post.id}'.", e)
+                emptyList()
+            }
+            commenterAvatarCache[post.id] = avatars
+            avatars
+        }
+    }
+
+    /**
+     * Toggles the like state of the given post on behalf of the user. The UI is expected to have
+     * already applied the optimistic [targetLiked] state; on failure a [LikeEvent.Failed] event is
+     * emitted carrying the previous state so the UI can revert.
+     */
+    fun togglePostLike(post: Post, targetLiked: Boolean) {
+        val userId = getLocalUserId()
+        if (userId == null) {
+            likeEventChannel.trySend(LikeEvent.LoginRequired)
+            // Revert the optimistic change applied by the UI.
+            likeEventChannel.trySend(LikeEvent.Failed(post.id, false, post.likesCount))
+            return
+        }
+
+        viewModelScope.launch {
+            try {
+                if (targetLiked) {
+                    postLikeIds[post.id] = postInteractionRepository.likePost(post.id, userId)
+                } else {
+                    val likeId = postLikeIds[post.id]
+                        ?: postInteractionRepository.getMyPostLikeId(post.id, userId)
+                    likeId?.let { postInteractionRepository.unlikePost(it) }
+                    postLikeIds[post.id] = null
+                }
+            } catch (e: Exception) {
+                logE("Failed to toggle like for post '${post.id}'.", e)
+                likeEventChannel.send(
+                    LikeEvent.Failed(post.id, !targetLiked, post.likesCount)
+                )
+            }
+        }
+    }
 
 }

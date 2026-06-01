@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.FragmentFeedListBinding
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
@@ -22,7 +21,8 @@ import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
-import io.github.drumber.kitsune.ui.webview.WebViewFragmentDirections
+import io.github.drumber.kitsune.util.ui.showSnackbar
+import io.github.drumber.kitsune.ui.postdetail.PostDetailFragmentDirections
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -47,7 +47,13 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
 
         viewModel.setFeedType(feedType)
 
-        val adapter = PostPagingAdapter(Glide.with(this), this)
+        val adapter = PostPagingAdapter(
+            glide = Glide.with(this),
+            scope = viewLifecycleOwner.lifecycleScope,
+            avatarProvider = { post -> viewModel.commenterAvatars(post) },
+            onLikeClick = { post, targetLiked -> viewModel.togglePostLike(post, targetLiked) },
+            listener = this
+        )
         binding.rvFeed.adapter = adapter.withLoadStateFooter(
             footer = ResourceLoadStateAdapter(adapter)
         )
@@ -97,16 +103,32 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.likeEvents.collectLatest { event ->
+                    when (event) {
+                        FeedListViewModel.LikeEvent.LoginRequired ->
+                            showSnackbar(binding.root, R.string.comment_login_required)
+
+                        is FeedListViewModel.LikeEvent.Failed -> {
+                            adapter.setLikeState(event.postId, event.isLiked, event.count)
+                            showSnackbar(binding.root, R.string.comment_action_failed)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun onItemClick(view: View, item: Post) {
-        val url = "${Kitsu.BASE_URL}/posts/${item.id}"
-        val action = WebViewFragmentDirections.actionGlobalWebViewFragment(url)
+        val action = PostDetailFragmentDirections.actionGlobalPostDetailFragment(item)
         findNavController().navigateSafe(R.id.feed_fragment, action)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.rvFeed.adapter = null
         _binding = null
     }
 
