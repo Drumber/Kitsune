@@ -1,6 +1,9 @@
 package io.github.drumber.kitsune.di
 
 import io.github.drumber.kitsune.ui.authentication.LoginViewModel
+import io.github.drumber.kitsune.ui.createpost.CreatePostViewModel
+import io.github.drumber.kitsune.ui.createpost.MediaPickerViewModel
+import io.github.drumber.kitsune.ui.createpost.UnitPickerViewModel
 import io.github.drumber.kitsune.ui.details.DetailsViewModel
 import io.github.drumber.kitsune.ui.details.characters.CharacterDetailsViewModel
 import io.github.drumber.kitsune.ui.details.characters.CharactersViewModel
@@ -42,6 +45,9 @@ val viewModelModule = module {
     viewModel { ReactionsViewModel(get(), get()) }
     viewModel { FeedListViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { PostDetailViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { CreatePostViewModel(get(), get(), get()) }
+    viewModel { MediaPickerViewModel(get()) }
+    viewModel { UnitPickerViewModel(get()) }
     viewModel { CharactersViewModel(get(), get()) }
     viewModel { CharacterDetailsViewModel(get(), get(), get()) }
     viewModel { SettingsViewModel(get(), get()) }

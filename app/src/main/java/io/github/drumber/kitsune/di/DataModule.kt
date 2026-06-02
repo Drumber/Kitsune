@@ -21,6 +21,8 @@ import io.github.drumber.kitsune.data.repository.MediaReactionRepository
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository
 import io.github.drumber.kitsune.data.repository.ContentRevealStore
 import io.github.drumber.kitsune.data.repository.PostInteractionRepository
+import io.github.drumber.kitsune.data.repository.PostManagementRepository
+import io.github.drumber.kitsune.data.repository.UploadRepository
 import io.github.drumber.kitsune.data.repository.PostInteractionStore
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
@@ -46,13 +48,18 @@ import io.github.drumber.kitsune.data.source.network.comment.model.NetworkCommen
 import io.github.drumber.kitsune.data.source.network.comment.model.NetworkCommentLike
 import io.github.drumber.kitsune.data.source.network.feed.FeedNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.feed.PostLikeNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.feed.PostNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.feed.UploadNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.feed.api.FeedApi
+import io.github.drumber.kitsune.data.source.network.feed.api.PostApi
+import io.github.drumber.kitsune.data.source.network.feed.api.UploadApi
 import io.github.drumber.kitsune.data.source.network.feed.api.PostLikeApi
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivity
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivityGroup
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPostLike
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUpload
+import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUploadRequest
 import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.library.api.LibraryEntryApi
 import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry
@@ -99,6 +106,7 @@ import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImage
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
 import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStats
+import io.github.drumber.kitsune.util.ui.MarkdownPreviewRenderer
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -330,8 +338,36 @@ val dataModule = module {
     single { PostLikeNetworkDataSource(get()) }
     single { PostInteractionRepository(get()) }
     single { PostInteractionStore() }
+
+    // Post creation
+    factory {
+        createService<PostApi>(
+            get(),
+            get(),
+            NetworkPost::class.java,
+            NetworkUser::class.java,
+            NetworkAnime::class.java,
+            NetworkManga::class.java,
+            NetworkEpisode::class.java,
+            NetworkChapter::class.java,
+            NetworkUpload::class.java
+        )
+    }
+    single { PostNetworkDataSource(get()) }
+    single { PostManagementRepository(get()) }
+    factory {
+        createService<UploadApi>(
+            get(),
+            get(),
+            NetworkUploadRequest::class.java,
+            NetworkUser::class.java
+        )
+    }
+    single { UploadNetworkDataSource(get()) }
+    single { UploadRepository(get()) }
     single { ContentRevealStore() }
     single { PostContentRenderer(androidContext()) }
+    single { MarkdownPreviewRenderer(androidContext()) }
 
     // Media Reactions
     factory {

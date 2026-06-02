@@ -32,9 +32,9 @@ class PostContentRenderer(context: Context) {
     fun render(textView: TextView, formatted: String?, plain: String?) {
         val source = formatted?.takeIf { it.isNotBlank() }
         if (source != null) {
-            markwon.setMarkdown(textView, source)
+            markwon.setMarkdown(textView, EmojiShortcodeConverter.convert(source))
         } else {
-            textView.text = plain.orEmpty()
+            textView.text = EmojiShortcodeConverter.convert(plain)
         }
     }
 

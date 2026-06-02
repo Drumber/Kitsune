@@ -318,4 +318,12 @@
     <action
         android:id="@+id/action_global_post_detail_fragment"
         app:destination="@id/post_detail_fragment" />
+    <fragment
+        android:id="@+id/create_post_fragment"
+        android:name="io.github.drumber.kitsune.ui.createpost.CreatePostFragment"
+        android:label="CreatePostFragment"
+        tools:layout="@layout/fragment_create_post" />
+    <action
+        android:id="@+id/action_global_create_post_fragment"
+        app:destination="@id/create_post_fragment" />
 </navigation>

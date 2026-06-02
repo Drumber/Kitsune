@@ -4,11 +4,14 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentFeedBinding
+import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 
 class FeedFragment : Fragment(R.layout.fragment_feed),
@@ -31,6 +34,19 @@ class FeedFragment : Fragment(R.layout.fragment_feed),
         )
 
         binding.viewPagerFeed.adapter = FeedViewPagerAdapter(this)
+
+        binding.fabCreatePost.initMarginWindowInsetsListener(
+            left = true,
+            right = true,
+            bottom = true,
+            consume = false
+        )
+        binding.fabCreatePost.setOnClickListener {
+            findNavController().navigateSafe(
+                R.id.feed_fragment,
+                FeedFragmentDirections.actionGlobalCreatePostFragment()
+            )
+        }
 
         TabLayoutMediator(binding.tabLayoutFeed, binding.viewPagerFeed) { tab, position ->
             tab.text = when (position) {
