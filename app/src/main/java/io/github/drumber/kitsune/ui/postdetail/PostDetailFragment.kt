@@ -14,11 +14,13 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentPostDetailBinding
 import io.github.drumber.kitsune.ui.adapter.paging.CommentPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
+import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
@@ -41,7 +43,8 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
 
     private val contentRenderer: PostContentRenderer by inject()
 
-    private var replyTarget: io.github.drumber.kitsune.data.presentation.model.comment.Comment? = null
+    private var replyTarget: Comment? = null
+    private var editCommentTarget: Comment? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,13 +62,18 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
         )
 
         val glide = Glide.with(this)
+        val currentUserId = viewModel.currentUserId()
         val headerAdapter = PostDetailHeaderAdapter(
             glide = glide,
             onLikeClick = { viewModel.togglePostLike() },
             contentRenderer = contentRenderer,
             nsfwAllowed = viewModel.nsfwAllowed,
             onRevealClick = { viewModel.revealCurrentPost() },
-            onMediaClick = { post -> openMedia(post) }
+            onMediaClick = { post -> openMedia(post) },
+            currentUserId = currentUserId,
+            onEditClick = { post -> navigateToEditPost(post) },
+            onDeleteClick = { confirmDeletePost() },
+            onAuthorClick = { userId -> navigateToUserProfile(userId) }
         )
         headerAdapter.setPost(args.post)
 
@@ -75,7 +83,11 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
             contentRenderer = contentRenderer,
             scope = viewLifecycleOwner.lifecycleScope,
             repliesProvider = { comment -> viewModel.loadReplies(comment) },
-            onReplyClick = { comment -> startReply(comment) }
+            onReplyClick = { comment -> startReply(comment) },
+            currentUserId = currentUserId,
+            onEditClick = { comment -> startEditComment(comment) },
+            onDeleteClick = { comment -> confirmDeleteComment(comment) },
+            onAuthorClick = { userId -> navigateToUserProfile(userId) }
         )
 
         binding.rvComments.apply {
@@ -131,6 +143,24 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
                         PostDetailViewModel.Event.Error ->
                             showSnackbar(binding.root, R.string.comment_action_failed)
 
+                        PostDetailViewModel.Event.PostDeleted -> {
+                            showSnackbar(binding.root, R.string.post_deleted)
+                            findNavController().navigateUp()
+                        }
+
+                        PostDetailViewModel.Event.CommentUpdated -> {
+                            binding.etComment.text?.clear()
+                            cancelReply()
+                            hideKeyboard()
+                            commentsAdapter.refresh()
+                            showSnackbar(binding.root, R.string.comment_updated)
+                        }
+
+                        PostDetailViewModel.Event.CommentDeleted -> {
+                            commentsAdapter.refresh()
+                            showSnackbar(binding.root, R.string.comment_deleted)
+                        }
+
                         is PostDetailViewModel.Event.CommentLikeChanged ->
                             commentsAdapter.setLikeState(event.commentId, event.isLiked, event.count)
                     }
@@ -142,12 +172,46 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
     private fun submitComment() {
         val content = binding.etComment.text?.toString().orEmpty().trim()
         if (content.isEmpty()) return
+        val editTarget = editCommentTarget
+        if (editTarget != null) {
+            viewModel.updateComment(editTarget.id, content)
+            return
+        }
         val target = replyTarget
         if (target != null) {
             viewModel.postReply(target.id, content)
         } else {
             viewModel.postComment(content)
         }
+    }
+
+    private fun navigateToEditPost(post: Post) {
+        val action = PostDetailFragmentDirections.actionGlobalCreatePostFragment(post)
+        findNavController().navigateSafe(R.id.post_detail_fragment, action)
+    }
+
+    private fun navigateToUserProfile(userId: String) {
+        val action = io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
+            .actionGlobalUserProfileFragment(userId)
+        findNavController().navigateSafe(R.id.post_detail_fragment, action)
+    }
+
+    private fun confirmDeletePost() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.delete_post_confirm_title)
+            .setMessage(R.string.delete_post_confirm_message)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.action_delete) { _, _ -> viewModel.deletePost() }
+            .show()
+    }
+
+    private fun confirmDeleteComment(comment: Comment) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.delete_comment_confirm_title)
+            .setMessage(R.string.delete_comment_confirm_message)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.action_delete) { _, _ -> viewModel.deleteComment(comment.id) }
+            .show()
     }
 
     private fun openMedia(post: Post) {
@@ -161,7 +225,8 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
         findNavController().navigateSafe(R.id.post_detail_fragment, action)
     }
 
-    private fun startReply(comment: io.github.drumber.kitsune.data.presentation.model.comment.Comment) {
+    private fun startReply(comment: Comment) {
+        editCommentTarget = null
         replyTarget = comment
         val author = comment.authorName
             ?: getString(R.string.feed_unknown_user)
@@ -173,10 +238,28 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
         imm.showSoftInput(binding.etComment, InputMethodManager.SHOW_IMPLICIT)
     }
 
+    private fun startEditComment(comment: Comment) {
+        replyTarget = null
+        editCommentTarget = comment
+        binding.tvReplyContext.text = getString(R.string.comment_editing)
+        binding.layoutReplyContext.visibility = View.VISIBLE
+        binding.tilComment.hint = getString(R.string.hint_add_comment)
+        binding.etComment.setText(comment.content)
+        binding.etComment.setSelection(binding.etComment.text?.length ?: 0)
+        binding.etComment.requestFocus()
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.etComment, InputMethodManager.SHOW_IMPLICIT)
+    }
+
     private fun cancelReply() {
         replyTarget = null
+        val wasEditing = editCommentTarget != null
+        editCommentTarget = null
         binding.layoutReplyContext.visibility = View.GONE
         binding.tilComment.hint = getString(R.string.hint_add_comment)
+        if (wasEditing) {
+            binding.etComment.text?.clear()
+        }
     }
 
     private fun hideKeyboard() {

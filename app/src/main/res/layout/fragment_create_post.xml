@@ -62,22 +62,26 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
                 android:orientation="horizontal">
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch_spoiler"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/label_spoiler" />
+                    android:text="@string/label_spoiler"
+                    app:switchPadding="8dp" />
+
+                <Space
+                    android:layout_width="24dp"
+                    android:layout_height="wrap_content" />
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch_nsfw"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/label_nsfw" />
+                    android:text="@string/label_nsfw"
+                    app:switchPadding="8dp" />
 
             </LinearLayout>
 

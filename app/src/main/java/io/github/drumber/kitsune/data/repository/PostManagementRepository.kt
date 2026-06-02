@@ -28,7 +28,8 @@ class PostManagementRepository(
         nsfw: Boolean,
         media: NetworkMedia? = null,
         spoiledUnit: NetworkMediaUnit? = null,
-        uploadIds: List<String> = emptyList()
+        uploadIds: List<String> = emptyList(),
+        targetUserId: String? = null
     ): Post? {
         val post = NetworkPost(
             id = null,
@@ -36,6 +37,7 @@ class PostManagementRepository(
             spoiler = spoiler,
             nsfw = nsfw,
             user = NetworkUser(id = userId),
+            targetUser = targetUserId?.let { NetworkUser(id = it) },
             media = media,
             spoiledUnit = spoiledUnit,
             uploads = uploadIds
@@ -43,6 +45,40 @@ class PostManagementRepository(
                 ?.mapIndexed { index, id -> NetworkUpload(id = id, uploadOrder = index) }
         )
         return postNetworkDataSource.postPost(post)?.toPost()
+    }
+
+    /**
+     * Updates an existing post owned by the user. Returns the updated post, or `null` when the
+     * server response is empty.
+     *
+     * @param uploadIds ids of the post's images, in display order.
+     */
+    suspend fun updatePost(
+        postId: String,
+        content: String?,
+        spoiler: Boolean,
+        nsfw: Boolean,
+        media: NetworkMedia? = null,
+        spoiledUnit: NetworkMediaUnit? = null,
+        uploadIds: List<String> = emptyList()
+    ): Post? {
+        val post = NetworkPost(
+            id = postId,
+            content = content,
+            spoiler = spoiler,
+            nsfw = nsfw,
+            media = media,
+            spoiledUnit = spoiledUnit,
+            uploads = uploadIds
+                .takeIf { it.isNotEmpty() }
+                ?.mapIndexed { index, id -> NetworkUpload(id = id, uploadOrder = index) }
+        )
+        return postNetworkDataSource.updatePost(postId, post)?.toPost()
+    }
+
+    /** Deletes the post with the given id. */
+    suspend fun deletePost(postId: String) {
+        postNetworkDataSource.deletePost(postId)
     }
 
 }

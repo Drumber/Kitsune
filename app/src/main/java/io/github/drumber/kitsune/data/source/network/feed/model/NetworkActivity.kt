@@ -18,6 +18,8 @@ data class NetworkActivity(
 
     @Relationship("subject")
     val subject: NetworkFeedSubject? = null,
+    @Relationship("target")
+    val target: NetworkFeedSubject? = null,
     @Relationship("actor")
     val actor: NetworkUser? = null
 )

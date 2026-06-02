@@ -5,6 +5,7 @@ import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
 import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime
 import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga
+import io.github.drumber.kitsune.data.source.network.feed.model.NetworkFeedSubject
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 
 @Type("mediaReactions")
@@ -28,4 +29,4 @@ data class NetworkMediaReaction(
     val anime: NetworkAnime? = null,
     @Relationship("manga")
     val manga: NetworkManga? = null
-)
+) : NetworkFeedSubject

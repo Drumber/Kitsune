@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.ui.adapter.paging
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -24,7 +25,11 @@ class CommentPagingAdapter(
     private val contentRenderer: PostContentRenderer? = null,
     private val scope: CoroutineScope? = null,
     private val repliesProvider: (suspend (Comment) -> List<Comment>)? = null,
-    private val onReplyClick: ((Comment) -> Unit)? = null
+    private val onReplyClick: ((Comment) -> Unit)? = null,
+    private val currentUserId: String? = null,
+    private val onEditClick: ((Comment) -> Unit)? = null,
+    private val onDeleteClick: ((Comment) -> Unit)? = null,
+    private val onAuthorClick: ((String) -> Unit)? = null
 ) : PagingDataAdapter<Comment, CommentPagingAdapter.CommentViewHolder>(CommentComparator) {
 
     private data class LikeState(val isLiked: Boolean, val count: Int)
@@ -75,6 +80,15 @@ class CommentPagingAdapter(
         binding.tvAuthor.text = comment.authorName
             ?: binding.root.context.getString(R.string.feed_unknown_user)
 
+        val authorId = comment.authorId
+        val authorClickListener = if (authorId != null && onAuthorClick != null) {
+            android.view.View.OnClickListener { onAuthorClick.invoke(authorId) }
+        } else {
+            null
+        }
+        binding.ivAvatar.setOnClickListener(authorClickListener)
+        binding.tvAuthor.setOnClickListener(authorClickListener)
+
         binding.tvTimestamp.apply {
             val date = comment.createdAt?.parseUtcDate()
             isVisible = date != null
@@ -115,6 +129,38 @@ class CommentPagingAdapter(
         // Replies are capped at one level, so only top-level comments can be replied to.
         binding.tvReply.isVisible = !isReply && onReplyClick != null
         binding.tvReply.setOnClickListener { onReplyClick?.invoke(comment) }
+
+        bindOverflowMenu(binding, comment)
+    }
+
+    private fun bindOverflowMenu(binding: ItemCommentBinding, comment: Comment) {
+        val isOwner = currentUserId != null && comment.authorId == currentUserId
+        binding.btnOverflow.isVisible = isOwner
+        if (!isOwner) {
+            binding.btnOverflow.setOnClickListener(null)
+            return
+        }
+        binding.btnOverflow.setOnClickListener { anchor ->
+            PopupMenu(anchor.context, anchor).apply {
+                menuInflater.inflate(R.menu.feed_item_options_menu, menu)
+                setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        R.id.action_edit_item -> {
+                            onEditClick?.invoke(comment)
+                            true
+                        }
+
+                        R.id.action_delete_item -> {
+                            onDeleteClick?.invoke(comment)
+                            true
+                        }
+
+                        else -> false
+                    }
+                }
+                show()
+            }
+        }
     }
 
     private fun bindLikeRow(binding: ItemCommentBinding, isLiked: Boolean, count: Int) {

@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.ui.createpost
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.data.repository.PostManagementRepository
 import io.github.drumber.kitsune.data.repository.UploadRepository
 import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime
@@ -36,9 +37,12 @@ class CreatePostViewModel(
         val spoiler: Boolean = false,
         val nsfw: Boolean = false,
         val isPublishing: Boolean = false,
+        val isEditMode: Boolean = false,
         val media: SelectedMedia? = null,
         val unit: SelectedUnit? = null,
-        val images: List<SelectedImage> = emptyList()
+        val images: List<SelectedImage> = emptyList(),
+        /** Name of the user whose wall this post targets, or `null` for a regular post. */
+        val wallTargetName: String? = null
     ) {
         val canPublish: Boolean
             get() = !isPublishing && (content.isNotBlank() || images.isNotEmpty())
@@ -60,19 +64,66 @@ class CreatePostViewModel(
 
     data class SelectedImage(
         val uri: String,
-        val dataUri: String
+        val dataUri: String? = null,
+        val existingUploadId: String? = null
     )
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
 
+    /** Id of the post being edited, or `null` when composing a new post. */
+    private var editPostId: String? = null
+
+    /** Id of the user whose wall the new post targets, or `null` for a regular post. */
+    private var targetUserId: String? = null
+
     private val eventChannel = Channel<Event>(Channel.BUFFERED)
     val events: Flow<Event> = eventChannel.receiveAsFlow()
+
+    /** Prefills the composer from an existing post for editing. Called once on screen creation. */
+    fun initFromPost(post: Post) {
+        if (editPostId != null) return
+        editPostId = post.id
+        _uiState.value = UiState(
+            content = post.content ?: "",
+            spoiler = post.spoiler,
+            nsfw = post.nsfw,
+            isEditMode = true,
+            media = if (post.mediaId != null) {
+                SelectedMedia(
+                    id = post.mediaId,
+                    title = post.mediaTitle ?: "",
+                    posterUrl = post.mediaPosterUrl,
+                    isAnime = post.mediaIsAnime ?: true
+                )
+            } else null,
+            unit = if (post.spoiledUnitId != null) {
+                SelectedUnit(
+                    id = post.spoiledUnitId,
+                    number = post.spoiledUnitNumber ?: 0,
+                    title = post.spoiledUnitTitle ?: "",
+                    isEpisode = post.spoiledUnitIsEpisode ?: true
+                )
+            } else null,
+            images = post.uploadIds.mapIndexed { index, id ->
+                SelectedImage(
+                    uri = post.imageUrls.getOrNull(index) ?: id,
+                    existingUploadId = id
+                )
+            }
+        )
+    }
 
     fun setContent(content: String) {
         _uiState.value = _uiState.value.copy(content = content)
     }
 
+    /** Marks this composer as a wall post targeting the given user. Called once on creation. */
+    fun setWallTarget(userId: String, userName: String?) {
+        if (targetUserId != null) return
+        targetUserId = userId
+        _uiState.value = _uiState.value.copy(wallTargetName = userName)
+    }
     fun setSpoiler(spoiler: Boolean) {
         _uiState.value = _uiState.value.copy(spoiler = spoiler)
     }
@@ -100,7 +151,7 @@ class CreatePostViewModel(
 
     fun addImage(uri: String, dataUri: String) {
         if (_uiState.value.images.size >= MAX_IMAGES) return
-        _uiState.value = _uiState.value.copy(images = _uiState.value.images + SelectedImage(uri, dataUri))
+        _uiState.value = _uiState.value.copy(images = _uiState.value.images + SelectedImage(uri = uri, dataUri = dataUri))
     }
 
     fun removeImage(index: Int) {
@@ -144,18 +195,37 @@ class CreatePostViewModel(
         viewModelScope.launch {
             try {
                 val uploadIds = state.images.mapIndexed { index, image ->
-                    uploadRepository.uploadImage(userId, image.dataUri, index)
+                    image.existingUploadId
+                        ?: uploadRepository.uploadImage(
+                            userId,
+                            image.dataUri ?: throw IllegalStateException("Missing image data."),
+                            index
+                        )
                         ?: throw IllegalStateException("Image upload returned no id.")
                 }
-                val post = postManagementRepository.postPost(
-                    userId = userId,
-                    content = content,
-                    spoiler = state.spoiler,
-                    nsfw = state.nsfw,
-                    media = mediaStub,
-                    spoiledUnit = unitStub,
-                    uploadIds = uploadIds
-                )
+                val editId = editPostId
+                val post = if (editId != null) {
+                    postManagementRepository.updatePost(
+                        postId = editId,
+                        content = content,
+                        spoiler = state.spoiler,
+                        nsfw = state.nsfw,
+                        media = mediaStub,
+                        spoiledUnit = unitStub,
+                        uploadIds = uploadIds
+                    )
+                } else {
+                    postManagementRepository.postPost(
+                        userId = userId,
+                        content = content,
+                        spoiler = state.spoiler,
+                        nsfw = state.nsfw,
+                        media = mediaStub,
+                        spoiledUnit = unitStub,
+                        uploadIds = uploadIds,
+                        targetUserId = targetUserId
+                    )
+                }
                 if (post != null) {
                     eventChannel.send(Event.Published)
                 } else {

@@ -23,6 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_scrollFlags="scroll|snap"
+                app:menu="@menu/feed_toolbar_menu"
                 app:titleCentered="true"
                 app:title="@string/nav_feed" />
 

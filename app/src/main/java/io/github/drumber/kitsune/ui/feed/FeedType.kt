@@ -5,5 +5,8 @@ enum class FeedType {
     GLOBAL,
 
     /** The personal feed showing posts from people the logged-in user follows. */
-    FOLLOWING
+    FOLLOWING,
+
+    /** A single user's profile feed: their own posts plus posts made on their wall. */
+    USER
 }

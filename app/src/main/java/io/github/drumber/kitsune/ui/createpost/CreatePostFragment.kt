@@ -15,6 +15,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -37,6 +38,8 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
     private val binding get() = _binding!!
 
     private val viewModel: CreatePostViewModel by viewModel()
+
+    private val args: CreatePostFragmentArgs by navArgs()
 
     private val previewRenderer: MarkdownPreviewRenderer by inject()
 
@@ -117,6 +120,22 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
         }
         ItemTouchHelper(dragCallback).attachToRecyclerView(binding.rvImages)
 
+        args.editPost?.let { post ->
+            if (savedInstanceState == null) {
+                viewModel.initFromPost(post)
+                binding.etContent.setText(post.content)
+                binding.switchSpoiler.isChecked = post.spoiler
+                binding.switchNsfw.isChecked = post.nsfw
+            }
+            binding.toolbar.setTitle(R.string.title_edit_post)
+        }
+
+        if (args.editPost == null) {
+            args.targetUserId?.let { targetUserId ->
+                viewModel.setWallTarget(targetUserId, args.targetUserName)
+            }
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collectLatest { state -> renderState(state) }
@@ -131,7 +150,11 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
                             showSnackbar(binding.root, R.string.comment_login_required)
 
                         CreatePostViewModel.Event.Published -> {
-                            showSnackbar(binding.root, R.string.post_published)
+                            showSnackbar(
+                                binding.root,
+                                if (viewModel.uiState.value.isEditMode) R.string.post_updated
+                                else R.string.post_published
+                            )
                             findNavController().navigateUp()
                         }
 
@@ -239,6 +262,11 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
 
     private fun renderState(state: CreatePostViewModel.UiState) {
         binding.toolbar.menu.findItem(R.id.menu_publish_post)?.isEnabled = state.canPublish
+
+        if (state.wallTargetName != null) {
+            binding.toolbar.subtitle =
+                getString(R.string.create_post_wall_hint, state.wallTargetName)
+        }
 
         val media = state.media
         binding.btnTagUnit.isEnabled = media != null

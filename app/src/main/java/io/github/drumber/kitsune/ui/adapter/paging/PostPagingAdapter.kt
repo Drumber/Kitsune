@@ -4,6 +4,7 @@ import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -33,7 +34,11 @@ class PostPagingAdapter(
     private val contentRenderer: PostContentRenderer? = null,
     private val nsfwAllowed: Boolean = false,
     private val onRevealClick: ((Post) -> Unit)? = null,
-    private val onMediaClick: ((Post) -> Unit)? = null
+    private val onMediaClick: ((Post) -> Unit)? = null,
+    private val currentUserId: String? = null,
+    private val onEditClick: ((Post) -> Unit)? = null,
+    private val onDeleteClick: ((Post) -> Unit)? = null,
+    private val onAuthorClick: ((String) -> Unit)? = null
 ) : PagingDataAdapter<Post, PostPagingAdapter.PostViewHolder>(PostComparator) {
 
     private data class InteractionOverride(
@@ -108,6 +113,36 @@ class PostPagingAdapter(
             avatarJob = null
         }
 
+        private fun bindOverflowMenu(post: Post) {
+            val isOwner = currentUserId != null && post.authorId == currentUserId
+            binding.btnOverflow.isVisible = isOwner
+            if (!isOwner) {
+                binding.btnOverflow.setOnClickListener(null)
+                return
+            }
+            binding.btnOverflow.setOnClickListener { anchor ->
+                PopupMenu(anchor.context, anchor).apply {
+                    menuInflater.inflate(R.menu.feed_item_options_menu, menu)
+                    setOnMenuItemClickListener { menuItem ->
+                        when (menuItem.itemId) {
+                            R.id.action_edit_item -> {
+                                onEditClick?.invoke(post)
+                                true
+                            }
+
+                            R.id.action_delete_item -> {
+                                onDeleteClick?.invoke(post)
+                                true
+                            }
+
+                            else -> false
+                        }
+                    }
+                    show()
+                }
+            }
+        }
+
         fun bind(post: Post) {
             binding.root.setOnClickListener {
                 listener?.onItemClick(binding.root, post)
@@ -120,6 +155,17 @@ class PostPagingAdapter(
 
             binding.tvAuthor.text = post.authorName
                 ?: binding.root.context.getString(R.string.feed_unknown_user)
+
+            val authorId = post.authorId
+            val authorClickListener = if (authorId != null && onAuthorClick != null) {
+                android.view.View.OnClickListener { onAuthorClick.invoke(authorId) }
+            } else {
+                null
+            }
+            binding.ivAvatar.setOnClickListener(authorClickListener)
+            binding.tvAuthor.setOnClickListener(authorClickListener)
+
+            bindOverflowMenu(post)
 
             binding.tvTimestamp.apply {
                 val date = post.createdAt?.parseUtcDate()

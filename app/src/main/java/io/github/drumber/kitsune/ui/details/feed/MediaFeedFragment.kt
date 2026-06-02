@@ -68,7 +68,15 @@ class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
             )
         }
 
-        val adapter = PostPagingAdapter(Glide.with(this), this)
+        val adapter = PostPagingAdapter(
+            glide = Glide.with(this),
+            listener = this,
+            onAuthorClick = { userId ->
+                val action = io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
+                    .actionGlobalUserProfileFragment(userId)
+                findNavController().navigateSafe(R.id.media_feed_fragment, action)
+            }
+        )
         binding.rvFeed.adapter = adapter.withLoadStateFooter(
             footer = ResourceLoadStateAdapter(adapter)
         )

@@ -10,6 +10,7 @@ import io.github.drumber.kitsune.data.repository.CommentRepository
 import io.github.drumber.kitsune.data.repository.ContentRevealStore
 import io.github.drumber.kitsune.data.repository.PostInteractionRepository
 import io.github.drumber.kitsune.data.repository.PostInteractionStore
+import io.github.drumber.kitsune.data.repository.PostManagementRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
@@ -27,6 +28,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalCoroutinesApi::class)
 class PostDetailViewModel(
     private val commentRepository: CommentRepository,
+    private val postManagementRepository: PostManagementRepository,
     private val postInteractionRepository: PostInteractionRepository,
     private val postInteractionStore: PostInteractionStore,
     private val contentRevealStore: ContentRevealStore,
@@ -38,6 +40,9 @@ class PostDetailViewModel(
         data object LoginRequired : Event
         data object CommentPosted : Event
         data object Error : Event
+        data object PostDeleted : Event
+        data object CommentUpdated : Event
+        data object CommentDeleted : Event
         data class CommentLikeChanged(val commentId: String, val isLiked: Boolean, val count: Int) : Event
     }
 
@@ -250,5 +255,63 @@ class PostDetailViewModel(
     }
 
     fun isLoggedIn() = getLocalUserId() != null
+
+    /** Id of the currently signed-in user, or `null` when not logged in. */
+    fun currentUserId(): String? = getLocalUserId()
+
+    /** Deletes the current post. Emits [Event.PostDeleted] on success. */
+    fun deletePost() {
+        val currentPost = post.value ?: return
+        viewModelScope.launch {
+            try {
+                postManagementRepository.deletePost(currentPost.id)
+                eventChannel.send(Event.PostDeleted)
+            } catch (e: Exception) {
+                logE("Failed to delete post '${currentPost.id}'.", e)
+                eventChannel.send(Event.Error)
+            }
+        }
+    }
+
+    /** Updates the content of a comment or reply owned by the user. */
+    fun updateComment(commentId: String, content: String) {
+        val trimmed = content.trim()
+        if (trimmed.isEmpty()) return
+        viewModelScope.launch {
+            try {
+                val updated = commentRepository.updateComment(commentId, trimmed)
+                if (updated != null) {
+                    // Drop cached replies so an edited reply is refetched.
+                    replyCache.clear()
+                    eventChannel.send(Event.CommentUpdated)
+                } else {
+                    eventChannel.send(Event.Error)
+                }
+            } catch (e: Exception) {
+                logE("Failed to update comment '$commentId'.", e)
+                eventChannel.send(Event.Error)
+            }
+        }
+    }
+
+    /** Deletes a comment or reply owned by the user. */
+    fun deleteComment(commentId: String) {
+        val currentPost = post.value
+        viewModelScope.launch {
+            try {
+                commentRepository.deleteComment(commentId)
+                replyCache.clear()
+                if (currentPost != null) {
+                    val newCount = ((postInteractionStore.get(currentPost.id)?.commentsCount
+                        ?: currentPost.commentsCount) - 1).coerceAtLeast(0)
+                    postInteractionStore.setCommentCount(currentPost.id, newCount)
+                }
+                eventChannel.send(Event.CommentDeleted)
+            } catch (e: Exception) {
+                logE("Failed to delete comment '$commentId'.", e)
+                eventChannel.send(Event.Error)
+            }
+        }
+    }
 
 }

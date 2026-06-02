@@ -10,6 +10,7 @@ import io.github.drumber.kitsune.data.repository.ContentRevealStore
 import io.github.drumber.kitsune.data.repository.FeedRepository
 import io.github.drumber.kitsune.data.repository.PostInteractionRepository
 import io.github.drumber.kitsune.data.repository.PostInteractionStore
+import io.github.drumber.kitsune.data.repository.PostManagementRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
@@ -31,6 +32,7 @@ import kotlinx.coroutines.sync.withLock
 class FeedListViewModel(
     private val feedRepository: FeedRepository,
     private val commentRepository: CommentRepository,
+    private val postManagementRepository: PostManagementRepository,
     private val postInteractionRepository: PostInteractionRepository,
     private val postInteractionStore: PostInteractionStore,
     private val contentRevealStore: ContentRevealStore,
@@ -43,7 +45,34 @@ class FeedListViewModel(
         data class Failed(val postId: String, val isLiked: Boolean, val count: Int) : LikeEvent
     }
 
+    sealed interface ActionEvent {
+        data object PostDeleted : ActionEvent
+        data object Error : ActionEvent
+    }
+
+    private val actionEventChannel = Channel<ActionEvent>(Channel.BUFFERED)
+    val actionEvents: Flow<ActionEvent> = actionEventChannel.receiveAsFlow()
+
+    /** Id of the currently signed-in user, or `null` when not logged in. */
+    fun currentUserId(): String? = getLocalUserId()
+
+    /** Deletes the given post owned by the user. Emits [ActionEvent.PostDeleted] on success. */
+    fun deletePost(post: Post) {
+        viewModelScope.launch {
+            try {
+                postManagementRepository.deletePost(post.id)
+                actionEventChannel.send(ActionEvent.PostDeleted)
+            } catch (e: Exception) {
+                logE("Failed to delete post '${post.id}'.", e)
+                actionEventChannel.send(ActionEvent.Error)
+            }
+        }
+    }
+
     private val feedType = MutableStateFlow<FeedType?>(null)
+
+    /** Target user id for [FeedType.USER] feeds. */
+    private var userFeedId: String? = null
 
     // Cache of liker avatar urls keyed by post id, to avoid refetching on rebind.
     private val likerAvatarCache = mutableMapOf<String, List<String>>()
@@ -81,6 +110,14 @@ class FeedListViewModel(
         }
     }
 
+    /** Configures this list to show the profile feed of the given user. */
+    fun setUserFeed(userId: String) {
+        userFeedId = userId
+        if (feedType.value != FeedType.USER) {
+            feedType.value = FeedType.USER
+        }
+    }
+
     /** Emits `true` if the current feed requires the user to be logged in but they are not. */
     val loginRequired: Flow<Boolean> = feedType.filterNotNull().map { type ->
         type == FeedType.FOLLOWING && getLocalUserId() == null
@@ -95,6 +132,14 @@ class FeedListViewModel(
                     flowOf(PagingData.empty())
                 } else {
                     feedRepository.timelineFeedPager(userId)
+                }
+            }
+            FeedType.USER -> {
+                val userId = userFeedId
+                if (userId == null) {
+                    flowOf(PagingData.empty())
+                } else {
+                    feedRepository.userFeedPager(userId)
                 }
             }
         }

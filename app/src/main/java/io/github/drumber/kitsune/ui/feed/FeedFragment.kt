@@ -35,6 +35,20 @@ class FeedFragment : Fragment(R.layout.fragment_feed),
 
         binding.viewPagerFeed.adapter = FeedViewPagerAdapter(this)
 
+        binding.toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.menu_notifications -> {
+                    findNavController().navigateSafe(
+                        R.id.feed_fragment,
+                        FeedFragmentDirections.actionGlobalNotificationsFragment()
+                    )
+                    true
+                }
+
+                else -> false
+            }
+        }
+
         binding.fabCreatePost.initMarginWindowInsetsListener(
             left = true,
             right = true,

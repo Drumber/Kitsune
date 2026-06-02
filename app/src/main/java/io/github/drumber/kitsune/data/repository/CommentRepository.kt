@@ -74,6 +74,20 @@ class CommentRepository(
         commentNetworkDataSource.deleteCommentLike(likeId)
     }
 
+    /** Updates the content of an existing comment owned by the user. Returns the updated comment. */
+    suspend fun updateComment(commentId: String, content: String): Comment? {
+        val comment = NetworkComment(
+            id = commentId,
+            content = content
+        )
+        return commentNetworkDataSource.updateComment(commentId, comment)?.toComment()
+    }
+
+    /** Deletes the comment with the given id. */
+    suspend fun deleteComment(commentId: String) {
+        commentNetworkDataSource.deleteComment(commentId)
+    }
+
     /**
      * Returns the replies of the given top-level comment, oldest first, with the current user's
      * like state resolved. Comment threading is capped at one level by the server.

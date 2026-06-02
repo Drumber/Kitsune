@@ -17,6 +17,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.paging.map
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.algolia.instantsearch.android.searchbox.SearchBoxViewAppCompat
 import com.algolia.instantsearch.core.connection.AbstractConnection
 import com.algolia.instantsearch.core.connection.ConnectionHandler
@@ -29,12 +31,15 @@ import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
+import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
 import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.presentation.model.user.UserSearchResult
 import io.github.drumber.kitsune.databinding.FragmentSearchBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.paging.MediaSearchPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
+import io.github.drumber.kitsune.ui.adapter.paging.UserSearchPagingAdapter
 import io.github.drumber.kitsune.ui.component.LoadStateSpanSizeLookup
 import io.github.drumber.kitsune.ui.component.ResponsiveGridLayoutManager
 import io.github.drumber.kitsune.ui.component.updateLoadState
@@ -63,6 +68,11 @@ class SearchFragment : Fragment(R.layout.fragment_search),
     private val viewModel: SearchViewModel by activityViewModel()
 
     private val connectionHandler = ConnectionHandler()
+
+    private lateinit var mediaAdapter: MediaSearchPagingAdapter
+    private lateinit var userAdapter: UserSearchPagingAdapter
+    private lateinit var gridLayoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager
+    private lateinit var listLayoutManager: LinearLayoutManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -97,6 +107,7 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         }
 
         initRecyclerView()
+        initSearchTypeToggle()
         initSearchBar()
         observeSearchBox()
         observeFilters()
@@ -105,10 +116,21 @@ class SearchFragment : Fragment(R.layout.fragment_search),
 
     private fun initRecyclerView() {
         val adapter = MediaSearchPagingAdapter(Glide.with(this), this)
+        mediaAdapter = adapter
+        userAdapter = UserSearchPagingAdapter(
+            Glide.with(this),
+            object : OnItemClickListener<UserSearchResult> {
+                override fun onItemClick(view: View, item: UserSearchResult) {
+                    onUserClick(item)
+                }
+            }
+        )
         val columnWidth = resources.getDimension(KitsunePref.mediaItemSize.widthRes) +
                 2 * resources.getDimension(R.dimen.media_item_margin)
         val gridLayout = ResponsiveGridLayoutManager(requireContext(), columnWidth.toInt(), 2)
         gridLayout.spanSizeLookup = LoadStateSpanSizeLookup(adapter, gridLayout)
+        gridLayoutManager = gridLayout
+        listLayoutManager = LinearLayoutManager(requireContext())
 
         binding.rvMedia.adapter = adapter.withLoadStateHeaderAndFooter(
             header = ResourceLoadStateAdapter(adapter),
@@ -117,11 +139,18 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         binding.rvMedia.layoutManager = gridLayout
         binding.rvMedia.itemAnimator = null
 
-        binding.layoutLoading.btnRetry.setOnClickListener { adapter.retry() }
+        binding.layoutLoading.btnRetry.setOnClickListener {
+            if (viewModel.currentSearchType.value == SearchType.Users) {
+                userAdapter.retry()
+            } else {
+                mediaAdapter.retry()
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 adapter.loadStateFlow.collectLatest { loadState ->
+                    if (viewModel.currentSearchType.value == SearchType.Users) return@collectLatest
                     binding.layoutLoading.updateLoadState(
                         binding.rvMedia,
                         adapter.itemCount,
@@ -137,11 +166,72 @@ class SearchFragment : Fragment(R.layout.fragment_search),
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.searchResultSource.collectLatest {
-                    adapter.submitData(it)
+                userAdapter.loadStateFlow.collectLatest { loadState ->
+                    if (viewModel.currentSearchType.value != SearchType.Users) return@collectLatest
+                    binding.layoutLoading.updateLoadState(
+                        binding.rvMedia,
+                        userAdapter.itemCount,
+                        loadState
+                    )
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.searchResultSource.collectLatest { data ->
+                    if (viewModel.currentSearchType.value == SearchType.Users) {
+                        userAdapter.submitData(data.map { it as UserSearchResult })
+                    } else {
+                        mediaAdapter.submitData(data.map { it as Media })
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initSearchTypeToggle() {
+        val checkedId = if (viewModel.currentSearchType.value == SearchType.Users) {
+            R.id.btn_search_users
+        } else {
+            R.id.btn_search_media
+        }
+        binding.toggleSearchType.check(checkedId)
+        applySearchType(viewModel.currentSearchType.value ?: SearchType.Media)
+
+        binding.toggleSearchType.addOnButtonCheckedListener { _, id, isChecked ->
+            if (!isChecked) return@addOnButtonCheckedListener
+            val searchType = if (id == R.id.btn_search_users) {
+                SearchType.Users
+            } else {
+                SearchType.Media
+            }
+            if (viewModel.currentSearchType.value == searchType) return@addOnButtonCheckedListener
+            applySearchType(searchType)
+            viewModel.switchSearchType(searchType)
+        }
+    }
+
+    private fun applySearchType(searchType: SearchType) {
+        binding.btnFilter.isVisible = searchType != SearchType.Users
+        if (searchType == SearchType.Users) {
+            binding.rvMedia.layoutManager = listLayoutManager
+            binding.rvMedia.adapter = userAdapter.withLoadStateFooter(
+                footer = ResourceLoadStateAdapter(userAdapter)
+            )
+        } else {
+            binding.rvMedia.layoutManager = gridLayoutManager
+            binding.rvMedia.adapter = mediaAdapter.withLoadStateHeaderAndFooter(
+                header = ResourceLoadStateAdapter(mediaAdapter),
+                footer = ResourceLoadStateAdapter(mediaAdapter)
+            )
+        }
+    }
+
+    private fun onUserClick(user: UserSearchResult) {
+        val action = io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
+            .actionGlobalUserProfileFragment(user.id, user.name)
+        findNavController().navigateSafe(R.id.search_fragment, action)
     }
 
     private fun initSearchBar() {
@@ -182,6 +272,8 @@ class SearchFragment : Fragment(R.layout.fragment_search),
 
     private fun observeSearchBox() {
         viewModel.searchBox.observe(viewLifecycleOwner) { searchBox ->
+            // clear previous search box connection (e.g. when switching search type)
+            connectionHandler.clear()
             val searchBoxView = SearchBoxViewAppCompat(binding.searchView)
             connectionHandler += searchBox.connectView(searchBoxView)
             connectionHandler += SearchResponseListener(searchBox) {

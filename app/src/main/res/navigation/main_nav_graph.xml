@@ -70,6 +70,16 @@
         tools:layout="@layout/fragment_feed" />
 
     <fragment
+        android:id="@+id/notifications_fragment"
+        android:name="io.github.drumber.kitsune.ui.notifications.NotificationsFragment"
+        android:label="@string/notifications_title"
+        tools:layout="@layout/fragment_notifications" />
+
+    <action
+        android:id="@+id/action_global_notifications_fragment"
+        app:destination="@id/notifications_fragment" />
+
+    <fragment
         android:id="@+id/details_fragment"
         android:name="io.github.drumber.kitsune.ui.details.DetailsFragment"
         android:label="DetailsFragment">
@@ -319,10 +329,46 @@
         android:id="@+id/action_global_post_detail_fragment"
         app:destination="@id/post_detail_fragment" />
     <fragment
+        android:id="@+id/user_profile_fragment"
+        android:name="io.github.drumber.kitsune.ui.profile.UserProfileFragment"
+        android:label="UserProfileFragment"
+        tools:layout="@layout/fragment_profile" >
+        <argument
+            android:name="userId"
+            app:argType="string" />
+        <argument
+            android:name="userName"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_user_profile_fragment"
+        app:destination="@id/user_profile_fragment" />
+    <action
+        android:id="@+id/action_global_characterDetailsBottomSheet"
+        app:destination="@id/characterDetailsBottomSheet" />
+    <fragment
         android:id="@+id/create_post_fragment"
         android:name="io.github.drumber.kitsune.ui.createpost.CreatePostFragment"
         android:label="CreatePostFragment"
-        tools:layout="@layout/fragment_create_post" />
+        tools:layout="@layout/fragment_create_post" >
+        <argument
+            android:name="editPost"
+            app:argType="io.github.drumber.kitsune.data.presentation.model.feed.Post"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="targetUserId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="targetUserName"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
     <action
         android:id="@+id/action_global_create_post_fragment"
         app:destination="@id/create_post_fragment" />

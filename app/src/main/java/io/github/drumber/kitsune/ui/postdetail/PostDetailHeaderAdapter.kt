@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.ui.postdetail
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -22,7 +23,11 @@ class PostDetailHeaderAdapter(
     private val contentRenderer: PostContentRenderer? = null,
     private val nsfwAllowed: Boolean = false,
     private val onRevealClick: () -> Unit = {},
-    private val onMediaClick: (Post) -> Unit = {}
+    private val onMediaClick: (Post) -> Unit = {},
+    private val currentUserId: String? = null,
+    private val onEditClick: (Post) -> Unit = {},
+    private val onDeleteClick: (Post) -> Unit = {},
+    private val onAuthorClick: (String) -> Unit = {}
 ) : RecyclerView.Adapter<PostDetailHeaderAdapter.HeaderViewHolder>() {
 
     private var post: Post? = null
@@ -74,6 +79,15 @@ class PostDetailHeaderAdapter(
             binding.tvAuthor.text = post.authorName
                 ?: binding.root.context.getString(R.string.feed_unknown_user)
 
+            val authorId = post.authorId
+            val authorClickListener = if (authorId != null) {
+                android.view.View.OnClickListener { onAuthorClick(authorId) }
+            } else {
+                null
+            }
+            binding.ivAvatar.setOnClickListener(authorClickListener)
+            binding.tvAuthor.setOnClickListener(authorClickListener)
+
             binding.tvTimestamp.apply {
                 val date = post.createdAt?.parseUtcDate()
                 isVisible = date != null
@@ -119,6 +133,8 @@ class PostDetailHeaderAdapter(
                 onMediaClick(post)
             }
 
+            bindOverflowMenu(post)
+
             binding.tvLikes.text = likesCount.toString()
             binding.ivLike.setImageResource(
                 if (isLiked) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_border_24
@@ -126,6 +142,36 @@ class PostDetailHeaderAdapter(
             binding.layoutLike.setOnClickListener { onLikeClick() }
 
             binding.tvComments.text = post.commentsCount.toString()
+        }
+
+        private fun bindOverflowMenu(post: Post) {
+            val isOwner = currentUserId != null && post.authorId == currentUserId
+            binding.btnOverflow.isVisible = isOwner
+            if (!isOwner) {
+                binding.btnOverflow.setOnClickListener(null)
+                return
+            }
+            binding.btnOverflow.setOnClickListener { anchor ->
+                PopupMenu(anchor.context, anchor).apply {
+                    menuInflater.inflate(R.menu.feed_item_options_menu, menu)
+                    setOnMenuItemClickListener { menuItem ->
+                        when (menuItem.itemId) {
+                            R.id.action_edit_item -> {
+                                onEditClick(post)
+                                true
+                            }
+
+                            R.id.action_delete_item -> {
+                                onDeleteClick(post)
+                                true
+                            }
+
+                            else -> false
+                        }
+                    }
+                    show()
+                }
+            }
         }
 
         private fun bindImageGallery(post: Post, gated: Boolean) {

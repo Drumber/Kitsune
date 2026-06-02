@@ -32,6 +32,18 @@ class CommentNetworkDataSource(
         }
     }
 
+    suspend fun updateComment(id: String, comment: NetworkComment): NetworkComment? {
+        return withContext(Dispatchers.IO) {
+            commentApi.updateComment(id, JSONAPIDocument(comment)).get()
+        }
+    }
+
+    suspend fun deleteComment(id: String) {
+        withContext(Dispatchers.IO) {
+            commentApi.deleteComment(id)
+        }
+    }
+
     suspend fun getCommentLikes(filter: Filter): List<NetworkCommentLike> {
         return withContext(Dispatchers.IO) {
             commentApi.getCommentLikes(filter.options).get().orEmpty()

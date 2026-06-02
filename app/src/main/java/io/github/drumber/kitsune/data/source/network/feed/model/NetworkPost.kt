@@ -29,6 +29,8 @@ data class NetworkPost(
 
     @Relationship("user")
     val user: NetworkUser? = null,
+    @Relationship("targetUser")
+    val targetUser: NetworkUser? = null,
     @Relationship("media")
     val media: NetworkMedia? = null,
     @Relationship("spoiledUnit")

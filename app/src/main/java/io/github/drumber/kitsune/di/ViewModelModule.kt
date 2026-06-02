@@ -16,9 +16,11 @@ import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel
 import io.github.drumber.kitsune.ui.main.MainActivityViewModel
 import io.github.drumber.kitsune.ui.main.MainFragmentViewModel
 import io.github.drumber.kitsune.ui.medialist.MediaListViewModel
+import io.github.drumber.kitsune.ui.notifications.NotificationsViewModel
 import io.github.drumber.kitsune.ui.onboarding.OnboardingViewModel
 import io.github.drumber.kitsune.ui.postdetail.PostDetailViewModel
 import io.github.drumber.kitsune.ui.profile.ProfileViewModel
+import io.github.drumber.kitsune.ui.profile.UserProfileViewModel
 import io.github.drumber.kitsune.ui.profile.editprofile.EditProfileViewModel
 import io.github.drumber.kitsune.ui.search.SearchViewModel
 import io.github.drumber.kitsune.ui.search.categories.CategoriesViewModel
@@ -38,13 +40,15 @@ val viewModelModule = module {
     viewModel { LibraryEditEntryViewModel(get(), get()) }
     viewModel { LoginViewModel(get()) }
     viewModel { ProfileViewModel(get(), get()) }
+    viewModel { (userId: String) -> UserProfileViewModel(userId, get(), get(), get()) }
     viewModel { EditProfileViewModel(get(), get(), get()) }
     viewModel { DetailsViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { EpisodesViewModel(get(), get(), get(), get()) }
     viewModel { MediaFeedViewModel(get()) }
     viewModel { ReactionsViewModel(get(), get()) }
-    viewModel { FeedListViewModel(get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { PostDetailViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { FeedListViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { NotificationsViewModel(get(), get()) }
+    viewModel { PostDetailViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { CreatePostViewModel(get(), get(), get()) }
     viewModel { MediaPickerViewModel(get()) }
     viewModel { UnitPickerViewModel(get()) }

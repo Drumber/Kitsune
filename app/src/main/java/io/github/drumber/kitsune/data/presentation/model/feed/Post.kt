@@ -17,20 +17,25 @@ data class Post(
     val commentsCount: Int,
     val likesCount: Int,
 
+    val authorId: String?,
     val authorName: String?,
     val authorAvatarUrl: String?,
 
     val mediaTitle: String?,
+    val mediaId: String?,
     val mediaPosterUrl: String?,
     val mediaSynopsis: String?,
     val mediaSlug: String?,
     val mediaIsAnime: Boolean?,
 
     val spoiledUnitNumber: Int?,
+    val spoiledUnitId: String?,
     val spoiledUnitTitle: String?,
     val spoiledUnitIsEpisode: Boolean,
 
     val imageUrls: List<String>,
+
+    val uploadIds: List<String>,
 
     val embed: Embed?
 ) : Parcelable

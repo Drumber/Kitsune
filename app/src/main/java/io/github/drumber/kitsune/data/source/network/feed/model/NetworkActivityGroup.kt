@@ -15,6 +15,10 @@ data class NetworkActivityGroup(
     val createdAt: String? = null,
     val updatedAt: String? = null,
 
+    // Only present on the notifications feed.
+    val isRead: Boolean? = null,
+    val isSeen: Boolean? = null,
+
     @Relationship("activities")
     val activities: List<NetworkActivity>? = null
 )

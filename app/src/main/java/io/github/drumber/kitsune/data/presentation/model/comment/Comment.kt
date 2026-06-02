@@ -14,6 +14,7 @@ data class Comment(
 
     val repliesCount: Int,
 
+    val authorId: String?,
     val authorName: String?,
     val authorAvatarUrl: String?,
 

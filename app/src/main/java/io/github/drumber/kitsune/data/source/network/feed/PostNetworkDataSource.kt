@@ -16,4 +16,16 @@ class PostNetworkDataSource(
         }
     }
 
+    suspend fun updatePost(id: String, post: NetworkPost): NetworkPost? {
+        return withContext(Dispatchers.IO) {
+            postApi.updatePost(id, JSONAPIDocument(post)).get()
+        }
+    }
+
+    suspend fun deletePost(id: String) {
+        withContext(Dispatchers.IO) {
+            postApi.deletePost(id)
+        }
+    }
+
 }

@@ -49,6 +49,19 @@
                 android:textColor="?android:attr/textColorSecondary"
                 tools:text="2 hours ago" />
 
+            <ImageButton
+                android:id="@+id/btn_overflow"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/action_more_options"
+                android:padding="4dp"
+                android:src="@drawable/ic_more_vert"
+                android:visibility="gone"
+                app:tint="?android:attr/textColorSecondary"
+                tools:visibility="visible" />
+
         </LinearLayout>
 
         <TextView

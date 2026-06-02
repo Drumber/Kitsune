@@ -27,6 +27,15 @@ class FeedRepository(
         }
 
     /**
+     * Pager for a single user's profile feed, showing posts they authored as well as posts other
+     * users made on their wall (posts targeted at them).
+     */
+    fun userFeedPager(userId: String, pageSize: Int = Kitsu.DEFAULT_PAGE_SIZE) =
+        feedPager(pageSize) { cursor ->
+            feedNetworkDataSource.getUserFeed(userId, buildFilter(pageSize, cursor))
+        }
+
+    /**
      * Pager for the activity feed of a single media (anime or manga), matching the posts shown
      * on the media page of the Kitsu website. The feed id is composed of the capitalized media
      * type and the media id, e.g. `Anime-1` or `Manga-1`.

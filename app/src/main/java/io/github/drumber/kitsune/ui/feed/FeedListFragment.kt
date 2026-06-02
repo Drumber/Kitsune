@@ -12,6 +12,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.FragmentFeedListBinding
@@ -25,6 +26,7 @@ import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.showSnackbar
 import io.github.drumber.kitsune.ui.postdetail.PostDetailFragmentDirections
+import io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -46,11 +48,22 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
             arguments?.getString(ARG_FEED_TYPE) ?: FeedType.GLOBAL.name
         )
 
+    private val userId: String?
+        get() = arguments?.getString(ARG_USER_ID)
+
+    /** Navigation graph destination id this fragment is hosted in, used by [navigateSafe]. */
+    private val hostDestId: Int
+        get() = arguments?.getInt(ARG_HOST_DEST_ID, R.id.feed_fragment) ?: R.id.feed_fragment
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentFeedListBinding.bind(view)
 
-        viewModel.setFeedType(feedType)
+        if (feedType == FeedType.USER) {
+            userId?.let { viewModel.setUserFeed(it) }
+        } else {
+            viewModel.setFeedType(feedType)
+        }
 
         val adapter = PostPagingAdapter(
             glide = Glide.with(this),
@@ -62,7 +75,11 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
             nsfwAllowed = viewModel.nsfwAllowed,
             onRevealClick = { post -> viewModel.revealPost(post) },
             onMediaClick = { post -> openMedia(post) },
-            listener = this
+            listener = this,
+            currentUserId = viewModel.currentUserId(),
+            onEditClick = { post -> navigateToEditPost(post) },
+            onDeleteClick = { post -> confirmDeletePost(post) },
+            onAuthorClick = { userId -> navigateToUserProfile(userId) }
         )
         binding.rvFeed.adapter = adapter.withLoadStateFooter(
             footer = ResourceLoadStateAdapter(adapter)
@@ -152,11 +169,45 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
                 }
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.actionEvents.collectLatest { event ->
+                    when (event) {
+                        FeedListViewModel.ActionEvent.PostDeleted -> {
+                            adapter.refresh()
+                            showSnackbar(binding.root, R.string.post_deleted)
+                        }
+
+                        FeedListViewModel.ActionEvent.Error ->
+                            showSnackbar(binding.root, R.string.comment_action_failed)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun navigateToEditPost(post: Post) {
+        val action = PostDetailFragmentDirections.actionGlobalCreatePostFragment(post)
+        findNavController().navigateSafe(hostDestId, action)
+    }
+
+    private fun navigateToUserProfile(userId: String) {
+        val action = UserProfileFragmentDirections.actionGlobalUserProfileFragment(userId)
+        findNavController().navigateSafe(hostDestId, action)
+    }
+
+    private fun confirmDeletePost(post: Post) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.delete_post_confirm_title)
+            .setMessage(R.string.delete_post_confirm_message)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.action_delete) { _, _ -> viewModel.deletePost(post) }
+            .show()
     }
 
     override fun onItemClick(view: View, item: Post) {
         val action = PostDetailFragmentDirections.actionGlobalPostDetailFragment(item)
-        findNavController().navigateSafe(R.id.feed_fragment, action)
+        findNavController().navigateSafe(hostDestId, action)
     }
 
     private fun openMedia(post: Post) {
@@ -167,7 +218,7 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
             type = if (isAnime) "anime" else "manga",
             slug = slug
         )
-        findNavController().navigateSafe(R.id.feed_fragment, action)
+        findNavController().navigateSafe(hostDestId, action)
     }
 
     override fun onDestroyView() {
@@ -178,10 +229,21 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
 
     companion object {
         const val ARG_FEED_TYPE = "feed_type"
+        const val ARG_USER_ID = "user_id"
+        const val ARG_HOST_DEST_ID = "host_dest_id"
 
         fun newInstance(feedType: FeedType) = FeedListFragment().apply {
             arguments = Bundle().apply {
                 putString(ARG_FEED_TYPE, feedType.name)
+            }
+        }
+
+        /** Creates a fragment showing the profile feed of [userId], hosted in [hostDestId]. */
+        fun newUserFeedInstance(userId: String, hostDestId: Int) = FeedListFragment().apply {
+            arguments = Bundle().apply {
+                putString(ARG_FEED_TYPE, FeedType.USER.name)
+                putString(ARG_USER_ID, userId)
+                putInt(ARG_HOST_DEST_ID, hostDestId)
             }
         }
     }

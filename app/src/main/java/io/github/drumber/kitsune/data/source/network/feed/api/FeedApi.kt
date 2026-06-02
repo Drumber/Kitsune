@@ -19,6 +19,12 @@ interface FeedApi {
         @QueryMap filter: Map<String, String> = emptyMap()
     ): JSONAPIDocument<List<NetworkActivityGroup>>
 
+    @GET("feeds/user_aggr/{userId}")
+    suspend fun getUserFeed(
+        @Path("userId") userId: String,
+        @QueryMap filter: Map<String, String> = emptyMap()
+    ): JSONAPIDocument<List<NetworkActivityGroup>>
+
     @GET("feeds/media_aggr/{feedId}")
     suspend fun getMediaFeed(
         @Path("feedId") feedId: String,
