@@ -20,6 +20,7 @@ import io.github.drumber.kitsune.data.repository.MappingRepository
 import io.github.drumber.kitsune.data.repository.MediaReactionRepository
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository
 import io.github.drumber.kitsune.data.repository.PostInteractionRepository
+import io.github.drumber.kitsune.data.repository.PostInteractionStore
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.repository.WidgetLibraryChangeListener
@@ -286,6 +287,7 @@ val dataModule = module {
             NetworkActivityGroup::class.java,
             NetworkActivity::class.java,
             NetworkPost::class.java,
+            NetworkComment::class.java,
             NetworkUser::class.java,
             NetworkAnime::class.java,
             NetworkManga::class.java
@@ -320,6 +322,7 @@ val dataModule = module {
     }
     single { PostLikeNetworkDataSource(get()) }
     single { PostInteractionRepository(get()) }
+    single { PostInteractionStore() }
 
     // Media Reactions
     factory {

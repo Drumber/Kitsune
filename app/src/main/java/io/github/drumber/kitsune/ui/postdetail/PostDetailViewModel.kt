@@ -8,6 +8,7 @@ import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.data.repository.CommentRepository
 import io.github.drumber.kitsune.data.repository.PostInteractionRepository
+import io.github.drumber.kitsune.data.repository.PostInteractionStore
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,6 +25,7 @@ import kotlinx.coroutines.launch
 class PostDetailViewModel(
     private val commentRepository: CommentRepository,
     private val postInteractionRepository: PostInteractionRepository,
+    private val postInteractionStore: PostInteractionStore,
     private val getLocalUserId: GetLocalUserIdUseCase
 ) : ViewModel() {
 
@@ -86,11 +88,13 @@ class PostDetailViewModel(
 
         val state = _postLikeState.value
         val targetLiked = !state.isLiked
+        val targetCount = (state.count + if (targetLiked) 1 else -1).coerceAtLeast(0)
         // Optimistic update.
         _postLikeState.value = state.copy(
             isLiked = targetLiked,
-            count = (state.count + if (targetLiked) 1 else -1).coerceAtLeast(0)
+            count = targetCount
         )
+        postInteractionStore.setLikeState(currentPost.id, targetLiked, targetCount)
 
         viewModelScope.launch {
             try {
@@ -104,6 +108,7 @@ class PostDetailViewModel(
                 logE("Failed to toggle like for post '${currentPost.id}'.", e)
                 // Revert optimistic update.
                 _postLikeState.value = state
+                postInteractionStore.setLikeState(currentPost.id, state.isLiked, state.count)
                 eventChannel.send(Event.Error)
             }
         }
@@ -166,6 +171,9 @@ class PostDetailViewModel(
             try {
                 val comment = commentRepository.postComment(currentPost.id, userId, trimmed)
                 if (comment != null) {
+                    val newCount = (postInteractionStore.get(currentPost.id)?.commentsCount
+                        ?: currentPost.commentsCount) + 1
+                    postInteractionStore.setCommentCount(currentPost.id, newCount)
                     eventChannel.send(Event.CommentPosted)
                 } else {
                     eventChannel.send(Event.Error)

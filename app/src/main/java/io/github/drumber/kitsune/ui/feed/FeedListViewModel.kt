@@ -8,6 +8,7 @@ import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.data.repository.CommentRepository
 import io.github.drumber.kitsune.data.repository.FeedRepository
 import io.github.drumber.kitsune.data.repository.PostInteractionRepository
+import io.github.drumber.kitsune.data.repository.PostInteractionStore
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,6 +29,7 @@ class FeedListViewModel(
     private val feedRepository: FeedRepository,
     private val commentRepository: CommentRepository,
     private val postInteractionRepository: PostInteractionRepository,
+    private val postInteractionStore: PostInteractionStore,
     private val getLocalUserId: GetLocalUserIdUseCase
 ) : ViewModel() {
 
@@ -45,8 +47,15 @@ class FeedListViewModel(
     // Known like ids keyed by post id, used to unlike without a lookup.
     private val postLikeIds = mutableMapOf<String, String?>()
 
+    // Posts whose initial like state has already been resolved.
+    private val likeStateLoaded = mutableSetOf<String>()
+    private val likeStateMutex = Mutex()
+
     private val likeEventChannel = Channel<LikeEvent>(Channel.BUFFERED)
     val likeEvents: Flow<LikeEvent> = likeEventChannel.receiveAsFlow()
+
+    /** Shared interaction overrides (like state, comment count) keyed by post id. */
+    val interactionStates = postInteractionStore.states
 
     fun setFeedType(type: FeedType) {
         if (feedType.value != type) {
@@ -94,6 +103,33 @@ class FeedListViewModel(
     }
 
     /**
+     * Resolves the current user's like state for the given post once and, if the post is already
+     * liked, pushes the filled state to the shared interaction store. No-op when not logged in.
+     */
+    suspend fun ensureLikeStateLoaded(post: Post) {
+        val userId = getLocalUserId() ?: return
+        if (post.id in likeStateLoaded) return
+        likeStateMutex.withLock {
+            if (post.id in likeStateLoaded) return
+            // Don't clobber a like state the user already changed in this session.
+            if (postInteractionStore.get(post.id)?.isLiked != null) {
+                likeStateLoaded.add(post.id)
+                return
+            }
+            try {
+                val likeId = postInteractionRepository.getMyPostLikeId(post.id, userId)
+                likeStateLoaded.add(post.id)
+                if (likeId != null) {
+                    postLikeIds[post.id] = likeId
+                    postInteractionStore.setLikeState(post.id, true, post.likesCount)
+                }
+            } catch (e: Exception) {
+                logE("Failed to load like state for post '${post.id}'.", e)
+            }
+        }
+    }
+
+    /**
      * Toggles the like state of the given post on behalf of the user. The UI is expected to have
      * already applied the optimistic [targetLiked] state; on failure a [LikeEvent.Failed] event is
      * emitted carrying the previous state so the UI can revert.
@@ -107,6 +143,10 @@ class FeedListViewModel(
             return
         }
 
+        val currentCount = postInteractionStore.get(post.id)?.likesCount ?: post.likesCount
+        val targetCount = (currentCount + if (targetLiked) 1 else -1).coerceAtLeast(0)
+        postInteractionStore.setLikeState(post.id, targetLiked, targetCount)
+
         viewModelScope.launch {
             try {
                 if (targetLiked) {
@@ -119,6 +159,7 @@ class FeedListViewModel(
                 }
             } catch (e: Exception) {
                 logE("Failed to toggle like for post '${post.id}'.", e)
+                postInteractionStore.setLikeState(post.id, !targetLiked, post.likesCount)
                 likeEventChannel.send(
                     LikeEvent.Failed(post.id, !targetLiked, post.likesCount)
                 )

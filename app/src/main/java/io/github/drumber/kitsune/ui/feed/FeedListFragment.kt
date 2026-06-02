@@ -52,6 +52,7 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
             scope = viewLifecycleOwner.lifecycleScope,
             avatarProvider = { post -> viewModel.commenterAvatars(post) },
             onLikeClick = { post, targetLiked -> viewModel.togglePostLike(post, targetLiked) },
+            likeStateLoader = { post -> viewModel.ensureLikeStateLoaded(post) },
             listener = this
         )
         binding.rvFeed.adapter = adapter.withLoadStateFooter(
@@ -100,6 +101,21 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.dataSource.collectLatest { data ->
                     adapter.submitData(data)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.interactionStates.collectLatest { states ->
+                    states.forEach { (postId, state) ->
+                        adapter.applyInteraction(
+                            postId,
+                            state.isLiked,
+                            state.likesCount,
+                            state.commentsCount
+                        )
+                    }
                 }
             }
         }

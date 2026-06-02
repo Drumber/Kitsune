@@ -54,7 +54,15 @@ class FeedRepository(
 
     private fun buildFilter(pageSize: Int, cursor: String?) = Filter()
         .filter("kind", "posts")
-        .include("subject", "subject.user", "subject.media", "actor")
+        .include(
+            "subject",
+            "subject.user",
+            "subject.media",
+            "subject.post",
+            "subject.post.user",
+            "subject.post.media",
+            "actor"
+        )
         .pageLimit(pageSize)
         .apply { cursor?.let { pageCursor(it) } }
 

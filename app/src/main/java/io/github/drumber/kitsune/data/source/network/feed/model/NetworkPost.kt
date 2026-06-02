@@ -28,4 +28,4 @@ data class NetworkPost(
     val user: NetworkUser? = null,
     @Relationship("media")
     val media: NetworkMedia? = null
-)
+) : NetworkFeedSubject

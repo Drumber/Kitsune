@@ -23,16 +23,45 @@ class PostPagingAdapter(
     private val listener: OnItemClickListener<Post>? = null,
     private val scope: CoroutineScope? = null,
     private val avatarProvider: (suspend (Post) -> List<String>)? = null,
-    private val onLikeClick: ((Post, Boolean) -> Unit)? = null
+    private val onLikeClick: ((Post, Boolean) -> Unit)? = null,
+    private val likeStateLoader: (suspend (Post) -> Unit)? = null
 ) : PagingDataAdapter<Post, PostPagingAdapter.PostViewHolder>(PostComparator) {
 
-    private data class LikeState(val isLiked: Boolean, val count: Int)
+    private data class InteractionOverride(
+        val isLiked: Boolean? = null,
+        val likesCount: Int? = null,
+        val commentsCount: Int? = null
+    )
 
-    private val likeOverrides = mutableMapOf<String, LikeState>()
+    private val overrides = mutableMapOf<String, InteractionOverride>()
 
     /** Overrides the like state of the post and refreshes the item. */
     fun setLikeState(postId: String, isLiked: Boolean, count: Int) {
-        likeOverrides[postId] = LikeState(isLiked, count)
+        val current = overrides[postId] ?: InteractionOverride()
+        overrides[postId] = current.copy(isLiked = isLiked, likesCount = count)
+        refreshItem(postId)
+    }
+
+    /**
+     * Applies a shared interaction override (like state and/or comment count) to the post and
+     * refreshes the item if it is currently shown.
+     */
+    fun applyInteraction(
+        postId: String,
+        isLiked: Boolean?,
+        likesCount: Int?,
+        commentsCount: Int?
+    ) {
+        val current = overrides[postId] ?: InteractionOverride()
+        overrides[postId] = current.copy(
+            isLiked = isLiked ?: current.isLiked,
+            likesCount = likesCount ?: current.likesCount,
+            commentsCount = commentsCount ?: current.commentsCount
+        )
+        refreshItem(postId)
+    }
+
+    private fun refreshItem(postId: String) {
         val index = snapshot().items.indexOfFirst { it.id == postId }
         if (index != -1) notifyItemChanged(index)
     }
@@ -100,24 +129,29 @@ class PostPagingAdapter(
 
             binding.tvSpoilerWarning.isVisible = post.spoiler
 
-            val override = likeOverrides[post.id]
+            val override = overrides[post.id]
             val isLiked = override?.isLiked ?: false
-            val likesCount = override?.count ?: post.likesCount
+            val likesCount = override?.likesCount ?: post.likesCount
+            val commentsCount = override?.commentsCount ?: post.commentsCount
 
             binding.tvLikes.text = likesCount.toString()
             binding.ivLike.setImageResource(
                 if (isLiked) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_border_24
             )
             binding.layoutLike.setOnClickListener {
-                val current = likeOverrides[post.id]?.isLiked ?: false
-                val currentCount = likeOverrides[post.id]?.count ?: post.likesCount
+                val current = overrides[post.id]?.isLiked ?: false
+                val currentCount = overrides[post.id]?.likesCount ?: post.likesCount
                 val targetLiked = !current
                 val targetCount = (currentCount + if (targetLiked) 1 else -1).coerceAtLeast(0)
                 setLikeState(post.id, targetLiked, targetCount)
                 onLikeClick?.invoke(post, targetLiked)
             }
 
-            binding.tvComments.text = post.commentsCount.toString()
+            binding.tvComments.text = commentsCount.toString()
+
+            scope?.let { s ->
+                likeStateLoader?.let { loader -> s.launch { loader(post) } }
+            }
 
             bindCommenterAvatars(post)
         }

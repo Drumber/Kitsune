@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.data.source.network.comment.model
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
+import io.github.drumber.kitsune.data.source.network.feed.model.NetworkFeedSubject
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 
@@ -27,4 +28,4 @@ data class NetworkComment(
     val post: NetworkPost? = null,
     @Relationship("parent")
     val parent: NetworkComment? = null
-)
+) : NetworkFeedSubject

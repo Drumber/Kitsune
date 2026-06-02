@@ -30,6 +30,7 @@ class CommentPagingDataSource(
                 val likeFilter = Filter()
                     .filter("userId", userId)
                     .filter("commentId", commentIds.joinToString(","))
+                    .include("comment")
                     .pageLimit(commentIds.size)
                 dataSource.getCommentLikes(likeFilter)
                     .mapNotNull { like -> like.comment?.id?.let { it to like.id } }

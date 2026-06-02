@@ -3,7 +3,9 @@ package io.github.drumber.kitsune.data.source.network.feed
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import io.github.drumber.kitsune.data.source.network.CursorPageData
+import io.github.drumber.kitsune.data.source.network.comment.model.NetworkComment
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivityGroup
+import io.github.drumber.kitsune.data.source.network.feed.model.NetworkFeedSubject
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.util.logE
 
@@ -22,7 +24,10 @@ class FeedPagingDataSource(
 
             val posts = pageData.data
                 .orEmpty()
-                .mapNotNull { group -> group.activities?.firstOrNull()?.subject }
+                .mapNotNull { group ->
+                    group.activities?.firstNotNullOfOrNull { it.subject?.toPostOrNull() }
+                }
+                .distinctBy { it.id }
 
             LoadResult.Page(
                 data = posts,
@@ -37,4 +42,14 @@ class FeedPagingDataSource(
 
     override fun getRefreshKey(state: PagingState<String, NetworkPost>): String? = null
 
+}
+
+/**
+ * Resolves the post represented by a feed activity subject. Post subjects map to themselves,
+ * while comment subjects map to the post they were made on.
+ */
+private fun NetworkFeedSubject.toPostOrNull(): NetworkPost? = when (this) {
+    is NetworkPost -> this
+    is NetworkComment -> post
+    else -> null
 }

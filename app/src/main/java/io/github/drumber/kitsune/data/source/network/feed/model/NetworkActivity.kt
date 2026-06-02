@@ -17,7 +17,7 @@ data class NetworkActivity(
     val updatedAt: String? = null,
 
     @Relationship("subject")
-    val subject: NetworkPost? = null,
+    val subject: NetworkFeedSubject? = null,
     @Relationship("actor")
     val actor: NetworkUser? = null
 )
