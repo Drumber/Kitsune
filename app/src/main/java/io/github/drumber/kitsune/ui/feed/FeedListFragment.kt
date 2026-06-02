@@ -19,6 +19,7 @@ import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.paging.PostPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
+import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
@@ -54,12 +55,13 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
         val adapter = PostPagingAdapter(
             glide = Glide.with(this),
             scope = viewLifecycleOwner.lifecycleScope,
-            avatarProvider = { post -> viewModel.commenterAvatars(post) },
+            avatarProvider = { post -> viewModel.likerAvatars(post) },
             onLikeClick = { post, targetLiked -> viewModel.togglePostLike(post, targetLiked) },
             likeStateLoader = { post -> viewModel.ensureLikeStateLoaded(post) },
             contentRenderer = contentRenderer,
             nsfwAllowed = viewModel.nsfwAllowed,
             onRevealClick = { post -> viewModel.revealPost(post) },
+            onMediaClick = { post -> openMedia(post) },
             listener = this
         )
         binding.rvFeed.adapter = adapter.withLoadStateFooter(
@@ -154,6 +156,17 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
 
     override fun onItemClick(view: View, item: Post) {
         val action = PostDetailFragmentDirections.actionGlobalPostDetailFragment(item)
+        findNavController().navigateSafe(R.id.feed_fragment, action)
+    }
+
+    private fun openMedia(post: Post) {
+        val slug = post.mediaSlug
+        val isAnime = post.mediaIsAnime
+        if (slug.isNullOrBlank() || isAnime == null) return
+        val action = DetailsFragmentDirections.actionGlobalDetailsFragment(
+            type = if (isAnime) "anime" else "manga",
+            slug = slug
+        )
         findNavController().navigateSafe(R.id.feed_fragment, action)
     }
 

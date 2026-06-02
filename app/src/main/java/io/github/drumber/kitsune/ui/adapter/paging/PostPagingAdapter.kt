@@ -18,6 +18,7 @@ import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.EmbedBinder
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
+import io.github.drumber.kitsune.util.ui.PostMediaBinder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -31,7 +32,8 @@ class PostPagingAdapter(
     private val likeStateLoader: (suspend (Post) -> Unit)? = null,
     private val contentRenderer: PostContentRenderer? = null,
     private val nsfwAllowed: Boolean = false,
-    private val onRevealClick: ((Post) -> Unit)? = null
+    private val onRevealClick: ((Post) -> Unit)? = null,
+    private val onMediaClick: ((Post) -> Unit)? = null
 ) : PagingDataAdapter<Post, PostPagingAdapter.PostViewHolder>(PostComparator) {
 
     private data class InteractionOverride(
@@ -131,11 +133,6 @@ class PostPagingAdapter(
                 }
             }
 
-            binding.tvMedia.apply {
-                isVisible = !post.mediaTitle.isNullOrBlank()
-                text = context.getString(R.string.feed_post_about, post.mediaTitle)
-            }
-
             val needsWarning = post.spoiler || (post.nsfw && !nsfwAllowed)
             val gated = needsWarning && post.id !in revealedIds
 
@@ -168,6 +165,10 @@ class PostPagingAdapter(
 
             EmbedBinder.bind(binding.embed, glide, post.embed, visible = !gated)
 
+            PostMediaBinder.bind(binding.postMedia, glide, post, visible = true) {
+                onMediaClick?.invoke(post)
+            }
+
             val override = overrides[post.id]
             val isLiked = override?.isLiked ?: false
             val likesCount = override?.likesCount ?: post.likesCount
@@ -192,27 +193,27 @@ class PostPagingAdapter(
                 likeStateLoader?.let { loader -> s.launch { loader(post) } }
             }
 
-            bindCommenterAvatars(post)
+            bindLikerAvatars(post)
         }
 
-        private fun bindCommenterAvatars(post: Post) {
+        private fun bindLikerAvatars(post: Post) {
             avatarJob?.cancel()
             val avatarViews = listOf(
-                binding.ivCommenter1,
-                binding.ivCommenter2,
-                binding.ivCommenter3
+                binding.ivLiker1,
+                binding.ivLiker2,
+                binding.ivLiker3
             )
-            binding.layoutCommenters.isVisible = false
+            binding.layoutLikers.isVisible = false
             avatarViews.forEach { it.isVisible = false }
 
-            if (post.commentsCount <= 0) return
+            if (post.likesCount <= 0) return
             val scope = scope ?: return
             val avatarProvider = avatarProvider ?: return
 
             avatarJob = scope.launch {
                 val avatars = avatarProvider(post)
                 if (avatars.isEmpty()) return@launch
-                binding.layoutCommenters.isVisible = true
+                binding.layoutLikers.isVisible = true
                 avatarViews.forEachIndexed { index, imageView ->
                     val url = avatars.getOrNull(index)
                     imageView.isVisible = url != null

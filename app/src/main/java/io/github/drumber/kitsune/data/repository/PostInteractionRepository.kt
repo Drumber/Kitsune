@@ -19,6 +19,19 @@ class PostInteractionRepository(
         return postLikeNetworkDataSource.getPostLikes(filter).firstOrNull()?.id
     }
 
+    /** Returns up to [limit] distinct avatar urls of users who liked the given post. */
+    suspend fun getTopLikerAvatars(postId: String, limit: Int = 3): List<String> {
+        val filter = Filter()
+            .filter("postId", postId)
+            .include("user")
+            .pageLimit(limit * 4)
+        return postLikeNetworkDataSource.getPostLikes(filter)
+            .mapNotNull { it.user }
+            .distinctBy { it.id }
+            .mapNotNull { it.avatar?.originalOrDown() }
+            .take(limit)
+    }
+
     /** Likes the given post on behalf of the user. Returns the created like id, or null on failure. */
     suspend fun likePost(postId: String, userId: String): String? {
         val like = NetworkPostLike(

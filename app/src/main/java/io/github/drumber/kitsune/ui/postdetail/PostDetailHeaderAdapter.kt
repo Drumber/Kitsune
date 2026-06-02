@@ -13,6 +13,7 @@ import io.github.drumber.kitsune.databinding.ItemPostDetailHeaderBinding
 import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.EmbedBinder
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
+import io.github.drumber.kitsune.util.ui.PostMediaBinder
 
 /** Single-item adapter rendering the full post card at the top of the post detail screen. */
 class PostDetailHeaderAdapter(
@@ -20,7 +21,8 @@ class PostDetailHeaderAdapter(
     private val onLikeClick: () -> Unit,
     private val contentRenderer: PostContentRenderer? = null,
     private val nsfwAllowed: Boolean = false,
-    private val onRevealClick: () -> Unit = {}
+    private val onRevealClick: () -> Unit = {},
+    private val onMediaClick: (Post) -> Unit = {}
 ) : RecyclerView.Adapter<PostDetailHeaderAdapter.HeaderViewHolder>() {
 
     private var post: Post? = null
@@ -84,11 +86,6 @@ class PostDetailHeaderAdapter(
                 }
             }
 
-            binding.tvMedia.apply {
-                isVisible = !post.mediaTitle.isNullOrBlank()
-                text = context.getString(R.string.feed_post_about, post.mediaTitle)
-            }
-
             val needsWarning = post.spoiler || (post.nsfw && !nsfwAllowed)
             val gated = needsWarning && !revealed
 
@@ -118,6 +115,10 @@ class PostDetailHeaderAdapter(
 
             EmbedBinder.bind(binding.embed, glide, post.embed, visible = !gated)
 
+            PostMediaBinder.bind(binding.postMedia, glide, post, visible = true) {
+                onMediaClick(post)
+            }
+
             binding.tvLikes.text = likesCount.toString()
             binding.ivLike.setImageResource(
                 if (isLiked) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_border_24
@@ -141,7 +142,19 @@ class PostDetailHeaderAdapter(
                 return
             }
 
-            binding.vpImages.adapter = PostImagePagerAdapter(glide, images)
+            binding.vpImages.adapter = PostImagePagerAdapter(glide, images) { aspectRatio ->
+                val pager = binding.vpImages
+                val width = pager.width
+                if (width > 0 && aspectRatio > 0f) {
+                    val density = pager.resources.displayMetrics.density
+                    val minHeight = (160 * density).toInt()
+                    val maxHeight = (440 * density).toInt()
+                    val target = (width / aspectRatio).toInt().coerceIn(minHeight, maxHeight)
+                    if (pager.layoutParams.height != target) {
+                        pager.layoutParams = pager.layoutParams.apply { height = target }
+                    }
+                }
+            }
 
             if (images.size > 1) {
                 binding.tvImageIndicator.text = binding.root.context.getString(

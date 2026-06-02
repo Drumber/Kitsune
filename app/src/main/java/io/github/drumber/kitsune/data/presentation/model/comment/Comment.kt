@@ -12,6 +12,8 @@ data class Comment(
     val isLikedByMe: Boolean,
     val myLikeId: String?,
 
+    val repliesCount: Int,
+
     val authorName: String?,
     val authorAvatarUrl: String?,
 

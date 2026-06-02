@@ -21,6 +21,14 @@ data class Post(
     val authorAvatarUrl: String?,
 
     val mediaTitle: String?,
+    val mediaPosterUrl: String?,
+    val mediaSynopsis: String?,
+    val mediaSlug: String?,
+    val mediaIsAnime: Boolean?,
+
+    val spoiledUnitNumber: Int?,
+    val spoiledUnitTitle: String?,
+    val spoiledUnitIsEpisode: Boolean,
 
     val imageUrls: List<String>,
 

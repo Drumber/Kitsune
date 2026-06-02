@@ -18,6 +18,9 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentPostDetailBinding
 import io.github.drumber.kitsune.ui.adapter.paging.CommentPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
+import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
+import io.github.drumber.kitsune.data.presentation.model.feed.Post
+import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
@@ -37,6 +40,8 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
     private val viewModel: PostDetailViewModel by viewModel()
 
     private val contentRenderer: PostContentRenderer by inject()
+
+    private var replyTarget: io.github.drumber.kitsune.data.presentation.model.comment.Comment? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,14 +64,18 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
             onLikeClick = { viewModel.togglePostLike() },
             contentRenderer = contentRenderer,
             nsfwAllowed = viewModel.nsfwAllowed,
-            onRevealClick = { viewModel.revealCurrentPost() }
+            onRevealClick = { viewModel.revealCurrentPost() },
+            onMediaClick = { post -> openMedia(post) }
         )
         headerAdapter.setPost(args.post)
 
         val commentsAdapter = CommentPagingAdapter(
             glide = glide,
             onLikeClick = { comment -> viewModel.toggleCommentLike(comment) },
-            contentRenderer = contentRenderer
+            contentRenderer = contentRenderer,
+            scope = viewLifecycleOwner.lifecycleScope,
+            repliesProvider = { comment -> viewModel.loadReplies(comment) },
+            onReplyClick = { comment -> startReply(comment) }
         )
 
         binding.rvComments.apply {
@@ -78,6 +87,7 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
         }
 
         binding.btnSend.setOnClickListener { submitComment() }
+        binding.btnCancelReply.setOnClickListener { cancelReply() }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -112,6 +122,7 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
 
                         PostDetailViewModel.Event.CommentPosted -> {
                             binding.etComment.text?.clear()
+                            cancelReply()
                             hideKeyboard()
                             commentsAdapter.refresh()
                             showSnackbar(binding.root, R.string.comment_posted)
@@ -131,7 +142,41 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
     private fun submitComment() {
         val content = binding.etComment.text?.toString().orEmpty().trim()
         if (content.isEmpty()) return
-        viewModel.postComment(content)
+        val target = replyTarget
+        if (target != null) {
+            viewModel.postReply(target.id, content)
+        } else {
+            viewModel.postComment(content)
+        }
+    }
+
+    private fun openMedia(post: Post) {
+        val slug = post.mediaSlug
+        val isAnime = post.mediaIsAnime
+        if (slug.isNullOrBlank() || isAnime == null) return
+        val action = DetailsFragmentDirections.actionGlobalDetailsFragment(
+            type = if (isAnime) "anime" else "manga",
+            slug = slug
+        )
+        findNavController().navigateSafe(R.id.post_detail_fragment, action)
+    }
+
+    private fun startReply(comment: io.github.drumber.kitsune.data.presentation.model.comment.Comment) {
+        replyTarget = comment
+        val author = comment.authorName
+            ?: getString(R.string.feed_unknown_user)
+        binding.tvReplyContext.text = getString(R.string.comment_replying_to, author)
+        binding.layoutReplyContext.visibility = View.VISIBLE
+        binding.tilComment.hint = getString(R.string.comment_reply_hint)
+        binding.etComment.requestFocus()
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.etComment, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun cancelReply() {
+        replyTarget = null
+        binding.layoutReplyContext.visibility = View.GONE
+        binding.tilComment.hint = getString(R.string.hint_add_comment)
     }
 
     private fun hideKeyboard() {

@@ -237,15 +237,6 @@
                         android:text="@string/title_posts"
                         android:textAllCaps="false" />
 
-                    <Button
-                        android:id="@+id/btn_reactions"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/title_reactions"
-                        android:textAllCaps="false" />
-
                     <include
                         layout="@layout/section_details_trailer"
                         android:layout_width="match_parent"
@@ -254,6 +245,52 @@
                         app:coverUrl="@{data.trailerCoverUrl}"
                         app:isVisible="@{!TextUtils.isEmpty(data.trailerUrl)}"
                         app:videoUrl="@{data.trailerUrl}" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_reactions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:text="@string/title_reactions"
+                                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
+
+                            <Button
+                                android:id="@+id/btn_reactions_see_all"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:text="@string/action_see_all"
+                                android:textAllCaps="false" />
+
+                        </RelativeLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_reactions"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clipToPadding="false"
+                            android:orientation="horizontal"
+                            android:paddingVertical="5dp"
+                            android:requiresFadingEdge="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/layout_franchise"

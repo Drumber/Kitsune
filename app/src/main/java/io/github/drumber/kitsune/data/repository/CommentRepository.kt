@@ -30,20 +30,6 @@ class CommentRepository(
             }
         ).flow
 
-    /** Returns up to [limit] distinct commenter avatar urls for the given post, oldest first. */
-    suspend fun getTopCommenterAvatars(postId: String, limit: Int = 3): List<String> {
-        val filter = Filter()
-            .filter("postId", postId)
-            .include("user")
-            .sort("createdAt")
-            .pageLimit(limit * 4)
-        return commentNetworkDataSource.getAllComments(filter)
-            .mapNotNull { it.user }
-            .distinctBy { it.id }
-            .mapNotNull { it.avatar?.originalOrDown() }
-            .take(limit)
-    }
-
     /** Posts a new top-level comment on behalf of the user. Returns the created comment. */
     suspend fun postComment(postId: String, userId: String, content: String): Comment? {
         val comment = NetworkComment(
@@ -55,7 +41,25 @@ class CommentRepository(
         return commentNetworkDataSource.postComment(comment)?.toComment()
     }
 
-    /** Likes the given comment on behalf of the user. Returns the created like id, or null on failure. */
+    /**
+     * Posts a reply to the given parent comment. Comment threading is capped at one level, so the
+     * parent should always be a top-level comment.
+     */
+    suspend fun postReply(
+        postId: String,
+        parentCommentId: String,
+        userId: String,
+        content: String
+    ): Comment? {
+        val comment = NetworkComment(
+            id = null,
+            content = content,
+            post = NetworkPost(id = postId),
+            user = NetworkUser(id = userId),
+            parent = NetworkComment(id = parentCommentId)
+        )
+        return commentNetworkDataSource.postComment(comment)?.toComment()
+    }
     suspend fun likeComment(commentId: String, userId: String): String? {
         val like = NetworkCommentLike(
             id = null,
@@ -70,8 +74,44 @@ class CommentRepository(
         commentNetworkDataSource.deleteCommentLike(likeId)
     }
 
+    /**
+     * Returns the replies of the given top-level comment, oldest first, with the current user's
+     * like state resolved. Comment threading is capped at one level by the server.
+     */
+    suspend fun getReplies(parentCommentId: String, userId: String?): List<Comment> {
+        val filter = Filter()
+            .filter("parentId", parentCommentId)
+            .include("user", "uploads")
+            .sort("createdAt")
+            .pageLimit(Kitsu.DEFAULT_PAGE_SIZE)
+        val networkComments = commentNetworkDataSource.getAllComments(filter)
+
+        val likeIdByCommentId = if (userId != null && networkComments.isNotEmpty()) {
+            val commentIds = networkComments.mapNotNull { it.id }
+            val likeFilter = Filter()
+                .filter("userId", userId)
+                .filter("commentId", commentIds.joinToString(","))
+                .include("comment")
+                .pageLimit(commentIds.size)
+            commentNetworkDataSource.getCommentLikes(likeFilter)
+                .mapNotNull { like -> like.comment?.id?.let { it to like.id } }
+                .toMap()
+        } else {
+            emptyMap()
+        }
+
+        return networkComments.map { networkComment ->
+            val likeId = likeIdByCommentId[networkComment.id]
+            networkComment.toComment(
+                isLikedByMe = likeId != null,
+                myLikeId = likeId
+            )
+        }
+    }
+
     private fun buildCommentFilter(postId: String, pageSize: Int) = Filter()
         .filter("postId", postId)
+        .filter("parentId", "_none")
         .include("user", "uploads")
         .sort("createdAt")
         .pageLimit(pageSize)

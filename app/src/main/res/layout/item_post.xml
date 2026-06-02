@@ -59,19 +59,6 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_media"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textColor="?attr/colorPrimary"
-            android:visibility="gone"
-            tools:text="about Cowboy Bebop"
-            tools:visibility="visible" />
-
         <LinearLayout
             android:id="@+id/layout_content_warning"
             android:layout_width="match_parent"
@@ -163,6 +150,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <include
+            android:id="@+id/post_media"
+            layout="@layout/view_post_media"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -223,7 +216,7 @@
                 android:layout_weight="1" />
 
             <LinearLayout
-                android:id="@+id/layout_commenters"
+                android:id="@+id/layout_likers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -232,14 +225,14 @@
                 tools:visibility="visible">
 
                 <ImageView
-                    android:id="@+id/iv_commenter_1"
+                    android:id="@+id/iv_liker_1"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:contentDescription="@null"
                     tools:src="@drawable/ic_outline_person_24" />
 
                 <ImageView
-                    android:id="@+id/iv_commenter_2"
+                    android:id="@+id/iv_liker_2"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="-8dp"
@@ -247,7 +240,7 @@
                     tools:src="@drawable/ic_outline_person_24" />
 
                 <ImageView
-                    android:id="@+id/iv_commenter_3"
+                    android:id="@+id/iv_liker_3"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="-8dp"

@@ -58,6 +58,7 @@ import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemP
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.databinding.ItemDetailsInfoRowBinding
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.ui.adapter.MediaReactionPreviewAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaRelationshipRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
@@ -101,6 +102,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     private val binding get() = _binding!!
 
     private val viewModel: DetailsViewModel by viewModel()
+
+    private var reactionsAdapter: MediaReactionPreviewAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -152,6 +155,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
 
         initAppBar()
+
+        setupReactions()
 
         viewModel.mediaModel.observe(viewLifecycleOwner) { model ->
             binding.data = model
@@ -248,7 +253,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 )
                 findNavController().navigate(action)
             }
-            btnReactions.setOnClickListener {
+            btnReactionsSeeAll.setOnClickListener {
                 val media = viewModel.mediaModel.value ?: return@setOnClickListener
                 val action = DetailsFragmentDirections.actionDetailsFragmentToReactionsFragment(
                     media.id,
@@ -499,9 +504,38 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         findNavController().navigateSafe(R.id.details_fragment, action, extras)
     }
 
+    private fun setupReactions() {
+        val adapter = MediaReactionPreviewAdapter(Glide.with(this)) { reaction ->
+            viewModel.upvoteReaction(reaction)
+        }
+        reactionsAdapter = adapter
+        binding.rvReactions.adapter = adapter
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.reactions.collectLatest { reactions ->
+                binding.layoutReactions.isVisible = reactions.isNotEmpty()
+                adapter.submitList(reactions)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.reactionUpvoteEvents.collectLatest { event ->
+                when (event) {
+                    ReactionUpvoteEvent.LoginRequired ->
+                        showSnackbar(binding.root, R.string.reactions_upvote_login_required)
+
+                    is ReactionUpvoteEvent.Success ->
+                        reactionsAdapter?.markUpvoted(event.reactionId, event.newCount)
+
+                    ReactionUpvoteEvent.Failed ->
+                        showSnackbar(binding.root, R.string.reactions_upvote_failed)
+                }
+            }
+        }
+    }
+
     private fun showStreamingLinks(media: Media) {
         val data = (media as? Anime)?.streamingLinks ?: emptyList()
-
         if (binding.rvStreamer.adapter !is StreamingLinkAdapter) {
             val glide = Glide.with(this)
             val adapter =
@@ -636,6 +670,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
     override fun onDestroyView() {
         super.onDestroyView()
+        reactionsAdapter = null
         _binding = null
     }
 

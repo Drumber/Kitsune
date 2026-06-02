@@ -24,6 +24,10 @@
     <string name="feed_image_indicator">%1$d / %2$d</string>
     <string name="feed_unknown_user">Unknown user</string>
     <string name="feed_post_about">about %1$s</string>
+    <string name="feed_post_spoiled_episode">Ep. %1$d</string>
+    <string name="feed_post_spoiled_chapter">Ch. %1$d</string>
+    <string name="feed_post_media_unit_separator">%1$s — %2$s</string>
+    <string name="feed_post_unit_with_title">%1$s · %2$s</string>
     <string name="action_retry">Retry</string>
     <string name="action_ok">OK</string>
     <string name="action_cancel">Cancel</string>
@@ -133,9 +137,13 @@
     <string name="title_comments">Comments</string>
     <string name="hint_add_comment">Add a comment…</string>
     <string name="action_send">Send</string>
+    <string name="action_see_all">See all</string>
     <string name="comment_login_required">Log in to like and comment.</string>
     <string name="comment_posted">Comment posted.</string>
     <string name="comment_action_failed">Something went wrong. Please try again.</string>
+    <string name="comment_reply">Reply</string>
+    <string name="comment_replying_to">Replying to %1$s</string>
+    <string name="comment_reply_hint">Write a reply…</string>
     <string name="title_edit_library_entry">Edit Library Entry</string>
     <string name="title_edit_profile">Edit Profile</string>
     <string name="no_information">Unknown</string>

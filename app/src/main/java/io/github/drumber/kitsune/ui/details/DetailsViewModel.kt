@@ -14,12 +14,14 @@ import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.mapping.Mapping
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
 import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
 import io.github.drumber.kitsune.data.repository.LibraryRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
 import io.github.drumber.kitsune.data.repository.MappingRepository
+import io.github.drumber.kitsune.data.repository.MediaReactionRepository
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryUseCase
@@ -33,11 +35,13 @@ import io.github.drumber.kitsune.util.logW
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -49,7 +53,8 @@ class DetailsViewModel(
     private val libraryRepository: LibraryRepository,
     private val animeRepository: AnimeRepository,
     private val mangaRepository: MangaRepository,
-    private val mappingRepository: MappingRepository
+    private val mappingRepository: MappingRepository,
+    private val mediaReactionRepository: MediaReactionRepository
 ) : ViewModel() {
 
     fun isLoggedIn() = isUserLoggedIn()
@@ -70,6 +75,12 @@ class DetailsViewModel(
     private val _mappingsSate = MutableStateFlow<MediaMappingsSate>(MediaMappingsSate.Initial)
     val mappingsSate
         get() = _mappingsSate.asStateFlow()
+
+    private val _reactions = MutableStateFlow<List<MediaReaction>>(emptyList())
+    val reactions = _reactions.asStateFlow()
+
+    private val reactionUpvoteEventChannel = Channel<ReactionUpvoteEvent>(Channel.BUFFERED)
+    val reactionUpvoteEvents: Flow<ReactionUpvoteEvent> = reactionUpvoteEventChannel.receiveAsFlow()
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean>
@@ -136,10 +147,41 @@ class DetailsViewModel(
                 awaitAll(
                     async { loadFullMedia(media) },
                     async { loadLibraryEntry(media) },
-                    async { loadFavorite(media) }
+                    async { loadFavorite(media) },
+                    async { loadReactions(media) }
                 )
                 _isLoading.postValue(false)
             }
+        }
+    }
+
+    private suspend fun loadReactions(media: Media) {
+        try {
+            val reactions = mediaReactionRepository.getReactions(media is Anime, media.id)
+            _reactions.value = reactions
+        } catch (e: Exception) {
+            logE("Failed to load reactions for media '${media.id}'.", e)
+        }
+    }
+
+    fun upvoteReaction(reaction: MediaReaction) {
+        val userId = getLocalUserId()
+        if (userId == null) {
+            reactionUpvoteEventChannel.trySend(ReactionUpvoteEvent.LoginRequired)
+            return
+        }
+        viewModelScope.launch {
+            val event = try {
+                if (mediaReactionRepository.upvoteReaction(userId, reaction.id)) {
+                    ReactionUpvoteEvent.Success(reaction.id, reaction.upVotesCount + 1)
+                } else {
+                    ReactionUpvoteEvent.Failed
+                }
+            } catch (e: Exception) {
+                logE("Failed to upvote reaction with id '${reaction.id}'.", e)
+                ReactionUpvoteEvent.Failed
+            }
+            reactionUpvoteEventChannel.send(event)
         }
     }
 
@@ -363,4 +405,10 @@ sealed class MediaMappingsSate {
     data object Loading : MediaMappingsSate()
     data class Success(val mappings: List<Mapping>) : MediaMappingsSate()
     data class Error(val message: String) : MediaMappingsSate()
+}
+
+sealed interface ReactionUpvoteEvent {
+    data object LoginRequired : ReactionUpvoteEvent
+    data class Success(val reactionId: String, val newCount: Int) : ReactionUpvoteEvent
+    data object Failed : ReactionUpvoteEvent
 }

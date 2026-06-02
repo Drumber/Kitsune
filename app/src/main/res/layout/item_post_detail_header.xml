@@ -50,19 +50,6 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_media"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textAppearance="?attr/textAppearanceBodyMedium"
-        android:textColor="?attr/colorPrimary"
-        android:visibility="gone"
-        tools:text="about Cowboy Bebop"
-        tools:visibility="visible" />
-
     <LinearLayout
         android:id="@+id/layout_content_warning"
         android:layout_width="match_parent"
@@ -137,6 +124,12 @@
     <include
         android:id="@+id/embed"
         layout="@layout/view_embed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <include
+        android:id="@+id/post_media"
+        layout="@layout/view_post_media"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

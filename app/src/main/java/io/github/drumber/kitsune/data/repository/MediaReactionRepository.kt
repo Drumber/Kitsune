@@ -7,6 +7,7 @@ import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.Repository
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.mapper.ReactionMapper.toMediaReaction
+import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
 import io.github.drumber.kitsune.data.source.network.reaction.ReactionNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.reaction.ReactionPagingDataSource
 import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReaction
@@ -36,6 +37,21 @@ class MediaReactionRepository(
         }
     ).flow.map { pagingData ->
         pagingData.map { it.toMediaReaction() }
+    }
+
+    /**
+     * Fetches a limited list of the top reactions for a single media, sorted by upvotes, for the
+     * inline preview shown directly on the media page.
+     */
+    suspend fun getReactions(
+        isAnime: Boolean,
+        mediaId: String,
+        limit: Int = 10
+    ): List<MediaReaction> {
+        return reactionNetworkDataSource.getMediaReactions(buildFilter(isAnime, mediaId, limit))
+            .data
+            .orEmpty()
+            .map { it.toMediaReaction() }
     }
 
     /** Upvotes the reaction with the given id on behalf of the user. Returns true on success. */

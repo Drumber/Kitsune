@@ -294,6 +294,8 @@ val dataModule = module {
             NetworkUser::class.java,
             NetworkAnime::class.java,
             NetworkManga::class.java,
+            NetworkEpisode::class.java,
+            NetworkChapter::class.java,
             NetworkUpload::class.java
         )
     }

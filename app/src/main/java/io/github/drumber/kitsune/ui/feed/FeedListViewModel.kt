@@ -45,9 +45,9 @@ class FeedListViewModel(
 
     private val feedType = MutableStateFlow<FeedType?>(null)
 
-    // Cache of commenter avatar urls keyed by post id, to avoid refetching on rebind.
-    private val commenterAvatarCache = mutableMapOf<String, List<String>>()
-    private val commenterAvatarMutex = Mutex()
+    // Cache of liker avatar urls keyed by post id, to avoid refetching on rebind.
+    private val likerAvatarCache = mutableMapOf<String, List<String>>()
+    private val likerAvatarMutex = Mutex()
 
     // Known like ids keyed by post id, used to unlike without a lookup.
     private val postLikeIds = mutableMapOf<String, String?>()
@@ -101,21 +101,21 @@ class FeedListViewModel(
     }.cachedIn(viewModelScope)
 
     /**
-     * Returns up to three distinct commenter avatar urls for the given post, fetching them lazily
-     * and caching the result. Returns an empty list if the post has no comments or on failure.
+     * Returns up to three distinct avatar urls of users who liked the given post, fetching them
+     * lazily and caching the result. Returns an empty list if the post has no likes or on failure.
      */
-    suspend fun commenterAvatars(post: Post): List<String> {
-        if (post.commentsCount <= 0) return emptyList()
-        commenterAvatarCache[post.id]?.let { return it }
-        return commenterAvatarMutex.withLock {
-            commenterAvatarCache[post.id]?.let { return it }
+    suspend fun likerAvatars(post: Post): List<String> {
+        if (post.likesCount <= 0) return emptyList()
+        likerAvatarCache[post.id]?.let { return it }
+        return likerAvatarMutex.withLock {
+            likerAvatarCache[post.id]?.let { return it }
             val avatars = try {
-                commentRepository.getTopCommenterAvatars(post.id)
+                postInteractionRepository.getTopLikerAvatars(post.id)
             } catch (e: Exception) {
-                logE("Failed to load commenter avatars for post '${post.id}'.", e)
+                logE("Failed to load liker avatars for post '${post.id}'.", e)
                 emptyList()
             }
-            commenterAvatarCache[post.id] = avatars
+            likerAvatarCache[post.id] = avatars
             avatars
         }
     }

@@ -132,6 +132,20 @@ class PostDetailViewModel(
         }
     }
 
+    private val replyCache = mutableMapOf<String, List<Comment>>()
+
+    suspend fun loadReplies(comment: Comment): List<Comment> {
+        replyCache[comment.id]?.let { return it }
+        return try {
+            commentRepository.getReplies(comment.id, getLocalUserId()).also {
+                replyCache[comment.id] = it
+            }
+        } catch (e: Exception) {
+            logE("Failed to load replies for comment '${comment.id}'.", e)
+            emptyList()
+        }
+    }
+
     fun toggleCommentLike(comment: Comment) {
         val userId = getLocalUserId()
         if (userId == null) {
@@ -198,6 +212,38 @@ class PostDetailViewModel(
                 }
             } catch (e: Exception) {
                 logE("Failed to post comment on post '${currentPost.id}'.", e)
+                eventChannel.send(Event.Error)
+            }
+        }
+    }
+
+    fun postReply(parentCommentId: String, content: String) {
+        val currentPost = post.value ?: return
+        val userId = getLocalUserId()
+        if (userId == null) {
+            eventChannel.trySend(Event.LoginRequired)
+            return
+        }
+        val trimmed = content.trim()
+        if (trimmed.isEmpty()) return
+
+        viewModelScope.launch {
+            try {
+                val reply = commentRepository.postReply(
+                    currentPost.id,
+                    parentCommentId,
+                    userId,
+                    trimmed
+                )
+                if (reply != null) {
+                    // Invalidate cached replies so the new reply is fetched on refresh.
+                    replyCache.remove(parentCommentId)
+                    eventChannel.send(Event.CommentPosted)
+                } else {
+                    eventChannel.send(Event.Error)
+                }
+            } catch (e: Exception) {
+                logE("Failed to post reply to comment '$parentCommentId'.", e)
                 eventChannel.send(Event.Error)
             }
         }
