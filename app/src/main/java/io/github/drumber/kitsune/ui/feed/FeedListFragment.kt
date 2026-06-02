@@ -21,10 +21,12 @@ import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
+import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.showSnackbar
 import io.github.drumber.kitsune.ui.postdetail.PostDetailFragmentDirections
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListener<Post> {
@@ -33,6 +35,8 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
     private val binding get() = _binding!!
 
     private val viewModel: FeedListViewModel by viewModel()
+
+    private val contentRenderer: PostContentRenderer by inject()
 
     private var isLoginRequired = false
 
@@ -53,6 +57,9 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
             avatarProvider = { post -> viewModel.commenterAvatars(post) },
             onLikeClick = { post, targetLiked -> viewModel.togglePostLike(post, targetLiked) },
             likeStateLoader = { post -> viewModel.ensureLikeStateLoaded(post) },
+            contentRenderer = contentRenderer,
+            nsfwAllowed = viewModel.nsfwAllowed,
+            onRevealClick = { post -> viewModel.revealPost(post) },
             listener = this
         )
         binding.rvFeed.adapter = adapter.withLoadStateFooter(
@@ -116,6 +123,14 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
                             state.commentsCount
                         )
                     }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.revealedPosts.collectLatest { ids ->
+                    ids.forEach { adapter.markRevealed(it) }
                 }
             }
         }

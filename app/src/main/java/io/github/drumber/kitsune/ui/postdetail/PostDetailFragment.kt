@@ -20,9 +20,11 @@ import io.github.drumber.kitsune.ui.adapter.paging.CommentPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.showSnackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
@@ -33,6 +35,8 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
     private val binding get() = _binding!!
 
     private val viewModel: PostDetailViewModel by viewModel()
+
+    private val contentRenderer: PostContentRenderer by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,12 +54,20 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
         )
 
         val glide = Glide.with(this)
-        val headerAdapter = PostDetailHeaderAdapter(glide) { viewModel.togglePostLike() }
+        val headerAdapter = PostDetailHeaderAdapter(
+            glide = glide,
+            onLikeClick = { viewModel.togglePostLike() },
+            contentRenderer = contentRenderer,
+            nsfwAllowed = viewModel.nsfwAllowed,
+            onRevealClick = { viewModel.revealCurrentPost() }
+        )
         headerAdapter.setPost(args.post)
 
-        val commentsAdapter = CommentPagingAdapter(glide) { comment ->
-            viewModel.toggleCommentLike(comment)
-        }
+        val commentsAdapter = CommentPagingAdapter(
+            glide = glide,
+            onLikeClick = { comment -> viewModel.toggleCommentLike(comment) },
+            contentRenderer = contentRenderer
+        )
 
         binding.rvComments.apply {
             adapter = ConcatAdapter(
@@ -71,6 +83,14 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.postLikeState.collectLatest { state ->
                     headerAdapter.setLikeState(state.isLiked, state.count)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.revealedPosts.collectLatest { ids ->
+                    headerAdapter.setRevealed(args.post.id in ids)
                 }
             }
         }

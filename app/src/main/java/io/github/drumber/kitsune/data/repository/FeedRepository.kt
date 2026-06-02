@@ -58,9 +58,11 @@ class FeedRepository(
             "subject",
             "subject.user",
             "subject.media",
+            "subject.uploads",
             "subject.post",
             "subject.post.user",
             "subject.post.media",
+            "subject.post.uploads",
             "actor"
         )
         .pageLimit(pageSize)

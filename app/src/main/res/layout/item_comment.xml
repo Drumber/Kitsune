@@ -59,6 +59,27 @@
             android:textAppearance="?attr/textAppearanceBodyMedium"
             tools:text="This is a comment on the post." />
 
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:maxWidth="240dp"
+            android:maxHeight="200dp"
+            android:scaleType="fitStart"
+            android:visibility="gone"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Kitsune.Rounded8"
+            tools:src="@drawable/ic_insert_photo_48"
+            tools:visibility="visible" />
+
+        <include
+            android:id="@+id/embed"
+            layout="@layout/view_embed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <LinearLayout
             android:id="@+id/layout_like"
             android:layout_width="wrap_content"

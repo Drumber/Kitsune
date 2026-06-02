@@ -5,25 +5,38 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.ItemPostDetailHeaderBinding
 import io.github.drumber.kitsune.util.parseUtcDate
+import io.github.drumber.kitsune.util.ui.EmbedBinder
+import io.github.drumber.kitsune.util.ui.PostContentRenderer
 
 /** Single-item adapter rendering the full post card at the top of the post detail screen. */
 class PostDetailHeaderAdapter(
     private val glide: RequestManager,
-    private val onLikeClick: () -> Unit
+    private val onLikeClick: () -> Unit,
+    private val contentRenderer: PostContentRenderer? = null,
+    private val nsfwAllowed: Boolean = false,
+    private val onRevealClick: () -> Unit = {}
 ) : RecyclerView.Adapter<PostDetailHeaderAdapter.HeaderViewHolder>() {
 
     private var post: Post? = null
     private var isLiked: Boolean = false
     private var likesCount: Int = 0
+    private var revealed: Boolean = false
 
     fun setPost(post: Post) {
         this.post = post
         this.likesCount = post.likesCount
+        notifyItemChanged(0)
+    }
+
+    fun setRevealed(revealed: Boolean) {
+        if (this.revealed == revealed) return
+        this.revealed = revealed
         notifyItemChanged(0)
     }
 
@@ -47,6 +60,8 @@ class PostDetailHeaderAdapter(
 
     inner class HeaderViewHolder(private val binding: ItemPostDetailHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        private var pageChangeCallback: ViewPager2.OnPageChangeCallback? = null
 
         fun bind(post: Post) {
             glide.load(post.authorAvatarUrl)
@@ -74,12 +89,34 @@ class PostDetailHeaderAdapter(
                 text = context.getString(R.string.feed_post_about, post.mediaTitle)
             }
 
-            binding.tvSpoilerWarning.isVisible = post.spoiler
+            val needsWarning = post.spoiler || (post.nsfw && !nsfwAllowed)
+            val gated = needsWarning && !revealed
+
+            binding.layoutContentWarning.apply {
+                isVisible = gated
+                if (gated) {
+                    val isNsfwOnly = post.nsfw && !post.spoiler
+                    binding.tvWarningTitle.setText(
+                        if (isNsfwOnly) R.string.feed_nsfw_warning_title
+                        else R.string.feed_spoiler_warning_title
+                    )
+                    setOnClickListener { onRevealClick() }
+                } else {
+                    setOnClickListener(null)
+                }
+            }
 
             binding.tvContent.apply {
-                text = post.content
-                isVisible = !post.content.isNullOrBlank()
+                isVisible = !gated && !post.content.isNullOrBlank()
+                if (!gated) {
+                    contentRenderer?.render(this, post.contentFormatted, post.content)
+                        ?: run { text = post.content }
+                }
             }
+
+            bindImageGallery(post, gated)
+
+            EmbedBinder.bind(binding.embed, glide, post.embed, visible = !gated)
 
             binding.tvLikes.text = likesCount.toString()
             binding.ivLike.setImageResource(
@@ -88,6 +125,38 @@ class PostDetailHeaderAdapter(
             binding.layoutLike.setOnClickListener { onLikeClick() }
 
             binding.tvComments.text = post.commentsCount.toString()
+        }
+
+        private fun bindImageGallery(post: Post, gated: Boolean) {
+            pageChangeCallback?.let { binding.vpImages.unregisterOnPageChangeCallback(it) }
+            pageChangeCallback = null
+
+            val images = post.imageUrls
+            val show = !gated && images.isNotEmpty()
+            binding.vpImages.isVisible = show
+            binding.tvImageIndicator.isVisible = show && images.size > 1
+
+            if (!show) {
+                binding.vpImages.adapter = null
+                return
+            }
+
+            binding.vpImages.adapter = PostImagePagerAdapter(glide, images)
+
+            if (images.size > 1) {
+                binding.tvImageIndicator.text = binding.root.context.getString(
+                    R.string.feed_image_indicator, 1, images.size
+                )
+                val callback = object : ViewPager2.OnPageChangeCallback() {
+                    override fun onPageSelected(position: Int) {
+                        binding.tvImageIndicator.text = binding.root.context.getString(
+                            R.string.feed_image_indicator, position + 1, images.size
+                        )
+                    }
+                }
+                binding.vpImages.registerOnPageChangeCallback(callback)
+                pageChangeCallback = callback
+            }
         }
 
     }

@@ -72,16 +72,47 @@
             tools:text="about Cowboy Bebop"
             tools:visibility="visible" />
 
-        <TextView
-            android:id="@+id/tv_spoiler_warning"
+        <LinearLayout
+            android:id="@+id/layout_content_warning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/feed_spoiler_warning"
-            android:textAppearance="?attr/textAppearanceLabelMedium"
-            android:textColor="?attr/colorError"
+            android:background="@drawable/bg_content_warning"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="16dp"
             android:visibility="gone"
-            tools:visibility="visible" />
+            tools:visibility="visible">
+
+            <ImageView
+                android:id="@+id/iv_warning_icon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_visibility_off_24"
+                app:tint="?attr/colorError" />
+
+            <TextView
+                android:id="@+id/tv_warning_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="?attr/textAppearanceTitleSmall"
+                tools:text="@string/feed_spoiler_warning_title" />
+
+            <TextView
+                android:id="@+id/tv_warning_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:gravity="center"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="?android:attr/textColorSecondary"
+                android:text="@string/feed_content_warning_tap_to_view" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_content"
@@ -92,6 +123,45 @@
             android:maxLines="8"
             android:textAppearance="?attr/textAppearanceBodyMedium"
             tools:text="This is the content of a feed post that may span multiple lines." />
+
+        <FrameLayout
+            android:id="@+id/layout_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <ImageView
+                android:id="@+id/iv_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/ic_insert_photo_48" />
+
+            <TextView
+                android:id="@+id/tv_image_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="8dp"
+                android:background="@drawable/bg_image_count_badge"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:textColor="@android:color/white"
+                android:textAppearance="?attr/textAppearanceLabelMedium"
+                android:visibility="gone"
+                tools:text="+3"
+                tools:visibility="visible" />
+
+        </FrameLayout>
+
+        <include
+            android:id="@+id/embed"
+            layout="@layout/view_embed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <LinearLayout
             android:layout_width="match_parent"

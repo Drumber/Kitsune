@@ -11,12 +11,17 @@ object CommentMapper {
     ) = Comment(
         id = id.require(),
         content = content,
+        contentFormatted = contentFormatted,
         createdAt = createdAt,
         likesCount = likesCount ?: 0,
         isLikedByMe = isLikedByMe,
         myLikeId = myLikeId,
         authorName = user?.name,
-        authorAvatarUrl = user?.avatar?.originalOrDown()
+        authorAvatarUrl = user?.avatar?.originalOrDown(),
+        imageUrl = uploads
+            ?.sortedBy { it.uploadOrder ?: 0 }
+            ?.firstNotNullOfOrNull { it.content?.originalOrDown() },
+        embed = embed?.toEmbed()
     )
 
 }

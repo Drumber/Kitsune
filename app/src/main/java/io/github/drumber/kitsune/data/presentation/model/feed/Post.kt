@@ -20,5 +20,9 @@ data class Post(
     val authorName: String?,
     val authorAvatarUrl: String?,
 
-    val mediaTitle: String?
+    val mediaTitle: String?,
+
+    val imageUrls: List<String>,
+
+    val embed: Embed?
 ) : Parcelable

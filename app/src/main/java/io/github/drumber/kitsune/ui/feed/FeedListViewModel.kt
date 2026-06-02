@@ -6,9 +6,12 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.data.repository.CommentRepository
+import io.github.drumber.kitsune.data.repository.ContentRevealStore
 import io.github.drumber.kitsune.data.repository.FeedRepository
 import io.github.drumber.kitsune.data.repository.PostInteractionRepository
 import io.github.drumber.kitsune.data.repository.PostInteractionStore
+import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,6 +33,8 @@ class FeedListViewModel(
     private val commentRepository: CommentRepository,
     private val postInteractionRepository: PostInteractionRepository,
     private val postInteractionStore: PostInteractionStore,
+    private val contentRevealStore: ContentRevealStore,
+    private val userRepository: UserRepository,
     private val getLocalUserId: GetLocalUserIdUseCase
 ) : ViewModel() {
 
@@ -56,6 +61,19 @@ class FeedListViewModel(
 
     /** Shared interaction overrides (like state, comment count) keyed by post id. */
     val interactionStates = postInteractionStore.states
+
+    /** Post ids whose spoiler/NSFW content the user revealed during this session. */
+    val revealedPosts = contentRevealStore.revealed
+
+    /** Whether NSFW posts may be shown without gating, based on the user's SFW preference. */
+    val nsfwAllowed: Boolean
+        get() = userRepository.localUser.value?.sfwFilterPreference ==
+            LocalSfwFilterPreference.NSFW_EVERYWHERE
+
+    /** Remembers that the user revealed the gated content of the given post. */
+    fun revealPost(post: Post) {
+        contentRevealStore.reveal(post.id)
+    }
 
     fun setFeedType(type: FeedType) {
         if (feedType.value != type) {

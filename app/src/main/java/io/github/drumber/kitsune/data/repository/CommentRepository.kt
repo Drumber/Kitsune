@@ -72,7 +72,7 @@ class CommentRepository(
 
     private fun buildCommentFilter(postId: String, pageSize: Int) = Filter()
         .filter("postId", postId)
-        .include("user")
+        .include("user", "uploads")
         .sort("createdAt")
         .pageLimit(pageSize)
 

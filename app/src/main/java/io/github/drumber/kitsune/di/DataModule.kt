@@ -19,6 +19,7 @@ import io.github.drumber.kitsune.data.repository.MangaRepository
 import io.github.drumber.kitsune.data.repository.MappingRepository
 import io.github.drumber.kitsune.data.repository.MediaReactionRepository
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository
+import io.github.drumber.kitsune.data.repository.ContentRevealStore
 import io.github.drumber.kitsune.data.repository.PostInteractionRepository
 import io.github.drumber.kitsune.data.repository.PostInteractionStore
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
@@ -51,6 +52,7 @@ import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivity
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivityGroup
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPostLike
+import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUpload
 import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.library.api.LibraryEntryApi
 import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry
@@ -97,6 +99,7 @@ import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImage
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
 import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStats
+import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -290,7 +293,8 @@ val dataModule = module {
             NetworkComment::class.java,
             NetworkUser::class.java,
             NetworkAnime::class.java,
-            NetworkManga::class.java
+            NetworkManga::class.java,
+            NetworkUpload::class.java
         )
     }
     single { FeedNetworkDataSource(get()) }
@@ -304,7 +308,8 @@ val dataModule = module {
             NetworkComment::class.java,
             NetworkCommentLike::class.java,
             NetworkPost::class.java,
-            NetworkUser::class.java
+            NetworkUser::class.java,
+            NetworkUpload::class.java
         )
     }
     single { CommentNetworkDataSource(get()) }
@@ -323,6 +328,8 @@ val dataModule = module {
     single { PostLikeNetworkDataSource(get()) }
     single { PostInteractionRepository(get()) }
     single { PostInteractionStore() }
+    single { ContentRevealStore() }
+    single { PostContentRenderer(androidContext()) }
 
     // Media Reactions
     factory {

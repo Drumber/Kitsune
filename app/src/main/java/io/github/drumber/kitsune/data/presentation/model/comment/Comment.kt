@@ -1,8 +1,11 @@
 package io.github.drumber.kitsune.data.presentation.model.comment
 
+import io.github.drumber.kitsune.data.presentation.model.feed.Embed
+
 data class Comment(
     val id: String,
     val content: String?,
+    val contentFormatted: String?,
     val createdAt: String?,
 
     val likesCount: Int,
@@ -10,5 +13,8 @@ data class Comment(
     val myLikeId: String?,
 
     val authorName: String?,
-    val authorAvatarUrl: String?
+    val authorAvatarUrl: String?,
+
+    val imageUrl: String?,
+    val embed: Embed?
 )

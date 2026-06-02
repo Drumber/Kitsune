@@ -63,16 +63,47 @@
         tools:text="about Cowboy Bebop"
         tools:visibility="visible" />
 
-    <TextView
-        android:id="@+id/tv_spoiler_warning"
+    <LinearLayout
+        android:id="@+id/layout_content_warning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@string/feed_spoiler_warning"
-        android:textAppearance="?attr/textAppearanceLabelMedium"
-        android:textColor="?attr/colorError"
+        android:background="@drawable/bg_content_warning"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="20dp"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/iv_warning_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_visibility_off_24"
+            app:tint="?attr/colorError" />
+
+        <TextView
+            android:id="@+id/tv_warning_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            tools:text="@string/feed_spoiler_warning_title" />
+
+        <TextView
+            android:id="@+id/tv_warning_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="?android:attr/textColorSecondary"
+            android:text="@string/feed_content_warning_tap_to_view" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_content"
@@ -82,6 +113,32 @@
         android:textAppearance="?attr/textAppearanceBodyLarge"
         android:textIsSelectable="true"
         tools:text="This is the full content of a feed post that may span multiple lines." />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp_images"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:layout_marginTop="12dp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_image_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="6dp"
+        android:textAppearance="?attr/textAppearanceBodySmall"
+        android:textColor="?android:attr/textColorSecondary"
+        android:visibility="gone"
+        tools:text="1 / 3"
+        tools:visibility="visible" />
+
+    <include
+        android:id="@+id/embed"
+        layout="@layout/view_embed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -7,8 +7,11 @@ import androidx.paging.cachedIn
 import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.data.repository.CommentRepository
+import io.github.drumber.kitsune.data.repository.ContentRevealStore
 import io.github.drumber.kitsune.data.repository.PostInteractionRepository
 import io.github.drumber.kitsune.data.repository.PostInteractionStore
+import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,6 +29,8 @@ class PostDetailViewModel(
     private val commentRepository: CommentRepository,
     private val postInteractionRepository: PostInteractionRepository,
     private val postInteractionStore: PostInteractionStore,
+    private val contentRevealStore: ContentRevealStore,
+    private val userRepository: UserRepository,
     private val getLocalUserId: GetLocalUserIdUseCase
 ) : ViewModel() {
 
@@ -77,6 +82,19 @@ class PostDetailViewModel(
     val comments: Flow<PagingData<Comment>> = post.filterNotNull().flatMapLatest { p ->
         commentRepository.commentsPager(p.id, getLocalUserId())
     }.cachedIn(viewModelScope)
+
+    /** Post ids whose spoiler/NSFW content the user revealed during this session. */
+    val revealedPosts = contentRevealStore.revealed
+
+    /** Whether NSFW posts may be shown without gating, based on the user's SFW preference. */
+    val nsfwAllowed: Boolean
+        get() = userRepository.localUser.value?.sfwFilterPreference ==
+            LocalSfwFilterPreference.NSFW_EVERYWHERE
+
+    /** Remembers that the user revealed the gated content of the current post. */
+    fun revealCurrentPost() {
+        post.value?.let { contentRevealStore.reveal(it.id) }
+    }
 
     fun togglePostLike() {
         val currentPost = post.value ?: return

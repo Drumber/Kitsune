@@ -9,11 +9,15 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.ItemPostBinding
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.util.parseUtcDate
+import io.github.drumber.kitsune.util.ui.EmbedBinder
+import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -24,7 +28,10 @@ class PostPagingAdapter(
     private val scope: CoroutineScope? = null,
     private val avatarProvider: (suspend (Post) -> List<String>)? = null,
     private val onLikeClick: ((Post, Boolean) -> Unit)? = null,
-    private val likeStateLoader: (suspend (Post) -> Unit)? = null
+    private val likeStateLoader: (suspend (Post) -> Unit)? = null,
+    private val contentRenderer: PostContentRenderer? = null,
+    private val nsfwAllowed: Boolean = false,
+    private val onRevealClick: ((Post) -> Unit)? = null
 ) : PagingDataAdapter<Post, PostPagingAdapter.PostViewHolder>(PostComparator) {
 
     private data class InteractionOverride(
@@ -34,6 +41,13 @@ class PostPagingAdapter(
     )
 
     private val overrides = mutableMapOf<String, InteractionOverride>()
+
+    private val revealedIds = mutableSetOf<String>()
+
+    /** Marks the given post's gated content as revealed and refreshes the item. */
+    fun markRevealed(postId: String) {
+        if (revealedIds.add(postId)) refreshItem(postId)
+    }
 
     /** Overrides the like state of the post and refreshes the item. */
     fun setLikeState(postId: String, isLiked: Boolean, count: Int) {
@@ -122,12 +136,37 @@ class PostPagingAdapter(
                 text = context.getString(R.string.feed_post_about, post.mediaTitle)
             }
 
-            binding.tvContent.apply {
-                text = post.content
-                isVisible = !post.content.isNullOrBlank()
+            val needsWarning = post.spoiler || (post.nsfw && !nsfwAllowed)
+            val gated = needsWarning && post.id !in revealedIds
+
+            binding.layoutContentWarning.apply {
+                isVisible = gated
+                if (gated) {
+                    val isNsfwOnly = post.nsfw && !post.spoiler
+                    binding.tvWarningTitle.setText(
+                        if (isNsfwOnly) R.string.feed_nsfw_warning_title
+                        else R.string.feed_spoiler_warning_title
+                    )
+                    setOnClickListener {
+                        markRevealed(post.id)
+                        onRevealClick?.invoke(post)
+                    }
+                } else {
+                    setOnClickListener(null)
+                }
             }
 
-            binding.tvSpoilerWarning.isVisible = post.spoiler
+            binding.tvContent.apply {
+                isVisible = !gated && !post.content.isNullOrBlank()
+                if (!gated) {
+                    contentRenderer?.render(this, post.contentFormatted, post.content)
+                        ?: run { text = post.content }
+                }
+            }
+
+            bindImagePreview(post, gated)
+
+            EmbedBinder.bind(binding.embed, glide, post.embed, visible = !gated)
 
             val override = overrides[post.id]
             val isLiked = override?.isLiked ?: false
@@ -179,6 +218,24 @@ class PostPagingAdapter(
                     imageView.isVisible = url != null
                     if (url != null) loadAvatar(imageView, url)
                 }
+            }
+        }
+
+        private fun bindImagePreview(post: Post, gated: Boolean) {
+            val images = post.imageUrls
+            val show = !gated && images.isNotEmpty()
+            binding.layoutImage.isVisible = show
+            if (!show) return
+
+            val radius = (12 * binding.root.resources.displayMetrics.density).toInt()
+            glide.load(images.first())
+                .placeholder(R.drawable.ic_insert_photo_48)
+                .transform(CenterCrop(), RoundedCorners(radius))
+                .into(binding.ivImage)
+
+            binding.tvImageCount.apply {
+                isVisible = images.size > 1
+                text = context.getString(R.string.feed_image_count_more, images.size - 1)
             }
         }
 

@@ -12,10 +12,13 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.databinding.ItemCommentBinding
 import io.github.drumber.kitsune.util.parseUtcDate
+import io.github.drumber.kitsune.util.ui.EmbedBinder
+import io.github.drumber.kitsune.util.ui.PostContentRenderer
 
 class CommentPagingAdapter(
     private val glide: RequestManager,
-    private val onLikeClick: ((Comment) -> Unit)? = null
+    private val onLikeClick: ((Comment) -> Unit)? = null,
+    private val contentRenderer: PostContentRenderer? = null
 ) : PagingDataAdapter<Comment, CommentPagingAdapter.CommentViewHolder>(CommentComparator) {
 
     private data class LikeState(val isLiked: Boolean, val count: Int)
@@ -65,9 +68,23 @@ class CommentPagingAdapter(
             }
 
             binding.tvContent.apply {
-                text = comment.content
                 isVisible = !comment.content.isNullOrBlank()
+                contentRenderer?.render(this, comment.contentFormatted, comment.content)
+                    ?: run { text = comment.content }
             }
+
+            binding.ivImage.apply {
+                isVisible = !comment.imageUrl.isNullOrBlank()
+                if (!comment.imageUrl.isNullOrBlank()) {
+                    glide.load(comment.imageUrl)
+                        .placeholder(R.drawable.ic_insert_photo_48)
+                        .into(this)
+                } else {
+                    glide.clear(this)
+                }
+            }
+
+            EmbedBinder.bind(binding.embed, glide, comment.embed, visible = true)
 
             val override = likeOverrides[comment.id]
             val isLiked = override?.isLiked ?: comment.isLikedByMe

@@ -17,6 +17,11 @@
     <string name="feed_tab_following">Following</string>
     <string name="feed_login_required">Log in to see posts from people you follow.</string>
     <string name="feed_spoiler_warning">Spoiler</string>
+    <string name="feed_spoiler_warning_title">Spoiler</string>
+    <string name="feed_nsfw_warning_title">NSFW content</string>
+    <string name="feed_content_warning_tap_to_view">Tap to view</string>
+    <string name="feed_image_count_more">+%1$d</string>
+    <string name="feed_image_indicator">%1$d / %2$d</string>
     <string name="feed_unknown_user">Unknown user</string>
     <string name="feed_post_about">about %1$s</string>
     <string name="action_retry">Retry</string>

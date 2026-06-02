@@ -24,8 +24,12 @@ data class NetworkPost(
     val topLevelCommentsCount: Int? = null,
     val postLikesCount: Int? = null,
 
+    val embed: NetworkEmbed? = null,
+
     @Relationship("user")
     val user: NetworkUser? = null,
     @Relationship("media")
-    val media: NetworkMedia? = null
+    val media: NetworkMedia? = null,
+    @Relationship("uploads")
+    val uploads: List<NetworkUpload>? = null
 ) : NetworkFeedSubject

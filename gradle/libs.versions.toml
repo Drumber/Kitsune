@@ -40,6 +40,7 @@ kotpref = "2.13.2"
 ksp = "2.3.6"
 ktorClient = "1.6.8"
 leakCanary = "2.14"
+markwon = "4.6.2"
 material = "1.13.0"
 materialRatingBar = "1.4.0"
 mockito = "6.2.3"
@@ -128,6 +129,10 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 mikepenz-aboutlibraries = { module = "com.mikepenz:aboutlibraries", version.ref = "aboutLibraries" }
 mikepenz-aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutLibraries" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito" }
+noties-markwon-core = { module = "io.noties.markwon:core", version.ref = "markwon" }
+noties-markwon-html = { module = "io.noties.markwon:html", version.ref = "markwon" }
+noties-markwon-image-glide = { module = "io.noties.markwon:image-glide", version.ref = "markwon" }
+noties-markwon-linkify = { module = "io.noties.markwon:linkify", version.ref = "markwon" }
 philjay-mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpAndroidChart" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 squareup-leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakCanary" }

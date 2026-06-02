@@ -172,6 +172,12 @@ dependencies {
     implementation(libs.bumptech.glide.okhttp3)
     implementation(libs.bumptech.glide.compose)
 
+    // Markwon (post content formatting)
+    implementation(libs.noties.markwon.core)
+    implementation(libs.noties.markwon.html)
+    implementation(libs.noties.markwon.image.glide)
+    implementation(libs.noties.markwon.linkify)
+
     // Koin DI
     implementation(libs.insert.koin.android)
     implementation(libs.insert.koin.androidx.navigation)
