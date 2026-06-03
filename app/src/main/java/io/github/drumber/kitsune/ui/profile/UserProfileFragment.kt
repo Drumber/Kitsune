@@ -41,6 +41,7 @@ import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.Profi
 import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStats
 import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsData
 import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsKind
+import io.github.drumber.kitsune.data.repository.FollowListType
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
 import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
 import io.github.drumber.kitsune.ui.adapter.CharacterAdapter
@@ -48,6 +49,7 @@ import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.component.chart.PieChartStyle
 import io.github.drumber.kitsune.ui.feed.FeedListFragment
+import io.github.drumber.kitsune.ui.profile.follow.FollowListFragmentDirections
 import io.github.drumber.kitsune.util.extensions.copyToClipboard
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
@@ -63,7 +65,6 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.util.concurrent.CopyOnWriteArrayList
-import kotlin.math.round
 
 /** Read-only profile screen for viewing another user's profile. */
 class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
@@ -102,8 +103,13 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         binding.apply {
             // Self-only UI is not used in the read-only profile view.
             btnLogin.isVisible = false
-            btnFollowing.isVisible = false
-            btnFollowers.isVisible = false
+
+            btnFollowing.setOnClickListener {
+                navigateToFollowList(FollowListType.FOLLOWING)
+            }
+            btnFollowers.setOnClickListener {
+                navigateToFollowList(FollowListType.FOLLOWERS)
+            }
 
             // Show the provided name immediately, before the full profile loads.
             toolbar.title = args.userName ?: getString(R.string.nav_profile)
@@ -287,6 +293,15 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         }
     }
 
+    private fun navigateToFollowList(type: FollowListType) {
+        val action = FollowListFragmentDirections.actionGlobalFollowListFragment(
+            args.userId,
+            type,
+            viewModel.getUser()?.name ?: args.userName
+        )
+        findNavController().navigateSafe(R.id.user_profile_fragment, action)
+    }
+
     private fun updateFabVisibility() {
         binding.fabPostWall.isVisible = isPostsTab && canPostOnWall
     }
@@ -349,12 +364,15 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         val categoryEntries: List<PieEntry> = categoryStats?.let { stats ->
             val total = stats.total ?: return@let null
             val categories = stats.categories ?: return@let null
-            categories.toList()
+            if (total <= 0) return@let null
+
+            val sorted = categories.toList()
                 .filter { it.second != 0 }
                 .sortedByDescending { it.second }
-                .take(PieChartStyle.STATS_MAX_ELEMENTS)
+
+            sorted.take(PieChartStyle.STATS_MAX_ELEMENTS)
                 .map { (category, value) ->
-                    PieEntry(round(value.toFloat() / total * 100f), category)
+                    PieEntry(value.toFloat() / total * 100f, category)
                 }
         } ?: emptyList()
 

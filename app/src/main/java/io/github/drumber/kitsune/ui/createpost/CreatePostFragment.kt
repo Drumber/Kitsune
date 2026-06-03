@@ -19,6 +19,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.button.MaterialButton
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentCreatePostBinding
 import io.github.drumber.kitsune.preference.KitsunePref
@@ -45,6 +46,8 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
 
     private var imageAdapter: PostImageThumbnailAdapter? = null
 
+    private var publishButton: MaterialButton? = null
+
     private val pickImages =
         registerForActivityResult(
             ActivityResultContracts.PickMultipleVisualMedia(CreatePostViewModel.MAX_IMAGES)
@@ -65,24 +68,17 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
         binding.root.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
 
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-        binding.toolbar.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.menu_publish_post -> {
-                    viewModel.publish()
-                    true
-                }
-
-                else -> false
-            }
-        }
+        publishButton = binding.toolbar.menu.findItem(R.id.menu_publish_post)
+            ?.actionView?.findViewById(R.id.btn_publish)
+        publishButton?.setOnClickListener { viewModel.publish() }
 
         binding.etContent.doAfterTextChanged { text ->
             viewModel.setContent(text?.toString().orEmpty())
         }
-        binding.switchSpoiler.setOnCheckedChangeListener { _, isChecked ->
+        binding.chipSpoiler.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setSpoiler(isChecked)
         }
-        binding.switchNsfw.setOnCheckedChangeListener { _, isChecked ->
+        binding.chipNsfw.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setNsfw(isChecked)
         }
 
@@ -124,8 +120,8 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
             if (savedInstanceState == null) {
                 viewModel.initFromPost(post)
                 binding.etContent.setText(post.content)
-                binding.switchSpoiler.isChecked = post.spoiler
-                binding.switchNsfw.isChecked = post.nsfw
+                binding.chipSpoiler.isChecked = post.spoiler
+                binding.chipNsfw.isChecked = post.nsfw
             }
             binding.toolbar.setTitle(R.string.title_edit_post)
         }
@@ -261,7 +257,7 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
     }
 
     private fun renderState(state: CreatePostViewModel.UiState) {
-        binding.toolbar.menu.findItem(R.id.menu_publish_post)?.isEnabled = state.canPublish
+        publishButton?.isEnabled = state.canPublish
 
         if (state.wallTargetName != null) {
             binding.toolbar.subtitle =
@@ -298,6 +294,7 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
         super.onDestroyView()
         binding.rvImages.adapter = null
         imageAdapter = null
+        publishButton = null
         _binding = null
     }
 }

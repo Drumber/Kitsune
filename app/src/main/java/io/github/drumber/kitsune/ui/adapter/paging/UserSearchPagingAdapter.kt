@@ -44,6 +44,11 @@ class UserSearchPagingAdapter(
             binding.tvName.text = user.name
                 ?: binding.root.context.getString(R.string.feed_unknown_user)
 
+            binding.tvTitle.apply {
+                isVisible = !user.title.isNullOrBlank()
+                text = user.title
+            }
+
             binding.tvFollowers.apply {
                 val count = user.followersCount
                 isVisible = count != null

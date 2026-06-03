@@ -37,6 +37,8 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
     private var _binding: FragmentFeedListBinding? = null
     private val binding get() = _binding!!
 
+    private var feedAdapter: PostPagingAdapter? = null
+
     private val viewModel: FeedListViewModel by viewModel()
 
     private val contentRenderer: PostContentRenderer by inject()
@@ -84,6 +86,7 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
         binding.rvFeed.adapter = adapter.withLoadStateFooter(
             footer = ResourceLoadStateAdapter(adapter)
         )
+        feedAdapter = adapter
         binding.rvFeed.layoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
 
@@ -210,6 +213,21 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
         findNavController().navigateSafe(hostDestId, action)
     }
 
+    /**
+     * Scrolls the feed list to the top, or refreshes the content if it is already at the top.
+     *
+     * @param appBarExpanded whether the hosting app bar is currently fully expanded.
+     */
+    fun scrollToTopOrRefresh(appBarExpanded: Boolean) {
+        val binding = _binding ?: return
+        if (binding.rvFeed.canScrollVertically(-1) || !appBarExpanded) {
+            binding.rvFeed.smoothScrollToPosition(0)
+        } else if (!isLoginRequired) {
+            binding.swipeRefreshLayout.isRefreshing = true
+            feedAdapter?.refresh()
+        }
+    }
+
     private fun openMedia(post: Post) {
         val slug = post.mediaSlug
         val isAnime = post.mediaIsAnime
@@ -223,6 +241,7 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
 
     override fun onDestroyView() {
         super.onDestroyView()
+        feedAdapter = null
         binding.rvFeed.adapter = null
         _binding = null
     }

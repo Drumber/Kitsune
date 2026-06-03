@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -67,7 +68,11 @@ class SearchFragment : Fragment(R.layout.fragment_search),
 
     private val viewModel: SearchViewModel by activityViewModel()
 
+    private val args: SearchFragmentArgs by navArgs()
+
     private val connectionHandler = ConnectionHandler()
+
+    private var pendingSearchFocus = false
 
     private lateinit var mediaAdapter: MediaSearchPagingAdapter
     private lateinit var userAdapter: UserSearchPagingAdapter
@@ -112,6 +117,13 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         observeSearchBox()
         observeFilters()
         initSearchProviderStatusLayout()
+
+        if (savedInstanceState == null && args.focusSearch) {
+            pendingSearchFocus = true
+            binding.searchView.post {
+                if (isAdded) focusSearchView()
+            }
+        }
     }
 
     private fun initRecyclerView() {
@@ -282,6 +294,15 @@ class SearchFragment : Fragment(R.layout.fragment_search),
                     // scroll to top when searching
                     binding.rvMedia.scrollToPosition(0)
                     binding.appBarLayout.setExpanded(true)
+                }
+            }
+
+            // connecting the search box re-applies the query text and drops the
+            // initial keyboard focus -> re-assert it once when opened from Home
+            if (pendingSearchFocus) {
+                pendingSearchFocus = false
+                binding.searchView.post {
+                    if (isAdded) focusSearchView()
                 }
             }
         }

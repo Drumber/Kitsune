@@ -38,7 +38,7 @@
     <dimen name="details_rating_chart_full_threshold">400dp</dimen>
 
     <!-- Profile Fragment -->
-    <dimen name="profile_pie_chart_height">300dp</dimen>
+    <dimen name="profile_pie_chart_height">220dp</dimen>
 
     <!-- Icon Button -->
     <dimen name="icon_button_size">38dp</dimen>

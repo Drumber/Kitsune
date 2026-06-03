@@ -37,6 +37,14 @@ class FeedFragment : Fragment(R.layout.fragment_feed),
 
         binding.toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
+                R.id.menu_groups -> {
+                    findNavController().navigateSafe(
+                        R.id.feed_fragment,
+                        FeedFragmentDirections.actionGlobalGroupsFragment()
+                    )
+                    true
+                }
+
                 R.id.menu_notifications -> {
                     findNavController().navigateSafe(
                         R.id.feed_fragment,
@@ -72,7 +80,13 @@ class FeedFragment : Fragment(R.layout.fragment_feed),
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        binding.appBarLayout.setExpanded(true)
+        val isAppBarExpanded = binding.appBarLayout.bottom >= binding.appBarLayout.height
+        val currentChild = childFragmentManager
+            .findFragmentByTag("f" + binding.viewPagerFeed.currentItem) as? FeedListFragment
+        currentChild?.scrollToTopOrRefresh(isAppBarExpanded)
+        if (!isAppBarExpanded) {
+            binding.appBarLayout.setExpanded(true)
+        }
     }
 
     override fun onDestroyView() {

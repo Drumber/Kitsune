@@ -47,6 +47,7 @@ import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.Profi
 import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStats
 import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsData
 import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsKind
+import io.github.drumber.kitsune.data.repository.FollowListType
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
 import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
 import io.github.drumber.kitsune.ui.adapter.CharacterAdapter
@@ -54,7 +55,7 @@ import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.component.chart.PieChartStyle
-import io.github.drumber.kitsune.ui.webview.WebViewFragmentDirections
+import io.github.drumber.kitsune.ui.profile.follow.FollowListFragmentDirections
 import io.github.drumber.kitsune.util.extensions.copyToClipboard
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
@@ -71,7 +72,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.CopyOnWriteArrayList
-import kotlin.math.round
 
 class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
     NavigationBarView.OnItemReselectedListener {
@@ -152,10 +152,10 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
             layoutWaifuRow.tvValue.setOnClickListener(onWaifuClicked)
 
             btnFollowing.setOnClickListener {
-                openProfilePageInWebView("following")
+                navigateToFollowList(FollowListType.FOLLOWING)
             }
             btnFollowers.setOnClickListener {
-                openProfilePageInWebView("followers")
+                navigateToFollowList(FollowListType.FOLLOWERS)
             }
         }
 
@@ -336,15 +336,15 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
         val categoryEntries: List<PieEntry> = categoryStats?.let { stats ->
             val total = stats.total ?: return@let null
             val categories = stats.categories ?: return@let null
-            categories.toList()
+            if (total <= 0) return@let null
+
+            val sorted = categories.toList()
                 .filter { it.second != 0 }
                 .sortedByDescending { it.second }
-                .take(PieChartStyle.STATS_MAX_ELEMENTS)
+
+            sorted.take(PieChartStyle.STATS_MAX_ELEMENTS)
                 .map { (category, value) ->
-                    PieEntry(
-                        round(value.toFloat() / total * 100f),
-                        category
-                    )
+                    PieEntry(value.toFloat() / total * 100f, category)
                 }
         } ?: emptyList()
 
@@ -490,16 +490,26 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
         }
     }
 
-    private fun openProfilePageInWebView(subPage: String) {
+    private fun navigateToFollowList(type: FollowListType) {
         val user = viewModel.getUser() ?: return
-        val url = "https://kitsu.app/users/${user.slug ?: user.id}/$subPage"
-        val webViewAction = WebViewFragmentDirections.actionGlobalWebViewFragment(url)
-        findNavController().navigateSafe(R.id.profile_fragment, webViewAction)
+        val action = FollowListFragmentDirections.actionGlobalFollowListFragment(
+            user.id,
+            type,
+            user.name
+        )
+        findNavController().navigateSafe(R.id.profile_fragment, action)
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        binding.nsvContent.smoothScrollTo(0, 0)
-        binding.appBarLayout.setExpanded(true)
+        val isAtTop = binding.nsvContent.scrollY == 0 &&
+                binding.appBarLayout.bottom >= binding.appBarLayout.height
+        if (isAtTop && binding.swipeRefreshLayout.isEnabled) {
+            binding.swipeRefreshLayout.isRefreshing = true
+            viewModel.refreshUser()
+        } else {
+            binding.nsvContent.smoothScrollTo(0, 0)
+            binding.appBarLayout.setExpanded(true)
+        }
     }
 
     override fun onDestroyView() {

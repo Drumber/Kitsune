@@ -11,6 +11,8 @@ import io.github.drumber.kitsune.ui.details.episodes.EpisodesViewModel
 import io.github.drumber.kitsune.ui.details.feed.MediaFeedViewModel
 import io.github.drumber.kitsune.ui.details.reactions.ReactionsViewModel
 import io.github.drumber.kitsune.ui.feed.FeedListViewModel
+import io.github.drumber.kitsune.ui.groupdetail.GroupDetailViewModel
+import io.github.drumber.kitsune.ui.groups.GroupsViewModel
 import io.github.drumber.kitsune.ui.library.LibraryViewModel
 import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel
 import io.github.drumber.kitsune.ui.main.MainActivityViewModel
@@ -20,7 +22,9 @@ import io.github.drumber.kitsune.ui.notifications.NotificationsViewModel
 import io.github.drumber.kitsune.ui.onboarding.OnboardingViewModel
 import io.github.drumber.kitsune.ui.postdetail.PostDetailViewModel
 import io.github.drumber.kitsune.ui.profile.ProfileViewModel
+import io.github.drumber.kitsune.data.repository.FollowListType
 import io.github.drumber.kitsune.ui.profile.UserProfileViewModel
+import io.github.drumber.kitsune.ui.profile.follow.FollowListViewModel
 import io.github.drumber.kitsune.ui.profile.editprofile.EditProfileViewModel
 import io.github.drumber.kitsune.ui.reactiondetail.ReactionDetailViewModel
 import io.github.drumber.kitsune.ui.search.SearchViewModel
@@ -42,12 +46,17 @@ val viewModelModule = module {
     viewModel { LoginViewModel(get()) }
     viewModel { ProfileViewModel(get(), get()) }
     viewModel { (userId: String) -> UserProfileViewModel(userId, get(), get(), get()) }
+    viewModel { (userId: String, type: FollowListType) ->
+        FollowListViewModel(userId, type, get(), get())
+    }
     viewModel { EditProfileViewModel(get(), get(), get()) }
     viewModel { DetailsViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { EpisodesViewModel(get(), get(), get(), get()) }
     viewModel { MediaFeedViewModel(get()) }
     viewModel { ReactionsViewModel(get(), get()) }
     viewModel { (reactionId: String) -> ReactionDetailViewModel(reactionId, get(), get()) }
+    viewModel { GroupsViewModel(get(), get()) }
+    viewModel { (groupId: String) -> GroupDetailViewModel(groupId, get()) }
     viewModel { FeedListViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { NotificationsViewModel(get(), get()) }
     viewModel { PostDetailViewModel(get(), get(), get(), get(), get(), get(), get()) }

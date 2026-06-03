@@ -2,6 +2,8 @@ package io.github.drumber.kitsune.data.source.network.user
 
 import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.source.network.PageData
+import io.github.drumber.kitsune.data.source.network.toPageData
 import io.github.drumber.kitsune.data.source.network.user.api.FollowApi
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkFollow
 import kotlinx.coroutines.Dispatchers
@@ -14,6 +16,12 @@ class FollowNetworkDataSource(
     suspend fun getFollows(filter: Filter): List<NetworkFollow>? {
         return withContext(Dispatchers.IO) {
             followApi.getFollows(filter.options).get()
+        }
+    }
+
+    suspend fun getFollowsPage(filter: Filter): PageData<NetworkFollow> {
+        return withContext(Dispatchers.IO) {
+            followApi.getFollows(filter.options).toPageData()
         }
     }
 

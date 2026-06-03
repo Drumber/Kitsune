@@ -13,6 +13,7 @@ import com.algolia.instantsearch.android.paging3.flow
 import com.algolia.instantsearch.android.paging3.searchbox.connectPaginator
 import com.algolia.instantsearch.core.connection.AbstractConnection
 import com.algolia.instantsearch.core.connection.ConnectionHandler
+import com.algolia.instantsearch.core.searchbox.SearchBoxViewModel
 import com.algolia.instantsearch.core.selectable.list.SelectionMode
 import com.algolia.instantsearch.filter.facet.DefaultFacetListPresenter
 import com.algolia.instantsearch.filter.facet.FacetListConnector
@@ -78,6 +79,9 @@ class SearchViewModel(
     private val _searchBox = MutableLiveData<SearchBoxConnector<ResponseSearch>>()
     val searchBox get() = _searchBox as LiveData<SearchBoxConnector<ResponseSearch>>
 
+    // Shared across search client recreations so the typed query is kept when switching search type.
+    private val searchBoxViewModel = SearchBoxViewModel()
+
     private val _filterFacets = MutableLiveData<FilterFacets>()
     val filterFacets get() = _filterFacets as LiveData<FilterFacets>
 
@@ -108,6 +112,7 @@ class SearchViewModel(
                 +"id"
                 +"name"
                 +"slug"
+                +"title"
                 +"avatar"
                 +"followersCount"
             }
@@ -124,6 +129,9 @@ class SearchViewModel(
                 +"subtype"
             }
         }
+    }.apply {
+        // keep the current search text when switching search type
+        query = searchBoxViewModel.query.value
     }
 
     private fun createSearchClient(searchType: SearchType, query: Query) {
@@ -184,7 +192,7 @@ class SearchViewModel(
     }
 
     private fun createSearchBox(searcher: HitsSearcher, paginator: Paginator<Any>) {
-        val searchBox = SearchBoxConnector(searcher)
+        val searchBox = SearchBoxConnector(searcher, viewModel = searchBoxViewModel)
         connectionHandler += searchBox
         connectionHandler += searchBox.connectPaginator(paginator)
         _searchBox.postValue(searchBox)

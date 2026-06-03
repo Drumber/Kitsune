@@ -50,11 +50,17 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
 
         binding.appBarLayout.statusBarForeground =
             MaterialShapeDrawable.createWithElevationOverlay(context)
-        binding.toolbar.initPaddingWindowInsetsListener(
+        binding.searchBar.initMarginWindowInsetsListener(
             left = true,
             right = true,
             consume = false
         )
+        binding.searchBar.setOnClickListener {
+            findNavController().navigateSafe(
+                R.id.main_fragment,
+                MainFragmentDirections.actionMainFragmentToSearchFragment(focusSearch = true)
+            )
+        }
         binding.tabLayoutExplore.initPaddingWindowInsetsListener(
             left = true,
             right = true,
@@ -131,8 +137,18 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        binding.nsvContent.smoothScrollTo(0, 0)
-        binding.appBarLayout.setExpanded(true)
+        val isAtTop = binding.nsvContent.scrollY == 0 &&
+                binding.appBarLayout.bottom >= binding.appBarLayout.height
+        if (isAtTop) {
+            binding.swipeRefreshLayout.isRefreshing = true
+            when (binding.viewPagerExplore.currentItem) {
+                0 -> viewModel.refreshAnimeData()
+                1 -> viewModel.refreshMangaData()
+            }
+        } else {
+            binding.nsvContent.smoothScrollTo(0, 0)
+            binding.appBarLayout.setExpanded(true)
+        }
     }
 
     override fun onDestroyView() {

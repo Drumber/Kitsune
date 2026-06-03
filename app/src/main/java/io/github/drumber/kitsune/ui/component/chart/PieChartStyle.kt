@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.annotation.StringRes
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import io.github.drumber.kitsune.R
@@ -12,63 +11,55 @@ import io.github.drumber.kitsune.util.extensions.getColor
 
 object PieChartStyle : BaseChartStyle() {
 
-    const val STATS_MAX_ELEMENTS = 7
-    const val ANIMATION_DURATION = 1000
+    const val STATS_MAX_ELEMENTS = 5
+    const val ANIMATION_DURATION = 800
 
     fun PieChart.applyStyle(
         c: Context,
-        @StringRes centerTextResId: Int? = null,
-        showLegend: Boolean = false
+        @StringRes centerTextResId: Int? = null
     ) {
         val theme = c.theme
 
         setUsePercentValues(false)
         description.isEnabled = false
-        setExtraOffsets(5f, 5f, 5f, 5f)
+        setExtraOffsets(8f, 8f, 8f, 8f)
 
-        enableScroll()
+        // Clean donut without on-slice labels. Tapping a slice reveals a floating
+        // tooltip (handled by the adapter) instead of the cluttered legend list.
         isRotationEnabled = false
+        isHighlightPerTapEnabled = true
+        setDrawEntryLabels(false)
 
         isDrawHoleEnabled = true
         setHoleColor(theme.getColor(android.R.color.transparent))
-        holeRadius = 55f
-        setTransparentCircleAlpha(50)
+        holeRadius = 68f
+        transparentCircleRadius = 72f
+        setTransparentCircleColor(theme.getColor(R.attr.colorOnSurface))
+        setTransparentCircleAlpha(20)
 
         setCenterTextColor(theme.getColor(R.attr.colorOnSurface))
+        setCenterTextSize(14f)
         if (centerTextResId != null) {
             centerText = c.getString(centerTextResId)
         }
 
-        isHighlightPerTapEnabled = true
-
         setNoDataTextColor(theme.getColor(R.attr.colorControlNormal))
-        setEntryLabelColor(theme.getColor(R.attr.colorOnSurface))
 
         animateY(ANIMATION_DURATION, Easing.EaseInOutQuad)
 
-        legend.apply {
-            form = Legend.LegendForm.CIRCLE
-            verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-            horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
-            orientation = Legend.LegendOrientation.VERTICAL
-            setDrawInside(false)
-            textColor = theme.getColor(R.attr.colorOnSurface)
-            yEntrySpace = 2f
-            yOffset = 0f
-            xOffset = 0f
-            isEnabled = showLegend
-        }
+        legend.isEnabled = false
     }
 
     fun PieDataSet.applyStyle(c: Context) {
         applyBaseStyle(c)
-        sliceSpace = 0f
-        selectionShift = 5f
+        sliceSpace = 2f
+        selectionShift = 6f
+        setDrawValues(false)
     }
 
     fun PieData.applyStyle(c: Context) {
         applyBaseStyle(c)
-        setValueFormatter(CustomPercentFormatter())
+        setDrawValues(false)
     }
 
 }

@@ -22,6 +22,7 @@ import io.github.drumber.kitsune.data.repository.MediaReactionRepository
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository
 import io.github.drumber.kitsune.data.repository.ContentRevealStore
 import io.github.drumber.kitsune.data.repository.FollowRepository
+import io.github.drumber.kitsune.data.repository.GroupsRepository
 import io.github.drumber.kitsune.data.repository.PostInteractionRepository
 import io.github.drumber.kitsune.data.repository.PostManagementRepository
 import io.github.drumber.kitsune.data.repository.UploadRepository
@@ -70,6 +71,11 @@ import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibrar
 import io.github.drumber.kitsune.data.source.network.mapping.MappingNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.mapping.api.MappingApi
 import io.github.drumber.kitsune.data.source.network.mapping.model.NetworkMapping
+import io.github.drumber.kitsune.data.source.network.group.GroupsNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.group.api.GroupsApi
+import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroup
+import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroupCategory
+import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroupMember
 import io.github.drumber.kitsune.data.source.network.reaction.ReactionNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.reaction.api.MediaReactionApi
 import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReaction
@@ -423,6 +429,19 @@ val dataModule = module {
     }
     single { ReactionNetworkDataSource(get()) }
     single { MediaReactionRepository(get()) }
+
+    // Groups
+    factory {
+        createService<GroupsApi>(
+            get(),
+            get(),
+            NetworkGroup::class.java,
+            NetworkGroupCategory::class.java,
+            NetworkGroupMember::class.java
+        )
+    }
+    single { GroupsNetworkDataSource(get()) }
+    single { GroupsRepository(get()) }
 }
 
 private fun createAuthService(objectMapper: ObjectMapper) = createService<AuthenticationApi>(

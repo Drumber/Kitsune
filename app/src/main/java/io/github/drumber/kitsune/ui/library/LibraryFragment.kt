@@ -622,8 +622,15 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        binding.rvLibraryEntries.smoothScrollToPosition(0)
-        binding.appBarLayout.setExpanded(true)
+        val isAtTop = !binding.rvLibraryEntries.canScrollVertically(-1) &&
+                binding.appBarLayout.bottom >= binding.appBarLayout.height
+        if (isAtTop) {
+            binding.swipeRefreshLayout.isRefreshing = true
+            viewModel.doRefreshListener?.invoke()
+        } else {
+            binding.rvLibraryEntries.smoothScrollToPosition(0)
+            binding.appBarLayout.setExpanded(true)
+        }
     }
 
     override fun onDestroyView() {

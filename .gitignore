@@ -94,3 +94,4 @@ lint/tmp/
 # Android Profiling
 *.hprof
 
+.github/copilot-instructions.md

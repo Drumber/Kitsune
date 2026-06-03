@@ -120,6 +120,7 @@ object AlgoliaMapper {
         id = id.toString(),
         name = name,
         slug = slug,
+        title = title,
         avatar = avatar?.toImage(),
         followersCount = followersCount
     )
