@@ -29,6 +29,7 @@ import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -38,19 +39,9 @@ class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
 
     private val args: MediaFeedFragmentArgs by navArgs()
 
-    private var _binding: FragmentMediaFeedBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentMediaFeedBinding::bind)
 
     private val viewModel: MediaFeedViewModel by viewModel()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentMediaFeedBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -126,10 +117,5 @@ class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
         } else {
             findNavController().navigateUp()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

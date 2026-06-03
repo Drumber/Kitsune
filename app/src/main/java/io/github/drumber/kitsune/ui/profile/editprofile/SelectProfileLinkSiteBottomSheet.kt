@@ -15,6 +15,7 @@ import io.github.drumber.kitsune.databinding.ItemListOptionBinding
 import io.github.drumber.kitsune.databinding.SheetSelectProfileLinkSiteBinding
 import io.github.drumber.kitsune.util.ItemClickListener
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -23,16 +24,14 @@ class SelectProfileLinkSiteBottomSheet : BottomSheetDialogFragment() {
 
     private val viewModel: EditProfileViewModel by viewModel(ownerProducer = { requireParentFragment() })
 
-    private var _binding: SheetSelectProfileLinkSiteBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(SheetSelectProfileLinkSiteBinding::bind)
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = SheetSelectProfileLinkSiteBinding.inflate(inflater, container, false)
-        return binding.root
+        return SheetSelectProfileLinkSiteBinding.inflate(inflater, container, false).root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,11 +77,6 @@ class SelectProfileLinkSiteBottomSheet : BottomSheetDialogFragment() {
             bundleOf(BUNDLE_PROFILE_LINK_SITE to linkSite)
         )
         dismiss()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
     companion object {

@@ -86,6 +86,7 @@ import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbar
 import io.github.drumber.kitsune.util.ui.showSnackbarOnFailure
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -98,8 +99,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
     private val args: DetailsFragmentArgs by navArgs()
 
-    private var _binding: FragmentDetailsBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentDetailsBinding::bind)
 
     private val viewModel: DetailsViewModel by viewModel()
 
@@ -116,15 +116,6 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         }
         sharedElementEnterTransition = transition
         sharedElementReturnTransition = transition
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentDetailsBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -671,7 +662,6 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     override fun onDestroyView() {
         super.onDestroyView()
         reactionsAdapter = null
-        _binding = null
     }
 
 }

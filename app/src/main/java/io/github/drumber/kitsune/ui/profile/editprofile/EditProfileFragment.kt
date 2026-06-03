@@ -49,14 +49,14 @@ import io.github.drumber.kitsune.util.ui.initImePaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
 
-    private var _binding: FragmentEditProfileBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentEditProfileBinding::bind)
 
     private val viewModel: EditProfileViewModel by viewModel()
 
@@ -87,7 +87,7 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentEditProfileBinding.inflate(inflater, container, false)
+        val view = super.onCreateView(inflater, container, savedInstanceState)!!
 
         binding.toolbar.initWindowInsetsListener(consume = false)
         binding.nestedScrollView.initMarginWindowInsetsListener(
@@ -104,7 +104,7 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
 
         binding.root.initImePaddingWindowInsetsListener()
 
-        return binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -575,6 +575,5 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
     override fun onDestroyView() {
         connectionHandler.clear()
         super.onDestroyView()
-        _binding = null
     }
 }

@@ -16,6 +16,7 @@ import io.github.drumber.kitsune.data.presentation.model.media.unit.Episode
 import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.databinding.SheetUnitPickerBinding
 import io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -23,8 +24,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class UnitPickerBottomSheet : BottomSheetDialogFragment(),
     MediaUnitPagingAdapter.MediaUnitActionListener {
 
-    private var _binding: SheetUnitPickerBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(SheetUnitPickerBinding::bind)
 
     private val viewModel: UnitPickerViewModel by viewModel()
 
@@ -33,8 +33,7 @@ class UnitPickerBottomSheet : BottomSheetDialogFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = SheetUnitPickerBinding.inflate(inflater, container, false)
-        return binding.root
+        return SheetUnitPickerBinding.inflate(inflater, container, false).root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,11 +78,6 @@ class UnitPickerBottomSheet : BottomSheetDialogFragment(),
 
     override fun onWatchStateChanged(mediaUnit: MediaUnit, isWatched: Boolean) {
         // Not used in the picker.
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     companion object {

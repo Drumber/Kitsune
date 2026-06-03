@@ -11,20 +11,20 @@ import androidx.fragment.app.setFragmentResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.databinding.SheetEditProfileLinkBinding
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
+import io.github.drumber.kitsune.util.ui.viewBinding
 
 class EditProfileLinkBottomSheet : BottomSheetDialogFragment() {
 
-    private var _binding: SheetEditProfileLinkBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(SheetEditProfileLinkBinding::bind)
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = SheetEditProfileLinkBinding.inflate(inflater, container, false)
-        binding.isCreatingNew = isCreatingNew()
-        return binding.root
+        return SheetEditProfileLinkBinding.inflate(inflater, container, false).apply {
+            isCreatingNew = isCreatingNew()
+        }.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,11 +78,6 @@ class EditProfileLinkBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun isCreatingNew() = arguments?.getBoolean(BUNDLE_IS_CREATING_NEW) == true
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
 
     companion object {
         const val TAG = "edit_profile_link_bottom_sheet"

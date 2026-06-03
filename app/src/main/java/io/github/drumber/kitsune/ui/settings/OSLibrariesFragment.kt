@@ -12,25 +12,16 @@ import com.mikepenz.aboutlibraries.LibsBuilder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentOsLibrariesBinding
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 
 class OSLibrariesFragment : Fragment(R.layout.fragment_os_libraries) {
 
-    private var _binding: FragmentOsLibrariesBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentOsLibrariesBinding::bind)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentOsLibrariesBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,10 +44,5 @@ class OSLibrariesFragment : Fragment(R.layout.fragment_os_libraries) {
         childFragmentManager.beginTransaction()
             .replace(R.id.os_libraries_fragment_container, aboutLibrariesFragment)
             .commit()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

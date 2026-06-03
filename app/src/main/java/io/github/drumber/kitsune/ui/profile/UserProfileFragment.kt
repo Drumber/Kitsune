@@ -60,6 +60,7 @@ import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -69,8 +70,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 /** Read-only profile screen for viewing another user's profile. */
 class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
 
-    private var _binding: FragmentProfileBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentProfileBinding::bind)
 
     private val args: UserProfileFragmentArgs by navArgs()
 
@@ -83,15 +83,6 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
 
     /** Whether the logged-in user is allowed to post on this wall. */
     private var canPostOnWall = false
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -476,7 +467,6 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         binding.rvFavoriteAnime.adapter = null
         binding.rvFavoriteManga.adapter = null
         binding.rvFavoriteCharacters.adapter = null
-        _binding = null
     }
 
     companion object {

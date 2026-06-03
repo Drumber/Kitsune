@@ -28,6 +28,7 @@ import io.github.drumber.kitsune.util.ui.MarkdownPreviewRenderer
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbar
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -35,8 +36,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
 
-    private var _binding: FragmentCreatePostBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentCreatePostBinding::bind)
 
     private val viewModel: CreatePostViewModel by viewModel()
 
@@ -62,7 +62,6 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentCreatePostBinding.bind(view)
 
         binding.toolbar.initWindowInsetsListener(consume = false)
         binding.root.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
@@ -295,6 +294,5 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
         binding.rvImages.adapter = null
         imageAdapter = null
         publishButton = null
-        _binding = null
     }
 }

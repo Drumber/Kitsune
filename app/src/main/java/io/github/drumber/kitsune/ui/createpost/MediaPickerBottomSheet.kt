@@ -22,14 +22,14 @@ import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.SheetMediaPickerBinding
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.paging.MediaSearchPagingAdapter
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MediaPickerBottomSheet : BottomSheetDialogFragment(), OnItemClickListener<Media> {
 
-    private var _binding: SheetMediaPickerBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(SheetMediaPickerBinding::bind)
 
     private val viewModel: MediaPickerViewModel by viewModel()
 
@@ -40,8 +40,7 @@ class MediaPickerBottomSheet : BottomSheetDialogFragment(), OnItemClickListener<
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = SheetMediaPickerBinding.inflate(inflater, container, false)
-        return binding.root
+        return SheetMediaPickerBinding.inflate(inflater, container, false).root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -91,7 +90,6 @@ class MediaPickerBottomSheet : BottomSheetDialogFragment(), OnItemClickListener<
     override fun onDestroyView() {
         super.onDestroyView()
         connectionHandler.clear()
-        _binding = null
     }
 
     companion object {

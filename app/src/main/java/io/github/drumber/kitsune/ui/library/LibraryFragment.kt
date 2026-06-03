@@ -39,6 +39,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.shape.MaterialShapeDrawable
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel
@@ -53,6 +54,7 @@ import io.github.drumber.kitsune.ui.component.ResponsiveGridLayoutManager
 import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibrarySynchronizationResult
 import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibraryUpdateResult
+import io.github.drumber.kitsune.ui.webview.WebViewFragmentDirections
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.toPx
@@ -60,6 +62,7 @@ import io.github.drumber.kitsune.util.rating.RatingSystemUtil
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbarOnAnyFailure
 import io.github.drumber.kitsune.util.ui.showSnackbarOnFailure
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -71,8 +74,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     LibraryEntriesAdapter.LibraryEntryActionListener,
     NavigationBarView.OnItemReselectedListener {
 
-    private var _binding: FragmentLibraryBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentLibraryBinding::bind)
 
     private val viewModel: LibraryViewModel by viewModel()
 
@@ -94,15 +96,6 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         offlineLibraryUpdateBadge = BadgeDrawable.create(requireContext())
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentLibraryBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -510,15 +503,41 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
         toolbar.inflateMenu(R.menu.library_menu)
         toolbar.setOnMenuItemClickListener { item ->
-            return@setOnMenuItemClickListener if (item.itemId == R.id.menu_synchronize) {
-                viewModel.synchronizeOfflineLibraryUpdates()
-                true
-            } else {
-                false
+            when (item.itemId) {
+                R.id.menu_synchronize -> {
+                    viewModel.synchronizeOfflineLibraryUpdates()
+                    true
+                }
+
+                R.id.menu_db_request -> {
+                    showDbRequestDialog()
+                    true
+                }
+
+                else -> false
             }
         }
         initSearchView(toolbar.menu.findItem(R.id.menu_search))
         updateToolbarMenu(toolbar.menu)
+    }
+
+    private fun showDbRequestDialog() {
+        val options = listOf(
+            R.string.db_request_anime to Kitsu.ANIME_DB_REQUEST_URL,
+            R.string.db_request_open_anime to Kitsu.OPEN_ANIME_REQUESTS_URL,
+            R.string.db_request_manga to Kitsu.MANGA_DB_REQUEST_URL,
+            R.string.db_request_open_manga to Kitsu.OPEN_MANGA_REQUESTS_URL
+        )
+        val items = options.map { getString(it.first) }.toTypedArray()
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.action_db_request)
+            .setItems(items) { _, which ->
+                val url = options[which].second
+                val action = WebViewFragmentDirections.actionGlobalWebViewFragment(url)
+                findNavController().navigateSafe(R.id.library_fragment, action)
+            }
+            .show()
     }
 
     @OptIn(ExperimentalBadgeUtils::class)
@@ -638,7 +657,6 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         searchViewBackPressedCallback?.remove()
         searchViewBackPressedCallback = null
         super.onDestroyView()
-        _binding = null
     }
 
 }

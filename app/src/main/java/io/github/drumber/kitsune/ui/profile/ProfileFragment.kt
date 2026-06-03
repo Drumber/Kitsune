@@ -68,6 +68,7 @@ import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -76,19 +77,9 @@ import java.util.concurrent.CopyOnWriteArrayList
 class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
     NavigationBarView.OnItemReselectedListener {
 
-    private var _binding: FragmentProfileBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentProfileBinding::bind)
 
     private val viewModel: ProfileViewModel by viewModel()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -510,11 +501,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
             binding.nsvContent.smoothScrollTo(0, 0)
             binding.appBarLayout.setExpanded(true)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
 }

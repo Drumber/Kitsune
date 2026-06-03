@@ -30,6 +30,7 @@ import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openCharacterOnMAL
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.toPx
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -37,8 +38,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
 
-    private var _binding: SheetCharacterDetailsBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(SheetCharacterDetailsBinding::bind)
 
     private val viewModel: CharacterDetailsViewModel by viewModel()
 
@@ -49,8 +49,7 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = SheetCharacterDetailsBinding.inflate(inflater, container, false)
-        return binding.root
+        return SheetCharacterDetailsBinding.inflate(inflater, container, false).root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -93,8 +92,10 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
                 if (favorite != null && icon is AnimatedVectorDrawableCompat) {
                     icon.registerAnimationCallback(object : AnimationCallback() {
                         override fun onAnimationEnd(drawable: Drawable?) {
-                            // binding can be null if the fragment is destroyed
-                            _binding?.btnFavorite?.setIconResource(R.drawable.ic_favorite_24)
+                            // view can be null if the fragment is destroyed
+                            if (view != null) {
+                                binding.btnFavorite.setIconResource(R.drawable.ic_favorite_24)
+                            }
                         }
                     })
                 } else {
@@ -198,11 +199,6 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
             dataSet.addAll(sortedMediaCharacters)
             notifyDataSetChanged()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
 }

@@ -24,6 +24,7 @@ import io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -31,8 +32,7 @@ import org.koin.core.parameter.parametersOf
 
 class FollowListFragment : Fragment(R.layout.fragment_follow_list) {
 
-    private var _binding: FragmentFollowListBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentFollowListBinding::bind)
 
     private val args: FollowListFragmentArgs by navArgs()
 
@@ -42,7 +42,6 @@ class FollowListFragment : Fragment(R.layout.fragment_follow_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentFollowListBinding.bind(view)
 
         binding.appBarLayout.statusBarForeground =
             MaterialShapeDrawable.createWithElevationOverlay(context)
@@ -125,6 +124,5 @@ class FollowListFragment : Fragment(R.layout.fragment_follow_list) {
     override fun onDestroyView() {
         super.onDestroyView()
         binding.rvFollowUsers.adapter = null
-        _binding = null
     }
 }

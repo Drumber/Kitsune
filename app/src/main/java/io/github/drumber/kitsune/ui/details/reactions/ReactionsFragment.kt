@@ -25,6 +25,7 @@ import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -34,19 +35,9 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
 
     private val args: ReactionsFragmentArgs by navArgs()
 
-    private var _binding: FragmentReactionsBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentReactionsBinding::bind)
 
     private val viewModel: ReactionsViewModel by viewModel()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentReactionsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -131,10 +122,5 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
         } else {
             findNavController().navigateUp()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

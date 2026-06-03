@@ -16,4 +16,10 @@ object Kitsu {
     const val ANIME_URL_PREFIX = "$BASE_URL/anime/"
 
     const val MANGA_URL_PREFIX = "$BASE_URL/manga/"
+
+    private const val DB_REQUEST_BASE_URL = "https://www.kitsu-stuff.com"
+    const val ANIME_DB_REQUEST_URL = "$DB_REQUEST_BASE_URL/anime-db-request"
+    const val OPEN_ANIME_REQUESTS_URL = "$DB_REQUEST_BASE_URL/open-anime-requests"
+    const val MANGA_DB_REQUEST_URL = "$DB_REQUEST_BASE_URL/manga-db-request"
+    const val OPEN_MANGA_REQUESTS_URL = "$DB_REQUEST_BASE_URL/open-manga-requests"
 }

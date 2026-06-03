@@ -71,6 +71,11 @@
     <string name="action_synchronize">Synchronize</string>
     <string name="action_save_in_gallery">Save in Gallery</string>
     <string name="action_open_in_browser">Open in Browser</string>
+    <string name="action_db_request">Request DB change</string>
+    <string name="db_request_anime">Request anime DB change</string>
+    <string name="db_request_open_anime">View open anime requests</string>
+    <string name="db_request_manga">Request manga DB change</string>
+    <string name="db_request_open_manga">View open manga requests</string>
     <string name="action_copy_url">Copy URL</string>
     <string name="action_open_on_mal">Open on MyAnimeList.net</string>
     <string name="action_save_changes">Save Changes</string>

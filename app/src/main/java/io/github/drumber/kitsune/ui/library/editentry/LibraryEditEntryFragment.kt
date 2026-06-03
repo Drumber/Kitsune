@@ -54,14 +54,14 @@ import io.github.drumber.kitsune.util.ui.initImePaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_library_entry) {
 
     private val args: LibraryEditEntryFragmentArgs by navArgs()
 
-    private var _binding: FragmentEditLibraryEntryBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentEditLibraryEntryBinding::bind)
 
     private val viewModel: LibraryEditEntryViewModel by viewModel()
 
@@ -90,7 +90,7 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentEditLibraryEntryBinding.inflate(inflater, container, false)
+        val view = super.onCreateView(inflater, container, savedInstanceState)!!
         viewModel.initLibraryEntry(args.libraryEntryId)
 
         binding.toolbar.initWindowInsetsListener(consume = false)
@@ -108,7 +108,7 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
 
         binding.root.initImePaddingWindowInsetsListener()
 
-        return binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -462,10 +462,5 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
                 if (accent) R.attr.colorPrimary else R.attr.colorControlNormal
             )
         )
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

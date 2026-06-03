@@ -20,6 +20,7 @@ import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -29,8 +30,7 @@ class ReactionDetailFragment : Fragment(R.layout.fragment_reaction_detail) {
 
     private val args: ReactionDetailFragmentArgs by navArgs()
 
-    private var _binding: FragmentReactionDetailBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentReactionDetailBinding::bind)
 
     private val viewModel: ReactionDetailViewModel by viewModel {
         parametersOf(args.reactionId)
@@ -38,7 +38,6 @@ class ReactionDetailFragment : Fragment(R.layout.fragment_reaction_detail) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentReactionDetailBinding.bind(view)
 
         binding.toolbar.initWindowInsetsListener(consume = false)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
@@ -144,10 +143,5 @@ class ReactionDetailFragment : Fragment(R.layout.fragment_reaction_detail) {
 
     private fun showSnackbar(messageResId: Int) {
         Snackbar.make(binding.root, messageResId, Snackbar.LENGTH_SHORT).show()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

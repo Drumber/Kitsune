@@ -51,6 +51,7 @@ import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.No
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotInitialized
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
@@ -63,8 +64,7 @@ class SearchFragment : Fragment(R.layout.fragment_search),
 
     override val hasTransparentStatusBar = false
 
-    private var _binding: FragmentSearchBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentSearchBinding::bind)
 
     private val viewModel: SearchViewModel by activityViewModel()
 
@@ -78,15 +78,6 @@ class SearchFragment : Fragment(R.layout.fragment_search),
     private lateinit var userAdapter: UserSearchPagingAdapter
     private lateinit var gridLayoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager
     private lateinit var listLayoutManager: LinearLayoutManager
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentSearchBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -365,7 +356,6 @@ class SearchFragment : Fragment(R.layout.fragment_search),
     override fun onDestroyView() {
         connectionHandler.clear()
         super.onDestroyView()
-        _binding = null
     }
 
     companion object {

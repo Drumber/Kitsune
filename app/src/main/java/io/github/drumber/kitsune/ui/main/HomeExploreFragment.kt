@@ -25,28 +25,19 @@ import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.component.ExploreSection
 import io.github.drumber.kitsune.ui.main.MainFragmentViewModel.NavigationAction
 import io.github.drumber.kitsune.util.network.ResponseData
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.launch
 import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
     OnItemClickListener<Media> {
 
-    private var _binding: FragmentHomeExploreBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentHomeExploreBinding::bind)
 
     private val viewModel: MainFragmentViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
 
     companion object {
         const val BUNDLE_MEDIA_TYPE = "bundle_media_type"
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentHomeExploreBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -252,10 +243,5 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.navigate(NavigationAction.OpenMediaDetails(item.toMediaDto(), view))
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

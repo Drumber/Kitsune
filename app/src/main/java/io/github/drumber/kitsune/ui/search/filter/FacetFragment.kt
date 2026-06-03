@@ -36,6 +36,7 @@ import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.No
 import io.github.drumber.kitsune.ui.search.categories.CategoriesDialogFragment
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class FacetFragment : Fragment(R.layout.fragment_filter_facet),
@@ -44,21 +45,11 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
 
     override val hasTransparentStatusBar = true
 
-    private var _binding: FragmentFilterFacetBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentFilterFacetBinding::bind)
 
     private val connection = ConnectionHandler()
 
     private val viewModel: SearchViewModel by activityViewModel()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentFilterFacetBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -256,7 +247,6 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
     override fun onDestroyView() {
         connection.clear()
         super.onDestroyView()
-        _binding = null
     }
 
 }

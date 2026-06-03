@@ -13,16 +13,15 @@ import io.github.drumber.kitsune.databinding.FragmentFeedBinding
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 
 class FeedFragment : Fragment(R.layout.fragment_feed),
     NavigationBarView.OnItemReselectedListener {
 
-    private var _binding: FragmentFeedBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentFeedBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentFeedBinding.bind(view)
 
         binding.appBarLayout.statusBarForeground =
             MaterialShapeDrawable.createWithElevationOverlay(context)
@@ -87,10 +86,5 @@ class FeedFragment : Fragment(R.layout.fragment_feed),
         if (!isAppBarExpanded) {
             binding.appBarLayout.setExpanded(true)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

@@ -25,6 +25,7 @@ import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.showSnackbar
+import io.github.drumber.kitsune.util.ui.viewBinding
 import io.github.drumber.kitsune.ui.postdetail.PostDetailFragmentDirections
 import io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
 import kotlinx.coroutines.flow.collectLatest
@@ -34,8 +35,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListener<Post> {
 
-    private var _binding: FragmentFeedListBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentFeedListBinding::bind)
 
     private var feedAdapter: PostPagingAdapter? = null
 
@@ -59,7 +59,6 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentFeedListBinding.bind(view)
 
         if (feedType == FeedType.USER) {
             userId?.let { viewModel.setUserFeed(it) }
@@ -219,7 +218,7 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
      * @param appBarExpanded whether the hosting app bar is currently fully expanded.
      */
     fun scrollToTopOrRefresh(appBarExpanded: Boolean) {
-        val binding = _binding ?: return
+        if (view == null) return
         if (binding.rvFeed.canScrollVertically(-1) || !appBarExpanded) {
             binding.rvFeed.smoothScrollToPosition(0)
         } else if (!isLoginRequired) {
@@ -243,7 +242,6 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
         super.onDestroyView()
         feedAdapter = null
         binding.rvFeed.adapter = null
-        _binding = null
     }
 
     companion object {

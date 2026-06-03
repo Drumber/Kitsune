@@ -27,6 +27,7 @@ import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.showSnackbar
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -36,8 +37,7 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
 
     private val args: PostDetailFragmentArgs by navArgs()
 
-    private var _binding: FragmentPostDetailBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentPostDetailBinding::bind)
 
     private val viewModel: PostDetailViewModel by viewModel()
 
@@ -48,7 +48,6 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentPostDetailBinding.bind(view)
 
         viewModel.setPost(args.post)
 
@@ -274,11 +273,6 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         binding.etComment.clearFocus()
         imm.hideSoftInputFromWindow(binding.etComment.windowToken, 0)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
 }

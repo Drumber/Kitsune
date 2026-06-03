@@ -15,6 +15,7 @@ import io.github.drumber.kitsune.data.presentation.model.group.Group
 import io.github.drumber.kitsune.databinding.FragmentGroupDetailBinding
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -24,8 +25,7 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
 
     private val args: GroupDetailFragmentArgs by navArgs()
 
-    private var _binding: FragmentGroupDetailBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentGroupDetailBinding::bind)
 
     private val viewModel: GroupDetailViewModel by viewModel {
         parametersOf(args.groupId)
@@ -33,7 +33,6 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentGroupDetailBinding.bind(view)
 
         binding.toolbar.initWindowInsetsListener(consume = false)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
@@ -111,10 +110,5 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
         header.isVisible = value != null
         content.isVisible = value != null
         content.text = value
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

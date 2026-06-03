@@ -25,6 +25,7 @@ import io.github.drumber.kitsune.ui.reactiondetail.ReactionDetailFragmentDirecti
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -32,14 +33,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class NotificationsFragment : Fragment(R.layout.fragment_notifications),
     OnItemClickListener<Notification> {
 
-    private var _binding: FragmentNotificationsBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentNotificationsBinding::bind)
 
     private val viewModel: NotificationsViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentNotificationsBinding.bind(view)
 
         binding.appBarLayout.statusBarForeground =
             MaterialShapeDrawable.createWithElevationOverlay(context)
@@ -111,6 +110,5 @@ class NotificationsFragment : Fragment(R.layout.fragment_notifications),
     override fun onDestroyView() {
         super.onDestroyView()
         binding.rvNotifications.adapter = null
-        _binding = null
     }
 }

@@ -14,15 +14,12 @@ import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 
 class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {
 
-    private var _binding: SheetMediaUnitDetailsBinding? = null
-    private val binding get() = _binding!!
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = SheetMediaUnitDetailsBinding.inflate(inflater, container, false)
+        val binding = SheetMediaUnitDetailsBinding.inflate(inflater, container, false)
         val mediaUnitDto: MediaUnitDto? = arguments?.getParcelable(BUNDLE_MEDIA_UNIT_ADAPTER)
         val mediaUnit = mediaUnitDto?.toMediaUnit()
         binding.mediaUnit = mediaUnit
@@ -42,11 +39,6 @@ class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {
         }
 
         return binding.root
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
     companion object {

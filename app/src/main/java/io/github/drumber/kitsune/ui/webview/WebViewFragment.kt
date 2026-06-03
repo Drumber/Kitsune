@@ -25,24 +25,16 @@ import io.github.drumber.kitsune.util.extensions.copyToClipboard
 import io.github.drumber.kitsune.util.extensions.openUrl
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import org.koin.android.ext.android.inject
 
-class WebViewFragment : Fragment() {
+class WebViewFragment : Fragment(R.layout.fragment_web_view) {
 
-    private var _binding: FragmentWebViewBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentWebViewBinding::bind)
 
     private val args: WebViewFragmentArgs by navArgs()
 
     private val accessTokenRepository: AccessTokenRepository by inject()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentWebViewBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
