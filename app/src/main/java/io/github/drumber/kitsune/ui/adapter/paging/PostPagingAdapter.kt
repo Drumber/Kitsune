@@ -15,7 +15,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.ItemPostBinding
-import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.util.extensions.setOnDoubleTapListener
 import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.EmbedBinder
@@ -27,19 +26,11 @@ import kotlinx.coroutines.launch
 
 class PostPagingAdapter(
     private val glide: RequestManager,
-    private val listener: OnItemClickListener<Post>? = null,
     private val scope: CoroutineScope? = null,
-    private val avatarProvider: (suspend (Post) -> List<String>)? = null,
-    private val onLikeClick: ((Post, Boolean) -> Unit)? = null,
-    private val likeStateLoader: (suspend (Post) -> Unit)? = null,
     private val contentRenderer: PostContentRenderer? = null,
     private val nsfwAllowed: Boolean = false,
-    private val onRevealClick: ((Post) -> Unit)? = null,
-    private val onMediaClick: ((Post) -> Unit)? = null,
     private val currentUserId: String? = null,
-    private val onEditClick: ((Post) -> Unit)? = null,
-    private val onDeleteClick: ((Post) -> Unit)? = null,
-    private val onAuthorClick: ((String) -> Unit)? = null
+    private val listener: PostInteractionListener? = null
 ) : PagingDataAdapter<Post, PostPagingAdapter.PostViewHolder>(PostComparator) {
 
     private data class InteractionOverride(
@@ -120,7 +111,7 @@ class PostPagingAdapter(
             if (current) return
             val currentCount = overrides[post.id]?.likesCount ?: post.likesCount
             setLikeState(post.id, true, currentCount + 1)
-            onLikeClick?.invoke(post, true)
+            listener?.onLikeClick(post, true)
         }
 
         private fun bindOverflowMenu(post: Post) {
@@ -136,12 +127,12 @@ class PostPagingAdapter(
                     setOnMenuItemClickListener { menuItem ->
                         when (menuItem.itemId) {
                             R.id.action_edit_item -> {
-                                onEditClick?.invoke(post)
+                                listener?.onEditClick(post)
                                 true
                             }
 
                             R.id.action_delete_item -> {
-                                onDeleteClick?.invoke(post)
+                                listener?.onDeleteClick(post)
                                 true
                             }
 
@@ -155,7 +146,7 @@ class PostPagingAdapter(
 
         fun bind(post: Post) {
             binding.root.setOnDoubleTapListener(
-                onSingleTap = { listener?.onItemClick(binding.root, post) },
+                onSingleTap = { listener?.onPostClick(binding.root, post) },
                 onDoubleTap = { likeViaDoubleTap(post) }
             )
 
@@ -168,8 +159,8 @@ class PostPagingAdapter(
                 ?: binding.root.context.getString(R.string.feed_unknown_user)
 
             val authorId = post.authorId
-            val authorClickListener = if (authorId != null && onAuthorClick != null) {
-                android.view.View.OnClickListener { onAuthorClick.invoke(authorId) }
+            val authorClickListener = if (authorId != null && listener != null) {
+                android.view.View.OnClickListener { listener.onAuthorClick(authorId) }
             } else {
                 null
             }
@@ -203,7 +194,7 @@ class PostPagingAdapter(
                     )
                     setOnClickListener {
                         markRevealed(post.id)
-                        onRevealClick?.invoke(post)
+                        listener?.onRevealClick(post)
                     }
                 } else {
                     setOnClickListener(null)
@@ -223,7 +214,7 @@ class PostPagingAdapter(
             EmbedBinder.bind(binding.embed, glide, post.embed, visible = !gated)
 
             PostMediaBinder.bind(binding.postMedia, glide, post, visible = true) {
-                onMediaClick?.invoke(post)
+                listener?.onMediaClick(post)
             }
 
             val override = overrides[post.id]
@@ -241,13 +232,13 @@ class PostPagingAdapter(
                 val targetLiked = !current
                 val targetCount = (currentCount + if (targetLiked) 1 else -1).coerceAtLeast(0)
                 setLikeState(post.id, targetLiked, targetCount)
-                onLikeClick?.invoke(post, targetLiked)
+                listener?.onLikeClick(post, targetLiked)
             }
 
             binding.tvComments.text = commentsCount.toString()
 
             scope?.let { s ->
-                likeStateLoader?.let { loader -> s.launch { loader(post) } }
+                listener?.let { l -> s.launch { l.ensureLikeStateLoaded(post) } }
             }
 
             bindLikerAvatars(post)
@@ -266,10 +257,10 @@ class PostPagingAdapter(
 
             if (post.likesCount <= 0) return
             val scope = scope ?: return
-            val avatarProvider = avatarProvider ?: return
+            val listener = listener ?: return
 
             avatarJob = scope.launch {
-                val avatars = avatarProvider(post)
+                val avatars = listener.loadLikerAvatars(post)
                 if (avatars.isEmpty()) return@launch
                 binding.layoutLikers.isVisible = true
                 avatarViews.forEachIndexed { index, imageView ->

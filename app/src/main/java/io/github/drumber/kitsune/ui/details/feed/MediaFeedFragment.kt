@@ -20,7 +20,7 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.FragmentMediaFeedBinding
-import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
+import io.github.drumber.kitsune.ui.adapter.paging.PostInteractionListener
 import io.github.drumber.kitsune.ui.adapter.paging.PostPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
-    OnItemClickListener<Post>, NavigationBarView.OnItemReselectedListener {
+    PostInteractionListener, NavigationBarView.OnItemReselectedListener {
 
     private val args: MediaFeedFragmentArgs by navArgs()
 
@@ -61,12 +61,7 @@ class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
 
         val adapter = PostPagingAdapter(
             glide = Glide.with(this),
-            listener = this,
-            onAuthorClick = { userId ->
-                val action = io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
-                    .actionGlobalUserProfileFragment(userId)
-                findNavController().navigateSafe(R.id.media_feed_fragment, action)
-            }
+            listener = this
         )
         binding.rvFeed.adapter = adapter.withLoadStateFooter(
             footer = ResourceLoadStateAdapter(adapter)
@@ -104,9 +99,15 @@ class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
         }
     }
 
-    override fun onItemClick(view: View, item: Post) {
-        val url = "${Kitsu.BASE_URL}/posts/${item.id}"
+    override fun onPostClick(view: View, post: Post) {
+        val url = "${Kitsu.BASE_URL}/posts/${post.id}"
         val action = WebViewFragmentDirections.actionGlobalWebViewFragment(url)
+        findNavController().navigateSafe(R.id.media_feed_fragment, action)
+    }
+
+    override fun onAuthorClick(userId: String) {
+        val action = io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
+            .actionGlobalUserProfileFragment(userId)
         findNavController().navigateSafe(R.id.media_feed_fragment, action)
     }
 

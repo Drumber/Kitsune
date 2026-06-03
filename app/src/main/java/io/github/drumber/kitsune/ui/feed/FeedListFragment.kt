@@ -16,7 +16,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.FragmentFeedListBinding
-import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
+import io.github.drumber.kitsune.ui.adapter.paging.PostInteractionListener
 import io.github.drumber.kitsune.ui.adapter.paging.PostPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListener<Post> {
+class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionListener {
 
     private val binding by viewBinding(FragmentFeedListBinding::bind)
 
@@ -69,18 +69,10 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
         val adapter = PostPagingAdapter(
             glide = Glide.with(this),
             scope = viewLifecycleOwner.lifecycleScope,
-            avatarProvider = { post -> viewModel.likerAvatars(post) },
-            onLikeClick = { post, targetLiked -> viewModel.togglePostLike(post, targetLiked) },
-            likeStateLoader = { post -> viewModel.ensureLikeStateLoaded(post) },
             contentRenderer = contentRenderer,
             nsfwAllowed = viewModel.nsfwAllowed,
-            onRevealClick = { post -> viewModel.revealPost(post) },
-            onMediaClick = { post -> openMedia(post) },
-            listener = this,
             currentUserId = viewModel.currentUserId(),
-            onEditClick = { post -> navigateToEditPost(post) },
-            onDeleteClick = { post -> confirmDeletePost(post) },
-            onAuthorClick = { userId -> navigateToUserProfile(userId) }
+            listener = this
         )
         binding.rvFeed.adapter = adapter.withLoadStateFooter(
             footer = ResourceLoadStateAdapter(adapter)
@@ -207,9 +199,41 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), OnItemClickListe
             .show()
     }
 
-    override fun onItemClick(view: View, item: Post) {
-        val action = PostDetailFragmentDirections.actionGlobalPostDetailFragment(item)
+    override fun onPostClick(view: View, post: Post) {
+        val action = PostDetailFragmentDirections.actionGlobalPostDetailFragment(post)
         findNavController().navigateSafe(hostDestId, action)
+    }
+
+    override fun onLikeClick(post: Post, targetLiked: Boolean) {
+        viewModel.togglePostLike(post, targetLiked)
+    }
+
+    override fun onRevealClick(post: Post) {
+        viewModel.revealPost(post)
+    }
+
+    override fun onMediaClick(post: Post) {
+        openMedia(post)
+    }
+
+    override fun onEditClick(post: Post) {
+        navigateToEditPost(post)
+    }
+
+    override fun onDeleteClick(post: Post) {
+        confirmDeletePost(post)
+    }
+
+    override fun onAuthorClick(userId: String) {
+        navigateToUserProfile(userId)
+    }
+
+    override suspend fun loadLikerAvatars(post: Post): List<String> {
+        return viewModel.likerAvatars(post)
+    }
+
+    override suspend fun ensureLikeStateLoaded(post: Post) {
+        viewModel.ensureLikeStateLoaded(post)
     }
 
     /**
