@@ -10,6 +10,12 @@ class PostNetworkDataSource(
     private val postApi: PostApi
 ) {
 
+    suspend fun getPost(id: String, filter: Map<String, String> = emptyMap()): NetworkPost? {
+        return withContext(Dispatchers.IO) {
+            postApi.getPost(id, filter).get()
+        }
+    }
+
     suspend fun postPost(post: NetworkPost): NetworkPost? {
         return withContext(Dispatchers.IO) {
             postApi.postPost(JSONAPIDocument(post)).get()

@@ -35,6 +35,7 @@
     <string name="feed_nsfw_warning_title">NSFW content</string>
     <string name="feed_content_warning_tap_to_view">Tap to view</string>
     <string name="feed_image_count_more">+%1$d</string>
+    <string name="feed_likers_more">+%1$d</string>
     <string name="feed_image_indicator">%1$d / %2$d</string>
     <string name="feed_unknown_user">Unknown user</string>
     <string name="feed_post_about">about %1$s</string>
@@ -145,6 +146,7 @@
     <string name="title_characters">Characters</string>
     <string name="title_posts">Posts</string>
     <string name="title_reactions">Reactions</string>
+    <string name="title_reaction">Reaction</string>
     <string name="reactions_upvote_login_required">Log in to upvote reactions.</string>
     <string name="reactions_upvote_failed">Failed to upvote reaction.</string>
     <string name="title_post">Post</string>

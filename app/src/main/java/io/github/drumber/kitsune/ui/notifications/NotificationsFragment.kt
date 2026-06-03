@@ -21,6 +21,7 @@ import io.github.drumber.kitsune.ui.adapter.paging.NotificationPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.ui.postdetail.PostDetailFragmentDirections
+import io.github.drumber.kitsune.ui.reactiondetail.ReactionDetailFragmentDirections
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
@@ -95,6 +96,13 @@ class NotificationsFragment : Fragment(R.layout.fragment_notifications),
     }
 
     override fun onItemClick(view: View, item: Notification) {
+        val reactionId = item.targetReactionId
+        if (reactionId != null) {
+            val action = ReactionDetailFragmentDirections
+                .actionGlobalReactionDetailFragment(reactionId)
+            findNavController().navigateSafe(R.id.notifications_fragment, action)
+            return
+        }
         val post = item.targetPost ?: return
         val action = PostDetailFragmentDirections.actionGlobalPostDetailFragment(post)
         findNavController().navigateSafe(R.id.notifications_fragment, action)

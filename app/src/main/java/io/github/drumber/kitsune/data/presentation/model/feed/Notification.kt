@@ -47,5 +47,8 @@ data class Notification(
     val excerpt: String?,
 
     /** The post this notification relates to, if it can be resolved. Used for navigation. */
-    val targetPost: Post?
+    val targetPost: Post?,
+
+    /** The id of the media reaction this notification relates to, if any. Used for navigation. */
+    val targetReactionId: String? = null
 ) : Parcelable

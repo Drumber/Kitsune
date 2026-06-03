@@ -6,6 +6,7 @@ import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMedia
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
 interface MediaReactionApi {
@@ -14,6 +15,12 @@ interface MediaReactionApi {
     suspend fun getMediaReactions(
         @QueryMap filter: Map<String, String> = emptyMap()
     ): JSONAPIDocument<List<NetworkMediaReaction>>
+
+    @GET("media-reactions/{id}")
+    suspend fun getMediaReaction(
+        @Path("id") id: String,
+        @QueryMap filter: Map<String, String> = emptyMap()
+    ): JSONAPIDocument<NetworkMediaReaction>
 
     @POST("media-reaction-votes")
     suspend fun postMediaReactionVote(

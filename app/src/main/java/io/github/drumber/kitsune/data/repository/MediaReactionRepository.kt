@@ -54,6 +54,13 @@ class MediaReactionRepository(
             .map { it.toMediaReaction() }
     }
 
+    /** Fetches a single reaction by id, including the author and the media it belongs to. */
+    suspend fun getReaction(reactionId: String): MediaReaction? {
+        val filter = Filter()
+            .include("user", "anime", "manga")
+        return reactionNetworkDataSource.getMediaReaction(reactionId, filter)?.toMediaReaction()
+    }
+
     /** Upvotes the reaction with the given id on behalf of the user. Returns true on success. */
     suspend fun upvoteReaction(userId: String, reactionId: String): Boolean {
         val vote = NetworkMediaReactionVote(

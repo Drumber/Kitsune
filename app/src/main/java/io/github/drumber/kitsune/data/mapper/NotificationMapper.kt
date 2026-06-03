@@ -21,6 +21,9 @@ object NotificationMapper {
         val resolvedPost = activities.firstNotNullOfOrNull {
             it.subject?.resolvePost() ?: it.target?.resolvePost()
         }
+        val resolvedReactionId = activities.firstNotNullOfOrNull {
+            it.subject?.resolveReactionId() ?: it.target?.resolveReactionId()
+        }
         val excerpt = activities.firstNotNullOfOrNull {
             it.subject?.resolveExcerpt() ?: it.target?.resolveExcerpt()
         }
@@ -34,13 +37,19 @@ object NotificationMapper {
             actorAvatarUrl = actor?.avatar?.originalOrDown(),
             actorCount = actorCount ?: activities.mapNotNull { it.actor?.id }.distinct().size,
             excerpt = excerpt,
-            targetPost = resolvedPost
+            targetPost = resolvedPost,
+            targetReactionId = resolvedReactionId
         )
     }
 
     private fun NetworkFeedSubject.resolvePost(): Post? = when (this) {
         is NetworkPost -> toPost()
         is NetworkComment -> post?.toPost()
+        else -> null
+    }
+
+    private fun NetworkFeedSubject.resolveReactionId(): String? = when (this) {
+        is NetworkMediaReaction -> id
         else -> null
     }
 

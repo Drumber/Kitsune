@@ -53,6 +53,9 @@ class PostDetailViewModel(
 
     private val post = MutableStateFlow<Post?>(null)
 
+    /** The current post, updated once the full version has been fetched from the network. */
+    val postState = post.asStateFlow()
+
     private val _postLikeState = MutableStateFlow(PostLikeUiState())
     val postLikeState = _postLikeState.asStateFlow()
     private var postLikeId: String? = null
@@ -72,6 +75,18 @@ class PostDetailViewModel(
         if (post.value?.id == newPost.id) return
         post.value = newPost
         _postLikeState.value = PostLikeUiState(isLiked = false, count = newPost.likesCount)
+        // Some entry points (e.g. notifications) only carry a partial post without images,
+        // media or embed. Re-fetch the full post so the detail screen renders completely.
+        viewModelScope.launch {
+            try {
+                postManagementRepository.getPost(newPost.id)?.let { fullPost ->
+                    post.value = fullPost
+                    _postLikeState.value = _postLikeState.value.copy(count = fullPost.likesCount)
+                }
+            } catch (e: Exception) {
+                logE("Failed to fetch full post '${newPost.id}'.", e)
+            }
+        }
         val userId = getLocalUserId() ?: return
         viewModelScope.launch {
             try {

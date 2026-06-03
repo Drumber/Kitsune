@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.data.repository
 
 import io.github.drumber.kitsune.data.mapper.FeedMapper.toPost
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.source.network.feed.PostNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUpload
@@ -12,6 +13,17 @@ import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 class PostManagementRepository(
     private val postNetworkDataSource: PostNetworkDataSource
 ) {
+
+    /**
+     * Fetches a single post by id with the relationships needed to fully render it (author, media,
+     * spoiled unit and image uploads). Used to load the complete post when only a partial copy is
+     * available, e.g. when opening a post from a notification.
+     */
+    suspend fun getPost(postId: String): Post? {
+        val filter = Filter()
+            .include("user", "media", "spoiledUnit", "uploads")
+        return postNetworkDataSource.getPost(postId, filter.options)?.toPost()
+    }
 
     /**
      * Creates a new post on the current user's profile feed. Returns the created post, or `null`

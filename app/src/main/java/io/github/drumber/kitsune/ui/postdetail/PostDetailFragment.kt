@@ -103,6 +103,14 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.postState.collectLatest { post ->
+                    post?.let { headerAdapter.setPost(it) }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.postLikeState.collectLatest { state ->
                     headerAdapter.setLikeState(state.isLiked, state.count)
                 }

@@ -22,6 +22,7 @@ import io.github.drumber.kitsune.ui.postdetail.PostDetailViewModel
 import io.github.drumber.kitsune.ui.profile.ProfileViewModel
 import io.github.drumber.kitsune.ui.profile.UserProfileViewModel
 import io.github.drumber.kitsune.ui.profile.editprofile.EditProfileViewModel
+import io.github.drumber.kitsune.ui.reactiondetail.ReactionDetailViewModel
 import io.github.drumber.kitsune.ui.search.SearchViewModel
 import io.github.drumber.kitsune.ui.search.categories.CategoriesViewModel
 import io.github.drumber.kitsune.ui.settings.AppLogsViewModel
@@ -46,6 +47,7 @@ val viewModelModule = module {
     viewModel { EpisodesViewModel(get(), get(), get(), get()) }
     viewModel { MediaFeedViewModel(get()) }
     viewModel { ReactionsViewModel(get(), get()) }
+    viewModel { (reactionId: String) -> ReactionDetailViewModel(reactionId, get(), get()) }
     viewModel { FeedListViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { NotificationsViewModel(get(), get()) }
     viewModel { PostDetailViewModel(get(), get(), get(), get(), get(), get(), get()) }

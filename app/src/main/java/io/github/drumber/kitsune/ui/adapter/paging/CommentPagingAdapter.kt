@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +13,7 @@ import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.databinding.ItemCommentBinding
+import io.github.drumber.kitsune.util.extensions.setOnDoubleTapListener
 import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.EmbedBinder
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
@@ -126,9 +128,32 @@ class CommentPagingAdapter(
         bindLikeRow(binding, isLiked, count)
         binding.layoutLike.setOnClickListener { onLikeClick?.invoke(comment) }
 
+        // Double tapping the comment likes it (Instagram-style). Does nothing if already liked.
+        binding.layoutCommentBody.setOnDoubleTapListener {
+            val liked = likeOverrides[comment.id]?.isLiked ?: comment.isLikedByMe
+            if (!liked) onLikeClick?.invoke(comment)
+        }
+
         // Replies are capped at one level, so only top-level comments can be replied to.
         binding.tvReply.isVisible = !isReply && onReplyClick != null
         binding.tvReply.setOnClickListener { onReplyClick?.invoke(comment) }
+
+        // Only top-level comments get a trailing divider; replies are nested with less indentation
+        // and a smaller avatar so the thread reads as a clear, tighter group.
+        binding.dividerComment.isVisible = !isReply
+        val density = binding.root.resources.displayMetrics.density
+        fun dp(value: Int) = (value * density).toInt()
+        binding.layoutCommentBody.setPaddingRelative(
+            if (isReply) 0 else dp(16),
+            dp(10),
+            dp(16),
+            dp(10)
+        )
+        val avatarSize = dp(if (isReply) 30 else 36)
+        binding.ivAvatar.updateLayoutParams {
+            width = avatarSize
+            height = avatarSize
+        }
 
         bindOverflowMenu(binding, comment)
     }

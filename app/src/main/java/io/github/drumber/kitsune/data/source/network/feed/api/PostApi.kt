@@ -5,11 +5,19 @@ import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.QueryMap
 
 interface PostApi {
+
+    @GET("posts/{id}")
+    suspend fun getPost(
+        @Path("id") id: String,
+        @QueryMap filter: Map<String, String> = emptyMap()
+    ): JSONAPIDocument<NetworkPost>
 
     @POST("posts")
     suspend fun postPost(

@@ -11,6 +11,7 @@ import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.ItemPostDetailHeaderBinding
+import io.github.drumber.kitsune.util.extensions.setOnDoubleTapListener
 import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.EmbedBinder
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
@@ -71,6 +72,10 @@ class PostDetailHeaderAdapter(
         private var pageChangeCallback: ViewPager2.OnPageChangeCallback? = null
 
         fun bind(post: Post) {
+            binding.root.setOnDoubleTapListener {
+                if (!isLiked) onLikeClick()
+            }
+
             glide.load(post.authorAvatarUrl)
                 .placeholder(R.drawable.ic_outline_person_24)
                 .circleCrop()

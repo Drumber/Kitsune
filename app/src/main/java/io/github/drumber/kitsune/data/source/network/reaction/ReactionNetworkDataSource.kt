@@ -20,6 +20,12 @@ class ReactionNetworkDataSource(
         }
     }
 
+    suspend fun getMediaReaction(id: String, filter: Filter): NetworkMediaReaction? {
+        return withContext(Dispatchers.IO) {
+            mediaReactionApi.getMediaReaction(id, filter.options).get()
+        }
+    }
+
     suspend fun postMediaReactionVote(vote: NetworkMediaReactionVote): NetworkMediaReactionVote? {
         return withContext(Dispatchers.IO) {
             mediaReactionApi.postMediaReactionVote(JSONAPIDocument(vote)).get()

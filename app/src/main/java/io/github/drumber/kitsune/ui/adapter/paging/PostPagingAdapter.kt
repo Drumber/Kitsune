@@ -16,6 +16,7 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.ItemPostBinding
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
+import io.github.drumber.kitsune.util.extensions.setOnDoubleTapListener
 import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.EmbedBinder
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
@@ -113,6 +114,15 @@ class PostPagingAdapter(
             avatarJob = null
         }
 
+        /** Likes the post in response to a double tap. Does nothing if it is already liked. */
+        private fun likeViaDoubleTap(post: Post) {
+            val current = overrides[post.id]?.isLiked ?: false
+            if (current) return
+            val currentCount = overrides[post.id]?.likesCount ?: post.likesCount
+            setLikeState(post.id, true, currentCount + 1)
+            onLikeClick?.invoke(post, true)
+        }
+
         private fun bindOverflowMenu(post: Post) {
             val isOwner = currentUserId != null && post.authorId == currentUserId
             binding.btnOverflow.isVisible = isOwner
@@ -144,9 +154,10 @@ class PostPagingAdapter(
         }
 
         fun bind(post: Post) {
-            binding.root.setOnClickListener {
-                listener?.onItemClick(binding.root, post)
-            }
+            binding.root.setOnDoubleTapListener(
+                onSingleTap = { listener?.onItemClick(binding.root, post) },
+                onDoubleTap = { likeViaDoubleTap(post) }
+            )
 
             glide.load(post.authorAvatarUrl)
                 .placeholder(R.drawable.ic_outline_person_24)
@@ -251,6 +262,7 @@ class PostPagingAdapter(
             )
             binding.layoutLikers.isVisible = false
             avatarViews.forEach { it.isVisible = false }
+            binding.tvLikerMore.isVisible = false
 
             if (post.likesCount <= 0) return
             val scope = scope ?: return
@@ -264,6 +276,14 @@ class PostPagingAdapter(
                     val url = avatars.getOrNull(index)
                     imageView.isVisible = url != null
                     if (url != null) loadAvatar(imageView, url)
+                }
+                val totalLikes = overrides[post.id]?.likesCount ?: post.likesCount
+                val remaining = totalLikes - avatarViews.size
+                binding.tvLikerMore.apply {
+                    isVisible = remaining > 0
+                    if (remaining > 0) {
+                        text = context.getString(R.string.feed_likers_more, remaining)
+                    }
                 }
             }
         }
