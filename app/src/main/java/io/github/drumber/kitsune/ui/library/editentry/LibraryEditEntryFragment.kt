@@ -2,9 +2,7 @@ package io.github.drumber.kitsune.ui.library.editentry
 
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -85,12 +83,9 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
         super.onStart()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val view = super.onCreateView(inflater, container, savedInstanceState)!!
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         viewModel.initLibraryEntry(args.libraryEntryId)
 
         binding.toolbar.initWindowInsetsListener(consume = false)
@@ -107,12 +102,6 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
         )
 
         binding.root.initImePaddingWindowInsetsListener()
-
-        return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
             toolbar.setNavigationOnClickListener {
