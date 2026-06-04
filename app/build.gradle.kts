@@ -296,6 +296,7 @@ dependencies {
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.datafaker)
     testImplementation(libs.cashapp.turbine)
+    testImplementation(libs.androidx.arch.core.testing)
 
     // fastlane screengrab
     androidTestImplementation(libs.fastlane.screengrab)

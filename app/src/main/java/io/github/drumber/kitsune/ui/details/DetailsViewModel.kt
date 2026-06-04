@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.exception.NoDataException
-import io.github.drumber.kitsune.data.common.exception.ResourceUpdateFailed
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
@@ -35,13 +34,11 @@ import io.github.drumber.kitsune.util.logW
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -68,19 +65,21 @@ class DetailsViewModel(
     val libraryEntryWrapper: LiveData<LibraryEntryWithModification?>
         get() = _libraryEntryWithModification
 
-    private val _favorite = MutableLiveData<Favorite?>()
+    private val favoriteDelegate by lazy {
+        MediaFavoriteDelegate(viewModelScope, favoriteRepository, getLocalUserId) { mediaModel.value }
+    }
     val favorite: LiveData<Favorite?>
-        get() = _favorite
+        get() = favoriteDelegate.favorite
 
     private val _mappingsSate = MutableStateFlow<MediaMappingsSate>(MediaMappingsSate.Initial)
     val mappingsSate
         get() = _mappingsSate.asStateFlow()
 
-    private val _reactions = MutableStateFlow<List<MediaReaction>>(emptyList())
-    val reactions = _reactions.asStateFlow()
-
-    private val reactionUpvoteEventChannel = Channel<ReactionUpvoteEvent>(Channel.BUFFERED)
-    val reactionUpvoteEvents: Flow<ReactionUpvoteEvent> = reactionUpvoteEventChannel.receiveAsFlow()
+    private val reactionsDelegate by lazy {
+        MediaReactionsDelegate(viewModelScope, mediaReactionRepository, getLocalUserId)
+    }
+    val reactions get() = reactionsDelegate.reactions
+    val reactionUpvoteEvents: Flow<ReactionUpvoteEvent> get() = reactionsDelegate.upvoteEvents
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean>
@@ -147,43 +146,15 @@ class DetailsViewModel(
                 awaitAll(
                     async { loadFullMedia(media) },
                     async { loadLibraryEntry(media) },
-                    async { loadFavorite(media) },
-                    async { loadReactions(media) }
+                    async { favoriteDelegate.loadFavorite(media) },
+                    async { reactionsDelegate.loadReactions(media) }
                 )
                 _isLoading.postValue(false)
             }
         }
     }
 
-    private suspend fun loadReactions(media: Media) {
-        try {
-            val reactions = mediaReactionRepository.getReactions(media is Anime, media.id)
-            _reactions.value = reactions
-        } catch (e: Exception) {
-            logE("Failed to load reactions for media '${media.id}'.", e)
-        }
-    }
-
-    fun upvoteReaction(reaction: MediaReaction) {
-        val userId = getLocalUserId()
-        if (userId == null) {
-            reactionUpvoteEventChannel.trySend(ReactionUpvoteEvent.LoginRequired)
-            return
-        }
-        viewModelScope.launch {
-            val event = try {
-                if (mediaReactionRepository.upvoteReaction(userId, reaction.id)) {
-                    ReactionUpvoteEvent.Success(reaction.id, reaction.upVotesCount + 1)
-                } else {
-                    ReactionUpvoteEvent.Failed
-                }
-            } catch (e: Exception) {
-                logE("Failed to upvote reaction with id '${reaction.id}'.", e)
-                ReactionUpvoteEvent.Failed
-            }
-            reactionUpvoteEventChannel.send(event)
-        }
-    }
+    fun upvoteReaction(reaction: MediaReaction) = reactionsDelegate.upvoteReaction(reaction)
 
     private suspend fun loadFullMedia(media: Media) {
         val id = media.id
@@ -260,22 +231,6 @@ class DetailsViewModel(
             }
         } catch (e: Exception) {
             logE("Failed to load library entry.", e)
-        }
-    }
-
-    private suspend fun loadFavorite(media: Media) {
-        val userId = getLocalUserId() ?: return
-
-        val filter = Filter()
-            .filter("user_id", userId)
-            .filter("item_id", media.id)
-            .filter("item_type", if (media is Anime) "Anime" else "Manga")
-
-        try {
-            val favorites = favoriteRepository.getAllFavorites(filter)
-            _favorite.postValue(favorites?.firstOrNull())
-        } catch (e: Exception) {
-            logE("Failed to load favorites.", e)
         }
     }
 
@@ -357,35 +312,7 @@ class DetailsViewModel(
         }
     }
 
-    fun toggleFavorite() {
-        val favorite = favorite.value
-
-        viewModelScope.launch(Dispatchers.IO) {
-            if (favorite == null) {
-                val mediaItem = mediaModel.value ?: return@launch
-                val userId = getLocalUserId() ?: return@launch
-
-                try {
-                    val newFavorite = favoriteRepository.createMediaFavorite(userId, mediaItem.mediaType, mediaItem.id)
-                    _favorite.postValue(newFavorite)
-                } catch (e: Exception) {
-                    logE("Failed to create new favorite.", e)
-                }
-            } else {
-                val favoriteId = favorite.id
-                try {
-                    val isSuccessful = favoriteRepository.deleteFavorite(favoriteId)
-                    if (isSuccessful) {
-                        _favorite.postValue(null)
-                    } else {
-                        throw ResourceUpdateFailed()
-                    }
-                } catch (e: Exception) {
-                    logE("Failed to delete favorite.", e)
-                }
-            }
-        }
-    }
+    fun toggleFavorite() = favoriteDelegate.toggleFavorite()
 }
 
 sealed class LibraryChangeResult {
