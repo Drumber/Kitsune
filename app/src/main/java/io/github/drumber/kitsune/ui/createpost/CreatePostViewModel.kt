@@ -5,14 +5,9 @@ import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.data.repository.PostManagementRepository
 import io.github.drumber.kitsune.data.repository.UploadRepository
-import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime
-import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga
-import io.github.drumber.kitsune.data.source.network.media.model.NetworkMedia
-import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkChapter
-import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkEpisode
-import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkMediaUnit
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.util.logE
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -184,12 +179,8 @@ class CreatePostViewModel(
             return
         }
 
-        val mediaStub: NetworkMedia? = state.media?.let { media ->
-            if (media.isAnime) NetworkAnime.empty(media.id) else NetworkManga.empty(media.id)
-        }
-        val unitStub: NetworkMediaUnit? = state.unit?.let { unit ->
-            if (unit.isEpisode) NetworkEpisode.empty(unit.id) else NetworkChapter.empty(unit.id)
-        }
+        val mediaState = state.media
+        val unitState = state.unit
 
         _uiState.value = state.copy(isPublishing = true)
         viewModelScope.launch {
@@ -210,8 +201,10 @@ class CreatePostViewModel(
                         content = content,
                         spoiler = state.spoiler,
                         nsfw = state.nsfw,
-                        media = mediaStub,
-                        spoiledUnit = unitStub,
+                        mediaId = mediaState?.id,
+                        mediaIsAnime = mediaState?.isAnime ?: false,
+                        spoiledUnitId = unitState?.id,
+                        spoiledUnitIsEpisode = unitState?.isEpisode ?: false,
                         uploadIds = uploadIds
                     )
                 } else {
@@ -220,8 +213,10 @@ class CreatePostViewModel(
                         content = content,
                         spoiler = state.spoiler,
                         nsfw = state.nsfw,
-                        media = mediaStub,
-                        spoiledUnit = unitStub,
+                        mediaId = mediaState?.id,
+                        mediaIsAnime = mediaState?.isAnime ?: false,
+                        spoiledUnitId = unitState?.id,
+                        spoiledUnitIsEpisode = unitState?.isEpisode ?: false,
                         uploadIds = uploadIds,
                         targetUserId = targetUserId
                     )
@@ -232,6 +227,8 @@ class CreatePostViewModel(
                     _uiState.value = _uiState.value.copy(isPublishing = false)
                     eventChannel.send(Event.Error)
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 logE("Failed to publish post.", e)
                 _uiState.value = _uiState.value.copy(isPublishing = false)

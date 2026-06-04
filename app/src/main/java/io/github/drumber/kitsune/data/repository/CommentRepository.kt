@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.data.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.map
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.Repository
 import io.github.drumber.kitsune.data.common.Filter
@@ -13,6 +14,7 @@ import io.github.drumber.kitsune.data.source.network.comment.model.NetworkCommen
 import io.github.drumber.kitsune.data.source.network.comment.model.NetworkCommentLike
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
+import kotlinx.coroutines.flow.map
 
 class CommentRepository(
     private val commentNetworkDataSource: CommentNetworkDataSource
@@ -28,7 +30,14 @@ class CommentRepository(
             pagingSourceFactory = {
                 CommentPagingDataSource(commentNetworkDataSource, userId, buildCommentFilter(postId, pageSize))
             }
-        ).flow
+        ).flow.map { pagingData ->
+            pagingData.map { item ->
+                item.comment.toComment(
+                    isLikedByMe = item.likeId != null,
+                    myLikeId = item.likeId
+                )
+            }
+        }
 
     /** Posts a new top-level comment on behalf of the user. Returns the created comment. */
     suspend fun postComment(postId: String, userId: String, content: String): Comment? {

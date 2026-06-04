@@ -6,13 +6,23 @@ import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.source.network.feed.PostNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUpload
+import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime
+import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga
 import io.github.drumber.kitsune.data.source.network.media.model.NetworkMedia
+import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkChapter
+import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkEpisode
 import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkMediaUnit
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 
 class PostManagementRepository(
     private val postNetworkDataSource: PostNetworkDataSource
 ) {
+
+    private fun mediaStub(mediaId: String?, isAnime: Boolean): NetworkMedia? =
+        mediaId?.let { if (isAnime) NetworkAnime.empty(it) else NetworkManga.empty(it) }
+
+    private fun spoiledUnitStub(unitId: String?, isEpisode: Boolean): NetworkMediaUnit? =
+        unitId?.let { if (isEpisode) NetworkEpisode.empty(it) else NetworkChapter.empty(it) }
 
     /**
      * Fetches a single post by id with the relationships needed to fully render it (author, media,
@@ -29,8 +39,10 @@ class PostManagementRepository(
      * Creates a new post on the current user's profile feed. Returns the created post, or `null`
      * when the server response is empty.
      *
-     * @param media optional anime/manga the post is tagged with.
-     * @param spoiledUnit optional episode/chapter the post spoils.
+     * @param mediaId optional id of the anime/manga the post is tagged with.
+     * @param mediaIsAnime whether [mediaId] refers to an anime (otherwise manga).
+     * @param spoiledUnitId optional id of the episode/chapter the post spoils.
+     * @param spoiledUnitIsEpisode whether [spoiledUnitId] refers to an episode (otherwise chapter).
      * @param uploadIds ids of previously uploaded images to attach, in display order.
      */
     suspend fun postPost(
@@ -38,8 +50,10 @@ class PostManagementRepository(
         content: String?,
         spoiler: Boolean,
         nsfw: Boolean,
-        media: NetworkMedia? = null,
-        spoiledUnit: NetworkMediaUnit? = null,
+        mediaId: String? = null,
+        mediaIsAnime: Boolean = false,
+        spoiledUnitId: String? = null,
+        spoiledUnitIsEpisode: Boolean = false,
         uploadIds: List<String> = emptyList(),
         targetUserId: String? = null
     ): Post? {
@@ -50,8 +64,8 @@ class PostManagementRepository(
             nsfw = nsfw,
             user = NetworkUser(id = userId),
             targetUser = targetUserId?.let { NetworkUser(id = it) },
-            media = media,
-            spoiledUnit = spoiledUnit,
+            media = mediaStub(mediaId, mediaIsAnime),
+            spoiledUnit = spoiledUnitStub(spoiledUnitId, spoiledUnitIsEpisode),
             uploads = uploadIds
                 .takeIf { it.isNotEmpty() }
                 ?.mapIndexed { index, id -> NetworkUpload(id = id, uploadOrder = index) }
@@ -70,8 +84,10 @@ class PostManagementRepository(
         content: String?,
         spoiler: Boolean,
         nsfw: Boolean,
-        media: NetworkMedia? = null,
-        spoiledUnit: NetworkMediaUnit? = null,
+        mediaId: String? = null,
+        mediaIsAnime: Boolean = false,
+        spoiledUnitId: String? = null,
+        spoiledUnitIsEpisode: Boolean = false,
         uploadIds: List<String> = emptyList()
     ): Post? {
         val post = NetworkPost(
@@ -79,8 +95,8 @@ class PostManagementRepository(
             content = content,
             spoiler = spoiler,
             nsfw = nsfw,
-            media = media,
-            spoiledUnit = spoiledUnit,
+            media = mediaStub(mediaId, mediaIsAnime),
+            spoiledUnit = spoiledUnitStub(spoiledUnitId, spoiledUnitIsEpisode),
             uploads = uploadIds
                 .takeIf { it.isNotEmpty() }
                 ?.mapIndexed { index, id -> NetworkUpload(id = id, uploadOrder = index) }

@@ -4,8 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.common.Filter
-import io.github.drumber.kitsune.data.mapper.CommentMapper.toComment
-import io.github.drumber.kitsune.data.presentation.model.comment.Comment
+import io.github.drumber.kitsune.data.source.network.comment.model.NetworkCommentWithLike
 import io.github.drumber.kitsune.util.logE
 
 /**
@@ -17,9 +16,9 @@ class CommentPagingDataSource(
     private val dataSource: CommentNetworkDataSource,
     private val userId: String?,
     private val filter: Filter
-) : PagingSource<Int, Comment>() {
+) : PagingSource<Int, NetworkCommentWithLike>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Comment> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, NetworkCommentWithLike> {
         return try {
             val pageOffset = params.key ?: Kitsu.DEFAULT_PAGE_OFFSET
             val pageData = dataSource.getComments(filter.pageOffset(pageOffset))
@@ -40,10 +39,9 @@ class CommentPagingDataSource(
             }
 
             val comments = networkComments.map { networkComment ->
-                val likeId = likeIdByCommentId[networkComment.id]
-                networkComment.toComment(
-                    isLikedByMe = likeId != null,
-                    myLikeId = likeId
+                NetworkCommentWithLike(
+                    comment = networkComment,
+                    likeId = likeIdByCommentId[networkComment.id]
                 )
             }
 
@@ -58,7 +56,7 @@ class CommentPagingDataSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, Comment>) =
+    override fun getRefreshKey(state: PagingState<Int, NetworkCommentWithLike>) =
         state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)

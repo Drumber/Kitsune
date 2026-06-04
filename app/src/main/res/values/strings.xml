@@ -393,12 +393,13 @@
     <string name="preference_not_logged_in">You must be logged in to edit this setting.</string>
     <string name="app_logs_no_data">No logs available.</string>
     <string name="prompt_email">Email</string>
+    <string name="prompt_email_or_username">Email or username</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_log_in">Log in</string>
     <string name="action_log_in_to_kitsu">Log in to Kitsu</string>
     <string name="action_create_account">Create account</string>
-    <string name="invalid_username">Not a valid email address</string>
+    <string name="invalid_username">Enter your email or username</string>
     <string name="login_failed">"Login failed"</string>
     <string name="status_logging_in">Logging in…</string>
     <string name="logged_in_success">Logged in as %s.</string>

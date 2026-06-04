@@ -5,6 +5,7 @@ import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logI
 import retrofit2.HttpException
+import kotlin.coroutines.cancellation.CancellationException
 
 class LogInUserUseCase(
     private val userRepository: UserRepository,
@@ -27,6 +28,8 @@ class LogInUserUseCase(
                 400 -> LoginResult.Failure
                 else -> LoginResult.Error(e)
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             logE("Login: Failed to obtain access token.", e)
             return LoginResult.Error(e)
@@ -35,6 +38,8 @@ class LogInUserUseCase(
         val localUser = try {
             userRepository.fetchAndStoreLocalUserFromNetwork()
             userRepository.localUser.value
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             logE("Login: Failed to update local user from network.", e)
             null

@@ -18,6 +18,7 @@ import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.cancellation.CancellationException
 
 class SearchProvider(
     private val algoliaKeyRepository: AlgoliaKeyRepository
@@ -64,6 +65,8 @@ class SearchProvider(
         async {
             try {
                 algoliaKeyRepository.getAllAlgoliaKeys()
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 logE("Failed to obtain algolia search keys.", e)
                 null

@@ -201,8 +201,8 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
                 val ratingTwenty = libraryEntry.ratingTwenty
                 val hasRated = ratingTwenty != null && ratingTwenty != -1
                 fieldRating.editText?.apply {
-                    val ratingText = if (hasRated) {
-                        "${ratingTwenty!!.formatRatingTwenty()} / ${20.formatRatingTwenty()}"
+                    val ratingText = if (ratingTwenty != null && ratingTwenty != -1) {
+                        "${ratingTwenty.formatRatingTwenty()} / ${20.formatRatingTwenty()}"
                     } else {
                         getString(R.string.library_not_rated)
                     }
