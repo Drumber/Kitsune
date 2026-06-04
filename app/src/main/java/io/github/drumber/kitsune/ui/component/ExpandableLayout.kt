@@ -8,6 +8,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import androidx.core.animation.addListener
+import androidx.core.os.BundleCompat
 import androidx.core.os.bundleOf
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.LiveData
@@ -91,7 +92,7 @@ class ExpandableLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         val bundle = state as Bundle
         expansion = bundle.getFloat(KEY_EXPANSION)
         this.state = if (expansion == 1f) EXPANDED else COLLAPSED
-        val superState = bundle.getParcelable<Parcelable>(KEY_SUPER_STATE)
+        val superState = BundleCompat.getParcelable(bundle, KEY_SUPER_STATE, Parcelable::class.java)
 
         super.onRestoreInstanceState(superState)
     }

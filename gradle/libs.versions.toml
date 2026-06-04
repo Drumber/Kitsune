@@ -38,6 +38,7 @@ kotlin = "2.2.20"
 kotlinxCoroutines = "1.10.2"
 kotlinxSerialization = "1.9.0"
 kotpref = "2.13.2"
+kover = "0.9.1"
 ksp = "2.3.6"
 ktorClient = "1.6.8"
 leakCanary = "2.14"
@@ -156,4 +157,5 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 jetbrains-kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

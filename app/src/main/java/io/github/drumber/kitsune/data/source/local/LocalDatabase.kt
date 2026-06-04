@@ -32,7 +32,7 @@ abstract class LocalDatabase : RoomDatabase() {
     companion object {
         fun createLocalDatabase(application: Application): LocalDatabase {
             return Room.databaseBuilder(application, LocalDatabase::class.java, "kitsune.db")
-                .fallbackToDestructiveMigration()
+                .fallbackToDestructiveMigration(dropAllTables = true)
                 .build()
         }
     }

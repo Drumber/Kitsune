@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
+import androidx.core.os.BundleCompat
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
@@ -46,7 +47,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         view.doOnPreDraw { startPostponedEnterTransition() }
 
         val mediaType = arguments?.takeIf { it.containsKey(BUNDLE_MEDIA_TYPE) }?.let {
-            it.getSerializable(BUNDLE_MEDIA_TYPE) as? MediaType
+            BundleCompat.getSerializable(it, BUNDLE_MEDIA_TYPE, MediaType::class.java)
         }
 
         if (mediaType == MediaType.Anime) {

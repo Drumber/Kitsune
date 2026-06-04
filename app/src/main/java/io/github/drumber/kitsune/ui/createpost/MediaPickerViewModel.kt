@@ -26,6 +26,7 @@ import io.github.drumber.kitsune.data.source.network.algolia.model.search.Algoli
 import io.github.drumber.kitsune.domain.algolia.SearchProvider
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logI
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -107,6 +108,7 @@ class MediaPickerViewModel(
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val searchResultSource = searchPaginator.asFlow().flatMapLatest { paginator ->
         paginator.flow
     }.cachedIn(viewModelScope)

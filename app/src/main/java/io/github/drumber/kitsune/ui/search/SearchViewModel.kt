@@ -49,6 +49,7 @@ import io.github.drumber.kitsune.ui.component.algolia.SeasonListPresenter
 import io.github.drumber.kitsune.ui.component.algolia.range.CustomFilterRangeConnector
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logI
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -198,6 +199,7 @@ class SearchViewModel(
         _searchBox.postValue(searchBox)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val searchResultSource = searchPaginator.asFlow().flatMapLatest { paginator ->
         paginator.flow
     }.cachedIn(viewModelScope)

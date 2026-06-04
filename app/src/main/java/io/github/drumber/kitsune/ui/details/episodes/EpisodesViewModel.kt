@@ -24,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 
@@ -85,6 +86,7 @@ class EpisodesViewModel(
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val dataSource: Flow<PagingData<MediaUnit>> = media.asFlow().flatMapLatest { media ->
         val filter = Filter()
             .sort("number")

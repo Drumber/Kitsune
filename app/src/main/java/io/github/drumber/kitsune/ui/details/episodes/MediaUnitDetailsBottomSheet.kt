@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.BundleCompat
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.R
@@ -20,7 +21,9 @@ class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = SheetMediaUnitDetailsBinding.inflate(inflater, container, false)
-        val mediaUnitDto: MediaUnitDto? = arguments?.getParcelable(BUNDLE_MEDIA_UNIT_ADAPTER)
+        val mediaUnitDto: MediaUnitDto? = arguments?.let {
+            BundleCompat.getParcelable(it, BUNDLE_MEDIA_UNIT_ADAPTER, MediaUnitDto::class.java)
+        }
         val mediaUnit = mediaUnitDto?.toMediaUnit()
         binding.mediaUnit = mediaUnit
 

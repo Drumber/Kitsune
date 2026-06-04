@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.os.BundleCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.children
 import androidx.core.view.doOnPreDraw
@@ -279,7 +280,11 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
         setFragmentResultListener(ManageLibraryBottomSheet.STATUS_REQUEST_KEY) { _, bundle ->
             val libraryEntryStatus =
-                bundle.get(ManageLibraryBottomSheet.BUNDLE_STATUS) as? LibraryStatus
+                BundleCompat.getSerializable(
+                    bundle,
+                    ManageLibraryBottomSheet.BUNDLE_STATUS,
+                    LibraryStatus::class.java
+                )
             libraryEntryStatus?.let { viewModel.updateLibraryEntryStatus(it) }
         }
 
