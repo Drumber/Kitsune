@@ -5,17 +5,11 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
-import android.text.style.UnderlineSpan
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.PopupMenu
 import androidx.core.os.BundleCompat
 import androidx.core.os.bundleOf
-import androidx.core.view.children
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
@@ -28,9 +22,6 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
 import com.google.android.material.chip.Chip
 import com.google.android.material.elevation.SurfaceColors
 import com.google.android.material.navigation.NavigationBarView
@@ -41,13 +32,9 @@ import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.data.common.Filter
-import io.github.drumber.kitsune.data.common.Titles
-import io.github.drumber.kitsune.data.common.en
 import io.github.drumber.kitsune.data.common.media.MediaType
-import io.github.drumber.kitsune.data.common.withoutCommonTitles
 import io.github.drumber.kitsune.data.presentation.dto.toMedia
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
-import io.github.drumber.kitsune.data.presentation.getStringRes
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.getStringResId
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
@@ -55,22 +42,15 @@ import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
 import io.github.drumber.kitsune.data.presentation.model.media.category.Category
-import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
-import io.github.drumber.kitsune.databinding.ItemDetailsInfoRowBinding
-import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.MediaReactionPreviewAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaRelationshipRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
-import io.github.drumber.kitsune.ui.component.chart.BarChartStyle
-import io.github.drumber.kitsune.ui.component.chart.BarChartStyle.applyStyle
-import io.github.drumber.kitsune.ui.component.chart.StepAxisValueFormatter
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.LibraryUpdateResult
-import io.github.drumber.kitsune.util.DataUtil.mapLanguageCodesToDisplayName
 import io.github.drumber.kitsune.util.extensions.getColor
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
@@ -78,10 +58,6 @@ import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.logW
-import io.github.drumber.kitsune.util.rating.RatingFrequenciesUtil.calculateAverageRating
-import io.github.drumber.kitsune.util.rating.RatingFrequenciesUtil.transformToRatingSystem
-import io.github.drumber.kitsune.util.rating.RatingSystemUtil.convertFrom
-import io.github.drumber.kitsune.util.rating.RatingSystemUtil.stepSize
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
@@ -91,9 +67,7 @@ import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.text.NumberFormat
 import java.util.concurrent.CopyOnWriteArrayList
-import kotlin.math.roundToInt
 
 class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     NavigationBarView.OnItemReselectedListener {
@@ -105,6 +79,21 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     private val viewModel: DetailsViewModel by viewModel()
 
     private var reactionsAdapter: MediaReactionPreviewAdapter? = null
+
+    private val ratingChartSection by lazy {
+        DetailsRatingChartSection(binding, requireContext())
+    }
+
+    private val titlesSection by lazy {
+        DetailsTitlesSection(
+            binding = binding,
+            layoutInflater = layoutInflater,
+            resolveColor = { attr -> requireActivity().theme.getColor(attr) },
+            isExpanded = { viewModel.areAllTileLanguagesShown },
+            setExpanded = { viewModel.areAllTileLanguagesShown = it },
+            currentTitles = { viewModel.mediaModel.value?.titles }
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -152,11 +141,11 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
         viewModel.mediaModel.observe(viewLifecycleOwner) { model ->
             binding.data = model
-            updateTitlesInDetailsTable(model.titles)
+            titlesSection.updateTitlesInDetailsTable(model.titles)
             showCategoryChips(model)
             showFranchise(model)
             showStreamingLinks(model)
-            showRatingChart(model)
+            ratingChartSection.showRatingChart(model)
 
             val glide = Glide.with(this)
 
@@ -257,7 +246,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             btnEditLibraryEntry.setOnClickListener { showEditLibraryEntryFragment() }
 
             btnRatingTypeMenu.setOnClickListener { v ->
-                showRatingTypeMenu(v)
+                ratingChartSection.showRatingTypeMenu(v, viewModel.mediaModel.value)
             }
         }
 
@@ -371,75 +360,6 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         )
     }
 
-    private fun updateTitlesInDetailsTable(titles: Titles?) {
-        val identifierTag = "dynamic_title"
-        val tableLayout = binding.sectionDetailsInfo.tableLayout
-        // remove any previous added titles
-        tableLayout.apply {
-            children.filter { it.tag == identifierTag }.toList().forEach { removeView(it) }
-        }
-
-        // map language codes and sort them
-        val sortedTitles = titles?.withoutCommonTitles()
-            ?.filterValues { !it.isNullOrBlank() }
-            ?.filterNot { it.key == "en_us" && it.value == titles.en }
-            ?.mapLanguageCodesToDisplayName()
-            ?.toList()
-            ?.sortedByDescending { it.first }
-
-        if (sortedTitles.isNullOrEmpty()) return
-
-        val maxShownTitles = 3
-        val shouldLimitShownTitles = sortedTitles.size > maxShownTitles &&
-                !viewModel.areAllTileLanguagesShown
-        val rowIndex = tableLayout.indexOfChild(binding.sectionDetailsInfo.synonymsRowLayout.root)
-            .coerceAtLeast(0)
-        // add a row for each title
-        sortedTitles
-            .takeLast(if (shouldLimitShownTitles) maxShownTitles else Int.MAX_VALUE)
-            .forEach { (language, title) ->
-                val rowBinding = ItemDetailsInfoRowBinding.inflate(layoutInflater)
-                rowBinding.title = language
-                rowBinding.value = title
-                rowBinding.root.tag = identifierTag
-                tableLayout.addView(rowBinding.root, rowIndex)
-            }
-
-        // add 'show more' text to table
-        if (sortedTitles.size > maxShownTitles) {
-            val showMoreRow = createShowMoreTitlesRow()
-            showMoreRow.tag = identifierTag
-            val viewIndex =
-                tableLayout.indexOfChild(binding.sectionDetailsInfo.synonymsRowLayout.root)
-                    .coerceAtLeast(0)
-            tableLayout.addView(showMoreRow, viewIndex)
-        }
-    }
-
-    private fun createShowMoreTitlesRow(): View {
-        val rowBinding = ItemDetailsInfoRowBinding.inflate(layoutInflater)
-        val text = getString(
-            if (viewModel.areAllTileLanguagesShown)
-                R.string.action_show_less
-            else
-                R.string.action_show_more
-        )
-        rowBinding.title = SpannableString(text).apply {
-            setSpan(
-                ForegroundColorSpan(requireActivity().theme.getColor(R.attr.colorPrimary)),
-                0,
-                text.length,
-                SpannableString.SPAN_INCLUSIVE_EXCLUSIVE
-            )
-            setSpan(UnderlineSpan(), 0, text.length, SpannableString.SPAN_INCLUSIVE_EXCLUSIVE)
-        }
-        rowBinding.tvTitle.setOnClickListener {
-            viewModel.areAllTileLanguagesShown = !viewModel.areAllTileLanguagesShown
-            updateTitlesInDetailsTable(viewModel.mediaModel.value?.titles)
-        }
-        return rowBinding.root
-    }
-
     private fun showCategoryChips(media: Media) {
         if (!media.categories.isNullOrEmpty()) {
             binding.chipGroupCategories.removeAllViews()
@@ -547,69 +467,6 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             val adapter = binding.rvStreamer.adapter as StreamingLinkAdapter
             adapter.submitList(data)
         }
-    }
-
-    private fun showRatingChart(media: Media) {
-        val ratings = media.ratingFrequencies ?: return
-        val ratingSystem = KitsunePref.ratingChartRatingSystem
-
-        val ratingList = ratings.transformToRatingSystem(ratingSystem)
-
-        val chartEntries = ratingList.mapIndexed { index, value ->
-            BarEntry(index.toFloat(), value.toFloat())
-        }
-
-        val dataSet = BarDataSet(chartEntries, "Ratings")
-        val chartColorArray = BarChartStyle
-            .getColorArray(requireContext(), R.array.ratings_chart_colors)
-            .let { colorArray ->
-                val colorStep = (colorArray.size.toFloat() / ratingList.size).roundToInt()
-                colorArray.filterIndexed { index, _ ->
-                    index % colorStep == 0
-                }
-            }
-        dataSet.applyStyle(requireContext(), chartColorArray)
-
-        val barData = BarData(dataSet)
-        barData.applyStyle(requireContext())
-
-        binding.chartRatings.apply {
-            data = barData
-            applyStyle(requireContext())
-            setFitBars(true)
-            xAxis.valueFormatter = StepAxisValueFormatter(
-                ratingSystem.convertFrom(2),
-                ratingSystem.stepSize()
-            )
-            xAxis.labelCount = ratingList.size
-            invalidate()
-        }
-
-        val avgRating = ratings.calculateAverageRating(ratingSystem)
-        val numberFormatter = NumberFormat.getNumberInstance()
-        numberFormatter.minimumFractionDigits = 1
-        numberFormatter.maximumFractionDigits = 2
-        binding.tvCalculatedAverageRating.text = numberFormatter.format(avgRating)
-        binding.tvCalculatedAverageRatingMax.text = "/ " + numberFormatter.format(ratingSystem.convertFrom(20))
-    }
-
-    private fun showRatingTypeMenu(anchorView: View) {
-        val popup = PopupMenu(requireContext(), anchorView)
-        val menu = popup.menu
-        val selectedRatingSystem = KitsunePref.ratingChartRatingSystem
-
-        LocalRatingSystemPreference.entries.forEach {
-            val menuItem = menu.add(1, it.ordinal, it.ordinal, it.getStringRes())
-            menuItem.isChecked = selectedRatingSystem == it
-            menuItem.setOnMenuItemClickListener { _ ->
-                KitsunePref.ratingChartRatingSystem = it
-                viewModel.mediaModel.value?.let { mediaAdapter -> showRatingChart(mediaAdapter) }
-                true
-            }
-        }
-
-        menu.setGroupCheckable(1, true, true)
-        popup.show()
     }
 
     private fun showManageLibraryBottomSheet() {
