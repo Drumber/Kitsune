@@ -226,6 +226,10 @@ class PostPagingAdapter(
             binding.ivLike.setImageResource(
                 if (isLiked) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_border_24
             )
+            binding.layoutLike.contentDescription = binding.root.context.getString(
+                if (isLiked) R.string.cd_unlike_post else R.string.cd_like_post,
+                likesCount
+            )
             binding.layoutLike.setOnClickListener {
                 val current = overrides[post.id]?.isLiked ?: false
                 val currentCount = overrides[post.id]?.likesCount ?: post.likesCount
@@ -236,6 +240,8 @@ class PostPagingAdapter(
             }
 
             binding.tvComments.text = commentsCount.toString()
+            binding.tvComments.contentDescription =
+                binding.root.context.getString(R.string.cd_comments_count, commentsCount)
 
             scope?.let { s ->
                 listener?.let { l -> s.launch { l.ensureLikeStateLoaded(post) } }

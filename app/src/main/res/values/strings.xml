@@ -44,6 +44,9 @@
     <string name="feed_post_spoiled_chapter">Ch. %1$d</string>
     <string name="feed_post_media_unit_separator">%1$s — %2$s</string>
     <string name="feed_post_unit_with_title">%1$s · %2$s</string>
+    <string name="cd_like_post">Like post, %1$d likes</string>
+    <string name="cd_unlike_post">Unlike post, %1$d likes</string>
+    <string name="cd_comments_count">%1$d comments</string>
     <string name="action_retry">Retry</string>
     <string name="action_ok">OK</string>
     <string name="action_cancel">Cancel</string>
