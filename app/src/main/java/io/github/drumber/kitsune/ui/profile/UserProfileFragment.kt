@@ -11,7 +11,6 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.webkit.URLUtil
-import androidx.annotation.StringRes
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -22,11 +21,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.elevation.SurfaceColors
 import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.data.presentation.dto.toCharacterDto
@@ -38,23 +34,18 @@ import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
 import io.github.drumber.kitsune.data.presentation.model.user.User
 import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLink
-import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStats
-import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsData
-import io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsKind
 import io.github.drumber.kitsune.data.repository.FollowListType
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
 import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
 import io.github.drumber.kitsune.ui.adapter.CharacterAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter
 import io.github.drumber.kitsune.ui.base.BaseFragment
-import io.github.drumber.kitsune.ui.component.chart.PieChartStyle
 import io.github.drumber.kitsune.ui.feed.FeedListFragment
 import io.github.drumber.kitsune.ui.profile.follow.FollowListFragmentDirections
 import io.github.drumber.kitsune.util.extensions.copyToClipboard
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.openUrl
-import io.github.drumber.kitsune.util.extensions.recyclerView
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
@@ -76,6 +67,10 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
 
     private val viewModel: UserProfileViewModel by viewModel {
         parametersOf(args.userId)
+    }
+
+    private val statsSection by lazy {
+        ProfileStatsSection(binding.viewPagerStats, binding.tabLayoutStats)
     }
 
     /** Whether the Posts tab is currently selected. */
@@ -298,78 +293,18 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
     }
 
     private fun initStatsViewPager() {
-        val dataSet = listOf(
-            ProfileStatsAdapter.ProfileStatsData(getString(R.string.profile_anime_stats)),
-            ProfileStatsAdapter.ProfileStatsData(getString(R.string.profile_manga_stats))
-        )
-        val adapter = ProfileStatsAdapter(dataSet)
-
-        binding.viewPagerStats.apply {
-            this.adapter = adapter
-            recyclerView.isNestedScrollingEnabled = false
-        }
-
-        TabLayoutMediator(binding.tabLayoutStats, binding.viewPagerStats) { tab, position ->
-            when (position) {
-                ProfileStatsAdapter.POS_ANIME -> tab.setText(R.string.profile_anime_stats)
-                ProfileStatsAdapter.POS_MANGA -> tab.setText(R.string.profile_manga_stats)
-            }
-        }.attach()
+        statsSection.init()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.userModel.collectLatest { user ->
-                val animeCategoryStats: UserStatsData.CategoryBreakdownData? = user?.stats
-                    .findStatsData(UserStatsKind.AnimeCategoryBreakdown)
-                updateStatsChart(ProfileStatsAdapter.POS_ANIME, R.string.profile_anime_stats, animeCategoryStats)
-
-                val mangaCategoryStats: UserStatsData.CategoryBreakdownData? = user?.stats
-                    .findStatsData(UserStatsKind.MangaCategoryBreakdown)
-                updateStatsChart(ProfileStatsAdapter.POS_MANGA, R.string.profile_manga_stats, mangaCategoryStats)
-
-                val animeAmountConsumed: UserStatsData.AmountConsumedData? = user?.stats
-                    .findStatsData(UserStatsKind.AnimeAmountConsumed)
-                adapter.updateAmountConsumedData(ProfileStatsAdapter.POS_ANIME, animeAmountConsumed)
-
-                val mangaAmountConsumed: UserStatsData.AmountConsumedData? = user?.stats
-                    .findStatsData(UserStatsKind.MangaAmountConsumed)
-                adapter.updateAmountConsumedData(ProfileStatsAdapter.POS_MANGA, mangaAmountConsumed)
+                statsSection.submitStats(user?.stats)
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
-                adapter.setLoading(ProfileStatsAdapter.POS_ANIME, state.isInitialLoading)
-                adapter.setLoading(ProfileStatsAdapter.POS_MANGA, state.isInitialLoading)
+                statsSection.setLoading(state.isInitialLoading)
             }
         }
-    }
-
-    private inline fun <reified T> List<UserStats>?.findStatsData(kind: UserStatsKind): T? {
-        return this?.find { it.kind == kind }?.statsData as? T
-    }
-
-    private fun updateStatsChart(
-        position: Int,
-        @StringRes titleRes: Int,
-        categoryStats: UserStatsData.CategoryBreakdownData?
-    ) {
-        val categoryEntries: List<PieEntry> = categoryStats?.let { stats ->
-            val total = stats.total ?: return@let null
-            val categories = stats.categories ?: return@let null
-            if (total <= 0) return@let null
-
-            val sorted = categories.toList()
-                .filter { it.second != 0 }
-                .sortedByDescending { it.second }
-
-            sorted.take(PieChartStyle.STATS_MAX_ELEMENTS)
-                .map { (category, value) ->
-                    PieEntry(value.toFloat() / total * 100f, category)
-                }
-        } ?: emptyList()
-
-        val set = PieDataSet(categoryEntries, getString(titleRes))
-        val adapter = binding.viewPagerStats.adapter as ProfileStatsAdapter
-        adapter.updateCategoryData(position, set)
     }
 
     private fun updateProfileLinks(profileLinks: List<ProfileLink>) {
