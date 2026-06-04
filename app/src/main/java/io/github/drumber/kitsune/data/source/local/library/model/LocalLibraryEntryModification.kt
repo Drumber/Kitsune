@@ -1,10 +1,15 @@
 package io.github.drumber.kitsune.data.source.local.library.model
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState.NOT_SYNCHRONIZED
 
-@Entity(tableName = "library_entries_modifications")
+@Entity(
+    tableName = "library_entries_modifications",
+    // Serves the `state = ...` filter (getLibraryEntryModificationsByStateAsLiveData).
+    indices = [Index(value = ["state"])]
+)
 data class LocalLibraryEntryModification(
     /** Corresponds to the library entry ID */
     @PrimaryKey val id: String,

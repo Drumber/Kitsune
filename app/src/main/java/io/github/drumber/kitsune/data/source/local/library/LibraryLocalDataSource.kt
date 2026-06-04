@@ -10,6 +10,7 @@ import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMed
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState
 import io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus
 import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyType
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 class LibraryLocalDataSource(
     private val database: LocalDatabase
@@ -38,6 +39,7 @@ class LibraryLocalDataSource(
 
     fun getLibraryEntriesWithModificationsByStatusAsFlow(status: List<LocalLibraryStatus>) =
         libraryEntryWithModificationDao.getLibraryEntriesWithModificationByStatusAsFlow(status)
+            .distinctUntilChanged()
 
     fun getLibraryEntryWithModificationFromMediaAsLiveData(mediaId: String) =
         libraryEntryWithModificationDao.getLibraryEntryWithModificationFromMediaAsLiveData(mediaId)
@@ -157,6 +159,7 @@ class LibraryLocalDataSource(
 
     fun getAllLibraryEntryModificationsAsFlow() =
         libraryEntryModificationDao.getAllLibraryEntryModificationsAsFlow()
+            .distinctUntilChanged()
 
     fun getLibraryEntryModificationsByStateAsLiveData(state: LocalLibraryModificationState) =
         libraryEntryModificationDao.getLibraryEntryModificationsByStateAsLiveData(state)
