@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.chip.Chip
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.SurfaceColors
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
@@ -42,6 +43,7 @@ import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
 import io.github.drumber.kitsune.data.presentation.model.media.category.Category
+import io.github.drumber.kitsune.databinding.DialogComposeReactionBinding
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
 import io.github.drumber.kitsune.ui.adapter.MediaReactionPreviewAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaRelationshipRecyclerViewAdapter
@@ -427,9 +429,14 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         reactionsAdapter = adapter
         binding.rvReactions.adapter = adapter
 
+        binding.btnAddReaction.setOnClickListener { showComposeReactionDialog() }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.reactions.collectLatest { reactions ->
-                binding.layoutReactions.isVisible = reactions.isNotEmpty()
+                // The section stays visible even with no reactions so the add button is always
+                // reachable; only the list itself collapses when empty.
+                binding.layoutReactions.isVisible = true
+                binding.rvReactions.isVisible = reactions.isNotEmpty()
                 adapter.submitList(reactions)
             }
         }
@@ -448,6 +455,37 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.reactionEditEvents.collectLatest { event ->
+                when (event) {
+                    ReactionEditEvent.LoginRequired ->
+                        showSnackbar(binding.root, R.string.reaction_login_required)
+
+                    ReactionEditEvent.AddToLibraryRequired ->
+                        showSnackbar(binding.root, R.string.reaction_add_to_library_required)
+
+                    ReactionEditEvent.Created ->
+                        showSnackbar(binding.root, R.string.reaction_posted)
+
+                    ReactionEditEvent.Failed ->
+                        showSnackbar(binding.root, R.string.action_failed)
+                }
+            }
+        }
+    }
+
+    private fun showComposeReactionDialog() {
+        val dialogBinding = DialogComposeReactionBinding.inflate(layoutInflater)
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.reaction_compose_title)
+            .setView(dialogBinding.root)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.reaction_compose_action_post) { _, _ ->
+                val text = dialogBinding.etReaction.text?.toString().orEmpty().trim()
+                if (text.isNotEmpty()) viewModel.createReaction(text)
+            }
+            .show()
     }
 
     private fun showStreamingLinks(media: Media) {

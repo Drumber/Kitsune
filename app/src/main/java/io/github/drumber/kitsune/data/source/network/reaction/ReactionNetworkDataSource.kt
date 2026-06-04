@@ -32,4 +32,22 @@ class ReactionNetworkDataSource(
         }
     }
 
+    suspend fun postMediaReaction(reaction: NetworkMediaReaction): NetworkMediaReaction? {
+        return withContext(Dispatchers.IO) {
+            mediaReactionApi.postMediaReaction(JSONAPIDocument(reaction)).get()
+        }
+    }
+
+    suspend fun updateMediaReaction(id: String, reaction: NetworkMediaReaction): NetworkMediaReaction? {
+        return withContext(Dispatchers.IO) {
+            mediaReactionApi.updateMediaReaction(id, JSONAPIDocument(reaction)).get()
+        }
+    }
+
+    suspend fun deleteMediaReaction(id: String) {
+        withContext(Dispatchers.IO) {
+            mediaReactionApi.deleteMediaReaction(id)
+        }
+    }
+
 }

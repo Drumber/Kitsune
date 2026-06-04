@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.data.source.network.feed.model
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
+import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroup
 import io.github.drumber.kitsune.data.source.network.media.model.NetworkMedia
 import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkMediaUnit
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
@@ -31,6 +32,8 @@ data class NetworkPost(
     val user: NetworkUser? = null,
     @Relationship("targetUser")
     val targetUser: NetworkUser? = null,
+    @Relationship("targetGroup")
+    val targetGroup: NetworkGroup? = null,
     @Relationship("media")
     val media: NetworkMedia? = null,
     @Relationship("spoiledUnit")

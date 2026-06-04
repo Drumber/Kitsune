@@ -10,11 +10,15 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.google.android.material.tabs.TabLayout
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.group.Group
 import io.github.drumber.kitsune.databinding.FragmentGroupDetailBinding
+import io.github.drumber.kitsune.ui.feed.FeedListFragment
+import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.showSnackbar
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -31,8 +35,17 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
         parametersOf(args.groupId)
     }
 
+    private var isPostsTab = false
+    private var canPost = false
+    private var hasSelectedDefaultTab = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Don't override the tab the user already had selected before a config change.
+        if (savedInstanceState != null) {
+            hasSelectedDefaultTab = true
+        }
 
         binding.toolbar.initWindowInsetsListener(consume = false)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
@@ -44,6 +57,12 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
         )
 
         val glide = Glide.with(this)
+
+        binding.btnJoin.setOnClickListener {
+            viewModel.toggleMembership()
+        }
+
+        initGroupFeed()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -59,6 +78,86 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
                     group?.let { bindGroup(it) }
                 }
             }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.membershipState.collectLatest { state ->
+                    bindMembershipState(state)
+                    canPost = state.isVisible
+                    updateFabVisibility()
+                    if (!hasSelectedDefaultTab && state.isMember) {
+                        hasSelectedDefaultTab = true
+                        binding.tabLayoutGroup.getTabAt(TAB_POSTS)?.select()
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.events.collectLatest { event ->
+                    when (event) {
+                        GroupDetailViewModel.Event.LoginRequired ->
+                            showSnackbar(binding.root, R.string.group_login_required)
+
+                        GroupDetailViewModel.Event.JoinFailed ->
+                            showSnackbar(binding.root, R.string.group_join_failed)
+
+                        GroupDetailViewModel.Event.LeaveFailed ->
+                            showSnackbar(binding.root, R.string.group_leave_failed)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initGroupFeed() {
+        binding.tabLayoutGroup.isVisible = true
+
+        if (childFragmentManager.findFragmentById(R.id.feed_container) == null) {
+            childFragmentManager.beginTransaction()
+                .replace(
+                    R.id.feed_container,
+                    FeedListFragment.newGroupFeedInstance(args.groupId, R.id.group_detail_fragment)
+                )
+                .commit()
+        }
+
+        binding.tabLayoutGroup.addOnTabSelectedListener(object :
+            TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                isPostsTab = tab.position == TAB_POSTS
+                binding.nestedScrollView.isVisible = !isPostsTab
+                binding.feedContainer.isVisible = isPostsTab
+                updateFabVisibility()
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
+        binding.fabPost.setOnClickListener {
+            val action = GroupDetailFragmentDirections.actionGlobalCreatePostFragment(
+                targetGroupId = args.groupId,
+                targetGroupName = viewModel.group.value?.name
+            )
+            findNavController().navigateSafe(R.id.group_detail_fragment, action)
+        }
+    }
+
+    private fun updateFabVisibility() {
+        binding.fabPost.isVisible = isPostsTab && canPost
+    }
+
+    private fun bindMembershipState(state: GroupDetailViewModel.MembershipState) {
+        binding.btnJoin.apply {
+            isVisible = state.isVisible
+            isEnabled = !state.isLoading
+            setText(
+                if (state.isMember) R.string.group_action_leave
+                else R.string.group_action_join
+            )
         }
     }
 
@@ -110,5 +209,9 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
         header.isVisible = value != null
         content.isVisible = value != null
         content.text = value
+    }
+
+    companion object {
+        private const val TAB_POSTS = 1
     }
 }

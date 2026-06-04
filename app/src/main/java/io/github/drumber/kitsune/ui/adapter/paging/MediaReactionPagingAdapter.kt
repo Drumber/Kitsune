@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.ui.adapter.paging
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -15,7 +16,10 @@ import io.github.drumber.kitsune.util.parseUtcDate
 
 class MediaReactionPagingAdapter(
     private val glide: RequestManager,
-    private val onUpvoteClick: ((MediaReaction) -> Unit)? = null
+    private val currentUserId: String? = null,
+    private val onUpvoteClick: ((MediaReaction) -> Unit)? = null,
+    private val onEditClick: ((MediaReaction) -> Unit)? = null,
+    private val onDeleteClick: ((MediaReaction) -> Unit)? = null
 ) : PagingDataAdapter<MediaReaction, MediaReactionPagingAdapter.ReactionViewHolder>(ReactionComparator) {
 
     private val upvotedIds = mutableSetOf<String>()
@@ -77,6 +81,38 @@ class MediaReactionPagingAdapter(
                 )
                 isEnabled = !isUpvoted
                 setOnClickListener { onUpvoteClick?.invoke(reaction) }
+            }
+
+            bindOverflowMenu(reaction)
+        }
+
+        private fun bindOverflowMenu(reaction: MediaReaction) {
+            val isOwner = currentUserId != null && reaction.authorId == currentUserId
+            binding.btnOverflow.isVisible = isOwner
+            if (!isOwner) {
+                binding.btnOverflow.setOnClickListener(null)
+                return
+            }
+            binding.btnOverflow.setOnClickListener { anchor ->
+                PopupMenu(anchor.context, anchor).apply {
+                    menuInflater.inflate(R.menu.feed_item_options_menu, menu)
+                    setOnMenuItemClickListener { item ->
+                        when (item.itemId) {
+                            R.id.action_edit_item -> {
+                                onEditClick?.invoke(reaction)
+                                true
+                            }
+
+                            R.id.action_delete_item -> {
+                                onDeleteClick?.invoke(reaction)
+                                true
+                            }
+
+                            else -> false
+                        }
+                    }
+                    show()
+                }
             }
         }
 

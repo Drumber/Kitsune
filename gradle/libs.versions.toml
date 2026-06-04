@@ -144,6 +144,7 @@ philjay-mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 squareup-leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakCanary" }
 squareup-okhttp3-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okHttp" }
+squareup-okhttp3-mockwebserver = { module = "com.squareup.okhttp3:mockwebserver3", version.ref = "okHttp" }
 squareup-okhttp3-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okHttp" }
 squareup-retrofit2-jackson = { module = "com.squareup.retrofit2:converter-jackson", version.ref = "retrofit" }
 squareup-retrofit2-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }

@@ -4,7 +4,11 @@ import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroup
 import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroupCategory
 import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroupMember
+import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
@@ -30,5 +34,15 @@ interface GroupsApi {
     suspend fun getGroupMembers(
         @QueryMap filter: Map<String, String> = emptyMap()
     ): JSONAPIDocument<List<NetworkGroupMember>>
+
+    @POST("group-members")
+    suspend fun createGroupMember(
+        @Body member: JSONAPIDocument<NetworkGroupMember>
+    ): JSONAPIDocument<NetworkGroupMember>
+
+    @DELETE("group-members/{id}")
+    suspend fun deleteGroupMember(
+        @Path("id") id: String
+    ): Response<Unit>
 
 }

@@ -15,14 +15,18 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
+import io.github.drumber.kitsune.databinding.DialogComposeReactionBinding
 import io.github.drumber.kitsune.databinding.FragmentReactionsBinding
 import io.github.drumber.kitsune.ui.adapter.paging.MediaReactionPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.extensions.setAppTheme
+import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
@@ -53,11 +57,21 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
                 bottom = true,
                 consume = false
             )
+            fabAddReaction.initMarginWindowInsetsListener(
+                right = true,
+                bottom = true,
+                consume = false
+            )
+            fabAddReaction.setOnClickListener { showComposeReactionDialog(null) }
         }
 
-        val adapter = MediaReactionPagingAdapter(Glide.with(this)) { reaction ->
-            viewModel.upvote(reaction)
-        }
+        val adapter = MediaReactionPagingAdapter(
+            glide = Glide.with(this),
+            currentUserId = viewModel.currentUserId,
+            onUpvoteClick = { reaction -> viewModel.upvote(reaction) },
+            onEditClick = { reaction -> showComposeReactionDialog(reaction) },
+            onDeleteClick = { reaction -> confirmDeleteReaction(reaction) }
+        )
         binding.rvReactions.adapter = adapter.withLoadStateFooter(
             footer = ResourceLoadStateAdapter(adapter)
         )
@@ -109,6 +123,80 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.editEvents.collectLatest { event ->
+                    when (event) {
+                        ReactionsViewModel.EditEvent.LoginRequired ->
+                            showSnackbar(R.string.reaction_login_required)
+
+                        ReactionsViewModel.EditEvent.AddToLibraryRequired ->
+                            showSnackbar(R.string.reaction_add_to_library_required)
+
+                        ReactionsViewModel.EditEvent.Created -> {
+                            showSnackbar(R.string.reaction_posted)
+                            adapter.refresh()
+                        }
+
+                        ReactionsViewModel.EditEvent.Updated -> {
+                            showSnackbar(R.string.reaction_updated)
+                            adapter.refresh()
+                        }
+
+                        ReactionsViewModel.EditEvent.Deleted -> {
+                            showSnackbar(R.string.reaction_deleted)
+                            adapter.refresh()
+                        }
+
+                        ReactionsViewModel.EditEvent.Failed ->
+                            showSnackbar(R.string.action_failed)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showComposeReactionDialog(existing: MediaReaction?) {
+        val dialogBinding = DialogComposeReactionBinding.inflate(layoutInflater)
+        val initialText = existing?.reaction?.takeUnless { it.isBlank() } ?: existing?.content
+        dialogBinding.etReaction.setText(initialText)
+        dialogBinding.etReaction.setSelection(dialogBinding.etReaction.text?.length ?: 0)
+
+        val titleRes = if (existing == null) {
+            R.string.reaction_compose_title
+        } else {
+            R.string.reaction_compose_edit_title
+        }
+        val positiveRes = if (existing == null) {
+            R.string.reaction_compose_action_post
+        } else {
+            R.string.action_save
+        }
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(titleRes)
+            .setView(dialogBinding.root)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(positiveRes) { _, _ ->
+                val text = dialogBinding.etReaction.text?.toString().orEmpty().trim()
+                if (text.isEmpty()) return@setPositiveButton
+                if (existing == null) {
+                    viewModel.createReaction(text)
+                } else {
+                    viewModel.updateReaction(existing, text)
+                }
+            }
+            .show()
+    }
+
+    private fun confirmDeleteReaction(reaction: MediaReaction) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.delete_reaction_confirm_title)
+            .setMessage(R.string.delete_reaction_confirm_message)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.action_delete) { _, _ -> viewModel.deleteReaction(reaction) }
+            .show()
     }
 
     private fun showSnackbar(messageResId: Int) {

@@ -30,6 +30,9 @@ class MediaReactionsDelegate(
     private val upvoteEventChannel = Channel<ReactionUpvoteEvent>(Channel.BUFFERED)
     val upvoteEvents: Flow<ReactionUpvoteEvent> = upvoteEventChannel.receiveAsFlow()
 
+    private val editEventChannel = Channel<ReactionEditEvent>(Channel.BUFFERED)
+    val editEvents: Flow<ReactionEditEvent> = editEventChannel.receiveAsFlow()
+
     suspend fun loadReactions(media: Media) {
         try {
             val reactions = mediaReactionRepository.getReactions(media is Anime, media.id)
@@ -57,6 +60,47 @@ class MediaReactionsDelegate(
                 ReactionUpvoteEvent.Failed
             }
             upvoteEventChannel.send(event)
+        }
+    }
+
+    /**
+     * Posts a new reaction for the given media. Kitsu requires the media to already be in the
+     * user's library, so the matching [libraryEntryId] must be provided; if it is null the
+     * [ReactionEditEvent.AddToLibraryRequired] event is emitted instead. The reactions list is
+     * reloaded on success so the new reaction shows up in the preview.
+     */
+    fun createReaction(media: Media, libraryEntryId: String?, text: String) {
+        val userId = getLocalUserId()
+        if (userId == null) {
+            editEventChannel.trySend(ReactionEditEvent.LoginRequired)
+            return
+        }
+        val reactionText = text.trim()
+        if (reactionText.isEmpty()) return
+        if (libraryEntryId == null) {
+            editEventChannel.trySend(ReactionEditEvent.AddToLibraryRequired)
+            return
+        }
+        scope.launch {
+            val event = try {
+                val created = mediaReactionRepository.createReaction(
+                    userId = userId,
+                    libraryEntryId = libraryEntryId,
+                    isAnime = media is Anime,
+                    mediaId = media.id,
+                    reactionText = reactionText
+                )
+                if (created != null) {
+                    loadReactions(media)
+                    ReactionEditEvent.Created
+                } else {
+                    ReactionEditEvent.Failed
+                }
+            } catch (e: Exception) {
+                logE("Failed to create reaction for media '${media.id}'.", e)
+                ReactionEditEvent.Failed
+            }
+            editEventChannel.send(event)
         }
     }
 }

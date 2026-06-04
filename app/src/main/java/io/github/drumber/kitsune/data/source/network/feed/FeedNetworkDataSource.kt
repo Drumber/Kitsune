@@ -36,4 +36,10 @@ class FeedNetworkDataSource(
         }
     }
 
+    suspend fun getGroupFeed(groupId: String, filter: Filter): CursorPageData<NetworkActivityGroup> {
+        return withContext(Dispatchers.IO) {
+            feedApi.getGroupFeed(groupId, filter.options).toCursorPageData()
+        }
+    }
+
 }

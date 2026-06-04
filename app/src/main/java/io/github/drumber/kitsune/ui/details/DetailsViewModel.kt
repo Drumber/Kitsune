@@ -80,6 +80,7 @@ class DetailsViewModel(
     }
     val reactions get() = reactionsDelegate.reactions
     val reactionUpvoteEvents: Flow<ReactionUpvoteEvent> get() = reactionsDelegate.upvoteEvents
+    val reactionEditEvents: Flow<ReactionEditEvent> get() = reactionsDelegate.editEvents
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean>
@@ -155,6 +156,12 @@ class DetailsViewModel(
     }
 
     fun upvoteReaction(reaction: MediaReaction) = reactionsDelegate.upvoteReaction(reaction)
+
+    fun createReaction(text: String) {
+        val media = mediaModel.value ?: return
+        val libraryEntryId = _libraryEntryWithModification.value?.libraryEntry?.id
+        reactionsDelegate.createReaction(media, libraryEntryId, text)
+    }
 
     private suspend fun loadFullMedia(media: Media) {
         val id = media.id
@@ -338,4 +345,11 @@ sealed interface ReactionUpvoteEvent {
     data object LoginRequired : ReactionUpvoteEvent
     data class Success(val reactionId: String, val newCount: Int) : ReactionUpvoteEvent
     data object Failed : ReactionUpvoteEvent
+}
+
+sealed interface ReactionEditEvent {
+    data object LoginRequired : ReactionEditEvent
+    data object AddToLibraryRequired : ReactionEditEvent
+    data object Created : ReactionEditEvent
+    data object Failed : ReactionEditEvent
 }

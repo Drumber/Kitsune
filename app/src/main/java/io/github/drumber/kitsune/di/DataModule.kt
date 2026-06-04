@@ -325,6 +325,7 @@ val dataModule = module {
             NetworkPost::class.java,
             NetworkComment::class.java,
             NetworkUser::class.java,
+            NetworkGroup::class.java,
             NetworkAnime::class.java,
             NetworkManga::class.java,
             NetworkEpisode::class.java,
@@ -392,6 +393,7 @@ val dataModule = module {
             get(),
             NetworkPost::class.java,
             NetworkUser::class.java,
+            NetworkGroup::class.java,
             NetworkAnime::class.java,
             NetworkManga::class.java,
             NetworkEpisode::class.java,
@@ -424,7 +426,8 @@ val dataModule = module {
             NetworkMediaReactionVote::class.java,
             NetworkUser::class.java,
             NetworkAnime::class.java,
-            NetworkManga::class.java
+            NetworkManga::class.java,
+            NetworkLibraryEntry::class.java
         )
     }
     single { ReactionNetworkDataSource(get()) }
@@ -437,7 +440,8 @@ val dataModule = module {
             get(),
             NetworkGroup::class.java,
             NetworkGroupCategory::class.java,
-            NetworkGroupMember::class.java
+            NetworkGroupMember::class.java,
+            NetworkUser::class.java
         )
     }
     single { GroupsNetworkDataSource(get()) }

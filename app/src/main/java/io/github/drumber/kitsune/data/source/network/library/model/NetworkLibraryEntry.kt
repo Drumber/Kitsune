@@ -99,6 +99,26 @@ data class NetworkLibraryEntry(
             manga = null,
             user = null
         )
+
+        fun empty(id: String) = NetworkLibraryEntry(
+            id = id,
+            updatedAt = null,
+            startedAt = null,
+            finishedAt = null,
+            progressedAt = null,
+            status = null,
+            progress = null,
+            reconsuming = null,
+            reconsumeCount = null,
+            volumesOwned = null,
+            ratingTwenty = null,
+            notes = null,
+            privateEntry = null,
+            reactionSkipped = null,
+            anime = null,
+            manga = null,
+            user = null
+        )
     }
 
 }

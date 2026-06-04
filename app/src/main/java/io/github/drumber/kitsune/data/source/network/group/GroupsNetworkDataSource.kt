@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.data.source.network.group
 
+import com.github.jasminb.jsonapi.JSONAPIDocument
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.source.network.PageData
 import io.github.drumber.kitsune.data.source.network.group.api.GroupsApi
@@ -35,6 +36,24 @@ class GroupsNetworkDataSource(
     suspend fun getGroupMembers(filter: Filter): PageData<NetworkGroupMember> {
         return withContext(Dispatchers.IO) {
             groupsApi.getGroupMembers(filter.options).toPageData()
+        }
+    }
+
+    suspend fun getGroupMembersList(filter: Filter): List<NetworkGroupMember>? {
+        return withContext(Dispatchers.IO) {
+            groupsApi.getGroupMembers(filter.options).get()
+        }
+    }
+
+    suspend fun createGroupMember(member: NetworkGroupMember): NetworkGroupMember? {
+        return withContext(Dispatchers.IO) {
+            groupsApi.createGroupMember(JSONAPIDocument(member)).get()
+        }
+    }
+
+    suspend fun deleteGroupMember(id: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            groupsApi.deleteGroupMember(id).isSuccessful
         }
     }
 

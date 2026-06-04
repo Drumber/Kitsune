@@ -291,6 +291,9 @@ dependencies {
     androidTestImplementation(composeBom)
     androidTestImplementation(libs.androidx.compose.ui.test)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    // testBuildType is "instrumented", so the test-manifest (provides the host
+    // ComponentActivity for createComposeRule) must also be on that build type.
+    "instrumentedImplementation"(libs.androidx.compose.ui.test.manifest)
 
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
     testImplementation(libs.insert.koin.test.junit4)
@@ -298,6 +301,7 @@ dependencies {
     testImplementation(libs.datafaker)
     testImplementation(libs.cashapp.turbine)
     testImplementation(libs.androidx.arch.core.testing)
+    testImplementation(libs.squareup.okhttp3.mockwebserver)
 
     // fastlane screengrab
     androidTestImplementation(libs.fastlane.screengrab)

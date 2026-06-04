@@ -31,4 +31,10 @@ interface FeedApi {
         @QueryMap filter: Map<String, String> = emptyMap()
     ): JSONAPIDocument<List<NetworkActivityGroup>>
 
+    @GET("feeds/group/{groupId}")
+    suspend fun getGroupFeed(
+        @Path("groupId") groupId: String,
+        @QueryMap filter: Map<String, String> = emptyMap()
+    ): JSONAPIDocument<List<NetworkActivityGroup>>
+
 }

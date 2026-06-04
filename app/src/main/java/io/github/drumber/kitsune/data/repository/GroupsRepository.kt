@@ -14,6 +14,9 @@ import io.github.drumber.kitsune.data.presentation.model.group.GroupCategory
 import io.github.drumber.kitsune.data.source.network.group.FollowedGroupsPagingDataSource
 import io.github.drumber.kitsune.data.source.network.group.GroupsNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.group.GroupsPagingDataSource
+import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroup
+import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroupMember
+import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import kotlinx.coroutines.flow.map
 
 class GroupsRepository(
@@ -81,6 +84,37 @@ class GroupsRepository(
             .pageLimit(20)
         return groupsNetworkDataSource.getGroupCategories(filter)
             .map { it.toGroupCategory() }
+    }
+
+    /**
+     * Returns the id of the membership record where [userId] is a member of the group with
+     * [groupId], or `null` if the user is not a member.
+     */
+    suspend fun getMembershipId(groupId: String, userId: String): String? {
+        val filter = Filter()
+            .filter("group", groupId)
+            .filter("user", userId)
+            .fields("groupMembers", "id")
+            .pageLimit(1)
+        return groupsNetworkDataSource.getGroupMembersList(filter)?.firstOrNull()?.id
+    }
+
+    /**
+     * Joins the group with [groupId] as the user with [userId] and returns the created membership
+     * id, or `null` on failure.
+     */
+    suspend fun joinGroup(groupId: String, userId: String): String? {
+        val member = NetworkGroupMember(
+            id = null,
+            group = NetworkGroup(id = groupId),
+            user = NetworkUser(id = userId)
+        )
+        return groupsNetworkDataSource.createGroupMember(member)?.id
+    }
+
+    /** Leaves the group by deleting the membership record with [membershipId]. */
+    suspend fun leaveGroup(membershipId: String): Boolean {
+        return groupsNetworkDataSource.deleteGroupMember(membershipId)
     }
 
     private fun buildFilter(

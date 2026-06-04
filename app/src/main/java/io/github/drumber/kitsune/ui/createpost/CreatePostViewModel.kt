@@ -37,7 +37,9 @@ class CreatePostViewModel(
         val unit: SelectedUnit? = null,
         val images: List<SelectedImage> = emptyList(),
         /** Name of the user whose wall this post targets, or `null` for a regular post. */
-        val wallTargetName: String? = null
+        val wallTargetName: String? = null,
+        /** Name of the group this post targets, or `null` for a regular post. */
+        val groupTargetName: String? = null
     ) {
         val canPublish: Boolean
             get() = !isPublishing && (content.isNotBlank() || images.isNotEmpty())
@@ -71,6 +73,9 @@ class CreatePostViewModel(
 
     /** Id of the user whose wall the new post targets, or `null` for a regular post. */
     private var targetUserId: String? = null
+
+    /** Id of the group the new post targets, or `null` for a regular post. */
+    private var targetGroupId: String? = null
 
     private val eventChannel = Channel<Event>(Channel.BUFFERED)
     val events: Flow<Event> = eventChannel.receiveAsFlow()
@@ -118,6 +123,13 @@ class CreatePostViewModel(
         if (targetUserId != null) return
         targetUserId = userId
         _uiState.value = _uiState.value.copy(wallTargetName = userName)
+    }
+
+    /** Marks this composer as a post targeting the given group. Called once on creation. */
+    fun setGroupTarget(groupId: String, groupName: String?) {
+        if (targetGroupId != null) return
+        targetGroupId = groupId
+        _uiState.value = _uiState.value.copy(groupTargetName = groupName)
     }
     fun setSpoiler(spoiler: Boolean) {
         _uiState.value = _uiState.value.copy(spoiler = spoiler)
@@ -218,7 +230,8 @@ class CreatePostViewModel(
                         spoiledUnitId = unitState?.id,
                         spoiledUnitIsEpisode = unitState?.isEpisode ?: false,
                         uploadIds = uploadIds,
-                        targetUserId = targetUserId
+                        targetUserId = targetUserId,
+                        targetGroupId = targetGroupId
                     )
                 }
                 if (post != null) {

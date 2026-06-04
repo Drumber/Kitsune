@@ -216,7 +216,8 @@ class CreatePostViewModelTest {
                     spoiledUnitId = anyOrNull(),
                     spoiledUnitIsEpisode = any(),
                     uploadIds = any(),
-                    targetUserId = anyOrNull()
+                    targetUserId = anyOrNull(),
+                    targetGroupId = anyOrNull()
                 )
             } doReturn samplePost()
         }
@@ -236,7 +237,8 @@ class CreatePostViewModelTest {
             spoiledUnitId = anyOrNull(),
             spoiledUnitIsEpisode = any(),
             uploadIds = any(),
-            targetUserId = anyOrNull()
+            targetUserId = anyOrNull(),
+            targetGroupId = anyOrNull()
         )
     }
 
@@ -285,7 +287,8 @@ class CreatePostViewModelTest {
             spoiledUnitId = anyOrNull(),
             spoiledUnitIsEpisode = any(),
             uploadIds = any(),
-            targetUserId = anyOrNull()
+            targetUserId = anyOrNull(),
+            targetGroupId = anyOrNull()
         )
     }
 
@@ -303,7 +306,8 @@ class CreatePostViewModelTest {
                     spoiledUnitId = anyOrNull(),
                     spoiledUnitIsEpisode = any(),
                     uploadIds = any(),
-                    targetUserId = anyOrNull()
+                    targetUserId = anyOrNull(),
+                    targetGroupId = anyOrNull()
                 )
             } doReturn null
         }
@@ -330,7 +334,8 @@ class CreatePostViewModelTest {
                     spoiledUnitId = anyOrNull(),
                     spoiledUnitIsEpisode = any(),
                     uploadIds = any(),
-                    targetUserId = anyOrNull()
+                    targetUserId = anyOrNull(),
+                    targetGroupId = anyOrNull()
                 )
             } doThrow RuntimeException("network down")
         }

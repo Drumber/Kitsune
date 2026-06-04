@@ -74,6 +74,9 @@ class FeedListViewModel(
     /** Target user id for [FeedType.USER] feeds. */
     private var userFeedId: String? = null
 
+    /** Target group id for [FeedType.GROUP] feeds. */
+    private var groupFeedId: String? = null
+
     // Cache of liker avatar urls keyed by post id, to avoid refetching on rebind.
     private val likerAvatarCache = mutableMapOf<String, List<String>>()
     private val likerAvatarMutex = Mutex()
@@ -118,6 +121,14 @@ class FeedListViewModel(
         }
     }
 
+    /** Configures this list to show the feed of the given group. */
+    fun setGroupFeed(groupId: String) {
+        groupFeedId = groupId
+        if (feedType.value != FeedType.GROUP) {
+            feedType.value = FeedType.GROUP
+        }
+    }
+
     /** Emits `true` if the current feed requires the user to be logged in but they are not. */
     val loginRequired: Flow<Boolean> = feedType.filterNotNull().map { type ->
         type == FeedType.FOLLOWING && getLocalUserId() == null
@@ -140,6 +151,14 @@ class FeedListViewModel(
                     flowOf(PagingData.empty())
                 } else {
                     feedRepository.userFeedPager(userId)
+                }
+            }
+            FeedType.GROUP -> {
+                val groupId = groupFeedId
+                if (groupId == null) {
+                    flowOf(PagingData.empty())
+                } else {
+                    feedRepository.groupFeedPager(groupId)
                 }
             }
         }

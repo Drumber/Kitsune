@@ -46,6 +46,14 @@ class FeedRepository(
             feedNetworkDataSource.getMediaFeed(feedId, buildFilter(pageSize, cursor))
         }
 
+    /**
+     * Pager for a single group's activity feed, showing the posts published in the group.
+     */
+    fun groupFeedPager(groupId: String, pageSize: Int = Kitsu.DEFAULT_PAGE_SIZE) =
+        feedPager(pageSize) { cursor ->
+            feedNetworkDataSource.getGroupFeed(groupId, buildFilter(pageSize, cursor))
+        }
+
     private fun feedPager(
         pageSize: Int,
         loadPage: suspend (cursor: String?) -> CursorPageData<NetworkActivityGroup>

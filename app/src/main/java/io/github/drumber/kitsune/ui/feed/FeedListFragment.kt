@@ -53,6 +53,9 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
     private val userId: String?
         get() = arguments?.getString(ARG_USER_ID)
 
+    private val groupId: String?
+        get() = arguments?.getString(ARG_GROUP_ID)
+
     /** Navigation graph destination id this fragment is hosted in, used by [navigateSafe]. */
     private val hostDestId: Int
         get() = arguments?.getInt(ARG_HOST_DEST_ID, R.id.feed_fragment) ?: R.id.feed_fragment
@@ -60,10 +63,10 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (feedType == FeedType.USER) {
-            userId?.let { viewModel.setUserFeed(it) }
-        } else {
-            viewModel.setFeedType(feedType)
+        when (feedType) {
+            FeedType.USER -> userId?.let { viewModel.setUserFeed(it) }
+            FeedType.GROUP -> groupId?.let { viewModel.setGroupFeed(it) }
+            else -> viewModel.setFeedType(feedType)
         }
 
         val adapter = PostPagingAdapter(
@@ -271,6 +274,7 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
     companion object {
         const val ARG_FEED_TYPE = "feed_type"
         const val ARG_USER_ID = "user_id"
+        const val ARG_GROUP_ID = "group_id"
         const val ARG_HOST_DEST_ID = "host_dest_id"
 
         fun newInstance(feedType: FeedType) = FeedListFragment().apply {
@@ -284,6 +288,15 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
             arguments = Bundle().apply {
                 putString(ARG_FEED_TYPE, FeedType.USER.name)
                 putString(ARG_USER_ID, userId)
+                putInt(ARG_HOST_DEST_ID, hostDestId)
+            }
+        }
+
+        /** Creates a fragment showing the feed of [groupId], hosted in [hostDestId]. */
+        fun newGroupFeedInstance(groupId: String, hostDestId: Int) = FeedListFragment().apply {
+            arguments = Bundle().apply {
+                putString(ARG_FEED_TYPE, FeedType.GROUP.name)
+                putString(ARG_GROUP_ID, groupId)
                 putInt(ARG_HOST_DEST_ID, hostDestId)
             }
         }

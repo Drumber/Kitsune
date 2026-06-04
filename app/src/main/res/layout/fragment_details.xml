@@ -260,13 +260,35 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp">
 
-                            <TextView
+                            <LinearLayout
+                                android:id="@+id/layout_reactions_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentStart="true"
                                 android:layout_centerVertical="true"
-                                android:text="@string/title_reactions"
-                                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/title_reactions"
+                                    android:textAppearance="?attr/textAppearanceHeadlineSmall" />
+
+                                <Button
+                                    android:id="@+id/btn_add_reaction"
+                                    style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginStart="8dp"
+                                    android:contentDescription="@string/action_add_reaction"
+                                    android:insetTop="0dp"
+                                    android:insetBottom="0dp"
+                                    app:icon="@drawable/ic_add_24"
+                                    app:iconGravity="textStart"
+                                    app:iconPadding="0dp" />
+
+                            </LinearLayout>
 
                             <Button
                                 android:id="@+id/btn_reactions_see_all"

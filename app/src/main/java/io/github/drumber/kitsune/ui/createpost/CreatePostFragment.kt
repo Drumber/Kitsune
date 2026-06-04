@@ -129,6 +129,9 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
             args.targetUserId?.let { targetUserId ->
                 viewModel.setWallTarget(targetUserId, args.targetUserName)
             }
+            args.targetGroupId?.let { targetGroupId ->
+                viewModel.setGroupTarget(targetGroupId, args.targetGroupName)
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -261,6 +264,9 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
         if (state.wallTargetName != null) {
             binding.toolbar.subtitle =
                 getString(R.string.create_post_wall_hint, state.wallTargetName)
+        } else if (state.groupTargetName != null) {
+            binding.toolbar.subtitle =
+                getString(R.string.create_post_group_hint, state.groupTargetName)
         }
 
         val media = state.media

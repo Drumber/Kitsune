@@ -63,6 +63,15 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_add_reaction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:contentDescription="@string/action_add_reaction"
+            android:src="@drawable/ic_add_24" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </FrameLayout>

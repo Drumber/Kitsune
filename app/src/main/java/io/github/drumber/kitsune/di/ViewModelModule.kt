@@ -53,10 +53,10 @@ val viewModelModule = module {
     viewModel { DetailsViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { EpisodesViewModel(get(), get(), get(), get()) }
     viewModel { MediaFeedViewModel(get()) }
-    viewModel { ReactionsViewModel(get(), get()) }
+    viewModel { ReactionsViewModel(get(), get(), get()) }
     viewModel { (reactionId: String) -> ReactionDetailViewModel(reactionId, get(), get()) }
     viewModel { GroupsViewModel(get(), get()) }
-    viewModel { (groupId: String) -> GroupDetailViewModel(groupId, get()) }
+    viewModel { (groupId: String) -> GroupDetailViewModel(groupId, get(), get()) }
     viewModel { FeedListViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { NotificationsViewModel(get(), get()) }
     viewModel { PostDetailViewModel(get(), get(), get(), get(), get(), get(), get()) }

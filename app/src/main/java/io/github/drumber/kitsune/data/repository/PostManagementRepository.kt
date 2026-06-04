@@ -6,6 +6,7 @@ import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.source.network.feed.PostNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUpload
+import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroup
 import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime
 import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga
 import io.github.drumber.kitsune.data.source.network.media.model.NetworkMedia
@@ -55,7 +56,8 @@ class PostManagementRepository(
         spoiledUnitId: String? = null,
         spoiledUnitIsEpisode: Boolean = false,
         uploadIds: List<String> = emptyList(),
-        targetUserId: String? = null
+        targetUserId: String? = null,
+        targetGroupId: String? = null
     ): Post? {
         val post = NetworkPost(
             id = null,
@@ -64,6 +66,7 @@ class PostManagementRepository(
             nsfw = nsfw,
             user = NetworkUser(id = userId),
             targetUser = targetUserId?.let { NetworkUser(id = it) },
+            targetGroup = targetGroupId?.let { NetworkGroup(id = it) },
             media = mediaStub(mediaId, mediaIsAnime),
             spoiledUnit = spoiledUnitStub(spoiledUnitId, spoiledUnitIsEpisode),
             uploads = uploadIds

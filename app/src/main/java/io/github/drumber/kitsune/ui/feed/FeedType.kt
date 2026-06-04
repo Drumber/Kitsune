@@ -8,5 +8,8 @@ enum class FeedType {
     FOLLOWING,
 
     /** A single user's profile feed: their own posts plus posts made on their wall. */
-    USER
+    USER,
+
+    /** A single group's feed: the posts published in that group. */
+    GROUP
 }

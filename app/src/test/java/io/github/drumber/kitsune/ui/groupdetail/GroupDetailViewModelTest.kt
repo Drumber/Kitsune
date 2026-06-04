@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.ui.groupdetail
 
 import io.github.drumber.kitsune.data.presentation.model.group.Group
 import io.github.drumber.kitsune.data.repository.GroupsRepository
+import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.testutils.MainDispatcherRule
 import io.github.drumber.kitsune.testutils.onSuspend
 import io.github.drumber.kitsune.testutils.useMockedAndroidLogger
@@ -46,8 +47,9 @@ class GroupDetailViewModelTest {
     )
 
     private fun viewModel(
-        groupsRepository: GroupsRepository = mock()
-    ) = GroupDetailViewModel(groupId, groupsRepository)
+        groupsRepository: GroupsRepository = mock(),
+        getLocalUserId: GetLocalUserIdUseCase = mock()
+    ) = GroupDetailViewModel(groupId, groupsRepository, getLocalUserId)
 
     @Test
     fun `loadGroup populates group and stops loading on success`() = runTest {
