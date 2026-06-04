@@ -3,9 +3,7 @@ package io.github.drumber.kitsune.ui.profile.editprofile
 import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentDialog
@@ -82,12 +80,8 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
         super.onStart()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val view = super.onCreateView(inflater, container, savedInstanceState)!!
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.toolbar.initWindowInsetsListener(consume = false)
         binding.nestedScrollView.initMarginWindowInsetsListener(
@@ -103,12 +97,6 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
         }
 
         binding.root.initImePaddingWindowInsetsListener()
-
-        return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         childFragmentManager.setFragmentResultListener(
             SelectProfileLinkSiteBottomSheet.PROFILE_SITE_SELECTED_REQUEST_KEY,
