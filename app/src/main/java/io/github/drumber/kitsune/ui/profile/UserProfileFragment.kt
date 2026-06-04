@@ -32,7 +32,6 @@ import io.github.drumber.kitsune.data.presentation.model.user.User
 import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLink
 import io.github.drumber.kitsune.data.repository.FollowListType
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
-import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.feed.FeedListFragment
 import io.github.drumber.kitsune.ui.profile.follow.FollowListFragmentDirections
@@ -42,7 +41,6 @@ import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.openUrl
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
-import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
@@ -73,6 +71,10 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
             onMediaClick = { view, media -> onFavoriteMediaItemClicked(view, media) },
             onCharacterClick = { character -> openCharacterDetailsBottomSheet(character) }
         )
+    }
+
+    private val linksSection by lazy {
+        ProfileLinksSection(binding, layoutInflater) { onProfileLinkClicked(it) }
     }
 
     /** Whether the Posts tab is currently selected. */
@@ -310,20 +312,7 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
     }
 
     private fun updateProfileLinks(profileLinks: List<ProfileLink>) {
-        binding.scrollViewProfileLinks.isVisible = profileLinks.isNotEmpty()
-        binding.chipGroupProfileLinks.apply {
-            removeAllViews()
-
-            profileLinks.sortedBy { it.profileLinkSite?.id?.toIntOrNull() }
-                .forEach { profileLink ->
-                    val profileLinkBinding = ItemProfileSiteChipBinding.inflate(layoutInflater, this, true)
-                    val chip = profileLinkBinding.root
-                    val siteName = profileLink.profileLinkSite?.name
-                    chip.text = siteName
-                    chip.setChipIconResource(getProfileSiteLogoResourceId(siteName))
-                    chip.setOnClickListener { onProfileLinkClicked(profileLink) }
-                }
-        }
+        linksSection.submitProfileLinks(profileLinks)
     }
 
     private fun updateFavoritesData(favorites: List<Favorite>) {
