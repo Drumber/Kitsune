@@ -5,8 +5,11 @@ import io.github.drumber.kitsune.data.repository.AccessTokenRepository
 import io.github.drumber.kitsune.domain.auth.RefreshAccessTokenUseCase
 import io.github.drumber.kitsune.domain.auth.RefreshResult
 import io.github.drumber.kitsune.util.logD
+import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logI
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import okhttp3.Authenticator
 import okhttp3.Interceptor
 import okhttp3.Request
@@ -52,8 +55,15 @@ class AuthenticationInterceptorImpl(
         } else {
             logI("Refreshing access token because of a 401 Unauthorized response.")
             val refreshResult = runBlocking {
-                val refreshAccessToken: RefreshAccessTokenUseCase = get()
-                refreshAccessToken()
+                try {
+                    withTimeout(REFRESH_TIMEOUT_MS) {
+                        val refreshAccessToken: RefreshAccessTokenUseCase = get()
+                        refreshAccessToken()
+                    }
+                } catch (e: TimeoutCancellationException) {
+                    logE("Refreshing access token timed out after ${REFRESH_TIMEOUT_MS}ms.", e)
+                    null
+                }
             }
             if (refreshResult !is RefreshResult.Success) return null
             refreshResult.accessToken.accessToken
@@ -66,4 +76,8 @@ class AuthenticationInterceptorImpl(
 
     private val Response.responseCount: Int
         get() = generateSequence(this) { it.priorResponse }.count()
+
+    companion object {
+        private const val REFRESH_TIMEOUT_MS = 30_000L
+    }
 }
