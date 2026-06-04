@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.aboutlibraries.plugin)
     alias(libs.plugins.jetbrains.kotlin.parcelize)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.kover)
     id("kitsune-plugin")
 }
 
@@ -105,6 +106,29 @@ aboutLibraries {
     offlineMode = true
     // Remove the "generated" timestamp to allow for reproducible builds
     excludeFields = arrayOf("generated")
+}
+
+kover {
+    reports {
+        filters {
+            excludes {
+                // Generated code (data binding, navigation safe-args, Glide, Room, KSP, etc.)
+                classes(
+                    "*.databinding.*",
+                    "*.BR",
+                    "*.BuildConfig",
+                    "*Binding",
+                    "*Args",
+                    "*Directions",
+                    "*GlideModule*",
+                    "*_Factory",
+                    "*_Impl",
+                    "hilt_aggregated_deps.*"
+                )
+                annotatedBy("androidx.compose.runtime.Composable")
+            }
+        }
+    }
 }
 
 dependencies {
