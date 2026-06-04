@@ -295,6 +295,7 @@ dependencies {
     testImplementation(libs.insert.koin.test.junit4)
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.datafaker)
+    testImplementation(libs.cashapp.turbine)
 
     // fastlane screengrab
     androidTestImplementation(libs.fastlane.screengrab)
