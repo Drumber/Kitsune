@@ -93,6 +93,7 @@ kotlin {
         jvmTarget = JvmTarget.JVM_11
         languageVersion = KotlinVersion.KOTLIN_2_2
         freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
+        freeCompilerArgs.add("-Xannotation-default-target=param-property")
     }
 }
 

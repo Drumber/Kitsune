@@ -22,6 +22,7 @@ constraintLayout = "2.2.1"
 coreKtx = "1.17.0"
 coreSplashScreen = "1.0.1"
 dataFaker = "2.0.1"
+detekt = "1.23.8"
 espressoCore = "3.7.0"
 expandableTextView = "1.0.5"
 glide = "5.0.5"
@@ -109,6 +110,7 @@ chibatching-kotpref-enum = { module = "com.chibatching.kotpref:enum-support", ve
 chibatching-kotpref-livedata = { module = "com.chibatching.kotpref:livedata-support", version.ref = "kotpref" }
 chrisbanes-photoview = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoView" }
 datafaker = { module = "net.datafaker:datafaker", version.ref = "dataFaker" }
+detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 fasterxml-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
 fasterxml-jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
 fastlane-screengrab = { module = "tools.fastlane:screengrab", version.ref = "screengrab" }
@@ -150,6 +152,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-legacy-kapt = { id = "com.android.legacy-kapt", version.ref = "agp" }
 androidx-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidxNavigation" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 jetbrains-kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

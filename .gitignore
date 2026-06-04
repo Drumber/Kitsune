@@ -95,3 +95,4 @@ lint/tmp/
 *.hprof
 
 .github/copilot-instructions.md
+.kotlin/sessions/

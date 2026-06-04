@@ -1,0 +1,100 @@
+build:
+  maxIssues: 0
+  excludeCorrectable: false
+
+config:
+  validation: true
+  warningsAsErrors: false
+  checkExhaustiveness: false
+
+processors:
+  active: true
+
+console-reports:
+  active: true
+
+complexity:
+  active: true
+  LongParameterList:
+    active: true
+    functionThreshold: 8
+    constructorThreshold: 8
+    ignoreDefaultParameters: true
+  LongMethod:
+    active: true
+    threshold: 80
+  CyclomaticComplexMethod:
+    active: true
+    threshold: 20
+  NestedBlockDepth:
+    active: true
+    threshold: 6
+  TooManyFunctions:
+    active: false
+
+style:
+  active: true
+  MagicNumber:
+    active: false
+  ReturnCount:
+    active: true
+    max: 5
+  MaxLineLength:
+    active: true
+    maxLineLength: 120
+    excludePackageStatements: true
+    excludeImportStatements: true
+  UnusedPrivateMember:
+    active: true
+  WildcardImport:
+    active: true
+  ForbiddenComment:
+    active: false
+  DataClassContainsFunctions:
+    active: false
+  UnnecessaryAbstractClass:
+    active: false
+
+naming:
+  active: true
+  FunctionNaming:
+    active: true
+    # Allow @Composable functions to use PascalCase.
+    ignoreAnnotated: ['Composable']
+  TopLevelPropertyNaming:
+    active: true
+
+formatting:
+  active: true
+  Indentation:
+    active: false
+  MaximumLineLength:
+    active: true
+    maxLineLength: 120
+  ArgumentListWrapping:
+    active: false
+  ParameterListWrapping:
+    active: false
+  Wrapping:
+    active: false
+  FinalNewline:
+    active: true
+  NoWildcardImports:
+    active: true
+
+exceptions:
+  active: true
+  TooGenericExceptionCaught:
+    active: false
+  SwallowedException:
+    active: false
+  TooGenericExceptionThrown:
+    active: false
+
+potential-bugs:
+  active: true
+
+performance:
+  active: true
+  SpreadOperator:
+    active: false
