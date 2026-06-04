@@ -2,18 +2,18 @@ package io.github.drumber.kitsune.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.character.Character
 import io.github.drumber.kitsune.databinding.ItemSingleCharacterBinding
-import java.util.concurrent.CopyOnWriteArrayList
 
 class CharacterAdapter(
-    val dataSet: CopyOnWriteArrayList<Character>,
     private val glide: RequestManager,
     private val listener: OnItemClickListener<Character>? = null
-) : RecyclerView.Adapter<CharacterAdapter.SingleCharacterViewHolder>() {
+) : ListAdapter<Character, CharacterAdapter.SingleCharacterViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SingleCharacterViewHolder {
         return SingleCharacterViewHolder(
@@ -26,10 +26,8 @@ class CharacterAdapter(
     }
 
     override fun onBindViewHolder(holder: SingleCharacterViewHolder, position: Int) {
-        holder.bind(dataSet[position])
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount() = dataSet.size
 
     inner class SingleCharacterViewHolder(private val binding: ItemSingleCharacterBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -46,6 +44,16 @@ class CharacterAdapter(
             binding.tvName.text = character.name
         }
 
+    }
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Character>() {
+            override fun areItemsTheSame(oldItem: Character, newItem: Character): Boolean =
+                oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: Character, newItem: Character): Boolean =
+                oldItem == newItem
+        }
     }
 
 }

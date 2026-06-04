@@ -69,14 +69,13 @@ class ProfileFavoritesSection(
         data: List<Character>
     ) {
         if (recyclerView.adapter !is CharacterAdapter) {
-            recyclerView.adapter = CharacterAdapter(CopyOnWriteArrayList(data), glide) { _, character ->
+            val adapter = CharacterAdapter(glide) { _, character ->
                 onCharacterClick(character)
             }
+            recyclerView.adapter = adapter
+            adapter.submitList(data)
         } else {
-            val adapter = recyclerView.adapter as CharacterAdapter
-            adapter.dataSet.clear()
-            adapter.dataSet.addAll(data)
-            adapter.notifyDataSetChanged()
+            (recyclerView.adapter as CharacterAdapter).submitList(data)
         }
     }
 }

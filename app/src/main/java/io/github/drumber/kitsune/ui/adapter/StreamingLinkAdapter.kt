@@ -3,34 +3,32 @@ package io.github.drumber.kitsune.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.widget.TooltipCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.StreamingLogo
 import io.github.drumber.kitsune.data.presentation.model.media.streamer.StreamingLink
 import io.github.drumber.kitsune.databinding.ItemStreamerBinding
-import java.util.concurrent.CopyOnWriteArrayList
 
 class StreamingLinkAdapter(
-    val dataSet: CopyOnWriteArrayList<StreamingLink> = CopyOnWriteArrayList(),
     private val glide: RequestManager,
     private val listener: OnItemClickListener<StreamingLink>? = null
-) : RecyclerView.Adapter<StreamingLinkAdapter.StreamingLinkViewHolder>() {
+) : ListAdapter<StreamingLink, StreamingLinkAdapter.StreamingLinkViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StreamingLinkViewHolder {
         val binding = ItemStreamerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return StreamingLinkViewHolder(binding) { position ->
-            if (position < dataSet.size) {
-                listener?.onItemClick(binding.root, dataSet[position])
+            if (position < itemCount) {
+                listener?.onItemClick(binding.root, getItem(position))
             }
         }
     }
 
     override fun onBindViewHolder(holder: StreamingLinkViewHolder, position: Int) {
-        holder.bind(dataSet[position])
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount() = dataSet.size
 
     inner class StreamingLinkViewHolder(
         private val binding: ItemStreamerBinding,
@@ -58,6 +56,16 @@ class StreamingLinkAdapter(
             TooltipCompat.setTooltipText(binding.root, streamingLink.streamer?.siteName)
         }
 
+    }
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<StreamingLink>() {
+            override fun areItemsTheSame(oldItem: StreamingLink, newItem: StreamingLink): Boolean =
+                oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: StreamingLink, newItem: StreamingLink): Boolean =
+                oldItem == newItem
+        }
     }
 
 }

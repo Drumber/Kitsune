@@ -34,7 +34,6 @@ import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.concurrent.CopyOnWriteArrayList
 
 class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
 
@@ -56,7 +55,6 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.rvMediaCharacters.adapter = MediaCharacterAdapter(
-            CopyOnWriteArrayList(),
             Glide.with(this)
         ) { _, mediaCharacter ->
             val media = mediaCharacter.media
@@ -192,13 +190,8 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun updateMediaCharactersRecyclerView(mediaCharacters: List<MediaCharacter>?) {
-        (binding.rvMediaCharacters.adapter as MediaCharacterAdapter).apply {
-            dataSet.clear()
-            val sortedMediaCharacters = mediaCharacters?.sortedBy { it.role?.ordinal }
-                ?: emptyList()
-            dataSet.addAll(sortedMediaCharacters)
-            notifyDataSetChanged()
-        }
+        val sortedMediaCharacters = mediaCharacters?.sortedBy { it.role?.ordinal } ?: emptyList()
+        (binding.rvMediaCharacters.adapter as MediaCharacterAdapter).submitList(sortedMediaCharacters)
     }
 
 }

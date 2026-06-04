@@ -535,17 +535,17 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         if (binding.rvStreamer.adapter !is StreamingLinkAdapter) {
             val glide = Glide.with(this)
             val adapter =
-                StreamingLinkAdapter(CopyOnWriteArrayList(data), glide) { _, streamingLink ->
+                StreamingLinkAdapter(glide) { _, streamingLink ->
                     streamingLink.url?.let { url ->
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                         startActivity(intent)
                     }
                 }
             binding.rvStreamer.adapter = adapter
+            adapter.submitList(data)
         } else {
             val adapter = binding.rvStreamer.adapter as StreamingLinkAdapter
-            adapter.dataSet.addAll(0, data)
-            adapter.notifyDataSetChanged()
+            adapter.submitList(data)
         }
     }
 
