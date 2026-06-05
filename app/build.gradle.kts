@@ -86,6 +86,16 @@ android {
     testOptions {
         animationsDisabled = true
         testBuildType = "instrumented"
+        unitTests {
+            // Robolectric loads a resource table per sandbox; across a large suite this
+            // accumulates and exhausts the default (512 MB) fork heap, causing late-running
+            // classes to fail with OutOfMemoryError. Raise the heap and recycle the JVM
+            // periodically to release that memory.
+            all {
+                it.maxHeapSize = "2g"
+                it.forkEvery = 40
+            }
+        }
     }
 }
 

@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.ui.details.reactions
 import app.cash.turbine.test
 import androidx.paging.PagingData
 import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
+import io.github.drumber.kitsune.data.repository.LibraryRepository
 import io.github.drumber.kitsune.data.repository.MediaReactionRepository
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.testutils.MainDispatcherRule
@@ -60,10 +61,12 @@ class ReactionsViewModelTest {
         on { invoke() } doReturn id
     }
 
+    private fun libraryRepository(): LibraryRepository = mock()
+
     @Test
     fun `dataSource requests a pager for the selected media`() = runTest {
         val repository = reactionRepository()
-        val vm = ReactionsViewModel(repository, getLocalUserId(null))
+        val vm = ReactionsViewModel(repository, getLocalUserId(null), libraryRepository())
 
         vm.dataSource.test {
             vm.setMedia("media-1", isAnime = true)
@@ -76,7 +79,7 @@ class ReactionsViewModelTest {
 
     @Test
     fun `upvote emits LoginRequired when not logged in`() = runTest {
-        val vm = ReactionsViewModel(reactionRepository(), getLocalUserId(null))
+        val vm = ReactionsViewModel(reactionRepository(), getLocalUserId(null), libraryRepository())
 
         vm.upvoteEvents.test {
             vm.upvote(reaction())
@@ -87,7 +90,7 @@ class ReactionsViewModelTest {
     @Test
     fun `upvote does not call repository when not logged in`() = runTest {
         val repository = reactionRepository()
-        val vm = ReactionsViewModel(repository, getLocalUserId(null))
+        val vm = ReactionsViewModel(repository, getLocalUserId(null), libraryRepository())
 
         vm.upvote(reaction())
 
@@ -99,7 +102,7 @@ class ReactionsViewModelTest {
         val repository = reactionRepository {
             onSuspend { upvoteReaction(eq("user-1"), eq("reaction-1")) } doReturn true
         }
-        val vm = ReactionsViewModel(repository, getLocalUserId("user-1"))
+        val vm = ReactionsViewModel(repository, getLocalUserId("user-1"), libraryRepository())
 
         vm.upvoteEvents.test {
             vm.upvote(reaction(upVotesCount = 5))
@@ -116,7 +119,7 @@ class ReactionsViewModelTest {
         val repository = reactionRepository {
             onSuspend { upvoteReaction(any(), any()) } doReturn false
         }
-        val vm = ReactionsViewModel(repository, getLocalUserId("user-1"))
+        val vm = ReactionsViewModel(repository, getLocalUserId("user-1"), libraryRepository())
 
         vm.upvoteEvents.test {
             vm.upvote(reaction())
@@ -129,7 +132,7 @@ class ReactionsViewModelTest {
         val repository = reactionRepository {
             onSuspend { upvoteReaction(any(), any()) } doThrow RuntimeException("boom")
         }
-        val vm = ReactionsViewModel(repository, getLocalUserId("user-1"))
+        val vm = ReactionsViewModel(repository, getLocalUserId("user-1"), libraryRepository())
 
         useMockedAndroidLogger {
             vm.upvoteEvents.test {
