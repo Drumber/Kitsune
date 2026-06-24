@@ -34,7 +34,7 @@
     <string name="action_add_to_favorites">إضافة إلى المفضلة</string>
     <string name="action_remove_from_favorites">إزالة من المفضلة</string>
     <string name="action_dismiss">رفض</string>
-    <string name="action_synchronize">تزامن</string>
+    <string name="action_synchronize">تزامُن</string>
     <string name="action_save_in_gallery">حفظ في المعرض</string>
     <string name="action_open_in_browser">فتح في المتصفح</string>
     <string name="action_copy_url">نسخ الرابط</string>
