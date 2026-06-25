@@ -239,7 +239,7 @@
     <string name="preference_force_legacy_image_picker">Forzar Selector de Fotos heredado</string>
     <string name="preference_force_legacy_image_picker_description">Usa el selector de fotos del sistema en lugar del nuevo.</string>
     <string name="preference_check_for_updates">Buscar Actualizaciones al Iniciar</string>
-    <string name="preference_check_for_updates_description">Buscar actualizaciones de la aplicación en cada inicio.</string>
+    <string name="preference_check_for_updates_description">Buscar nueva actualización al iniciar la app.</string>
     <string name="preference_app_logs_description">Ver y compartir archivos log de la aplicación.</string>
     <string name="preference_app_version">Información de la versión</string>
     <string name="preference_app_version_description">Clic para comprobar actualizaciones.</string>
@@ -389,4 +389,7 @@
     <string name="onboarding_login_is_logged_in">Has iniciado sesión en</string>
     <string name="onboarding_setup_subtitle">Establece tus preferencias para comenzar. Puede cambiarlas en cualquier momento más tarde en las configuraciones.</string>
     <string name="onboarding_setup_title_language_selected">Seleccionado: %1$s</string>
+    <string name="action_copy_url">Copiar URL</string>
+    <string name="profile_data_following">%d Siguiendo</string>
+    <string name="profile_data_followers">%d Seguidores</string>
 </resources>
