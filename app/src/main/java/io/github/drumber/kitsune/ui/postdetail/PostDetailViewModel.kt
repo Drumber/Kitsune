@@ -70,9 +70,6 @@ class PostDetailViewModel(
     private val _composerMode = MutableStateFlow<ComposerMode>(ComposerMode.Normal)
     val composerMode = _composerMode.asStateFlow()
 
-    private val _commentsRefresh = MutableStateFlow(false)
-    val commentsRefresh = _commentsRefresh.asStateFlow()
-
     private val eventChannel = Channel<Event>(Channel.BUFFERED)
     val events: Flow<Event> = eventChannel.receiveAsFlow()
 
