@@ -163,15 +163,6 @@ class MainActivity : BaseActivity() {
             setOnItemSelectedListener { item ->
                 viewModel.currentNavRootDestId = item.itemId
 
-                if (item.itemId == selectedItemId
-                    && navController.currentDestination?.id != item.itemId
-                    && navController.popBackStack(item.itemId, false)
-                ) {
-                    // we are on a sub-destination of this tab (e.g. Search under Home)
-                    // -> pop back to the tab's root destination instead of reselecting
-                    return@setOnItemSelectedListener true
-                }
-
                 // handle reselect of navigation item and pass event to current fragment
                 navHostFragment.childFragmentManager.fragments.let { fragments ->
                     if (item.itemId == selectedItemId
