@@ -1,15 +1,14 @@
 package io.github.drumber.kitsune.ui.profile.editprofile
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLinkSite
 import io.github.drumber.kitsune.databinding.ItemListOptionBinding
 import io.github.drumber.kitsune.databinding.SheetSelectProfileLinkSiteBinding
@@ -20,19 +19,12 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SelectProfileLinkSiteBottomSheet : BottomSheetDialogFragment() {
+class SelectProfileLinkSiteBottomSheet :
+    BottomSheetDialogFragment(R.layout.sheet_select_profile_link_site) {
 
     private val viewModel: EditProfileViewModel by viewModel(ownerProducer = { requireParentFragment() })
 
     private val binding by viewBinding(SheetSelectProfileLinkSiteBinding::bind)
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return SheetSelectProfileLinkSiteBinding.inflate(inflater, container, false).root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
