@@ -161,21 +161,29 @@ class SearchViewModel(
                     )
                     searchPaginator.postValue(paginator)
 
-                    val filterState = if (KitsunePref.rememberSearchFilters) {
+                    // Media-specific facet filters (kind, subtype, year, ...) must not be applied
+                    // to the users index, otherwise every user search returns no results.
+                    val supportsFilters = searchType == SearchType.Media
+
+                    val filterState = if (supportsFilters && KitsunePref.rememberSearchFilters) {
                         val storedFilters = KitsunePref.searchFilters.toCombinedMap()
                         FilterState(storedFilters)
                     } else {
                         FilterState()
                     }
-                    createFilterFacets(searcher, filterState)
+                    if (supportsFilters) {
+                        createFilterFacets(searcher, filterState)
+                    }
                     connectionHandler += searcher.connectFilterState(filterState)
                     connectionHandler += filterState.connectPaginator(paginator)
 
                     _filtersLiveData.postValue(filterState.filters.value)
                     filterState.filters.subscribe {
                         _filtersLiveData.postValue(it)
-                        // store search filters
-                        KitsunePref.searchFilters = it.toFilterCollection()
+                        // store search filters (only for media, which owns the facet filters)
+                        if (supportsFilters) {
+                            KitsunePref.searchFilters = it.toFilterCollection()
+                        }
                     }
 
                     createSearchBox(searcher, paginator)
