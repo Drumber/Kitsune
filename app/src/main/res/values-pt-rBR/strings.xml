@@ -415,15 +415,10 @@
     <string name="feed_spoiler_warning_title">Spoiler</string>
     <string name="feed_nsfw_warning_title">Conteúdo NSFW</string>
     <string name="feed_content_warning_tap_to_view">Toque para ver</string>
-    <string name="feed_image_count_more">+%1$d</string>
-    <string name="feed_likers_more">+%1$d</string>
-    <string name="feed_image_indicator">%1$d / %2$d</string>
     <string name="feed_unknown_user">Usuário desconhecido</string>
     <string name="feed_post_about">sobre %1$s</string>
     <string name="feed_post_spoiled_episode">Ep. %1$d</string>
     <string name="feed_post_spoiled_chapter">Cap. %1$d</string>
-    <string name="feed_post_media_unit_separator">%1$s — %2$s</string>
-    <string name="feed_post_unit_with_title">%1$s · %2$s</string>
     <string name="cd_like_post">Curtir publicação, %1$d curtidas</string>
     <string name="cd_unlike_post">Descurtir, %1$d curtidas</string>
     <string name="cd_comments_count">%1$d comentários</string>
@@ -523,5 +518,4 @@
     <string name="follow_list_following_title">Seguindo</string>
     <string name="follow_list_followers_title">Seguidores</string>
     <string name="follow_list_empty">Nada para mostrar aqui.</string>
-    <string name="profile_stats_percent">%d%%</string>
 </resources>

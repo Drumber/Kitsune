@@ -422,15 +422,10 @@
     <string name="feed_spoiler_warning_title">Спойлер</string>
     <string name="feed_nsfw_warning_title">Контент NSFW</string>
     <string name="feed_content_warning_tap_to_view">Нажмите, чтобы посмотреть</string>
-    <string name="feed_image_count_more">+%1$d</string>
-    <string name="feed_likers_more">+%1$d</string>
-    <string name="feed_image_indicator">%1$d / %2$d</string>
     <string name="feed_unknown_user">Неизвестный пользователь</string>
     <string name="feed_post_about">о %1$s</string>
     <string name="feed_post_spoiled_episode">Эп. %1$d</string>
     <string name="feed_post_spoiled_chapter">Гл. %1$d</string>
-    <string name="feed_post_media_unit_separator">%1$s — %2$s</string>
-    <string name="feed_post_unit_with_title">%1$s · %2$s</string>
     <string name="cd_like_post">Оценить пост, лайков: %1$d</string>
     <string name="cd_unlike_post">Убрать оценку, лайков: %1$d</string>
     <string name="cd_comments_count">Комментариев: %1$d</string>
@@ -530,5 +525,4 @@
     <string name="follow_list_following_title">Подписки</string>
     <string name="follow_list_followers_title">Подписчики</string>
     <string name="follow_list_empty">Здесь пока ничего нет.</string>
-    <string name="profile_stats_percent">%d%%</string>
 </resources>

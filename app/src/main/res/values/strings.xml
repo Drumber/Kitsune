@@ -35,15 +35,15 @@
     <string name="feed_spoiler_warning_title">Spoiler</string>
     <string name="feed_nsfw_warning_title">NSFW content</string>
     <string name="feed_content_warning_tap_to_view">Tap to view</string>
-    <string name="feed_image_count_more">+%1$d</string>
-    <string name="feed_likers_more">+%1$d</string>
-    <string name="feed_image_indicator">%1$d / %2$d</string>
+    <string name="feed_image_count_more" translatable="false">+%1$d</string>
+    <string name="feed_likers_more" translatable="false">+%1$d</string>
+    <string name="feed_image_indicator" translatable="false">%1$d / %2$d</string>
     <string name="feed_unknown_user">Unknown user</string>
     <string name="feed_post_about">about %1$s</string>
     <string name="feed_post_spoiled_episode">Ep. %1$d</string>
     <string name="feed_post_spoiled_chapter">Ch. %1$d</string>
-    <string name="feed_post_media_unit_separator">%1$s — %2$s</string>
-    <string name="feed_post_unit_with_title">%1$s · %2$s</string>
+    <string name="feed_post_media_unit_separator" translatable="false">%1$s — %2$s</string>
+    <string name="feed_post_unit_with_title" translatable="false">%1$s · %2$s</string>
     <string name="cd_like_post">Like post, %1$d likes</string>
     <string name="cd_unlike_post">Unlike post, %1$d likes</string>
     <string name="cd_comments_count">%1$d comments</string>
@@ -480,7 +480,7 @@
     <string name="profile_stats_manga_chapters_read">%d chapters read.</string>
     <string name="profile_stats_time_spent_total">%s in total.</string>
     <string name="profile_stats_completed">%1$d completed. More than &lt;b&gt;%2$d%%&lt;/b&gt; of users.</string>
-    <string name="profile_stats_percent">%d%%</string>
+    <string name="profile_stats_percent" translatable="false">%d%%</string>
     <string name="profile_data_gender">Gender</string>
     <string name="profile_data_location">Location</string>
     <string name="profile_data_birthday">Birthday</string>

@@ -401,15 +401,10 @@
     <string name="feed_spoiler_warning_title">Spoiler</string>
     <string name="feed_nsfw_warning_title">Nội dung NSFW</string>
     <string name="feed_content_warning_tap_to_view">Chạm để xem</string>
-    <string name="feed_image_count_more">+%1$d</string>
-    <string name="feed_likers_more">+%1$d</string>
-    <string name="feed_image_indicator">%1$d / %2$d</string>
     <string name="feed_unknown_user">Người dùng không xác định</string>
     <string name="feed_post_about">về %1$s</string>
     <string name="feed_post_spoiled_episode">Tập %1$d</string>
     <string name="feed_post_spoiled_chapter">Chương %1$d</string>
-    <string name="feed_post_media_unit_separator">%1$s — %2$s</string>
-    <string name="feed_post_unit_with_title">%1$s · %2$s</string>
     <string name="cd_like_post">Thích bài viết, %1$d lượt thích</string>
     <string name="cd_unlike_post">Bỏ thích, %1$d lượt thích</string>
     <string name="cd_comments_count">%1$d bình luận</string>
@@ -509,5 +504,4 @@
     <string name="follow_list_following_title">Đang theo dõi</string>
     <string name="follow_list_followers_title">Người theo dõi</string>
     <string name="follow_list_empty">Không có gì để hiển thị ở đây.</string>
-    <string name="profile_stats_percent">%d%%</string>
 </resources>

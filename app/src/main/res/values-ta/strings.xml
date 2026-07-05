@@ -408,15 +408,10 @@
     <string name="feed_spoiler_warning_title">ஸ்பாய்லர்</string>
     <string name="feed_nsfw_warning_title">NSFW உள்ளடக்கம்</string>
     <string name="feed_content_warning_tap_to_view">பார்க்க தட்டவும்</string>
-    <string name="feed_image_count_more">+%1$d</string>
-    <string name="feed_likers_more">+%1$d</string>
-    <string name="feed_image_indicator">%1$d / %2$d</string>
     <string name="feed_unknown_user">தெரியாத பயனர்</string>
     <string name="feed_post_about">%1$s பற்றி</string>
     <string name="feed_post_spoiled_episode">எபி. %1$d</string>
     <string name="feed_post_spoiled_chapter">அத். %1$d</string>
-    <string name="feed_post_media_unit_separator">%1$s — %2$s</string>
-    <string name="feed_post_unit_with_title">%1$s · %2$s</string>
     <string name="cd_like_post">இடுகையை விரும்பு, %1$d விருப்பங்கள்</string>
     <string name="cd_unlike_post">விருப்பத்தை நீக்கு, %1$d விருப்பங்கள்</string>
     <string name="cd_comments_count">%1$d கருத்துகள்</string>
@@ -516,5 +511,4 @@
     <string name="follow_list_following_title">பின்தொடர்பவை</string>
     <string name="follow_list_followers_title">பின்தொடர்பவர்கள்</string>
     <string name="follow_list_empty">இங்கே காட்ட எதுவும் இல்லை.</string>
-    <string name="profile_stats_percent">%d%%</string>
 </resources>

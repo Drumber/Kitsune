@@ -371,15 +371,10 @@
     <string name="feed_spoiler_warning_title">剧透</string>
     <string name="feed_nsfw_warning_title">NSFW 内容</string>
     <string name="feed_content_warning_tap_to_view">点击查看</string>
-    <string name="feed_image_count_more">+%1$d</string>
-    <string name="feed_likers_more">+%1$d</string>
-    <string name="feed_image_indicator">%1$d / %2$d</string>
     <string name="feed_unknown_user">未知用户</string>
     <string name="feed_post_about">关于 %1$s</string>
     <string name="feed_post_spoiled_episode">第 %1$d 集</string>
     <string name="feed_post_spoiled_chapter">第 %1$d 话</string>
-    <string name="feed_post_media_unit_separator">%1$s — %2$s</string>
-    <string name="feed_post_unit_with_title">%1$s · %2$s</string>
     <string name="cd_like_post">点赞帖子，%1$d 个赞</string>
     <string name="cd_unlike_post">取消点赞，%1$d 个赞</string>
     <string name="cd_comments_count">%1$d 条评论</string>
@@ -479,7 +474,6 @@
     <string name="follow_list_following_title">关注</string>
     <string name="follow_list_followers_title">粉丝</string>
     <string name="follow_list_empty">这里没有内容。</string>
-    <string name="profile_stats_percent">%d%%</string>
     <string name="action_skip">跳过</string>
     <string name="action_next">下一步</string>
     <string name="action_continue">继续</string>

@@ -160,15 +160,10 @@
     <string name="feed_spoiler_warning_title">Bederwer</string>
     <string name="feed_nsfw_warning_title">NSFW-inhoud</string>
     <string name="feed_content_warning_tap_to_view">Tik om te sien</string>
-    <string name="feed_image_count_more">+%1$d</string>
-    <string name="feed_likers_more">+%1$d</string>
-    <string name="feed_image_indicator">%1$d / %2$d</string>
     <string name="feed_unknown_user">Onbekende gebruiker</string>
     <string name="feed_post_about">oor %1$s</string>
     <string name="feed_post_spoiled_episode">Ep. %1$d</string>
     <string name="feed_post_spoiled_chapter">Hfst. %1$d</string>
-    <string name="feed_post_media_unit_separator">%1$s — %2$s</string>
-    <string name="feed_post_unit_with_title">%1$s · %2$s</string>
     <string name="cd_like_post">Hou van plasing, %1$d laaiks</string>
     <string name="cd_unlike_post">Hou nie van plasing nie, %1$d laaiks</string>
     <string name="cd_comments_count">%1$d kommentaar</string>
@@ -268,7 +263,6 @@
     <string name="follow_list_following_title">Volg</string>
     <string name="follow_list_followers_title">Volgers</string>
     <string name="follow_list_empty">Niks om hier te wys nie.</string>
-    <string name="profile_stats_percent">%d%%</string>
     <string name="status_tba">TBA</string>
     <string name="data_popularity">Gewildheid #%d</string>
     <string name="data_kitsu_score">Kitsu-telling %s%%</string>
