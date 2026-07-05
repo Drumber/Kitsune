@@ -24,7 +24,8 @@ class PostInteractionStore(
     data class State(
         val isLiked: Boolean? = null,
         val likesCount: Int? = null,
-        val commentsCount: Int? = null
+        val commentsCount: Int? = null,
+        val likerAvatars: List<String>? = null
     )
 
     private val _states = MutableStateFlow<Map<String, State>>(emptyMap())
@@ -40,6 +41,11 @@ class PostInteractionStore(
     /** Updates the comment count for the given post. */
     fun setCommentCount(postId: String, commentsCount: Int) {
         updateState(postId) { it.copy(commentsCount = commentsCount) }
+    }
+
+    /** Updates the top liker avatar urls shown for the given post. */
+    fun setLikerAvatars(postId: String, likerAvatars: List<String>) {
+        updateState(postId) { it.copy(likerAvatars = likerAvatars) }
     }
 
     private fun updateState(postId: String, transform: (State) -> State) {

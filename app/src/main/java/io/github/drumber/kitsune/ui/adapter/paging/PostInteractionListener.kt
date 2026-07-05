@@ -30,7 +30,4 @@ interface PostInteractionListener {
 
     /** Called when the post author's name or avatar is tapped. */
     fun onAuthorClick(userId: String) {}
-
-    /** Loads avatar URLs of users who liked the post. An empty list hides the liker row. */
-    suspend fun loadLikerAvatars(post: Post): List<String> = emptyList()
 }

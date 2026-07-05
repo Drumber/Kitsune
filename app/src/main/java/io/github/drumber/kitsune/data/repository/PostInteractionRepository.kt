@@ -22,7 +22,8 @@ class PostInteractionRepository(
     /**
      * Returns the current user's like ids for the given posts, keyed by post id, resolved in a
      * single request. Posts the user has not liked are absent from the map. The post resources are
-     * requested with an empty sparse fieldset so only their ids are transferred.
+     * requested with a minimal sparse fieldset so only their ids and one small attribute are
+     * transferred (the API rejects an empty `fields[posts]=` value with HTTP 400).
      */
     suspend fun getMyPostLikeIds(postIds: List<String>, userId: String): Map<String, String> {
         if (postIds.isEmpty()) return emptyMap()
@@ -30,7 +31,7 @@ class PostInteractionRepository(
             .filter("postId", postIds.joinToString(","))
             .filter("userId", userId)
             .include("post")
-            .fields("posts")
+            .fields("posts", "createdAt")
             .pageLimit(postIds.size)
         return postLikeNetworkDataSource.getPostLikes(filter)
             .mapNotNull { like ->

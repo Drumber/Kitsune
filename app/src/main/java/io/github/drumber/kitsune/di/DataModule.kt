@@ -334,7 +334,15 @@ val dataModule = module {
         )
     }
     single { FeedNetworkDataSource(get()) }
-    single { FeedRepository(get(), get(), get(), get()) }
+    single {
+        FeedRepository(
+            get(),
+            get(),
+            get(),
+            get(),
+            CoroutineScope(SupervisorJob() + Dispatchers.Default)
+        )
+    }
 
     // Notifications
     factory {

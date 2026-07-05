@@ -20,13 +20,9 @@ import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.EmbedBinder
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.PostMediaBinder
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 class PostPagingAdapter(
     private val glide: RequestManager,
-    private val scope: CoroutineScope? = null,
     private val contentRenderer: PostContentRenderer? = null,
     private val nsfwAllowed: Boolean = false,
     private val currentUserId: String? = null,
@@ -36,7 +32,8 @@ class PostPagingAdapter(
     private data class InteractionOverride(
         val isLiked: Boolean? = null,
         val likesCount: Int? = null,
-        val commentsCount: Int? = null
+        val commentsCount: Int? = null,
+        val likerAvatars: List<String>? = null
     )
 
     private val overrides = mutableMapOf<String, InteractionOverride>()
@@ -63,13 +60,15 @@ class PostPagingAdapter(
         postId: String,
         isLiked: Boolean?,
         likesCount: Int?,
-        commentsCount: Int?
+        commentsCount: Int?,
+        likerAvatars: List<String>? = null
     ) {
         val current = overrides[postId] ?: InteractionOverride()
         overrides[postId] = current.copy(
             isLiked = isLiked ?: current.isLiked,
             likesCount = likesCount ?: current.likesCount,
-            commentsCount = commentsCount ?: current.commentsCount
+            commentsCount = commentsCount ?: current.commentsCount,
+            likerAvatars = likerAvatars ?: current.likerAvatars
         )
         refreshItem(postId)
     }
@@ -90,20 +89,8 @@ class PostPagingAdapter(
         getItem(position)?.let { holder.bind(it) }
     }
 
-    override fun onViewRecycled(holder: PostViewHolder) {
-        super.onViewRecycled(holder)
-        holder.clear()
-    }
-
     inner class PostViewHolder(private val binding: ItemPostBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
-        private var avatarJob: Job? = null
-
-        fun clear() {
-            avatarJob?.cancel()
-            avatarJob = null
-        }
 
         /** Likes the post in response to a double tap. Does nothing if it is already liked. */
         private fun likeViaDoubleTap(post: Post) {
@@ -247,36 +234,28 @@ class PostPagingAdapter(
         }
 
         private fun bindLikerAvatars(post: Post) {
-            avatarJob?.cancel()
             val avatarViews = listOf(
                 binding.ivLiker1,
                 binding.ivLiker2,
                 binding.ivLiker3
             )
-            binding.layoutLikers.isVisible = false
+            val avatars = overrides[post.id]?.likerAvatars.orEmpty()
+            binding.layoutLikers.isVisible = avatars.isNotEmpty()
             avatarViews.forEach { it.isVisible = false }
             binding.tvLikerMore.isVisible = false
+            if (avatars.isEmpty()) return
 
-            if (post.likesCount <= 0) return
-            val scope = scope ?: return
-            val listener = listener ?: return
-
-            avatarJob = scope.launch {
-                val avatars = listener.loadLikerAvatars(post)
-                if (avatars.isEmpty()) return@launch
-                binding.layoutLikers.isVisible = true
-                avatarViews.forEachIndexed { index, imageView ->
-                    val url = avatars.getOrNull(index)
-                    imageView.isVisible = url != null
-                    if (url != null) loadAvatar(imageView, url)
-                }
-                val totalLikes = overrides[post.id]?.likesCount ?: post.likesCount
-                val remaining = totalLikes - avatarViews.size
-                binding.tvLikerMore.apply {
-                    isVisible = remaining > 0
-                    if (remaining > 0) {
-                        text = context.getString(R.string.feed_likers_more, remaining)
-                    }
+            avatarViews.forEachIndexed { index, imageView ->
+                val url = avatars.getOrNull(index)
+                imageView.isVisible = url != null
+                if (url != null) loadAvatar(imageView, url)
+            }
+            val totalLikes = overrides[post.id]?.likesCount ?: post.likesCount
+            val remaining = totalLikes - avatarViews.size
+            binding.tvLikerMore.apply {
+                isVisible = remaining > 0
+                if (remaining > 0) {
+                    text = context.getString(R.string.feed_likers_more, remaining)
                 }
             }
         }

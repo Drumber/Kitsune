@@ -25,8 +25,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class FeedListViewModel(
@@ -76,10 +74,6 @@ class FeedListViewModel(
 
     /** Target group id for [FeedType.GROUP] feeds. */
     private var groupFeedId: String? = null
-
-    // Cache of liker avatar urls keyed by post id, to avoid refetching on rebind.
-    private val likerAvatarCache = mutableMapOf<String, List<String>>()
-    private val likerAvatarMutex = Mutex()
 
     // Known like ids keyed by post id, used to unlike without a lookup.
     private val postLikeIds = mutableMapOf<String, String?>()
@@ -159,26 +153,6 @@ class FeedListViewModel(
             }
         }
     }.cachedIn(viewModelScope)
-
-    /**
-     * Returns up to three distinct avatar urls of users who liked the given post, fetching them
-     * lazily and caching the result. Returns an empty list if the post has no likes or on failure.
-     */
-    suspend fun likerAvatars(post: Post): List<String> {
-        if (post.likesCount <= 0) return emptyList()
-        likerAvatarCache[post.id]?.let { return it }
-        return likerAvatarMutex.withLock {
-            likerAvatarCache[post.id]?.let { return it }
-            val avatars = try {
-                postInteractionRepository.getTopLikerAvatars(post.id)
-            } catch (e: Exception) {
-                logE("Failed to load liker avatars for post '${post.id}'.", e)
-                emptyList()
-            }
-            likerAvatarCache[post.id] = avatars
-            avatars
-        }
-    }
 
     /**
      * Toggles the like state of the given post on behalf of the user. The UI is expected to have

@@ -13,13 +13,17 @@ import io.github.drumber.kitsune.data.source.network.feed.FeedPagingDataSource
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivityGroup
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.util.logE
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 class FeedRepository(
     private val feedNetworkDataSource: FeedNetworkDataSource,
     private val postInteractionRepository: PostInteractionRepository,
     private val postInteractionStore: PostInteractionStore,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val externalScope: CoroutineScope
 ) {
 
     fun globalFeedPager(pageSize: Int = Kitsu.DEFAULT_PAGE_SIZE) = feedPager(pageSize) { cursor ->
@@ -68,7 +72,12 @@ class FeedRepository(
             maxSize = Repository.MAX_CACHED_ITEMS
         ),
         pagingSourceFactory = {
-            FeedPagingDataSource(loadPage, ::preloadLikeStates)
+            FeedPagingDataSource(loadPage) { posts ->
+                // Resolve like state on the load path so the like icon is correct on first paint,
+                // but resolve liker avatars off it so the feed renders without waiting on them.
+                preloadLikeStates(posts)
+                externalScope.launch { preloadLikerAvatars(posts) }
+            }
         }
     ).flow.map { pagingData ->
         pagingData.map { it.toPost() }
@@ -100,6 +109,36 @@ class FeedRepository(
             }
         } catch (e: Exception) {
             logE("Failed to preload like states for feed page.", e)
+        }
+    }
+
+    /**
+     * Resolves and publishes up to three liker avatar urls for every liked post on a freshly
+     * loaded feed page to [postInteractionStore]. Runs off the paging load path so the feed
+     * renders immediately and avatars appear as they resolve. Because the post-likes endpoint caps
+     * a page at 20 results, avatars are resolved per post rather than in a single batched request.
+     */
+    private suspend fun preloadLikerAvatars(posts: List<NetworkPost>) {
+        val targets = posts.filter { post ->
+            val id = post.id
+            (post.postLikesCount ?: 0) > 0 && id != null &&
+                postInteractionStore.get(id)?.likerAvatars == null
+        }
+        if (targets.isEmpty()) return
+        coroutineScope {
+            targets.forEach { post ->
+                launch {
+                    val id = post.id ?: return@launch
+                    try {
+                        val avatars = postInteractionRepository.getTopLikerAvatars(id)
+                        if (avatars.isNotEmpty()) {
+                            postInteractionStore.setLikerAvatars(id, avatars)
+                        }
+                    } catch (e: Exception) {
+                        logE("Failed to preload liker avatars for post '$id'.", e)
+                    }
+                }
+            }
         }
     }
 

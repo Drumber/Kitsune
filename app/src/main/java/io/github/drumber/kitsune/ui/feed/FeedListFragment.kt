@@ -71,7 +71,6 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
 
         val adapter = PostPagingAdapter(
             glide = Glide.with(this),
-            scope = viewLifecycleOwner.lifecycleScope,
             contentRenderer = contentRenderer,
             nsfwAllowed = viewModel.nsfwAllowed,
             currentUserId = viewModel.currentUserId(),
@@ -136,7 +135,8 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
                             postId,
                             state.isLiked,
                             state.likesCount,
-                            state.commentsCount
+                            state.commentsCount,
+                            state.likerAvatars
                         )
                     }
                 }
@@ -229,10 +229,6 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
 
     override fun onAuthorClick(userId: String) {
         navigateToUserProfile(userId)
-    }
-
-    override suspend fun loadLikerAvatars(post: Post): List<String> {
-        return viewModel.likerAvatars(post)
     }
 
     /**
