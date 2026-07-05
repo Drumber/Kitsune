@@ -235,6 +235,7 @@
     <string name="post_deleted">Post deleted.</string>
     <string name="comment_updated">Comment updated.</string>
     <string name="comment_deleted">Comment deleted.</string>
+    <string name="title_replies">Replies</string>
     <string name="action_failed">Something went wrong. Please try again.</string>
     <string name="delete_post_confirm_title">Delete post?</string>
     <string name="delete_post_confirm_message">This post will be permanently deleted.</string>
@@ -568,6 +569,10 @@
     <plurals name="group_members_count">
         <item quantity="one">%d member</item>
         <item quantity="other">%d members</item>
+    </plurals>
+    <plurals name="comment_view_all_replies">
+        <item quantity="one">View %d reply</item>
+        <item quantity="other">View all %d replies</item>
     </plurals>
     <!-- Transition names -->
     <string name="unique_poster_transition_name" translatable="false">media_item_poster_%1$s</string>

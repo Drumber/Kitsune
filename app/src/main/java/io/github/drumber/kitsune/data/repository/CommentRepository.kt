@@ -10,8 +10,11 @@ import io.github.drumber.kitsune.data.mapper.CommentMapper.toComment
 import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.data.source.network.comment.CommentNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.comment.CommentPagingDataSource
+import io.github.drumber.kitsune.data.source.network.comment.RepliesPagingDataSource
+import io.github.drumber.kitsune.data.source.network.comment.resolveLikeIds
 import io.github.drumber.kitsune.data.source.network.comment.model.NetworkComment
 import io.github.drumber.kitsune.data.source.network.comment.model.NetworkCommentLike
+import io.github.drumber.kitsune.data.source.network.comment.model.NetworkCommentWithLike
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import kotlinx.coroutines.flow.map
@@ -31,13 +34,38 @@ class CommentRepository(
                 CommentPagingDataSource(commentNetworkDataSource, userId, buildCommentFilter(postId, pageSize))
             }
         ).flow.map { pagingData ->
-            pagingData.map { item ->
-                item.comment.toComment(
-                    isLikedByMe = item.likeId != null,
-                    myLikeId = item.likeId
+            pagingData.map { item -> item.toComment() }
+        }
+
+    /** Pager for the full, paginated list of replies of a single parent comment, oldest first. */
+    fun repliesPager(parentCommentId: String, userId: String?, pageSize: Int = Kitsu.DEFAULT_PAGE_SIZE) =
+        Pager(
+            config = PagingConfig(
+                pageSize = pageSize,
+                maxSize = Repository.MAX_CACHED_ITEMS
+            ),
+            pagingSourceFactory = {
+                RepliesPagingDataSource(
+                    commentNetworkDataSource,
+                    userId,
+                    buildRepliesFilter(parentCommentId, pageSize)
                 )
             }
+        ).flow.map { pagingData ->
+            pagingData.map { item -> item.toComment() }
         }
+
+    /** Fetches a single comment by id, including the current user's like state. */
+    suspend fun getComment(commentId: String, userId: String?): Comment? {
+        val filter = Filter()
+            .filter("id", commentId)
+            .include("user", "uploads")
+            .pageLimit(1)
+        val networkComment = commentNetworkDataSource.getAllComments(filter).firstOrNull() ?: return null
+        val id = networkComment.id ?: return null
+        val likeId = commentNetworkDataSource.resolveLikeIds(userId, listOf(id))[id]
+        return networkComment.toComment(isLikedByMe = likeId != null, myLikeId = likeId)
+    }
 
     /** Posts a new top-level comment on behalf of the user. Returns the created comment. */
     suspend fun postComment(postId: String, userId: String, content: String): Comment? {
@@ -97,46 +125,22 @@ class CommentRepository(
         commentNetworkDataSource.deleteComment(commentId)
     }
 
-    /**
-     * Returns the replies of the given top-level comment, oldest first, with the current user's
-     * like state resolved. Comment threading is capped at one level by the server.
-     */
-    suspend fun getReplies(parentCommentId: String, userId: String?): List<Comment> {
-        val filter = Filter()
-            .filter("parentId", parentCommentId)
-            .include("user", "uploads")
-            .sort("createdAt")
-            .pageLimit(Kitsu.DEFAULT_PAGE_SIZE)
-        val networkComments = commentNetworkDataSource.getAllComments(filter)
-
-        val likeIdByCommentId = if (userId != null && networkComments.isNotEmpty()) {
-            val commentIds = networkComments.mapNotNull { it.id }
-            val likeFilter = Filter()
-                .filter("userId", userId)
-                .filter("commentId", commentIds.joinToString(","))
-                .include("comment")
-                .pageLimit(commentIds.size)
-            commentNetworkDataSource.getCommentLikes(likeFilter)
-                .mapNotNull { like -> like.comment?.id?.let { it to like.id } }
-                .toMap()
-        } else {
-            emptyMap()
-        }
-
-        return networkComments.map { networkComment ->
-            val likeId = likeIdByCommentId[networkComment.id]
-            networkComment.toComment(
-                isLikedByMe = likeId != null,
-                myLikeId = likeId
-            )
-        }
-    }
-
     private fun buildCommentFilter(postId: String, pageSize: Int) = Filter()
         .filter("postId", postId)
         .filter("parentId", "_none")
         .include("user", "uploads")
         .sort("createdAt")
         .pageLimit(pageSize)
+
+    private fun buildRepliesFilter(parentCommentId: String, pageSize: Int) = Filter()
+        .filter("parentId", parentCommentId)
+        .include("user", "uploads")
+        .sort("createdAt")
+        .pageLimit(pageSize)
+
+    private fun NetworkCommentWithLike.toComment(): Comment = comment.toComment(
+        isLikedByMe = likeId != null,
+        myLikeId = likeId
+    ).copy(replies = replies.map { it.toComment() })
 
 }

@@ -243,10 +243,6 @@ class PostPagingAdapter(
             binding.tvComments.contentDescription =
                 binding.root.context.getString(R.string.cd_comments_count, commentsCount)
 
-            scope?.let { s ->
-                listener?.let { l -> s.launch { l.ensureLikeStateLoaded(post) } }
-            }
-
             bindLikerAvatars(post)
         }
 

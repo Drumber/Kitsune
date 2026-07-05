@@ -26,6 +26,16 @@ class CommentNetworkDataSource(
         }
     }
 
+    /** Fetches up to [limit] replies of the given parent comment, oldest first. */
+    suspend fun getReplies(parentCommentId: String, limit: Int): List<NetworkComment> {
+        val filter = Filter()
+            .filter("parentId", parentCommentId)
+            .include("user", "uploads")
+            .sort("createdAt")
+            .pageLimit(limit)
+        return getAllComments(filter)
+    }
+
     suspend fun postComment(comment: NetworkComment): NetworkComment? {
         return withContext(Dispatchers.IO) {
             commentApi.postComment(JSONAPIDocument(comment)).get()
@@ -62,4 +72,24 @@ class CommentNetworkDataSource(
         }
     }
 
+}
+
+/**
+ * Resolves the current user's like ids for the given comments in a single request, keyed by comment
+ * id. Returns an empty map when [userId] is `null` or [commentIds] is empty, avoiding a needless
+ * network call. Shared by the comment and reply paging sources.
+ */
+internal suspend fun CommentNetworkDataSource.resolveLikeIds(
+    userId: String?,
+    commentIds: List<String>
+): Map<String, String?> {
+    if (userId == null || commentIds.isEmpty()) return emptyMap()
+    val likeFilter = Filter()
+        .filter("userId", userId)
+        .filter("commentId", commentIds.joinToString(","))
+        .include("comment")
+        .pageLimit(commentIds.size)
+    return getCommentLikes(likeFilter)
+        .mapNotNull { like -> like.comment?.id?.let { it to like.id } }
+        .toMap()
 }

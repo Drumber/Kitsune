@@ -19,5 +19,8 @@ data class Comment(
     val authorAvatarUrl: String?,
 
     val imageUrl: String?,
-    val embed: Embed?
+    val embed: Embed?,
+
+    /** Bounded preview of replies loaded with the comment. May be shorter than [repliesCount]. */
+    val replies: List<Comment> = emptyList()
 )

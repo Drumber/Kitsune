@@ -15,7 +15,8 @@ import io.github.drumber.kitsune.util.logE
  * official Kitsu apps.
  */
 class FeedPagingDataSource(
-    private val loadPage: suspend (cursor: String?) -> CursorPageData<NetworkActivityGroup>
+    private val loadPage: suspend (cursor: String?) -> CursorPageData<NetworkActivityGroup>,
+    private val onPostsLoaded: (suspend (List<NetworkPost>) -> Unit)? = null
 ) : PagingSource<String, NetworkPost>() {
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, NetworkPost> {
@@ -28,6 +29,8 @@ class FeedPagingDataSource(
                     group.activities?.firstNotNullOfOrNull { it.subject?.toPostOrNull() }
                 }
                 .distinctBy { it.id }
+
+            onPostsLoaded?.invoke(posts)
 
             LoadResult.Page(
                 data = posts,

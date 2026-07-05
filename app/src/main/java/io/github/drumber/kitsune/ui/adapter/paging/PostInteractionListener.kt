@@ -33,7 +33,4 @@ interface PostInteractionListener {
 
     /** Loads avatar URLs of users who liked the post. An empty list hides the liker row. */
     suspend fun loadLikerAvatars(post: Post): List<String> = emptyList()
-
-    /** Ensures the like state for the post has been loaded. */
-    suspend fun ensureLikeStateLoaded(post: Post) {}
 }

@@ -27,6 +27,7 @@ import io.github.drumber.kitsune.ui.profile.UserProfileViewModel
 import io.github.drumber.kitsune.ui.profile.follow.FollowListViewModel
 import io.github.drumber.kitsune.ui.profile.editprofile.EditProfileViewModel
 import io.github.drumber.kitsune.ui.reactiondetail.ReactionDetailViewModel
+import io.github.drumber.kitsune.ui.replies.RepliesViewModel
 import io.github.drumber.kitsune.ui.search.SearchViewModel
 import io.github.drumber.kitsune.ui.search.categories.CategoriesViewModel
 import io.github.drumber.kitsune.ui.settings.AppLogsViewModel
@@ -60,6 +61,9 @@ val viewModelModule = module {
     viewModel { FeedListViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { NotificationsViewModel(get(), get()) }
     viewModel { PostDetailViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { (parentCommentId: String, postId: String) ->
+        RepliesViewModel(parentCommentId, postId, get(), get())
+    }
     viewModel { CreatePostViewModel(get(), get(), get()) }
     viewModel { MediaPickerViewModel(get()) }
     viewModel { UnitPickerViewModel(get()) }

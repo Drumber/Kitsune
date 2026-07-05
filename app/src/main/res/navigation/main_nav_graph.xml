@@ -336,6 +336,21 @@
         android:id="@+id/action_global_post_detail_fragment"
         app:destination="@id/post_detail_fragment" />
     <fragment
+        android:id="@+id/replies_fragment"
+        android:name="io.github.drumber.kitsune.ui.replies.RepliesFragment"
+        android:label="RepliesFragment"
+        tools:layout="@layout/fragment_replies" >
+        <argument
+            android:name="parentCommentId"
+            app:argType="string" />
+        <argument
+            android:name="postId"
+            app:argType="string" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_replies_fragment"
+        app:destination="@id/replies_fragment" />
+    <fragment
         android:id="@+id/reaction_detail_fragment"
         android:name="io.github.drumber.kitsune.ui.reactiondetail.ReactionDetailFragment"
         android:label="ReactionDetailFragment"

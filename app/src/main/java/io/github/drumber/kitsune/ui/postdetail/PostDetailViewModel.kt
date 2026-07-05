@@ -159,20 +159,6 @@ class PostDetailViewModel(
         }
     }
 
-    private val replyCache = mutableMapOf<String, List<Comment>>()
-
-    suspend fun loadReplies(comment: Comment): List<Comment> {
-        replyCache[comment.id]?.let { return it }
-        return try {
-            commentRepository.getReplies(comment.id, getLocalUserId()).also {
-                replyCache[comment.id] = it
-            }
-        } catch (e: Exception) {
-            logE("Failed to load replies for comment '${comment.id}'.", e)
-            emptyList()
-        }
-    }
-
     fun toggleCommentLike(comment: Comment) {
         val userId = getLocalUserId()
         if (userId == null) {
@@ -263,8 +249,6 @@ class PostDetailViewModel(
                     trimmed
                 )
                 if (reply != null) {
-                    // Invalidate cached replies so the new reply is fetched on refresh.
-                    replyCache.remove(parentCommentId)
                     eventChannel.send(Event.CommentPosted)
                 } else {
                     eventChannel.send(Event.Error)
@@ -318,8 +302,6 @@ class PostDetailViewModel(
             try {
                 val updated = commentRepository.updateComment(commentId, trimmed)
                 if (updated != null) {
-                    // Drop cached replies so an edited reply is refetched.
-                    replyCache.clear()
                     eventChannel.send(Event.CommentUpdated)
                 } else {
                     eventChannel.send(Event.Error)
@@ -337,7 +319,6 @@ class PostDetailViewModel(
         viewModelScope.launch {
             try {
                 commentRepository.deleteComment(commentId)
-                replyCache.clear()
                 if (currentPost != null) {
                     val newCount = ((postInteractionStore.get(currentPost.id)?.commentsCount
                         ?: currentPost.commentsCount) - 1).coerceAtLeast(0)

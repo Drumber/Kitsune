@@ -1,0 +1,229 @@
+package io.github.drumber.kitsune.ui.replies
+
+import android.content.Context
+import android.os.Bundle
+import android.text.format.DateUtils
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.presentation.model.comment.Comment
+import io.github.drumber.kitsune.databinding.FragmentRepliesBinding
+import io.github.drumber.kitsune.ui.adapter.paging.CommentPagingAdapter
+import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
+import io.github.drumber.kitsune.ui.component.updateLoadState
+import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.util.parseUtcDate
+import io.github.drumber.kitsune.util.ui.EmbedBinder
+import io.github.drumber.kitsune.util.ui.PostContentRenderer
+import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.showSnackbar
+import io.github.drumber.kitsune.util.ui.viewBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
+
+class RepliesFragment : Fragment(R.layout.fragment_replies) {
+
+    private val args: RepliesFragmentArgs by navArgs()
+
+    private val binding by viewBinding(FragmentRepliesBinding::bind)
+
+    private val viewModel: RepliesViewModel by viewModel {
+        parametersOf(args.parentCommentId, args.postId)
+    }
+
+    private val contentRenderer: PostContentRenderer by inject()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.toolbar.initWindowInsetsListener(consume = false)
+        binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+        binding.rvReplies.initPaddingWindowInsetsListener(
+            left = true,
+            right = true,
+            bottom = true,
+            consume = false
+        )
+        binding.layoutInput.initPaddingWindowInsetsListener(
+            left = true,
+            right = true,
+            bottom = true,
+            consume = false
+        )
+
+        val repliesAdapter = CommentPagingAdapter(
+            glide = Glide.with(this),
+            onLikeClick = { comment -> viewModel.toggleCommentLike(comment) },
+            contentRenderer = contentRenderer,
+            currentUserId = viewModel.currentUserId(),
+            onAuthorClick = { userId -> navigateToUserProfile(userId) }
+        )
+
+        binding.rvReplies.apply {
+            adapter = repliesAdapter.withLoadStateFooter(ResourceLoadStateAdapter(repliesAdapter))
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        }
+
+        binding.layoutLoading.btnRetry.setOnClickListener { repliesAdapter.retry() }
+        binding.btnSend.setOnClickListener { submitReply() }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.parentComment.collectLatest { comment ->
+                    comment?.let { bindParentComment(it) }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                repliesAdapter.loadStateFlow.collectLatest { loadState ->
+                    binding.layoutLoading.updateLoadState(
+                        binding.rvReplies,
+                        repliesAdapter.itemCount,
+                        loadState
+                    )
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.replies.collectLatest { data ->
+                    repliesAdapter.submitData(data)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.events.collectLatest { event ->
+                    when (event) {
+                        is RepliesViewModel.Event.CommentLikeChanged ->
+                            if (event.commentId == args.parentCommentId) {
+                                bindParentLikeRow(event.isLiked, event.count)
+                            } else {
+                                repliesAdapter.setLikeState(event.commentId, event.isLiked, event.count)
+                            }
+
+                        RepliesViewModel.Event.ReplyPosted -> {
+                            binding.etReply.text?.clear()
+                            hideKeyboard()
+                            repliesAdapter.refresh()
+                            showSnackbar(binding.root, R.string.comment_posted)
+                        }
+
+                        RepliesViewModel.Event.LoginRequired ->
+                            showSnackbar(binding.root, R.string.comment_login_required)
+
+                        RepliesViewModel.Event.Error ->
+                            showSnackbar(binding.root, R.string.comment_action_failed)
+                    }
+                }
+            }
+        }
+    }
+
+    /** Renders the comment whose replies are shown as a pinned header above the reply list. */
+    private fun bindParentComment(comment: Comment) {
+        val header = binding.parentComment
+        header.root.isVisible = true
+        binding.dividerParent.isVisible = true
+        binding.tvRepliesHeader.isVisible = true
+
+        Glide.with(this)
+            .load(comment.authorAvatarUrl)
+            .placeholder(R.drawable.ic_outline_person_24)
+            .circleCrop()
+            .into(header.ivAvatar)
+
+        header.tvAuthor.text = comment.authorName ?: getString(R.string.feed_unknown_user)
+
+        val authorId = comment.authorId
+        val authorClickListener = authorId?.let { id ->
+            View.OnClickListener { navigateToUserProfile(id) }
+        }
+        header.ivAvatar.setOnClickListener(authorClickListener)
+        header.tvAuthor.setOnClickListener(authorClickListener)
+
+        header.tvTimestamp.apply {
+            val date = comment.createdAt?.parseUtcDate()
+            isVisible = date != null
+            text = date?.let {
+                DateUtils.getRelativeTimeSpanString(
+                    it.time,
+                    System.currentTimeMillis(),
+                    DateUtils.MINUTE_IN_MILLIS
+                )
+            }
+        }
+
+        header.tvContent.apply {
+            isVisible = !comment.content.isNullOrBlank()
+            contentRenderer.render(this, comment.contentFormatted, comment.content)
+        }
+
+        header.ivImage.apply {
+            isVisible = !comment.imageUrl.isNullOrBlank()
+            if (!comment.imageUrl.isNullOrBlank()) {
+                Glide.with(this@RepliesFragment)
+                    .load(comment.imageUrl)
+                    .placeholder(R.drawable.ic_insert_photo_48)
+                    .into(this)
+            }
+        }
+
+        EmbedBinder.bind(header.embed, Glide.with(this), comment.embed, visible = true)
+
+        bindParentLikeRow(comment.isLikedByMe, comment.likesCount)
+        header.layoutLike.setOnClickListener { viewModel.toggleCommentLike(comment) }
+
+        // The pinned header only represents the parent comment, so hide list-only affordances.
+        header.tvReply.isVisible = false
+        header.btnOverflow.isVisible = false
+        header.layoutReplies.isVisible = false
+        header.tvViewAllReplies.isVisible = false
+        header.dividerComment.isVisible = false
+    }
+
+    private fun bindParentLikeRow(isLiked: Boolean, count: Int) {
+        val header = binding.parentComment
+        header.tvLikes.text = count.toString()
+        header.ivLike.setImageResource(
+            if (isLiked) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_border_24
+        )
+    }
+
+    private fun submitReply() {
+        val content = binding.etReply.text?.toString().orEmpty().trim()
+        if (content.isEmpty()) return
+        viewModel.postReply(content)
+    }
+
+    private fun hideKeyboard() {
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        binding.etReply.clearFocus()
+        imm.hideSoftInputFromWindow(binding.etReply.windowToken, 0)
+    }
+
+    private fun navigateToUserProfile(userId: String) {
+        val action = io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
+            .actionGlobalUserProfileFragment(userId)
+        findNavController().navigateSafe(R.id.replies_fragment, action)
+    }
+
+}

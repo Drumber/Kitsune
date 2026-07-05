@@ -11,10 +11,15 @@ import io.github.drumber.kitsune.data.source.network.CursorPageData
 import io.github.drumber.kitsune.data.source.network.feed.FeedNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.feed.FeedPagingDataSource
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivityGroup
+import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
+import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.flow.map
 
 class FeedRepository(
-    private val feedNetworkDataSource: FeedNetworkDataSource
+    private val feedNetworkDataSource: FeedNetworkDataSource,
+    private val postInteractionRepository: PostInteractionRepository,
+    private val postInteractionStore: PostInteractionStore,
+    private val userRepository: UserRepository
 ) {
 
     fun globalFeedPager(pageSize: Int = Kitsu.DEFAULT_PAGE_SIZE) = feedPager(pageSize) { cursor ->
@@ -63,10 +68,39 @@ class FeedRepository(
             maxSize = Repository.MAX_CACHED_ITEMS
         ),
         pagingSourceFactory = {
-            FeedPagingDataSource(loadPage)
+            FeedPagingDataSource(loadPage, ::preloadLikeStates)
         }
     ).flow.map { pagingData ->
         pagingData.map { it.toPost() }
+    }
+
+    /**
+     * Resolves the current user's like state for every post on a freshly loaded feed page in a
+     * single request and publishes it to [postInteractionStore], so the feed renders the correct
+     * like state without the UI having to fetch it per item. No-op when the user is not logged in.
+     */
+    private suspend fun preloadLikeStates(posts: List<NetworkPost>) {
+        val userId = userRepository.localUser.value?.id ?: return
+        // Skip posts whose like state was already resolved or changed during this session.
+        val unresolved = posts.filter { post ->
+            val id = post.id
+            id != null && postInteractionStore.get(id)?.isLiked == null
+        }
+        if (unresolved.isEmpty()) return
+        try {
+            val likedIds = postInteractionRepository.getMyPostLikeIds(
+                unresolved.mapNotNull { it.id },
+                userId
+            )
+            unresolved.forEach { post ->
+                val postId = post.id ?: return@forEach
+                if (postId in likedIds) {
+                    postInteractionStore.setLikeState(postId, true, post.postLikesCount ?: 0)
+                }
+            }
+        } catch (e: Exception) {
+            logE("Failed to preload like states for feed page.", e)
+        }
     }
 
     private fun buildFilter(pageSize: Int, cursor: String?) = Filter()

@@ -235,10 +235,6 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
         return viewModel.likerAvatars(post)
     }
 
-    override suspend fun ensureLikeStateLoaded(post: Post) {
-        viewModel.ensureLikeStateLoaded(post)
-    }
-
     /**
      * Scrolls the feed list to the top, or refreshes the content if it is already at the top.
      *

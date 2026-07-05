@@ -334,7 +334,7 @@ val dataModule = module {
         )
     }
     single { FeedNetworkDataSource(get()) }
-    single { FeedRepository(get()) }
+    single { FeedRepository(get(), get(), get(), get()) }
 
     // Notifications
     factory {

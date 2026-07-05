@@ -17,17 +17,13 @@ import io.github.drumber.kitsune.util.extensions.setOnDoubleTapListener
 import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.EmbedBinder
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 class CommentPagingAdapter(
     private val glide: RequestManager,
     private val onLikeClick: ((Comment) -> Unit)? = null,
     private val contentRenderer: PostContentRenderer? = null,
-    private val scope: CoroutineScope? = null,
-    private val repliesProvider: (suspend (Comment) -> List<Comment>)? = null,
     private val onReplyClick: ((Comment) -> Unit)? = null,
+    private val onViewAllRepliesClick: ((Comment) -> Unit)? = null,
     private val currentUserId: String? = null,
     private val onEditClick: ((Comment) -> Unit)? = null,
     private val onDeleteClick: ((Comment) -> Unit)? = null,
@@ -38,19 +34,19 @@ class CommentPagingAdapter(
 
     private val likeOverrides = mutableMapOf<String, LikeState>()
 
-    // Currently displayed reply views keyed by comment id, so reply like state can be refreshed
-    // without rebuilding the parent comment (replies are not part of the paging list).
-    private val replyBindings = mutableMapOf<String, ItemCommentBinding>()
-
-    /** Overrides the like state of the comment (top-level or reply) and refreshes its view. */
+    /**
+     * Overrides the like state of the comment (top-level or reply) and refreshes its view. Replies
+     * are rendered as nested views of their parent, so a reply like change refreshes the parent
+     * item that owns it.
+     */
     fun setLikeState(commentId: String, isLiked: Boolean, count: Int) {
         likeOverrides[commentId] = LikeState(isLiked, count)
-        val index = snapshot().items.indexOfFirst { it.id == commentId }
+        val index = snapshot().items.indexOfFirst { comment ->
+            comment.id == commentId || comment.replies.any { it.id == commentId }
+        }
         if (index != -1) {
             notifyItemChanged(index)
-            return
         }
-        replyBindings[commentId]?.let { bindLikeRow(it, isLiked, count) }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
@@ -160,8 +156,9 @@ class CommentPagingAdapter(
 
     private fun bindOverflowMenu(binding: ItemCommentBinding, comment: Comment) {
         val isOwner = currentUserId != null && comment.authorId == currentUserId
-        binding.btnOverflow.isVisible = isOwner
-        if (!isOwner) {
+        val canManage = isOwner && (onEditClick != null || onDeleteClick != null)
+        binding.btnOverflow.isVisible = canManage
+        if (!canManage) {
             binding.btnOverflow.setOnClickListener(null)
             return
         }
@@ -195,53 +192,49 @@ class CommentPagingAdapter(
         )
     }
 
+    /**
+     * Renders the preview of [comment]'s replies as nested views and, when the comment has more
+     * replies than are previewed, a link that opens the full paginated replies screen.
+     */
+    private fun renderReplies(binding: ItemCommentBinding, comment: Comment) {
+        binding.layoutReplies.removeAllViews()
+        val replies = comment.replies
+        binding.layoutReplies.isVisible = replies.isNotEmpty()
+        if (replies.isNotEmpty()) {
+            val inflater = LayoutInflater.from(binding.root.context)
+            replies.forEach { reply ->
+                val replyBinding = ItemCommentBinding.inflate(inflater, binding.layoutReplies, false)
+                bindCommentViews(replyBinding, reply, isReply = true)
+                binding.layoutReplies.addView(replyBinding.root)
+            }
+        }
+
+        val hasMore = comment.repliesCount > replies.size
+        binding.tvViewAllReplies.isVisible = hasMore
+        if (hasMore) {
+            binding.tvViewAllReplies.text = binding.root.context.resources.getQuantityString(
+                R.plurals.comment_view_all_replies,
+                comment.repliesCount,
+                comment.repliesCount
+            )
+            binding.tvViewAllReplies.setOnClickListener { onViewAllRepliesClick?.invoke(comment) }
+        } else {
+            binding.tvViewAllReplies.setOnClickListener(null)
+        }
+    }
+
     inner class CommentViewHolder(private val binding: ItemCommentBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        private var replyJob: Job? = null
-        private val boundReplyIds = mutableListOf<String>()
-
         fun bind(comment: Comment) {
             bindCommentViews(binding, comment, isReply = false)
-            bindReplies(comment)
+            renderReplies(binding, comment)
         }
 
         fun clear() {
-            replyJob?.cancel()
-            replyJob = null
-            boundReplyIds.forEach { replyBindings.remove(it) }
-            boundReplyIds.clear()
             binding.layoutReplies.removeAllViews()
             binding.layoutReplies.isVisible = false
-        }
-
-        private fun bindReplies(comment: Comment) {
-            replyJob?.cancel()
-            boundReplyIds.forEach { replyBindings.remove(it) }
-            boundReplyIds.clear()
-            binding.layoutReplies.removeAllViews()
-            binding.layoutReplies.isVisible = false
-
-            if (comment.repliesCount <= 0) return
-            val scope = scope ?: return
-            val provider = repliesProvider ?: return
-
-            replyJob = scope.launch {
-                val replies = provider(comment)
-                if (replies.isEmpty()) return@launch
-                binding.layoutReplies.isVisible = true
-                val inflater = LayoutInflater.from(binding.root.context)
-                replies.forEach { reply ->
-                    val replyBinding = ItemCommentBinding.inflate(
-                        inflater, binding.layoutReplies, false
-                    )
-                    bindCommentViews(replyBinding, reply, isReply = true)
-                    replyBinding.layoutReplies.isVisible = false
-                    binding.layoutReplies.addView(replyBinding.root)
-                    replyBindings[reply.id] = replyBinding
-                    boundReplyIds.add(reply.id)
-                }
-            }
+            binding.tvViewAllReplies.isVisible = false
         }
 
     }

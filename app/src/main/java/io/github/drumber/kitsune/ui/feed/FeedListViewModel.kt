@@ -84,10 +84,6 @@ class FeedListViewModel(
     // Known like ids keyed by post id, used to unlike without a lookup.
     private val postLikeIds = mutableMapOf<String, String?>()
 
-    // Posts whose initial like state has already been resolved.
-    private val likeStateLoaded = mutableSetOf<String>()
-    private val likeStateMutex = Mutex()
-
     private val likeEventChannel = Channel<LikeEvent>(Channel.BUFFERED)
     val likeEvents: Flow<LikeEvent> = likeEventChannel.receiveAsFlow()
 
@@ -181,33 +177,6 @@ class FeedListViewModel(
             }
             likerAvatarCache[post.id] = avatars
             avatars
-        }
-    }
-
-    /**
-     * Resolves the current user's like state for the given post once and, if the post is already
-     * liked, pushes the filled state to the shared interaction store. No-op when not logged in.
-     */
-    suspend fun ensureLikeStateLoaded(post: Post) {
-        val userId = getLocalUserId() ?: return
-        if (post.id in likeStateLoaded) return
-        likeStateMutex.withLock {
-            if (post.id in likeStateLoaded) return
-            // Don't clobber a like state the user already changed in this session.
-            if (postInteractionStore.get(post.id)?.isLiked != null) {
-                likeStateLoaded.add(post.id)
-                return
-            }
-            try {
-                val likeId = postInteractionRepository.getMyPostLikeId(post.id, userId)
-                likeStateLoaded.add(post.id)
-                if (likeId != null) {
-                    postLikeIds[post.id] = likeId
-                    postInteractionStore.setLikeState(post.id, true, post.likesCount)
-                }
-            } catch (e: Exception) {
-                logE("Failed to load like state for post '${post.id}'.", e)
-            }
         }
     }
 

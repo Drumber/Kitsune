@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -77,21 +78,27 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
             glide = glide,
             onLikeClick = { comment -> viewModel.toggleCommentLike(comment) },
             contentRenderer = contentRenderer,
-            scope = viewLifecycleOwner.lifecycleScope,
-            repliesProvider = { comment -> viewModel.loadReplies(comment) },
             onReplyClick = { comment -> startReply(comment) },
+            onViewAllRepliesClick = { comment -> navigateToReplies(comment) },
             currentUserId = currentUserId,
             onEditClick = { comment -> startEditComment(comment) },
             onDeleteClick = { comment -> confirmDeleteComment(comment) },
             onAuthorClick = { userId -> navigateToUserProfile(userId) }
         )
 
+        val commentsFooter = ResourceLoadStateAdapter(commentsAdapter)
         binding.rvComments.apply {
-            adapter = ConcatAdapter(
-                headerAdapter,
-                commentsAdapter.withLoadStateFooter(ResourceLoadStateAdapter(commentsAdapter))
-            )
+            adapter = ConcatAdapter(headerAdapter, commentsAdapter, commentsFooter)
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        }
+
+        // Surface the initial comment load (spinner/error/retry) as a footer below the post so the
+        // post stays visible; fall back to the append state for subsequent pages.
+        commentsAdapter.addLoadStateListener { loadState ->
+            val refresh = loadState.source.refresh
+            commentsFooter.loadState =
+                if (refresh is LoadState.Loading || refresh is LoadState.Error) refresh
+                else loadState.source.append
         }
 
         binding.btnSend.setOnClickListener { submitComment() }
@@ -204,6 +211,11 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
     private fun navigateToUserProfile(userId: String) {
         val action = io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
             .actionGlobalUserProfileFragment(userId)
+        findNavController().navigateSafe(R.id.post_detail_fragment, action)
+    }
+
+    private fun navigateToReplies(comment: Comment) {
+        val action = PostDetailFragmentDirections.actionGlobalRepliesFragment(comment.id, args.post.id)
         findNavController().navigateSafe(R.id.post_detail_fragment, action)
     }
 

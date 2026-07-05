@@ -19,6 +19,28 @@ class PostInteractionRepository(
         return postLikeNetworkDataSource.getPostLikes(filter).firstOrNull()?.id
     }
 
+    /**
+     * Returns the current user's like ids for the given posts, keyed by post id, resolved in a
+     * single request. Posts the user has not liked are absent from the map. The post resources are
+     * requested with an empty sparse fieldset so only their ids are transferred.
+     */
+    suspend fun getMyPostLikeIds(postIds: List<String>, userId: String): Map<String, String> {
+        if (postIds.isEmpty()) return emptyMap()
+        val filter = Filter()
+            .filter("postId", postIds.joinToString(","))
+            .filter("userId", userId)
+            .include("post")
+            .fields("posts")
+            .pageLimit(postIds.size)
+        return postLikeNetworkDataSource.getPostLikes(filter)
+            .mapNotNull { like ->
+                val postId = like.post?.id ?: return@mapNotNull null
+                val likeId = like.id ?: return@mapNotNull null
+                postId to likeId
+            }
+            .toMap()
+    }
+
     /** Returns up to [limit] distinct avatar urls of users who liked the given post. */
     suspend fun getTopLikerAvatars(postId: String, limit: Int = 3): List<String> {
         val filter = Filter()

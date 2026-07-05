@@ -7,5 +7,7 @@ package io.github.drumber.kitsune.data.source.network.comment.model
  */
 data class NetworkCommentWithLike(
     val comment: NetworkComment,
-    val likeId: String?
+    val likeId: String?,
+    /** Bounded preview of replies (each with their own like state) loaded with the comment. */
+    val replies: List<NetworkCommentWithLike> = emptyList()
 )
