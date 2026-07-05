@@ -11,7 +11,7 @@ import io.github.drumber.kitsune.util.extensions.getColor
 
 object PieChartStyle : BaseChartStyle() {
 
-    const val STATS_MAX_ELEMENTS = 5
+    const val STATS_MAX_ELEMENTS = 7
     const val ANIMATION_DURATION = 800
 
     fun PieChart.applyStyle(
