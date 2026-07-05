@@ -51,6 +51,13 @@ class PostDetailViewModel(
         val count: Int = 0
     )
 
+    /** Current state of the comment composer. Survives configuration changes. */
+    sealed interface ComposerMode {
+        data object Normal : ComposerMode
+        data class Reply(val comment: Comment) : ComposerMode
+        data class Edit(val comment: Comment) : ComposerMode
+    }
+
     private val post = MutableStateFlow<Post?>(null)
 
     /** The current post, updated once the full version has been fetched from the network. */
@@ -59,6 +66,9 @@ class PostDetailViewModel(
     private val _postLikeState = MutableStateFlow(PostLikeUiState())
     val postLikeState = _postLikeState.asStateFlow()
     private var postLikeId: String? = null
+
+    private val _composerMode = MutableStateFlow<ComposerMode>(ComposerMode.Normal)
+    val composerMode = _composerMode.asStateFlow()
 
     private val _commentsRefresh = MutableStateFlow(false)
     val commentsRefresh = _commentsRefresh.asStateFlow()
@@ -273,6 +283,21 @@ class PostDetailViewModel(
 
     /** Id of the currently signed-in user, or `null` when not logged in. */
     fun currentUserId(): String? = getLocalUserId()
+
+    /** Switches the composer into reply mode for the given [comment]. */
+    fun startReply(comment: Comment) {
+        _composerMode.value = ComposerMode.Reply(comment)
+    }
+
+    /** Switches the composer into edit mode for the given [comment]. */
+    fun startEditComment(comment: Comment) {
+        _composerMode.value = ComposerMode.Edit(comment)
+    }
+
+    /** Resets the composer back to posting a new top-level comment. */
+    fun cancelComposer() {
+        _composerMode.value = ComposerMode.Normal
+    }
 
     /** Deletes the current post. Emits [Event.PostDeleted] on success. */
     fun deletePost() {

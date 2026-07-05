@@ -43,9 +43,6 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
 
     private val contentRenderer: PostContentRenderer by inject()
 
-    private var replyTarget: Comment? = null
-    private var editCommentTarget: Comment? = null
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -98,7 +95,15 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
         }
 
         binding.btnSend.setOnClickListener { submitComment() }
-        binding.btnCancelReply.setOnClickListener { cancelReply() }
+        binding.btnCancelReply.setOnClickListener { cancelComposer() }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.composerMode.collectLatest { mode ->
+                    renderComposerMode(mode)
+                }
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -141,7 +146,7 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
 
                         PostDetailViewModel.Event.CommentPosted -> {
                             binding.etComment.text?.clear()
-                            cancelReply()
+                            viewModel.cancelComposer()
                             hideKeyboard()
                             commentsAdapter.refresh()
                             showSnackbar(binding.root, R.string.comment_posted)
@@ -157,7 +162,7 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
 
                         PostDetailViewModel.Event.CommentUpdated -> {
                             binding.etComment.text?.clear()
-                            cancelReply()
+                            viewModel.cancelComposer()
                             hideKeyboard()
                             commentsAdapter.refresh()
                             showSnackbar(binding.root, R.string.comment_updated)
@@ -179,16 +184,15 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
     private fun submitComment() {
         val content = binding.etComment.text?.toString().orEmpty().trim()
         if (content.isEmpty()) return
-        val editTarget = editCommentTarget
-        if (editTarget != null) {
-            viewModel.updateComment(editTarget.id, content)
-            return
-        }
-        val target = replyTarget
-        if (target != null) {
-            viewModel.postReply(target.id, content)
-        } else {
-            viewModel.postComment(content)
+        when (val mode = viewModel.composerMode.value) {
+            is PostDetailViewModel.ComposerMode.Edit ->
+                viewModel.updateComment(mode.comment.id, content)
+
+            is PostDetailViewModel.ComposerMode.Reply ->
+                viewModel.postReply(mode.comment.id, content)
+
+            PostDetailViewModel.ComposerMode.Normal ->
+                viewModel.postComment(content)
         }
     }
 
@@ -233,40 +237,52 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
     }
 
     private fun startReply(comment: Comment) {
-        editCommentTarget = null
-        replyTarget = comment
-        val author = comment.authorName
-            ?: getString(R.string.feed_unknown_user)
-        binding.tvReplyContext.text = getString(R.string.comment_replying_to, author)
-        binding.layoutReplyContext.visibility = View.VISIBLE
-        binding.tilComment.hint = getString(R.string.comment_reply_hint)
-        binding.etComment.requestFocus()
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(binding.etComment, InputMethodManager.SHOW_IMPLICIT)
+        viewModel.startReply(comment)
+        focusCommentInput()
     }
 
     private fun startEditComment(comment: Comment) {
-        replyTarget = null
-        editCommentTarget = comment
-        binding.tvReplyContext.text = getString(R.string.comment_editing)
-        binding.layoutReplyContext.visibility = View.VISIBLE
-        binding.tilComment.hint = getString(R.string.hint_add_comment)
+        viewModel.startEditComment(comment)
         binding.etComment.setText(comment.content)
         binding.etComment.setSelection(binding.etComment.text?.length ?: 0)
-        binding.etComment.requestFocus()
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(binding.etComment, InputMethodManager.SHOW_IMPLICIT)
+        focusCommentInput()
     }
 
-    private fun cancelReply() {
-        replyTarget = null
-        val wasEditing = editCommentTarget != null
-        editCommentTarget = null
-        binding.layoutReplyContext.visibility = View.GONE
-        binding.tilComment.hint = getString(R.string.hint_add_comment)
+    private fun renderComposerMode(mode: PostDetailViewModel.ComposerMode) {
+        when (mode) {
+            PostDetailViewModel.ComposerMode.Normal -> {
+                binding.layoutReplyContext.visibility = View.GONE
+                binding.tilComment.hint = getString(R.string.hint_add_comment)
+            }
+
+            is PostDetailViewModel.ComposerMode.Reply -> {
+                val author = mode.comment.authorName
+                    ?: getString(R.string.feed_unknown_user)
+                binding.tvReplyContext.text = getString(R.string.comment_replying_to, author)
+                binding.layoutReplyContext.visibility = View.VISIBLE
+                binding.tilComment.hint = getString(R.string.comment_reply_hint)
+            }
+
+            is PostDetailViewModel.ComposerMode.Edit -> {
+                binding.tvReplyContext.text = getString(R.string.comment_editing)
+                binding.layoutReplyContext.visibility = View.VISIBLE
+                binding.tilComment.hint = getString(R.string.hint_add_comment)
+            }
+        }
+    }
+
+    private fun cancelComposer() {
+        val wasEditing = viewModel.composerMode.value is PostDetailViewModel.ComposerMode.Edit
+        viewModel.cancelComposer()
         if (wasEditing) {
             binding.etComment.text?.clear()
         }
+    }
+
+    private fun focusCommentInput() {
+        binding.etComment.requestFocus()
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.etComment, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun hideKeyboard() {
