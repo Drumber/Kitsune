@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CreatePostViewModel(
@@ -115,66 +116,73 @@ class CreatePostViewModel(
     }
 
     fun setContent(content: String) {
-        _uiState.value = _uiState.value.copy(content = content)
+        _uiState.update { it.copy(content = content) }
     }
 
     /** Marks this composer as a wall post targeting the given user. Called once on creation. */
     fun setWallTarget(userId: String, userName: String?) {
         if (targetUserId != null) return
         targetUserId = userId
-        _uiState.value = _uiState.value.copy(wallTargetName = userName)
+        _uiState.update { it.copy(wallTargetName = userName) }
     }
 
     /** Marks this composer as a post targeting the given group. Called once on creation. */
     fun setGroupTarget(groupId: String, groupName: String?) {
         if (targetGroupId != null) return
         targetGroupId = groupId
-        _uiState.value = _uiState.value.copy(groupTargetName = groupName)
+        _uiState.update { it.copy(groupTargetName = groupName) }
     }
     fun setSpoiler(spoiler: Boolean) {
-        _uiState.value = _uiState.value.copy(spoiler = spoiler)
+        _uiState.update { it.copy(spoiler = spoiler) }
     }
 
     fun setNsfw(nsfw: Boolean) {
-        _uiState.value = _uiState.value.copy(nsfw = nsfw)
+        _uiState.update { it.copy(nsfw = nsfw) }
     }
 
     fun setMedia(media: SelectedMedia) {
         // Changing the tagged media invalidates a previously selected unit.
-        _uiState.value = _uiState.value.copy(media = media, unit = null)
+        _uiState.update { it.copy(media = media, unit = null) }
     }
 
     fun clearMedia() {
-        _uiState.value = _uiState.value.copy(media = null, unit = null)
+        _uiState.update { it.copy(media = null, unit = null) }
     }
 
     fun setUnit(unit: SelectedUnit) {
-        _uiState.value = _uiState.value.copy(unit = unit)
+        _uiState.update { it.copy(unit = unit) }
     }
 
     fun clearUnit() {
-        _uiState.value = _uiState.value.copy(unit = null)
+        _uiState.update { it.copy(unit = null) }
     }
 
     fun addImage(uri: String, dataUri: String) {
-        if (_uiState.value.images.size >= MAX_IMAGES) return
-        _uiState.value = _uiState.value.copy(images = _uiState.value.images + SelectedImage(uri = uri, dataUri = dataUri))
+        _uiState.update { state ->
+            if (state.images.size >= MAX_IMAGES) return@update state
+            state.copy(images = state.images + SelectedImage(uri = uri, dataUri = dataUri))
+        }
     }
 
     fun removeImage(index: Int) {
-        val images = _uiState.value.images
-        if (index !in images.indices) return
-        _uiState.value = _uiState.value.copy(images = images.filterIndexed { i, _ -> i != index })
+        _uiState.update { state ->
+            if (index !in state.images.indices) return@update state
+            state.copy(images = state.images.filterIndexed { i, _ -> i != index })
+        }
     }
 
     fun reorderImages(orderedUris: List<String>) {
-        val current = _uiState.value.images.toMutableList()
-        val reordered = orderedUris.mapNotNull { uri ->
-            val index = current.indexOfFirst { it.uri == uri }
-            if (index >= 0) current.removeAt(index) else null
-        }
-        if (reordered.size == _uiState.value.images.size) {
-            _uiState.value = _uiState.value.copy(images = reordered)
+        _uiState.update { state ->
+            val current = state.images.toMutableList()
+            val reordered = orderedUris.mapNotNull { uri ->
+                val index = current.indexOfFirst { it.uri == uri }
+                if (index >= 0) current.removeAt(index) else null
+            }
+            if (reordered.size == state.images.size) {
+                state.copy(images = reordered)
+            } else {
+                state
+            }
         }
     }
 
@@ -194,7 +202,7 @@ class CreatePostViewModel(
         val mediaState = state.media
         val unitState = state.unit
 
-        _uiState.value = state.copy(isPublishing = true)
+        _uiState.update { it.copy(isPublishing = true) }
         viewModelScope.launch {
             try {
                 val uploadIds = state.images.mapIndexed { index, image ->
@@ -237,14 +245,14 @@ class CreatePostViewModel(
                 if (post != null) {
                     eventChannel.send(Event.Published)
                 } else {
-                    _uiState.value = _uiState.value.copy(isPublishing = false)
+                    _uiState.update { it.copy(isPublishing = false) }
                     eventChannel.send(Event.Error)
                 }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 logE("Failed to publish post.", e)
-                _uiState.value = _uiState.value.copy(isPublishing = false)
+                _uiState.update { it.copy(isPublishing = false) }
                 eventChannel.send(Event.Error)
             }
         }
