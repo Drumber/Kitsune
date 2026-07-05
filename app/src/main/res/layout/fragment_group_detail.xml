@@ -38,7 +38,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/scrim_gradient_bottom"
+                    android:background="@drawable/bottom_edge_fade"
                     app:layout_collapseMode="parallax" />
 
                 <com.google.android.material.appbar.MaterialToolbar
