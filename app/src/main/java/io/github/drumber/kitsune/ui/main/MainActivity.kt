@@ -230,7 +230,7 @@ class MainActivity : BaseActivity() {
 
             // require a double back press to exit when back would otherwise close the app
             onBackPressedToExitCallback.isEnabled =
-                navController.previousBackStackEntry == null
+                KitsunePref.doubleBackToExit && navController.previousBackStackEntry == null
 
             // hide bottom navigation if the destination is not a main one
             toggleNavigationBarView(

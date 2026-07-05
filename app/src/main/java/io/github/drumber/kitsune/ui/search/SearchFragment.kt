@@ -74,6 +74,8 @@ class SearchFragment : Fragment(R.layout.fragment_search),
 
     private var pendingSearchFocus = false
 
+    private var isSearchViewFocused = false
+
     private lateinit var mediaAdapter: MediaSearchPagingAdapter
     private lateinit var userAdapter: UserSearchPagingAdapter
     private lateinit var gridLayoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager
@@ -239,8 +241,7 @@ class SearchFragment : Fragment(R.layout.fragment_search),
 
     private fun initSearchBar() {
         binding.btnSearch.setOnClickListener {
-            val isSearchFocussed = binding.searchView.getTag(TAG_SEARCH_FOCUSED) as? Boolean
-            if (isSearchFocussed == true) {
+            if (isSearchViewFocused) {
                 val focusedView = binding.searchView.findFocus()
                 focusedView.clearFocus()
                 val imm =
@@ -255,7 +256,7 @@ class SearchFragment : Fragment(R.layout.fragment_search),
             binding.btnSearch.setImageResource(
                 if (hasFocus) R.drawable.ic_arrow_back_24 else R.drawable.ic_search_24
             )
-            binding.searchView.setTag(TAG_SEARCH_FOCUSED, hasFocus)
+            isSearchViewFocused = hasFocus
         }
 
         binding.btnFilter.apply {
@@ -356,11 +357,6 @@ class SearchFragment : Fragment(R.layout.fragment_search),
     override fun onDestroyView() {
         connectionHandler.clear()
         super.onDestroyView()
-    }
-
-    companion object {
-        @SuppressLint("NonConstantResourceId")
-        const val TAG_SEARCH_FOCUSED = R.drawable.ic_search_24
     }
 
     /**
