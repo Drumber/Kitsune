@@ -56,8 +56,6 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
             consume = false
         )
 
-        val glide = Glide.with(this)
-
         binding.btnJoin.setOnClickListener {
             viewModel.toggleMembership()
         }
