@@ -29,8 +29,10 @@ import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbar
 import io.github.drumber.kitsune.util.ui.viewBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -224,28 +226,31 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
 
     private fun onImageUrisSelected(uris: List<Uri>) {
         if (uris.isEmpty()) return
-        var encodingFailed = false
-        for (uri in uris) {
-            if (viewModel.uiState.value.images.size >= CreatePostViewModel.MAX_IMAGES) break
-            val dataUri = getBase64ImageFrom(uri)
-            if (dataUri == null) {
-                encodingFailed = true
-                continue
+        viewLifecycleOwner.lifecycleScope.launch {
+            var encodingFailed = false
+            for (uri in uris) {
+                if (viewModel.uiState.value.images.size >= CreatePostViewModel.MAX_IMAGES) break
+                val dataUri = getBase64ImageFrom(uri)
+                if (dataUri == null) {
+                    encodingFailed = true
+                    continue
+                }
+                viewModel.addImage(uri.toString(), dataUri)
             }
-            viewModel.addImage(uri.toString(), dataUri)
-        }
-        if (encodingFailed) {
-            showSnackbar(binding.root, R.string.comment_action_failed)
+            if (encodingFailed) {
+                showSnackbar(binding.root, R.string.comment_action_failed)
+            }
         }
     }
 
-    private fun getBase64ImageFrom(uri: Uri): String? {
-        val inputStream = requireContext().contentResolver.openInputStream(uri) ?: return null
+    private suspend fun getBase64ImageFrom(uri: Uri): String? = withContext(Dispatchers.IO) {
+        val inputStream = requireContext().contentResolver.openInputStream(uri)
+            ?: return@withContext null
 
         // get mime type from image (default to jpeg)
         val mimeType = requireContext().contentResolver.getType(uri) ?: "image/jpeg"
 
-        return try {
+        try {
             inputStream.use { stream ->
                 val bytes = stream.readBytes()
                 Base64.encodeToString(bytes, Base64.DEFAULT)
