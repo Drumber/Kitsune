@@ -11,8 +11,15 @@ import kotlinx.coroutines.flow.update
  * Acts as a single source of truth shared between the feed and the post detail screen so that
  * liking a post or posting a comment in one place is reflected in the cached feed view without a
  * full reload.
+ *
+ * The map is capped at [maxSize] to bound memory usage over a long session. Every update moves the
+ * touched post to the most-recent position, so once the cap is exceeded the least-recently-touched
+ * post is evicted first (LRU). Evicting a post's cached state is harmless: it just means the feed
+ * falls back to the values from the last network load for that post.
  */
-class PostInteractionStore {
+class PostInteractionStore(
+    private val maxSize: Int = DEFAULT_MAX_SIZE
+) {
 
     data class State(
         val isLiked: Boolean? = null,
@@ -27,18 +34,30 @@ class PostInteractionStore {
 
     /** Updates the like state and like count for the given post. */
     fun setLikeState(postId: String, isLiked: Boolean, likesCount: Int) {
-        _states.update { map ->
-            val current = map[postId] ?: State()
-            map + (postId to current.copy(isLiked = isLiked, likesCount = likesCount))
-        }
+        updateState(postId) { it.copy(isLiked = isLiked, likesCount = likesCount) }
     }
 
     /** Updates the comment count for the given post. */
     fun setCommentCount(postId: String, commentsCount: Int) {
+        updateState(postId) { it.copy(commentsCount = commentsCount) }
+    }
+
+    private fun updateState(postId: String, transform: (State) -> State) {
         _states.update { map ->
             val current = map[postId] ?: State()
-            map + (postId to current.copy(commentsCount = commentsCount))
+            // Re-insert last so the most-recently-touched post is evicted last, then trim to cap.
+            val updated = LinkedHashMap<String, State>(map)
+            updated.remove(postId)
+            updated[postId] = transform(current)
+            while (updated.size > maxSize) {
+                updated.remove(updated.keys.first())
+            }
+            updated
         }
+    }
+
+    companion object {
+        private const val DEFAULT_MAX_SIZE = 200
     }
 
 }
