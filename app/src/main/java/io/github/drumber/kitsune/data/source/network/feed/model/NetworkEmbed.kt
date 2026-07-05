@@ -19,8 +19,3 @@ data class NetworkEmbed(
     val image: JsonNode? = null,
     val video: JsonNode? = null
 )
-
-data class NetworkEmbedMedia(
-    val url: String? = null,
-    val type: String? = null
-)
