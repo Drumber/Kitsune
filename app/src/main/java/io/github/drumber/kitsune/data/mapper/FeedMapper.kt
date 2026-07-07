@@ -1,8 +1,7 @@
 package io.github.drumber.kitsune.data.mapper
 
-import io.github.drumber.kitsune.data.presentation.model.feed.Embed
+import io.github.drumber.kitsune.data.mapper.EmbedMapper.toEmbed
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
-import io.github.drumber.kitsune.data.source.network.feed.model.NetworkEmbed
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime
 import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkEpisode
@@ -40,29 +39,5 @@ object FeedMapper {
             ?.mapNotNull { it.id }
             ?: emptyList(),
         embed = embed?.toEmbed()
-    )
-
-}
-
-fun NetworkEmbed.toEmbed(): Embed {
-    val resolvedSiteName = site?.let { node ->
-        if (node.isTextual) node.asText() else node.get("name")?.asText()
-    }
-    val resolvedImageUrl = image?.let { node ->
-        if (node.isTextual) node.asText() else node.get("url")?.asText()
-    }
-    val resolvedVideoUrl = video?.let { node ->
-        if (node.isTextual) node.asText() else node.get("url")?.asText()
-    }
-    val resolvedVideoType = video?.takeIf { !it.isTextual }?.get("type")?.asText()
-    return Embed(
-        kind = kind,
-        title = title,
-        description = description,
-        url = url,
-        siteName = resolvedSiteName,
-        imageUrl = resolvedImageUrl,
-        videoUrl = resolvedVideoUrl,
-        videoType = resolvedVideoType
     )
 }
