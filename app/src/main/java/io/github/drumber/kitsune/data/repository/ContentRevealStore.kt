@@ -24,8 +24,6 @@ class ContentRevealStore(
     private val _revealed = MutableStateFlow<Set<String>>(emptySet())
     val revealed: StateFlow<Set<String>> = _revealed.asStateFlow()
 
-    fun isRevealed(postId: String): Boolean = postId in _revealed.value
-
     fun reveal(postId: String) {
         _revealed.update { current ->
             if (postId in current) return@update current
