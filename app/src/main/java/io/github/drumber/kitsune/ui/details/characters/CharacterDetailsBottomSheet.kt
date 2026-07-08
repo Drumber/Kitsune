@@ -2,9 +2,7 @@ package io.github.drumber.kitsune.ui.details.characters
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -35,21 +33,14 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
+class CharacterDetailsBottomSheet :
+    BottomSheetDialogFragment(R.layout.sheet_character_details) {
 
     private val binding by viewBinding(SheetCharacterDetailsBinding::bind)
 
     private val viewModel: CharacterDetailsViewModel by viewModel()
 
     private val navArgs by navArgs<CharacterDetailsBottomSheetArgs>()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return SheetCharacterDetailsBinding.inflate(inflater, container, false).root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
