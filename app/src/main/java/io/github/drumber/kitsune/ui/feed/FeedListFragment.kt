@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -16,6 +17,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.FragmentFeedListBinding
+import io.github.drumber.kitsune.ui.adapter.paging.PinnedPostAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.PostInteractionListener
 import io.github.drumber.kitsune.ui.adapter.paging.PostPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
@@ -38,6 +40,9 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
     private val binding by viewBinding(FragmentFeedListBinding::bind)
 
     private var feedAdapter: PostPagingAdapter? = null
+
+    /** Header adapter showing the profile's pinned post; used only for [FeedType.USER] feeds. */
+    private var pinnedPostAdapter: PinnedPostAdapter? = null
 
     private val viewModel: FeedListViewModel by viewModel()
 
@@ -76,10 +81,24 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
             currentUserId = viewModel.currentUserId(),
             listener = this
         )
-        binding.rvFeed.adapter = adapter.withLoadStateFooter(
+        feedAdapter = adapter
+
+        val feedWithFooter = adapter.withLoadStateFooter(
             footer = ResourceLoadStateAdapter(adapter)
         )
-        feedAdapter = adapter
+        binding.rvFeed.adapter = if (feedType == FeedType.USER) {
+            val pinnedAdapter = PinnedPostAdapter(
+                glide = Glide.with(this),
+                contentRenderer = contentRenderer,
+                nsfwAllowed = viewModel.nsfwAllowed,
+                currentUserId = viewModel.currentUserId(),
+                listener = this
+            )
+            pinnedPostAdapter = pinnedAdapter
+            ConcatAdapter(pinnedAdapter, feedWithFooter)
+        } else {
+            feedWithFooter
+        }
         binding.rvFeed.layoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
 
@@ -87,16 +106,22 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
 
         binding.swipeRefreshLayout.apply {
             setAppTheme()
-            setOnRefreshListener { adapter.refresh() }
+            setOnRefreshListener {
+                adapter.refresh()
+                viewModel.reloadPinnedPost()
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 adapter.loadStateFlow.collectLatest { loadState ->
                     if (isLoginRequired) return@collectLatest
+                    // Count the pinned post as content so the empty state does not hide it when
+                    // the paginated feed itself is empty.
+                    val itemCount = adapter.itemCount + (pinnedPostAdapter?.itemCount ?: 0)
                     binding.layoutLoading.updateLoadState(
                         binding.rvFeed,
-                        adapter.itemCount,
+                        itemCount,
                         loadState
                     )
                     binding.swipeRefreshLayout.isRefreshing =
@@ -129,9 +154,30 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.pinnedPost.collectLatest { post ->
+                    pinnedPostAdapter?.setPost(post)
+                    // If the paginated feed is empty, its empty state hides the list; make sure a
+                    // pinned post stays visible in that case.
+                    if (post != null && !binding.rvFeed.isVisible) {
+                        binding.rvFeed.isVisible = true
+                        binding.layoutLoading.root.isVisible = false
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.interactionStates.collectLatest { states ->
                     states.forEach { (postId, state) ->
                         adapter.applyInteraction(
+                            postId,
+                            state.isLiked,
+                            state.likesCount,
+                            state.commentsCount,
+                            state.likerAvatars
+                        )
+                        pinnedPostAdapter?.applyInteraction(
                             postId,
                             state.isLiked,
                             state.likesCount,
@@ -146,7 +192,10 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.revealedPosts.collectLatest { ids ->
-                    ids.forEach { adapter.markRevealed(it) }
+                    ids.forEach {
+                        adapter.markRevealed(it)
+                        pinnedPostAdapter?.markRevealed(it)
+                    }
                 }
             }
         }
@@ -160,6 +209,11 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
 
                         is FeedListViewModel.LikeEvent.Failed -> {
                             adapter.setLikeState(event.postId, event.isLiked, event.count)
+                            pinnedPostAdapter?.setLikeState(
+                                event.postId,
+                                event.isLiked,
+                                event.count
+                            )
                             showSnackbar(binding.root, R.string.comment_action_failed)
                         }
                     }
@@ -172,6 +226,7 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
                     when (event) {
                         FeedListViewModel.ActionEvent.PostDeleted -> {
                             adapter.refresh()
+                            viewModel.reloadPinnedPost()
                             showSnackbar(binding.root, R.string.post_deleted)
                         }
 
@@ -243,6 +298,7 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
         } else if (!isLoginRequired) {
             binding.swipeRefreshLayout.isRefreshing = true
             feedAdapter?.refresh()
+            viewModel.reloadPinnedPost()
         }
     }
 
@@ -260,6 +316,7 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
     override fun onDestroyView() {
         super.onDestroyView()
         feedAdapter = null
+        pinnedPostAdapter = null
         binding.rvFeed.adapter = null
     }
 

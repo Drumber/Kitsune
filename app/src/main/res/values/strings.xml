@@ -31,6 +31,7 @@
     <string name="feed_tab_global">Global</string>
     <string name="feed_tab_following">Following</string>
     <string name="feed_login_required">Log in to see posts from people you follow.</string>
+    <string name="feed_pinned_post">Pinned</string>
     <string name="feed_spoiler_warning">Spoiler</string>
     <string name="feed_spoiler_warning_title">Spoiler</string>
     <string name="feed_nsfw_warning_title">NSFW content</string>

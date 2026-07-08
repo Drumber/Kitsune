@@ -6,6 +6,7 @@ import com.github.jasminb.jsonapi.annotations.Type
 import io.github.drumber.kitsune.data.common.Image
 import io.github.drumber.kitsune.data.common.user.UserThemePreference
 import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
+import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
 import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStats
 
@@ -72,4 +73,6 @@ data class NetworkUser(
     val waifu: NetworkCharacter? = null,
     @Relationship("profileLinks")
     val profileLinks: List<NetworkProfileLink>? = null,
+    @Relationship("pinnedPost")
+    val pinnedPost: NetworkPost? = null,
 )

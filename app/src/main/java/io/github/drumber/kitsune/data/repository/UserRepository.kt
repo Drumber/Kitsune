@@ -3,10 +3,12 @@ package io.github.drumber.kitsune.data.repository
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.exception.NoDataException
+import io.github.drumber.kitsune.data.mapper.FeedMapper.toPost
 import io.github.drumber.kitsune.data.mapper.ProfileLinksMapper.toProfileLink
 import io.github.drumber.kitsune.data.mapper.UserMapper.toLocalUser
 import io.github.drumber.kitsune.data.mapper.UserMapper.toNetworkUser
 import io.github.drumber.kitsune.data.mapper.UserMapper.toUser
+import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.data.presentation.model.user.User
 import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLink
 import io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource
@@ -72,6 +74,22 @@ class UserRepository(
 
     suspend fun fetchUser(userId: String, filter: Filter): User? {
         return remoteUserDataSource.getUser(userId, filter)?.toUser()
+    }
+
+    /**
+     * Fetches the user's single pinned post (the post they pinned to the top of their profile),
+     * with the relationships needed to fully render it. Returns `null` if the user has no pinned
+     * post.
+     */
+    suspend fun getPinnedPost(userId: String): Post? {
+        val filter = Filter().include(
+            "pinnedPost",
+            "pinnedPost.user",
+            "pinnedPost.media",
+            "pinnedPost.spoiledUnit",
+            "pinnedPost.uploads"
+        )
+        return remoteUserDataSource.getUser(userId, filter)?.pinnedPost?.toPost()
     }
 
     suspend fun updateUser(userId: String, user: LocalUser): LocalUser? {

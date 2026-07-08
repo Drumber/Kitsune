@@ -19,6 +19,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -69,6 +70,10 @@ class FeedListViewModel(
 
     private val feedType = MutableStateFlow<FeedType?>(null)
 
+    /** The user's pinned post, shown above their profile feed. `null` when there is none. */
+    private val _pinnedPost = MutableStateFlow<Post?>(null)
+    val pinnedPost = _pinnedPost.asStateFlow()
+
     /** Target user id for [FeedType.USER] feeds. */
     private var userFeedId: String? = null
 
@@ -108,6 +113,22 @@ class FeedListViewModel(
         userFeedId = userId
         if (feedType.value != FeedType.USER) {
             feedType.value = FeedType.USER
+        }
+        loadPinnedPost(userId)
+    }
+
+    /** Reloads the pinned post of the currently shown user feed, if any. */
+    fun reloadPinnedPost() {
+        userFeedId?.let { loadPinnedPost(it) }
+    }
+
+    private fun loadPinnedPost(userId: String) {
+        viewModelScope.launch {
+            try {
+                _pinnedPost.value = userRepository.getPinnedPost(userId)
+            } catch (e: Exception) {
+                logE("Failed to load pinned post for user '$userId'.", e)
+            }
         }
     }
 
