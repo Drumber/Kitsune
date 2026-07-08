@@ -47,6 +47,7 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
             hasSelectedDefaultTab = true
         }
 
+        binding.collapsingToolbar.initWindowInsetsListener(consume = false)
         binding.toolbar.initWindowInsetsListener(consume = false)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
         binding.nestedScrollView.initPaddingWindowInsetsListener(
