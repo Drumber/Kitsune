@@ -21,10 +21,10 @@ import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCas
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 
@@ -103,5 +103,4 @@ class EpisodesViewModel(
         }
         mediaUnitRepository.mediaUnitPager(type, filter, Kitsu.DEFAULT_PAGE_SIZE)
     }.cachedIn(viewModelScope)
-
 }

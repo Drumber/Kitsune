@@ -11,10 +11,10 @@ import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.data.source.network.comment.CommentNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.comment.CommentPagingDataSource
 import io.github.drumber.kitsune.data.source.network.comment.RepliesPagingDataSource
-import io.github.drumber.kitsune.data.source.network.comment.resolveLikeIds
 import io.github.drumber.kitsune.data.source.network.comment.model.NetworkComment
 import io.github.drumber.kitsune.data.source.network.comment.model.NetworkCommentLike
 import io.github.drumber.kitsune.data.source.network.comment.model.NetworkCommentWithLike
+import io.github.drumber.kitsune.data.source.network.comment.resolveLikeIds
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import kotlinx.coroutines.flow.map
@@ -142,5 +142,4 @@ class CommentRepository(
         isLikedByMe = likeId != null,
         myLikeId = likeId
     ).copy(replies = replies.map { it.toComment() })
-
 }

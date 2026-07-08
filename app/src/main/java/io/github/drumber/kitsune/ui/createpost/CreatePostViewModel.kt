@@ -7,7 +7,6 @@ import io.github.drumber.kitsune.data.repository.PostManagementRepository
 import io.github.drumber.kitsune.data.repository.UploadRepository
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.util.logE
-import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.coroutines.cancellation.CancellationException
 
 class CreatePostViewModel(
     private val postManagementRepository: PostManagementRepository,
@@ -97,7 +97,9 @@ class CreatePostViewModel(
                     posterUrl = post.mediaPosterUrl,
                     isAnime = post.mediaIsAnime ?: true
                 )
-            } else null,
+            } else {
+                null
+            },
             unit = if (post.spoiledUnitId != null) {
                 SelectedUnit(
                     id = post.spoiledUnitId,
@@ -105,7 +107,9 @@ class CreatePostViewModel(
                     title = post.spoiledUnitTitle ?: "",
                     isEpisode = post.spoiledUnitIsEpisode ?: true
                 )
-            } else null,
+            } else {
+                null
+            },
             images = post.uploadIds.mapIndexed { index, id ->
                 SelectedImage(
                     uri = post.imageUrls.getOrNull(index) ?: id,
@@ -261,5 +265,4 @@ class CreatePostViewModel(
     companion object {
         const val MAX_IMAGES = 10
     }
-
 }

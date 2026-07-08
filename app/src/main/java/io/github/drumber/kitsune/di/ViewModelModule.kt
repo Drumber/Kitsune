@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.di
 
+import io.github.drumber.kitsune.data.repository.FollowListType
 import io.github.drumber.kitsune.ui.authentication.LoginViewModel
 import io.github.drumber.kitsune.ui.createpost.CreatePostViewModel
 import io.github.drumber.kitsune.ui.createpost.MediaPickerViewModel
@@ -22,10 +23,9 @@ import io.github.drumber.kitsune.ui.notifications.NotificationsViewModel
 import io.github.drumber.kitsune.ui.onboarding.OnboardingViewModel
 import io.github.drumber.kitsune.ui.postdetail.PostDetailViewModel
 import io.github.drumber.kitsune.ui.profile.ProfileViewModel
-import io.github.drumber.kitsune.data.repository.FollowListType
 import io.github.drumber.kitsune.ui.profile.UserProfileViewModel
-import io.github.drumber.kitsune.ui.profile.follow.FollowListViewModel
 import io.github.drumber.kitsune.ui.profile.editprofile.EditProfileViewModel
+import io.github.drumber.kitsune.ui.profile.follow.FollowListViewModel
 import io.github.drumber.kitsune.ui.reactiondetail.ReactionDetailViewModel
 import io.github.drumber.kitsune.ui.replies.RepliesViewModel
 import io.github.drumber.kitsune.ui.search.SearchViewModel

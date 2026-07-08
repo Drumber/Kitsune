@@ -20,10 +20,6 @@ class ArchUnitTest {
         private val NON_TEST_CLASSES = ClassFileImporter().withImportOption {
             !it.matches(".*/(debug|release|instrumented)UnitTest/.*".toPattern())
         }.importPackagesOf(KitsuneApplication::class.java)
-
-        private val TEST_CLASSES = ClassFileImporter().withImportOption {
-            it.matches(".*/(debug|release|instrumented)UnitTest/.*".toPattern())
-        }.importPackagesOf(KitsuneApplication::class.java)
     }
 
     @Test

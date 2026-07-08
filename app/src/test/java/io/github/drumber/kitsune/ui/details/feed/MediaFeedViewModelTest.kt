@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.ui.details.feed
 
-import app.cash.turbine.test
 import androidx.paging.PagingData
+import app.cash.turbine.test
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.data.repository.FeedRepository
 import io.github.drumber.kitsune.testutils.MainDispatcherRule

@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.view.isVisible
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -188,8 +188,11 @@ class PinnedPostAdapter(
                 if (gated) {
                     val isNsfwOnly = post.nsfw && !post.spoiler
                     binding.tvWarningTitle.setText(
-                        if (isNsfwOnly) R.string.feed_nsfw_warning_title
-                        else R.string.feed_spoiler_warning_title
+                        if (isNsfwOnly) {
+                            R.string.feed_nsfw_warning_title
+                        } else {
+                            R.string.feed_spoiler_warning_title
+                        }
                     )
                     setOnClickListener {
                         markRevealed(post.id)
@@ -319,7 +322,5 @@ class PinnedPostAdapter(
                 .circleCrop()
                 .into(imageView)
         }
-
     }
-
 }

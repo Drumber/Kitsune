@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.ui.details.reactions
 
-import app.cash.turbine.test
 import androidx.paging.PagingData
+import app.cash.turbine.test
 import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
 import io.github.drumber.kitsune.data.repository.LibraryRepository
 import io.github.drumber.kitsune.data.repository.MediaReactionRepository

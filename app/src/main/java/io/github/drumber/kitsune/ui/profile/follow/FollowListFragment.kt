@@ -78,7 +78,6 @@ class FollowListFragment : Fragment(R.layout.fragment_follow_list) {
                     )
                     binding.swipeRefreshLayout.isRefreshing =
                         loadState.refresh is LoadState.Loading && adapter.itemCount > 0
-
                 }
             }
         }

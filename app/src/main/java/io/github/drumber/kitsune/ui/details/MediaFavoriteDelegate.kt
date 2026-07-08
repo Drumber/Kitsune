@@ -2,8 +2,8 @@ package io.github.drumber.kitsune.ui.details
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.github.drumber.kitsune.data.common.exception.ResourceUpdateFailed
 import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.common.exception.ResourceUpdateFailed
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite

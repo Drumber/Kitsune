@@ -225,5 +225,4 @@ class RepliesFragment : Fragment(R.layout.fragment_replies) {
             .actionGlobalUserProfileFragment(userId)
         findNavController().navigateSafe(R.id.replies_fragment, action)
     }
-
 }

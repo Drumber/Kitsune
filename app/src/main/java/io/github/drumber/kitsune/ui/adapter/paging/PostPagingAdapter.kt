@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.view.isVisible
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -178,8 +178,11 @@ class PostPagingAdapter(
                 if (gated) {
                     val isNsfwOnly = post.nsfw && !post.spoiler
                     binding.tvWarningTitle.setText(
-                        if (isNsfwOnly) R.string.feed_nsfw_warning_title
-                        else R.string.feed_spoiler_warning_title
+                        if (isNsfwOnly) {
+                            R.string.feed_nsfw_warning_title
+                        } else {
+                            R.string.feed_spoiler_warning_title
+                        }
                     )
                     setOnClickListener {
                         markRevealed(post.id)
@@ -310,7 +313,6 @@ class PostPagingAdapter(
                 .circleCrop()
                 .into(imageView)
         }
-
     }
 
     object PostComparator : DiffUtil.ItemCallback<Post>() {
@@ -318,5 +320,4 @@ class PostPagingAdapter(
 
         override fun areContentsTheSame(oldItem: Post, newItem: Post) = oldItem == newItem
     }
-
 }

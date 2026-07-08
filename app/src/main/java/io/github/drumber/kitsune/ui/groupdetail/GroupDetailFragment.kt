@@ -154,8 +154,11 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
             isVisible = state.isVisible
             isEnabled = !state.isLoading
             setText(
-                if (state.isMember) R.string.group_action_leave
-                else R.string.group_action_join
+                if (state.isMember) {
+                    R.string.group_action_leave
+                } else {
+                    R.string.group_action_join
+                }
             )
         }
     }

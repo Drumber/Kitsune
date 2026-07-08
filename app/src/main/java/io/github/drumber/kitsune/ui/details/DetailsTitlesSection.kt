@@ -80,10 +80,11 @@ class DetailsTitlesSection(
     private fun createShowMoreTitlesRow(): View {
         val rowBinding = ItemDetailsInfoRowBinding.inflate(layoutInflater)
         val text = layoutInflater.context.getString(
-            if (isExpanded())
+            if (isExpanded()) {
                 R.string.action_show_less
-            else
+            } else {
                 R.string.action_show_more
+            }
         )
         rowBinding.title = SpannableString(text).apply {
             setSpan(

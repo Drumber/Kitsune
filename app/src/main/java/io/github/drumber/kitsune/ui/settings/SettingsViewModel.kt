@@ -14,9 +14,9 @@ import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.util.logE
-import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.coroutines.cancellation.CancellationException
 
 class SettingsViewModel(
     private val userRepository: UserRepository,
@@ -66,7 +66,6 @@ class SettingsViewModel(
         }
     }
 
-
     data class ErrorMessage(
         @StringRes val stringRes: Int? = null,
         val message: String = ""
@@ -77,5 +76,4 @@ class SettingsViewModel(
             message
         }
     }
-
 }

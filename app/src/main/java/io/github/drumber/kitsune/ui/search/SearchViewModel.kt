@@ -32,6 +32,7 @@ import com.algolia.search.model.response.ResponseSearch
 import com.algolia.search.model.search.Query
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.Repository
+import io.github.drumber.kitsune.data.common.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toMedia
 import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toUserSearchResult
 import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
@@ -43,7 +44,6 @@ import io.github.drumber.kitsune.domain.algolia.FilterCollection
 import io.github.drumber.kitsune.domain.algolia.SearchProvider
 import io.github.drumber.kitsune.domain.algolia.toCombinedMap
 import io.github.drumber.kitsune.domain.algolia.toFilterCollection
-import io.github.drumber.kitsune.data.common.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.component.algolia.SeasonListPresenter
 import io.github.drumber.kitsune.ui.component.algolia.range.CustomFilterRangeConnector
@@ -212,7 +212,6 @@ class SearchViewModel(
         paginator.flow
     }.cachedIn(viewModelScope)
 
-
     private fun createFilterFacets(searcher: HitsSearcher, filterState: FilterState) {
         val filterFacets = FilterFacets(searcher, filterState)
         applyCategoryFilters(filterState)
@@ -334,5 +333,4 @@ class SearchViewModel(
         NotAvailable,
         Error
     }
-
 }

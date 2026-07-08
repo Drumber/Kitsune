@@ -16,7 +16,6 @@ import io.github.drumber.kitsune.testutils.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -32,8 +31,6 @@ class DetailsViewModelTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
-
-    private val faker = Faker()
 
     private fun viewModel(
         getLocalUserId: GetLocalUserIdUseCase = mock(),

@@ -17,16 +17,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.presentation.model.comment.Comment
+import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.FragmentPostDetailBinding
 import io.github.drumber.kitsune.ui.adapter.paging.CommentPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
-import io.github.drumber.kitsune.data.presentation.model.comment.Comment
-import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.showSnackbar
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -97,8 +97,11 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
         commentsAdapter.addLoadStateListener { loadState ->
             val refresh = loadState.source.refresh
             commentsFooter.loadState =
-                if (refresh is LoadState.Loading || refresh is LoadState.Error) refresh
-                else loadState.source.append
+                if (refresh is LoadState.Loading || refresh is LoadState.Error) {
+                    refresh
+                } else {
+                    loadState.source.append
+                }
         }
 
         binding.btnSend.setOnClickListener { submitComment() }
@@ -302,5 +305,4 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
         binding.etComment.clearFocus()
         imm.hideSoftInputFromWindow(binding.etComment.windowToken, 0)
     }
-
 }

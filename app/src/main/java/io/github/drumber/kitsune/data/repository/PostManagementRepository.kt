@@ -1,8 +1,8 @@
 package io.github.drumber.kitsune.data.repository
 
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.mapper.FeedMapper.toPost
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
-import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.source.network.feed.PostNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUpload
@@ -111,5 +111,4 @@ class PostManagementRepository(
     suspend fun deletePost(postId: String) {
         postNetworkDataSource.deletePost(postId)
     }
-
 }

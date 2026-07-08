@@ -23,13 +23,13 @@ import io.github.drumber.kitsune.ui.adapter.paging.PostPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
+import io.github.drumber.kitsune.ui.postdetail.PostDetailFragmentDirections
+import io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.showSnackbar
 import io.github.drumber.kitsune.util.ui.viewBinding
-import io.github.drumber.kitsune.ui.postdetail.PostDetailFragmentDirections
-import io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
