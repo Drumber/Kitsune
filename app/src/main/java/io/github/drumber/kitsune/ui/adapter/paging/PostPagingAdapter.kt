@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
+import androidx.core.view.doOnPreDraw
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +21,7 @@ import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.EmbedBinder
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.PostMediaBinder
+import io.github.drumber.kitsune.util.ui.isTextTruncated
 
 class PostPagingAdapter(
     private val glide: RequestManager,
@@ -279,11 +281,8 @@ class PostPagingAdapter(
             )
             if (!contentShown) return
 
-            binding.tvContent.post {
-                val layout = binding.tvContent.layout ?: return@post
-                val lastLine = layout.lineCount - 1
-                val truncated = lastLine >= 0 && layout.getEllipsisCount(lastLine) > 0
-                binding.tvReadMore.isVisible = truncated
+            binding.tvContent.doOnPreDraw {
+                binding.tvReadMore.isVisible = binding.tvContent.isTextTruncated()
             }
         }
 
