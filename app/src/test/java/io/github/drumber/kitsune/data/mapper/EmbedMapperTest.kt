@@ -57,4 +57,62 @@ class EmbedMapperTest {
         assertThat(result.videoUrl).isEqualTo("https://example.com/v.mp4")
         assertThat(result.videoType).isEqualTo("video/mp4")
     }
+
+    @Test
+    fun shouldResolveNullSiteName_whenNameFieldIsJsonNull() {
+        // given
+        val embed = NetworkEmbed(
+            kind = "link",
+            title = "title",
+            site = objectMapper.readTree("""{"name": null}"""),
+            image = objectMapper.readTree("""{"url": null}"""),
+            video = objectMapper.readTree("""{"url": null, "type": null}""")
+        )
+
+        // when
+        val result = embed.toEmbed()
+
+        // then
+        assertThat(result.siteName).isNull()
+        assertThat(result.imageUrl).isNull()
+        assertThat(result.videoUrl).isNull()
+        assertThat(result.videoType).isNull()
+    }
+
+    @Test
+    fun shouldResolveNullValues_whenNodesAreJsonNull() {
+        // given
+        val embed = NetworkEmbed(
+            kind = "link",
+            title = "title",
+            site = objectMapper.nullNode(),
+            image = objectMapper.nullNode(),
+            video = objectMapper.nullNode()
+        )
+
+        // when
+        val result = embed.toEmbed()
+
+        // then
+        assertThat(result.siteName).isNull()
+        assertThat(result.imageUrl).isNull()
+        assertThat(result.videoUrl).isNull()
+        assertThat(result.videoType).isNull()
+    }
+
+    @Test
+    fun shouldResolveNullSiteName_whenNameIsMissing() {
+        // given
+        val embed = NetworkEmbed(
+            site = objectMapper.readTree("""{}"""),
+            image = objectMapper.readTree("""{}""")
+        )
+
+        // when
+        val result = embed.toEmbed()
+
+        // then
+        assertThat(result.siteName).isNull()
+        assertThat(result.imageUrl).isNull()
+    }
 }
