@@ -372,15 +372,16 @@
 
                     </LinearLayout>
 
-                    <!-- Not Logged In Message -->
+                    <!-- Not Logged In Message (self profile only; controlled in code) -->
                     <LinearLayout
+                        android:id="@+id/layout_not_logged_in"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:padding="20dp"
                         android:orientation="vertical"
-                        tools:visibility="gone"
-                        app:isVisible="@{user == null}">
+                        android:visibility="gone"
+                        tools:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -404,6 +405,14 @@
                             android:textAllCaps="false" />
 
                     </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/progress_bar_profile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
 
                 </FrameLayout>
 

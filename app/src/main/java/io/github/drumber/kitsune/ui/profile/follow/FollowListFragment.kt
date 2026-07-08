@@ -2,7 +2,6 @@ package io.github.drumber.kitsune.ui.profile.follow
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -80,10 +79,6 @@ class FollowListFragment : Fragment(R.layout.fragment_follow_list) {
                     binding.swipeRefreshLayout.isRefreshing =
                         loadState.refresh is LoadState.Loading && adapter.itemCount > 0
 
-                    val isEmpty = loadState.refresh is LoadState.NotLoading &&
-                            loadState.append.endOfPaginationReached &&
-                            adapter.itemCount == 0
-                    binding.tvEmpty.isVisible = isEmpty
                 }
             }
         }

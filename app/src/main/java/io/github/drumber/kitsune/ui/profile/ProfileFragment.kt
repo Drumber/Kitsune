@@ -94,6 +94,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
                 updateProfileLinks(user?.profileLinks ?: emptyList())
                 updateOptionsMenu()
                 binding.swipeRefreshLayout.isEnabled = user != null
+                binding.layoutNotLoggedIn.isVisible = user == null
             }
         }
 

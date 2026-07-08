@@ -41,6 +41,7 @@ import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.openUrl
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
+import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
@@ -60,22 +61,9 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         parametersOf(args.userId)
     }
 
-    private val statsSection by lazy {
-        ProfileStatsSection(binding.viewPagerStats, binding.tabLayoutStats)
-    }
-
-    private val favoritesSection by lazy {
-        ProfileFavoritesSection(
-            binding = binding,
-            glide = Glide.with(this),
-            onMediaClick = { view, media -> onFavoriteMediaItemClicked(view, media) },
-            onCharacterClick = { character -> openCharacterDetailsBottomSheet(character) }
-        )
-    }
-
-    private val linksSection by lazy {
-        ProfileLinksSection(binding, layoutInflater) { onProfileLinkClicked(it) }
-    }
+    private lateinit var statsSection: ProfileStatsSection
+    private lateinit var favoritesSection: ProfileFavoritesSection
+    private lateinit var linksSection: ProfileLinksSection
 
     /** Whether the Posts tab is currently selected. */
     private var isPostsTab = false
@@ -87,6 +75,15 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
+
+        statsSection = ProfileStatsSection(binding.viewPagerStats, binding.tabLayoutStats)
+        favoritesSection = ProfileFavoritesSection(
+            binding = binding,
+            glide = Glide.with(this),
+            onMediaClick = { view, media -> onFavoriteMediaItemClicked(view, media) },
+            onCharacterClick = { character -> openCharacterDetailsBottomSheet(character) }
+        )
+        linksSection = ProfileLinksSection(binding, layoutInflater) { onProfileLinkClicked(it) }
 
         initToolbar()
 
@@ -136,6 +133,10 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
 
         initStatsViewPager()
         initProfileFeed()
+        val selectedTab = savedInstanceState?.getInt(KEY_SELECTED_TAB, 0) ?: 0
+        if (selectedTab != binding.tabLayoutProfile.selectedTabPosition) {
+            binding.tabLayoutProfile.getTabAt(selectedTab)?.select()
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.userModel.collectLatest { user ->
@@ -147,6 +148,7 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
                 binding.swipeRefreshLayout.isRefreshing = state.isRefreshing
+                binding.progressBarProfile.isVisible = state.isInitialLoading
                 binding.btnFollow.apply {
                     isVisible = state.canFollow
                     isEnabled = !state.isFollowProcessing
@@ -191,6 +193,11 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(KEY_SELECTED_TAB, binding.tabLayoutProfile.selectedTabPosition)
+    }
+
     private fun updateUser(user: User?) {
         binding.user = user
         binding.invalidateAll()
@@ -212,6 +219,7 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
         glide.load(user?.avatar?.originalOrDown())
             .dontAnimate()
             .circleCrop()
+            .override(45.toPx())
             .placeholder(R.drawable.profile_picture_placeholder)
             .into(object : CustomTarget<Drawable>() {
                 override fun onResourceReady(
@@ -351,5 +359,6 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
 
     companion object {
         private const val TAB_POSTS = 1
+        private const val KEY_SELECTED_TAB = "user_profile_selected_tab"
     }
 }

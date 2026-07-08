@@ -54,18 +54,6 @@
             android:visibility="gone"
             tools:visibility="gone" />
 
-        <TextView
-            android:id="@+id/tv_empty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="24dp"
-            android:gravity="center"
-            android:text="@string/follow_list_empty"
-            android:textAppearance="?attr/textAppearanceBodyLarge"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </FrameLayout>
