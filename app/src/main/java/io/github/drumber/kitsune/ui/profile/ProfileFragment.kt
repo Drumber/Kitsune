@@ -27,6 +27,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.SurfaceColors
 import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.tabs.TabLayout
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.presentation.dto.toCharacterDto
@@ -40,6 +41,7 @@ import io.github.drumber.kitsune.data.repository.FollowListType
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseFragment
+import io.github.drumber.kitsune.ui.feed.FeedListFragment
 import io.github.drumber.kitsune.ui.profile.follow.FollowListFragmentDirections
 import io.github.drumber.kitsune.util.extensions.copyToClipboard
 import io.github.drumber.kitsune.util.extensions.navigateSafe
@@ -80,6 +82,10 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
         ProfileLinksSection(binding, layoutInflater) { onProfileLinkClicked(it) }
     }
 
+    private var isPostsTab = false
+
+    private var isFeedInitialized = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
@@ -95,6 +101,22 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
                 updateOptionsMenu()
                 binding.swipeRefreshLayout.isEnabled = user != null
                 binding.layoutNotLoggedIn.isVisible = user == null
+                binding.tabLayoutProfile.isVisible = user != null
+                if (user?.id != null && !isFeedInitialized) {
+                    initProfileFeed(user.id)
+                } else if (user == null) {
+                    isPostsTab = false
+                    if (binding.tabLayoutProfile.selectedTabPosition != 0) {
+                        binding.tabLayoutProfile.getTabAt(0)?.select()
+                    }
+                    binding.swipeRefreshLayout.isVisible = true
+                    binding.feedContainer.isVisible = false
+                    childFragmentManager.findFragmentById(R.id.feed_container)?.let {
+                        childFragmentManager.beginTransaction().remove(it).commit()
+                    }
+                    isFeedInitialized = false
+                }
+                updateFabVisibility()
             }
         }
 
@@ -151,6 +173,11 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
         }
 
         initStatsViewPager()
+        initProfileTabs()
+        val selectedTab = savedInstanceState?.getInt(KEY_SELECTED_TAB, 0) ?: 0
+        if (selectedTab != binding.tabLayoutProfile.selectedTabPosition) {
+            binding.tabLayoutProfile.getTabAt(selectedTab)?.select()
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -164,6 +191,11 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
                     }
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(KEY_SELECTED_TAB, binding.tabLayoutProfile.selectedTabPosition)
     }
 
     private fun initToolbar() {
@@ -202,6 +234,38 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
                 true
             }
         }
+    }
+
+    private fun initProfileTabs() {
+        binding.tabLayoutProfile.addOnTabSelectedListener(object :
+            TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                isPostsTab = tab.position == TAB_POSTS
+                binding.swipeRefreshLayout.isVisible = !isPostsTab
+                binding.feedContainer.isVisible = isPostsTab
+                updateFabVisibility()
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
+        binding.fabPostWall.setOnClickListener {
+            val action = ProfileFragmentDirections.actionGlobalCreatePostFragment()
+            findNavController().navigateSafe(R.id.profile_fragment, action)
+        }
+    }
+
+    private fun initProfileFeed(userId: String) {
+        if (childFragmentManager.findFragmentById(R.id.feed_container) == null) {
+            childFragmentManager.beginTransaction()
+                .replace(
+                    R.id.feed_container,
+                    FeedListFragment.newUserFeedInstance(userId, R.id.profile_fragment)
+                )
+                .commit()
+        }
+        isFeedInitialized = true
     }
 
     private fun setToolbarLogoClickListener() {
@@ -309,6 +373,10 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
         }
     }
 
+    private fun updateFabVisibility() {
+        binding.fabPostWall.isVisible = isPostsTab && viewModel.getUser() != null
+    }
+
     private fun showLogOutConfirmationDialog() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.action_log_out)
@@ -350,6 +418,15 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
+        if (isPostsTab) {
+            val feedFragment =
+                childFragmentManager.findFragmentById(R.id.feed_container) as? FeedListFragment
+            feedFragment?.scrollToTopOrRefresh(
+                appBarExpanded = binding.appBarLayout.bottom >= binding.appBarLayout.height
+            )
+            return
+        }
+
         val isAtTop = binding.nsvContent.scrollY == 0 &&
                 binding.appBarLayout.bottom >= binding.appBarLayout.height
         if (isAtTop && binding.swipeRefreshLayout.isEnabled) {
@@ -361,4 +438,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile, true),
         }
     }
 
+    companion object {
+        private const val TAB_POSTS = 1
+        private const val KEY_SELECTED_TAB = "profile_selected_tab"
+    }
 }

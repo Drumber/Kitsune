@@ -208,6 +208,8 @@ class PinnedPostAdapter(
 
             bindImagePreview(post, gated)
 
+            bindReadMoreIndicator(post, gated)
+
             EmbedBinder.bind(binding.embed, glide, post.embed, visible = !gated)
 
             PostMediaBinder.bind(binding.postMedia, glide, post, visible = true) {
@@ -266,6 +268,31 @@ class PinnedPostAdapter(
                 if (remaining > 0) {
                     text = context.getString(R.string.feed_likers_more, remaining)
                 }
+            }
+        }
+
+        /**
+         * Shows a "Read more" affordance when the post content is truncated in the feed. Truncation
+         * can only be measured after layout, so we defer the check until the [TextView] has been laid
+         * out and inspect the last line's ellipsis count.
+         */
+        private fun bindReadMoreIndicator(post: Post, gated: Boolean) {
+            val contentShown = !gated && !post.content.isNullOrBlank()
+            binding.tvReadMore.isVisible = false
+            binding.tvReadMore.setOnClickListener(
+                if (contentShown) {
+                    android.view.View.OnClickListener { listener?.onPostClick(binding.root, post) }
+                } else {
+                    null
+                }
+            )
+            if (!contentShown) return
+
+            binding.tvContent.post {
+                val layout = binding.tvContent.layout ?: return@post
+                val lastLine = layout.lineCount - 1
+                val truncated = lastLine >= 0 && layout.getEllipsisCount(lastLine) > 0
+                binding.tvReadMore.isVisible = truncated
             }
         }
 

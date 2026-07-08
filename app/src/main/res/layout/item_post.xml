@@ -150,6 +150,21 @@
             android:textAppearance="?attr/textAppearanceBodyMedium"
             tools:text="This is the content of a feed post that may span multiple lines." />
 
+        <TextView
+            android:id="@+id/tv_read_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingVertical="2dp"
+            android:text="@string/action_read_more"
+            android:textAppearance="?attr/textAppearanceLabelLarge"
+            android:textColor="?attr/colorPrimary"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
         <FrameLayout
             android:id="@+id/layout_image"
             android:layout_width="match_parent"
