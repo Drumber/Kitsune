@@ -195,7 +195,9 @@ class UserProfileFragment : BaseFragment(R.layout.fragment_profile, true) {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(KEY_SELECTED_TAB, binding.tabLayoutProfile.selectedTabPosition)
+        if (view != null) {
+            outState.putInt(KEY_SELECTED_TAB, binding.tabLayoutProfile.selectedTabPosition)
+        }
     }
 
     private fun updateUser(user: User?) {

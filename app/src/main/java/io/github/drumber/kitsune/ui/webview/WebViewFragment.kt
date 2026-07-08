@@ -77,7 +77,9 @@ class WebViewFragment : Fragment(R.layout.fragment_web_view) {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        binding.webView.saveState(outState)
+        if (view != null) {
+            binding.webView.saveState(outState)
+        }
     }
 
     private fun onToolbarMenuItemClicked(item: MenuItem): Boolean {
