@@ -20,11 +20,9 @@
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
+                android:layout_height="?attr/collapsingToolbarLayoutLargeSize"
                 app:contentScrim="?attr/colorSurface"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:title="@string/title_groups"
-                app:titleEnabled="false">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <ImageView
                     android:id="@+id/iv_cover"
@@ -38,7 +36,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bottom_edge_fade"
+                    android:background="@drawable/bottom_edge_fade_surface"
                     app:layout_collapseMode="parallax" />
 
                 <com.google.android.material.appbar.MaterialToolbar
@@ -91,7 +89,7 @@
                     android:id="@+id/iv_avatar"
                     android:layout_width="72dp"
                     android:layout_height="72dp"
-                    android:layout_marginTop="-36dp"
+                    android:layout_marginTop="16dp"
                     android:contentDescription="@null"
                     android:scaleType="centerCrop"
                     app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Kitsune.Rounded8"

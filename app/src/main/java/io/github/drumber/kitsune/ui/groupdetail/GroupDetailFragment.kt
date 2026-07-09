@@ -10,12 +10,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.tabs.TabLayout
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.group.Group
 import io.github.drumber.kitsune.databinding.FragmentGroupDetailBinding
 import io.github.drumber.kitsune.ui.feed.FeedListFragment
 import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbar
@@ -59,6 +61,15 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
 
         binding.btnJoin.setOnClickListener {
             viewModel.toggleMembership()
+        }
+
+        binding.ivCover.setOnClickListener {
+            viewModel.group.value?.let { group ->
+                val groupName = group.name
+                group.coverImageUrl?.let { imageUrl ->
+                    openPhotoViewActivity(imageUrl, groupName, sharedElement = binding.ivCover)
+                }
+            }
         }
 
         initGroupFeed()
@@ -167,6 +178,8 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
         val glide = Glide.with(this)
 
         glide.load(group.coverImageUrl)
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .placeholder(R.drawable.cover_placeholder)
             .into(binding.ivCover)
 
         glide.load(group.avatarUrl)
