@@ -101,6 +101,7 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
         }
         binding.rvFeed.layoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        binding.rvFeed.itemAnimator = null
 
         binding.layoutLoading.btnRetry.setOnClickListener { adapter.retry() }
 

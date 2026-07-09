@@ -66,13 +66,16 @@ class PostPagingAdapter(
         likerAvatars: List<String>? = null
     ) {
         val current = overrides[postId] ?: InteractionOverride()
-        overrides[postId] = current.copy(
+        val updated = current.copy(
             isLiked = isLiked ?: current.isLiked,
             likesCount = likesCount ?: current.likesCount,
             commentsCount = commentsCount ?: current.commentsCount,
             likerAvatars = likerAvatars ?: current.likerAvatars
         )
-        refreshItem(postId)
+        if (current != updated) {
+            overrides[postId] = updated
+            refreshItem(postId)
+        }
     }
 
     private fun refreshItem(postId: String) {
