@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.ui.feed
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.FragmentFeedListBinding
@@ -26,7 +28,6 @@ import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
 import io.github.drumber.kitsune.ui.postdetail.PostDetailFragmentDirections
 import io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
 import io.github.drumber.kitsune.util.extensions.navigateSafe
-import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.showSnackbar
 import io.github.drumber.kitsune.util.ui.viewBinding
@@ -35,7 +36,8 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionListener {
+class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionListener,
+    NavigationBarView.OnItemReselectedListener {
 
     private val binding by viewBinding(FragmentFeedListBinding::bind)
 
@@ -105,14 +107,6 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
 
         binding.layoutLoading.btnRetry.setOnClickListener { adapter.retry() }
 
-        binding.swipeRefreshLayout.apply {
-            setAppTheme()
-            setOnRefreshListener {
-                adapter.refresh()
-                viewModel.reloadPinnedPost()
-            }
-        }
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 adapter.loadStateFlow.collectLatest { loadState ->
@@ -125,8 +119,9 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
                         itemCount,
                         loadState
                     )
-                    binding.swipeRefreshLayout.isRefreshing =
-                        loadState.refresh is LoadState.Loading && adapter.itemCount > 0
+                    if (loadState.refresh is LoadState.NotLoading) {
+                        (parentFragment as? FeedListParent)?.onDataLoadFinished()
+                    }
                 }
             }
         }
@@ -139,7 +134,6 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
                     if (loginRequired) {
                         binding.rvFeed.isVisible = false
                         binding.layoutLoading.root.isVisible = false
-                        binding.swipeRefreshLayout.isRefreshing = false
                     }
                 }
             }
@@ -287,20 +281,9 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
         navigateToUserProfile(userId)
     }
 
-    /**
-     * Scrolls the feed list to the top, or refreshes the content if it is already at the top.
-     *
-     * @param appBarExpanded whether the hosting app bar is currently fully expanded.
-     */
-    fun scrollToTopOrRefresh(appBarExpanded: Boolean) {
-        if (view == null) return
-        if (binding.rvFeed.canScrollVertically(-1) || !appBarExpanded) {
-            binding.rvFeed.smoothScrollToPosition(0)
-        } else if (!isLoginRequired) {
-            binding.swipeRefreshLayout.isRefreshing = true
-            feedAdapter?.refresh()
-            viewModel.reloadPinnedPost()
-        }
+    fun refreshFeedContent() {
+        feedAdapter?.refresh()
+        viewModel.reloadPinnedPost()
     }
 
     private fun openMedia(post: Post) {
@@ -312,6 +295,11 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
             slug = slug
         )
         findNavController().navigateSafe(hostDestId, action)
+    }
+
+    override fun onNavigationItemReselected(p0: MenuItem) {
+        if (view == null) return
+        binding.rvFeed.smoothScrollToPosition(0)
     }
 
     override fun onDestroyView() {
@@ -350,5 +338,9 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
                 putInt(ARG_HOST_DEST_ID, hostDestId)
             }
         }
+    }
+
+    interface FeedListParent {
+        fun onDataLoadFinished()
     }
 }

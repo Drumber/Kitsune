@@ -1,18 +1,18 @@
-package io.github.drumber.kitsune.ui.profile
+package io.github.drumber.kitsune.ui.profile.about
 
 import android.view.LayoutInflater
 import androidx.core.view.isVisible
 import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLink
-import io.github.drumber.kitsune.databinding.FragmentProfileBinding
+import io.github.drumber.kitsune.databinding.FragmentProfileAboutBinding
 import io.github.drumber.kitsune.databinding.ItemProfileSiteChipBinding
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
 
 /**
- * Encapsulates the profile links chip group section. Used by both [ProfileFragment] and
- * [UserProfileFragment], which differ only in their profile-link click callback.
+ * Encapsulates the profile links chip group section. Used by both [io.github.drumber.kitsune.ui.profile.MyProfileFragment] and
+ * [io.github.drumber.kitsune.ui.profile.UserProfileFragment], which differ only in their profile-link click callback.
  */
 class ProfileLinksSection(
-    private val binding: FragmentProfileBinding,
+    private val binding: FragmentProfileAboutBinding,
     private val layoutInflater: LayoutInflater,
     private val onProfileLinkClick: (ProfileLink) -> Unit
 ) {

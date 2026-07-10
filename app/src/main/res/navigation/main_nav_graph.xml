@@ -49,7 +49,7 @@
 
     <fragment
         android:id="@+id/profile_fragment"
-        android:name="io.github.drumber.kitsune.ui.profile.ProfileFragment"
+        android:name="io.github.drumber.kitsune.ui.profile.MyProfileFragment"
         android:label="@string/nav_profile"
         tools:layout="@layout/fragment_profile" >
         <action

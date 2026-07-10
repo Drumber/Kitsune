@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.profile
+package io.github.drumber.kitsune.ui.profile.about
 
 import android.content.res.ColorStateList
 import android.view.LayoutInflater

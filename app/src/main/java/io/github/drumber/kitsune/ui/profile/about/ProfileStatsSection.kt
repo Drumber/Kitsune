@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.ui.profile
+package io.github.drumber.kitsune.ui.profile.about
 
 import androidx.annotation.StringRes
 import androidx.viewpager2.widget.ViewPager2
@@ -15,7 +15,7 @@ import io.github.drumber.kitsune.util.extensions.recyclerView
 
 /**
  * Encapsulates the profile statistics view pager (anime/manga category breakdown charts and
- * amount-consumed data). Used by both [ProfileFragment] and [UserProfileFragment].
+ * amount-consumed data). Used by both [io.github.drumber.kitsune.ui.profile.MyProfileFragment] and [io.github.drumber.kitsune.ui.profile.UserProfileFragment].
  */
 class ProfileStatsSection(
     private val viewPager: ViewPager2,

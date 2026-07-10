@@ -1,6 +1,5 @@
 package io.github.drumber.kitsune.ui.profile
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.presentation.model.user.User
@@ -18,13 +17,13 @@ class UserProfileViewModel(
     private val userRepository: UserRepository,
     private val followRepository: FollowRepository,
     private val getLocalUserId: GetLocalUserIdUseCase
-) : ViewModel() {
+) : BaseProfileViewModel() {
 
     private val _userModel = MutableStateFlow<User?>(null)
-    val userModel = _userModel.asStateFlow()
+    override val userModel = _userModel.asStateFlow()
 
     private val _uiState = MutableStateFlow(UserProfileUiState())
-    val uiState = _uiState.asStateFlow()
+    override val uiState = _uiState.asStateFlow()
 
     /** Whether the viewed profile belongs to the currently logged-in user. */
     val isOwnProfile: Boolean
@@ -35,9 +34,7 @@ class UserProfileViewModel(
         loadFollowState()
     }
 
-    fun getUser(): User? = _userModel.value
-
-    fun refreshUser() {
+    override fun refreshUser() {
         _uiState.update { it.copy(isRefreshing = true) }
         loadUser()
         loadFollowState()
@@ -46,7 +43,7 @@ class UserProfileViewModel(
     private fun loadUser() {
         viewModelScope.launch {
             try {
-                val user = userRepository.fetchUser(userId, ProfileViewModel.FULL_USER_FILTER)
+                val user = userRepository.fetchUser(userId, MyProfileViewModel.FULL_USER_FILTER)
                     ?: throw NoDataException("Received data is null.")
                 _userModel.update { user }
             } catch (e: Exception) {
@@ -113,10 +110,10 @@ class UserProfileViewModel(
 }
 
 data class UserProfileUiState(
-    val isRefreshing: Boolean = false,
-    val isInitialLoading: Boolean = true,
+    override val isRefreshing: Boolean = false,
+    override val isInitialLoading: Boolean = true,
     val canFollow: Boolean = false,
     val isFollowing: Boolean = false,
     val isFollowProcessing: Boolean = false,
     val followId: String? = null
-)
+) : ProfileUiState

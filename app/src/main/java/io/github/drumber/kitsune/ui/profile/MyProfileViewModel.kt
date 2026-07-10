@@ -1,6 +1,5 @@
 package io.github.drumber.kitsune.ui.profile
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.constants.Defaults
 import io.github.drumber.kitsune.data.common.Filter
@@ -21,10 +20,13 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class ProfileViewModel(
+class MyProfileViewModel(
     private val userRepository: UserRepository,
     private val logOutUser: LogOutUserUseCase
-) : ViewModel() {
+) : BaseProfileViewModel() {
+
+    private val _uiState = MutableStateFlow(MyProfileUiState())
+    override val uiState = _uiState.asStateFlow()
 
     private val _refreshTrigger = MutableSharedFlow<Unit>()
 
@@ -48,16 +50,9 @@ class ProfileViewModel(
             initialValue = userRepository.localUser.value?.toUser()
         )
 
-    val userModel = _userModel
+    override val userModel = _userModel
 
-    private val _uiState = MutableStateFlow(ProfileUiState())
-    val uiState = _uiState.asStateFlow()
-
-    fun getUser(): User? {
-        return _userModel.replayCache.firstOrNull() ?: userRepository.localUser.value?.toUser()
-    }
-
-    fun refreshUser() {
+    override fun refreshUser() {
         viewModelScope.launch {
             _uiState.update { it.copy(isRefreshing = true) }
             _refreshTrigger.emit(Unit)
@@ -89,7 +84,7 @@ class ProfileViewModel(
     }
 }
 
-data class ProfileUiState(
-    val isRefreshing: Boolean = false,
-    val isInitialLoading: Boolean = true
-)
+data class MyProfileUiState(
+    override val isRefreshing: Boolean = false,
+    override val isInitialLoading: Boolean = true
+) : ProfileUiState

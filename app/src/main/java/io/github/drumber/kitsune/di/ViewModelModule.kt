@@ -22,7 +22,7 @@ import io.github.drumber.kitsune.ui.medialist.MediaListViewModel
 import io.github.drumber.kitsune.ui.notifications.NotificationsViewModel
 import io.github.drumber.kitsune.ui.onboarding.OnboardingViewModel
 import io.github.drumber.kitsune.ui.postdetail.PostDetailViewModel
-import io.github.drumber.kitsune.ui.profile.ProfileViewModel
+import io.github.drumber.kitsune.ui.profile.MyProfileViewModel
 import io.github.drumber.kitsune.ui.profile.UserProfileViewModel
 import io.github.drumber.kitsune.ui.profile.editprofile.EditProfileViewModel
 import io.github.drumber.kitsune.ui.profile.follow.FollowListViewModel
@@ -45,7 +45,7 @@ val viewModelModule = module {
     viewModel { LibraryViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { LibraryEditEntryViewModel(get(), get()) }
     viewModel { LoginViewModel(get()) }
-    viewModel { ProfileViewModel(get(), get()) }
+    viewModel { MyProfileViewModel(get(), get()) }
     viewModel { (userId: String) -> UserProfileViewModel(userId, get(), get(), get()) }
     viewModel { (userId: String, type: FollowListType) ->
         FollowListViewModel(userId, type, get(), get())

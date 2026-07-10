@@ -24,7 +24,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ProfileViewModelTest {
+class MyProfileViewModelTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
@@ -34,7 +34,7 @@ class ProfileViewModelTest {
     private fun viewModel(
         userRepository: UserRepository = mock { on { localUser } doReturn MutableStateFlow(null) },
         logOutUser: LogOutUserUseCase = mock()
-    ) = ProfileViewModel(userRepository, logOutUser)
+    ) = MyProfileViewModel(userRepository, logOutUser)
 
     @Test
     fun `initial ui state is loading`() {
