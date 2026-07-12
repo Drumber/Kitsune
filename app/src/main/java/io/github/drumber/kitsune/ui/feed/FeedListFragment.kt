@@ -170,7 +170,7 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
                     pinnedPostAdapter?.setPost(post)
                     // If the paginated feed is empty, its empty state hides the list; make sure a
                     // pinned post stays visible in that case.
-                    if (post != null && !binding.rvFeed.isVisible) {
+                    if (post != null && !binding.layoutLoading.progressBar.isVisible) {
                         binding.rvFeed.isVisible = true
                         binding.layoutLoading.root.isVisible = false
                     }
