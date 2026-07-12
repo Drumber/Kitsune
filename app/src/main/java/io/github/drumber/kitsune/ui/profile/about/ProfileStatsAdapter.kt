@@ -29,6 +29,7 @@ class ProfileStatsAdapter(dataSet: List<ProfileStatsData>) :
     }
 
     private val dataSet = dataSet.toMutableList()
+    var isChartAnimationEnabled = true
 
     fun updateCategoryData(position: Int, data: PieDataSet) {
         if (dataSet[position].categoriesDataSet == data) return
@@ -65,7 +66,7 @@ class ProfileStatsAdapter(dataSet: List<ProfileStatsData>) :
 
         init {
             binding.apply {
-                pieChart.applyStyle(binding.root.context)
+                pieChart.applyStyle(binding.root.context, animate = isChartAnimationEnabled)
                 progressBar.isVisible = true
             }
         }

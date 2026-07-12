@@ -63,7 +63,7 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
-                binding.progressBarProfile.isVisible = state.isInitialLoading
+                binding.progressBarProfile.isVisible = state.isInitialLoading && viewModel.getUser() == null
             }
         }
     }

@@ -26,12 +26,13 @@ class ProfileStatsSection(
 
     private lateinit var adapter: ProfileStatsAdapter
 
-    fun init() {
-        val dataSet = listOf(
+    fun init(isInitialCreation: Boolean) {
+        val tabItems = listOf(
             ProfileStatsAdapter.ProfileStatsData(context.getString(R.string.profile_anime_stats)),
             ProfileStatsAdapter.ProfileStatsData(context.getString(R.string.profile_manga_stats))
         )
-        adapter = ProfileStatsAdapter(dataSet)
+        adapter = ProfileStatsAdapter(tabItems)
+        adapter.isChartAnimationEnabled = isInitialCreation
 
         viewPager.apply {
             adapter = this@ProfileStatsSection.adapter
@@ -46,7 +47,8 @@ class ProfileStatsSection(
         }.attach()
     }
 
-    fun submitStats(stats: List<UserStats>?) {
+    fun submitStats(stats: List<UserStats>?, animateChart: Boolean) {
+        adapter.isChartAnimationEnabled = animateChart
         val animeCategoryStats: UserStatsData.CategoryBreakdownData? =
             stats.findStatsData(UserStatsKind.AnimeCategoryBreakdown)
         updateStatsChart(
@@ -101,7 +103,7 @@ class ProfileStatsSection(
                 }
         } ?: emptyList()
 
-        val set = PieDataSet(categoryEntries, context.getString(titleRes))
-        adapter.updateCategoryData(position, set)
+        val pieDataSet = PieDataSet(categoryEntries, context.getString(titleRes))
+        adapter.updateCategoryData(position, pieDataSet)
     }
 }

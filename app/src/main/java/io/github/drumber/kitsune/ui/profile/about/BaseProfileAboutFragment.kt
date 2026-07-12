@@ -45,7 +45,7 @@ abstract class BaseProfileAboutFragment : BaseFragment(R.layout.fragment_profile
         super.onViewCreated(view, savedInstanceState)
 
         statsSection = ProfileStatsSection(binding.viewPagerStats, binding.tabLayoutStats)
-        statsSection.init()
+        statsSection.init(savedInstanceState == null)
         favoritesSection = ProfileFavoritesSection(
             binding = binding,
             glide = Glide.with(this),
@@ -90,7 +90,7 @@ abstract class BaseProfileAboutFragment : BaseFragment(R.layout.fragment_profile
             viewModel.userModel.collectLatest { user ->
                 updateUser(user)
                 updateProfileLinks(user?.profileLinks ?: emptyList())
-                statsSection.submitStats(user?.stats)
+                statsSection.submitStats(user?.stats, savedInstanceState == null)
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {

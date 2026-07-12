@@ -16,7 +16,8 @@ object PieChartStyle : BaseChartStyle() {
 
     fun PieChart.applyStyle(
         c: Context,
-        @StringRes centerTextResId: Int? = null
+        @StringRes centerTextResId: Int? = null,
+        animate: Boolean = true,
     ) {
         val theme = c.theme
 
@@ -45,7 +46,9 @@ object PieChartStyle : BaseChartStyle() {
 
         setNoDataTextColor(theme.getColor(R.attr.colorControlNormal))
 
-        animateY(ANIMATION_DURATION, Easing.EaseInOutQuad)
+        if (animate) {
+            animateY(ANIMATION_DURATION, Easing.EaseInOutQuad)
+        }
 
         legend.isEnabled = false
     }
