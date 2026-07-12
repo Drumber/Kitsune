@@ -11,13 +11,11 @@ import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentFeedBinding
 import io.github.drumber.kitsune.util.extensions.navigateSafe
-import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
 
 class FeedFragment : Fragment(R.layout.fragment_feed),
-    FeedListFragment.FeedListParent,
     NavigationBarView.OnItemReselectedListener {
 
     private val binding by viewBinding(FragmentFeedBinding::bind)
@@ -58,15 +56,6 @@ class FeedFragment : Fragment(R.layout.fragment_feed),
             }
         }
 
-        binding.swipeRefreshLayout.apply {
-            setAppTheme()
-            setOnRefreshListener {
-                val currentChild = childFragmentManager
-                    .findFragmentByTag("f" + binding.viewPagerFeed.currentItem) as? FeedListFragment
-                currentChild?.refreshFeedContent()
-            }
-        }
-
         binding.fabCreatePost.initMarginWindowInsetsListener(
             left = true,
             right = true,
@@ -87,10 +76,6 @@ class FeedFragment : Fragment(R.layout.fragment_feed),
                 else -> null
             }
         }.attach()
-    }
-
-    override fun onDataLoadFinished() {
-        binding.swipeRefreshLayout.isRefreshing = false
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {

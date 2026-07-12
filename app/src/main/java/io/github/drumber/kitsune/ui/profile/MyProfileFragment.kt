@@ -54,7 +54,7 @@ class MyProfileFragment : BaseProfileFragment() {
 
     override fun onUserModelChanged(user: User?) {
         super.onUserModelChanged(user)
-        binding.layoutNotLoggedIn.isVisible = user == null
+        binding.nsvNotLoggedIn.isVisible = user == null
         updateOptionsMenu()
     }
 

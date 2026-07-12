@@ -28,7 +28,9 @@ import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
 import io.github.drumber.kitsune.ui.postdetail.PostDetailFragmentDirections
 import io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
 import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
+import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbar
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -107,6 +109,21 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
 
         binding.layoutLoading.btnRetry.setOnClickListener { adapter.retry() }
 
+        binding.swipeRefreshLayout.apply {
+            setAppTheme()
+            setOnRefreshListener {
+                adapter.refresh()
+                viewModel.reloadPinnedPost()
+            }
+            initPaddingWindowInsetsListener(
+                left = true,
+                right = true,
+                consume = false
+            )
+        }
+
+        binding.rvFeed.initPaddingWindowInsetsListener(bottom = true, consume = false)
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 adapter.loadStateFlow.collectLatest { loadState ->
@@ -119,9 +136,8 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
                         itemCount,
                         loadState
                     )
-                    if (loadState.refresh is LoadState.NotLoading) {
-                        (parentFragment as? FeedListParent)?.onDataLoadFinished()
-                    }
+                    binding.swipeRefreshLayout.isRefreshing =
+                        loadState.refresh is LoadState.Loading && adapter.itemCount > 0
                 }
             }
         }
@@ -134,6 +150,7 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
                     if (loginRequired) {
                         binding.rvFeed.isVisible = false
                         binding.layoutLoading.root.isVisible = false
+                        binding.swipeRefreshLayout.isRefreshing = false
                     }
                 }
             }
@@ -281,11 +298,6 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
         navigateToUserProfile(userId)
     }
 
-    fun refreshFeedContent() {
-        feedAdapter?.refresh()
-        viewModel.reloadPinnedPost()
-    }
-
     private fun openMedia(post: Post) {
         val slug = post.mediaSlug
         val isAnime = post.mediaIsAnime
@@ -338,9 +350,5 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
                 putInt(ARG_HOST_DEST_ID, hostDestId)
             }
         }
-    }
-
-    interface FeedListParent {
-        fun onDataLoadFinished()
     }
 }

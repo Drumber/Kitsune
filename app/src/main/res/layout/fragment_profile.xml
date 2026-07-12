@@ -21,7 +21,7 @@
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:liftOnScrollTargetViewId="@id/nsv_content"
+            app:liftOnScrollTargetViewId="@id/view_pager_profile"
             app:liftOnScroll="true">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -87,75 +87,68 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager_profile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/view_pager_profile"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nsv_not_logged_in"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:visibility="gone"
+            tools:visibility="gone">
+
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent">
 
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/nsv_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:fillViewport="true">
+                <LinearLayout
+                    android:id="@+id/layout_not_logged_in"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="20dp"
+                    android:orientation="vertical">
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <!-- Not Logged In Message (self profile only; controlled in code) -->
-                    <LinearLayout
-                        android:id="@+id/layout_not_logged_in"
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:padding="20dp"
-                        android:orientation="vertical"
-                        android:visibility="gone"
-                        tools:visibility="gone">
+                        android:layout_marginBottom="8dp"
+                        android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                        android:text="@string/profile_not_logged_in_title" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:textAppearance="?attr/textAppearanceHeadlineSmall"
-                            android:text="@string/profile_not_logged_in_title" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?attr/textAppearanceBodyMedium"
-                            android:text="@string/profile_not_logged_in_text" />
-
-                        <Button
-                            android:id="@+id/btn_login"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginVertical="20dp"
-                            android:text="@string/action_log_in_to_kitsu"
-                            android:textAllCaps="false" />
-
-                    </LinearLayout>
-
-                    <ProgressBar
-                        android:id="@+id/progress_bar_profile"
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:text="@string/profile_not_logged_in_text" />
 
-                </FrameLayout>
+                    <Button
+                        android:id="@+id/btn_login"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="20dp"
+                        android:text="@string/action_log_in_to_kitsu"
+                        android:textAllCaps="false" />
 
-            </androidx.core.widget.NestedScrollView>
+                </LinearLayout>
 
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                <ProgressBar
+                    android:id="@+id/progress_bar_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            </FrameLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_post_wall"

@@ -24,6 +24,8 @@ import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.ui.profile.BaseProfileViewModel
 import io.github.drumber.kitsune.util.extensions.copyToClipboard
 import io.github.drumber.kitsune.util.extensions.openUrl
+import io.github.drumber.kitsune.util.extensions.setAppTheme
+import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -43,6 +45,7 @@ abstract class BaseProfileAboutFragment : BaseFragment(R.layout.fragment_profile
         super.onViewCreated(view, savedInstanceState)
 
         statsSection = ProfileStatsSection(binding.viewPagerStats, binding.tabLayoutStats)
+        statsSection.init()
         favoritesSection = ProfileFavoritesSection(
             binding = binding,
             glide = Glide.with(this),
@@ -51,14 +54,21 @@ abstract class BaseProfileAboutFragment : BaseFragment(R.layout.fragment_profile
         )
         linksSection = ProfileLinksSection(binding, layoutInflater) { onProfileLinkClicked(it) }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.userModel.collectLatest { user ->
-                updateUser(user)
-                updateProfileLinks(user?.profileLinks ?: emptyList())
-            }
-        }
-
         binding.apply {
+            swipeRefreshLayout.initPaddingWindowInsetsListener(
+                left = true,
+                right = true,
+                consume = false
+            )
+            nsvContent.initPaddingWindowInsetsListener(bottom = true, consume = false)
+
+            swipeRefreshLayout.apply {
+                setAppTheme()
+                setOnRefreshListener {
+                    viewModel.refreshUser()
+                }
+            }
+
             val onWaifuClicked: View.OnClickListener = object : View.OnClickListener {
                 override fun onClick(v: View?) {
                     val waifu = viewModel.getUser()?.waifu ?: return
@@ -76,7 +86,21 @@ abstract class BaseProfileAboutFragment : BaseFragment(R.layout.fragment_profile
             }
         }
 
-        initStatsViewPager()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.userModel.collectLatest { user ->
+                updateUser(user)
+                updateProfileLinks(user?.profileLinks ?: emptyList())
+                statsSection.submitStats(user?.stats)
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.uiState.collectLatest { state ->
+                binding.swipeRefreshLayout.apply {
+                    isRefreshing = isRefreshing && state.isRefreshing
+                }
+                statsSection.setLoading(state.isInitialLoading)
+            }
+        }
     }
 
     private fun updateUser(user: User?) {
@@ -101,21 +125,6 @@ abstract class BaseProfileAboutFragment : BaseFragment(R.layout.fragment_profile
         }
 
         user?.favorites?.let { updateFavoritesData(it) }
-    }
-
-    private fun initStatsViewPager() {
-        statsSection.init()
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.userModel.collectLatest { user ->
-                statsSection.submitStats(user?.stats)
-            }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uiState.collectLatest { state ->
-                statsSection.setLoading(state.isInitialLoading)
-            }
-        }
     }
 
     private fun updateProfileLinks(profileLinks: List<ProfileLink>) {

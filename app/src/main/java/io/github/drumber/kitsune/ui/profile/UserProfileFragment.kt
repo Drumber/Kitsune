@@ -26,7 +26,7 @@ class UserProfileFragment : BaseProfileFragment() {
 
         binding.apply {
             // Self-only UI is not used in the read-only profile view.
-            layoutNotLoggedIn.isVisible = false
+            nsvNotLoggedIn.isVisible = false
 
             // Show the provided name immediately, before the full profile loads.
             toolbar.title = args.userName ?: getString(R.string.nav_profile)

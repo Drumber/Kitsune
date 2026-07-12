@@ -21,11 +21,9 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.user.User
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
 import io.github.drumber.kitsune.ui.base.BaseFragment
-import io.github.drumber.kitsune.ui.feed.FeedListFragment
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
-import io.github.drumber.kitsune.util.extensions.setAppTheme
+import io.github.drumber.kitsune.util.extensions.recyclerView
 import io.github.drumber.kitsune.util.extensions.toPx
-import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -34,7 +32,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, true),
-    FeedListFragment.FeedListParent,
     NavigationBarView.OnItemReselectedListener {
 
     protected val binding by viewBinding(FragmentProfileBinding::bind)
@@ -50,26 +47,6 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
         initProfileViewPager()
 
         binding.apply {
-            swipeRefreshLayout.initPaddingWindowInsetsListener(
-                left = true,
-                right = true,
-                consume = false
-            )
-            nsvContent.initPaddingWindowInsetsListener(bottom = true, consume = false)
-
-            swipeRefreshLayout.apply {
-                setAppTheme()
-                setOnRefreshListener {
-                    val currentPageFragment = childFragmentManager
-                        .findFragmentByTag("f" + binding.viewPagerProfile.currentItem)
-                    if (currentPageFragment is FeedListFragment) {
-                        currentPageFragment.refreshFeedContent()
-                    } else {
-                        viewModel.refreshUser()
-                    }
-                }
-            }
-
             ivCover.setOnClickListener {
                 val coverImgUrl = viewModel.getUser()?.coverImage?.originalOrDown()
                     ?: return@setOnClickListener
@@ -86,9 +63,6 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
-                binding.swipeRefreshLayout.apply {
-                    isRefreshing = isRefreshing && state.isRefreshing
-                }
                 binding.progressBarProfile.isVisible = state.isInitialLoading
             }
         }
@@ -97,9 +71,8 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
     protected open fun onUserModelChanged(user: User?) {
         binding.user = user
         binding.invalidateAll()
-        binding.swipeRefreshLayout.isEnabled = user != null
-        binding.swipeRefreshLayout.isVisible = user != null
         binding.tabLayoutProfile.isVisible = user != null
+        binding.viewPagerProfile.isVisible = user != null
         updateUserAvatarAndCover(user)
     }
 
@@ -129,6 +102,7 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
 
                 viewPagerAdapter = createProfileViewPagerAdapter(userId)
                 binding.viewPagerProfile.adapter = viewPagerAdapter
+                binding.viewPagerProfile.recyclerView.isNestedScrollingEnabled = false
 
                 tabLayoutMediator = TabLayoutMediator(binding.tabLayoutProfile, binding.viewPagerProfile) { tab, position ->
                     when (position) {
@@ -193,10 +167,6 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
             .centerCrop()
             .placeholder(ColorDrawable(SurfaceColors.SURFACE_0.getColor(requireContext())))
             .into(binding.ivCover)
-    }
-
-    override fun onDataLoadFinished() {
-        binding.swipeRefreshLayout.isRefreshing = false
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
