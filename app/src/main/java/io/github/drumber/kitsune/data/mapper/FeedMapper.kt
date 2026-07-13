@@ -4,7 +4,9 @@ import io.github.drumber.kitsune.data.mapper.EmbedMapper.toEmbed
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime
+import io.github.drumber.kitsune.data.source.network.media.model.NetworkMedia
 import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkEpisode
+import io.github.drumber.kitsune.util.DataUtil
 
 object FeedMapper {
 
@@ -20,7 +22,7 @@ object FeedMapper {
         authorId = user?.id,
         authorName = user?.name,
         authorAvatarUrl = user?.avatar?.originalOrDown(),
-        mediaTitle = media?.canonicalTitle,
+        mediaTitle = media?.getPreferredTitle(),
         mediaId = media?.id,
         mediaPosterUrl = media?.posterImage?.originalOrDown(),
         mediaSynopsis = media?.description,
@@ -40,4 +42,8 @@ object FeedMapper {
             ?: emptyList(),
         embed = embed?.toEmbed()
     )
+
+    private fun NetworkMedia.getPreferredTitle(): String? {
+        return DataUtil.getTitle(titles, canonicalTitle)
+    }
 }

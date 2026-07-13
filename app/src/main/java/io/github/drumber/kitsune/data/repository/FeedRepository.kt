@@ -148,12 +148,12 @@ class FeedRepository(
             "subject",
             "subject.user",
             "subject.media",
-            "subject.spoiledUnit",
+            "subject.spoiled_unit",
             "subject.uploads",
             "subject.post",
             "subject.post.user",
             "subject.post.media",
-            "subject.post.spoiledUnit",
+            "subject.post.spoiled_unit",
             "subject.post.uploads",
             "actor"
         )
