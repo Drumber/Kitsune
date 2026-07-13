@@ -89,7 +89,7 @@ class PostPagingAdapter(
         }
 
         override fun isPostRevealed(post: Post): Boolean {
-            return post.id !in revealedIds
+            return post.id in revealedIds
         }
 
         override fun onRevealPost(post: Post) {

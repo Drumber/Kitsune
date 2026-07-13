@@ -136,13 +136,15 @@
         android:id="@+id/embed"
         layout="@layout/view_embed"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" />
 
     <include
         android:id="@+id/post_media"
         layout="@layout/view_post_media"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
