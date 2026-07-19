@@ -7,9 +7,12 @@ import io.github.drumber.kitsune.testutils.image
 import io.github.drumber.kitsune.testutils.networkAnime
 import io.github.drumber.kitsune.testutils.networkManga
 import io.github.drumber.kitsune.testutils.networkUser
+import io.github.drumber.kitsune.util.DataUtil
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.mockito.Mockito.mockStatic
+import org.mockito.kotlin.any
 
 class FeedMapperTest {
 
@@ -37,7 +40,13 @@ class FeedMapperTest {
         )
 
         // when
-        val post = networkPost.toPost()
+        val post = mockStatic(DataUtil::class.java).use {
+            it.`when`<String> { DataUtil.getTitle(any(), any()) }.thenAnswer { invocation ->
+                invocation.arguments[1]
+            }
+
+            networkPost.toPost()
+        }
 
         // then
         assertThat(post.id).isEqualTo("42")
@@ -92,7 +101,11 @@ class FeedMapperTest {
         val networkPost = NetworkPost(id = "1", media = networkManga(faker))
 
         // when
-        val post = networkPost.toPost()
+        val post = mockStatic(DataUtil::class.java).use {
+            it.`when`<String> { DataUtil.getTitle(any(), any()) }.thenReturn("title")
+
+            networkPost.toPost()
+        }
 
         // then
         assertThat(post.mediaIsAnime).isFalse()
