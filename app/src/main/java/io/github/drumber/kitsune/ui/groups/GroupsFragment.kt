@@ -1,13 +1,12 @@
 package io.github.drumber.kitsune.ui.groups
 
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -17,6 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
+import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.shape.MaterialShapeDrawable
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.group.GroupCategory
 import io.github.drumber.kitsune.databinding.FragmentGroupsBinding
@@ -26,13 +27,13 @@ import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class GroupsFragment : Fragment(R.layout.fragment_groups) {
+class GroupsFragment : Fragment(R.layout.fragment_groups),
+ NavigationBarView.OnItemReselectedListener {
 
     private val binding by viewBinding(FragmentGroupsBinding::bind)
 
@@ -42,8 +43,12 @@ class GroupsFragment : Fragment(R.layout.fragment_groups) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            toolbar.initWindowInsetsListener(consume = false)
+            appBarLayout.statusBarForeground =
+                MaterialShapeDrawable.createWithElevationOverlay(context)
+            toolbar.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
             toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+            inputLayoutSearch.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
+            horizontalScrollView.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
             rvGroups.initPaddingWindowInsetsListener(
                 left = true,
                 right = true,
@@ -101,7 +106,7 @@ class GroupsFragment : Fragment(R.layout.fragment_groups) {
                         loadState
                     )
                     binding.swipeRefreshLayout.isRefreshing =
-                        loadState.refresh is LoadState.Loading && adapter.itemCount > 0
+                        binding.swipeRefreshLayout.isRefreshing && loadState.refresh is LoadState.Loading && adapter.itemCount > 0
                 }
             }
         }
@@ -147,5 +152,10 @@ class GroupsFragment : Fragment(R.layout.fragment_groups) {
                 viewModel.setCategory(if (isChecked) categoryId else null)
             }
         }
+    }
+
+    override fun onNavigationItemReselected(item: MenuItem) {
+        binding.appBarLayout.setExpanded(true)
+        binding.rvGroups.smoothScrollToPosition(0)
     }
 }

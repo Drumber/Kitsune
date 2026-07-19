@@ -19,7 +19,7 @@ class PinnedPostAdapter(
     private val nsfwAllowed: Boolean = false,
     private val currentUserId: String? = null,
     private val listener: PostInteractionListener? = null
-) : RecyclerView.Adapter<PinnedPostAdapter.PostViewHolder>() {
+) : RecyclerView.Adapter<PinnedPostAdapter.PinnedPostViewHolder>() {
 
     private var post: Post? = null
 
@@ -71,19 +71,19 @@ class PinnedPostAdapter(
         notifyItemChanged(0)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        return PostViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PinnedPostViewHolder {
+        return PinnedPostViewHolder(
             ItemPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PinnedPostViewHolder, position: Int) {
         post?.let { holder.bind(it) }
     }
 
     override fun getItemCount() = if (post != null) 1 else 0
 
-    inner class PostViewHolder(binding: ItemPostBinding) :
+    inner class PinnedPostViewHolder(binding: ItemPostBinding) :
         BasePostViewHolder(binding, glide, contentRenderer, nsfwAllowed) {
 
         override fun onPostClick(post: Post) {

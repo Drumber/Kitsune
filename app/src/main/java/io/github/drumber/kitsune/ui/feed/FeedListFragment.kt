@@ -214,7 +214,7 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.likeEvents.collectLatest { event ->
+                viewModel.likeEvents.collect { event ->
                     when (event) {
                         FeedListViewModel.LikeEvent.LoginRequired ->
                             showSnackbar(binding.root, R.string.comment_login_required)
@@ -227,6 +227,15 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
                                 event.count
                             )
                             showSnackbar(binding.root, R.string.comment_action_failed)
+                        }
+
+                        is FeedListViewModel.LikeEvent.Updated -> {
+                            adapter.setLikeState(event.postId, event.isLiked, event.count)
+                            pinnedPostAdapter?.setLikeState(
+                                event.postId,
+                                event.isLiked,
+                                event.count
+                            )
                         }
                     }
                 }

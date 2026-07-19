@@ -35,7 +35,9 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="4dp"
                     app:cardCornerRadius="50dp"
                     app:cardElevation="6dp"
                     style="@style/Widget.Material3.CardView.Elevated">
@@ -95,6 +97,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_search_media"
                         style="?attr/materialButtonOutlinedStyle"
+                        app:backgroundTint="@color/button_outlined_opaque_background_color_selector"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/search_type_media" />
@@ -102,6 +105,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_search_users"
                         style="?attr/materialButtonOutlinedStyle"
+                        app:backgroundTint="@color/button_outlined_opaque_background_color_selector"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/search_type_users" />

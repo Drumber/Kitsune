@@ -124,10 +124,10 @@ class GroupsRepository(
         pageSize: Int
     ) = Filter()
         .include("category")
-        .sort(sort)
         .pageLimit(pageSize)
         .apply {
             if (!query.isNullOrBlank()) filter("query", query)
+            else sort(sort)
             if (!categoryId.isNullOrBlank()) filter("category", categoryId)
         }
 
@@ -138,10 +138,10 @@ class GroupsRepository(
     ) = Filter()
         .filter("user", userId)
         .include("group", "group.category")
-        .sort("-createdAt")
         .pageLimit(pageSize)
         .apply {
             if (!query.isNullOrBlank()) filter("query", query)
+            else sort("-createdAt")
         }
 
 }

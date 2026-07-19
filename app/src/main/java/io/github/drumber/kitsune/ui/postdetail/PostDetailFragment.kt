@@ -152,21 +152,21 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
                 viewModel.events.collectLatest { event ->
                     when (event) {
                         PostDetailViewModel.Event.LoginRequired ->
-                            showSnackbar(binding.root, R.string.comment_login_required)
+                            showSnackbar(binding.rootLayout, R.string.comment_login_required)
 
                         PostDetailViewModel.Event.CommentPosted -> {
                             binding.etComment.text?.clear()
                             viewModel.cancelComposer()
                             hideKeyboard()
                             commentsAdapter.refresh()
-                            showSnackbar(binding.root, R.string.comment_posted)
+                            showSnackbar(binding.rootLayout, R.string.comment_posted)
                         }
 
                         PostDetailViewModel.Event.Error ->
-                            showSnackbar(binding.root, R.string.comment_action_failed)
+                            showSnackbar(binding.rootLayout, R.string.comment_action_failed)
 
                         PostDetailViewModel.Event.PostDeleted -> {
-                            showSnackbar(binding.root, R.string.post_deleted)
+                            showSnackbar(binding.rootLayout, R.string.post_deleted)
                             findNavController().navigateUp()
                         }
 
@@ -175,12 +175,12 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
                             viewModel.cancelComposer()
                             hideKeyboard()
                             commentsAdapter.refresh()
-                            showSnackbar(binding.root, R.string.comment_updated)
+                            showSnackbar(binding.rootLayout, R.string.comment_updated)
                         }
 
                         PostDetailViewModel.Event.CommentDeleted -> {
                             commentsAdapter.refresh()
-                            showSnackbar(binding.root, R.string.comment_deleted)
+                            showSnackbar(binding.rootLayout, R.string.comment_deleted)
                         }
 
                         is PostDetailViewModel.Event.CommentLikeChanged ->

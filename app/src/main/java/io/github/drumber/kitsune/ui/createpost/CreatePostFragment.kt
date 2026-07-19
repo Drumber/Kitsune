@@ -10,7 +10,6 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -66,7 +65,7 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.toolbar.initWindowInsetsListener(consume = false)
-        binding.root.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
+        binding.nsvContent.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
 
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
         publishButton = binding.toolbar.menu.findItem(R.id.menu_publish_post)

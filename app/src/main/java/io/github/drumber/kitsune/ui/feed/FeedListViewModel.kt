@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
-import io.github.drumber.kitsune.data.repository.CommentRepository
 import io.github.drumber.kitsune.data.repository.ContentRevealStore
 import io.github.drumber.kitsune.data.repository.FeedRepository
 import io.github.drumber.kitsune.data.repository.PostInteractionRepository
@@ -30,7 +29,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalCoroutinesApi::class)
 class FeedListViewModel(
     private val feedRepository: FeedRepository,
-    private val commentRepository: CommentRepository,
     private val postManagementRepository: PostManagementRepository,
     private val postInteractionRepository: PostInteractionRepository,
     private val postInteractionStore: PostInteractionStore,
@@ -42,6 +40,7 @@ class FeedListViewModel(
     sealed interface LikeEvent {
         data object LoginRequired : LikeEvent
         data class Failed(val postId: String, val isLiked: Boolean, val count: Int) : LikeEvent
+        data class Updated(val postId: String, val isLiked: Boolean, val count: Int) : LikeEvent
     }
 
     sealed interface ActionEvent {
@@ -185,7 +184,7 @@ class FeedListViewModel(
         if (userId == null) {
             likeEventChannel.trySend(LikeEvent.LoginRequired)
             // Revert the optimistic change applied by the UI.
-            likeEventChannel.trySend(LikeEvent.Failed(post.id, false, post.likesCount))
+            likeEventChannel.trySend(LikeEvent.Updated(post.id, false, post.likesCount))
             return
         }
 

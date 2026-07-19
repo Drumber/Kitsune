@@ -58,7 +58,7 @@ val viewModelModule = module {
     viewModel { (reactionId: String) -> ReactionDetailViewModel(reactionId, get(), get()) }
     viewModel { GroupsViewModel(get(), get()) }
     viewModel { (groupId: String) -> GroupDetailViewModel(groupId, get(), get()) }
-    viewModel { FeedListViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { FeedListViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { NotificationsViewModel(get(), get()) }
     viewModel { PostDetailViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { (parentCommentId: String, postId: String) ->

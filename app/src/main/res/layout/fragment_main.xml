@@ -30,7 +30,7 @@
                 android:focusable="true"
                 android:contentDescription="@string/hint_search"
                 app:cardCornerRadius="50dp"
-                app:cardElevation="6dp"
+                app:cardElevation="2dp"
                 app:layout_scrollFlags="scroll|snap"
                 style="@style/Widget.Material3.CardView.Elevated">
 

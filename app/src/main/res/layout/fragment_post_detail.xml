@@ -2,32 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.postdetail.PostDetailFragment">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:liftOnScroll="true">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationContentDescription="@string/action_back"
-            app:navigationIcon="@drawable/ic_arrow_back_24"
-            app:title="@string/title_post" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <FrameLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/root_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:liftOnScroll="true">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:navigationContentDescription="@string/action_back"
+                app:navigationIcon="@drawable/ic_arrow_back_24"
+                app:title="@string/title_post" />
+
+        </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_comments"
@@ -35,6 +35,7 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:paddingBottom="8dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:listitem="@layout/item_comment" />
 
         <include
@@ -45,7 +46,7 @@
             android:layout_gravity="center"
             android:visibility="gone" />
 
-    </FrameLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <View
         android:layout_width="match_parent"
