@@ -54,6 +54,11 @@
         <item name="cornerSize">12dp</item>
     </style>
 
+    <style name="ShapeAppearanceOverlay.Kitsune.Rounded8" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
     <style name="ShapeAppearance.Kitsune.SubtypeBadge" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeBottomLeft">4dp</item>

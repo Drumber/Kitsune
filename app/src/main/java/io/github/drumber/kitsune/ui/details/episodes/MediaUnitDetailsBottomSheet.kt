@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.BundleCompat
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.R
@@ -14,16 +15,15 @@ import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 
 class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {
 
-    private var _binding: SheetMediaUnitDetailsBinding? = null
-    private val binding get() = _binding!!
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = SheetMediaUnitDetailsBinding.inflate(inflater, container, false)
-        val mediaUnitDto: MediaUnitDto? = arguments?.getParcelable(BUNDLE_MEDIA_UNIT_ADAPTER)
+        val binding = SheetMediaUnitDetailsBinding.inflate(inflater, container, false)
+        val mediaUnitDto: MediaUnitDto? = arguments?.let {
+            BundleCompat.getParcelable(it, BUNDLE_MEDIA_UNIT_ADAPTER, MediaUnitDto::class.java)
+        }
         val mediaUnit = mediaUnitDto?.toMediaUnit()
         binding.mediaUnit = mediaUnit
 
@@ -42,11 +42,6 @@ class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {
         }
 
         return binding.root
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
     companion object {

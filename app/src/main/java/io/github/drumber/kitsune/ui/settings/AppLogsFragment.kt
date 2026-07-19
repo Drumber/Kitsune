@@ -19,6 +19,7 @@ import io.github.drumber.kitsune.databinding.FragmentAppLogsBinding
 import io.github.drumber.kitsune.util.LogCatReader
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
@@ -27,23 +28,13 @@ import java.util.Date
 
 class AppLogsFragment : Fragment(R.layout.fragment_app_logs) {
 
-    private var _binding: FragmentAppLogsBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentAppLogsBinding::bind)
     private val viewModel: AppLogsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentAppLogsBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -121,10 +112,5 @@ class AppLogsFragment : Fragment(R.layout.fragment_app_logs) {
 
     private fun deleteAllFiles(directory: File) {
         directory.listFiles { file: File -> file.isFile }?.forEach { it.delete() }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

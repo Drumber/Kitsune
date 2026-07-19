@@ -11,6 +11,7 @@ import io.github.drumber.kitsune.data.presentation.model.algolia.AlgoliaKeyColle
 import io.github.drumber.kitsune.data.presentation.model.character.CharacterSearchResult
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
+import io.github.drumber.kitsune.data.presentation.model.user.UserSearchResult
 import io.github.drumber.kitsune.data.source.network.algolia.model.NetworkAlgoliaKey
 import io.github.drumber.kitsune.data.source.network.algolia.model.NetworkAlgoliaKeyCollection
 import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaCharacterSearchResult
@@ -20,6 +21,7 @@ import io.github.drumber.kitsune.data.source.network.algolia.model.search.Algoli
 import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaImageMeta
 import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaMediaSearchKind
 import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaMediaSearchResult
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaUserSearchResult
 
 object AlgoliaMapper {
     fun NetworkAlgoliaKeyCollection.toAlgoliaKeyCollection() = AlgoliaKeyCollection(
@@ -112,6 +114,15 @@ object AlgoliaMapper {
         name = canonicalName,
         image = image?.toImage(),
         primaryMediaTitle = primaryMedia
+    )
+
+    fun AlgoliaUserSearchResult.toUserSearchResult() = UserSearchResult(
+        id = id.toString(),
+        name = name,
+        slug = slug,
+        title = title,
+        avatar = avatar?.toImage(),
+        followersCount = followersCount
     )
 
     fun AlgoliaImage.toImage() = Image(

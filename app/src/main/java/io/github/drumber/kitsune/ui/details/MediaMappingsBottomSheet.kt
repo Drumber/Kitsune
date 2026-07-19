@@ -10,14 +10,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.data.presentation.model.mapping.getExternalUrl
 import io.github.drumber.kitsune.databinding.SheetMediaMappingsBinding
 import io.github.drumber.kitsune.ui.adapter.MediaMappingsAdapter
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MediaMappingsBottomSheet : BottomSheetDialogFragment() {
 
-    private var _binding: SheetMediaMappingsBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(SheetMediaMappingsBinding::bind)
     private val viewModel: DetailsViewModel by viewModel(ownerProducer = { requireParentFragment() })
 
     override fun onCreateView(
@@ -25,8 +25,7 @@ class MediaMappingsBottomSheet : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = SheetMediaMappingsBinding.inflate(inflater, container, false)
-        return binding.root
+        return SheetMediaMappingsBinding.inflate(inflater, container, false).root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,7 +54,6 @@ class MediaMappingsBottomSheet : BottomSheetDialogFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        _binding = null
     }
 
     companion object {

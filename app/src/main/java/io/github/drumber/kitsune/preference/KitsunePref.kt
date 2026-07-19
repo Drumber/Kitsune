@@ -71,6 +71,11 @@ object KitsunePref : KotprefModel(), KoinComponent {
         key = R.string.preference_key_remember_search_filters
     )
 
+    var doubleBackToExit by booleanPref(
+        false,
+        key = R.string.preference_key_double_back_to_exit
+    )
+
     var forceLegacyImagePicker by booleanPref(
         false,
         key = R.string.preference_key_force_legacy_image_picker

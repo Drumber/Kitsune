@@ -19,12 +19,12 @@ import io.github.drumber.kitsune.ui.base.BaseDialogFragment
 import io.github.drumber.kitsune.util.network.ResponseData
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CategoriesDialogFragment : BaseDialogFragment(R.layout.fragment_categories) {
 
-    private var _binding: FragmentCategoriesBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentCategoriesBinding::bind)
 
     private val viewModel: CategoriesViewModel by viewModel()
 
@@ -32,15 +32,6 @@ class CategoriesDialogFragment : BaseDialogFragment(R.layout.fragment_categories
 
     private lateinit var treeView: AndroidTreeView
     private lateinit var treeRoot: TreeNode
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentCategoriesBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -244,11 +235,6 @@ class CategoriesDialogFragment : BaseDialogFragment(R.layout.fragment_categories
 
     fun setOnDismissListener(listener: DialogInterface.OnDismissListener) {
         onDismissListener = listener
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     companion object {

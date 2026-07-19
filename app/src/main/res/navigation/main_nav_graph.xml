@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_main_fragment_to_mediaListFragment"
             app:destination="@id/media_list_fragment" />
+        <action
+            android:id="@+id/action_main_fragment_to_search_fragment"
+            app:destination="@id/search_fragment" />
     </fragment>
 
     <fragment
@@ -24,6 +27,10 @@
         android:name="io.github.drumber.kitsune.ui.search.SearchFragment"
         android:label="@string/nav_search"
         tools:layout="@layout/fragment_search" >
+        <argument
+            android:name="focusSearch"
+            android:defaultValue="false"
+            app:argType="boolean" />
         <action
             android:id="@+id/action_search_fragment_to_details_fragment"
             app:destination="@id/details_fragment"
@@ -42,7 +49,7 @@
 
     <fragment
         android:id="@+id/profile_fragment"
-        android:name="io.github.drumber.kitsune.ui.profile.ProfileFragment"
+        android:name="io.github.drumber.kitsune.ui.profile.MyProfileFragment"
         android:label="@string/nav_profile"
         tools:layout="@layout/fragment_profile" >
         <action
@@ -63,6 +70,22 @@
             android:id="@+id/action_profile_fragment_to_characterDetailsBottomSheet"
             app:destination="@id/characterDetailsBottomSheet" />
     </fragment>
+    <fragment
+        android:id="@+id/feed_fragment"
+        android:name="io.github.drumber.kitsune.ui.feed.FeedFragment"
+        android:label="@string/nav_feed"
+        tools:layout="@layout/fragment_feed" />
+
+    <fragment
+        android:id="@+id/notifications_fragment"
+        android:name="io.github.drumber.kitsune.ui.notifications.NotificationsFragment"
+        android:label="@string/notifications_title"
+        tools:layout="@layout/fragment_notifications" />
+
+    <action
+        android:id="@+id/action_global_notifications_fragment"
+        app:destination="@id/notifications_fragment" />
+
     <fragment
         android:id="@+id/details_fragment"
         android:name="io.github.drumber.kitsune.ui.details.DetailsFragment"
@@ -89,6 +112,20 @@
         <action
             android:id="@+id/action_details_fragment_to_characters_fragment"
             app:destination="@id/characters_fragment"
+            app:enterAnim="@animator/scale_enter_anim"
+            app:exitAnim="@animator/scale_exit_anim"
+            app:popEnterAnim="@animator/scale_pop_enter_anim"
+            app:popExitAnim="@animator/scale_pop_exit_anim" />
+        <action
+            android:id="@+id/action_details_fragment_to_media_feed_fragment"
+            app:destination="@id/media_feed_fragment"
+            app:enterAnim="@animator/scale_enter_anim"
+            app:exitAnim="@animator/scale_exit_anim"
+            app:popEnterAnim="@animator/scale_pop_enter_anim"
+            app:popExitAnim="@animator/scale_pop_exit_anim" />
+        <action
+            android:id="@+id/action_details_fragment_to_reactions_fragment"
+            app:destination="@id/reactions_fragment"
             app:enterAnim="@animator/scale_enter_anim"
             app:exitAnim="@animator/scale_exit_anim"
             app:popEnterAnim="@animator/scale_pop_enter_anim"
@@ -166,6 +203,28 @@
         <action
             android:id="@+id/action_characters_fragment_to_characterDetailsBottomSheet"
             app:destination="@id/characterDetailsBottomSheet" />
+    </fragment>
+    <fragment
+        android:id="@+id/media_feed_fragment"
+        android:name="io.github.drumber.kitsune.ui.details.feed.MediaFeedFragment"
+        android:label="MediaFeedFragment" >
+        <argument
+            android:name="mediaId"
+            app:argType="string" />
+        <argument
+            android:name="isAnime"
+            app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/reactions_fragment"
+        android:name="io.github.drumber.kitsune.ui.details.reactions.ReactionsFragment"
+        android:label="ReactionsFragment" >
+        <argument
+            android:name="mediaId"
+            app:argType="string" />
+        <argument
+            android:name="isAnime"
+            app:argType="boolean" />
     </fragment>
     <activity
         android:id="@+id/photo_view_activity"
@@ -264,4 +323,142 @@
             app:argType="string" />
     </fragment>
     <action android:id="@+id/action_global_webViewFragment" app:destination="@id/webViewFragment" />
+    <fragment
+        android:id="@+id/post_detail_fragment"
+        android:name="io.github.drumber.kitsune.ui.postdetail.PostDetailFragment"
+        android:label="PostDetailFragment"
+        tools:layout="@layout/fragment_post_detail" >
+        <argument
+            android:name="post"
+            app:argType="io.github.drumber.kitsune.data.presentation.model.feed.Post" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_post_detail_fragment"
+        app:destination="@id/post_detail_fragment" />
+    <fragment
+        android:id="@+id/replies_fragment"
+        android:name="io.github.drumber.kitsune.ui.replies.RepliesFragment"
+        android:label="RepliesFragment"
+        tools:layout="@layout/fragment_replies" >
+        <argument
+            android:name="parentCommentId"
+            app:argType="string" />
+        <argument
+            android:name="postId"
+            app:argType="string" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_replies_fragment"
+        app:destination="@id/replies_fragment" />
+    <fragment
+        android:id="@+id/reaction_detail_fragment"
+        android:name="io.github.drumber.kitsune.ui.reactiondetail.ReactionDetailFragment"
+        android:label="ReactionDetailFragment"
+        tools:layout="@layout/fragment_reaction_detail" >
+        <argument
+            android:name="reactionId"
+            app:argType="string" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_reaction_detail_fragment"
+        app:destination="@id/reaction_detail_fragment" />
+    <fragment
+        android:id="@+id/groups_fragment"
+        android:name="io.github.drumber.kitsune.ui.groups.GroupsFragment"
+        android:label="GroupsFragment"
+        tools:layout="@layout/fragment_groups" >
+        <action
+            android:id="@+id/action_groups_fragment_to_group_detail_fragment"
+            app:destination="@id/group_detail_fragment"
+            app:enterAnim="@animator/scale_enter_anim"
+            app:exitAnim="@animator/scale_exit_anim"
+            app:popEnterAnim="@animator/scale_pop_enter_anim"
+            app:popExitAnim="@animator/scale_pop_exit_anim" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_groups_fragment"
+        app:destination="@id/groups_fragment" />
+    <fragment
+        android:id="@+id/group_detail_fragment"
+        android:name="io.github.drumber.kitsune.ui.groupdetail.GroupDetailFragment"
+        android:label="GroupDetailFragment"
+        tools:layout="@layout/fragment_group_detail" >
+        <argument
+            android:name="groupId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/user_profile_fragment"
+        android:name="io.github.drumber.kitsune.ui.profile.UserProfileFragment"
+        android:label="UserProfileFragment"
+        tools:layout="@layout/fragment_profile" >
+        <argument
+            android:name="userId"
+            app:argType="string" />
+        <argument
+            android:name="userName"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_user_profile_fragment"
+        app:destination="@id/user_profile_fragment" />
+    <fragment
+        android:id="@+id/follow_list_fragment"
+        android:name="io.github.drumber.kitsune.ui.profile.follow.FollowListFragment"
+        android:label="FollowListFragment"
+        tools:layout="@layout/fragment_follow_list" >
+        <argument
+            android:name="userId"
+            app:argType="string" />
+        <argument
+            android:name="listType"
+            app:argType="io.github.drumber.kitsune.data.repository.FollowListType" />
+        <argument
+            android:name="userName"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_follow_list_fragment"
+        app:destination="@id/follow_list_fragment" />
+    <action
+        android:id="@+id/action_global_characterDetailsBottomSheet"
+        app:destination="@id/characterDetailsBottomSheet" />
+    <fragment
+        android:id="@+id/create_post_fragment"
+        android:name="io.github.drumber.kitsune.ui.createpost.CreatePostFragment"
+        android:label="CreatePostFragment"
+        tools:layout="@layout/fragment_create_post" >
+        <argument
+            android:name="editPost"
+            app:argType="io.github.drumber.kitsune.data.presentation.model.feed.Post"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="targetUserId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="targetUserName"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="targetGroupId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="targetGroupName"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_create_post_fragment"
+        app:destination="@id/create_post_fragment" />
 </navigation>

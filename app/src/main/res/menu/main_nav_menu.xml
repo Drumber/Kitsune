@@ -7,9 +7,9 @@
         android:title="@string/nav_home"/>
 
     <item
-        android:id="@+id/search_fragment"
-        android:icon="@drawable/selector_search"
-        android:title="@string/nav_search" />
+        android:id="@+id/feed_fragment"
+        android:icon="@drawable/selector_feed"
+        android:title="@string/nav_feed" />
 
     <item
         android:id="@+id/library_fragment"

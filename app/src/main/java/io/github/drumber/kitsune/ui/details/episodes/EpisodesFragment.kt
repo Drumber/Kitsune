@@ -28,6 +28,7 @@ import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbarOnFailure
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -38,19 +39,9 @@ class EpisodesFragment : Fragment(R.layout.fragment_media_list),
 
     private val args: EpisodesFragmentArgs by navArgs()
 
-    private var _binding: FragmentMediaListBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentMediaListBinding::bind)
 
     private val viewModel: EpisodesViewModel by viewModel()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentMediaListBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -150,10 +141,5 @@ class EpisodesFragment : Fragment(R.layout.fragment_media_list),
         } else {
             findNavController().navigateUp()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

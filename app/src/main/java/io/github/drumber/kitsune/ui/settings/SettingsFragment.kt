@@ -279,7 +279,9 @@ class SettingsFragment : BasePreferenceFragment() {
             findPreference<ListPreference>(R.string.preference_key_country)?.apply {
                 entryValues = Locale.getISOCountries()
                 entries =
-                    Locale.getISOCountries().map { Locale("", it).displayCountry }.toTypedArray()
+                    Locale.getISOCountries()
+                        .map { Locale.Builder().setRegion(it).build().displayCountry }
+                        .toTypedArray()
                 value = user?.country
                 setOnPreferenceChangeListener { _, newValue ->
                     if (user == null) return@setOnPreferenceChangeListener false
@@ -294,7 +296,7 @@ class SettingsFragment : BasePreferenceFragment() {
                     if (it.value == null) {
                         getString(R.string.preference_country_summary_non)
                     } else {
-                        val countryName = Locale("", it.value).displayName
+                        val countryName = Locale.Builder().setRegion(it.value).build().displayName
                         getString(R.string.preference_country_summary, countryName)
                     }
                 }

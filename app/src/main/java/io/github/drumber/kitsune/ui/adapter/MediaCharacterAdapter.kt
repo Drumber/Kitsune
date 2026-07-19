@@ -3,6 +3,8 @@ package io.github.drumber.kitsune.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.R
@@ -10,13 +12,11 @@ import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.data.presentation.model.character.MediaCharacter
 import io.github.drumber.kitsune.data.presentation.model.character.getStringRes
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
-import java.util.concurrent.CopyOnWriteArrayList
 
 class MediaCharacterAdapter(
-    val dataSet: CopyOnWriteArrayList<MediaCharacter>,
     private val glide: RequestManager,
     private val listener: OnItemClickListener<MediaCharacter>? = null
-) : RecyclerView.Adapter<MediaCharacterAdapter.MediaCharacterViewHolder>() {
+) : ListAdapter<MediaCharacter, MediaCharacterAdapter.MediaCharacterViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaCharacterViewHolder {
         return MediaCharacterViewHolder(
@@ -29,10 +29,8 @@ class MediaCharacterAdapter(
     }
 
     override fun onBindViewHolder(holder: MediaCharacterViewHolder, position: Int) {
-        holder.bind(dataSet[position])
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount() = dataSet.size
 
     inner class MediaCharacterViewHolder(private val binding: ItemMediaBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -59,6 +57,16 @@ class MediaCharacterAdapter(
             }
         }
 
+    }
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MediaCharacter>() {
+            override fun areItemsTheSame(oldItem: MediaCharacter, newItem: MediaCharacter): Boolean =
+                oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: MediaCharacter, newItem: MediaCharacter): Boolean =
+                oldItem == newItem
+        }
     }
 
 }

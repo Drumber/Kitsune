@@ -8,12 +8,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.presentation.model.media.production.Casting
 import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.CastingRepository
-import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
@@ -98,8 +99,8 @@ class CharactersViewModel(
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val dataSource: Flow<PagingData<Casting>> = filter.asFlow().flatMapLatest { filter ->
         castingRepository.castingPager(filter, Kitsu.DEFAULT_PAGE_SIZE)
     }.cachedIn(viewModelScope)
-
 }

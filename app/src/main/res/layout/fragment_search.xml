@@ -24,10 +24,11 @@
             android:background="@android:color/transparent"
             tools:targetApi="p">
 
-            <FrameLayout
+            <LinearLayout
                 android:id="@+id/search_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 app:layout_scrollFlags="scroll|enterAlways|snap"
                 android:background="@android:color/transparent">
 
@@ -82,7 +83,32 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-            </FrameLayout>
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggle_search_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="6dp"
+                    app:selectionRequired="true"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_search_media"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/search_type_media" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_search_users"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/search_type_users" />
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            </LinearLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
 

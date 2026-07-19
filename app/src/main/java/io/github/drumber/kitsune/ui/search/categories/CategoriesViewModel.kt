@@ -64,11 +64,11 @@ class CategoriesViewModel(private val categoryRepository: CategoryRepository) : 
                         _categoryNodes.postValue(ResponseData.Success(nodes))
                     } else {
                         parent.childCategories.addAll(0, nodes)
-                        if (_categoryNodes.value is ResponseData.Success || _categoryNodes.value?.data == null) {
+                        val currentData = _categoryNodes.value?.data
+                        if (_categoryNodes.value is ResponseData.Success || currentData == null) {
                             _categoryNodes.postValue(_categoryNodes.value)
                         } else {
-                            val responseData = ResponseData.Success(categoryNodes.value?.data!!)
-                            _categoryNodes.postValue(responseData)
+                            _categoryNodes.postValue(ResponseData.Success(currentData))
                         }
                     }
                 }

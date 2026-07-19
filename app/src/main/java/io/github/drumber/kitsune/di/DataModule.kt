@@ -10,12 +10,23 @@ import io.github.drumber.kitsune.data.repository.AppUpdateRepository
 import io.github.drumber.kitsune.data.repository.CastingRepository
 import io.github.drumber.kitsune.data.repository.CategoryRepository
 import io.github.drumber.kitsune.data.repository.CharacterRepository
+import io.github.drumber.kitsune.data.repository.CommentRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
+import io.github.drumber.kitsune.data.repository.FeedRepository
+import io.github.drumber.kitsune.data.repository.NotificationRepository
 import io.github.drumber.kitsune.data.repository.LibraryChangeListener
 import io.github.drumber.kitsune.data.repository.LibraryRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
 import io.github.drumber.kitsune.data.repository.MappingRepository
+import io.github.drumber.kitsune.data.repository.MediaReactionRepository
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository
+import io.github.drumber.kitsune.data.repository.ContentRevealStore
+import io.github.drumber.kitsune.data.repository.FollowRepository
+import io.github.drumber.kitsune.data.repository.GroupsRepository
+import io.github.drumber.kitsune.data.repository.PostInteractionRepository
+import io.github.drumber.kitsune.data.repository.PostManagementRepository
+import io.github.drumber.kitsune.data.repository.UploadRepository
+import io.github.drumber.kitsune.data.repository.PostInteractionStore
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.repository.WidgetLibraryChangeListener
@@ -34,12 +45,41 @@ import io.github.drumber.kitsune.data.source.network.character.CharacterNetworkD
 import io.github.drumber.kitsune.data.source.network.character.api.CharacterApi
 import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
 import io.github.drumber.kitsune.data.source.network.character.model.NetworkMediaCharacter
+import io.github.drumber.kitsune.data.source.network.comment.CommentNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.comment.api.CommentApi
+import io.github.drumber.kitsune.data.source.network.comment.model.NetworkComment
+import io.github.drumber.kitsune.data.source.network.comment.model.NetworkCommentLike
+import io.github.drumber.kitsune.data.source.network.feed.FeedNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.feed.PostLikeNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.feed.PostNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.feed.UploadNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.feed.api.FeedApi
+import io.github.drumber.kitsune.data.source.network.feed.api.PostApi
+import io.github.drumber.kitsune.data.source.network.feed.api.UploadApi
+import io.github.drumber.kitsune.data.source.network.feed.api.PostLikeApi
+import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivity
+import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivityGroup
+import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
+import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPostLike
+import io.github.drumber.kitsune.data.source.network.notification.NotificationNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.notification.api.NotificationApi
+import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUpload
+import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUploadRequest
 import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.library.api.LibraryEntryApi
 import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry
 import io.github.drumber.kitsune.data.source.network.mapping.MappingNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.mapping.api.MappingApi
 import io.github.drumber.kitsune.data.source.network.mapping.model.NetworkMapping
+import io.github.drumber.kitsune.data.source.network.group.GroupsNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.group.api.GroupsApi
+import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroup
+import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroupCategory
+import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroupMember
+import io.github.drumber.kitsune.data.source.network.reaction.ReactionNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.reaction.api.MediaReactionApi
+import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReaction
+import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReactionVote
 import io.github.drumber.kitsune.data.source.network.media.AnimeNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.media.CastingNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.media.CategoryNetworkDataSource
@@ -64,18 +104,23 @@ import io.github.drumber.kitsune.data.source.network.media.model.streamer.Networ
 import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkChapter
 import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkEpisode
 import io.github.drumber.kitsune.data.source.network.user.FavoriteNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.user.FollowNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.user.ProfileLinkNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.user.UserNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.user.api.FavoriteApi
+import io.github.drumber.kitsune.data.source.network.user.api.FollowApi
 import io.github.drumber.kitsune.data.source.network.user.api.ProfileLinkApi
 import io.github.drumber.kitsune.data.source.network.user.api.UserApi
 import io.github.drumber.kitsune.data.source.network.user.api.UserImageUploadApi
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite
+import io.github.drumber.kitsune.data.source.network.user.model.NetworkFollow
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImageUpload
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
 import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStats
+import io.github.drumber.kitsune.util.ui.MarkdownPreviewRenderer
+import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -114,6 +159,18 @@ val dataModule = module {
     single { UserNetworkDataSource(get(), get()) }
     single<UserLocalDataSource> { UserPreferences(androidContext(), get()) }
     single { UserRepository(get(), get(), CoroutineScope(SupervisorJob() + Dispatchers.Default)) }
+
+    // Follow
+    factory {
+        createService<FollowApi>(
+            get(),
+            get(),
+            NetworkFollow::class.java,
+            NetworkUser::class.java
+        )
+    }
+    single { FollowNetworkDataSource(get()) }
+    single { FollowRepository(get()) }
 
     // Algolia
     factory { createService<AlgoliaKeyApi>(get(), get()) }
@@ -257,6 +314,146 @@ val dataModule = module {
     }
     single { AppReleaseNetworkDataSource(get()) }
     single { AppUpdateRepository(get()) }
+
+    // Feed
+    factory {
+        createService<FeedApi>(
+            get(),
+            get(),
+            NetworkActivityGroup::class.java,
+            NetworkActivity::class.java,
+            NetworkPost::class.java,
+            NetworkComment::class.java,
+            NetworkUser::class.java,
+            NetworkGroup::class.java,
+            NetworkAnime::class.java,
+            NetworkManga::class.java,
+            NetworkEpisode::class.java,
+            NetworkChapter::class.java,
+            NetworkUpload::class.java
+        )
+    }
+    single { FeedNetworkDataSource(get()) }
+    single {
+        FeedRepository(
+            get(),
+            get(),
+            get(),
+            get(),
+            CoroutineScope(SupervisorJob() + Dispatchers.Default)
+        )
+    }
+
+    // Notifications
+    factory {
+        createService<NotificationApi>(
+            get(),
+            get(),
+            NetworkActivityGroup::class.java,
+            NetworkActivity::class.java,
+            NetworkPost::class.java,
+            NetworkComment::class.java,
+            NetworkMediaReaction::class.java,
+            NetworkUser::class.java,
+            NetworkAnime::class.java,
+            NetworkManga::class.java,
+            NetworkEpisode::class.java,
+            NetworkChapter::class.java,
+            NetworkUpload::class.java
+        )
+    }
+    single { NotificationNetworkDataSource(get()) }
+    single { NotificationRepository(get()) }
+
+    // Comments
+    factory {
+        createService<CommentApi>(
+            get(),
+            get(),
+            NetworkComment::class.java,
+            NetworkCommentLike::class.java,
+            NetworkPost::class.java,
+            NetworkUser::class.java,
+            NetworkUpload::class.java
+        )
+    }
+    single { CommentNetworkDataSource(get()) }
+    single { CommentRepository(get()) }
+
+    // Post Likes
+    factory {
+        createService<PostLikeApi>(
+            get(),
+            get(),
+            NetworkPostLike::class.java,
+            NetworkPost::class.java,
+            NetworkUser::class.java
+        )
+    }
+    single { PostLikeNetworkDataSource(get()) }
+    single { PostInteractionRepository(get()) }
+    single { PostInteractionStore() }
+
+    // Post creation
+    factory {
+        createService<PostApi>(
+            get(),
+            get(),
+            NetworkPost::class.java,
+            NetworkUser::class.java,
+            NetworkGroup::class.java,
+            NetworkAnime::class.java,
+            NetworkManga::class.java,
+            NetworkEpisode::class.java,
+            NetworkChapter::class.java,
+            NetworkUpload::class.java
+        )
+    }
+    single { PostNetworkDataSource(get()) }
+    single { PostManagementRepository(get()) }
+    factory {
+        createService<UploadApi>(
+            get(),
+            get(),
+            NetworkUploadRequest::class.java,
+            NetworkUser::class.java
+        )
+    }
+    single { UploadNetworkDataSource(get()) }
+    single { UploadRepository(get()) }
+    single { ContentRevealStore() }
+    single { PostContentRenderer(androidContext()) }
+    single { MarkdownPreviewRenderer(androidContext()) }
+
+    // Media Reactions
+    factory {
+        createService<MediaReactionApi>(
+            get(),
+            get(),
+            NetworkMediaReaction::class.java,
+            NetworkMediaReactionVote::class.java,
+            NetworkUser::class.java,
+            NetworkAnime::class.java,
+            NetworkManga::class.java,
+            NetworkLibraryEntry::class.java
+        )
+    }
+    single { ReactionNetworkDataSource(get()) }
+    single { MediaReactionRepository(get()) }
+
+    // Groups
+    factory {
+        createService<GroupsApi>(
+            get(),
+            get(),
+            NetworkGroup::class.java,
+            NetworkGroupCategory::class.java,
+            NetworkGroupMember::class.java,
+            NetworkUser::class.java
+        )
+    }
+    single { GroupsNetworkDataSource(get()) }
+    single { GroupsRepository(get()) }
 }
 
 private fun createAuthService(objectMapper: ObjectMapper) = createService<AuthenticationApi>(

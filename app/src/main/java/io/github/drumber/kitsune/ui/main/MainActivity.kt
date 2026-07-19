@@ -5,6 +5,8 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
@@ -70,6 +72,25 @@ class MainActivity : BaseActivity() {
 
     private var overrideStartDestination: Int? = null
     private var handledIntentHashCode: Int? = null
+
+    private var backPressedToExitTime = 0L
+    private var exitToast: Toast? = null
+
+    private val onBackPressedToExitCallback = object : OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() {
+            if (System.currentTimeMillis() - backPressedToExitTime < BACK_PRESS_EXIT_INTERVAL_MS) {
+                exitToast?.cancel()
+                finish()
+            } else {
+                backPressedToExitTime = System.currentTimeMillis()
+                exitToast = Toast.makeText(
+                    this@MainActivity,
+                    R.string.press_back_again_to_exit,
+                    Toast.LENGTH_SHORT
+                ).also { it.show() }
+            }
+        }
+    }
 
     private val navigationBarView: NavigationBarView
         get() = binding.bottomNavigation
@@ -207,6 +228,10 @@ class MainActivity : BaseActivity() {
                 }
             }
 
+            // require a double back press to exit when back would otherwise close the app
+            onBackPressedToExitCallback.isEnabled =
+                KitsunePref.doubleBackToExit && navController.previousBackStackEntry == null
+
             // hide bottom navigation if the destination is not a main one
             toggleNavigationBarView(
                 !isDestinationOnMainNavGraph(destination) || destination.id == R.id.webViewFragment,
@@ -218,6 +243,8 @@ class MainActivity : BaseActivity() {
             true -> savedInstanceState.getInt(LAST_HANDLED_INTENT_KEY)
             else -> null
         }
+
+        onBackPressedDispatcher.addCallback(this, onBackPressedToExitCallback)
 
         if (savedInstanceState == null) {
             onCreateWithoutSavedInstanceState()
@@ -436,6 +463,7 @@ class MainActivity : BaseActivity() {
 
     companion object {
         private const val LAST_HANDLED_INTENT_KEY = "last_handled_intent"
+        private const val BACK_PRESS_EXIT_INTERVAL_MS = 2000L
     }
 }
 

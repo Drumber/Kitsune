@@ -1,39 +1,30 @@
 package io.github.drumber.kitsune.ui.profile.editprofile
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.user.profilelinks.ProfileLinkSite
 import io.github.drumber.kitsune.databinding.ItemListOptionBinding
 import io.github.drumber.kitsune.databinding.SheetSelectProfileLinkSiteBinding
 import io.github.drumber.kitsune.util.ItemClickListener
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SelectProfileLinkSiteBottomSheet : BottomSheetDialogFragment() {
+class SelectProfileLinkSiteBottomSheet :
+    BottomSheetDialogFragment(R.layout.sheet_select_profile_link_site) {
 
     private val viewModel: EditProfileViewModel by viewModel(ownerProducer = { requireParentFragment() })
 
-    private var _binding: SheetSelectProfileLinkSiteBinding? = null
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = SheetSelectProfileLinkSiteBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    private val binding by viewBinding(SheetSelectProfileLinkSiteBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -78,11 +69,6 @@ class SelectProfileLinkSiteBottomSheet : BottomSheetDialogFragment() {
             bundleOf(BUNDLE_PROFILE_LINK_SITE to linkSite)
         )
         dismiss()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
     companion object {

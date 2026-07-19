@@ -2,9 +2,7 @@ package io.github.drumber.kitsune.ui.library.editentry
 
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -54,14 +52,14 @@ import io.github.drumber.kitsune.util.ui.initImePaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_library_entry) {
 
     private val args: LibraryEditEntryFragmentArgs by navArgs()
 
-    private var _binding: FragmentEditLibraryEntryBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentEditLibraryEntryBinding::bind)
 
     private val viewModel: LibraryEditEntryViewModel by viewModel()
 
@@ -85,12 +83,9 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
         super.onStart()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentEditLibraryEntryBinding.inflate(inflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         viewModel.initLibraryEntry(args.libraryEntryId)
 
         binding.toolbar.initWindowInsetsListener(consume = false)
@@ -107,12 +102,6 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
         )
 
         binding.root.initImePaddingWindowInsetsListener()
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
             toolbar.setNavigationOnClickListener {
@@ -201,8 +190,8 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
                 val ratingTwenty = libraryEntry.ratingTwenty
                 val hasRated = ratingTwenty != null && ratingTwenty != -1
                 fieldRating.editText?.apply {
-                    val ratingText = if (hasRated) {
-                        "${ratingTwenty!!.formatRatingTwenty()} / ${20.formatRatingTwenty()}"
+                    val ratingText = if (ratingTwenty != null && ratingTwenty != -1) {
+                        "${ratingTwenty.formatRatingTwenty()} / ${20.formatRatingTwenty()}"
                     } else {
                         getString(R.string.library_not_rated)
                     }
@@ -462,10 +451,5 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
                 if (accent) R.attr.colorPrimary else R.attr.colorControlNormal
             )
         )
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

@@ -16,6 +16,7 @@ import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.coroutines.cancellation.CancellationException
 
 class SettingsViewModel(
     private val userRepository: UserRepository,
@@ -36,6 +37,8 @@ class SettingsViewModel(
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     userRepository.fetchAndStoreLocalUserFromNetwork()
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     logE("Failed to update local user model from network.", e)
                 }
@@ -50,6 +53,8 @@ class SettingsViewModel(
                 userRepository.updateUser(user.id, user)
                     ?: throw NoDataException("Received user data is null.")
                 userRepository.fetchAndStoreLocalUserFromNetwork()
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 logE("Failed to update user settings.", e)
                 errorMessageListener?.invoke(ErrorMessage(R.string.error_user_update_failed))
@@ -61,7 +66,6 @@ class SettingsViewModel(
         }
     }
 
-
     data class ErrorMessage(
         @StringRes val stringRes: Int? = null,
         val message: String = ""
@@ -72,5 +76,4 @@ class SettingsViewModel(
             message
         }
     }
-
 }

@@ -1,0 +1,1126 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ChainWrapping:BaseActivity.kt$BaseActivity$||</ID>
+    <ID>ChainWrapping:CreatePostFragment.kt$CreatePostFragment$&amp;&amp;</ID>
+    <ID>ChainWrapping:DetailsFragment.kt$DetailsFragment$||</ID>
+    <ID>ChainWrapping:EditProfileFragment.kt$EditProfileFragment$&amp;&amp;</ID>
+    <ID>ChainWrapping:EditProfileViewModel.kt$EditProfileViewModel$||</ID>
+    <ID>ChainWrapping:LayoutResourceLoadingLoadState.kt$&amp;&amp;</ID>
+    <ID>ChainWrapping:LibraryEntriesAdapter.kt$LibraryEntriesAdapter.LibraryEntryUiModelComparator$&amp;&amp;</ID>
+    <ID>ChainWrapping:LibraryFragment.kt$LibraryFragment$||</ID>
+    <ID>ChainWrapping:MainActivity.kt$MainActivity$&amp;&amp;</ID>
+    <ID>ChainWrapping:PhotoViewActivity.kt$PhotoViewActivity$&amp;&amp;</ID>
+    <ID>ChainWrapping:PhotoViewNestedScrollView.kt$PhotoViewNestedScrollView$&amp;&amp;</ID>
+    <ID>ChainWrapping:PhotoViewNestedScrollView.kt$PhotoViewNestedScrollView$||</ID>
+    <ID>CommentSpacing:AppearanceFragment.kt$AppearanceFragment$//---- App Theme</ID>
+    <ID>CommentSpacing:AppearanceFragment.kt$AppearanceFragment$//---- Dark Mode</ID>
+    <ID>CommentSpacing:AppearanceFragment.kt$AppearanceFragment$//---- Dynamic Color Theme</ID>
+    <ID>CommentSpacing:AppearanceFragment.kt$AppearanceFragment$//---- Media Item Size</ID>
+    <ID>CommentSpacing:AppearanceFragment.kt$AppearanceFragment$//---- OLED Black Mode</ID>
+    <ID>CommentSpacing:CharacterMapper.kt$CharacterMapper$//********************************************************************************************//</ID>
+    <ID>CommentSpacing:LibraryLocalDataSource.kt$LibraryLocalDataSource$//********************************************************************************************//</ID>
+    <ID>CommentSpacing:LibraryRepository.kt$LibraryRepository$//********************************************************************************************//</ID>
+    <ID>CommentSpacing:LoggedInUserView.kt$LoggedInUserView$//... other data fields that may be accessible to the UI</ID>
+    <ID>CommentSpacing:Media.kt$Media$//********************************************************************************************//</ID>
+    <ID>CommentSpacing:MediaMapper.kt$MediaMapper$//********************************************************************************************//</ID>
+    <ID>CommentSpacing:MediaUnit.kt$MediaUnit$//********************************************************************************************//</ID>
+    <ID>CommentSpacing:SettingsFragment.kt$SettingsFragment$//---- Adult Content</ID>
+    <ID>CommentSpacing:SettingsFragment.kt$SettingsFragment$//---- App Language</ID>
+    <ID>CommentSpacing:SettingsFragment.kt$SettingsFragment$//---- App Logs</ID>
+    <ID>CommentSpacing:SettingsFragment.kt$SettingsFragment$//---- App Version</ID>
+    <ID>CommentSpacing:SettingsFragment.kt$SettingsFragment$//---- Appearance</ID>
+    <ID>CommentSpacing:SettingsFragment.kt$SettingsFragment$//---- Check for Updates on Launch</ID>
+    <ID>CommentSpacing:SettingsFragment.kt$SettingsFragment$//---- Country</ID>
+    <ID>CommentSpacing:SettingsFragment.kt$SettingsFragment$//---- Display Name</ID>
+    <ID>CommentSpacing:SettingsFragment.kt$SettingsFragment$//---- Force legacy image picker</ID>
+    <ID>CommentSpacing:SettingsFragment.kt$SettingsFragment$//---- Open Source Libraries</ID>
+    <ID>CommentSpacing:SettingsFragment.kt$SettingsFragment$//---- Profile URL</ID>
+    <ID>CommentSpacing:SettingsFragment.kt$SettingsFragment$//---- Rating System</ID>
+    <ID>CommentSpacing:SettingsFragment.kt$SettingsFragment$//---- Start Fragment</ID>
+    <ID>CommentSpacing:SettingsFragment.kt$SettingsFragment$//---- Title Language Preference</ID>
+    <ID>CommentSpacing:UserMapper.kt$UserMapper$//********************************************************************************************//</ID>
+    <ID>ComplexCondition:MainActivity.kt$MainActivity$item.itemId == selectedItemId &amp;&amp; fragments.size &gt; 0 &amp;&amp; fragments[0] is NavigationBarView.OnItemReselectedListener &amp;&amp; fragments[0].lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)</ID>
+    <ID>CyclomaticComplexMethod:DetailsFragment.kt$DetailsFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
+    <ID>CyclomaticComplexMethod:EditProfileFragment.kt$EditProfileFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
+    <ID>CyclomaticComplexMethod:LibraryEditEntryFragment.kt$LibraryEditEntryFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
+    <ID>CyclomaticComplexMethod:LibraryFragment.kt$LibraryFragment$private fun initRecyclerView()</ID>
+    <ID>CyclomaticComplexMethod:MainActivity.kt$MainActivity$override fun onCreate(savedInstanceState: Bundle?)</ID>
+    <ID>CyclomaticComplexMethod:PostPagingAdapter.kt$PostPagingAdapter.PostViewHolder$fun bind(post: Post)</ID>
+    <ID>CyclomaticComplexMethod:ProfileSiteLogo.kt$fun getProfileSiteLogoResourceId(name: String?): Int</ID>
+    <ID>CyclomaticComplexMethod:SettingsFragment.kt$SettingsFragment$private fun observeUserModel()</ID>
+    <ID>DestructuringDeclarationWithTooManyEntries:WindowInsetsUtil.kt$val (initialLeft, initialTop, initialRight, initialBottom) = listOf( marginLeft, marginTop, marginRight, marginBottom )</ID>
+    <ID>DestructuringDeclarationWithTooManyEntries:WindowInsetsUtil.kt$val (initialLeft, initialTop, initialRight, initialBottom) = listOf( paddingLeft, paddingTop, paddingRight, paddingBottom )</ID>
+    <ID>EmptyFunctionBlock:AuthenticationActivity.kt$&lt;no name provided&gt;${}</ID>
+    <ID>EmptyFunctionBlock:CreatePostFragment.kt$CreatePostFragment.&lt;no name provided&gt;${}</ID>
+    <ID>EmptyFunctionBlock:IntNumberRangeView.kt$IntNumberRangeView.&lt;no name provided&gt;${}</ID>
+    <ID>EmptyFunctionBlock:LibraryRepositoryTest.kt$LibraryRepositoryTest.NoOpLibraryChangeListener${ }</ID>
+    <ID>EmptyFunctionBlock:LibraryRepositoryTest.kt$LibraryRepositoryTest.NoOpLibraryChangeListener${}</ID>
+    <ID>EmptyFunctionBlock:MainActivity.kt$MainActivity.&lt;no name provided&gt;${}</ID>
+    <ID>EmptyFunctionBlock:ProfileFragment.kt$ProfileFragment.&lt;no name provided&gt;${}</ID>
+    <ID>EmptyFunctionBlock:RoundBitmapDrawable.kt$RoundBitmapDrawable${}</ID>
+    <ID>EmptyFunctionBlock:UserProfileFragment.kt$UserProfileFragment.&lt;no name provided&gt;${}</ID>
+    <ID>FinalNewline:AbstractMediaRecyclerViewAdapter.kt$io.github.drumber.kitsune.ui.adapter.AbstractMediaRecyclerViewAdapter.kt</ID>
+    <ID>FinalNewline:AccessTokenLocalDataSource.kt$io.github.drumber.kitsune.data.source.local.auth.AccessTokenLocalDataSource.kt</ID>
+    <ID>FinalNewline:AccessTokenNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.auth.AccessTokenNetworkDataSource.kt</ID>
+    <ID>FinalNewline:AccessTokenPreference.kt$io.github.drumber.kitsune.data.source.local.auth.AccessTokenPreference.kt</ID>
+    <ID>FinalNewline:AccessTokenRepository.kt$io.github.drumber.kitsune.data.repository.AccessTokenRepository.kt</ID>
+    <ID>FinalNewline:AccessTokenRepositoryTest.kt$io.github.drumber.kitsune.data.repository.AccessTokenRepositoryTest.kt</ID>
+    <ID>FinalNewline:AgeRating.kt$io.github.drumber.kitsune.data.common.media.AgeRating.kt</ID>
+    <ID>FinalNewline:AlgoliaFacetValueDeserializer.kt$io.github.drumber.kitsune.util.json.AlgoliaFacetValueDeserializer.kt</ID>
+    <ID>FinalNewline:AlgoliaKeyApi.kt$io.github.drumber.kitsune.data.source.network.algolia.api.AlgoliaKeyApi.kt</ID>
+    <ID>FinalNewline:AlgoliaKeyNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.algolia.AlgoliaKeyNetworkDataSource.kt</ID>
+    <ID>FinalNewline:AlgoliaKeyRepository.kt$io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository.kt</ID>
+    <ID>FinalNewline:AlgoliaKeyRepositoryTest.kt$io.github.drumber.kitsune.data.repository.AlgoliaKeyRepositoryTest.kt</ID>
+    <ID>FinalNewline:AlgoliaMapper.kt$io.github.drumber.kitsune.data.mapper.AlgoliaMapper.kt</ID>
+    <ID>FinalNewline:AlgoliaNumericValueDeserializer.kt$io.github.drumber.kitsune.util.json.AlgoliaNumericValueDeserializer.kt</ID>
+    <ID>FinalNewline:AnimeAdapter.kt$io.github.drumber.kitsune.ui.adapter.paging.AnimeAdapter.kt</ID>
+    <ID>FinalNewline:AnimeApi.kt$io.github.drumber.kitsune.data.source.network.media.api.AnimeApi.kt</ID>
+    <ID>FinalNewline:AnimeNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.media.AnimeNetworkDataSource.kt</ID>
+    <ID>FinalNewline:AnimeProductionRole.kt$io.github.drumber.kitsune.data.presentation.model.media.production.AnimeProductionRole.kt</ID>
+    <ID>FinalNewline:AnimeRepository.kt$io.github.drumber.kitsune.data.repository.AnimeRepository.kt</ID>
+    <ID>FinalNewline:AnimeSubtype.kt$io.github.drumber.kitsune.data.common.media.AnimeSubtype.kt</ID>
+    <ID>FinalNewline:AppLogsFragment.kt$io.github.drumber.kitsune.ui.settings.AppLogsFragment.kt</ID>
+    <ID>FinalNewline:AppLogsViewModel.kt$io.github.drumber.kitsune.ui.settings.AppLogsViewModel.kt</ID>
+    <ID>FinalNewline:AppModule.kt$io.github.drumber.kitsune.di.AppModule.kt</ID>
+    <ID>FinalNewline:AppRelease.kt$io.github.drumber.kitsune.data.presentation.model.appupdate.AppRelease.kt</ID>
+    <ID>FinalNewline:AppReleaseNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.appupdate.AppReleaseNetworkDataSource.kt</ID>
+    <ID>FinalNewline:AppUpdateMapper.kt$io.github.drumber.kitsune.data.mapper.AppUpdateMapper.kt</ID>
+    <ID>FinalNewline:AppUpdateRepository.kt$io.github.drumber.kitsune.data.repository.AppUpdateRepository.kt</ID>
+    <ID>FinalNewline:AppUpdateRepositoryTest.kt$io.github.drumber.kitsune.data.repository.AppUpdateRepositoryTest.kt</ID>
+    <ID>FinalNewline:AppearanceFragment.kt$io.github.drumber.kitsune.ui.settings.AppearanceFragment.kt</ID>
+    <ID>FinalNewline:ArchUnitTest.kt$io.github.drumber.kitsune.archunit.ArchUnitTest.kt</ID>
+    <ID>FinalNewline:AuthMapperTest.kt$io.github.drumber.kitsune.data.mapper.AuthMapperTest.kt</ID>
+    <ID>FinalNewline:AuthenticationActivity.kt$io.github.drumber.kitsune.ui.authentication.AuthenticationActivity.kt</ID>
+    <ID>FinalNewline:AuthenticationApi.kt$io.github.drumber.kitsune.data.source.network.auth.api.AuthenticationApi.kt</ID>
+    <ID>FinalNewline:BarChartStyle.kt$io.github.drumber.kitsune.ui.component.chart.BarChartStyle.kt</ID>
+    <ID>FinalNewline:BaseActivity.kt$io.github.drumber.kitsune.ui.base.BaseActivity.kt</ID>
+    <ID>FinalNewline:BaseChartStyle.kt$io.github.drumber.kitsune.ui.component.chart.BaseChartStyle.kt</ID>
+    <ID>FinalNewline:BaseDialogFragment.kt$io.github.drumber.kitsune.ui.base.BaseDialogFragment.kt</ID>
+    <ID>FinalNewline:BasePagingDataSource.kt$io.github.drumber.kitsune.data.source.network.BasePagingDataSource.kt</ID>
+    <ID>FinalNewline:BasePreferenceFragment.kt$io.github.drumber.kitsune.ui.base.BasePreferenceFragment.kt</ID>
+    <ID>FinalNewline:BindingAdapter.kt$io.github.drumber.kitsune.util.ui.BindingAdapter.kt</ID>
+    <ID>FinalNewline:CaptureScreenshots.kt$io.github.drumber.kitsune.fastlane.CaptureScreenshots.kt</ID>
+    <ID>FinalNewline:CastingApi.kt$io.github.drumber.kitsune.data.source.network.media.api.CastingApi.kt</ID>
+    <ID>FinalNewline:CastingNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.media.CastingNetworkDataSource.kt</ID>
+    <ID>FinalNewline:CastingPagingDataSource.kt$io.github.drumber.kitsune.data.source.network.media.CastingPagingDataSource.kt</ID>
+    <ID>FinalNewline:CastingRepository.kt$io.github.drumber.kitsune.data.repository.CastingRepository.kt</ID>
+    <ID>FinalNewline:CategoriesDialogFragment.kt$io.github.drumber.kitsune.ui.search.categories.CategoriesDialogFragment.kt</ID>
+    <ID>FinalNewline:CategoriesViewModel.kt$io.github.drumber.kitsune.ui.search.categories.CategoriesViewModel.kt</ID>
+    <ID>FinalNewline:CategoryApi.kt$io.github.drumber.kitsune.data.source.network.media.api.CategoryApi.kt</ID>
+    <ID>FinalNewline:CategoryNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.media.CategoryNetworkDataSource.kt</ID>
+    <ID>FinalNewline:CategoryNode.kt$io.github.drumber.kitsune.data.presentation.model.media.category.CategoryNode.kt</ID>
+    <ID>FinalNewline:CategoryRepository.kt$io.github.drumber.kitsune.data.repository.CategoryRepository.kt</ID>
+    <ID>FinalNewline:CategoryViewHolder.kt$io.github.drumber.kitsune.ui.search.categories.CategoryViewHolder.kt</ID>
+    <ID>FinalNewline:ChapterApi.kt$io.github.drumber.kitsune.data.source.network.media.api.ChapterApi.kt</ID>
+    <ID>FinalNewline:ChapterNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.media.ChapterNetworkDataSource.kt</ID>
+    <ID>FinalNewline:ChapterPagingDataSource.kt$io.github.drumber.kitsune.data.source.network.media.ChapterPagingDataSource.kt</ID>
+    <ID>FinalNewline:CharacterAdapter.kt$io.github.drumber.kitsune.ui.adapter.CharacterAdapter.kt</ID>
+    <ID>FinalNewline:CharacterApi.kt$io.github.drumber.kitsune.data.source.network.character.api.CharacterApi.kt</ID>
+    <ID>FinalNewline:CharacterDetailsBottomSheet.kt$io.github.drumber.kitsune.ui.details.characters.CharacterDetailsBottomSheet.kt</ID>
+    <ID>FinalNewline:CharacterFilterAdapter.kt$io.github.drumber.kitsune.ui.details.characters.CharacterFilterAdapter.kt</ID>
+    <ID>FinalNewline:CharacterMapper.kt$io.github.drumber.kitsune.data.mapper.CharacterMapper.kt</ID>
+    <ID>FinalNewline:CharacterMapperTest.kt$io.github.drumber.kitsune.data.mapper.CharacterMapperTest.kt</ID>
+    <ID>FinalNewline:CharacterNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.character.CharacterNetworkDataSource.kt</ID>
+    <ID>FinalNewline:CharacterPagingAdapter.kt$io.github.drumber.kitsune.ui.adapter.paging.CharacterPagingAdapter.kt</ID>
+    <ID>FinalNewline:CharacterRepository.kt$io.github.drumber.kitsune.data.repository.CharacterRepository.kt</ID>
+    <ID>FinalNewline:CharacterSearchResult.kt$io.github.drumber.kitsune.data.presentation.model.character.CharacterSearchResult.kt</ID>
+    <ID>FinalNewline:CharacterSearchResultAdapter.kt$io.github.drumber.kitsune.ui.profile.editprofile.CharacterSearchResultAdapter.kt</ID>
+    <ID>FinalNewline:CharactersFragment.kt$io.github.drumber.kitsune.ui.details.characters.CharactersFragment.kt</ID>
+    <ID>FinalNewline:CharactersViewModel.kt$io.github.drumber.kitsune.ui.details.characters.CharactersViewModel.kt</ID>
+    <ID>FinalNewline:CustomNumberRangeView.kt$io.github.drumber.kitsune.ui.component.algolia.range.CustomNumberRangeView.kt</ID>
+    <ID>FinalNewline:CustomPercentFormatter.kt$io.github.drumber.kitsune.ui.component.chart.CustomPercentFormatter.kt</ID>
+    <ID>FinalNewline:DataUtil.kt$io.github.drumber.kitsune.util.DataUtil.kt</ID>
+    <ID>FinalNewline:DateValidatorPointBetween.kt$io.github.drumber.kitsune.util.ui.DateValidatorPointBetween.kt</ID>
+    <ID>FinalNewline:Defaults.kt$io.github.drumber.kitsune.constants.Defaults.kt</ID>
+    <ID>FinalNewline:DetailsFragment.kt$io.github.drumber.kitsune.ui.details.DetailsFragment.kt</ID>
+    <ID>FinalNewline:DomainModule.kt$io.github.drumber.kitsune.di.DomainModule.kt</ID>
+    <ID>FinalNewline:EditProfileFragment.kt$io.github.drumber.kitsune.ui.profile.editprofile.EditProfileFragment.kt</ID>
+    <ID>FinalNewline:EditProfileLinkBottomSheet.kt$io.github.drumber.kitsune.ui.profile.editprofile.EditProfileLinkBottomSheet.kt</ID>
+    <ID>FinalNewline:EpisodeApi.kt$io.github.drumber.kitsune.data.source.network.media.api.EpisodeApi.kt</ID>
+    <ID>FinalNewline:EpisodeNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.media.EpisodeNetworkDataSource.kt</ID>
+    <ID>FinalNewline:EpisodePagingDataSource.kt$io.github.drumber.kitsune.data.source.network.media.EpisodePagingDataSource.kt</ID>
+    <ID>FinalNewline:EpisodesFragment.kt$io.github.drumber.kitsune.ui.details.episodes.EpisodesFragment.kt</ID>
+    <ID>FinalNewline:EpisodesViewModel.kt$io.github.drumber.kitsune.ui.details.episodes.EpisodesViewModel.kt</ID>
+    <ID>FinalNewline:ExpandableLayout.kt$io.github.drumber.kitsune.ui.component.ExpandableLayout.kt</ID>
+    <ID>FinalNewline:ExploreSection.kt$io.github.drumber.kitsune.ui.component.ExploreSection.kt</ID>
+    <ID>FinalNewline:FacetFragment.kt$io.github.drumber.kitsune.ui.search.filter.FacetFragment.kt</ID>
+    <ID>FinalNewline:FakeCharacter.kt$io.github.drumber.kitsune.testutils.FakeCharacter.kt</ID>
+    <ID>FinalNewline:FakeHttpException.kt$io.github.drumber.kitsune.testutils.network.FakeHttpException.kt</ID>
+    <ID>FinalNewline:FavoriteApi.kt$io.github.drumber.kitsune.data.source.network.user.api.FavoriteApi.kt</ID>
+    <ID>FinalNewline:FavoriteNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.user.FavoriteNetworkDataSource.kt</ID>
+    <ID>FinalNewline:FavoriteRepository.kt$io.github.drumber.kitsune.data.repository.FavoriteRepository.kt</ID>
+    <ID>FinalNewline:FetchLibraryEntriesForWidgetUseCase.kt$io.github.drumber.kitsune.domain.library.FetchLibraryEntriesForWidgetUseCase.kt</ID>
+    <ID>FinalNewline:Filter.kt$io.github.drumber.kitsune.data.common.Filter.kt</ID>
+    <ID>FinalNewline:FilterFacetListViewHolder.kt$io.github.drumber.kitsune.ui.search.filter.FilterFacetListViewHolder.kt</ID>
+    <ID>FinalNewline:GetLibraryEntriesWithModificationsPagerUseCase.kt$io.github.drumber.kitsune.domain.library.GetLibraryEntriesWithModificationsPagerUseCase.kt</ID>
+    <ID>FinalNewline:GetLocalUserIdUseCase.kt$io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase.kt</ID>
+    <ID>FinalNewline:GitHubApi.kt$io.github.drumber.kitsune.data.source.network.appupdate.api.GitHubApi.kt</ID>
+    <ID>FinalNewline:HomeExploreFragment.kt$io.github.drumber.kitsune.ui.main.HomeExploreFragment.kt</ID>
+    <ID>FinalNewline:HomeExploreViewPagerAdapter.kt$io.github.drumber.kitsune.ui.main.HomeExploreViewPagerAdapter.kt</ID>
+    <ID>FinalNewline:IgnoreParcelablePropertyMixin.kt$io.github.drumber.kitsune.util.json.IgnoreParcelablePropertyMixin.kt</ID>
+    <ID>FinalNewline:ImageMapper.kt$io.github.drumber.kitsune.data.mapper.ImageMapper.kt</ID>
+    <ID>FinalNewline:ImagePresenter.kt$io.github.drumber.kitsune.ui.onboarding.components.ImagePresenter.kt</ID>
+    <ID>FinalNewline:ImageSlideshow.kt$io.github.drumber.kitsune.ui.onboarding.components.ImageSlideshow.kt</ID>
+    <ID>FinalNewline:IntNumberRangeView.kt$io.github.drumber.kitsune.ui.component.algolia.range.IntNumberRangeView.kt</ID>
+    <ID>FinalNewline:IntentAction.kt$io.github.drumber.kitsune.constants.IntentAction.kt</ID>
+    <ID>FinalNewline:InvalidDataException.kt$io.github.drumber.kitsune.data.common.exception.InvalidDataException.kt</ID>
+    <ID>FinalNewline:InvalidatingPagingSourceFactory.kt$io.github.drumber.kitsune.data.utils.InvalidatingPagingSourceFactory.kt</ID>
+    <ID>FinalNewline:IsUserLoggedInUseCase.kt$io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase.kt</ID>
+    <ID>FinalNewline:ItemClickListener.kt$io.github.drumber.kitsune.util.ItemClickListener.kt</ID>
+    <ID>FinalNewline:KitsuUrlReplacer.kt$io.github.drumber.kitsune.util.KitsuUrlReplacer.kt</ID>
+    <ID>FinalNewline:KitsuneApplication.kt$io.github.drumber.kitsune.KitsuneApplication.kt</ID>
+    <ID>FinalNewline:KitsuneWidgetReceiver.kt$io.github.drumber.kitsune.ui.widget.KitsuneWidgetReceiver.kt</ID>
+    <ID>FinalNewline:KitsuneWidgetTheme.kt$io.github.drumber.kitsune.ui.widget.KitsuneWidgetTheme.kt</ID>
+    <ID>FinalNewline:LibraryAppWidget.kt$io.github.drumber.kitsune.ui.widget.LibraryAppWidget.kt</ID>
+    <ID>FinalNewline:LibraryChangeListener.kt$io.github.drumber.kitsune.data.repository.LibraryChangeListener.kt</ID>
+    <ID>FinalNewline:LibraryEditEntryFragment.kt$io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryFragment.kt</ID>
+    <ID>FinalNewline:LibraryEditEntryViewModel.kt$io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel.kt</ID>
+    <ID>FinalNewline:LibraryEntriesAdapter.kt$io.github.drumber.kitsune.ui.adapter.paging.LibraryEntriesAdapter.kt</ID>
+    <ID>FinalNewline:LibraryEntryApi.kt$io.github.drumber.kitsune.data.source.network.library.api.LibraryEntryApi.kt</ID>
+    <ID>FinalNewline:LibraryEntryDao.kt$io.github.drumber.kitsune.data.source.local.library.dao.LibraryEntryDao.kt</ID>
+    <ID>FinalNewline:LibraryEntryKind.kt$io.github.drumber.kitsune.data.common.library.LibraryEntryKind.kt</ID>
+    <ID>FinalNewline:LibraryEntryModificationDao.kt$io.github.drumber.kitsune.data.source.local.library.dao.LibraryEntryModificationDao.kt</ID>
+    <ID>FinalNewline:LibraryEntryModificationTest.kt$io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModificationTest.kt</ID>
+    <ID>FinalNewline:LibraryEntryRemoteMediator.kt$io.github.drumber.kitsune.data.repository.LibraryEntryRemoteMediator.kt</ID>
+    <ID>FinalNewline:LibraryEntryUpdateResult.kt$io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.kt</ID>
+    <ID>FinalNewline:LibraryEntryWithModificationDao.kt$io.github.drumber.kitsune.data.source.local.library.dao.LibraryEntryWithModificationDao.kt</ID>
+    <ID>FinalNewline:LibraryEntryWithModificationTest.kt$io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModificationTest.kt</ID>
+    <ID>FinalNewline:LibraryFragment.kt$io.github.drumber.kitsune.ui.library.LibraryFragment.kt</ID>
+    <ID>FinalNewline:LibraryLocalDataSource.kt$io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource.kt</ID>
+    <ID>FinalNewline:LibraryMapper.kt$io.github.drumber.kitsune.data.mapper.LibraryMapper.kt</ID>
+    <ID>FinalNewline:LibraryModificationState.kt$io.github.drumber.kitsune.data.presentation.model.library.LibraryModificationState.kt</ID>
+    <ID>FinalNewline:LibraryNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource.kt</ID>
+    <ID>FinalNewline:LibraryRepository.kt$io.github.drumber.kitsune.data.repository.LibraryRepository.kt</ID>
+    <ID>FinalNewline:LibraryRepositoryTest.kt$io.github.drumber.kitsune.data.repository.LibraryRepositoryTest.kt</ID>
+    <ID>FinalNewline:LibraryStatus.kt$io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus.kt</ID>
+    <ID>FinalNewline:LibraryWidget.kt$io.github.drumber.kitsune.constants.LibraryWidget.kt</ID>
+    <ID>FinalNewline:LoadStateSpanSizeLookup.kt$io.github.drumber.kitsune.ui.component.LoadStateSpanSizeLookup.kt</ID>
+    <ID>FinalNewline:LocalAccessTokenTest.kt$io.github.drumber.kitsune.data.source.local.auth.LocalAccessTokenTest.kt</ID>
+    <ID>FinalNewline:LocalDatabase.kt$io.github.drumber.kitsune.data.source.local.LocalDatabase.kt</ID>
+    <ID>FinalNewline:LocalLibraryConverters.kt$io.github.drumber.kitsune.data.source.local.library.LocalLibraryConverters.kt</ID>
+    <ID>FinalNewline:LocalLibraryEntryModificationTest.kt$io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModificationTest.kt</ID>
+    <ID>FinalNewline:LocalLibraryMedia.kt$io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMedia.kt</ID>
+    <ID>FinalNewline:LocalLibraryModificationState.kt$io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState.kt</ID>
+    <ID>FinalNewline:LocalLibraryStatus.kt$io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus.kt</ID>
+    <ID>FinalNewline:LocalTitleLanguagePreference.kt$io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference.kt</ID>
+    <ID>FinalNewline:LogCatReader.kt$io.github.drumber.kitsune.util.LogCatReader.kt</ID>
+    <ID>FinalNewline:LogInUserUseCase.kt$io.github.drumber.kitsune.domain.auth.LogInUserUseCase.kt</ID>
+    <ID>FinalNewline:LogInUserUseCaseTest.kt$io.github.drumber.kitsune.domain.auth.LogInUserUseCaseTest.kt</ID>
+    <ID>FinalNewline:LogOutUserUseCase.kt$io.github.drumber.kitsune.domain.auth.LogOutUserUseCase.kt</ID>
+    <ID>FinalNewline:LogOutUserUseCaseTest.kt$io.github.drumber.kitsune.domain.auth.LogOutUserUseCaseTest.kt</ID>
+    <ID>FinalNewline:LoggedInUserView.kt$io.github.drumber.kitsune.ui.authentication.LoggedInUserView.kt</ID>
+    <ID>FinalNewline:LoginFormState.kt$io.github.drumber.kitsune.ui.authentication.LoginFormState.kt</ID>
+    <ID>FinalNewline:LoginResult.kt$io.github.drumber.kitsune.domain.auth.LoginResult.kt</ID>
+    <ID>FinalNewline:LoginResultUi.kt$io.github.drumber.kitsune.ui.authentication.LoginResultUi.kt</ID>
+    <ID>FinalNewline:LoginViewModel.kt$io.github.drumber.kitsune.ui.authentication.LoginViewModel.kt</ID>
+    <ID>FinalNewline:MainActivityViewModel.kt$io.github.drumber.kitsune.ui.main.MainActivityViewModel.kt</ID>
+    <ID>FinalNewline:MainFragment.kt$io.github.drumber.kitsune.ui.main.MainFragment.kt</ID>
+    <ID>FinalNewline:MainFragmentViewModel.kt$io.github.drumber.kitsune.ui.main.MainFragmentViewModel.kt</ID>
+    <ID>FinalNewline:ManageLibraryBottomSheet.kt$io.github.drumber.kitsune.ui.details.ManageLibraryBottomSheet.kt</ID>
+    <ID>FinalNewline:MangaAdapter.kt$io.github.drumber.kitsune.ui.adapter.paging.MangaAdapter.kt</ID>
+    <ID>FinalNewline:MangaApi.kt$io.github.drumber.kitsune.data.source.network.media.api.MangaApi.kt</ID>
+    <ID>FinalNewline:MangaNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.media.MangaNetworkDataSource.kt</ID>
+    <ID>FinalNewline:MangaRepository.kt$io.github.drumber.kitsune.data.repository.MangaRepository.kt</ID>
+    <ID>FinalNewline:MangaSubtype.kt$io.github.drumber.kitsune.data.common.media.MangaSubtype.kt</ID>
+    <ID>FinalNewline:MappingApi.kt$io.github.drumber.kitsune.data.source.network.mapping.api.MappingApi.kt</ID>
+    <ID>FinalNewline:MappingMapper.kt$io.github.drumber.kitsune.data.mapper.MappingMapper.kt</ID>
+    <ID>FinalNewline:MappingNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.mapping.MappingNetworkDataSource.kt</ID>
+    <ID>FinalNewline:MappingRepository.kt$io.github.drumber.kitsune.data.repository.MappingRepository.kt</ID>
+    <ID>FinalNewline:MdcThemeAdapter.kt$io.github.drumber.kitsune.ui.theme.MdcThemeAdapter.kt</ID>
+    <ID>FinalNewline:Media.kt$io.github.drumber.kitsune.data.presentation.model.media.Media.kt</ID>
+    <ID>FinalNewline:MediaCharacterAdapter.kt$io.github.drumber.kitsune.ui.adapter.MediaCharacterAdapter.kt</ID>
+    <ID>FinalNewline:MediaDto.kt$io.github.drumber.kitsune.data.presentation.dto.MediaDto.kt</ID>
+    <ID>FinalNewline:MediaItemCard.kt$io.github.drumber.kitsune.ui.component.MediaItemCard.kt</ID>
+    <ID>FinalNewline:MediaListFragment.kt$io.github.drumber.kitsune.ui.medialist.MediaListFragment.kt</ID>
+    <ID>FinalNewline:MediaListViewModel.kt$io.github.drumber.kitsune.ui.medialist.MediaListViewModel.kt</ID>
+    <ID>FinalNewline:MediaMapper.kt$io.github.drumber.kitsune.data.mapper.MediaMapper.kt</ID>
+    <ID>FinalNewline:MediaMapperTest.kt$io.github.drumber.kitsune.data.mapper.MediaMapperTest.kt</ID>
+    <ID>FinalNewline:MediaMappingsAdapter.kt$io.github.drumber.kitsune.ui.adapter.MediaMappingsAdapter.kt</ID>
+    <ID>FinalNewline:MediaMappingsBottomSheet.kt$io.github.drumber.kitsune.ui.details.MediaMappingsBottomSheet.kt</ID>
+    <ID>FinalNewline:MediaPagingAdapter.kt$io.github.drumber.kitsune.ui.adapter.paging.MediaPagingAdapter.kt</ID>
+    <ID>FinalNewline:MediaRecyclerViewAdapter.kt$io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter.kt</ID>
+    <ID>FinalNewline:MediaRelationshipRecyclerViewAdapter.kt$io.github.drumber.kitsune.ui.adapter.MediaRelationshipRecyclerViewAdapter.kt</ID>
+    <ID>FinalNewline:MediaRelationshipViewHolder.kt$io.github.drumber.kitsune.ui.adapter.MediaRelationshipViewHolder.kt</ID>
+    <ID>FinalNewline:MediaSearchPagingAdapter.kt$io.github.drumber.kitsune.ui.adapter.paging.MediaSearchPagingAdapter.kt</ID>
+    <ID>FinalNewline:MediaTest.kt$io.github.drumber.kitsune.data.presentation.model.media.MediaTest.kt</ID>
+    <ID>FinalNewline:MediaType.kt$io.github.drumber.kitsune.data.common.media.MediaType.kt</ID>
+    <ID>FinalNewline:MediaUnitDetailsBottomSheet.kt$io.github.drumber.kitsune.ui.details.episodes.MediaUnitDetailsBottomSheet.kt</ID>
+    <ID>FinalNewline:MediaUnitMapper.kt$io.github.drumber.kitsune.data.mapper.MediaUnitMapper.kt</ID>
+    <ID>FinalNewline:MediaUnitPagingAdapter.kt$io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter.kt</ID>
+    <ID>FinalNewline:MediaUnitRepository.kt$io.github.drumber.kitsune.data.repository.MediaUnitRepository.kt</ID>
+    <ID>FinalNewline:MediaViewHolder.kt$io.github.drumber.kitsune.ui.adapter.MediaViewHolder.kt</ID>
+    <ID>FinalNewline:NavigationTest.kt$io.github.drumber.kitsune.navigation.NavigationTest.kt</ID>
+    <ID>FinalNewline:NestedScrollableHost.kt$io.github.drumber.kitsune.ui.component.NestedScrollableHost.kt</ID>
+    <ID>FinalNewline:NetworkAnimeProductionRole.kt$io.github.drumber.kitsune.data.source.network.media.model.production.NetworkAnimeProductionRole.kt</ID>
+    <ID>FinalNewline:NetworkAnimeSubtype.kt$io.github.drumber.kitsune.data.source.network.media.model.NetworkAnimeSubtype.kt</ID>
+    <ID>FinalNewline:NetworkLibraryStatus.kt$io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryStatus.kt</ID>
+    <ID>FinalNewline:NetworkMangaSubtype.kt$io.github.drumber.kitsune.data.source.network.media.model.NetworkMangaSubtype.kt</ID>
+    <ID>FinalNewline:NetworkMedia.kt$io.github.drumber.kitsune.data.source.network.media.model.NetworkMedia.kt</ID>
+    <ID>FinalNewline:NetworkMediaRelationshipRole.kt$io.github.drumber.kitsune.data.source.network.media.model.relationship.NetworkMediaRelationshipRole.kt</ID>
+    <ID>FinalNewline:NetworkReleaseStatus.kt$io.github.drumber.kitsune.data.source.network.media.model.NetworkReleaseStatus.kt</ID>
+    <ID>FinalNewline:NetworkTitleLanguagePreference.kt$io.github.drumber.kitsune.data.source.network.user.model.NetworkTitleLanguagePreference.kt</ID>
+    <ID>FinalNewline:NetworkUserStatsData.kt$io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStatsData.kt</ID>
+    <ID>FinalNewline:NoDataException.kt$io.github.drumber.kitsune.data.common.exception.NoDataException.kt</ID>
+    <ID>FinalNewline:NonZeroLargeValueFormatter.kt$io.github.drumber.kitsune.ui.component.chart.NonZeroLargeValueFormatter.kt</ID>
+    <ID>FinalNewline:NotificationChannels.kt$io.github.drumber.kitsune.notification.NotificationChannels.kt</ID>
+    <ID>FinalNewline:Notifications.kt$io.github.drumber.kitsune.notification.Notifications.kt</ID>
+    <ID>FinalNewline:NullableIntSerializer.kt$io.github.drumber.kitsune.util.json.NullableIntSerializer.kt</ID>
+    <ID>FinalNewline:OSLibrariesFragment.kt$io.github.drumber.kitsune.ui.settings.OSLibrariesFragment.kt</ID>
+    <ID>FinalNewline:OkHttpIdlingResource.kt$io.github.drumber.kitsune.utils.OkHttpIdlingResource.kt</ID>
+    <ID>FinalNewline:OnItemClickListener.kt$io.github.drumber.kitsune.ui.adapter.OnItemClickListener.kt</ID>
+    <ID>FinalNewline:OnboardingNavigationControls.kt$io.github.drumber.kitsune.ui.onboarding.components.OnboardingNavigationControls.kt</ID>
+    <ID>FinalNewline:OnboardingUiState.kt$io.github.drumber.kitsune.ui.onboarding.OnboardingUiState.kt</ID>
+    <ID>FinalNewline:OnboardingViewModel.kt$io.github.drumber.kitsune.ui.onboarding.OnboardingViewModel.kt</ID>
+    <ID>FinalNewline:PageDataTest.kt$io.github.drumber.kitsune.data.source.network.PageDataTest.kt</ID>
+    <ID>FinalNewline:PhotoViewActivity.kt$io.github.drumber.kitsune.ui.photoview.PhotoViewActivity.kt</ID>
+    <ID>FinalNewline:PhotoViewNestedScrollView.kt$io.github.drumber.kitsune.ui.component.PhotoViewNestedScrollView.kt</ID>
+    <ID>FinalNewline:PieChartStyle.kt$io.github.drumber.kitsune.ui.component.chart.PieChartStyle.kt</ID>
+    <ID>FinalNewline:ProfileFragment.kt$io.github.drumber.kitsune.ui.profile.ProfileFragment.kt</ID>
+    <ID>FinalNewline:ProfileLinkApi.kt$io.github.drumber.kitsune.data.source.network.user.api.ProfileLinkApi.kt</ID>
+    <ID>FinalNewline:ProfileLinkNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.user.ProfileLinkNetworkDataSource.kt</ID>
+    <ID>FinalNewline:ProfileLinkRepository.kt$io.github.drumber.kitsune.data.repository.ProfileLinkRepository.kt</ID>
+    <ID>FinalNewline:ProfileLinksMapper.kt$io.github.drumber.kitsune.data.mapper.ProfileLinksMapper.kt</ID>
+    <ID>FinalNewline:ProfileStatsAdapter.kt$io.github.drumber.kitsune.ui.profile.ProfileStatsAdapter.kt</ID>
+    <ID>FinalNewline:ProfileViewModel.kt$io.github.drumber.kitsune.ui.profile.ProfileViewModel.kt</ID>
+    <ID>FinalNewline:RatingBottomSheet.kt$io.github.drumber.kitsune.ui.library.RatingBottomSheet.kt</ID>
+    <ID>FinalNewline:RatingFrequenciesUtil.kt$io.github.drumber.kitsune.util.rating.RatingFrequenciesUtil.kt</ID>
+    <ID>FinalNewline:RatingFrequenciesUtilTest.kt$io.github.drumber.kitsune.util.rating.RatingFrequenciesUtilTest.kt</ID>
+    <ID>FinalNewline:RatingSystemUtil.kt$io.github.drumber.kitsune.util.rating.RatingSystemUtil.kt</ID>
+    <ID>FinalNewline:RefreshAccessTokenIfExpiredUseCase.kt$io.github.drumber.kitsune.domain.auth.RefreshAccessTokenIfExpiredUseCase.kt</ID>
+    <ID>FinalNewline:RefreshAccessTokenIfExpiredUseCaseTest.kt$io.github.drumber.kitsune.domain.auth.RefreshAccessTokenIfExpiredUseCaseTest.kt</ID>
+    <ID>FinalNewline:RefreshAccessTokenUseCase.kt$io.github.drumber.kitsune.domain.auth.RefreshAccessTokenUseCase.kt</ID>
+    <ID>FinalNewline:RefreshAccessTokenUseCaseTest.kt$io.github.drumber.kitsune.domain.auth.RefreshAccessTokenUseCaseTest.kt</ID>
+    <ID>FinalNewline:RefreshResult.kt$io.github.drumber.kitsune.domain.auth.RefreshResult.kt</ID>
+    <ID>FinalNewline:ReleaseStatus.kt$io.github.drumber.kitsune.data.common.media.ReleaseStatus.kt</ID>
+    <ID>FinalNewline:RemoteKeyDao.kt$io.github.drumber.kitsune.data.source.local.library.dao.RemoteKeyDao.kt</ID>
+    <ID>FinalNewline:ResourceLoadStateAdapter.kt$io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter.kt</ID>
+    <ID>FinalNewline:ResourceUpdateFailed.kt$io.github.drumber.kitsune.data.common.exception.ResourceUpdateFailed.kt</ID>
+    <ID>FinalNewline:ResponseData.kt$io.github.drumber.kitsune.util.network.ResponseData.kt</ID>
+    <ID>FinalNewline:ResponsiveGridLayoutManager.kt$io.github.drumber.kitsune.ui.component.ResponsiveGridLayoutManager.kt</ID>
+    <ID>FinalNewline:RoundBitmapDrawable.kt$io.github.drumber.kitsune.util.ui.RoundBitmapDrawable.kt</ID>
+    <ID>FinalNewline:ScreenshotModeCustomFilter.kt$io.github.drumber.kitsune.utils.filter.ScreenshotModeCustomFilter.kt</ID>
+    <ID>FinalNewline:SearchLibraryEntriesWithLocalModificationsPagerUseCase.kt$io.github.drumber.kitsune.domain.library.SearchLibraryEntriesWithLocalModificationsPagerUseCase.kt</ID>
+    <ID>FinalNewline:SearchProviderUnavailableException.kt$io.github.drumber.kitsune.data.common.exception.SearchProviderUnavailableException.kt</ID>
+    <ID>FinalNewline:SearchViewActions.kt$io.github.drumber.kitsune.utils.SearchViewActions.kt</ID>
+    <ID>FinalNewline:SeasonListPresenter.kt$io.github.drumber.kitsune.ui.component.algolia.SeasonListPresenter.kt</ID>
+    <ID>FinalNewline:SelectProfileLinkSiteBottomSheet.kt$io.github.drumber.kitsune.ui.profile.editprofile.SelectProfileLinkSiteBottomSheet.kt</ID>
+    <ID>FinalNewline:SettingsFragment.kt$io.github.drumber.kitsune.ui.settings.SettingsFragment.kt</ID>
+    <ID>FinalNewline:SettingsViewModel.kt$io.github.drumber.kitsune.ui.settings.SettingsViewModel.kt</ID>
+    <ID>FinalNewline:SetupPage.kt$io.github.drumber.kitsune.ui.onboarding.pages.SetupPage.kt</ID>
+    <ID>FinalNewline:StepAxisValueFormatter.kt$io.github.drumber.kitsune.ui.component.chart.StepAxisValueFormatter.kt</ID>
+    <ID>FinalNewline:StreamingLinkAdapter.kt$io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter.kt</ID>
+    <ID>FinalNewline:SyncLibraryEntriesForWidgetWorker.kt$io.github.drumber.kitsune.work.SyncLibraryEntriesForWidgetWorker.kt</ID>
+    <ID>FinalNewline:SynchronizeLocalLibraryModificationsUseCase.kt$io.github.drumber.kitsune.domain.library.SynchronizeLocalLibraryModificationsUseCase.kt</ID>
+    <ID>FinalNewline:SynchronizeLocalLibraryModificationsUseCaseTest.kt$io.github.drumber.kitsune.domain.library.SynchronizeLocalLibraryModificationsUseCaseTest.kt</ID>
+    <ID>FinalNewline:ThemePickerPreference.kt$io.github.drumber.kitsune.ui.settings.ThemePickerPreference.kt</ID>
+    <ID>FinalNewline:TimeUtil.kt$io.github.drumber.kitsune.util.TimeUtil.kt</ID>
+    <ID>FinalNewline:UniqueStateRecyclerView.kt$io.github.drumber.kitsune.ui.component.UniqueStateRecyclerView.kt</ID>
+    <ID>FinalNewline:UpdateCheckResult.kt$io.github.drumber.kitsune.data.presentation.model.appupdate.UpdateCheckResult.kt</ID>
+    <ID>FinalNewline:UpdateLibraryEntryProgressUseCase.kt$io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCase.kt</ID>
+    <ID>FinalNewline:UpdateLibraryEntryRatingUseCase.kt$io.github.drumber.kitsune.domain.library.UpdateLibraryEntryRatingUseCase.kt</ID>
+    <ID>FinalNewline:UpdateLibraryEntryUseCase.kt$io.github.drumber.kitsune.domain.library.UpdateLibraryEntryUseCase.kt</ID>
+    <ID>FinalNewline:UpdateLibraryWidgetUseCase.kt$io.github.drumber.kitsune.domain.work.UpdateLibraryWidgetUseCase.kt</ID>
+    <ID>FinalNewline:UpdateLibraryWidgetWorker.kt$io.github.drumber.kitsune.work.UpdateLibraryWidgetWorker.kt</ID>
+    <ID>FinalNewline:UpdateLocalUserUseCase.kt$io.github.drumber.kitsune.domain.user.UpdateLocalUserUseCase.kt</ID>
+    <ID>FinalNewline:UpdateLocalUserUseCaseTest.kt$io.github.drumber.kitsune.domain.user.UpdateLocalUserUseCaseTest.kt</ID>
+    <ID>FinalNewline:UserAgentInterceptor.kt$io.github.drumber.kitsune.util.network.UserAgentInterceptor.kt</ID>
+    <ID>FinalNewline:UserApi.kt$io.github.drumber.kitsune.data.source.network.user.api.UserApi.kt</ID>
+    <ID>FinalNewline:UserImageUploadApi.kt$io.github.drumber.kitsune.data.source.network.user.api.UserImageUploadApi.kt</ID>
+    <ID>FinalNewline:UserLocalDataSource.kt$io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource.kt</ID>
+    <ID>FinalNewline:UserMapper.kt$io.github.drumber.kitsune.data.mapper.UserMapper.kt</ID>
+    <ID>FinalNewline:UserMapperTest.kt$io.github.drumber.kitsune.data.mapper.UserMapperTest.kt</ID>
+    <ID>FinalNewline:UserNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.user.UserNetworkDataSource.kt</ID>
+    <ID>FinalNewline:UserPreferences.kt$io.github.drumber.kitsune.data.source.local.user.UserPreferences.kt</ID>
+    <ID>FinalNewline:UserRepository.kt$io.github.drumber.kitsune.data.repository.UserRepository.kt</ID>
+    <ID>FinalNewline:UserRepositoryTest.kt$io.github.drumber.kitsune.data.repository.UserRepositoryTest.kt</ID>
+    <ID>FinalNewline:UserStatsData.kt$io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsData.kt</ID>
+    <ID>FinalNewline:UserStatsMapper.kt$io.github.drumber.kitsune.data.mapper.UserStatsMapper.kt</ID>
+    <ID>FinalNewline:ViewActions.kt$io.github.drumber.kitsune.utils.ViewActions.kt</ID>
+    <ID>FinalNewline:WebViewFragment.kt$io.github.drumber.kitsune.ui.webview.WebViewFragment.kt</ID>
+    <ID>FinalNewline:WidgetUtils.kt$io.github.drumber.kitsune.ui.widget.WidgetUtils.kt</ID>
+    <ID>ImportOrdering:AnimeNetworkDataSource.kt$import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.api.AnimeApi import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime import io.github.drumber.kitsune.data.source.network.toPageData import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
+    <ID>ImportOrdering:AnimePagingDataSource.kt$import io.github.drumber.kitsune.data.source.network.BasePagingDataSource import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime import io.github.drumber.kitsune.data.common.Filter</ID>
+    <ID>ImportOrdering:AnimeRepository.kt$import androidx.paging.Pager import androidx.paging.PagingConfig import androidx.paging.map import io.github.drumber.kitsune.constants.Repository import io.github.drumber.kitsune.data.mapper.MediaMapper.toAnime import io.github.drumber.kitsune.data.presentation.model.media.Anime import io.github.drumber.kitsune.data.source.network.media.AnimeNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.AnimePagingDataSource import io.github.drumber.kitsune.data.source.network.media.TrendingAnimePagingDataSource import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.flow.map</ID>
+    <ID>ImportOrdering:CastingNetworkDataSource.kt$import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.api.CastingApi import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkCasting import io.github.drumber.kitsune.data.source.network.toPageData import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
+    <ID>ImportOrdering:CastingPagingDataSource.kt$import io.github.drumber.kitsune.data.source.network.BasePagingDataSource import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkCasting import io.github.drumber.kitsune.data.common.Filter</ID>
+    <ID>ImportOrdering:CastingRepository.kt$import androidx.paging.Pager import androidx.paging.PagingConfig import androidx.paging.map import io.github.drumber.kitsune.constants.Repository import io.github.drumber.kitsune.data.mapper.MediaMapper.toCasting import io.github.drumber.kitsune.data.source.network.media.CastingNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.CastingPagingDataSource import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.flow.map</ID>
+    <ID>ImportOrdering:CategoriesViewModel.kt$import androidx.lifecycle.LiveData import androidx.lifecycle.MutableLiveData import androidx.lifecycle.ViewModel import androidx.lifecycle.viewModelScope import io.github.drumber.kitsune.data.presentation.model.media.category.CategoryNode import io.github.drumber.kitsune.data.repository.CategoryRepository import io.github.drumber.kitsune.preference.CategoryPrefWrapper import io.github.drumber.kitsune.data.common.Filter import io.github.drumber.kitsune.preference.KitsunePref import io.github.drumber.kitsune.util.logE import io.github.drumber.kitsune.util.network.ResponseData import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.launch</ID>
+    <ID>ImportOrdering:CategoryNetworkDataSource.kt$import io.github.drumber.kitsune.data.source.network.media.api.CategoryApi import io.github.drumber.kitsune.data.source.network.media.model.category.NetworkCategory import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
+    <ID>ImportOrdering:CategoryRepository.kt$import io.github.drumber.kitsune.data.mapper.MediaMapper.toCategory import io.github.drumber.kitsune.data.presentation.model.media.category.Category import io.github.drumber.kitsune.data.source.network.media.CategoryNetworkDataSource import io.github.drumber.kitsune.data.common.Filter</ID>
+    <ID>ImportOrdering:ChapterNetworkDataSource.kt$import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.api.ChapterApi import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkChapter import io.github.drumber.kitsune.data.source.network.toPageData import io.github.drumber.kitsune.data.common.Filter</ID>
+    <ID>ImportOrdering:ChapterPagingDataSource.kt$import io.github.drumber.kitsune.data.source.network.BasePagingDataSource import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkChapter import io.github.drumber.kitsune.data.common.Filter</ID>
+    <ID>ImportOrdering:CharacterNetworkDataSource.kt$import io.github.drumber.kitsune.data.source.network.character.api.CharacterApi import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
+    <ID>ImportOrdering:CharacterRepository.kt$import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter import io.github.drumber.kitsune.data.presentation.model.character.Character import io.github.drumber.kitsune.data.source.network.character.CharacterNetworkDataSource import io.github.drumber.kitsune.data.common.Filter</ID>
+    <ID>ImportOrdering:CharactersViewModel.kt$import androidx.lifecycle.LiveData import androidx.lifecycle.MutableLiveData import androidx.lifecycle.ViewModel import androidx.lifecycle.asFlow import androidx.lifecycle.viewModelScope import androidx.paging.PagingData import androidx.paging.cachedIn import io.github.drumber.kitsune.constants.Kitsu import io.github.drumber.kitsune.data.presentation.model.media.production.Casting import io.github.drumber.kitsune.data.repository.AnimeRepository import io.github.drumber.kitsune.data.repository.CastingRepository import io.github.drumber.kitsune.data.common.Filter import io.github.drumber.kitsune.util.logE import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.flow.Flow import kotlinx.coroutines.flow.flatMapLatest import kotlinx.coroutines.launch import kotlinx.coroutines.withContext</ID>
+    <ID>ImportOrdering:DataModule.kt$import com.fasterxml.jackson.databind.ObjectMapper import io.github.drumber.kitsune.constants.GitHub import io.github.drumber.kitsune.constants.Kitsu import io.github.drumber.kitsune.data.repository.AccessTokenRepository import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository import io.github.drumber.kitsune.data.repository.AnimeRepository import io.github.drumber.kitsune.data.repository.AppUpdateRepository import io.github.drumber.kitsune.data.repository.CastingRepository import io.github.drumber.kitsune.data.repository.CategoryRepository import io.github.drumber.kitsune.data.repository.CharacterRepository import io.github.drumber.kitsune.data.repository.CommentRepository import io.github.drumber.kitsune.data.repository.FavoriteRepository import io.github.drumber.kitsune.data.repository.FeedRepository import io.github.drumber.kitsune.data.repository.NotificationRepository import io.github.drumber.kitsune.data.repository.LibraryChangeListener import io.github.drumber.kitsune.data.repository.LibraryRepository import io.github.drumber.kitsune.data.repository.MangaRepository import io.github.drumber.kitsune.data.repository.MappingRepository import io.github.drumber.kitsune.data.repository.MediaReactionRepository import io.github.drumber.kitsune.data.repository.MediaUnitRepository import io.github.drumber.kitsune.data.repository.ContentRevealStore import io.github.drumber.kitsune.data.repository.FollowRepository import io.github.drumber.kitsune.data.repository.GroupsRepository import io.github.drumber.kitsune.data.repository.PostInteractionRepository import io.github.drumber.kitsune.data.repository.PostManagementRepository import io.github.drumber.kitsune.data.repository.UploadRepository import io.github.drumber.kitsune.data.repository.PostInteractionStore import io.github.drumber.kitsune.data.repository.ProfileLinkRepository import io.github.drumber.kitsune.data.repository.UserRepository import io.github.drumber.kitsune.data.repository.WidgetLibraryChangeListener import io.github.drumber.kitsune.data.source.local.auth.AccessTokenLocalDataSource import io.github.drumber.kitsune.data.source.local.auth.AccessTokenPreference import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource import io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource import io.github.drumber.kitsune.data.source.local.user.UserPreferences import io.github.drumber.kitsune.data.source.network.algolia.AlgoliaKeyNetworkDataSource import io.github.drumber.kitsune.data.source.network.algolia.api.AlgoliaKeyApi import io.github.drumber.kitsune.data.source.network.appupdate.AppReleaseNetworkDataSource import io.github.drumber.kitsune.data.source.network.appupdate.api.GitHubApi import io.github.drumber.kitsune.data.source.network.auth.AccessTokenNetworkDataSource import io.github.drumber.kitsune.data.source.network.auth.api.AuthenticationApi import io.github.drumber.kitsune.data.source.network.character.CharacterNetworkDataSource import io.github.drumber.kitsune.data.source.network.character.api.CharacterApi import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter import io.github.drumber.kitsune.data.source.network.character.model.NetworkMediaCharacter import io.github.drumber.kitsune.data.source.network.comment.CommentNetworkDataSource import io.github.drumber.kitsune.data.source.network.comment.api.CommentApi import io.github.drumber.kitsune.data.source.network.comment.model.NetworkComment import io.github.drumber.kitsune.data.source.network.comment.model.NetworkCommentLike import io.github.drumber.kitsune.data.source.network.feed.FeedNetworkDataSource import io.github.drumber.kitsune.data.source.network.feed.PostLikeNetworkDataSource import io.github.drumber.kitsune.data.source.network.feed.PostNetworkDataSource import io.github.drumber.kitsune.data.source.network.feed.UploadNetworkDataSource import io.github.drumber.kitsune.data.source.network.feed.api.FeedApi import io.github.drumber.kitsune.data.source.network.feed.api.PostApi import io.github.drumber.kitsune.data.source.network.feed.api.UploadApi import io.github.drumber.kitsune.data.source.network.feed.api.PostLikeApi import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivity import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivityGroup import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPostLike import io.github.drumber.kitsune.data.source.network.notification.NotificationNetworkDataSource import io.github.drumber.kitsune.data.source.network.notification.api.NotificationApi import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUpload import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUploadRequest import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource import io.github.drumber.kitsune.data.source.network.library.api.LibraryEntryApi import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry import io.github.drumber.kitsune.data.source.network.mapping.MappingNetworkDataSource import io.github.drumber.kitsune.data.source.network.mapping.api.MappingApi import io.github.drumber.kitsune.data.source.network.mapping.model.NetworkMapping import io.github.drumber.kitsune.data.source.network.group.GroupsNetworkDataSource import io.github.drumber.kitsune.data.source.network.group.api.GroupsApi import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroup import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroupCategory import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroupMember import io.github.drumber.kitsune.data.source.network.reaction.ReactionNetworkDataSource import io.github.drumber.kitsune.data.source.network.reaction.api.MediaReactionApi import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReaction import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReactionVote import io.github.drumber.kitsune.data.source.network.media.AnimeNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.CastingNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.CategoryNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.ChapterNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.EpisodeNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.MangaNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.api.AnimeApi import io.github.drumber.kitsune.data.source.network.media.api.CastingApi import io.github.drumber.kitsune.data.source.network.media.api.CategoryApi import io.github.drumber.kitsune.data.source.network.media.api.ChapterApi import io.github.drumber.kitsune.data.source.network.media.api.EpisodeApi import io.github.drumber.kitsune.data.source.network.media.api.MangaApi import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga import io.github.drumber.kitsune.data.source.network.media.model.category.NetworkCategory import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkAnimeProduction import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkCasting import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkProducer import io.github.drumber.kitsune.data.source.network.media.model.relationship.NetworkMediaRelationship import io.github.drumber.kitsune.data.source.network.media.model.streamer.NetworkStreamer import io.github.drumber.kitsune.data.source.network.media.model.streamer.NetworkStreamingLink import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkChapter import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkEpisode import io.github.drumber.kitsune.data.source.network.user.FavoriteNetworkDataSource import io.github.drumber.kitsune.data.source.network.user.FollowNetworkDataSource import io.github.drumber.kitsune.data.source.network.user.ProfileLinkNetworkDataSource import io.github.drumber.kitsune.data.source.network.user.UserNetworkDataSource import io.github.drumber.kitsune.data.source.network.user.api.FavoriteApi import io.github.drumber.kitsune.data.source.network.user.api.FollowApi import io.github.drumber.kitsune.data.source.network.user.api.ProfileLinkApi import io.github.drumber.kitsune.data.source.network.user.api.UserApi import io.github.drumber.kitsune.data.source.network.user.api.UserImageUploadApi import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite import io.github.drumber.kitsune.data.source.network.user.model.NetworkFollow import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImageUpload import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStats import io.github.drumber.kitsune.util.ui.MarkdownPreviewRenderer import io.github.drumber.kitsune.util.ui.PostContentRenderer import kotlinx.coroutines.CoroutineScope import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.SupervisorJob import org.koin.android.ext.koin.androidApplication import org.koin.android.ext.koin.androidContext import org.koin.core.qualifier.named import org.koin.dsl.module</ID>
+    <ID>ImportOrdering:EpisodeNetworkDataSource.kt$import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.api.EpisodeApi import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkEpisode import io.github.drumber.kitsune.data.source.network.toPageData import io.github.drumber.kitsune.data.common.Filter</ID>
+    <ID>ImportOrdering:EpisodePagingDataSource.kt$import io.github.drumber.kitsune.data.source.network.BasePagingDataSource import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkEpisode import io.github.drumber.kitsune.data.common.Filter</ID>
+    <ID>ImportOrdering:FavoriteNetworkDataSource.kt$import com.github.jasminb.jsonapi.JSONAPIDocument import io.github.drumber.kitsune.data.source.network.user.api.FavoriteApi import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
+    <ID>ImportOrdering:FavoriteRepository.kt$import io.github.drumber.kitsune.data.common.media.MediaType import io.github.drumber.kitsune.data.mapper.UserMapper.toFavorite import io.github.drumber.kitsune.data.presentation.model.user.Favorite import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga import io.github.drumber.kitsune.data.source.network.user.FavoriteNetworkDataSource import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavoriteItem import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser import io.github.drumber.kitsune.data.common.Filter</ID>
+    <ID>ImportOrdering:FeedListFragment.kt$import android.os.Bundle import android.view.View import androidx.core.view.isVisible import androidx.fragment.app.Fragment import androidx.lifecycle.Lifecycle import androidx.lifecycle.lifecycleScope import androidx.lifecycle.repeatOnLifecycle import androidx.navigation.fragment.findNavController import androidx.paging.LoadState import androidx.recyclerview.widget.LinearLayoutManager import androidx.recyclerview.widget.RecyclerView import com.bumptech.glide.Glide import com.google.android.material.dialog.MaterialAlertDialogBuilder import io.github.drumber.kitsune.R import io.github.drumber.kitsune.data.presentation.model.feed.Post import io.github.drumber.kitsune.databinding.FragmentFeedListBinding import io.github.drumber.kitsune.ui.adapter.paging.PostInteractionListener import io.github.drumber.kitsune.ui.adapter.paging.PostPagingAdapter import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter import io.github.drumber.kitsune.ui.component.updateLoadState import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections import io.github.drumber.kitsune.util.extensions.navigateSafe import io.github.drumber.kitsune.util.extensions.setAppTheme import io.github.drumber.kitsune.util.ui.PostContentRenderer import io.github.drumber.kitsune.util.ui.showSnackbar import io.github.drumber.kitsune.util.ui.viewBinding import io.github.drumber.kitsune.ui.postdetail.PostDetailFragmentDirections import io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections import kotlinx.coroutines.flow.collectLatest import kotlinx.coroutines.launch import org.koin.android.ext.android.inject import org.koin.androidx.viewmodel.ext.android.viewModel</ID>
+    <ID>ImportOrdering:GroupsFragment.kt$import android.os.Bundle import android.view.LayoutInflater import android.view.View import android.view.ViewGroup import android.view.inputmethod.EditorInfo import androidx.core.widget.doAfterTextChanged import androidx.fragment.app.Fragment import androidx.core.view.isVisible import androidx.lifecycle.Lifecycle import androidx.lifecycle.lifecycleScope import androidx.lifecycle.repeatOnLifecycle import androidx.navigation.fragment.findNavController import androidx.paging.LoadState import androidx.recyclerview.widget.LinearLayoutManager import androidx.recyclerview.widget.RecyclerView import com.bumptech.glide.Glide import com.google.android.material.chip.Chip import io.github.drumber.kitsune.R import io.github.drumber.kitsune.data.presentation.model.group.GroupCategory import io.github.drumber.kitsune.databinding.FragmentGroupsBinding import io.github.drumber.kitsune.ui.adapter.paging.GroupsPagingAdapter import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter import io.github.drumber.kitsune.ui.component.updateLoadState import io.github.drumber.kitsune.util.extensions.navigateSafe import io.github.drumber.kitsune.util.extensions.setAppTheme import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener import io.github.drumber.kitsune.util.ui.initWindowInsetsListener import io.github.drumber.kitsune.util.ui.viewBinding import kotlinx.coroutines.flow.collectLatest import kotlinx.coroutines.launch import org.koin.androidx.viewmodel.ext.android.viewModel</ID>
+    <ID>ImportOrdering:LibraryEditEntryViewModel.kt$import androidx.lifecycle.LiveData import androidx.lifecycle.MutableLiveData import androidx.lifecycle.ViewModel import androidx.lifecycle.map import androidx.lifecycle.viewModelScope import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification import io.github.drumber.kitsune.data.repository.LibraryRepository import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.NotFound import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Failure import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Success import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryUseCase import io.github.drumber.kitsune.data.common.Filter import io.github.drumber.kitsune.util.logE import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.launch</ID>
+    <ID>ImportOrdering:LibraryEntryModificationTest.kt$import io.github.drumber.kitsune.testutils.libraryEntryModification import io.github.drumber.kitsune.testutils.localLibraryEntry import io.github.drumber.kitsune.testutils.localLibraryEntryModification import io.github.drumber.kitsune.testutils.libraryEntry import net.datafaker.Faker import org.assertj.core.api.Assertions.assertThat import org.junit.Test</ID>
+    <ID>ImportOrdering:LibraryEntryPagingDataSource.kt$import io.github.drumber.kitsune.data.source.network.BasePagingDataSource import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry import io.github.drumber.kitsune.data.common.Filter</ID>
+    <ID>ImportOrdering:LibraryEntryWithModificationTest.kt$import io.github.drumber.kitsune.data.presentation.model.library.LibraryModificationState.SYNCHRONIZING import io.github.drumber.kitsune.testutils.libraryEntryModification import io.github.drumber.kitsune.testutils.libraryEntry import net.datafaker.Faker import org.assertj.core.api.Assertions.assertThat import org.junit.Test</ID>
+    <ID>ImportOrdering:LibraryNetworkDataSource.kt$import com.github.jasminb.jsonapi.JSONAPIDocument import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.library.api.LibraryEntryApi import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry import io.github.drumber.kitsune.data.source.network.toPageData import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
+    <ID>ImportOrdering:MangaNetworkDataSource.kt$import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.api.MangaApi import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga import io.github.drumber.kitsune.data.source.network.toPageData import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
+    <ID>ImportOrdering:MangaPagingDataSource.kt$import io.github.drumber.kitsune.data.source.network.BasePagingDataSource import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga import io.github.drumber.kitsune.data.common.Filter</ID>
+    <ID>ImportOrdering:MangaRepository.kt$import androidx.paging.Pager import androidx.paging.PagingConfig import androidx.paging.map import io.github.drumber.kitsune.constants.Repository import io.github.drumber.kitsune.data.mapper.MediaMapper.toManga import io.github.drumber.kitsune.data.presentation.model.media.Manga import io.github.drumber.kitsune.data.source.network.media.MangaNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.MangaPagingDataSource import io.github.drumber.kitsune.data.source.network.media.TrendingMangaPagingDataSource import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.flow.map</ID>
+    <ID>ImportOrdering:MappingNetworkDataSource.kt$import io.github.drumber.kitsune.data.source.network.mapping.api.MappingApi import io.github.drumber.kitsune.data.source.network.mapping.model.NetworkMapping import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
+    <ID>ImportOrdering:MappingRepository.kt$import io.github.drumber.kitsune.data.mapper.MappingMapper.toMapping import io.github.drumber.kitsune.data.presentation.model.mapping.Mapping import io.github.drumber.kitsune.data.source.network.mapping.MappingNetworkDataSource import io.github.drumber.kitsune.data.common.Filter</ID>
+    <ID>ImportOrdering:MediaUnitRepository.kt$import androidx.paging.Pager import androidx.paging.PagingConfig import androidx.paging.map import io.github.drumber.kitsune.constants.Repository import io.github.drumber.kitsune.data.mapper.MediaUnitMapper.toMediaUnit import io.github.drumber.kitsune.data.source.network.media.ChapterNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.ChapterPagingDataSource import io.github.drumber.kitsune.data.source.network.media.EpisodeNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.EpisodePagingDataSource import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.flow.map</ID>
+    <ID>ImportOrdering:NetworkMediaReaction.kt$import com.github.jasminb.jsonapi.annotations.Id import com.github.jasminb.jsonapi.annotations.Relationship import com.github.jasminb.jsonapi.annotations.Type import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga import io.github.drumber.kitsune.data.source.network.feed.model.NetworkFeedSubject import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser</ID>
+    <ID>ImportOrdering:NetworkModule.kt$import android.content.Context import android.os.Parcelable import com.algolia.search.model.filter.Filter import com.fasterxml.jackson.annotation.JsonInclude import com.fasterxml.jackson.databind.DeserializationFeature import com.fasterxml.jackson.databind.MapperFeature import com.fasterxml.jackson.databind.ObjectMapper import com.fasterxml.jackson.databind.module.SimpleModule import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder import com.github.jasminb.jsonapi.DeserializationFeature as JsonApiDeserializationFeature import com.github.jasminb.jsonapi.ResourceConverter import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory import io.github.drumber.kitsune.BuildConfig import io.github.drumber.kitsune.constants.Kitsu import io.github.drumber.kitsune.util.json.AlgoliaFacetValueDeserializer import io.github.drumber.kitsune.util.json.AlgoliaNumericValueDeserializer import io.github.drumber.kitsune.util.json.IgnoreParcelablePropertyMixin import io.github.drumber.kitsune.util.network.AuthenticationInterceptor import io.github.drumber.kitsune.util.network.AuthenticationInterceptorImpl import io.github.drumber.kitsune.util.network.UserAgentInterceptor import okhttp3.Cache import okhttp3.OkHttpClient import okhttp3.Request import okhttp3.logging.HttpLoggingInterceptor import org.koin.core.qualifier.named import org.koin.dsl.module import retrofit2.Retrofit import retrofit2.converter.jackson.JacksonConverterFactory import java.io.File import java.util.concurrent.TimeUnit</ID>
+    <ID>ImportOrdering:PostDetailFragment.kt$import android.content.Context import android.os.Bundle import android.view.View import android.view.inputmethod.InputMethodManager import androidx.fragment.app.Fragment import androidx.lifecycle.Lifecycle import androidx.lifecycle.lifecycleScope import androidx.lifecycle.repeatOnLifecycle import androidx.navigation.fragment.findNavController import androidx.navigation.fragment.navArgs import androidx.recyclerview.widget.ConcatAdapter import androidx.recyclerview.widget.LinearLayoutManager import androidx.recyclerview.widget.RecyclerView import com.bumptech.glide.Glide import com.google.android.material.dialog.MaterialAlertDialogBuilder import io.github.drumber.kitsune.R import io.github.drumber.kitsune.databinding.FragmentPostDetailBinding import io.github.drumber.kitsune.ui.adapter.paging.CommentPagingAdapter import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections import io.github.drumber.kitsune.data.presentation.model.comment.Comment import io.github.drumber.kitsune.data.presentation.model.feed.Post import io.github.drumber.kitsune.util.extensions.navigateSafe import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener import io.github.drumber.kitsune.util.ui.initWindowInsetsListener import io.github.drumber.kitsune.util.ui.PostContentRenderer import io.github.drumber.kitsune.util.ui.showSnackbar import io.github.drumber.kitsune.util.ui.viewBinding import kotlinx.coroutines.flow.collectLatest import kotlinx.coroutines.launch import org.koin.android.ext.android.inject import org.koin.androidx.viewmodel.ext.android.viewModel</ID>
+    <ID>ImportOrdering:PostManagementRepository.kt$import io.github.drumber.kitsune.data.mapper.FeedMapper.toPost import io.github.drumber.kitsune.data.presentation.model.feed.Post import io.github.drumber.kitsune.data.common.Filter import io.github.drumber.kitsune.data.source.network.feed.PostNetworkDataSource import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUpload import io.github.drumber.kitsune.data.source.network.media.model.NetworkMedia import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkMediaUnit import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser</ID>
+    <ID>ImportOrdering:ProfileLinkNetworkDataSource.kt$import io.github.drumber.kitsune.data.source.network.user.api.ProfileLinkApi import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
+    <ID>ImportOrdering:SearchViewModel.kt$import androidx.lifecycle.LiveData import androidx.lifecycle.MutableLiveData import androidx.lifecycle.ViewModel import androidx.lifecycle.asFlow import androidx.lifecycle.viewModelScope import androidx.paging.PagingConfig import androidx.paging.cachedIn import com.algolia.instantsearch.android.paging3.Paginator import com.algolia.instantsearch.android.paging3.filterstate.connectPaginator import com.algolia.instantsearch.android.paging3.flow import com.algolia.instantsearch.android.paging3.searchbox.connectPaginator import com.algolia.instantsearch.core.connection.AbstractConnection import com.algolia.instantsearch.core.connection.ConnectionHandler import com.algolia.instantsearch.core.searchbox.SearchBoxViewModel import com.algolia.instantsearch.core.selectable.list.SelectionMode import com.algolia.instantsearch.filter.facet.DefaultFacetListPresenter import com.algolia.instantsearch.filter.facet.FacetListConnector import com.algolia.instantsearch.filter.facet.FacetSortCriterion import com.algolia.instantsearch.filter.state.FilterState import com.algolia.instantsearch.filter.state.Filters import com.algolia.instantsearch.filter.state.groupOr import com.algolia.instantsearch.searchbox.SearchBoxConnector import com.algolia.instantsearch.searcher.connectFilterState import com.algolia.instantsearch.searcher.hits.HitsSearcher import com.algolia.search.dsl.attributesToRetrieve import com.algolia.search.dsl.query import com.algolia.search.model.Attribute import com.algolia.search.model.filter.Filter import com.algolia.search.model.response.ResponseSearch import com.algolia.search.model.search.Query import io.github.drumber.kitsune.constants.Kitsu import io.github.drumber.kitsune.constants.Repository import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toMedia import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toUserSearchResult import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType import io.github.drumber.kitsune.data.presentation.model.media.Media import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaMediaSearchResult import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaUserSearchResult import io.github.drumber.kitsune.domain.algolia.FilterCollection import io.github.drumber.kitsune.domain.algolia.SearchProvider import io.github.drumber.kitsune.domain.algolia.toCombinedMap import io.github.drumber.kitsune.domain.algolia.toFilterCollection import io.github.drumber.kitsune.data.common.exception.SearchProviderUnavailableException import io.github.drumber.kitsune.preference.KitsunePref import io.github.drumber.kitsune.ui.component.algolia.SeasonListPresenter import io.github.drumber.kitsune.ui.component.algolia.range.CustomFilterRangeConnector import io.github.drumber.kitsune.util.logE import io.github.drumber.kitsune.util.logI import kotlinx.coroutines.flow.flatMapLatest import kotlinx.coroutines.launch import kotlinx.serialization.json.Json import kotlinx.serialization.json.decodeFromJsonElement import java.util.Calendar</ID>
+    <ID>ImportOrdering:TrendingAnimePagingDataSource.kt$import io.github.drumber.kitsune.data.source.network.BasePagingDataSource import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime import io.github.drumber.kitsune.data.common.Filter</ID>
+    <ID>ImportOrdering:TrendingMangaPagingDataSource.kt$import io.github.drumber.kitsune.data.source.network.BasePagingDataSource import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga import io.github.drumber.kitsune.data.common.Filter</ID>
+    <ID>ImportOrdering:UpdateLibraryEntryUseCase.kt$import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification import io.github.drumber.kitsune.data.repository.LibraryRepository import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.NetworkError import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.NotFound import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.UnknownException import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Failure import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Success import io.github.drumber.kitsune.data.common.exception.NotFoundException import java.io.IOException import kotlin.coroutines.cancellation.CancellationException</ID>
+    <ID>ImportOrdering:UserApi.kt$import com.github.jasminb.jsonapi.JSONAPIDocument import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser import retrofit2.Response import retrofit2.http.Body import retrofit2.http.DELETE import retrofit2.http.GET import retrofit2.http.PATCH import retrofit2.http.Path import retrofit2.http.QueryMap</ID>
+    <ID>ImportOrdering:UserNetworkDataSource.kt$import com.github.jasminb.jsonapi.JSONAPIDocument import io.github.drumber.kitsune.data.source.network.user.api.UserApi import io.github.drumber.kitsune.data.source.network.user.api.UserImageUploadApi import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImageUpload import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
+    <ID>ImportOrdering:ViewModelModule.kt$import io.github.drumber.kitsune.ui.authentication.LoginViewModel import io.github.drumber.kitsune.ui.createpost.CreatePostViewModel import io.github.drumber.kitsune.ui.createpost.MediaPickerViewModel import io.github.drumber.kitsune.ui.createpost.UnitPickerViewModel import io.github.drumber.kitsune.ui.details.DetailsViewModel import io.github.drumber.kitsune.ui.details.characters.CharacterDetailsViewModel import io.github.drumber.kitsune.ui.details.characters.CharactersViewModel import io.github.drumber.kitsune.ui.details.episodes.EpisodesViewModel import io.github.drumber.kitsune.ui.details.feed.MediaFeedViewModel import io.github.drumber.kitsune.ui.details.reactions.ReactionsViewModel import io.github.drumber.kitsune.ui.feed.FeedListViewModel import io.github.drumber.kitsune.ui.groupdetail.GroupDetailViewModel import io.github.drumber.kitsune.ui.groups.GroupsViewModel import io.github.drumber.kitsune.ui.library.LibraryViewModel import io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel import io.github.drumber.kitsune.ui.main.MainActivityViewModel import io.github.drumber.kitsune.ui.main.MainFragmentViewModel import io.github.drumber.kitsune.ui.medialist.MediaListViewModel import io.github.drumber.kitsune.ui.notifications.NotificationsViewModel import io.github.drumber.kitsune.ui.onboarding.OnboardingViewModel import io.github.drumber.kitsune.ui.postdetail.PostDetailViewModel import io.github.drumber.kitsune.ui.profile.ProfileViewModel import io.github.drumber.kitsune.data.repository.FollowListType import io.github.drumber.kitsune.ui.profile.UserProfileViewModel import io.github.drumber.kitsune.ui.profile.follow.FollowListViewModel import io.github.drumber.kitsune.ui.profile.editprofile.EditProfileViewModel import io.github.drumber.kitsune.ui.reactiondetail.ReactionDetailViewModel import io.github.drumber.kitsune.ui.search.SearchViewModel import io.github.drumber.kitsune.ui.search.categories.CategoriesViewModel import io.github.drumber.kitsune.ui.settings.AppLogsViewModel import io.github.drumber.kitsune.ui.settings.SettingsViewModel import org.koin.core.module.dsl.viewModel import org.koin.dsl.module</ID>
+    <ID>LongMethod:CharacterDetailsBottomSheet.kt$CharacterDetailsBottomSheet$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
+    <ID>LongMethod:CustomDialog.kt$@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class) @Composable fun CustomDialog( modifier: Modifier = Modifier, icon: @Composable (() -&gt; Unit)? = null, title: (@Composable () -&gt; Unit)? = null, onDismissRequest: () -&gt; Unit, confirmButton: @Composable () -&gt; Unit, dismissButton: @Composable (() -&gt; Unit)?, shape: Shape = AlertDialogDefaults.shape, containerColor: Color = AlertDialogDefaults.containerColor, iconContentColor: Color = AlertDialogDefaults.iconContentColor, titleContentColor: Color = AlertDialogDefaults.titleContentColor, textContentColor: Color = AlertDialogDefaults.textContentColor, tonalElevation: Dp = AlertDialogDefaults.TonalElevation, properties: DialogProperties = DialogProperties(), content: @Composable (contentPadding: PaddingValues) -&gt; Unit )</ID>
+    <ID>LongMethod:DetailsFragment.kt$DetailsFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
+    <ID>LongMethod:EditProfileFragment.kt$EditProfileFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
+    <ID>LongMethod:FeedListFragment.kt$FeedListFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
+    <ID>LongMethod:LibraryAppWidget.kt$LibraryAppWidget$@Composable private fun LibraryItem( item: LibraryEntryWithModification, modifier: GlanceModifier, clickItemAction: (LibraryEntry) -&gt; Action, progressAction: (LibraryEntry, Int) -&gt; Unit )</ID>
+    <ID>LongMethod:LibraryEditEntryFragment.kt$LibraryEditEntryFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
+    <ID>LongMethod:LibraryEditEntryFragment.kt$LibraryEditEntryFragment$private fun initListeners()</ID>
+    <ID>LongMethod:LibraryFragment.kt$LibraryFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
+    <ID>LongMethod:LibraryFragment.kt$LibraryFragment$private fun initRecyclerView()</ID>
+    <ID>LongMethod:MainActivity.kt$MainActivity$override fun onCreate(savedInstanceState: Bundle?)</ID>
+    <ID>LongMethod:MdcThemeAdapter.kt$fun obtainColorScheme( context: Context ): ColorScheme</ID>
+    <ID>LongMethod:PostDetailFragment.kt$PostDetailFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
+    <ID>LongMethod:PostPagingAdapter.kt$PostPagingAdapter.PostViewHolder$fun bind(post: Post)</ID>
+    <ID>LongMethod:SettingsFragment.kt$SettingsFragment$private fun observeUserModel()</ID>
+    <ID>LongMethod:SetupPage.kt$@Composable private fun SetupPage( modifier: Modifier = Modifier, onFinishClicked: () -&gt; Unit = {}, onBackClicked: () -&gt; Unit = {}, showNotificationPermissionNotice: Boolean = false, checkForUpdatesPreference: Boolean = false, onCheckForUpdatesPreferenceChanged: (Boolean) -&gt; Unit = {}, hideTitleLanguagePreference: Boolean = false, titleLanguages: List&lt;String&gt; = emptyList(), selectedTitleLanguageIndex: Int = 0, onTitleLanguageSelected: (Int) -&gt; Unit = {} )</ID>
+    <ID>LongParameterList:DetailsViewModel.kt$DetailsViewModel$( private val getLocalUserId: GetLocalUserIdUseCase, private val isUserLoggedIn: IsUserLoggedInUseCase, private val updateLibraryEntry: UpdateLibraryEntryUseCase, private val favoriteRepository: FavoriteRepository, private val libraryRepository: LibraryRepository, private val animeRepository: AnimeRepository, private val mangaRepository: MangaRepository, private val mappingRepository: MappingRepository, private val mediaReactionRepository: MediaReactionRepository )</ID>
+    <ID>LongParameterList:FeedListViewModel.kt$FeedListViewModel$( private val feedRepository: FeedRepository, private val commentRepository: CommentRepository, private val postManagementRepository: PostManagementRepository, private val postInteractionRepository: PostInteractionRepository, private val postInteractionStore: PostInteractionStore, private val contentRevealStore: ContentRevealStore, private val userRepository: UserRepository, private val getLocalUserId: GetLocalUserIdUseCase )</ID>
+    <ID>LongParameterList:LibraryViewModel.kt$LibraryViewModel$( private val userRepository: UserRepository, private val getLocalUserId: GetLocalUserIdUseCase, private val libraryRepository: LibraryRepository, private val getLibraryEntriesWithModifications: GetLibraryEntriesWithModificationsPagerUseCase, private val searchLibraryEntriesWithModification: SearchLibraryEntriesWithLocalModificationsPagerUseCase, private val updateLibraryEntryProgress: UpdateLibraryEntryProgressUseCase, private val updateLibraryEntryRating: UpdateLibraryEntryRatingUseCase, private val synchronizeLocalLibraryModifications: SynchronizeLocalLibraryModificationsUseCase )</ID>
+    <ID>LoopWithTooManyJumpStatements:CreatePostFragment.kt$CreatePostFragment$for</ID>
+    <ID>MaxLineLength:AuthenticationInterceptor.kt$AuthenticationInterceptorImpl$logD("Local access token was changed during this request. Do not refresh access token and retry with changed access token.")</ID>
+    <ID>MaxLineLength:CharacterDetailsViewModel.kt$CharacterDetailsViewModel$if (_characterFlow.replayCache.isNotEmpty() &amp;&amp; _characterFlow.replayCache.firstOrNull()?.id == character.id) return</ID>
+    <ID>MaxLineLength:CreatePostViewModel.kt$CreatePostViewModel$_uiState.value = _uiState.value.copy(images = _uiState.value.images + SelectedImage(uri = uri, dataUri = dataUri))</ID>
+    <ID>MaxLineLength:DetailsViewModel.kt$DetailsViewModel$_libraryEntryWithModification</ID>
+    <ID>MaxLineLength:EditProfileFragment.kt$EditProfileFragment$response.hits.deserialize(AlgoliaCharacterSearchResult.serializer()).map { it.toCharacterSearchResult() }</ID>
+    <ID>MaxLineLength:FakeLibraryEntry.kt$fun</ID>
+    <ID>MaxLineLength:HomeExploreFragment.kt$HomeExploreFragment$viewModel.getAnimeExploreLiveData(MainFragmentViewModel.HIGHEST_RATED) as LiveData&lt;ResponseData&lt;List&lt;Media&gt;&gt;&gt;</ID>
+    <ID>MaxLineLength:HomeExploreFragment.kt$HomeExploreFragment$viewModel.getMangaExploreLiveData(MainFragmentViewModel.HIGHEST_RATED) as LiveData&lt;ResponseData&lt;List&lt;Media&gt;&gt;&gt;</ID>
+    <ID>MaxLineLength:LibraryEditEntryFragment.kt$LibraryEditEntryFragment$binding.tvMediaInfo.text = media?.let { "${it.publishingYearText(binding.root.context)} • ${it.subtypeFormatted}" }</ID>
+    <ID>MaxLineLength:LibraryEntriesAdapter.kt$LibraryEntriesAdapter.LibraryEntryViewHolder$getItem(bindingAdapterPosition)?.let { listener?.onEpisodeWatchedClicked((it as EntryModel).entry) }</ID>
+    <ID>MaxLineLength:LibraryEntriesAdapter.kt$LibraryEntriesAdapter.LibraryEntryViewHolder$getItem(bindingAdapterPosition)?.let { listener?.onItemClicked(cardView, (it as EntryModel).entry) }</ID>
+    <ID>MaxLineLength:LibraryEntryDao.kt$LibraryEntryDao$fun</ID>
+    <ID>MaxLineLength:LibraryEntryDao.kt$LibraryEntryDao$suspend</ID>
+    <ID>MaxLineLength:LibraryEntryModificationDao.kt$LibraryEntryModificationDao$fun</ID>
+    <ID>MaxLineLength:LibraryEntryRemoteMediator.kt$LibraryEntryRemoteMediator$*</ID>
+    <ID>MaxLineLength:LibraryEntryWithModificationDao.kt$LibraryEntryWithModificationDao$fun</ID>
+    <ID>MaxLineLength:LibraryEntryWithModificationDao.kt$LibraryEntryWithModificationDao$suspend</ID>
+    <ID>MaxLineLength:LibraryRepository.kt$LibraryRepository$fun</ID>
+    <ID>MaxLineLength:LibraryRepository.kt$LibraryRepository$suspend</ID>
+    <ID>MaxLineLength:MainFragment.kt$MainFragment$MainFragmentDirections.actionMainFragmentToMediaListFragment(navigationAction.mediaSelector, navigationAction.title)</ID>
+    <ID>MaxLineLength:PageDataTest.kt$PageDataTest$JSONAPISpecConstants.FIRST to Link("https://example.com/api/edge/anime?page%5Blimit%5D=5&amp;page%5Boffset%5D=0")</ID>
+    <ID>MaxLineLength:PageDataTest.kt$PageDataTest$JSONAPISpecConstants.LAST to Link("https://example.com/api/edge/anime?page%5Blimit%5D=5&amp;page%5Boffset%5D=20541")</ID>
+    <ID>MaxLineLength:RatingFrequenciesUtil.kt$RatingFrequenciesUtil$// contains the rating counts categorized by the rating type (1-4 for simple, 0.5-5 for regular, 1-10 for advanced)</ID>
+    <ID>MaxLineLength:RatingFrequenciesUtilTest.kt$RatingFrequenciesUtilTest$LocalRatingSystemPreference.Advanced to listOf(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)</ID>
+    <ID>MaxLineLength:RefreshAccessTokenIfExpiredUseCase.kt$RefreshAccessTokenIfExpiredUseCase$*</ID>
+    <ID>MaxLineLength:SaveImage.kt$val fileName = (if (!imageName.isNullOrBlank()) "${imageName}_" else "") + Date().formatDate("yyyy-MM-dd-HH-mm-ss") + ".jpg"</ID>
+    <ID>MaxLineLength:SearchViewModel.kt$SearchViewModel$SearchType.Media -&gt; json.decodeFromJsonElement&lt;AlgoliaMediaSearchResult&gt;(hit.json).toMedia()</ID>
+    <ID>MaxLineLength:SearchViewModel.kt$SearchViewModel$SearchType.Users -&gt; json.decodeFromJsonElement&lt;AlgoliaUserSearchResult&gt;(hit.json).toUserSearchResult()</ID>
+    <ID>MaxLineLength:SearchViewModel.kt$SearchViewModel$createSearchClient(_currentSearchType.value ?: SearchType.Media, buildQueryFor(_currentSearchType.value ?: SearchType.Media))</ID>
+    <ID>MaxLineLength:SettingsFragment.kt$SettingsFragment$LocalSfwFilterPreference.NSFW_EVERYWHERE -&gt; R.string.preference_adult_content_description_everywhere</ID>
+    <ID>MaxLineLength:SettingsFragment.kt$SettingsFragment$LocalSfwFilterPreference.NSFW_SOMETIMES -&gt; R.string.preference_adult_content_description_sometimes</ID>
+    <ID>MaxLineLength:ViewActions.kt$&lt;no name provided&gt;$throw RuntimeException("Multiple views found with matcher ${StringDescription.asString(matcher)} in the hierarchy of $view")</ID>
+    <ID>MaxLineLength:ViewActions.kt$&lt;no name provided&gt;$throw RuntimeException("No view found with matcher ${StringDescription.asString(matcher)} in the hierarchy of $view")</ID>
+    <ID>MaxLineLength:WebViewFragment.kt$WebViewFragment.KitsuWebViewClient$"{\"authenticated\":{\"authenticator\":\"authenticator:oauth2\",\"access_token\":\"${accessToken.accessToken}\",\"token_type\":\"Bearer\",\"expires_in\":${accessToken.expiresIn},\"refresh_token\":\"${accessToken.refreshToken}\",\"scope\":\"public\",\"created_at\":${accessToken.createdAt},\"expires_at\":${expiresAt}}}"</ID>
+    <ID>MaximumLineLength:AuthenticationInterceptor.kt$AuthenticationInterceptorImpl$ </ID>
+    <ID>MaximumLineLength:CharacterDetailsViewModel.kt$CharacterDetailsViewModel$ </ID>
+    <ID>MaximumLineLength:CreatePostViewModel.kt$CreatePostViewModel$ </ID>
+    <ID>MaximumLineLength:DetailsViewModel.kt$DetailsViewModel$ </ID>
+    <ID>MaximumLineLength:EditProfileFragment.kt$EditProfileFragment$ </ID>
+    <ID>MaximumLineLength:FakeLibraryEntry.kt$fun</ID>
+    <ID>MaximumLineLength:HomeExploreFragment.kt$HomeExploreFragment$ </ID>
+    <ID>MaximumLineLength:LibraryEditEntryFragment.kt$LibraryEditEntryFragment$ </ID>
+    <ID>MaximumLineLength:LibraryEntriesAdapter.kt$LibraryEntriesAdapter.LibraryEntryViewHolder$ </ID>
+    <ID>MaximumLineLength:LibraryEntryDao.kt$LibraryEntryDao$ </ID>
+    <ID>MaximumLineLength:LibraryEntryModificationDao.kt$LibraryEntryModificationDao$ </ID>
+    <ID>MaximumLineLength:LibraryEntryWithModificationDao.kt$LibraryEntryWithModificationDao$ </ID>
+    <ID>MaximumLineLength:LibraryRepository.kt$LibraryRepository$ </ID>
+    <ID>MaximumLineLength:MainFragment.kt$MainFragment$ </ID>
+    <ID>MaximumLineLength:PageDataTest.kt$PageDataTest$ </ID>
+    <ID>MaximumLineLength:RatingFrequenciesUtilTest.kt$RatingFrequenciesUtilTest$ </ID>
+    <ID>MaximumLineLength:SaveImage.kt$ </ID>
+    <ID>MaximumLineLength:SearchViewModel.kt$SearchViewModel$ </ID>
+    <ID>MaximumLineLength:SettingsFragment.kt$SettingsFragment$ </ID>
+    <ID>MaximumLineLength:ViewActions.kt$&lt;no name provided&gt;$ </ID>
+    <ID>MaximumLineLength:WebViewFragment.kt$WebViewFragment.KitsuWebViewClient$ </ID>
+    <ID>MemberNameEqualsClassName:Filter.kt$Filter$fun filter(attribute: String, value: String)</ID>
+    <ID>MultiLineIfElse:AbstractMediaRecyclerViewAdapter.kt$AbstractMediaRecyclerViewAdapter$ViewCompat.setTransitionName(this, transitionName + suffix)</ID>
+    <ID>MultiLineIfElse:AccessTokenRepository.kt$AccessTokenRepository$AccessTokenState.NOT_PRESENT</ID>
+    <ID>MultiLineIfElse:AccessTokenRepository.kt$AccessTokenRepository$AccessTokenState.PRESENT</ID>
+    <ID>MultiLineIfElse:ActivityExtensions.kt$window.statusBarColor = color</ID>
+    <ID>MultiLineIfElse:BaseActivity.kt$BaseActivity$appTheme.blackThemeRes</ID>
+    <ID>MultiLineIfElse:BaseActivity.kt$BaseActivity$appTheme.themeRes</ID>
+    <ID>MultiLineIfElse:BaseDialogFragment.kt$BaseDialogFragment$return R.style.Theme_Kitsune_FullScreenDialog_Dynamic</ID>
+    <ID>MultiLineIfElse:CharacterDetailsBottomSheet.kt$CharacterDetailsBottomSheet$R.drawable.ic_favorite_24</ID>
+    <ID>MultiLineIfElse:CharacterDetailsBottomSheet.kt$CharacterDetailsBottomSheet$R.drawable.ic_favorite_border_24</ID>
+    <ID>MultiLineIfElse:CharacterDetailsBottomSheet.kt$CharacterDetailsBottomSheet$R.string.action_add_to_favorites</ID>
+    <ID>MultiLineIfElse:CharacterDetailsBottomSheet.kt$CharacterDetailsBottomSheet$R.string.action_remove_from_favorites</ID>
+    <ID>MultiLineIfElse:CreatePostFragment.kt$CreatePostFragment$R.string.post_published</ID>
+    <ID>MultiLineIfElse:CreatePostFragment.kt$CreatePostFragment$R.string.post_updated</ID>
+    <ID>MultiLineIfElse:CreatePostViewModel.kt$CreatePostViewModel$null</ID>
+    <ID>MultiLineIfElse:CustomDialog.kt$Alignment.CenterHorizontally</ID>
+    <ID>MultiLineIfElse:CustomDialog.kt$Alignment.Start</ID>
+    <ID>MultiLineIfElse:DataUtil.kt$DataUtil$locale.displayLanguage</ID>
+    <ID>MultiLineIfElse:DataUtil.kt$DataUtil$locale.displayName</ID>
+    <ID>MultiLineIfElse:DetailsFragment.kt$DetailsFragment$R.drawable.ic_favorite_24</ID>
+    <ID>MultiLineIfElse:DetailsFragment.kt$DetailsFragment$R.drawable.ic_favorite_border_24</ID>
+    <ID>MultiLineIfElse:DetailsFragment.kt$DetailsFragment$R.string.action_add_to_favorites</ID>
+    <ID>MultiLineIfElse:DetailsFragment.kt$DetailsFragment$R.string.action_remove_from_favorites</ID>
+    <ID>MultiLineIfElse:DetailsFragment.kt$DetailsFragment$R.string.action_show_less</ID>
+    <ID>MultiLineIfElse:DetailsFragment.kt$DetailsFragment$R.string.action_show_more</ID>
+    <ID>MultiLineIfElse:KitsuneApplication.kt$KitsuneApplication$logI("[Migration-1.8.0] Deleted database file '${databaseFile.absolutePath}'.")</ID>
+    <ID>MultiLineIfElse:KitsuneApplication.kt$KitsuneApplication$logW("[Migration-1.8.0] Failed to delete database file '${databaseFile.absolutePath}'.")</ID>
+    <ID>MultiLineIfElse:LibraryChangeListener.kt$WidgetLibraryChangeListener$updateWidgets()</ID>
+    <ID>MultiLineIfElse:LibraryEditEntryFragment.kt$LibraryEditEntryFragment$R.drawable.ic_star_24</ID>
+    <ID>MultiLineIfElse:LibraryEditEntryFragment.kt$LibraryEditEntryFragment$R.drawable.ic_star_outline_24</ID>
+    <ID>MultiLineIfElse:LibraryEditEntryFragment.kt$LibraryEditEntryFragment$R.string.library_edit_reread_count</ID>
+    <ID>MultiLineIfElse:LibraryEditEntryFragment.kt$LibraryEditEntryFragment$R.string.library_edit_rewatch_count</ID>
+    <ID>MultiLineIfElse:LibraryEditEntryFragment.kt$LibraryEditEntryFragment$R.string.library_edit_start_reread</ID>
+    <ID>MultiLineIfElse:LibraryEditEntryFragment.kt$LibraryEditEntryFragment$R.string.library_edit_start_rewatch</ID>
+    <ID>MultiLineIfElse:LibraryEditEntryFragment.kt$LibraryEditEntryFragment$getString(R.string.library_edit_privacy_private)</ID>
+    <ID>MultiLineIfElse:LibraryEditEntryFragment.kt$LibraryEditEntryFragment$getString(R.string.library_edit_privacy_public)</ID>
+    <ID>MultiLineIfElse:LibraryEntryRemoteMediator.kt$LibraryEntryRemoteMediator$return@filter true</ID>
+    <ID>MultiLineIfElse:LibraryFragment.kt$LibraryFragment$R.string.library_status_planned</ID>
+    <ID>MultiLineIfElse:LibraryFragment.kt$LibraryFragment$R.string.library_status_planned_manga</ID>
+    <ID>MultiLineIfElse:LibraryFragment.kt$LibraryFragment$R.string.library_status_reading</ID>
+    <ID>MultiLineIfElse:LibraryFragment.kt$LibraryFragment$R.string.library_status_watching</ID>
+    <ID>MultiLineIfElse:LibraryFragment.kt$LibraryFragment$return</ID>
+    <ID>MultiLineIfElse:LibraryFragment.kt$LibraryFragment$return@observe</ID>
+    <ID>MultiLineIfElse:LibraryRepository.kt$LibraryRepository$return false</ID>
+    <ID>MultiLineIfElse:LogCatReader.kt$LogCatReader$writer.appendLine(generateLogFileHeader())</ID>
+    <ID>MultiLineIfElse:LogUtil.kt$Log.d(this::class.java.simpleName, msg)</ID>
+    <ID>MultiLineIfElse:LogUtil.kt$Log.d(this::class.java.simpleName, msg, t)</ID>
+    <ID>MultiLineIfElse:LogUtil.kt$Log.e(this::class.java.simpleName, msg)</ID>
+    <ID>MultiLineIfElse:LogUtil.kt$Log.e(this::class.java.simpleName, msg, t)</ID>
+    <ID>MultiLineIfElse:LogUtil.kt$Log.i(this::class.java.simpleName, msg)</ID>
+    <ID>MultiLineIfElse:LogUtil.kt$Log.i(this::class.java.simpleName, msg, t)</ID>
+    <ID>MultiLineIfElse:LogUtil.kt$Log.v(this::class.java.simpleName, msg)</ID>
+    <ID>MultiLineIfElse:LogUtil.kt$Log.v(this::class.java.simpleName, msg, t)</ID>
+    <ID>MultiLineIfElse:LogUtil.kt$Log.w(this::class.java.simpleName, msg)</ID>
+    <ID>MultiLineIfElse:LogUtil.kt$Log.w(this::class.java.simpleName, msg, t)</ID>
+    <ID>MultiLineIfElse:LogUtil.kt$Log.wtf(this::class.java.simpleName, msg)</ID>
+    <ID>MultiLineIfElse:LogUtil.kt$Log.wtf(this::class.java.simpleName, msg, t)</ID>
+    <ID>MultiLineIfElse:MainActivity.kt$MainActivity$return@setOnApplyWindowInsetsListener windowInsets</ID>
+    <ID>MultiLineIfElse:Media.kt$Media$null</ID>
+    <ID>MultiLineIfElse:PostDetailHeaderAdapter.kt$PostDetailHeaderAdapter.HeaderViewHolder$R.string.feed_nsfw_warning_title</ID>
+    <ID>MultiLineIfElse:PostDetailHeaderAdapter.kt$PostDetailHeaderAdapter.HeaderViewHolder$R.string.feed_spoiler_warning_title</ID>
+    <ID>MultiLineIfElse:PostMediaBinder.kt$PostMediaBinder$R.string.feed_post_spoiled_chapter</ID>
+    <ID>MultiLineIfElse:PostMediaBinder.kt$PostMediaBinder$R.string.feed_post_spoiled_episode</ID>
+    <ID>MultiLineIfElse:PostMediaBinder.kt$PostMediaBinder$null</ID>
+    <ID>MultiLineIfElse:PostPagingAdapter.kt$PostPagingAdapter.PostViewHolder$R.string.feed_nsfw_warning_title</ID>
+    <ID>MultiLineIfElse:PostPagingAdapter.kt$PostPagingAdapter.PostViewHolder$R.string.feed_spoiler_warning_title</ID>
+    <ID>MultiLineIfElse:SettingsFragment.kt$SettingsFragment$Kitsu.USER_URL_PREFIX + it.text</ID>
+    <ID>MultiLineIfElse:SettingsFragment.kt$SettingsFragment$getString(R.string.preference_profile_url_not_set)</ID>
+    <ID>MultiLineIfElse:ThemePickerPreference.kt$ThemePickerPreference$rvAdapter.notifyItemChanged(newSelectedIndex)</ID>
+    <ID>MultiLineIfElse:ThemePickerPreference.kt$ThemePickerPreference$rvAdapter.notifyItemChanged(prevSelectedIndex)</ID>
+    <ID>MultiLineIfElse:ThemePickerPreference.kt$ThemePickerPreference.ThemeViewHolder$R.attr.colorOnSurface</ID>
+    <ID>MultiLineIfElse:ThemePickerPreference.kt$ThemePickerPreference.ThemeViewHolder$R.attr.colorPrimary</ID>
+    <ID>MultiLineIfElse:UserProfileFragment.kt$UserProfileFragment$R.string.action_follow</ID>
+    <ID>MultiLineIfElse:UserProfileFragment.kt$UserProfileFragment$R.string.action_unfollow</ID>
+    <ID>MultiLineIfElse:WaitForView.kt$WaitForView$return</ID>
+    <ID>NewLineAtEndOfFile:AbstractMediaRecyclerViewAdapter.kt$io.github.drumber.kitsune.ui.adapter.AbstractMediaRecyclerViewAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:AccessTokenLocalDataSource.kt$io.github.drumber.kitsune.data.source.local.auth.AccessTokenLocalDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:AccessTokenNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.auth.AccessTokenNetworkDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:AccessTokenPreference.kt$io.github.drumber.kitsune.data.source.local.auth.AccessTokenPreference.kt</ID>
+    <ID>NewLineAtEndOfFile:AccessTokenRepository.kt$io.github.drumber.kitsune.data.repository.AccessTokenRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:AccessTokenRepositoryTest.kt$io.github.drumber.kitsune.data.repository.AccessTokenRepositoryTest.kt</ID>
+    <ID>NewLineAtEndOfFile:AgeRating.kt$io.github.drumber.kitsune.data.common.media.AgeRating.kt</ID>
+    <ID>NewLineAtEndOfFile:AlgoliaFacetValueDeserializer.kt$io.github.drumber.kitsune.util.json.AlgoliaFacetValueDeserializer.kt</ID>
+    <ID>NewLineAtEndOfFile:AlgoliaKeyApi.kt$io.github.drumber.kitsune.data.source.network.algolia.api.AlgoliaKeyApi.kt</ID>
+    <ID>NewLineAtEndOfFile:AlgoliaKeyNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.algolia.AlgoliaKeyNetworkDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:AlgoliaKeyRepository.kt$io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:AlgoliaKeyRepositoryTest.kt$io.github.drumber.kitsune.data.repository.AlgoliaKeyRepositoryTest.kt</ID>
+    <ID>NewLineAtEndOfFile:AlgoliaMapper.kt$io.github.drumber.kitsune.data.mapper.AlgoliaMapper.kt</ID>
+    <ID>NewLineAtEndOfFile:AlgoliaNumericValueDeserializer.kt$io.github.drumber.kitsune.util.json.AlgoliaNumericValueDeserializer.kt</ID>
+    <ID>NewLineAtEndOfFile:AnimeAdapter.kt$io.github.drumber.kitsune.ui.adapter.paging.AnimeAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:AnimeApi.kt$io.github.drumber.kitsune.data.source.network.media.api.AnimeApi.kt</ID>
+    <ID>NewLineAtEndOfFile:AnimeNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.media.AnimeNetworkDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:AnimeProductionRole.kt$io.github.drumber.kitsune.data.presentation.model.media.production.AnimeProductionRole.kt</ID>
+    <ID>NewLineAtEndOfFile:AnimeRepository.kt$io.github.drumber.kitsune.data.repository.AnimeRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:AnimeSubtype.kt$io.github.drumber.kitsune.data.common.media.AnimeSubtype.kt</ID>
+    <ID>NewLineAtEndOfFile:AppLogsFragment.kt$io.github.drumber.kitsune.ui.settings.AppLogsFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:AppLogsViewModel.kt$io.github.drumber.kitsune.ui.settings.AppLogsViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:AppModule.kt$io.github.drumber.kitsune.di.AppModule.kt</ID>
+    <ID>NewLineAtEndOfFile:AppRelease.kt$io.github.drumber.kitsune.data.presentation.model.appupdate.AppRelease.kt</ID>
+    <ID>NewLineAtEndOfFile:AppReleaseNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.appupdate.AppReleaseNetworkDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:AppUpdateMapper.kt$io.github.drumber.kitsune.data.mapper.AppUpdateMapper.kt</ID>
+    <ID>NewLineAtEndOfFile:AppUpdateRepository.kt$io.github.drumber.kitsune.data.repository.AppUpdateRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:AppUpdateRepositoryTest.kt$io.github.drumber.kitsune.data.repository.AppUpdateRepositoryTest.kt</ID>
+    <ID>NewLineAtEndOfFile:AppearanceFragment.kt$io.github.drumber.kitsune.ui.settings.AppearanceFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:ArchUnitTest.kt$io.github.drumber.kitsune.archunit.ArchUnitTest.kt</ID>
+    <ID>NewLineAtEndOfFile:AuthMapperTest.kt$io.github.drumber.kitsune.data.mapper.AuthMapperTest.kt</ID>
+    <ID>NewLineAtEndOfFile:AuthenticationActivity.kt$io.github.drumber.kitsune.ui.authentication.AuthenticationActivity.kt</ID>
+    <ID>NewLineAtEndOfFile:AuthenticationApi.kt$io.github.drumber.kitsune.data.source.network.auth.api.AuthenticationApi.kt</ID>
+    <ID>NewLineAtEndOfFile:BarChartStyle.kt$io.github.drumber.kitsune.ui.component.chart.BarChartStyle.kt</ID>
+    <ID>NewLineAtEndOfFile:BaseActivity.kt$io.github.drumber.kitsune.ui.base.BaseActivity.kt</ID>
+    <ID>NewLineAtEndOfFile:BaseChartStyle.kt$io.github.drumber.kitsune.ui.component.chart.BaseChartStyle.kt</ID>
+    <ID>NewLineAtEndOfFile:BaseDialogFragment.kt$io.github.drumber.kitsune.ui.base.BaseDialogFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:BasePagingDataSource.kt$io.github.drumber.kitsune.data.source.network.BasePagingDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:BasePreferenceFragment.kt$io.github.drumber.kitsune.ui.base.BasePreferenceFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:BindingAdapter.kt$io.github.drumber.kitsune.util.ui.BindingAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:CaptureScreenshots.kt$io.github.drumber.kitsune.fastlane.CaptureScreenshots.kt</ID>
+    <ID>NewLineAtEndOfFile:CastingApi.kt$io.github.drumber.kitsune.data.source.network.media.api.CastingApi.kt</ID>
+    <ID>NewLineAtEndOfFile:CastingNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.media.CastingNetworkDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:CastingPagingDataSource.kt$io.github.drumber.kitsune.data.source.network.media.CastingPagingDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:CastingRepository.kt$io.github.drumber.kitsune.data.repository.CastingRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:CategoriesDialogFragment.kt$io.github.drumber.kitsune.ui.search.categories.CategoriesDialogFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:CategoriesViewModel.kt$io.github.drumber.kitsune.ui.search.categories.CategoriesViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:CategoryApi.kt$io.github.drumber.kitsune.data.source.network.media.api.CategoryApi.kt</ID>
+    <ID>NewLineAtEndOfFile:CategoryNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.media.CategoryNetworkDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:CategoryNode.kt$io.github.drumber.kitsune.data.presentation.model.media.category.CategoryNode.kt</ID>
+    <ID>NewLineAtEndOfFile:CategoryRepository.kt$io.github.drumber.kitsune.data.repository.CategoryRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:CategoryViewHolder.kt$io.github.drumber.kitsune.ui.search.categories.CategoryViewHolder.kt</ID>
+    <ID>NewLineAtEndOfFile:ChapterApi.kt$io.github.drumber.kitsune.data.source.network.media.api.ChapterApi.kt</ID>
+    <ID>NewLineAtEndOfFile:ChapterNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.media.ChapterNetworkDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:ChapterPagingDataSource.kt$io.github.drumber.kitsune.data.source.network.media.ChapterPagingDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:CharacterAdapter.kt$io.github.drumber.kitsune.ui.adapter.CharacterAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:CharacterApi.kt$io.github.drumber.kitsune.data.source.network.character.api.CharacterApi.kt</ID>
+    <ID>NewLineAtEndOfFile:CharacterDetailsBottomSheet.kt$io.github.drumber.kitsune.ui.details.characters.CharacterDetailsBottomSheet.kt</ID>
+    <ID>NewLineAtEndOfFile:CharacterFilterAdapter.kt$io.github.drumber.kitsune.ui.details.characters.CharacterFilterAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:CharacterMapper.kt$io.github.drumber.kitsune.data.mapper.CharacterMapper.kt</ID>
+    <ID>NewLineAtEndOfFile:CharacterMapperTest.kt$io.github.drumber.kitsune.data.mapper.CharacterMapperTest.kt</ID>
+    <ID>NewLineAtEndOfFile:CharacterNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.character.CharacterNetworkDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:CharacterPagingAdapter.kt$io.github.drumber.kitsune.ui.adapter.paging.CharacterPagingAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:CharacterRepository.kt$io.github.drumber.kitsune.data.repository.CharacterRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:CharacterSearchResult.kt$io.github.drumber.kitsune.data.presentation.model.character.CharacterSearchResult.kt</ID>
+    <ID>NewLineAtEndOfFile:CharacterSearchResultAdapter.kt$io.github.drumber.kitsune.ui.profile.editprofile.CharacterSearchResultAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:CharactersFragment.kt$io.github.drumber.kitsune.ui.details.characters.CharactersFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:CharactersViewModel.kt$io.github.drumber.kitsune.ui.details.characters.CharactersViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:CustomNumberRangeView.kt$io.github.drumber.kitsune.ui.component.algolia.range.CustomNumberRangeView.kt</ID>
+    <ID>NewLineAtEndOfFile:CustomPercentFormatter.kt$io.github.drumber.kitsune.ui.component.chart.CustomPercentFormatter.kt</ID>
+    <ID>NewLineAtEndOfFile:DataUtil.kt$io.github.drumber.kitsune.util.DataUtil.kt</ID>
+    <ID>NewLineAtEndOfFile:DateValidatorPointBetween.kt$io.github.drumber.kitsune.util.ui.DateValidatorPointBetween.kt</ID>
+    <ID>NewLineAtEndOfFile:Defaults.kt$io.github.drumber.kitsune.constants.Defaults.kt</ID>
+    <ID>NewLineAtEndOfFile:DetailsFragment.kt$io.github.drumber.kitsune.ui.details.DetailsFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:DomainModule.kt$io.github.drumber.kitsune.di.DomainModule.kt</ID>
+    <ID>NewLineAtEndOfFile:EditProfileFragment.kt$io.github.drumber.kitsune.ui.profile.editprofile.EditProfileFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:EditProfileLinkBottomSheet.kt$io.github.drumber.kitsune.ui.profile.editprofile.EditProfileLinkBottomSheet.kt</ID>
+    <ID>NewLineAtEndOfFile:EpisodeApi.kt$io.github.drumber.kitsune.data.source.network.media.api.EpisodeApi.kt</ID>
+    <ID>NewLineAtEndOfFile:EpisodeNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.media.EpisodeNetworkDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:EpisodePagingDataSource.kt$io.github.drumber.kitsune.data.source.network.media.EpisodePagingDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:EpisodesFragment.kt$io.github.drumber.kitsune.ui.details.episodes.EpisodesFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:EpisodesViewModel.kt$io.github.drumber.kitsune.ui.details.episodes.EpisodesViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:ExpandableLayout.kt$io.github.drumber.kitsune.ui.component.ExpandableLayout.kt</ID>
+    <ID>NewLineAtEndOfFile:ExploreSection.kt$io.github.drumber.kitsune.ui.component.ExploreSection.kt</ID>
+    <ID>NewLineAtEndOfFile:FacetFragment.kt$io.github.drumber.kitsune.ui.search.filter.FacetFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:FakeCharacter.kt$io.github.drumber.kitsune.testutils.FakeCharacter.kt</ID>
+    <ID>NewLineAtEndOfFile:FakeHttpException.kt$io.github.drumber.kitsune.testutils.network.FakeHttpException.kt</ID>
+    <ID>NewLineAtEndOfFile:FavoriteApi.kt$io.github.drumber.kitsune.data.source.network.user.api.FavoriteApi.kt</ID>
+    <ID>NewLineAtEndOfFile:FavoriteNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.user.FavoriteNetworkDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:FavoriteRepository.kt$io.github.drumber.kitsune.data.repository.FavoriteRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:FetchLibraryEntriesForWidgetUseCase.kt$io.github.drumber.kitsune.domain.library.FetchLibraryEntriesForWidgetUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:Filter.kt$io.github.drumber.kitsune.data.common.Filter.kt</ID>
+    <ID>NewLineAtEndOfFile:FilterFacetListViewHolder.kt$io.github.drumber.kitsune.ui.search.filter.FilterFacetListViewHolder.kt</ID>
+    <ID>NewLineAtEndOfFile:GetLibraryEntriesWithModificationsPagerUseCase.kt$io.github.drumber.kitsune.domain.library.GetLibraryEntriesWithModificationsPagerUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:GetLocalUserIdUseCase.kt$io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:GitHubApi.kt$io.github.drumber.kitsune.data.source.network.appupdate.api.GitHubApi.kt</ID>
+    <ID>NewLineAtEndOfFile:HomeExploreFragment.kt$io.github.drumber.kitsune.ui.main.HomeExploreFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:HomeExploreViewPagerAdapter.kt$io.github.drumber.kitsune.ui.main.HomeExploreViewPagerAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:IgnoreParcelablePropertyMixin.kt$io.github.drumber.kitsune.util.json.IgnoreParcelablePropertyMixin.kt</ID>
+    <ID>NewLineAtEndOfFile:ImageMapper.kt$io.github.drumber.kitsune.data.mapper.ImageMapper.kt</ID>
+    <ID>NewLineAtEndOfFile:ImagePresenter.kt$io.github.drumber.kitsune.ui.onboarding.components.ImagePresenter.kt</ID>
+    <ID>NewLineAtEndOfFile:ImageSlideshow.kt$io.github.drumber.kitsune.ui.onboarding.components.ImageSlideshow.kt</ID>
+    <ID>NewLineAtEndOfFile:IntNumberRangeView.kt$io.github.drumber.kitsune.ui.component.algolia.range.IntNumberRangeView.kt</ID>
+    <ID>NewLineAtEndOfFile:IntentAction.kt$io.github.drumber.kitsune.constants.IntentAction.kt</ID>
+    <ID>NewLineAtEndOfFile:InvalidDataException.kt$io.github.drumber.kitsune.data.common.exception.InvalidDataException.kt</ID>
+    <ID>NewLineAtEndOfFile:InvalidatingPagingSourceFactory.kt$io.github.drumber.kitsune.data.utils.InvalidatingPagingSourceFactory.kt</ID>
+    <ID>NewLineAtEndOfFile:IsUserLoggedInUseCase.kt$io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:ItemClickListener.kt$io.github.drumber.kitsune.util.ItemClickListener.kt</ID>
+    <ID>NewLineAtEndOfFile:KitsuUrlReplacer.kt$io.github.drumber.kitsune.util.KitsuUrlReplacer.kt</ID>
+    <ID>NewLineAtEndOfFile:KitsuneApplication.kt$io.github.drumber.kitsune.KitsuneApplication.kt</ID>
+    <ID>NewLineAtEndOfFile:KitsuneWidgetReceiver.kt$io.github.drumber.kitsune.ui.widget.KitsuneWidgetReceiver.kt</ID>
+    <ID>NewLineAtEndOfFile:KitsuneWidgetTheme.kt$io.github.drumber.kitsune.ui.widget.KitsuneWidgetTheme.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryAppWidget.kt$io.github.drumber.kitsune.ui.widget.LibraryAppWidget.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryChangeListener.kt$io.github.drumber.kitsune.data.repository.LibraryChangeListener.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryEditEntryFragment.kt$io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryEditEntryViewModel.kt$io.github.drumber.kitsune.ui.library.editentry.LibraryEditEntryViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryEntriesAdapter.kt$io.github.drumber.kitsune.ui.adapter.paging.LibraryEntriesAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryEntryApi.kt$io.github.drumber.kitsune.data.source.network.library.api.LibraryEntryApi.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryEntryDao.kt$io.github.drumber.kitsune.data.source.local.library.dao.LibraryEntryDao.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryEntryKind.kt$io.github.drumber.kitsune.data.common.library.LibraryEntryKind.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryEntryModificationDao.kt$io.github.drumber.kitsune.data.source.local.library.dao.LibraryEntryModificationDao.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryEntryModificationTest.kt$io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModificationTest.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryEntryRemoteMediator.kt$io.github.drumber.kitsune.data.repository.LibraryEntryRemoteMediator.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryEntryUpdateResult.kt$io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryEntryWithModificationDao.kt$io.github.drumber.kitsune.data.source.local.library.dao.LibraryEntryWithModificationDao.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryEntryWithModificationTest.kt$io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModificationTest.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryFragment.kt$io.github.drumber.kitsune.ui.library.LibraryFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryLocalDataSource.kt$io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryMapper.kt$io.github.drumber.kitsune.data.mapper.LibraryMapper.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryModificationState.kt$io.github.drumber.kitsune.data.presentation.model.library.LibraryModificationState.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryRepository.kt$io.github.drumber.kitsune.data.repository.LibraryRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryRepositoryTest.kt$io.github.drumber.kitsune.data.repository.LibraryRepositoryTest.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryStatus.kt$io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryWidget.kt$io.github.drumber.kitsune.constants.LibraryWidget.kt</ID>
+    <ID>NewLineAtEndOfFile:LoadStateSpanSizeLookup.kt$io.github.drumber.kitsune.ui.component.LoadStateSpanSizeLookup.kt</ID>
+    <ID>NewLineAtEndOfFile:LocalAccessTokenTest.kt$io.github.drumber.kitsune.data.source.local.auth.LocalAccessTokenTest.kt</ID>
+    <ID>NewLineAtEndOfFile:LocalDatabase.kt$io.github.drumber.kitsune.data.source.local.LocalDatabase.kt</ID>
+    <ID>NewLineAtEndOfFile:LocalLibraryConverters.kt$io.github.drumber.kitsune.data.source.local.library.LocalLibraryConverters.kt</ID>
+    <ID>NewLineAtEndOfFile:LocalLibraryEntryModificationTest.kt$io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryEntryModificationTest.kt</ID>
+    <ID>NewLineAtEndOfFile:LocalLibraryMedia.kt$io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryMedia.kt</ID>
+    <ID>NewLineAtEndOfFile:LocalLibraryModificationState.kt$io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryModificationState.kt</ID>
+    <ID>NewLineAtEndOfFile:LocalLibraryStatus.kt$io.github.drumber.kitsune.data.source.local.library.model.LocalLibraryStatus.kt</ID>
+    <ID>NewLineAtEndOfFile:LocalTitleLanguagePreference.kt$io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference.kt</ID>
+    <ID>NewLineAtEndOfFile:LogCatReader.kt$io.github.drumber.kitsune.util.LogCatReader.kt</ID>
+    <ID>NewLineAtEndOfFile:LogInUserUseCase.kt$io.github.drumber.kitsune.domain.auth.LogInUserUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:LogInUserUseCaseTest.kt$io.github.drumber.kitsune.domain.auth.LogInUserUseCaseTest.kt</ID>
+    <ID>NewLineAtEndOfFile:LogOutUserUseCase.kt$io.github.drumber.kitsune.domain.auth.LogOutUserUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:LogOutUserUseCaseTest.kt$io.github.drumber.kitsune.domain.auth.LogOutUserUseCaseTest.kt</ID>
+    <ID>NewLineAtEndOfFile:LoggedInUserView.kt$io.github.drumber.kitsune.ui.authentication.LoggedInUserView.kt</ID>
+    <ID>NewLineAtEndOfFile:LoginFormState.kt$io.github.drumber.kitsune.ui.authentication.LoginFormState.kt</ID>
+    <ID>NewLineAtEndOfFile:LoginResult.kt$io.github.drumber.kitsune.domain.auth.LoginResult.kt</ID>
+    <ID>NewLineAtEndOfFile:LoginResultUi.kt$io.github.drumber.kitsune.ui.authentication.LoginResultUi.kt</ID>
+    <ID>NewLineAtEndOfFile:LoginViewModel.kt$io.github.drumber.kitsune.ui.authentication.LoginViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:MainActivityViewModel.kt$io.github.drumber.kitsune.ui.main.MainActivityViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:MainFragment.kt$io.github.drumber.kitsune.ui.main.MainFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:MainFragmentViewModel.kt$io.github.drumber.kitsune.ui.main.MainFragmentViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:ManageLibraryBottomSheet.kt$io.github.drumber.kitsune.ui.details.ManageLibraryBottomSheet.kt</ID>
+    <ID>NewLineAtEndOfFile:MangaAdapter.kt$io.github.drumber.kitsune.ui.adapter.paging.MangaAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:MangaApi.kt$io.github.drumber.kitsune.data.source.network.media.api.MangaApi.kt</ID>
+    <ID>NewLineAtEndOfFile:MangaNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.media.MangaNetworkDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:MangaRepository.kt$io.github.drumber.kitsune.data.repository.MangaRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:MangaSubtype.kt$io.github.drumber.kitsune.data.common.media.MangaSubtype.kt</ID>
+    <ID>NewLineAtEndOfFile:MappingApi.kt$io.github.drumber.kitsune.data.source.network.mapping.api.MappingApi.kt</ID>
+    <ID>NewLineAtEndOfFile:MappingMapper.kt$io.github.drumber.kitsune.data.mapper.MappingMapper.kt</ID>
+    <ID>NewLineAtEndOfFile:MappingNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.mapping.MappingNetworkDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:MappingRepository.kt$io.github.drumber.kitsune.data.repository.MappingRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:MdcThemeAdapter.kt$io.github.drumber.kitsune.ui.theme.MdcThemeAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:Media.kt$io.github.drumber.kitsune.data.presentation.model.media.Media.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaCharacterAdapter.kt$io.github.drumber.kitsune.ui.adapter.MediaCharacterAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaDto.kt$io.github.drumber.kitsune.data.presentation.dto.MediaDto.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaItemCard.kt$io.github.drumber.kitsune.ui.component.MediaItemCard.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaListFragment.kt$io.github.drumber.kitsune.ui.medialist.MediaListFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaListViewModel.kt$io.github.drumber.kitsune.ui.medialist.MediaListViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaMapper.kt$io.github.drumber.kitsune.data.mapper.MediaMapper.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaMapperTest.kt$io.github.drumber.kitsune.data.mapper.MediaMapperTest.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaMappingsAdapter.kt$io.github.drumber.kitsune.ui.adapter.MediaMappingsAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaMappingsBottomSheet.kt$io.github.drumber.kitsune.ui.details.MediaMappingsBottomSheet.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaPagingAdapter.kt$io.github.drumber.kitsune.ui.adapter.paging.MediaPagingAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaRecyclerViewAdapter.kt$io.github.drumber.kitsune.ui.adapter.MediaRecyclerViewAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaRelationshipRecyclerViewAdapter.kt$io.github.drumber.kitsune.ui.adapter.MediaRelationshipRecyclerViewAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaRelationshipViewHolder.kt$io.github.drumber.kitsune.ui.adapter.MediaRelationshipViewHolder.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaSearchPagingAdapter.kt$io.github.drumber.kitsune.ui.adapter.paging.MediaSearchPagingAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaTest.kt$io.github.drumber.kitsune.data.presentation.model.media.MediaTest.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaType.kt$io.github.drumber.kitsune.data.common.media.MediaType.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaUnitDetailsBottomSheet.kt$io.github.drumber.kitsune.ui.details.episodes.MediaUnitDetailsBottomSheet.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaUnitMapper.kt$io.github.drumber.kitsune.data.mapper.MediaUnitMapper.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaUnitPagingAdapter.kt$io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaUnitRepository.kt$io.github.drumber.kitsune.data.repository.MediaUnitRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:MediaViewHolder.kt$io.github.drumber.kitsune.ui.adapter.MediaViewHolder.kt</ID>
+    <ID>NewLineAtEndOfFile:NavigationTest.kt$io.github.drumber.kitsune.navigation.NavigationTest.kt</ID>
+    <ID>NewLineAtEndOfFile:NestedScrollableHost.kt$io.github.drumber.kitsune.ui.component.NestedScrollableHost.kt</ID>
+    <ID>NewLineAtEndOfFile:NetworkAnimeProductionRole.kt$io.github.drumber.kitsune.data.source.network.media.model.production.NetworkAnimeProductionRole.kt</ID>
+    <ID>NewLineAtEndOfFile:NetworkAnimeSubtype.kt$io.github.drumber.kitsune.data.source.network.media.model.NetworkAnimeSubtype.kt</ID>
+    <ID>NewLineAtEndOfFile:NetworkLibraryStatus.kt$io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryStatus.kt</ID>
+    <ID>NewLineAtEndOfFile:NetworkMangaSubtype.kt$io.github.drumber.kitsune.data.source.network.media.model.NetworkMangaSubtype.kt</ID>
+    <ID>NewLineAtEndOfFile:NetworkMedia.kt$io.github.drumber.kitsune.data.source.network.media.model.NetworkMedia.kt</ID>
+    <ID>NewLineAtEndOfFile:NetworkMediaRelationshipRole.kt$io.github.drumber.kitsune.data.source.network.media.model.relationship.NetworkMediaRelationshipRole.kt</ID>
+    <ID>NewLineAtEndOfFile:NetworkReleaseStatus.kt$io.github.drumber.kitsune.data.source.network.media.model.NetworkReleaseStatus.kt</ID>
+    <ID>NewLineAtEndOfFile:NetworkTitleLanguagePreference.kt$io.github.drumber.kitsune.data.source.network.user.model.NetworkTitleLanguagePreference.kt</ID>
+    <ID>NewLineAtEndOfFile:NetworkUserStatsData.kt$io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStatsData.kt</ID>
+    <ID>NewLineAtEndOfFile:NoDataException.kt$io.github.drumber.kitsune.data.common.exception.NoDataException.kt</ID>
+    <ID>NewLineAtEndOfFile:NonZeroLargeValueFormatter.kt$io.github.drumber.kitsune.ui.component.chart.NonZeroLargeValueFormatter.kt</ID>
+    <ID>NewLineAtEndOfFile:NotificationChannels.kt$io.github.drumber.kitsune.notification.NotificationChannels.kt</ID>
+    <ID>NewLineAtEndOfFile:Notifications.kt$io.github.drumber.kitsune.notification.Notifications.kt</ID>
+    <ID>NewLineAtEndOfFile:NullableIntSerializer.kt$io.github.drumber.kitsune.util.json.NullableIntSerializer.kt</ID>
+    <ID>NewLineAtEndOfFile:OSLibrariesFragment.kt$io.github.drumber.kitsune.ui.settings.OSLibrariesFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:OkHttpIdlingResource.kt$io.github.drumber.kitsune.utils.OkHttpIdlingResource.kt</ID>
+    <ID>NewLineAtEndOfFile:OnItemClickListener.kt$io.github.drumber.kitsune.ui.adapter.OnItemClickListener.kt</ID>
+    <ID>NewLineAtEndOfFile:OnboardingNavigationControls.kt$io.github.drumber.kitsune.ui.onboarding.components.OnboardingNavigationControls.kt</ID>
+    <ID>NewLineAtEndOfFile:OnboardingUiState.kt$io.github.drumber.kitsune.ui.onboarding.OnboardingUiState.kt</ID>
+    <ID>NewLineAtEndOfFile:OnboardingViewModel.kt$io.github.drumber.kitsune.ui.onboarding.OnboardingViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:PageDataTest.kt$io.github.drumber.kitsune.data.source.network.PageDataTest.kt</ID>
+    <ID>NewLineAtEndOfFile:PhotoViewActivity.kt$io.github.drumber.kitsune.ui.photoview.PhotoViewActivity.kt</ID>
+    <ID>NewLineAtEndOfFile:PhotoViewNestedScrollView.kt$io.github.drumber.kitsune.ui.component.PhotoViewNestedScrollView.kt</ID>
+    <ID>NewLineAtEndOfFile:PieChartStyle.kt$io.github.drumber.kitsune.ui.component.chart.PieChartStyle.kt</ID>
+    <ID>NewLineAtEndOfFile:ProfileFragment.kt$io.github.drumber.kitsune.ui.profile.ProfileFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:ProfileLinkApi.kt$io.github.drumber.kitsune.data.source.network.user.api.ProfileLinkApi.kt</ID>
+    <ID>NewLineAtEndOfFile:ProfileLinkNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.user.ProfileLinkNetworkDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:ProfileLinkRepository.kt$io.github.drumber.kitsune.data.repository.ProfileLinkRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:ProfileLinksMapper.kt$io.github.drumber.kitsune.data.mapper.ProfileLinksMapper.kt</ID>
+    <ID>NewLineAtEndOfFile:ProfileStatsAdapter.kt$io.github.drumber.kitsune.ui.profile.ProfileStatsAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:ProfileViewModel.kt$io.github.drumber.kitsune.ui.profile.ProfileViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:RatingBottomSheet.kt$io.github.drumber.kitsune.ui.library.RatingBottomSheet.kt</ID>
+    <ID>NewLineAtEndOfFile:RatingFrequenciesUtil.kt$io.github.drumber.kitsune.util.rating.RatingFrequenciesUtil.kt</ID>
+    <ID>NewLineAtEndOfFile:RatingFrequenciesUtilTest.kt$io.github.drumber.kitsune.util.rating.RatingFrequenciesUtilTest.kt</ID>
+    <ID>NewLineAtEndOfFile:RatingSystemUtil.kt$io.github.drumber.kitsune.util.rating.RatingSystemUtil.kt</ID>
+    <ID>NewLineAtEndOfFile:RefreshAccessTokenIfExpiredUseCase.kt$io.github.drumber.kitsune.domain.auth.RefreshAccessTokenIfExpiredUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:RefreshAccessTokenIfExpiredUseCaseTest.kt$io.github.drumber.kitsune.domain.auth.RefreshAccessTokenIfExpiredUseCaseTest.kt</ID>
+    <ID>NewLineAtEndOfFile:RefreshAccessTokenUseCase.kt$io.github.drumber.kitsune.domain.auth.RefreshAccessTokenUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:RefreshAccessTokenUseCaseTest.kt$io.github.drumber.kitsune.domain.auth.RefreshAccessTokenUseCaseTest.kt</ID>
+    <ID>NewLineAtEndOfFile:RefreshResult.kt$io.github.drumber.kitsune.domain.auth.RefreshResult.kt</ID>
+    <ID>NewLineAtEndOfFile:ReleaseStatus.kt$io.github.drumber.kitsune.data.common.media.ReleaseStatus.kt</ID>
+    <ID>NewLineAtEndOfFile:RemoteKeyDao.kt$io.github.drumber.kitsune.data.source.local.library.dao.RemoteKeyDao.kt</ID>
+    <ID>NewLineAtEndOfFile:ResourceLoadStateAdapter.kt$io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:ResourceUpdateFailed.kt$io.github.drumber.kitsune.data.common.exception.ResourceUpdateFailed.kt</ID>
+    <ID>NewLineAtEndOfFile:ResponseData.kt$io.github.drumber.kitsune.util.network.ResponseData.kt</ID>
+    <ID>NewLineAtEndOfFile:ResponsiveGridLayoutManager.kt$io.github.drumber.kitsune.ui.component.ResponsiveGridLayoutManager.kt</ID>
+    <ID>NewLineAtEndOfFile:RoundBitmapDrawable.kt$io.github.drumber.kitsune.util.ui.RoundBitmapDrawable.kt</ID>
+    <ID>NewLineAtEndOfFile:ScreenshotModeCustomFilter.kt$io.github.drumber.kitsune.utils.filter.ScreenshotModeCustomFilter.kt</ID>
+    <ID>NewLineAtEndOfFile:SearchLibraryEntriesWithLocalModificationsPagerUseCase.kt$io.github.drumber.kitsune.domain.library.SearchLibraryEntriesWithLocalModificationsPagerUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:SearchProviderUnavailableException.kt$io.github.drumber.kitsune.data.common.exception.SearchProviderUnavailableException.kt</ID>
+    <ID>NewLineAtEndOfFile:SearchViewActions.kt$io.github.drumber.kitsune.utils.SearchViewActions.kt</ID>
+    <ID>NewLineAtEndOfFile:SeasonListPresenter.kt$io.github.drumber.kitsune.ui.component.algolia.SeasonListPresenter.kt</ID>
+    <ID>NewLineAtEndOfFile:SelectProfileLinkSiteBottomSheet.kt$io.github.drumber.kitsune.ui.profile.editprofile.SelectProfileLinkSiteBottomSheet.kt</ID>
+    <ID>NewLineAtEndOfFile:SettingsFragment.kt$io.github.drumber.kitsune.ui.settings.SettingsFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:SettingsViewModel.kt$io.github.drumber.kitsune.ui.settings.SettingsViewModel.kt</ID>
+    <ID>NewLineAtEndOfFile:SetupPage.kt$io.github.drumber.kitsune.ui.onboarding.pages.SetupPage.kt</ID>
+    <ID>NewLineAtEndOfFile:StepAxisValueFormatter.kt$io.github.drumber.kitsune.ui.component.chart.StepAxisValueFormatter.kt</ID>
+    <ID>NewLineAtEndOfFile:StreamingLinkAdapter.kt$io.github.drumber.kitsune.ui.adapter.StreamingLinkAdapter.kt</ID>
+    <ID>NewLineAtEndOfFile:SyncLibraryEntriesForWidgetWorker.kt$io.github.drumber.kitsune.work.SyncLibraryEntriesForWidgetWorker.kt</ID>
+    <ID>NewLineAtEndOfFile:SynchronizeLocalLibraryModificationsUseCase.kt$io.github.drumber.kitsune.domain.library.SynchronizeLocalLibraryModificationsUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:SynchronizeLocalLibraryModificationsUseCaseTest.kt$io.github.drumber.kitsune.domain.library.SynchronizeLocalLibraryModificationsUseCaseTest.kt</ID>
+    <ID>NewLineAtEndOfFile:ThemePickerPreference.kt$io.github.drumber.kitsune.ui.settings.ThemePickerPreference.kt</ID>
+    <ID>NewLineAtEndOfFile:TimeUtil.kt$io.github.drumber.kitsune.util.TimeUtil.kt</ID>
+    <ID>NewLineAtEndOfFile:UniqueStateRecyclerView.kt$io.github.drumber.kitsune.ui.component.UniqueStateRecyclerView.kt</ID>
+    <ID>NewLineAtEndOfFile:UpdateCheckResult.kt$io.github.drumber.kitsune.data.presentation.model.appupdate.UpdateCheckResult.kt</ID>
+    <ID>NewLineAtEndOfFile:UpdateLibraryEntryProgressUseCase.kt$io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:UpdateLibraryEntryRatingUseCase.kt$io.github.drumber.kitsune.domain.library.UpdateLibraryEntryRatingUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:UpdateLibraryEntryUseCase.kt$io.github.drumber.kitsune.domain.library.UpdateLibraryEntryUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:UpdateLibraryWidgetUseCase.kt$io.github.drumber.kitsune.domain.work.UpdateLibraryWidgetUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:UpdateLibraryWidgetWorker.kt$io.github.drumber.kitsune.work.UpdateLibraryWidgetWorker.kt</ID>
+    <ID>NewLineAtEndOfFile:UpdateLocalUserUseCase.kt$io.github.drumber.kitsune.domain.user.UpdateLocalUserUseCase.kt</ID>
+    <ID>NewLineAtEndOfFile:UpdateLocalUserUseCaseTest.kt$io.github.drumber.kitsune.domain.user.UpdateLocalUserUseCaseTest.kt</ID>
+    <ID>NewLineAtEndOfFile:UserAgentInterceptor.kt$io.github.drumber.kitsune.util.network.UserAgentInterceptor.kt</ID>
+    <ID>NewLineAtEndOfFile:UserApi.kt$io.github.drumber.kitsune.data.source.network.user.api.UserApi.kt</ID>
+    <ID>NewLineAtEndOfFile:UserImageUploadApi.kt$io.github.drumber.kitsune.data.source.network.user.api.UserImageUploadApi.kt</ID>
+    <ID>NewLineAtEndOfFile:UserLocalDataSource.kt$io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:UserMapper.kt$io.github.drumber.kitsune.data.mapper.UserMapper.kt</ID>
+    <ID>NewLineAtEndOfFile:UserMapperTest.kt$io.github.drumber.kitsune.data.mapper.UserMapperTest.kt</ID>
+    <ID>NewLineAtEndOfFile:UserNetworkDataSource.kt$io.github.drumber.kitsune.data.source.network.user.UserNetworkDataSource.kt</ID>
+    <ID>NewLineAtEndOfFile:UserPreferences.kt$io.github.drumber.kitsune.data.source.local.user.UserPreferences.kt</ID>
+    <ID>NewLineAtEndOfFile:UserRepository.kt$io.github.drumber.kitsune.data.repository.UserRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:UserRepositoryTest.kt$io.github.drumber.kitsune.data.repository.UserRepositoryTest.kt</ID>
+    <ID>NewLineAtEndOfFile:UserStatsData.kt$io.github.drumber.kitsune.data.presentation.model.user.stats.UserStatsData.kt</ID>
+    <ID>NewLineAtEndOfFile:UserStatsMapper.kt$io.github.drumber.kitsune.data.mapper.UserStatsMapper.kt</ID>
+    <ID>NewLineAtEndOfFile:ViewActions.kt$io.github.drumber.kitsune.utils.ViewActions.kt</ID>
+    <ID>NewLineAtEndOfFile:WebViewFragment.kt$io.github.drumber.kitsune.ui.webview.WebViewFragment.kt</ID>
+    <ID>NewLineAtEndOfFile:WidgetUtils.kt$io.github.drumber.kitsune.ui.widget.WidgetUtils.kt</ID>
+    <ID>NoBlankLineBeforeRbrace:AccessTokenLocalDataSource.kt$AccessTokenLocalDataSource$ </ID>
+    <ID>NoBlankLineBeforeRbrace:AccessTokenNetworkDataSource.kt$AccessTokenNetworkDataSource$ </ID>
+    <ID>NoBlankLineBeforeRbrace:AccessTokenPreference.kt$AccessTokenPreference$ </ID>
+    <ID>NoBlankLineBeforeRbrace:AlgoliaKeyApi.kt$AlgoliaKeyApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:AlgoliaKeyRepository.kt$AlgoliaKeyRepository$ </ID>
+    <ID>NoBlankLineBeforeRbrace:AlgoliaNumericValueDeserializer.kt$AlgoliaNumericValueDeserializer$ </ID>
+    <ID>NoBlankLineBeforeRbrace:Anime.kt$Anime$ </ID>
+    <ID>NoBlankLineBeforeRbrace:AnimeAdapter.kt$AnimeAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:AnimeApi.kt$AnimeApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:AppLogsViewModel.kt$AppLogsViewModel$ </ID>
+    <ID>NoBlankLineBeforeRbrace:AppearanceFragment.kt$AppearanceFragment$ </ID>
+    <ID>NoBlankLineBeforeRbrace:AuthenticationActivity.kt$AuthenticationActivity$ </ID>
+    <ID>NoBlankLineBeforeRbrace:AuthenticationApi.kt$AuthenticationApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:BarChartStyle.kt$BarChartStyle$ </ID>
+    <ID>NoBlankLineBeforeRbrace:BaseActivity.kt$BaseActivity$ </ID>
+    <ID>NoBlankLineBeforeRbrace:BaseChartStyle.kt$BaseChartStyle$ </ID>
+    <ID>NoBlankLineBeforeRbrace:BaseDialogFragment.kt$BaseDialogFragment$ </ID>
+    <ID>NoBlankLineBeforeRbrace:BasePagingDataSource.kt$BasePagingDataSource$ </ID>
+    <ID>NoBlankLineBeforeRbrace:BasePreferenceFragment.kt$BasePreferenceFragment$ </ID>
+    <ID>NoBlankLineBeforeRbrace:BindingAdapter.kt$BindingAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CastingApi.kt$CastingApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CastingNetworkDataSource.kt$CastingNetworkDataSource$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CategoriesDialogFragment.kt$CategoriesDialogFragment$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CategoriesViewModel.kt$CategoriesViewModel$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CategoryApi.kt$CategoryApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CategoryViewHolder.kt$CategoryViewHolder$ </ID>
+    <ID>NoBlankLineBeforeRbrace:ChapterApi.kt$ChapterApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CharacterAdapter.kt$CharacterAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CharacterAdapter.kt$CharacterAdapter.SingleCharacterViewHolder$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CharacterApi.kt$CharacterApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CharacterDetailsBottomSheet.kt$CharacterDetailsBottomSheet$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CharacterDetailsViewModel.kt$CharacterDetailsViewModel$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CharacterFilterAdapter.kt$CharacterFilterAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CharacterPagingAdapter.kt$CharacterPagingAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CharacterPagingAdapter.kt$CharacterPagingAdapter.CharacterViewHolder$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CharacterSearchResultAdapter.kt$CharacterSearchResultAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CharacterSearchResultAdapter.kt$CharacterSearchResultAdapter.CharacterSearchResultViewHolder$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CharactersViewModel.kt$CharactersViewModel$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CommentApi.kt$CommentApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CommentMapper.kt$CommentMapper$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CommentNetworkDataSource.kt$CommentNetworkDataSource$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CommentPagingAdapter.kt$CommentPagingAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CommentPagingAdapter.kt$CommentPagingAdapter.CommentViewHolder$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CommentPagingDataSource.kt$CommentPagingDataSource$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CommentRepository.kt$CommentRepository$ </ID>
+    <ID>NoBlankLineBeforeRbrace:ContentRevealStore.kt$ContentRevealStore$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CreatePostViewModel.kt$CreatePostViewModel$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CustomNumberSpinner.kt$CustomNumberSpinner$ </ID>
+    <ID>NoBlankLineBeforeRbrace:CustomPercentFormatter.kt$CustomPercentFormatter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:DataUtil.kt$DataUtil$ </ID>
+    <ID>NoBlankLineBeforeRbrace:DateUtilTest.kt$DateUtilTest$ </ID>
+    <ID>NoBlankLineBeforeRbrace:DateValidatorPointBetween.kt$DateValidatorPointBetween$ </ID>
+    <ID>NoBlankLineBeforeRbrace:Defaults.kt$Defaults$ </ID>
+    <ID>NoBlankLineBeforeRbrace:DetailsFragment.kt$DetailsFragment$ </ID>
+    <ID>NoBlankLineBeforeRbrace:EditProfileLinkBottomSheet.kt$EditProfileLinkBottomSheet$ </ID>
+    <ID>NoBlankLineBeforeRbrace:EmbedBinder.kt$EmbedBinder$ </ID>
+    <ID>NoBlankLineBeforeRbrace:EpisodeApi.kt$EpisodeApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:EpisodesViewModel.kt$EpisodesViewModel$ </ID>
+    <ID>NoBlankLineBeforeRbrace:ExpandableLayout.kt$ExpandableLayout$ </ID>
+    <ID>NoBlankLineBeforeRbrace:ExploreSection.kt$ExploreSection$ </ID>
+    <ID>NoBlankLineBeforeRbrace:FacetFragment.kt$FacetFragment$ </ID>
+    <ID>NoBlankLineBeforeRbrace:FavoriteApi.kt$FavoriteApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:FeedApi.kt$FeedApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:FeedListViewModel.kt$FeedListViewModel$ </ID>
+    <ID>NoBlankLineBeforeRbrace:FeedMapper.kt$FeedMapper$ </ID>
+    <ID>NoBlankLineBeforeRbrace:FeedNetworkDataSource.kt$FeedNetworkDataSource$ </ID>
+    <ID>NoBlankLineBeforeRbrace:FeedPagingDataSource.kt$FeedPagingDataSource$ </ID>
+    <ID>NoBlankLineBeforeRbrace:FeedRepository.kt$FeedRepository$ </ID>
+    <ID>NoBlankLineBeforeRbrace:FollowApi.kt$FollowApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:GetLocalUserIdUseCase.kt$GetLocalUserIdUseCase$ </ID>
+    <ID>NoBlankLineBeforeRbrace:GitHub.kt$GitHub$ </ID>
+    <ID>NoBlankLineBeforeRbrace:GitHubApi.kt$GitHubApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:GroupDetailViewModel.kt$GroupDetailViewModel$ </ID>
+    <ID>NoBlankLineBeforeRbrace:GroupMapper.kt$GroupMapper$ </ID>
+    <ID>NoBlankLineBeforeRbrace:GroupsApi.kt$GroupsApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:GroupsNetworkDataSource.kt$GroupsNetworkDataSource$ </ID>
+    <ID>NoBlankLineBeforeRbrace:GroupsPagingAdapter.kt$GroupsPagingAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:GroupsPagingAdapter.kt$GroupsPagingAdapter.GroupViewHolder$ </ID>
+    <ID>NoBlankLineBeforeRbrace:GroupsRepository.kt$GroupsRepository$ </ID>
+    <ID>NoBlankLineBeforeRbrace:GroupsViewModel.kt$GroupsViewModel$ </ID>
+    <ID>NoBlankLineBeforeRbrace:HomeExploreFragment.kt$HomeExploreFragment$ </ID>
+    <ID>NoBlankLineBeforeRbrace:IntNumberRangeView.kt$IntNumberRangeView$ </ID>
+    <ID>NoBlankLineBeforeRbrace:IsUserLoggedInUseCase.kt$IsUserLoggedInUseCase$ </ID>
+    <ID>NoBlankLineBeforeRbrace:KitsuneGlideModule.kt$KitsuneGlideModule$ </ID>
+    <ID>NoBlankLineBeforeRbrace:LibraryEntriesAdapter.kt$LibraryEntriesAdapter.StatusSeparatorViewHolder$ </ID>
+    <ID>NoBlankLineBeforeRbrace:LibraryEntryApi.kt$LibraryEntryApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:LibraryEntryFilter.kt$LibraryEntryFilter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:LibraryEntryModificationDao.kt$LibraryEntryModificationDao$ </ID>
+    <ID>NoBlankLineBeforeRbrace:LibraryEntryRemoteMediator.kt$LibraryEntryRemoteMediator$ </ID>
+    <ID>NoBlankLineBeforeRbrace:LibraryEntryWithModification.kt$LibraryEntryWithModification$ </ID>
+    <ID>NoBlankLineBeforeRbrace:LibraryFragment.kt$LibraryFragment$ </ID>
+    <ID>NoBlankLineBeforeRbrace:LoadStateSpanSizeLookup.kt$LoadStateSpanSizeLookup$ </ID>
+    <ID>NoBlankLineBeforeRbrace:LogCatReader.kt$LogCatReader$ </ID>
+    <ID>NoBlankLineBeforeRbrace:LogInUserUseCase.kt$LogInUserUseCase$ </ID>
+    <ID>NoBlankLineBeforeRbrace:LogOutUserUseCase.kt$LogOutUserUseCase$ </ID>
+    <ID>NoBlankLineBeforeRbrace:LoginViewModel.kt$LoginViewModel$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MainFragmentViewModel.kt$MainFragmentViewModel$ </ID>
+    <ID>NoBlankLineBeforeRbrace:ManageLibraryBottomSheet.kt$ManageLibraryBottomSheet$ </ID>
+    <ID>NoBlankLineBeforeRbrace:Manga.kt$Manga$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MangaAdapter.kt$MangaAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MangaApi.kt$MangaApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MappingApi.kt$MappingApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MarkdownPreviewRenderer.kt$MarkdownPreviewRenderer$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MediaCharacterAdapter.kt$MediaCharacterAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MediaCharacterAdapter.kt$MediaCharacterAdapter.MediaCharacterViewHolder$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MediaFeedViewModel.kt$MediaFeedViewModel$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MediaItemCard.kt$MediaItemCard$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MediaMappingsBottomSheet.kt$MediaMappingsBottomSheet$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MediaPagingAdapter.kt$MediaPagingAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MediaReactionApi.kt$MediaReactionApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MediaReactionPagingAdapter.kt$MediaReactionPagingAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MediaReactionPagingAdapter.kt$MediaReactionPagingAdapter.ReactionViewHolder$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MediaReactionPreviewAdapter.kt$MediaReactionPreviewAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MediaReactionPreviewAdapter.kt$MediaReactionPreviewAdapter.ReactionViewHolder$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MediaReactionRepository.kt$MediaReactionRepository$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MediaUnitPagingAdapter.kt$MediaUnitPagingAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:MediaUnitPagingAdapter.kt$MediaUnitPagingAdapter.MediaUnitViewHolder$ </ID>
+    <ID>NoBlankLineBeforeRbrace:NetworkAnime.kt$NetworkAnime$ </ID>
+    <ID>NoBlankLineBeforeRbrace:NetworkLibraryEntry.kt$NetworkLibraryEntry$ </ID>
+    <ID>NoBlankLineBeforeRbrace:NetworkManga.kt$NetworkManga$ </ID>
+    <ID>NoBlankLineBeforeRbrace:NonZeroLargeValueFormatter.kt$NonZeroLargeValueFormatter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:NotificationApi.kt$NotificationApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:NotificationChannels.kt$NotificationChannels$ </ID>
+    <ID>NoBlankLineBeforeRbrace:NotificationMapper.kt$NotificationMapper$ </ID>
+    <ID>NoBlankLineBeforeRbrace:NotificationNetworkDataSource.kt$NotificationNetworkDataSource$ </ID>
+    <ID>NoBlankLineBeforeRbrace:NotificationPagingAdapter.kt$NotificationPagingAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:NotificationPagingDataSource.kt$NotificationPagingDataSource$ </ID>
+    <ID>NoBlankLineBeforeRbrace:NotificationRepository.kt$NotificationRepository$ </ID>
+    <ID>NoBlankLineBeforeRbrace:Notifications.kt$Notifications$ </ID>
+    <ID>NoBlankLineBeforeRbrace:NotificationsViewModel.kt$NotificationsViewModel$ </ID>
+    <ID>NoBlankLineBeforeRbrace:NullableIntSerializer.kt$NullableIntSerializer$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PhotoViewNestedScrollView.kt$PhotoViewNestedScrollView$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PieChartStyle.kt$PieChartStyle$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PostApi.kt$PostApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PostContentRenderer.kt$PostContentRenderer$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PostDetailFragment.kt$PostDetailFragment$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PostDetailHeaderAdapter.kt$PostDetailHeaderAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PostDetailHeaderAdapter.kt$PostDetailHeaderAdapter.HeaderViewHolder$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PostDetailViewModel.kt$PostDetailViewModel$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PostImagePagerAdapter.kt$PostImagePagerAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PostImagePagerAdapter.kt$PostImagePagerAdapter.ImageViewHolder$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PostInteractionRepository.kt$PostInteractionRepository$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PostInteractionStore.kt$PostInteractionStore$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PostLikeApi.kt$PostLikeApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PostLikeNetworkDataSource.kt$PostLikeNetworkDataSource$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PostManagementRepository.kt$PostManagementRepository$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PostMediaBinder.kt$PostMediaBinder$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PostNetworkDataSource.kt$PostNetworkDataSource$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PostPagingAdapter.kt$PostPagingAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:PostPagingAdapter.kt$PostPagingAdapter.PostViewHolder$ </ID>
+    <ID>NoBlankLineBeforeRbrace:ProfileFragment.kt$ProfileFragment$ </ID>
+    <ID>NoBlankLineBeforeRbrace:ProfileLinkApi.kt$ProfileLinkApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:ProfileStatsAdapter.kt$ProfileStatsAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:RatingBottomSheet.kt$RatingBottomSheet$ </ID>
+    <ID>NoBlankLineBeforeRbrace:RatingFrequenciesUtil.kt$RatingFrequenciesUtil$ </ID>
+    <ID>NoBlankLineBeforeRbrace:RatingSystemUtil.kt$RatingSystemUtil$ </ID>
+    <ID>NoBlankLineBeforeRbrace:ReactionDetailViewModel.kt$ReactionDetailViewModel$ </ID>
+    <ID>NoBlankLineBeforeRbrace:ReactionMapper.kt$ReactionMapper$ </ID>
+    <ID>NoBlankLineBeforeRbrace:ReactionNetworkDataSource.kt$ReactionNetworkDataSource$ </ID>
+    <ID>NoBlankLineBeforeRbrace:ReactionsViewModel.kt$ReactionsViewModel$ </ID>
+    <ID>NoBlankLineBeforeRbrace:RefreshAccessTokenIfExpiredUseCase.kt$RefreshAccessTokenIfExpiredUseCase$ </ID>
+    <ID>NoBlankLineBeforeRbrace:RefreshAccessTokenUseCase.kt$RefreshAccessTokenUseCase$ </ID>
+    <ID>NoBlankLineBeforeRbrace:Repository.kt$Repository$ </ID>
+    <ID>NoBlankLineBeforeRbrace:ResourceLoadStateAdapter.kt$ResourceLoadStateAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:ResourceLoadStateAdapter.kt$ResourceLoadStateAdapter.NetworkStateItemViewHolder$ </ID>
+    <ID>NoBlankLineBeforeRbrace:ResponseData.kt$ResponseData$ </ID>
+    <ID>NoBlankLineBeforeRbrace:SearchFragment.kt$SearchFragment$ </ID>
+    <ID>NoBlankLineBeforeRbrace:SearchFragment.kt$SearchFragment.SearchResponseListener$ </ID>
+    <ID>NoBlankLineBeforeRbrace:SearchProvider.kt$SearchProvider$ </ID>
+    <ID>NoBlankLineBeforeRbrace:SearchViewModel.kt$SearchViewModel$ </ID>
+    <ID>NoBlankLineBeforeRbrace:SelectProfileLinkSiteBottomSheet.kt$SelectProfileLinkSiteBottomSheet$ </ID>
+    <ID>NoBlankLineBeforeRbrace:SettingsFragment.kt$SettingsFragment$ </ID>
+    <ID>NoBlankLineBeforeRbrace:SettingsViewModel.kt$SettingsViewModel$ </ID>
+    <ID>NoBlankLineBeforeRbrace:SortFilter.kt$SortFilter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:StepAxisValueFormatter.kt$StepAxisValueFormatter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:StreamingLinkAdapter.kt$StreamingLinkAdapter$ </ID>
+    <ID>NoBlankLineBeforeRbrace:StreamingLinkAdapter.kt$StreamingLinkAdapter.StreamingLinkViewHolder$ </ID>
+    <ID>NoBlankLineBeforeRbrace:StreamingLogo.kt$StreamingLogo$ </ID>
+    <ID>NoBlankLineBeforeRbrace:ThemePickerPreference.kt$ThemePickerPreference$ </ID>
+    <ID>NoBlankLineBeforeRbrace:TimeUtil.kt$TimeUtil$ </ID>
+    <ID>NoBlankLineBeforeRbrace:UpdateLocalUserUseCase.kt$UpdateLocalUserUseCase$ </ID>
+    <ID>NoBlankLineBeforeRbrace:UploadApi.kt$UploadApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:UploadNetworkDataSource.kt$UploadNetworkDataSource$ </ID>
+    <ID>NoBlankLineBeforeRbrace:UploadRepository.kt$UploadRepository$ </ID>
+    <ID>NoBlankLineBeforeRbrace:UserApi.kt$UserApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:UserImageUploadApi.kt$UserImageUploadApi$ </ID>
+    <ID>NoBlankLineBeforeRbrace:UserLocalDataSource.kt$UserLocalDataSource$ </ID>
+    <ID>NoBlankLineBeforeRbrace:UserPreferences.kt$UserPreferences$ </ID>
+    <ID>NoConsecutiveBlankLines:AccessTokenRepositoryTest.kt$AccessTokenRepositoryTest$ </ID>
+    <ID>NoConsecutiveBlankLines:AppearanceFragment.kt$AppearanceFragment$ </ID>
+    <ID>NoConsecutiveBlankLines:KitsunePref.kt$KitsunePref$ </ID>
+    <ID>NoConsecutiveBlankLines:LibraryEntriesAdapter.kt$LibraryEntriesAdapter.LibraryEntryUiModelComparator$ </ID>
+    <ID>NoConsecutiveBlankLines:LibraryEntryDao.kt$LibraryEntryDao$ </ID>
+    <ID>NoConsecutiveBlankLines:LibraryRepositoryTest.kt$LibraryRepositoryTest$ </ID>
+    <ID>NoConsecutiveBlankLines:MainActivity.kt$MainActivity$ </ID>
+    <ID>NoConsecutiveBlankLines:ResourceLoadStateAdapter.kt$ResourceLoadStateAdapter$ </ID>
+    <ID>NoConsecutiveBlankLines:SearchViewModel.kt$SearchViewModel$ </ID>
+    <ID>NoConsecutiveBlankLines:SettingsViewModel.kt$SettingsViewModel$ </ID>
+    <ID>NoTrailingSpaces:AppearanceFragment.kt$AppearanceFragment$ </ID>
+    <ID>NoUnusedImports:AppLogsFragment.kt$io.github.drumber.kitsune.ui.settings.AppLogsFragment.kt</ID>
+    <ID>NoUnusedImports:CategoriesDialogFragment.kt$io.github.drumber.kitsune.ui.search.categories.CategoriesDialogFragment.kt</ID>
+    <ID>NoUnusedImports:CharactersFragment.kt$io.github.drumber.kitsune.ui.details.characters.CharactersFragment.kt</ID>
+    <ID>NoUnusedImports:DetailsFragment.kt$io.github.drumber.kitsune.ui.details.DetailsFragment.kt</ID>
+    <ID>NoUnusedImports:EpisodesFragment.kt$io.github.drumber.kitsune.ui.details.episodes.EpisodesFragment.kt</ID>
+    <ID>NoUnusedImports:FacetFragment.kt$io.github.drumber.kitsune.ui.search.filter.FacetFragment.kt</ID>
+    <ID>NoUnusedImports:FollowRepository.kt$io.github.drumber.kitsune.data.repository.FollowRepository.kt</ID>
+    <ID>NoUnusedImports:GroupsFragment.kt$io.github.drumber.kitsune.ui.groups.GroupsFragment.kt</ID>
+    <ID>NoUnusedImports:HomeExploreFragment.kt$io.github.drumber.kitsune.ui.main.HomeExploreFragment.kt</ID>
+    <ID>NoUnusedImports:LibraryFragment.kt$io.github.drumber.kitsune.ui.library.LibraryFragment.kt</ID>
+    <ID>NoUnusedImports:MainFragment.kt$io.github.drumber.kitsune.ui.main.MainFragment.kt</ID>
+    <ID>NoUnusedImports:MediaFeedFragment.kt$io.github.drumber.kitsune.ui.details.feed.MediaFeedFragment.kt</ID>
+    <ID>NoUnusedImports:MediaListFragment.kt$io.github.drumber.kitsune.ui.medialist.MediaListFragment.kt</ID>
+    <ID>NoUnusedImports:OSLibrariesFragment.kt$io.github.drumber.kitsune.ui.settings.OSLibrariesFragment.kt</ID>
+    <ID>NoUnusedImports:ProfileFragment.kt$io.github.drumber.kitsune.ui.profile.ProfileFragment.kt</ID>
+    <ID>NoUnusedImports:ReactionsFragment.kt$io.github.drumber.kitsune.ui.details.reactions.ReactionsFragment.kt</ID>
+    <ID>NoUnusedImports:SearchFragment.kt$io.github.drumber.kitsune.ui.search.SearchFragment.kt</ID>
+    <ID>NoUnusedImports:UserProfileFragment.kt$io.github.drumber.kitsune.ui.profile.UserProfileFragment.kt</ID>
+    <ID>NoUnusedImports:WebViewFragment.kt$io.github.drumber.kitsune.ui.webview.WebViewFragment.kt</ID>
+    <ID>ReturnCount:AppUpdateRepository.kt$AppUpdateRepository$private fun isSemanticVersionHigher(localVersion: String, remoteVersion: String): Boolean</ID>
+    <ID>SafeCast:FakeLibraryEntry.kt$if (media is NetworkAnime) media else null</ID>
+    <ID>SafeCast:FakeLibraryEntry.kt$if (media is NetworkManga) media else null</ID>
+    <ID>SpacingAroundColon:AccessTokenPreference.kt$AccessTokenPreference$:</ID>
+    <ID>SpacingAroundColon:AnimeAdapter.kt$AnimeAdapter.AnimeComparator$:</ID>
+    <ID>SpacingAroundColon:InvalidDataException.kt$InvalidDataException$:</ID>
+    <ID>SpacingAroundColon:InvalidatingPagingSourceFactory.kt$InvalidatingPagingSourceFactory$:</ID>
+    <ID>SpacingAroundColon:MangaAdapter.kt$MangaAdapter.MangaComparator$:</ID>
+    <ID>SpacingAroundColon:ResponseData.kt$ResponseData.Error$:</ID>
+    <ID>SpacingAroundColon:ResponseData.kt$ResponseData.Success$:</ID>
+    <ID>SpacingAroundColon:SearchProviderUnavailableException.kt$SearchProviderUnavailableException$:</ID>
+    <ID>SpacingAroundComma:FavoriteRepository.kt$FavoriteRepository$,</ID>
+    <ID>SpacingAroundKeyword:CategoryViewHolder.kt$CategoryViewHolder$if</ID>
+    <ID>SpacingAroundKeyword:ExploreSection.kt$ExploreSection$if</ID>
+    <ID>SpacingAroundKeyword:LoadStateSpanSizeLookup.kt$LoadStateSpanSizeLookup$if</ID>
+    <ID>SpacingAroundKeyword:LoginViewModel.kt$LoginViewModel$if</ID>
+    <ID>SpacingAroundKeyword:SortFilter.kt$SortFilter.Companion$if</ID>
+    <ID>SpacingAroundKeyword:StreamingLinkAdapter.kt$StreamingLinkAdapter.StreamingLinkViewHolder$if</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:AlgoliaMediaSearchKind.kt$AlgoliaMediaSearchKind$Manga</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkAnimeProductionRole.kt$NetworkAnimeProductionRole$Producer</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkAnimeProductionRole.kt$NetworkAnimeProductionRole$Studio</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkAnimeSubtype.kt$NetworkAnimeSubtype$Movie</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkAnimeSubtype.kt$NetworkAnimeSubtype$Music</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkAnimeSubtype.kt$NetworkAnimeSubtype$OVA</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkAnimeSubtype.kt$NetworkAnimeSubtype$Special</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkAnimeSubtype.kt$NetworkAnimeSubtype$TV</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMangaSubtype.kt$NetworkMangaSubtype$Manga</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMangaSubtype.kt$NetworkMangaSubtype$Manhua</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMangaSubtype.kt$NetworkMangaSubtype$Manhwa</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMangaSubtype.kt$NetworkMangaSubtype$Novel</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMangaSubtype.kt$NetworkMangaSubtype$Oel</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMangaSubtype.kt$NetworkMangaSubtype$Oneshot</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMediaCharacterRole.kt$NetworkMediaCharacterRole$CAMEO</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMediaCharacterRole.kt$NetworkMediaCharacterRole$RECURRING</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMediaCharacterRole.kt$NetworkMediaCharacterRole$SUPPORTING</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMediaRelationshipRole.kt$NetworkMediaRelationshipRole$Adaptation</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMediaRelationshipRole.kt$NetworkMediaRelationshipRole$AlternativeSetting</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMediaRelationshipRole.kt$NetworkMediaRelationshipRole$AlternativeVersion</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMediaRelationshipRole.kt$NetworkMediaRelationshipRole$Character</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMediaRelationshipRole.kt$NetworkMediaRelationshipRole$FullStory</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMediaRelationshipRole.kt$NetworkMediaRelationshipRole$Other</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMediaRelationshipRole.kt$NetworkMediaRelationshipRole$ParentStory</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMediaRelationshipRole.kt$NetworkMediaRelationshipRole$Prequel</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMediaRelationshipRole.kt$NetworkMediaRelationshipRole$SideStory</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMediaRelationshipRole.kt$NetworkMediaRelationshipRole$Spinoff</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkMediaRelationshipRole.kt$NetworkMediaRelationshipRole$Summary</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkRatingSystemPreference.kt$NetworkRatingSystemPreference$Regular</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkRatingSystemPreference.kt$NetworkRatingSystemPreference$Simple</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkReleaseStatus.kt$NetworkReleaseStatus$Finished</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkReleaseStatus.kt$NetworkReleaseStatus$TBA</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkReleaseStatus.kt$NetworkReleaseStatus$Unreleased</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkReleaseStatus.kt$NetworkReleaseStatus$Upcoming</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkSfwFilterPreference.kt$NetworkSfwFilterPreference$NSFW_EVERYWHERE</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkSfwFilterPreference.kt$NetworkSfwFilterPreference$NSFW_SOMETIMES</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkTitleLanguagePreference.kt$NetworkTitleLanguagePreference$English</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkTitleLanguagePreference.kt$NetworkTitleLanguagePreference$Romanized</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkUserStatsKind.kt$NetworkUserStatsKind$AnimeAmountConsumed</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkUserStatsKind.kt$NetworkUserStatsKind$AnimeCategoryBreakdown</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkUserStatsKind.kt$NetworkUserStatsKind$AnimeFavoriteYear</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkUserStatsKind.kt$NetworkUserStatsKind$MangaAmountConsumed</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkUserStatsKind.kt$NetworkUserStatsKind$MangaCategoryBreakdown</ID>
+    <ID>SpacingBetweenDeclarationsWithAnnotations:NetworkUserStatsKind.kt$NetworkUserStatsKind$MangaFavoriteYear</ID>
+    <ID>SpacingBetweenDeclarationsWithComments:LocalRatingSystemPreference.kt$LocalRatingSystemPreference.Regular$// 0.5, 1...5</ID>
+    <ID>SpacingBetweenDeclarationsWithComments:LocalRatingSystemPreference.kt$LocalRatingSystemPreference.Simple$// :(, :|, :), :D</ID>
+    <ID>SpacingBetweenDeclarationsWithComments:NetworkRatingSystemPreference.kt$NetworkRatingSystemPreference.Regular$// 0.5, 1...5</ID>
+    <ID>SpacingBetweenDeclarationsWithComments:NetworkRatingSystemPreference.kt$NetworkRatingSystemPreference.Simple$// :(, :|, :), :D</ID>
+    <ID>StringTemplate:WebViewFragment.kt$WebViewFragment.KitsuWebViewClient$${expiresAt}</ID>
+    <ID>ThrowingExceptionsWithoutMessageOrCause:NestedScrollableHost.kt$NestedScrollableHost$IllegalArgumentException()</ID>
+    <ID>ThrowsCount:LibraryRepository.kt$LibraryRepository$private suspend fun pushModificationToService( modification: LibraryEntryModification ): NetworkLibraryEntry</ID>
+    <ID>ThrowsCount:SearchProvider.kt$SearchProvider$suspend fun createSearchClient( searchType: SearchType, query: Query, triggerSearchFor: SearchForQuery = SearchForQuery.All, createdListener: suspend (HitsSearcher) -&gt; Unit )</ID>
+    <ID>UnusedPrivateMember:LoginPage.kt$@Preview(showBackground = true) @Composable private fun LoginPageAuthenticatedPreview()</ID>
+    <ID>UnusedPrivateMember:LoginPage.kt$@Preview(showBackground = true) @Composable private fun LoginPagePreview()</ID>
+    <ID>UnusedPrivateMember:OnboardingActivity.kt$@Preview(showBackground = true) @Composable private fun CreateAccountForwardDialogPreview()</ID>
+    <ID>UnusedPrivateMember:OnboardingActivity.kt$@Preview(showBackground = true) @Composable private fun OnboardingTourPreview()</ID>
+    <ID>UnusedPrivateMember:OnboardingNavigationControls.kt$@Preview(showBackground = true) @Composable private fun OnboardingNavigationControlsPreview()</ID>
+    <ID>UnusedPrivateMember:PreferenceCard.kt$@Preview(showBackground = false) @Composable private fun PreferenceCardPreview()</ID>
+    <ID>UnusedPrivateMember:SetupPage.kt$@Preview(showBackground = true) @Composable private fun SelectTitleLanguageDialogPreview()</ID>
+    <ID>UnusedPrivateMember:SetupPage.kt$@Preview(showBackground = true) @Composable private fun SetupPagePreview()</ID>
+    <ID>UnusedPrivateMember:WelcomePage.kt$@PreviewScreenSizes @Preview(showBackground = true, heightDp = 780, widthDp = 390) @Composable private fun WelcomePagePreview()</ID>
+    <ID>UnusedPrivateProperty:ArchUnitTest.kt$ArchUnitTest.Companion$private val TEST_CLASSES = ClassFileImporter().withImportOption { it.matches(".*/(debug|release)UnitTest/.*".toPattern()) }.importPackagesOf(KitsuneApplication::class.java)</ID>
+    <ID>UnusedPrivateProperty:FeedListViewModel.kt$FeedListViewModel$private val commentRepository: CommentRepository</ID>
+    <ID>UseCheckOrError:AccessTokenRepository.kt$AccessTokenRepository$throw IllegalStateException("No refresh token available. Are you logged in?")</ID>
+    <ID>UseCheckOrError:CreatePostViewModel.kt$CreatePostViewModel$throw IllegalStateException("Image upload returned no id.")</ID>
+    <ID>UseCheckOrError:CreatePostViewModel.kt$CreatePostViewModel$throw IllegalStateException("Missing image data.")</ID>
+    <ID>UseCheckOrError:FeedViewPagerAdapter.kt$FeedViewPagerAdapter$throw IllegalStateException("Invalid position '$position'. There are only 2 fragments!")</ID>
+    <ID>UseCheckOrError:HomeExploreViewPagerAdapter.kt$HomeExploreViewPagerAdapter$throw IllegalStateException("Invalid position '$position'. There are ony 2 fragments!")</ID>
+    <ID>UseCheckOrError:SearchViewModel.kt$SearchViewModel$throw IllegalStateException("Search type '$searchType' is not supported.")</ID>
+    <ID>VariableNaming:EditProfileViewModel.kt$EditProfileViewModel$val _loadingStateFlow = MutableSharedFlow&lt;LoadingState&gt;()</ID>
+    <ID>VariableNaming:EditProfileViewModel.kt$EditProfileViewModel$val _profileImageStateFlow = MutableSharedFlow&lt;ProfileImageState&gt;()</ID>
+    <ID>VariableNaming:EditProfileViewModel.kt$EditProfileViewModel$val _profileLinkEntriesStateFlow = MutableSharedFlow&lt;List&lt;ProfileLinkEntry&gt;&gt;()</ID>
+    <ID>VariableNaming:EditProfileViewModel.kt$EditProfileViewModel$val _profileStateFlow = MutableSharedFlow&lt;ProfileState&gt;()</ID>
+  </CurrentIssues>
+</SmellBaseline>

@@ -21,14 +21,14 @@
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:liftOnScrollTargetViewId="@id/nsv_content"
+            app:liftOnScrollTargetViewId="@id/view_pager_profile"
             app:liftOnScroll="true">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/collapsingToolbarLayoutLargeSize"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
                 style="@style/Widget.Material3.CollapsingToolbar.Large">
 
                 <FrameLayout
@@ -73,298 +73,93 @@
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_scrollFlags="noScroll"
+                app:tabMode="fixed"
+                tools:visibility="visible"
+                style="@style/Widget.Material3.TabLayout.OnSurface">
+
+            </com.google.android.material.tabs.TabLayout>
+
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager_profile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/nsv_content"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nsv_not_logged_in"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:visibility="gone"
+            tools:visibility="gone">
+
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:fillViewport="true">
+                android:layout_height="match_parent">
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                <LinearLayout
+                    android:id="@+id/layout_not_logged_in"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="20dp"
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:isVisible="@{user != null}"
-                        tools:visibility="visible"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginHorizontal="10dp">
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnFollowing"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="?attr/borderlessButtonStyle"
-                                android:textAppearance="?attr/textAppearanceLabelMedium"
-                                android:text="@{@string/profile_data_following(user.followingCount ?? 0)}"
-                                tools:text="12 Following"/>
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnFollowers"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="?attr/borderlessButtonStyle"
-                                android:textAppearance="?attr/textAppearanceLabelMedium"
-                                android:text="@{@string/profile_data_followers(user.followersCount ?? 0)}"
-                                tools:text="39 Followers"/>
-
-                        </LinearLayout>
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            style="?attr/materialCardViewOutlinedStyle">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:padding="@dimen/card_inner_padding"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="10dp"
-                                    android:textAppearance="?attr/textAppearanceHeadlineSmall"
-                                    android:text="@string/title_about_me" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="10dp"
-                                    app:isVisible="@{!TextUtils.isEmpty(user.about)}"
-                                    android:text="@{user.about}"
-                                    tools:text="Personal about me text." />
-
-                                <TableLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:stretchColumns="0,1">
-
-                                    <include
-                                        layout="@layout/item_details_info_row"
-                                        app:icon="@{@drawable/ic_person_24}"
-                                        app:title="@{@string/profile_data_gender}"
-                                        app:value="@{DataUtil.getGenderString(user.gender, context) ?? @string/profile_data_private}" />
-
-                                    <include
-                                        layout="@layout/item_details_info_row"
-                                        app:icon="@{@drawable/ic_location_24}"
-                                        app:title="@{@string/profile_data_location}"
-                                        app:value="@{!TextUtils.isEmpty(user.location) ? user.location : @string/profile_data_private}" />
-
-                                    <include
-                                        layout="@layout/item_details_info_row"
-                                        app:icon="@{@drawable/ic_cake_24}"
-                                        app:title="@{@string/profile_data_birthday}"
-                                        app:value="@{DataUtil.formatDate(user.birthday) ?? @string/profile_data_private}" />
-
-                                    <include
-                                        layout="@layout/item_details_info_row"
-                                        app:icon="@{@drawable/ic_calendar_24}"
-                                        app:title="@{@string/profile_data_join_date}"
-                                        app:value="@{DataUtil.formatUserJoinDate(user.createdAt, context) ?? @string/profile_data_private}" />
-
-                                    <include
-                                        layout="@layout/item_details_info_row"
-                                        android:id="@+id/layout_waifu_row"
-                                        app:isVisible="@{user.waifu != null}"
-                                        app:title="@{user.waifuOrHusbando}"
-                                        app:value="@{user.waifu.name}" />
-
-                                </TableLayout>
-
-                            </LinearLayout>
-
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <HorizontalScrollView
-                            android:id="@+id/scroll_view_profile_links"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="10dp"
-                            android:requiresFadingEdge="horizontal"
-                            android:scrollbars="none">
-
-                            <com.google.android.material.chip.ChipGroup
-                                android:id="@+id/chip_group_profile_links"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:clipToPadding="false"
-                                app:singleLine="true">
-
-                            </com.google.android.material.chip.ChipGroup>
-
-                        </HorizontalScrollView>
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            style="?attr/materialCardViewOutlinedStyle">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
-
-                                <com.google.android.material.tabs.TabLayout
-                                    android:id="@+id/tab_layout_stats"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    style="@style/Widget.Material3.TabLayout.OnSurface" />
-
-                                <androidx.viewpager2.widget.ViewPager2
-                                    android:id="@+id/view_pager_stats"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content" />
-
-                            </LinearLayout>
-
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <LinearLayout
-                            android:id="@+id/layout_favorite_anime"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_margin="10dp"
-                            android:visibility="gone"
-                            tools:visibility="visible">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/title_favorite_anime"
-                                android:textAppearance="?attr/textAppearanceHeadlineSmall"
-                                android:layout_marginBottom="10dp" />
-
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/rv_favorite_anime"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:paddingVertical="5dp"
-                                android:requiresFadingEdge="horizontal"
-                                android:clipToPadding="false"
-                                android:orientation="horizontal"
-                                android:transitionGroup="true"
-                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/layout_favorite_manga"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_margin="10dp"
-                            android:visibility="gone"
-                            tools:visibility="visible">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/title_favorite_manga"
-                                android:textAppearance="?attr/textAppearanceHeadlineSmall"
-                                android:layout_marginBottom="10dp" />
-
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/rv_favorite_manga"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:paddingVertical="5dp"
-                                android:requiresFadingEdge="horizontal"
-                                android:clipToPadding="false"
-                                android:orientation="horizontal"
-                                android:transitionGroup="true"
-                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/layout_favorite_characters"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_margin="10dp"
-                            android:visibility="gone"
-                            tools:visibility="visible">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/title_favorite_characters"
-                                android:textAppearance="?attr/textAppearanceHeadlineSmall"
-                                android:layout_marginBottom="10dp" />
-
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/rv_favorite_characters"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:paddingVertical="5dp"
-                                android:requiresFadingEdge="horizontal"
-                                android:clipToPadding="false"
-                                android:orientation="horizontal"
-                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <!-- Not Logged In Message -->
-                    <LinearLayout
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:padding="20dp"
-                        android:orientation="vertical"
-                        tools:visibility="gone"
-                        app:isVisible="@{user == null}">
+                        android:layout_marginBottom="8dp"
+                        android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                        android:text="@string/profile_not_logged_in_title" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:textAppearance="?attr/textAppearanceHeadlineSmall"
-                            android:text="@string/profile_not_logged_in_title" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:text="@string/profile_not_logged_in_text" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?attr/textAppearanceBodyMedium"
-                            android:text="@string/profile_not_logged_in_text" />
+                    <Button
+                        android:id="@+id/btn_login"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="20dp"
+                        android:text="@string/action_log_in_to_kitsu"
+                        android:textAllCaps="false" />
 
-                        <Button
-                            android:id="@+id/btn_login"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginVertical="20dp"
-                            android:text="@string/action_log_in_to_kitsu"
-                            android:textAllCaps="false" />
+                </LinearLayout>
 
-                    </LinearLayout>
+            </FrameLayout>
 
-                </FrameLayout>
+        </androidx.core.widget.NestedScrollView>
 
-            </androidx.core.widget.NestedScrollView>
+        <ProgressBar
+            android:id="@+id/progress_bar_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_post_wall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:visibility="gone"
+            android:contentDescription="@string/profile_post_on_wall"
+            app:srcCompat="@drawable/ic_edit_24"
+            tools:visibility="gone" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

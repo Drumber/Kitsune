@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.exception.NoDataException
-import io.github.drumber.kitsune.data.common.exception.ResourceUpdateFailed
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
@@ -15,12 +14,14 @@ import io.github.drumber.kitsune.data.presentation.model.mapping.Mapping
 import io.github.drumber.kitsune.data.presentation.model.mapping.getSiteName
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
 import io.github.drumber.kitsune.data.repository.AnimeRepository
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
 import io.github.drumber.kitsune.data.repository.LibraryRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
 import io.github.drumber.kitsune.data.repository.MappingRepository
+import io.github.drumber.kitsune.data.repository.MediaReactionRepository
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryUseCase
@@ -50,7 +51,8 @@ class DetailsViewModel(
     private val libraryRepository: LibraryRepository,
     private val animeRepository: AnimeRepository,
     private val mangaRepository: MangaRepository,
-    private val mappingRepository: MappingRepository
+    private val mappingRepository: MappingRepository,
+    private val mediaReactionRepository: MediaReactionRepository
 ) : ViewModel() {
 
     fun isLoggedIn() = isUserLoggedIn()
@@ -64,13 +66,22 @@ class DetailsViewModel(
     val libraryEntryWrapper: LiveData<LibraryEntryWithModification?>
         get() = _libraryEntryWithModification
 
-    private val _favorite = MutableLiveData<Favorite?>()
+    private val favoriteDelegate by lazy {
+        MediaFavoriteDelegate(viewModelScope, favoriteRepository, getLocalUserId) { mediaModel.value }
+    }
     val favorite: LiveData<Favorite?>
-        get() = _favorite
+        get() = favoriteDelegate.favorite
 
     private val _mappingsSate = MutableStateFlow<MediaMappingsSate>(MediaMappingsSate.Initial)
     val mappingsSate
         get() = _mappingsSate.asStateFlow()
+
+    private val reactionsDelegate by lazy {
+        MediaReactionsDelegate(viewModelScope, mediaReactionRepository, getLocalUserId)
+    }
+    val reactions get() = reactionsDelegate.reactions
+    val reactionUpvoteEvents: Flow<ReactionUpvoteEvent> get() = reactionsDelegate.upvoteEvents
+    val reactionEditEvents: Flow<ReactionEditEvent> get() = reactionsDelegate.editEvents
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean>
@@ -137,11 +148,20 @@ class DetailsViewModel(
                 awaitAll(
                     async { loadFullMedia(media) },
                     async { loadLibraryEntry(media) },
-                    async { loadFavorite(media) }
+                    async { favoriteDelegate.loadFavorite(media) },
+                    async { reactionsDelegate.loadReactions(media) }
                 )
                 _isLoading.postValue(false)
             }
         }
+    }
+
+    fun upvoteReaction(reaction: MediaReaction) = reactionsDelegate.upvoteReaction(reaction)
+
+    fun createReaction(text: String) {
+        val media = mediaModel.value ?: return
+        val libraryEntryId = _libraryEntryWithModification.value?.libraryEntry?.id
+        reactionsDelegate.createReaction(media, libraryEntryId, text)
     }
 
     private suspend fun loadFullMedia(media: Media) {
@@ -219,22 +239,6 @@ class DetailsViewModel(
             }
         } catch (e: Exception) {
             logE("Failed to load library entry.", e)
-        }
-    }
-
-    private suspend fun loadFavorite(media: Media) {
-        val userId = getLocalUserId() ?: return
-
-        val filter = Filter()
-            .filter("user_id", userId)
-            .filter("item_id", media.id)
-            .filter("item_type", if (media is Anime) "Anime" else "Manga")
-
-        try {
-            val favorites = favoriteRepository.getAllFavorites(filter)
-            _favorite.postValue(favorites?.firstOrNull())
-        } catch (e: Exception) {
-            logE("Failed to load favorites.", e)
         }
     }
 
@@ -319,35 +323,7 @@ class DetailsViewModel(
         }
     }
 
-    fun toggleFavorite() {
-        val favorite = favorite.value
-
-        viewModelScope.launch(Dispatchers.IO) {
-            if (favorite == null) {
-                val mediaItem = mediaModel.value ?: return@launch
-                val userId = getLocalUserId() ?: return@launch
-
-                try {
-                    val newFavorite = favoriteRepository.createMediaFavorite(userId, mediaItem.mediaType, mediaItem.id)
-                    _favorite.postValue(newFavorite)
-                } catch (e: Exception) {
-                    logE("Failed to create new favorite.", e)
-                }
-            } else {
-                val favoriteId = favorite.id
-                try {
-                    val isSuccessful = favoriteRepository.deleteFavorite(favoriteId)
-                    if (isSuccessful) {
-                        _favorite.postValue(null)
-                    } else {
-                        throw ResourceUpdateFailed()
-                    }
-                } catch (e: Exception) {
-                    logE("Failed to delete favorite.", e)
-                }
-            }
-        }
-    }
+    fun toggleFavorite() = favoriteDelegate.toggleFavorite()
 }
 
 sealed class LibraryChangeResult {
@@ -367,4 +343,17 @@ sealed class MediaMappingsSate {
     data object Loading : MediaMappingsSate()
     data class Success(val mappings: List<Mapping>) : MediaMappingsSate()
     data class Error(val message: String) : MediaMappingsSate()
+}
+
+sealed interface ReactionUpvoteEvent {
+    data object LoginRequired : ReactionUpvoteEvent
+    data class Success(val reactionId: String, val newCount: Int) : ReactionUpvoteEvent
+    data object Failed : ReactionUpvoteEvent
+}
+
+sealed interface ReactionEditEvent {
+    data object LoginRequired : ReactionEditEvent
+    data object AddToLibraryRequired : ReactionEditEvent
+    data object Created : ReactionEditEvent
+    data object Failed : ReactionEditEvent
 }

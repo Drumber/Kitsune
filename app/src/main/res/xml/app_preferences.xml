@@ -79,6 +79,13 @@
             app:iconSpaceReserved="false" />
 
         <SwitchPreferenceCompat
+            android:key="@string/preference_key_double_back_to_exit"
+            android:title="@string/preference_double_back_to_exit"
+            android:summary="@string/preference_double_back_to_exit_description"
+            android:defaultValue="false"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
             android:key="@string/preference_key_force_legacy_image_picker"
             android:title="@string/preference_force_legacy_image_picker"
             android:summary="@string/preference_force_legacy_image_picker_description"

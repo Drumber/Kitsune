@@ -6,6 +6,7 @@ import io.github.drumber.kitsune.domain.auth.RefreshAccessTokenIfExpiredUseCase
 import io.github.drumber.kitsune.domain.auth.RefreshResult
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logI
+import kotlin.coroutines.cancellation.CancellationException
 
 class UpdateLocalUserUseCase(
     private val userRepository: UserRepository,
@@ -27,6 +28,8 @@ class UpdateLocalUserUseCase(
 
         try {
             userRepository.fetchAndStoreLocalUserFromNetwork()
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             logE("Failed to update local user model from network.", e)
         }

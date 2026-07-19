@@ -3,6 +3,8 @@ package io.github.drumber.kitsune.ui.profile.editprofile
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.algolia.instantsearch.core.hits.HitsView
 import com.bumptech.glide.Glide
@@ -12,10 +14,10 @@ import io.github.drumber.kitsune.databinding.ItemCharacterSearchResultBinding
 import io.github.drumber.kitsune.util.fixImageUrl
 
 class CharacterSearchResultAdapter(private val onCharacterClicked: (CharacterSearchResult) -> Unit) :
-    RecyclerView.Adapter<CharacterSearchResultAdapter.CharacterSearchResultViewHolder>(),
+    ListAdapter<CharacterSearchResult, CharacterSearchResultAdapter.CharacterSearchResultViewHolder>(
+        DIFF_CALLBACK
+    ),
     HitsView<CharacterSearchResult> {
-
-    private val characters = mutableListOf<CharacterSearchResult>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -31,15 +33,11 @@ class CharacterSearchResultAdapter(private val onCharacterClicked: (CharacterSea
     }
 
     override fun onBindViewHolder(holder: CharacterSearchResultViewHolder, position: Int) {
-        holder.bind(characters[position])
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int = characters.size
-
     override fun setHits(hits: List<CharacterSearchResult>) {
-        characters.clear()
-        characters.addAll(hits)
-        notifyDataSetChanged()
+        submitList(hits)
     }
 
     inner class CharacterSearchResultViewHolder(private val binding: ItemCharacterSearchResultBinding) :
@@ -62,6 +60,20 @@ class CharacterSearchResultAdapter(private val onCharacterClicked: (CharacterSea
             }
         }
 
+    }
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CharacterSearchResult>() {
+            override fun areItemsTheSame(
+                oldItem: CharacterSearchResult,
+                newItem: CharacterSearchResult
+            ): Boolean = oldItem.id == newItem.id
+
+            override fun areContentsTheSame(
+                oldItem: CharacterSearchResult,
+                newItem: CharacterSearchResult
+            ): Boolean = oldItem == newItem
+        }
     }
 
 }

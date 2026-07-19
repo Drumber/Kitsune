@@ -23,24 +23,15 @@ import io.github.drumber.kitsune.util.extensions.recyclerView
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.launch
 import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemReselectedListener {
 
-    private var _binding: FragmentMainBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentMainBinding::bind)
 
     private val viewModel: MainFragmentViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentMainBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,11 +41,17 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
 
         binding.appBarLayout.statusBarForeground =
             MaterialShapeDrawable.createWithElevationOverlay(context)
-        binding.toolbar.initPaddingWindowInsetsListener(
+        binding.searchBar.initMarginWindowInsetsListener(
             left = true,
             right = true,
             consume = false
         )
+        binding.searchBar.setOnClickListener {
+            findNavController().navigateSafe(
+                R.id.main_fragment,
+                MainFragmentDirections.actionMainFragmentToSearchFragment(focusSearch = true)
+            )
+        }
         binding.tabLayoutExplore.initPaddingWindowInsetsListener(
             left = true,
             right = true,
@@ -131,13 +128,22 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        binding.nsvContent.smoothScrollTo(0, 0)
-        binding.appBarLayout.setExpanded(true)
+        val isAtTop = binding.nsvContent.scrollY == 0 &&
+                binding.appBarLayout.bottom >= binding.appBarLayout.height
+        if (isAtTop) {
+            binding.swipeRefreshLayout.isRefreshing = true
+            when (binding.viewPagerExplore.currentItem) {
+                0 -> viewModel.refreshAnimeData()
+                1 -> viewModel.refreshMangaData()
+            }
+        } else {
+            binding.nsvContent.smoothScrollTo(0, 0)
+            binding.appBarLayout.setExpanded(true)
+        }
     }
 
     override fun onDestroyView() {
-        _binding?.viewPagerExplore?.adapter = null
+        binding.viewPagerExplore.adapter = null
         super.onDestroyView()
-        _binding = null
     }
 }

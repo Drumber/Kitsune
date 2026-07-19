@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune
 
 import android.app.Application
+import android.os.StrictMode
 import androidx.appcompat.app.AppCompatDelegate
 import com.algolia.instantsearch.core.InstantSearchTelemetry
 import com.chibatching.kotpref.Kotpref
@@ -37,6 +38,10 @@ class KitsuneApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        if (BuildConfig.DEBUG) {
+            enableStrictMode()
+        }
+
         try {
             NotificationChannels.registerNotificationChannels(this)
         } catch (e: Exception) {
@@ -65,6 +70,23 @@ class KitsuneApplication : Application() {
         if (!BuildConfig.SCREENSHOT_MODE_ENABLED && KitsunePref.checkForUpdatesOnStart) {
             checkForNewVersion()
         }
+    }
+
+    private fun enableStrictMode() {
+        StrictMode.setThreadPolicy(
+            StrictMode.ThreadPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .build()
+        )
+        StrictMode.setVmPolicy(
+            StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                .detectLeakedClosableObjects()
+                .detectActivityLeaks()
+                .penaltyLog()
+                .build()
+        )
     }
 
     private fun performMigrations() {

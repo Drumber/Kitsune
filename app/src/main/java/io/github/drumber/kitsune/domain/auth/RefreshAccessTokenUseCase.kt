@@ -5,6 +5,7 @@ import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logI
 import retrofit2.HttpException
+import kotlin.coroutines.cancellation.CancellationException
 
 class RefreshAccessTokenUseCase(
     private val accessTokenRepository: AccessTokenRepository,
@@ -26,6 +27,8 @@ class RefreshAccessTokenUseCase(
 
             logE("Refresh: Failed to refresh access token.", e)
             return RefreshResult.Error(e)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             logE("Refresh: Failed to refresh access token.", e)
             return RefreshResult.Error(e)

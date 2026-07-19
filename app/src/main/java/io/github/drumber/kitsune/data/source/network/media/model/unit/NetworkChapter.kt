@@ -20,4 +20,19 @@ data class NetworkChapter(
 
     override val thumbnail: Image?,
     val published: String?
-) : NetworkMediaUnit
+) : NetworkMediaUnit {
+
+    companion object {
+        fun empty(id: String) = NetworkChapter(
+            id = id,
+            description = null,
+            titles = null,
+            canonicalTitle = null,
+            number = null,
+            volumeNumber = null,
+            length = null,
+            thumbnail = null,
+            published = null
+        )
+    }
+}

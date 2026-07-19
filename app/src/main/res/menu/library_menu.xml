@@ -15,4 +15,9 @@
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
+    <item
+        android:id="@+id/menu_db_request"
+        android:title="@string/action_db_request"
+        app:showAsAction="never" />
+
 </menu>

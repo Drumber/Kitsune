@@ -26,6 +26,7 @@ import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -35,19 +36,9 @@ class CharactersFragment : Fragment(R.layout.fragment_characters),
 
     private val args: CharactersFragmentArgs by navArgs()
 
-    private var _binding: FragmentCharactersBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentCharactersBinding::bind)
 
     private val viewModel: CharactersViewModel by viewModel()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentCharactersBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -133,10 +124,5 @@ class CharactersFragment : Fragment(R.layout.fragment_characters),
         } else {
             findNavController().navigateUp()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

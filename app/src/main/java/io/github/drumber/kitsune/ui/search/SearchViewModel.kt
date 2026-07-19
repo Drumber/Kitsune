@@ -13,6 +13,7 @@ import com.algolia.instantsearch.android.paging3.flow
 import com.algolia.instantsearch.android.paging3.searchbox.connectPaginator
 import com.algolia.instantsearch.core.connection.AbstractConnection
 import com.algolia.instantsearch.core.connection.ConnectionHandler
+import com.algolia.instantsearch.core.searchbox.SearchBoxViewModel
 import com.algolia.instantsearch.core.selectable.list.SelectionMode
 import com.algolia.instantsearch.filter.facet.DefaultFacetListPresenter
 import com.algolia.instantsearch.filter.facet.FacetListConnector
@@ -31,21 +32,24 @@ import com.algolia.search.model.response.ResponseSearch
 import com.algolia.search.model.search.Query
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.Repository
+import io.github.drumber.kitsune.data.common.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toMedia
+import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toUserSearchResult
 import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaMediaSearchResult
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaUserSearchResult
 import io.github.drumber.kitsune.domain.algolia.FilterCollection
 import io.github.drumber.kitsune.domain.algolia.SearchProvider
 import io.github.drumber.kitsune.domain.algolia.toCombinedMap
 import io.github.drumber.kitsune.domain.algolia.toFilterCollection
-import io.github.drumber.kitsune.data.common.exception.SearchProviderUnavailableException
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.component.algolia.SeasonListPresenter
 import io.github.drumber.kitsune.ui.component.algolia.range.CustomFilterRangeConnector
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logI
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -62,7 +66,10 @@ class SearchViewModel(
 
     private var filterState: FilterState? = null
 
-    private val searchPaginator = MutableLiveData<Paginator<Media>>()
+    private val searchPaginator = MutableLiveData<Paginator<Any>>()
+
+    private val _currentSearchType = MutableLiveData(SearchType.Media)
+    val currentSearchType get() = _currentSearchType as LiveData<SearchType>
 
     private val _filtersLiveData = MutableLiveData<Filters?>()
     val filtersLiveData get() = _filtersLiveData as LiveData<Filters?>
@@ -72,6 +79,9 @@ class SearchViewModel(
 
     private val _searchBox = MutableLiveData<SearchBoxConnector<ResponseSearch>>()
     val searchBox get() = _searchBox as LiveData<SearchBoxConnector<ResponseSearch>>
+
+    // Shared across search client recreations so the typed query is kept when switching search type.
+    private val searchBoxViewModel = SearchBoxViewModel()
 
     private val _filterFacets = MutableLiveData<FilterFacets>()
     val filterFacets get() = _filterFacets as LiveData<FilterFacets>
@@ -86,7 +96,30 @@ class SearchViewModel(
 
     fun initializeSearchClient() {
         if (searchProvider.isInitialized) return
-        val query = query {
+        createSearchClient(_currentSearchType.value ?: SearchType.Media, buildQueryFor(_currentSearchType.value ?: SearchType.Media))
+    }
+
+    /** Switches the active search index between media and users and recreates the search client. */
+    fun switchSearchType(searchType: SearchType) {
+        if (_currentSearchType.value == searchType) return
+        _currentSearchType.value = searchType
+        searchProvider.cancel()
+        createSearchClient(searchType, buildQueryFor(searchType))
+    }
+
+    private fun buildQueryFor(searchType: SearchType): Query = when (searchType) {
+        SearchType.Users -> query {
+            attributesToRetrieve {
+                +"id"
+                +"name"
+                +"slug"
+                +"title"
+                +"avatar"
+                +"followersCount"
+            }
+        }
+
+        else -> query {
             attributesToRetrieve {
                 +"id"
                 +"slug"
@@ -97,7 +130,9 @@ class SearchViewModel(
                 +"subtype"
             }
         }
-        createSearchClient(SearchType.Media, query)
+    }.apply {
+        // keep the current search text when switching search type
+        query = searchBoxViewModel.query.value
     }
 
     private fun createSearchClient(searchType: SearchType, query: Query) {
@@ -119,27 +154,36 @@ class SearchViewModel(
                         transformer = { hit ->
                             when (searchType) {
                                 SearchType.Media -> json.decodeFromJsonElement<AlgoliaMediaSearchResult>(hit.json).toMedia()
+                                SearchType.Users -> json.decodeFromJsonElement<AlgoliaUserSearchResult>(hit.json).toUserSearchResult()
                                 else -> throw IllegalStateException("Search type '$searchType' is not supported.")
                             }
                         }
                     )
                     searchPaginator.postValue(paginator)
 
-                    val filterState = if (KitsunePref.rememberSearchFilters) {
+                    // Media-specific facet filters (kind, subtype, year, ...) must not be applied
+                    // to the users index, otherwise every user search returns no results.
+                    val supportsFilters = searchType == SearchType.Media
+
+                    val filterState = if (supportsFilters && KitsunePref.rememberSearchFilters) {
                         val storedFilters = KitsunePref.searchFilters.toCombinedMap()
                         FilterState(storedFilters)
                     } else {
                         FilterState()
                     }
-                    createFilterFacets(searcher, filterState)
+                    if (supportsFilters) {
+                        createFilterFacets(searcher, filterState)
+                    }
                     connectionHandler += searcher.connectFilterState(filterState)
                     connectionHandler += filterState.connectPaginator(paginator)
 
                     _filtersLiveData.postValue(filterState.filters.value)
                     filterState.filters.subscribe {
                         _filtersLiveData.postValue(it)
-                        // store search filters
-                        KitsunePref.searchFilters = it.toFilterCollection()
+                        // store search filters (only for media, which owns the facet filters)
+                        if (supportsFilters) {
+                            KitsunePref.searchFilters = it.toFilterCollection()
+                        }
                     }
 
                     createSearchBox(searcher, paginator)
@@ -156,17 +200,17 @@ class SearchViewModel(
         }
     }
 
-    private fun createSearchBox(searcher: HitsSearcher, paginator: Paginator<Media>) {
-        val searchBox = SearchBoxConnector(searcher)
+    private fun createSearchBox(searcher: HitsSearcher, paginator: Paginator<Any>) {
+        val searchBox = SearchBoxConnector(searcher, viewModel = searchBoxViewModel)
         connectionHandler += searchBox
         connectionHandler += searchBox.connectPaginator(paginator)
         _searchBox.postValue(searchBox)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val searchResultSource = searchPaginator.asFlow().flatMapLatest { paginator ->
         paginator.flow
     }.cachedIn(viewModelScope)
-
 
     private fun createFilterFacets(searcher: HitsSearcher, filterState: FilterState) {
         val filterFacets = FilterFacets(searcher, filterState)
@@ -289,5 +333,4 @@ class SearchViewModel(
         NotAvailable,
         Error
     }
-
 }

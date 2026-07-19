@@ -54,8 +54,9 @@ class LoginViewModel(private val logInUser: LogInUserUseCase) : ViewModel() {
     }
 
     private fun isUserNameValid(username: String): Boolean {
-        // verify that username is an email address
-        return ("""^\S+@\S+\.\S+$""".toRegex().matches(username))
+        // Kitsu accepts either an email address or a username for login,
+        // so just verify the input is non-blank and contains no whitespace.
+        return username.isNotBlank() && username.none { it.isWhitespace() }
     }
 
     private fun isPasswordValid(password: String): Boolean {

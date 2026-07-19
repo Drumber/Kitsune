@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.data.source.local
 
 import android.app.Application
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -18,8 +19,11 @@ import io.github.drumber.kitsune.data.source.local.library.model.RemoteKeyEntity
     entities = [
         LocalLibraryEntry::class, LocalLibraryEntryModification::class, RemoteKeyEntity::class
     ],
-    version = 3,
-    exportSchema = true
+    version = 4,
+    exportSchema = true,
+    autoMigrations = [
+        AutoMigration(from = 3, to = 4)
+    ]
 )
 @TypeConverters(LocalLibraryConverters::class)
 abstract class LocalDatabase : RoomDatabase() {
@@ -32,7 +36,7 @@ abstract class LocalDatabase : RoomDatabase() {
     companion object {
         fun createLocalDatabase(application: Application): LocalDatabase {
             return Room.databaseBuilder(application, LocalDatabase::class.java, "kitsune.db")
-                .fallbackToDestructiveMigration()
+                .fallbackToDestructiveMigration(dropAllTables = true)
                 .build()
         }
     }

@@ -1,0 +1,216 @@
+package io.github.drumber.kitsune.ui.feed
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import io.github.drumber.kitsune.data.presentation.model.feed.Post
+import io.github.drumber.kitsune.data.repository.CommentRepository
+import io.github.drumber.kitsune.data.repository.ContentRevealStore
+import io.github.drumber.kitsune.data.repository.FeedRepository
+import io.github.drumber.kitsune.data.repository.PostInteractionRepository
+import io.github.drumber.kitsune.data.repository.PostInteractionStore
+import io.github.drumber.kitsune.data.repository.PostManagementRepository
+import io.github.drumber.kitsune.data.repository.UserRepository
+import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference
+import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
+import io.github.drumber.kitsune.util.logE
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class FeedListViewModel(
+    private val feedRepository: FeedRepository,
+    private val commentRepository: CommentRepository,
+    private val postManagementRepository: PostManagementRepository,
+    private val postInteractionRepository: PostInteractionRepository,
+    private val postInteractionStore: PostInteractionStore,
+    private val contentRevealStore: ContentRevealStore,
+    private val userRepository: UserRepository,
+    private val getLocalUserId: GetLocalUserIdUseCase
+) : ViewModel() {
+
+    sealed interface LikeEvent {
+        data object LoginRequired : LikeEvent
+        data class Failed(val postId: String, val isLiked: Boolean, val count: Int) : LikeEvent
+    }
+
+    sealed interface ActionEvent {
+        data object PostDeleted : ActionEvent
+        data object Error : ActionEvent
+    }
+
+    private val actionEventChannel = Channel<ActionEvent>(Channel.BUFFERED)
+    val actionEvents: Flow<ActionEvent> = actionEventChannel.receiveAsFlow()
+
+    /** Id of the currently signed-in user, or `null` when not logged in. */
+    fun currentUserId(): String? = getLocalUserId()
+
+    /** Deletes the given post owned by the user. Emits [ActionEvent.PostDeleted] on success. */
+    fun deletePost(post: Post) {
+        viewModelScope.launch {
+            try {
+                postManagementRepository.deletePost(post.id)
+                actionEventChannel.send(ActionEvent.PostDeleted)
+            } catch (e: Exception) {
+                logE("Failed to delete post '${post.id}'.", e)
+                actionEventChannel.send(ActionEvent.Error)
+            }
+        }
+    }
+
+    private val feedType = MutableStateFlow<FeedType?>(null)
+
+    /** The user's pinned post, shown above their profile feed. `null` when there is none. */
+    private val _pinnedPost = MutableStateFlow<Post?>(null)
+    val pinnedPost = _pinnedPost.asStateFlow()
+
+    /** Target user id for [FeedType.USER] feeds. */
+    private var userFeedId: String? = null
+
+    /** Target group id for [FeedType.GROUP] feeds. */
+    private var groupFeedId: String? = null
+
+    // Known like ids keyed by post id, used to unlike without a lookup.
+    private val postLikeIds = mutableMapOf<String, String?>()
+
+    private val likeEventChannel = Channel<LikeEvent>(Channel.BUFFERED)
+    val likeEvents: Flow<LikeEvent> = likeEventChannel.receiveAsFlow()
+
+    /** Shared interaction overrides (like state, comment count) keyed by post id. */
+    val interactionStates = postInteractionStore.states
+
+    /** Post ids whose spoiler/NSFW content the user revealed during this session. */
+    val revealedPosts = contentRevealStore.revealed
+
+    /** Whether NSFW posts may be shown without gating, based on the user's SFW preference. */
+    val nsfwAllowed: Boolean
+        get() = userRepository.localUser.value?.sfwFilterPreference ==
+            LocalSfwFilterPreference.NSFW_EVERYWHERE
+
+    /** Remembers that the user revealed the gated content of the given post. */
+    fun revealPost(post: Post) {
+        contentRevealStore.reveal(post.id)
+    }
+
+    fun setFeedType(type: FeedType) {
+        if (feedType.value != type) {
+            feedType.value = type
+        }
+    }
+
+    /** Configures this list to show the profile feed of the given user. */
+    fun setUserFeed(userId: String) {
+        userFeedId = userId
+        if (feedType.value != FeedType.USER) {
+            feedType.value = FeedType.USER
+        }
+        loadPinnedPost(userId)
+    }
+
+    /** Reloads the pinned post of the currently shown user feed, if any. */
+    fun reloadPinnedPost() {
+        userFeedId?.let { loadPinnedPost(it) }
+    }
+
+    private fun loadPinnedPost(userId: String) {
+        viewModelScope.launch {
+            try {
+                _pinnedPost.value = userRepository.getPinnedPost(userId)
+            } catch (e: Exception) {
+                logE("Failed to load pinned post for user '$userId'.", e)
+            }
+        }
+    }
+
+    /** Configures this list to show the feed of the given group. */
+    fun setGroupFeed(groupId: String) {
+        groupFeedId = groupId
+        if (feedType.value != FeedType.GROUP) {
+            feedType.value = FeedType.GROUP
+        }
+    }
+
+    /** Emits `true` if the current feed requires the user to be logged in but they are not. */
+    val loginRequired: Flow<Boolean> = feedType.filterNotNull().map { type ->
+        type == FeedType.FOLLOWING && getLocalUserId() == null
+    }
+
+    val dataSource: Flow<PagingData<Post>> = feedType.filterNotNull().flatMapLatest { type ->
+        when (type) {
+            FeedType.GLOBAL -> feedRepository.globalFeedPager()
+            FeedType.FOLLOWING -> {
+                val userId = getLocalUserId()
+                if (userId == null) {
+                    flowOf(PagingData.empty())
+                } else {
+                    feedRepository.timelineFeedPager(userId)
+                }
+            }
+            FeedType.USER -> {
+                val userId = userFeedId
+                if (userId == null) {
+                    flowOf(PagingData.empty())
+                } else {
+                    feedRepository.userFeedPager(userId)
+                }
+            }
+            FeedType.GROUP -> {
+                val groupId = groupFeedId
+                if (groupId == null) {
+                    flowOf(PagingData.empty())
+                } else {
+                    feedRepository.groupFeedPager(groupId)
+                }
+            }
+        }
+    }.cachedIn(viewModelScope)
+
+    /**
+     * Toggles the like state of the given post on behalf of the user. The UI is expected to have
+     * already applied the optimistic [targetLiked] state; on failure a [LikeEvent.Failed] event is
+     * emitted carrying the previous state so the UI can revert.
+     */
+    fun togglePostLike(post: Post, targetLiked: Boolean) {
+        val userId = getLocalUserId()
+        if (userId == null) {
+            likeEventChannel.trySend(LikeEvent.LoginRequired)
+            // Revert the optimistic change applied by the UI.
+            likeEventChannel.trySend(LikeEvent.Failed(post.id, false, post.likesCount))
+            return
+        }
+
+        val currentCount = postInteractionStore.get(post.id)?.likesCount ?: post.likesCount
+        val targetCount = (currentCount + if (targetLiked) 1 else -1).coerceAtLeast(0)
+        postInteractionStore.setLikeState(post.id, targetLiked, targetCount)
+
+        viewModelScope.launch {
+            try {
+                if (targetLiked) {
+                    postLikeIds[post.id] = postInteractionRepository.likePost(post.id, userId)
+                } else {
+                    val likeId = postLikeIds[post.id]
+                        ?: postInteractionRepository.getMyPostLikeId(post.id, userId)
+                    likeId?.let { postInteractionRepository.unlikePost(it) }
+                    postLikeIds[post.id] = null
+                }
+            } catch (e: Exception) {
+                logE("Failed to toggle like for post '${post.id}'.", e)
+                postInteractionStore.setLikeState(post.id, !targetLiked, post.likesCount)
+                likeEventChannel.send(
+                    LikeEvent.Failed(post.id, !targetLiked, post.likesCount)
+                )
+            }
+        }
+    }
+
+}

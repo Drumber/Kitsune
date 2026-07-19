@@ -1,34 +1,26 @@
 package io.github.drumber.kitsune.ui.profile.editprofile
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.os.BundleCompat
 import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.setFragmentResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.SheetEditProfileLinkBinding
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
+import io.github.drumber.kitsune.util.ui.viewBinding
 
-class EditProfileLinkBottomSheet : BottomSheetDialogFragment() {
+class EditProfileLinkBottomSheet :
+    BottomSheetDialogFragment(R.layout.sheet_edit_profile_link) {
 
-    private var _binding: SheetEditProfileLinkBinding? = null
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = SheetEditProfileLinkBinding.inflate(inflater, container, false)
-        binding.isCreatingNew = isCreatingNew()
-        return binding.root
-    }
+    private val binding by viewBinding(SheetEditProfileLinkBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.isCreatingNew = isCreatingNew()
 
         val profileLinkEntry = arguments?.let { bundle ->
             BundleCompat.getParcelable(
@@ -78,11 +70,6 @@ class EditProfileLinkBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun isCreatingNew() = arguments?.getBoolean(BUNDLE_IS_CREATING_NEW) == true
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
 
     companion object {
         const val TAG = "edit_profile_link_bottom_sheet"

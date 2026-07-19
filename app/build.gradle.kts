@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.aboutlibraries.plugin)
     alias(libs.plugins.jetbrains.kotlin.parcelize)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.kover)
     id("kitsune-plugin")
 }
 
@@ -85,6 +86,16 @@ android {
     testOptions {
         animationsDisabled = true
         testBuildType = "instrumented"
+        unitTests {
+            // Robolectric loads a resource table per sandbox; across a large suite this
+            // accumulates and exhausts the default (512 MB) fork heap, causing late-running
+            // classes to fail with OutOfMemoryError. Raise the heap and recycle the JVM
+            // periodically to release that memory.
+            all {
+                it.maxHeapSize = "2g"
+                it.forkEvery = 40
+            }
+        }
     }
 }
 
@@ -93,6 +104,7 @@ kotlin {
         jvmTarget = JvmTarget.JVM_11
         languageVersion = KotlinVersion.KOTLIN_2_2
         freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
+        freeCompilerArgs.add("-Xannotation-default-target=param-property")
     }
 }
 
@@ -104,6 +116,29 @@ aboutLibraries {
     offlineMode = true
     // Remove the "generated" timestamp to allow for reproducible builds
     excludeFields = arrayOf("generated")
+}
+
+kover {
+    reports {
+        filters {
+            excludes {
+                // Generated code (data binding, navigation safe-args, Glide, Room, KSP, etc.)
+                classes(
+                    "*.databinding.*",
+                    "*.BR",
+                    "*.BuildConfig",
+                    "*Binding",
+                    "*Args",
+                    "*Directions",
+                    "*GlideModule*",
+                    "*_Factory",
+                    "*_Impl",
+                    "hilt_aggregated_deps.*"
+                )
+                annotatedBy("androidx.compose.runtime.Composable")
+            }
+        }
+    }
 }
 
 dependencies {
@@ -119,6 +154,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.adaptive)
+    implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.accompanist.themeadapter.material3)
     implementation(libs.accompanist.permissions)
     implementation(libs.androidx.compose.ui.tooling.preview)
@@ -171,6 +207,12 @@ dependencies {
     ksp(libs.bumptech.glide.ksp)
     implementation(libs.bumptech.glide.okhttp3)
     implementation(libs.bumptech.glide.compose)
+
+    // Markwon (post content formatting)
+    implementation(libs.noties.markwon.core)
+    implementation(libs.noties.markwon.html)
+    implementation(libs.noties.markwon.image.glide)
+    implementation(libs.noties.markwon.linkify)
 
     // Koin DI
     implementation(libs.insert.koin.android)
@@ -259,11 +301,17 @@ dependencies {
     androidTestImplementation(composeBom)
     androidTestImplementation(libs.androidx.compose.ui.test)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    // testBuildType is "instrumented", so the test-manifest (provides the host
+    // ComponentActivity for createComposeRule) must also be on that build type.
+    "instrumentedImplementation"(libs.androidx.compose.ui.test.manifest)
 
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
     testImplementation(libs.insert.koin.test.junit4)
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.datafaker)
+    testImplementation(libs.cashapp.turbine)
+    testImplementation(libs.androidx.arch.core.testing)
+    testImplementation(libs.squareup.okhttp3.mockwebserver)
 
     // fastlane screengrab
     androidTestImplementation(libs.fastlane.screengrab)

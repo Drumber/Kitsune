@@ -5,6 +5,7 @@ import io.github.drumber.kitsune.data.source.network.user.UserNetworkDataSource
 import io.github.drumber.kitsune.testutils.localUser
 import io.github.drumber.kitsune.testutils.networkUser
 import io.github.drumber.kitsune.testutils.onSuspend
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -103,6 +104,7 @@ class UserRepositoryTest {
     }
 
     @Test
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun shouldTriggerReLogInPrompt() = runTest {
         // given
         val localUserDataSource = mock<UserLocalDataSource>()

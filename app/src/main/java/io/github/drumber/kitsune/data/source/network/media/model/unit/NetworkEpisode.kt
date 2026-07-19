@@ -21,4 +21,20 @@ data class NetworkEpisode(
     val airdate: String?,
 
     override val thumbnail: Image?
-) : NetworkMediaUnit
+) : NetworkMediaUnit {
+
+    companion object {
+        fun empty(id: String) = NetworkEpisode(
+            id = id,
+            description = null,
+            titles = null,
+            canonicalTitle = null,
+            number = null,
+            seasonNumber = null,
+            relativeNumber = null,
+            length = null,
+            airdate = null,
+            thumbnail = null
+        )
+    }
+}

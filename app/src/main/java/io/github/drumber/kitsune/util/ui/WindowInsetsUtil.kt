@@ -37,7 +37,7 @@ fun CollapsingToolbarLayout.initWindowInsetsListener(consume: Boolean = true) {
         view.layoutParams.height = initialHeight + insets.top
         this.scrimVisibleHeightTrigger = defaultScrimVisibleHeightTrigger + insets.top
 
-        val isRtl = ViewCompat.getLayoutDirection(view) == ViewCompat.LAYOUT_DIRECTION_RTL
+        val isRtl = view.layoutDirection == View.LAYOUT_DIRECTION_RTL
         this.expandedTitleMarginStart =
             defaultTitleMarginStart + if (isRtl) insets.right else insets.left
         this.expandedTitleMarginEnd =

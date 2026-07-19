@@ -3,9 +3,7 @@ package io.github.drumber.kitsune.ui.profile.editprofile
 import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentDialog
@@ -49,14 +47,14 @@ import io.github.drumber.kitsune.util.ui.initImePaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
 
-    private var _binding: FragmentEditProfileBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentEditProfileBinding::bind)
 
     private val viewModel: EditProfileViewModel by viewModel()
 
@@ -82,12 +80,8 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
         super.onStart()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentEditProfileBinding.inflate(inflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.toolbar.initWindowInsetsListener(consume = false)
         binding.nestedScrollView.initMarginWindowInsetsListener(
@@ -103,12 +97,6 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
         }
 
         binding.root.initImePaddingWindowInsetsListener()
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         childFragmentManager.setFragmentResultListener(
             SelectProfileLinkSiteBottomSheet.PROFILE_SITE_SELECTED_REQUEST_KEY,
@@ -575,6 +563,5 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
     override fun onDestroyView() {
         connectionHandler.clear()
         super.onDestroyView()
-        _binding = null
     }
 }

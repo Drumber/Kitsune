@@ -2,9 +2,7 @@ package io.github.drumber.kitsune.ui.details.characters
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -30,34 +28,24 @@ import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openCharacterOnMAL
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.toPx
+import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.concurrent.CopyOnWriteArrayList
 
-class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
+class CharacterDetailsBottomSheet :
+    BottomSheetDialogFragment(R.layout.sheet_character_details) {
 
-    private var _binding: SheetCharacterDetailsBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(SheetCharacterDetailsBinding::bind)
 
     private val viewModel: CharacterDetailsViewModel by viewModel()
 
     private val navArgs by navArgs<CharacterDetailsBottomSheetArgs>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = SheetCharacterDetailsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.rvMediaCharacters.adapter = MediaCharacterAdapter(
-            CopyOnWriteArrayList(),
             Glide.with(this)
         ) { _, mediaCharacter ->
             val media = mediaCharacter.media
@@ -93,8 +81,10 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
                 if (favorite != null && icon is AnimatedVectorDrawableCompat) {
                     icon.registerAnimationCallback(object : AnimationCallback() {
                         override fun onAnimationEnd(drawable: Drawable?) {
-                            // binding can be null if the fragment is destroyed
-                            _binding?.btnFavorite?.setIconResource(R.drawable.ic_favorite_24)
+                            // view can be null if the fragment is destroyed
+                            if (view != null) {
+                                binding.btnFavorite.setIconResource(R.drawable.ic_favorite_24)
+                            }
                         }
                     })
                 } else {
@@ -191,18 +181,8 @@ class CharacterDetailsBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun updateMediaCharactersRecyclerView(mediaCharacters: List<MediaCharacter>?) {
-        (binding.rvMediaCharacters.adapter as MediaCharacterAdapter).apply {
-            dataSet.clear()
-            val sortedMediaCharacters = mediaCharacters?.sortedBy { it.role?.ordinal }
-                ?: emptyList()
-            dataSet.addAll(sortedMediaCharacters)
-            notifyDataSetChanged()
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
+        val sortedMediaCharacters = mediaCharacters?.sortedBy { it.role?.ordinal } ?: emptyList()
+        (binding.rvMediaCharacters.adapter as MediaCharacterAdapter).submitList(sortedMediaCharacters)
     }
 
 }
