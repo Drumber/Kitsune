@@ -99,9 +99,9 @@ abstract class BaseActivity(
         // find the app task that corresponds to this activity
         val appTask = activityManager.appTasks.firstOrNull {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                it.taskInfo.taskId == taskId
+                it.taskInfo?.taskId == taskId
             } else {
-                it.taskInfo.id == taskId
+                it.taskInfo?.id == taskId
             }
         }
         // change the color of the task description, but keep the label and app icon
