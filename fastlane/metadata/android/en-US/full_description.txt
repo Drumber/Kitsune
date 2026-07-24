@@ -1,4 +1,4 @@
-Kitsune is an unofficial Android app for Kitsu.app (Kitsu.io). It is an open source community project for browsing anime and manga, tracking your progress, and connecting with other Kitsu users.
+Kitsune is an unofficial Android app for Kitsu.app (Kitsu.io). It allows you to browse anime and manga, track your progress, and connect with other users on Kitsu.
 
 Features:
 * Explore and search anime and manga, even without an account

@@ -18,10 +18,7 @@ Don't hesitate to open a [new issue](https://github.com/Drumber/Kitsune/issues/n
 
 ### 3. Translation
   - Contribute translations for different languages to make the app accessible globally.
-  - Copy the [string.xml](app/src/main/res/values/strings.xml) file to a new folder named `values-LANG` (e.g. `values-fr` for French) inside the [res](app/src/main/res) directory.
-    - Remove strings with `translatable="false"`.
-    - Keep placeholders like `%s` or `%d` in the strings.
-  - Submit a pull request with your changes.
+  - Translations can be added and edited on [Hosted Weblate](https://hosted.weblate.org/engage/kitsune/)
 
 ### 4. Documentation and Repository Files
   - Improve the documentation or contribute to other repository files, like issue templates.
@@ -29,11 +26,11 @@ Don't hesitate to open a [new issue](https://github.com/Drumber/Kitsune/issues/n
 ## How to Contribute Code Changes
 To start developing, follow these simple steps:
 
-1. **Set Up Your Environment:**
+1. **Set up your environment:**
   - Make sure you have [Android Studio](https://developer.android.com/studio) installed.
   - Familiarize yourself with [Kotlin](https://kotlinlang.org/) as it's the primary language used in the app.
 
-2. **Clone the Repository**
+2. **Fork and clone the Repository**
 
 3. **Build and Run:**
   - Open the project in Android Studio.

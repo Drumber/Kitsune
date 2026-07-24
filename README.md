@@ -3,31 +3,25 @@
 <h1>Kitsune</h1>
 </div>
 
-Unofficial android app for [Kitsu](https://kitsu.app). Discover new anime and manga and manage your library.
+Unofficial android app for [Kitsu](https://kitsu.app). Discover new anime and manga, manage your library and connect with other users on Kitsu.
+
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="75">](https://f-droid.org/packages/io.github.drumber.kitsune/)
 
 ## Features
 - Explore and search anime and manga, even without an account
 - View anime and manga details including episodes/chapters and characters
 - Manage your Kitsu library and account settings
 - Cached library for offline use
-- Multiple dark and light app themes
-- Material 3 Design
+- Social feeds, groups, reactions and posts
 - Home screen widget
-
-#### Missing features
-- Reactions/Comments
-- Global message feed and announcements
-- Groups
-- Search for other users
 
 ## Download
 > Requires Android 8.0 or higher.
 
 Kitsune is available for download on GitHub and F-Droid.
 
-[Download latest app release on GitHub.](https://github.com/Drumber/Kitsune/releases/latest)
-
-[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="75">](https://f-droid.org/packages/io.github.drumber.kitsune/)
+* [Download from **GitHub**](https://github.com/Drumber/Kitsune/releases/latest)
+* [Download from **F-Droid**](https://f-droid.org/packages/io.github.drumber.kitsune/)
 
 ## Localization
 Are you interested in translating Kitsune into your language?  
