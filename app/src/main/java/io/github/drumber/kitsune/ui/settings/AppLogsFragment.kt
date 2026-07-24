@@ -6,30 +6,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.core.content.FileProvider
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.color.MaterialColors
 import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.databinding.FragmentAppLogsBinding
+import io.github.drumber.kitsune.ui.compose.collectAsStateWithLifecycle
+import io.github.drumber.kitsune.ui.compose.composeView
 import io.github.drumber.kitsune.util.LogCatReader
-import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.compose.koinViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class AppLogsFragment : Fragment(R.layout.fragment_app_logs) {
-
-    private val binding by viewBinding(FragmentAppLogsBinding::bind)
-    private val viewModel: AppLogsViewModel by viewModel()
+class AppLogsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,46 +32,24 @@ class AppLogsFragment : Fragment(R.layout.fragment_app_logs) {
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = composeView {
+        AppLogsContent()
+    }
 
-        val colorBackground = MaterialColors.getColor(view, android.R.attr.colorBackground)
-        view.setBackgroundColor(colorBackground)
+    @Composable
+    private fun AppLogsContent() {
+        val viewModel: AppLogsViewModel = koinViewModel()
+        val logs by viewModel.logMessages.collectAsStateWithLifecycle()
 
-        binding.toolbar.initWindowInsetsListener(consume = false)
-        binding.nestedScrollView.initPaddingWindowInsetsListener(
-            left = true,
-            right = true,
-            bottom = true,
-            consume = false
+        AppLogsScreen(
+            logs = logs,
+            onNavigateUp = { findNavController().navigateUp() },
+            onShareClick = { shareLogFile() }
         )
-
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
-        }
-
-        binding.toolbar.setOnMenuItemClickListener { menuItem ->
-            if (menuItem.itemId == R.id.menu_share_app_logs) {
-                shareLogFile()
-            }
-            true
-        }
-
-        viewModel.logMessages.observe(viewLifecycleOwner) { logMessages ->
-            binding.apply {
-                progressBar.isVisible = false
-                tvNoLogs.isVisible = logMessages.isBlank()
-                tvLogMessages.isVisible = logMessages.isNotBlank()
-                tvLogMessages.text = logMessages
-
-                if (savedInstanceState == null) {
-                    nestedScrollView.post {
-                        if (!isAdded) return@post
-                        nestedScrollView.fullScroll(View.FOCUS_DOWN)
-                    }
-                }
-            }
-        }
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -86,7 +59,7 @@ class AppLogsFragment : Fragment(R.layout.fragment_app_logs) {
         val logsDir = File(requireContext().cacheDir, "logs")
         val logFile = File(logsDir, fileName)
 
-        deleteAllFiles(logsDir) // delete any previously created log files
+        deleteAllFiles(logsDir)
         logFile.deleteOnExit()
 
         lifecycleScope.launch {

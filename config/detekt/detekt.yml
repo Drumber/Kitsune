@@ -46,6 +46,8 @@ style:
     excludeImportStatements: true
   UnusedPrivateMember:
     active: true
+    # @Preview composables are entry points for the IDE/Compose tooling, never called from code
+    ignoreAnnotated: ['Preview']
   WildcardImport:
     active: true
   ForbiddenComment:

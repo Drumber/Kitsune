@@ -165,6 +165,12 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.adaptive)
     implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.insert.koin.androidx.compose)
     implementation(libs.accompanist.themeadapter.material3)
     implementation(libs.accompanist.permissions)
     implementation(libs.androidx.compose.ui.tooling.preview)
@@ -287,6 +293,7 @@ dependencies {
     // AboutLibraries
     implementation(libs.mikepenz.aboutlibraries.core)
     implementation(libs.mikepenz.aboutlibraries)
+    implementation(libs.mikepenz.aboutlibraries.compose.m3)
 
     // LeakCanary
     debugImplementation(libs.squareup.leakcanary)

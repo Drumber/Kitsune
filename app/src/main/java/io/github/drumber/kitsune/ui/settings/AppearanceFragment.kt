@@ -1,22 +1,23 @@
 package io.github.drumber.kitsune.ui.settings
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.preference.ListPreference
-import androidx.preference.SwitchPreferenceCompat
+import androidx.compose.runtime.getValue
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.chibatching.kotpref.livedata.asLiveData
 import com.google.android.material.color.DynamicColors
-import com.google.android.material.color.MaterialColors
 import com.google.android.material.transition.MaterialSharedAxis
-import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.constants.AppTheme
-import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.domain.work.UpdateLibraryWidgetUseCase
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.base.BasePreferenceFragment
+import io.github.drumber.kitsune.ui.compose.collectAsStateWithLifecycle
+import io.github.drumber.kitsune.ui.compose.composeView
 import org.koin.android.ext.android.inject
 
-class AppearanceFragment : BasePreferenceFragment(R.string.nav_appearance) {
+class AppearanceFragment : Fragment() {
 
     private val updateLibraryWidget: UpdateLibraryWidgetUseCase by inject()
 
@@ -26,105 +27,52 @@ class AppearanceFragment : BasePreferenceFragment(R.string.nav_appearance) {
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val colorBackground = MaterialColors.getColor(view, android.R.attr.colorBackground)
-        view.setBackgroundColor(colorBackground)
-    }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = composeView {
+        val useDynamicColorTheme by KitsunePref.asLiveData(KitsunePref::useDynamicColorTheme)
+            .collectAsStateWithLifecycle(KitsunePref.useDynamicColorTheme)
+        val appTheme by KitsunePref.asLiveData(KitsunePref::appTheme)
+            .collectAsStateWithLifecycle(KitsunePref.appTheme)
+        val darkMode by KitsunePref.asLiveData(KitsunePref::darkMode)
+            .collectAsStateWithLifecycle(KitsunePref.darkMode)
+        val oledBlackMode by KitsunePref.asLiveData(KitsunePref::oledBlackMode)
+            .collectAsStateWithLifecycle(KitsunePref.oledBlackMode)
+        val mediaItemSize by KitsunePref.asLiveData(KitsunePref::mediaItemSize)
+            .collectAsStateWithLifecycle(KitsunePref.mediaItemSize)
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        preferenceManager.sharedPreferencesName = getString(R.string.preference_file_key)
-        setPreferencesFromResource(R.xml.appearance_preferences, rootKey)
-
-        //---- Dynamic Color Theme
-        findPreference<SwitchPreferenceCompat>(R.string.preference_key_dynamic_color_theme)?.apply {
-            isVisible = DynamicColors.isDynamicColorAvailable()
-            setOnPreferenceChangeListener { _, newValue ->
-                KitsunePref.useDynamicColorTheme = newValue as Boolean
-                updateLibraryWidget(context)
-                true
-            }
-        }
-
-        //---- App Theme
-        findPreference<ThemePickerPreference>(R.string.preference_key_app_theme)?.apply {
-            isEnabled = !KitsunePref.useDynamicColorTheme
-            val themeEntries = getThemePreferenceEntries()
-            setThemeEntries(themeEntries)
-            setSelectedTheme(KitsunePref.appTheme.toThemeEntry())
-            setOnPreferenceChangeListener { _, newValue ->
-                val themeIndex = themeEntries.indexOf(newValue as ThemePickerPreference.ThemeEntry)
-                KitsunePref.appTheme = AppTheme.entries[themeIndex]
-                updateLibraryWidget(context)
-                true
-            }
-        }
-
-        //---- Dark Mode
-        findPreference<ListPreference>(R.string.preference_key_dark_mode)?.apply {
-            value = KitsunePref.darkMode
-            setOnPreferenceChangeListener { _, newValue ->
-                if (KitsunePref.darkMode != newValue) {
-                    KitsunePref.darkMode = newValue as String
-                    AppCompatDelegate.setDefaultNightMode(newValue.toInt())
+        AppearanceScreen(
+            uiState = AppearanceUiState(
+                isDynamicColorAvailable = DynamicColors.isDynamicColorAvailable(),
+                useDynamicColorTheme = useDynamicColorTheme,
+                appTheme = appTheme,
+                darkMode = darkMode,
+                oledBlackMode = oledBlackMode,
+                mediaItemSize = mediaItemSize
+            ),
+            onNavigateUp = { findNavController().navigateUp() },
+            onDynamicColorToggle = { enabled ->
+                KitsunePref.useDynamicColorTheme = enabled
+                updateLibraryWidget(requireContext())
+            },
+            onThemeSelected = { theme ->
+                KitsunePref.appTheme = theme
+                updateLibraryWidget(requireContext())
+            },
+            onDarkModeSelected = { value ->
+                if (KitsunePref.darkMode != value) {
+                    KitsunePref.darkMode = value
+                    AppCompatDelegate.setDefaultNightMode(value.toInt())
                 }
-                true
+            },
+            onOledBlackToggle = { enabled ->
+                KitsunePref.oledBlackMode = enabled
+            },
+            onMediaItemSizeSelected = { size ->
+                KitsunePref.mediaItemSize = size
             }
-        }
-
-
-        //---- OLED Black Mode
-        findPreference<SwitchPreferenceCompat>(R.string.preference_key_oled_black_mode)?.apply {
-            isEnabled = !KitsunePref.useDynamicColorTheme
-            setOnPreferenceChangeListener { _, newValue ->
-                KitsunePref.oledBlackMode = newValue as Boolean
-                true
-            }
-        }
-
-        //---- Media Item Size
-        findPreference<ListPreference>(R.string.preference_key_media_item_size)?.apply {
-            entryValues = MediaItemSize.entries.map { it.name }.toTypedArray()
-            value = KitsunePref.mediaItemSize.name
-            setOnPreferenceChangeListener { _, newValue ->
-                KitsunePref.mediaItemSize = MediaItemSize.valueOf(newValue as String)
-                true
-            }
-        }
-    }
-
-    private fun getThemePreferenceEntries(): List<ThemePickerPreference.ThemeEntry> {
-        return AppTheme.entries.map { it.toThemeEntry() }
-    }
-
-    private fun AppTheme.toThemeEntry() = when (this) {
-        AppTheme.DEFAULT -> ThemePickerPreference.ThemeEntry(
-            name = R.string.preference_app_theme_default,
-            primaryColor = R.color.md_theme_primary,
-            secondaryColor = R.color.md_theme_secondary,
-            surfaceColor = R.color.md_theme_surface
-        )
-
-        AppTheme.PURPLE -> ThemePickerPreference.ThemeEntry(
-            name = R.string.preference_app_theme_purple,
-            primaryColor = R.color.md_purple_theme_primary,
-            secondaryColor = R.color.md_purple_theme_secondary,
-            surfaceColor = R.color.md_purple_theme_surface
-        )
-        
-        AppTheme.BLUE -> ThemePickerPreference.ThemeEntry(
-            name = R.string.preference_app_theme_blue,
-            primaryColor = R.color.md_blue_theme_primary,
-            secondaryColor = R.color.md_blue_theme_secondary,
-            surfaceColor = R.color.md_blue_theme_surface
-        )
-
-        AppTheme.GREEN -> ThemePickerPreference.ThemeEntry(
-            name = R.string.preference_app_theme_green,
-            primaryColor = R.color.md_green_theme_primary,
-            secondaryColor = R.color.md_green_theme_secondary,
-            surfaceColor = R.color.md_green_theme_surface
         )
     }
-
 }
