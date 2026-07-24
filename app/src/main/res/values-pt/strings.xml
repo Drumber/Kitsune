@@ -386,4 +386,6 @@
     <string name="profile_data_bio">Bio</string>
     <string name="onboarding_welcome_feature_track">Seguir</string>
     <string name="onboarding_welcome_feature_track_description">Siga o controlo do que viu e leu.</string>
+    <string name="action_copy_url">Copiar URL</string>
+    <string name="relationship_spinoff">Spin-off</string>
 </resources>

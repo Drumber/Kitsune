@@ -288,7 +288,7 @@
     <string name="preference_force_legacy_image_picker">படை மரபு புகைப்படத் தேர்வாளர்</string>
     <string name="preference_force_legacy_image_picker_description">புதிய புகைப்பட தேர்வுக்கு பதிலாக கணினி கோப்பு தேர்வாளரைப் பயன்படுத்தவும்.</string>
     <string name="preference_check_for_updates">துவக்கத்தில் புதுப்பிப்புகளைச் சரிபார்க்கவும்</string>
-    <string name="preference_check_for_updates_description">ஒவ்வொரு துவக்கத்திலும் புதிய பயன்பாட்டு பதிப்பைச் சரிபார்க்கவும்.</string>
+    <string name="preference_check_for_updates_description">தொடக்கத்தில் பயன்பாட்டின் புதிய பதிப்பைச் சரிபார்க்கவும்.</string>
     <string name="preference_app_logs_description">பயன்பாட்டு பதிவு செய்திகளைப் பார்த்து பகிரவும்.</string>
     <string name="preference_app_version_description">புதுப்பிப்புகளை சரிபார்க்க சொடுக்கு செய்க.</string>
     <string name="preference_github_repo">அறிவிலிமையம் களஞ்சியம்</string>
@@ -379,7 +379,10 @@
         <item quantity="other">%s பக்கங்கள்</item>
     </plurals>
     <plurals name="duration_seconds">
-        <item quantity="one">%s இரண்டாவது</item>
+        <item quantity="one">%s நொடி</item>
         <item quantity="other">%s வினாடிகள்</item>
     </plurals>
+    <string name="action_copy_url">முகவரி ஐ நகலெடுக்கவும்</string>
+    <string name="profile_data_following">%d பின்தொடர்பவை</string>
+    <string name="profile_data_followers">%d பின்தொடர்பவர்கள்</string>
 </resources>
