@@ -40,6 +40,6 @@ Head over to the Kitsune project on [Hosted Weblate](https://hosted.weblate.org/
 - See [Contributing](CONTRIBUTING.md) for more details.
 
 ## Screenshots
-<img src="./media/light_home_screen_framed.png" width="250"> <img src="./media/dark_home_screen_framed.png" width="250"> <img src="./media/dark_purple_home_screen_framed.png" width="250">
+<img src="./media/0_light_0_home_screen_framed.png" width="250"> <img src="./media/1_dark_0_home_screen_framed.png" width="250"> <img src="./media/2_dark_purple_0_home_screen_framed.png" width="250">
 
-<img src="./media/dark_details_screen_framed.png" width="250"> <img src="./media/light_details_ratings_screen_framed.png" width="250">
+<img src="./media/1_dark_1_details_screen_framed.png" width="250"> <img src="./media/0_light_2_details_ratings_screen_framed.png" width="250">
