@@ -87,9 +87,14 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
 
             is NavigationAction.OpenMediaDetails -> {
                 val action = MainFragmentDirections.actionMainFragmentToDetailsFragment(navigationAction.mediaDto)
-                val detailsTransitionName = getString(R.string.details_poster_transition_name)
-                val extras = FragmentNavigatorExtras(navigationAction.sharedElement to detailsTransitionName)
-                findNavController().navigateSafe(R.id.main_fragment, action, extras)
+                val sharedElement = navigationAction.sharedElement
+                if (sharedElement != null) {
+                    val detailsTransitionName = getString(R.string.details_poster_transition_name)
+                    val extras = FragmentNavigatorExtras(sharedElement to detailsTransitionName)
+                    findNavController().navigateSafe(R.id.main_fragment, action, extras)
+                } else {
+                    findNavController().navigateSafe(R.id.main_fragment, action)
+                }
             }
         }
     }

@@ -1,73 +1,58 @@
 package io.github.drumber.kitsune.ui.settings
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.os.LocaleListCompat
-import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.preference.EditTextPreference
-import androidx.preference.ListPreference
-import androidx.preference.ListPreference.SimpleSummaryProvider
-import androidx.preference.Preference
-import androidx.preference.SwitchPreferenceCompat
-import com.google.android.material.color.MaterialColors
+import com.chibatching.kotpref.livedata.asLiveData
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialSharedAxis
-import io.github.drumber.kitsune.AppLocales
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.appupdate.UpdateCheckResult
 import io.github.drumber.kitsune.data.repository.AppUpdateRepository
-import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
-import io.github.drumber.kitsune.data.source.local.user.model.LocalSfwFilterPreference
-import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
-import io.github.drumber.kitsune.databinding.FragmentPreferenceBinding
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.preference.StartPagePref
-import io.github.drumber.kitsune.ui.base.BasePreferenceFragment
+import io.github.drumber.kitsune.ui.compose.collectAsStateWithLifecycle
+import io.github.drumber.kitsune.ui.compose.composeView
 import io.github.drumber.kitsune.ui.permissions.isNotificationPermissionGranted
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openUrl
-import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.Locale
 
-class SettingsFragment : BasePreferenceFragment() {
+class SettingsFragment : Fragment() {
 
     private val viewModel: SettingsViewModel by viewModel()
 
     private val appUpdateRepository: AppUpdateRepository by inject()
 
-    // this result listener will be called on requesting notification permission after the
-    // 'check for updates on launch' permission was changed and notification permission is not granted
     private lateinit var requestNotificationPermissionLauncher: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
         reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
-
         requestNotificationPermissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-                val preference =
-                    findPreference<SwitchPreferenceCompat>(R.string.preference_key_check_for_updates_on_start)
                 if (isGranted) {
                     KitsunePref.flagUserDeniedNotificationPermission = false
                 } else {
-                    preference?.isChecked = false
                     KitsunePref.flagUserDeniedNotificationPermission = true
                     Toast.makeText(
                         requireContext(),
@@ -78,132 +63,116 @@ class SettingsFragment : BasePreferenceFragment() {
             }
     }
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        preferenceManager.sharedPreferencesName = getString(R.string.preference_file_key)
-        setPreferencesFromResource(R.xml.app_preferences, rootKey)
-
-        //---- Appearance
-        findPreference<Preference>(R.string.preference_key_fragment_appearance)?.setOnPreferenceClickListener {
-            val action =
-                SettingsFragmentDirections.actionSettingsFragmentToAppearanceFragment()
-            findNavController().navigate(action)
-            true
-        }
-
-        //---- App Language
-        findPreference<ListPreference>(R.string.preference_key_language)?.apply {
-            val supportedLocales = AppLocales.SUPPORTED_LOCALES
-            val selectedLocale = AppCompatDelegate.getApplicationLocales()
-                .getFirstMatch(supportedLocales)
-            val selectedLocaleValue = supportedLocales.find { tag ->
-                val locale = Locale.forLanguageTag(tag)
-                locale.language == selectedLocale?.language && locale.country == selectedLocale.country
-            }
-            val languageDisplayNames = supportedLocales.map { tag ->
-                val locale = Locale.forLanguageTag(tag)
-                val contextLocale = selectedLocale ?: Locale.getDefault()
-                val languageName = locale.getDisplayLanguage(contextLocale)
-                val countryName = locale.getDisplayCountry(contextLocale)
-
-                if (countryName.isNotBlank()) {
-                    "$languageName ($countryName)"
-                } else {
-                    languageName
-                }
-            }.toTypedArray()
-            entryValues = arrayOf("", *supportedLocales)
-            entries = arrayOf(
-                getString(R.string.preference_language_default),
-                *languageDisplayNames
-            )
-            value = selectedLocaleValue ?: ""
-            setOnPreferenceChangeListener { _, newValue ->
-                val localeList = when (newValue.toString()) {
-                    "" -> LocaleListCompat.getEmptyLocaleList()
-                    else -> LocaleListCompat.forLanguageTags(newValue.toString())
-                }
-                AppCompatDelegate.setApplicationLocales(localeList)
-                true
-            }
-        }
-
-        //---- Start Fragment
-        findPreference<ListPreference>(R.string.preference_key_start_fragment)?.apply {
-            entryValues = StartPagePref.entries.map { it.name }.toTypedArray()
-            value = KitsunePref.startFragment.name
-            setSummaryProvider {
-                getString(R.string.preference_start_fragment_description, entry)
-            }
-            setOnPreferenceChangeListener { _, newValue ->
-                KitsunePref.startFragment = StartPagePref.valueOf(newValue as String)
-                true
-            }
-        }
-
-        //---- Force legacy image picker
-        findPreference<SwitchPreferenceCompat>(R.string.preference_key_force_legacy_image_picker)?.isVisible =
-            ActivityResultContracts.PickVisualMedia.isPhotoPickerAvailable(requireContext())
-
-        //---- Check for Updates on Launch
-        findPreference<SwitchPreferenceCompat>(R.string.preference_key_check_for_updates_on_start)
-            ?.setOnPreferenceChangeListener { _, newValue ->
-                if (newValue as Boolean && !requireContext().isNotificationPermissionGranted()) {
-                    requireActivity().requestNotificationPermission(
-                        requestNotificationPermissionLauncher
-                    )
-                    return@setOnPreferenceChangeListener false
-                }
-                true
-            }
-
-        //---- App Logs
-        findPreference<Preference>(R.string.preference_key_app_logs)?.setOnPreferenceClickListener {
-            val action = SettingsFragmentDirections.actionSettingsFragmentToAppLogsFragment()
-            findNavController().navigateSafe(R.id.settingsFragment, action)
-            true
-        }
-
-        //---- App Version
-        val appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
-        findPreference<Preference>(R.string.preference_key_app_version)?.apply {
-            summary = appVersion + System.lineSeparator() +
-                    getString(R.string.preference_app_version_description)
-            setOnPreferenceClickListener {
-                checkForNewVersion()
-                true
-            }
-        }
-
-        //---- Open Source Libraries
-        findPreference<Preference>(R.string.preference_key_open_source_libraries)?.setOnPreferenceClickListener {
-            val action = SettingsFragmentDirections.actionSettingsFragmentToLibrariesFragment()
-            findNavController().navigateSafe(R.id.settingsFragment, action)
-            true
-        }
-
-        observeUserModel()
-    }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = composeView { SettingsContent() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val colorBackground = MaterialColors.getColor(view, android.R.attr.colorBackground)
-        view.setBackgroundColor(colorBackground)
-
-        val binding = FragmentPreferenceBinding.bind(view)
-
         viewModel.errorMessageListener = {
             Snackbar.make(view, "Error: ${it.getMessage(requireContext())}", Snackbar.LENGTH_LONG)
-                .setAction(R.string.action_dismiss) { /* dismiss */ }
-                .apply {
-                    this.view.initMarginWindowInsetsListener(bottom = true, consume = false)
-                }
+                .setAction(R.string.action_dismiss) {}
                 .show()
         }
-
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.loadingOverlay.isVisible = isLoading
-        }
     }
+
+    override fun onDestroyView() {
+        viewModel.errorMessageListener = null
+        super.onDestroyView()
+    }
+
+    @Composable
+    private fun SettingsContent() {
+        val userState by viewModel.userModel.collectAsStateWithLifecycle()
+        val isLoading by viewModel.isLoading.collectAsStateWithLifecycle(false)
+        val startFragment by KitsunePref.asLiveData(KitsunePref::startFragment)
+            .collectAsStateWithLifecycle(KitsunePref.startFragment)
+        val rememberSearchFilters by KitsunePref.asLiveData(KitsunePref::rememberSearchFilters)
+            .collectAsStateWithLifecycle(KitsunePref.rememberSearchFilters)
+        val doubleBackToExit by KitsunePref.asLiveData(KitsunePref::doubleBackToExit)
+            .collectAsStateWithLifecycle(KitsunePref.doubleBackToExit)
+        val forceLegacyImagePicker by KitsunePref.asLiveData(KitsunePref::forceLegacyImagePicker)
+            .collectAsStateWithLifecycle(KitsunePref.forceLegacyImagePicker)
+        val checkForUpdatesOnStart by KitsunePref.asLiveData(KitsunePref::checkForUpdatesOnStart)
+            .collectAsStateWithLifecycle(KitsunePref.checkForUpdatesOnStart)
+        val titles by KitsunePref.getTitleLanguageAsFlow()
+            .collectAsStateWithLifecycle(KitsunePref.titles)
+        val context = LocalContext.current
+        val uiState = SettingsUiState(
+            user = userState,
+            isLoading = isLoading,
+            titles = titles,
+            startFragment = startFragment,
+            rememberSearchFilters = rememberSearchFilters,
+            doubleBackToExit = doubleBackToExit,
+            isPhotoPickerAvailable = ActivityResultContracts.PickVisualMedia.isPhotoPickerAvailable(context),
+            forceLegacyImagePicker = forceLegacyImagePicker,
+            checkForUpdatesOnStart = checkForUpdatesOnStart,
+            appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+        )
+        SettingsScreen(uiState = uiState, callbacks = buildCallbacks(userState))
+    }
+
+    private fun buildCallbacks(user: LocalUser?): SettingsCallbacks = SettingsCallbacks(
+        onNavigateUp = { findNavController().navigateUp() },
+        onNavigateToAppearance = {
+            val action = SettingsFragmentDirections.actionSettingsFragmentToAppearanceFragment()
+            findNavController().navigate(action)
+        },
+        onNavigateToAppLogs = {
+            val action = SettingsFragmentDirections.actionSettingsFragmentToAppLogsFragment()
+            findNavController().navigateSafe(R.id.settingsFragment, action)
+        },
+        onNavigateToLibraries = {
+            val action = SettingsFragmentDirections.actionSettingsFragmentToLibrariesFragment()
+            findNavController().navigateSafe(R.id.settingsFragment, action)
+        },
+        onNavigateToGitHub = { openUrl(getString(R.string.github_repo_url)) },
+        onLanguageSelected = { tag ->
+            val localeList = if (tag.isEmpty()) {
+                LocaleListCompat.getEmptyLocaleList()
+            } else {
+                LocaleListCompat.forLanguageTags(tag)
+            }
+            AppCompatDelegate.setApplicationLocales(localeList)
+        },
+        onStartFragmentSelected = { pref -> KitsunePref.startFragment = pref },
+        onTitlesSelected = { pref ->
+            val old = KitsunePref.titles
+            KitsunePref.titles = pref
+            if (user != null && old != pref) {
+                viewModel.updateUser(LocalUser.empty(user.id).copy(titleLanguagePreference = pref))
+            }
+        },
+        onCountrySelected = { code ->
+            user?.let { viewModel.updateUser(LocalUser.empty(it.id).copy(country = code)) }
+        },
+        onSfwFilterSelected = { pref ->
+            user?.let { viewModel.updateUser(LocalUser.empty(it.id).copy(sfwFilterPreference = pref)) }
+        },
+        onRatingSystemSelected = { pref ->
+            user?.let { viewModel.updateUser(LocalUser.empty(it.id).copy(ratingSystem = pref)) }
+        },
+        onDisplayNameChanged = { name ->
+            user?.let { viewModel.updateUser(LocalUser.empty(it.id).copy(name = name)) }
+        },
+        onProfileUrlChanged = { slug ->
+            user?.let { viewModel.updateUser(LocalUser.empty(it.id).copy(slug = slug)) }
+        },
+        onRememberSearchFiltersToggle = { KitsunePref.rememberSearchFilters = it },
+        onDoubleBackToExitToggle = { KitsunePref.doubleBackToExit = it },
+        onForceLegacyImagePickerToggle = { KitsunePref.forceLegacyImagePicker = it },
+        onCheckForUpdatesToggle = { enabled ->
+            if (enabled && !requireContext().isNotificationPermissionGranted()) {
+                requireActivity().requestNotificationPermission(requestNotificationPermissionLauncher)
+            } else {
+                KitsunePref.checkForUpdatesOnStart = enabled
+            }
+        },
+        onAppVersionClick = { checkForNewVersion() }
+    )
 
     private fun checkForNewVersion() {
         Toast.makeText(
@@ -211,25 +180,19 @@ class SettingsFragment : BasePreferenceFragment() {
             R.string.info_update_checking_new_version,
             Toast.LENGTH_SHORT
         ).show()
-
         lifecycleScope.launch {
             when (val result = appUpdateRepository.checkForUpdates(BuildConfig.VERSION_NAME)) {
                 is UpdateCheckResult.NewVersion -> {
                     val release = result.release
                     Notifications.showNewVersion(requireContext(), release)
-
                     val message = getString(
                         R.string.info_update_new_version_available_text,
                         release.version
                     )
                     Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG)
                         .setAction(R.string.action_view) { openUrl(release.url) }
-                        .apply {
-                            this.view.initMarginWindowInsetsListener(bottom = true, consume = false)
-                        }
                         .show()
                 }
-
                 is UpdateCheckResult.NoNewVersion -> {
                     Toast.makeText(
                         requireContext(),
@@ -237,7 +200,6 @@ class SettingsFragment : BasePreferenceFragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-
                 is UpdateCheckResult.Error -> {
                     Toast.makeText(
                         requireContext(),
@@ -248,162 +210,4 @@ class SettingsFragment : BasePreferenceFragment() {
             }
         }
     }
-
-    private fun observeUserModel() {
-        viewModel.userModel.observe(this) { user ->
-            //---- Title Language Preference
-            findPreference<ListPreference>(R.string.preference_key_titles)?.apply {
-                entryValues = LocalTitleLanguagePreference.entries.map { it.name }.toTypedArray()
-                setDefaultValue(KitsunePref.titles.name)
-                value = KitsunePref.titles.name
-                setOnPreferenceChangeListener { _, newValue ->
-                    val titlesPref = LocalTitleLanguagePreference.valueOf(newValue.toString())
-                    KitsunePref.titles = titlesPref
-
-                    // Title preference can be also changed without being logged in.
-                    // Do only try to update the user model if logged in.
-                    if (user != null) {
-                        updateUserIfChanged(
-                            value,
-                            newValue,
-                            LocalUser.empty(user.id).copy(
-                                titleLanguagePreference = titlesPref
-                            )
-                        )
-                    }
-                    true
-                }
-            }
-
-            //---- Country
-            findPreference<ListPreference>(R.string.preference_key_country)?.apply {
-                entryValues = Locale.getISOCountries()
-                entries =
-                    Locale.getISOCountries()
-                        .map { Locale.Builder().setRegion(it).build().displayCountry }
-                        .toTypedArray()
-                value = user?.country
-                setOnPreferenceChangeListener { _, newValue ->
-                    if (user == null) return@setOnPreferenceChangeListener false
-                    updateUserIfChanged(
-                        value,
-                        newValue,
-                        LocalUser.empty(user.id).copy(country = newValue as String)
-                    )
-                    true
-                }
-                requireUserLoggedIn(user) {
-                    if (it.value == null) {
-                        getString(R.string.preference_country_summary_non)
-                    } else {
-                        val countryName = Locale.Builder().setRegion(it.value).build().displayName
-                        getString(R.string.preference_country_summary, countryName)
-                    }
-                }
-            }
-
-            //---- Adult Content
-            findPreference<ListPreference>(R.string.preference_key_sfw_filter)?.apply {
-                value = user?.sfwFilterPreference?.name
-                entryValues = LocalSfwFilterPreference.entries.map { it.name }.toTypedArray()
-                setOnPreferenceChangeListener { _, newValue ->
-                    if (user == null) return@setOnPreferenceChangeListener false
-                    updateUserIfChanged(
-                        value,
-                        newValue,
-                        LocalUser.empty(user.id).copy(
-                            sfwFilterPreference = LocalSfwFilterPreference.valueOf(newValue as String)
-                        )
-                    )
-                    true
-                }
-                requireUserLoggedIn(user) {
-                    val filterPreference =
-                        it.value?.let { filter -> LocalSfwFilterPreference.valueOf(filter) }
-                    getString(
-                        when (filterPreference) {
-                            LocalSfwFilterPreference.SFW -> R.string.preference_adult_content_description_sfw
-                            LocalSfwFilterPreference.NSFW_SOMETIMES -> R.string.preference_adult_content_description_sometimes
-                            LocalSfwFilterPreference.NSFW_EVERYWHERE -> R.string.preference_adult_content_description_everywhere
-                            else -> R.string.no_information
-                        }
-                    )
-                }
-            }
-
-            //---- Rating System
-            findPreference<ListPreference>(R.string.preference_key_rating_system)?.apply {
-                entryValues =
-                    LocalRatingSystemPreference.entries.reversed().map { it.name }.toTypedArray()
-                value = user?.ratingSystem?.name
-                setOnPreferenceChangeListener { _, newValue ->
-                    if (user == null) return@setOnPreferenceChangeListener false
-                    updateUserIfChanged(
-                        value,
-                        newValue,
-                        LocalUser.empty(user.id).copy(
-                            ratingSystem = LocalRatingSystemPreference.valueOf(newValue as String)
-                        )
-                    )
-                    true
-                }
-                requireUserLoggedIn(user, summaryProvider = SimpleSummaryProvider.getInstance())
-            }
-
-            //---- Display Name
-            findPreference<EditTextPreference>(R.string.preference_key_display_name)?.apply {
-                text = user?.name
-                setOnPreferenceChangeListener { _, newValue ->
-                    if (user == null) return@setOnPreferenceChangeListener false
-                    updateUserIfChanged(text, newValue, LocalUser.empty(user.id).copy(name = newValue as String))
-                    true
-                }
-                requireUserLoggedIn(user) { it.text }
-            }
-
-            //---- Profile URL
-            findPreference<EditTextPreference>(R.string.preference_key_profile_url)?.apply {
-                text = user?.slug
-                setOnPreferenceChangeListener { _, newValue ->
-                    if (user == null) return@setOnPreferenceChangeListener false
-                    updateUserIfChanged(text, newValue, LocalUser.empty(user.id).copy(slug = newValue as String))
-                    true
-                }
-                requireUserLoggedIn(user) {
-                    if (!it.text.isNullOrBlank())
-                        Kitsu.USER_URL_PREFIX + it.text
-                    else
-                        getString(R.string.preference_profile_url_not_set)
-                }
-            }
-        }
-    }
-
-    private fun updateUserIfChanged(oldValue: Any?, newValue: Any?, user: LocalUser) {
-        if (oldValue != newValue) {
-            viewModel.updateUser(user)
-        }
-    }
-
-    private inline fun <reified T : Preference> T.requireUserLoggedIn(
-        user: LocalUser?,
-        @StringRes messageRes: Int = R.string.preference_not_logged_in,
-        summaryProvider: Preference.SummaryProvider<T>? = null
-    ) {
-        isEnabled = user != null
-        if (user == null) {
-            summary = getString(messageRes)
-        }
-        this.summaryProvider = if (user != null) {
-            summaryProvider
-        } else {
-            null
-        }
-    }
-
-    override fun onDestroyView() {
-        viewModel.errorMessageListener = null
-        super.onDestroyView()
-    }
-
 }

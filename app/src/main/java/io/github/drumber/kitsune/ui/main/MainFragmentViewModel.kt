@@ -167,7 +167,14 @@ class MainFragmentViewModel(
 
     sealed interface NavigationAction {
         data class OpenMediaList(val mediaSelector: MediaSelector, val title: String) : NavigationAction
-        data class OpenMediaDetails(val mediaDto: MediaDto, val sharedElement: View) : NavigationAction
+        data class OpenMediaDetails(
+            val mediaDto: MediaDto,
+            /**
+             * Shared element for the poster transition, or `null` when the source screen is
+             * Compose-hosted and has no View to hand off (Stage A of the Compose migration).
+             */
+            val sharedElement: View? = null
+        ) : NavigationAction
     }
 
     companion object {

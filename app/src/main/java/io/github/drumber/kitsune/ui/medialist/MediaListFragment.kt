@@ -5,49 +5,46 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.doOnPreDraw
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarState
+import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.res.dimensionResource
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.paging.LoadState
 import androidx.paging.PagingData
-import androidx.paging.PagingDataAdapter
-import com.bumptech.glide.Glide
-import com.google.android.material.color.MaterialColors
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.model.media.Media
-import io.github.drumber.kitsune.databinding.FragmentMediaListBinding
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.adapter.paging.AnimeAdapter
-import io.github.drumber.kitsune.ui.adapter.paging.MangaAdapter
-import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
-import io.github.drumber.kitsune.ui.component.LoadStateSpanSizeLookup
-import io.github.drumber.kitsune.ui.component.ResponsiveGridLayoutManager
-import io.github.drumber.kitsune.ui.component.updateLoadState
+import io.github.drumber.kitsune.ui.compose.composeView
 import io.github.drumber.kitsune.util.extensions.navigateSafe
-import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.viewBinding
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.compose.koinViewModel
 
-class MediaListFragment : Fragment(R.layout.fragment_media_list),
-    NavigationBarView.OnItemReselectedListener {
+class MediaListFragment : Fragment(), NavigationBarView.OnItemReselectedListener {
 
     private val args: MediaListFragmentArgs by navArgs()
 
-    private val binding by viewBinding(FragmentMediaListBinding::bind)
+    /**
+     * Holds the [LazyGridState] created inside [MediaListContent] so that
+     * [onNavigationItemReselected] can animate a scroll-to-top without going through Compose state.
+     */
+    private var lazyGridState: LazyGridState? = null
 
-    private val viewModel: MediaListViewModel by viewModel()
+    /** Held alongside [lazyGridState] so reselect can re-expand the collapsed toolbar. */
+    private var topAppBarState: TopAppBarState? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,99 +52,74 @@ class MediaListFragment : Fragment(R.layout.fragment_media_list),
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        postponeEnterTransition()
-
-        if (findNavController().currentBackStackEntry?.arguments == null) {
-            view.doOnPreDraw { startPostponedEnterTransition() }
-        } else {
-            // safeguard: ensure startPostponedEnterTransition() got called within 200ms
-            view.postDelayed({
-                startPostponedEnterTransition()
-            }, 200)
-        }
-
-        val colorBackground = MaterialColors.getColor(view, android.R.attr.colorBackground)
-        view.setBackgroundColor(colorBackground)
-
-        binding.rvMedia.initPaddingWindowInsetsListener(
-            left = true,
-            right = true,
-            bottom = true,
-            consume = false
-        )
-
-        viewModel.setMediaSelector(args.mediaSelector)
-
-        binding.collapsingToolbar.initWindowInsetsListener(consume = false)
-        binding.toolbar.apply {
-            initWindowInsetsListener(consume = false)
-            title = args.title
-            setNavigationOnClickListener { findNavController().navigateUp() }
-        }
-
-        initRecyclerView()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = composeView {
+        MediaListContent()
     }
 
-    private fun initRecyclerView() {
-        val glide = Glide.with(this)
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Suppress("UNCHECKED_CAST")
+    @Composable
+    private fun MediaListContent() {
+        val viewModel: MediaListViewModel = koinViewModel()
 
-        val adapter = when (args.mediaSelector.mediaType) {
-            MediaType.Anime -> AnimeAdapter(glide, this::onMediaClicked)
-            MediaType.Manga -> MangaAdapter(glide, this::onMediaClicked)
-        } as PagingDataAdapter<Media, *>
+        LaunchedEffect(args.mediaSelector) {
+            viewModel.setMediaSelector(args.mediaSelector)
+        }
 
-        val columnWidth = resources.getDimension(KitsunePref.mediaItemSize.widthRes) +
-                2 * resources.getDimension(R.dimen.media_item_margin)
-        val gridLayout = ResponsiveGridLayoutManager(requireContext(), columnWidth.toInt(), 2)
-        gridLayout.spanSizeLookup = LoadStateSpanSizeLookup(adapter, gridLayout)
+        val items = (viewModel.dataSource as Flow<PagingData<Media>>).collectAsLazyPagingItems()
 
-        binding.rvMedia.adapter = adapter.withLoadStateHeaderAndFooter(
-            header = ResourceLoadStateAdapter(adapter),
-            footer = ResourceLoadStateAdapter(adapter)
-        )
-        binding.rvMedia.layoutManager = gridLayout
-
-        binding.layoutLoading.btnRetry.setOnClickListener { adapter.retry() }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                adapter.loadStateFlow.collectLatest { loadStates ->
-                    binding.layoutLoading.updateLoadState(
-                        binding.rvMedia,
-                        adapter.itemCount,
-                        loadStates
-                    )
-
-                    if (loadStates.refresh is LoadState.NotLoading) {
-                        binding.rvMedia.doOnPreDraw { startPostponedEnterTransition() }
-                    }
-                }
+        val gridState = rememberLazyGridState()
+        val appBarState = rememberTopAppBarState()
+        DisposableEffect(Unit) {
+            lazyGridState = gridState
+            topAppBarState = appBarState
+            onDispose {
+                lazyGridState = null
+                topAppBarState = null
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.dataSource.collectLatest { data ->
-                    adapter.submitData(data as PagingData<Media>)
-                }
-            }
-        }
+        val itemWidth = dimensionResource(KitsunePref.mediaItemSize.widthRes)
+        val itemHeight = dimensionResource(KitsunePref.mediaItemSize.heightRes)
+        val itemMargin = dimensionResource(R.dimen.media_item_margin)
+        val columns = GridCells.Adaptive(itemWidth + itemMargin * 2)
+        val itemAspectRatio = itemWidth / itemHeight
+
+        MediaListScreen(
+            title = args.title,
+            items = items,
+            columns = columns,
+            itemAspectRatio = itemAspectRatio,
+            gridState = gridState,
+            topAppBarState = appBarState,
+            onNavigateUp = { findNavController().navigateUp() },
+            onMediaClick = { media -> navigateToDetails(media) }
+        )
     }
 
-    fun onMediaClicked(view: View, model: Media) {
-        val action =
-            MediaListFragmentDirections.actionMediaListFragmentToDetailsFragment(model.toMediaDto())
-        val detailsTransitionName = getString(R.string.details_poster_transition_name)
-        val extras = FragmentNavigatorExtras(view to detailsTransitionName)
-        findNavController().navigateSafe(R.id.media_list_fragment, action, extras)
+    private fun navigateToDetails(media: Media) {
+        val action = MediaListFragmentDirections
+            .actionMediaListFragmentToDetailsFragment(media.toMediaDto())
+        findNavController().navigateSafe(R.id.media_list_fragment, action)
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        if (binding.rvMedia.canScrollVertically(-1)) {
-            binding.rvMedia.smoothScrollToPosition(0)
-            binding.appBarLayout.setExpanded(true)
+        val state = lazyGridState
+        if (state != null &&
+            (state.firstVisibleItemIndex > 0 || state.firstVisibleItemScrollOffset > 0)
+        ) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                state.animateScrollToItem(0)
+                // mirrors the old appBarLayout.setExpanded(true)
+                topAppBarState?.apply {
+                    heightOffset = 0f
+                    contentOffset = 0f
+                }
+            }
         } else {
             findNavController().navigateUp()
         }

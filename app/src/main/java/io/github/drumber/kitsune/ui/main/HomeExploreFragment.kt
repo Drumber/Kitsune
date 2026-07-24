@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
 import androidx.core.os.BundleCompat
-import androidx.core.view.doOnPreDraw
-import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
-import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.media.MediaType
@@ -18,22 +18,14 @@ import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
 import io.github.drumber.kitsune.data.presentation.model.media.RequestType
-import io.github.drumber.kitsune.databinding.FragmentHomeExploreBinding
-import io.github.drumber.kitsune.databinding.SectionMainExploreBinding
-import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
-import io.github.drumber.kitsune.ui.base.BaseFragment
-import io.github.drumber.kitsune.ui.component.ExploreSection
+import io.github.drumber.kitsune.ui.compose.collectAsStateWithLifecycle
+import io.github.drumber.kitsune.ui.compose.composeView
 import io.github.drumber.kitsune.ui.main.MainFragmentViewModel.NavigationAction
 import io.github.drumber.kitsune.util.network.ResponseData
-import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.launch
 import org.koin.androidx.navigation.koinNavGraphViewModel
 
-class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
-    OnItemClickListener<Media> {
-
-    private val binding by viewBinding(FragmentHomeExploreBinding::bind)
+class HomeExploreFragment : Fragment() {
 
     private val viewModel: MainFragmentViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
 
@@ -41,208 +33,131 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         const val BUNDLE_MEDIA_TYPE = "bundle_media_type"
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        postponeEnterTransition()
-        view.doOnPreDraw { startPostponedEnterTransition() }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = composeView { HomeExploreContent() }
 
-        val mediaType = arguments?.takeIf { it.containsKey(BUNDLE_MEDIA_TYPE) }?.let {
+    @Composable
+    private fun HomeExploreContent() {
+        val mediaType = arguments?.let {
             BundleCompat.getSerializable(it, BUNDLE_MEDIA_TYPE, MediaType::class.java)
         }
-
-        if (mediaType == MediaType.Anime) {
-            initAnimeExploreSections()
-        } else if (mediaType == MediaType.Manga) {
-            initMangaExploreSections()
+        when (mediaType) {
+            MediaType.Anime -> AnimeExploreContent()
+            MediaType.Manga -> MangaExploreContent()
+            else -> Unit
         }
     }
 
-    private fun initAnimeExploreSections() {
-        // trending
-        buildExploreSectionView(
-            MediaType.Anime,
-            R.string.section_trending,
-            Filter().limit(30),
-            RequestType.TRENDING,
-            binding.sectionTrending,
-            viewModel.getAnimeExploreLiveData(MainFragmentViewModel.TRENDING) as LiveData<ResponseData<List<Media>>>
-        )
+    @Composable
+    private fun AnimeExploreContent() {
+        val trendingTitle = stringResource(R.string.section_trending)
+        val topAiringTitle = stringResource(R.string.section_top_airing_anime)
+        val topUpcomingTitle = stringResource(R.string.section_top_upcoming_anime)
+        val highestRatedTitle = stringResource(R.string.section_highest_rated_anime)
+        val mostPopularTitle = stringResource(R.string.section_most_popular_anime)
 
-        // top airing
-        buildExploreSectionView(
-            MediaType.Anime,
-            R.string.section_top_airing_anime,
-            MainFragmentViewModel.FILTER_TOP_AIRING_ANIME,
-            RequestType.ALL,
-            binding.sectionTopAiring,
-            viewModel.getAnimeExploreLiveData(MainFragmentViewModel.TOP_AIRING) as LiveData<ResponseData<List<Media>>>
-        )
+        val trendingState by animeSection(MainFragmentViewModel.TRENDING).collectAsStateWithLifecycle()
+        val topAiringState by animeSection(MainFragmentViewModel.TOP_AIRING).collectAsStateWithLifecycle()
+        val topUpcomingState by animeSection(MainFragmentViewModel.TOP_UPCOMING).collectAsStateWithLifecycle()
+        val highestRatedState by animeSection(MainFragmentViewModel.HIGHEST_RATED).collectAsStateWithLifecycle()
+        val mostPopularState by animeSection(MainFragmentViewModel.MOST_POPULAR).collectAsStateWithLifecycle()
 
-        // top upcoming
-        buildExploreSectionView(
-            MediaType.Anime,
-            R.string.section_top_upcoming_anime,
-            MainFragmentViewModel.FILTER_TOP_UPCOMING_ANIME,
-            RequestType.ALL,
-            binding.sectionTopUpcoming,
-            viewModel.getAnimeExploreLiveData(MainFragmentViewModel.TOP_UPCOMING) as LiveData<ResponseData<List<Media>>>
-        )
+        val topAiringSelector = animeSelector(MainFragmentViewModel.FILTER_TOP_AIRING_ANIME, RequestType.ALL)
+        val topUpcomingSelector = animeSelector(MainFragmentViewModel.FILTER_TOP_UPCOMING_ANIME, RequestType.ALL)
+        val highestRatedSelector = animeSelector(MainFragmentViewModel.FILTER_HIGHEST_RATED_ANIME, RequestType.ALL)
+        val mostPopularSelector = animeSelector(MainFragmentViewModel.FILTER_MOST_POPULAR_ANIME, RequestType.ALL)
 
-        // highest rated
-        buildExploreSectionView(
-            MediaType.Anime,
-            R.string.section_highest_rated_anime,
-            MainFragmentViewModel.FILTER_HIGHEST_RATED_ANIME,
-            RequestType.ALL,
-            binding.sectionHighestRated,
-            viewModel.getAnimeExploreLiveData(MainFragmentViewModel.HIGHEST_RATED) as LiveData<ResponseData<List<Media>>>
-        )
-
-        // most popular
-        buildExploreSectionView(
-            MediaType.Anime,
-            R.string.section_most_popular_anime,
-            MainFragmentViewModel.FILTER_MOST_POPULAR_ANIME,
-            RequestType.ALL,
-            binding.sectionMostPopular,
-            viewModel.getAnimeExploreLiveData(MainFragmentViewModel.MOST_POPULAR) as LiveData<ResponseData<List<Media>>>
-        )
-    }
-
-    private fun initMangaExploreSections() {
-        // trending
-        buildExploreSectionView(
-            MediaType.Manga,
-            R.string.section_trending,
-            Filter().limit(30),
-            RequestType.TRENDING,
-            binding.sectionTrending,
-            viewModel.getMangaExploreLiveData(MainFragmentViewModel.TRENDING) as LiveData<ResponseData<List<Media>>>
-        )
-
-        // top airing
-        buildExploreSectionView(
-            MediaType.Manga,
-            R.string.section_top_airing_manga,
-            MainFragmentViewModel.FILTER_TOP_AIRING_MANGA,
-            RequestType.ALL,
-            binding.sectionTopAiring,
-            viewModel.getMangaExploreLiveData(MainFragmentViewModel.TOP_AIRING) as LiveData<ResponseData<List<Media>>>
-        )
-
-        // top upcoming
-        buildExploreSectionView(
-            MediaType.Manga,
-            R.string.section_top_upcoming_manga,
-            MainFragmentViewModel.FILTER_TOP_UPCOMING_MANGA,
-            RequestType.ALL,
-            binding.sectionTopUpcoming,
-            viewModel.getMangaExploreLiveData(MainFragmentViewModel.TOP_UPCOMING) as LiveData<ResponseData<List<Media>>>
-        )
-
-        // highest rated
-        buildExploreSectionView(
-            MediaType.Manga,
-            R.string.section_highest_rated_manga,
-            MainFragmentViewModel.FILTER_HIGHEST_RATED_MANGA,
-            RequestType.ALL,
-            binding.sectionHighestRated,
-            viewModel.getMangaExploreLiveData(MainFragmentViewModel.HIGHEST_RATED) as LiveData<ResponseData<List<Media>>>
-        )
-
-        // most popular
-        buildExploreSectionView(
-            MediaType.Manga,
-            R.string.section_most_popular_manga,
-            MainFragmentViewModel.FILTER_MOST_POPULAR_MANGA,
-            RequestType.ALL,
-            binding.sectionMostPopular,
-            viewModel.getMangaExploreLiveData(MainFragmentViewModel.MOST_POPULAR) as LiveData<ResponseData<List<Media>>>
-        )
-    }
-
-    private fun buildExploreSectionView(
-        mediaType: MediaType,
-        @StringRes titleRes: Int,
-        filter: Filter,
-        requestType: RequestType,
-        sectionBinding: SectionMainExploreBinding,
-        liveData: LiveData<ResponseData<List<Media>>>
-    ): ExploreSection {
-        sectionBinding.apply {
-            rvMedia.isVisible = false
-            rvMedia.uniqueId = sectionBinding.root.id xor mediaType.ordinal
-            layoutLoading.apply {
-                root.layoutParams.height =
-                    resources.getDimensionPixelSize(KitsunePref.mediaItemSize.heightRes)
-                tvError.isVisible = false
-                btnRetry.isVisible = false
-                root.isVisible = true
-            }
-        }
-
-        val mediaSelector = MediaSelector(mediaType, filter.options, requestType)
-        val section = createExploreSection(titleRes, mediaSelector, sectionBinding.root)
-
-        liveData.observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is ResponseData.Success if response.data.isNotEmpty() -> {
-                    section.setData(response.data)
-                    sectionBinding.apply {
-                        layoutLoading.root.isVisible = false
-                        rvMedia.isVisible = true
-                    }
+        HomeExploreScreen(
+            sections = listOf(
+                HomeExploreSectionUiState(trendingTitle, trendingState) {
+                    navigateToMediaList(animeSelector(Filter().limit(30), RequestType.TRENDING), trendingTitle)
+                },
+                HomeExploreSectionUiState(topAiringTitle, topAiringState) {
+                    navigateToMediaList(topAiringSelector, topAiringTitle)
+                },
+                HomeExploreSectionUiState(topUpcomingTitle, topUpcomingState) {
+                    navigateToMediaList(topUpcomingSelector, topUpcomingTitle)
+                },
+                HomeExploreSectionUiState(highestRatedTitle, highestRatedState) {
+                    navigateToMediaList(highestRatedSelector, highestRatedTitle)
+                },
+                HomeExploreSectionUiState(mostPopularTitle, mostPopularState) {
+                    navigateToMediaList(mostPopularSelector, mostPopularTitle)
                 }
-
-                is ResponseData.Success if response.data.isEmpty() -> {
-                    sectionBinding.apply {
-                        rvMedia.isVisible = false
-                        layoutLoading.apply {
-                            root.isVisible = true
-                            tvError.isVisible = false
-                            tvNoData.isVisible = true
-                            progressBar.isVisible = false
-                        }
-                    }
-                }
-
-                else -> {
-                    sectionBinding.apply {
-                        rvMedia.isVisible = false
-                        layoutLoading.apply {
-                            root.isVisible = true
-                            tvError.isVisible = true
-                            tvNoData.isVisible = false
-                            progressBar.isVisible = false
-                        }
-                    }
-                }
-            }
-
-        }
-        return section
+            ),
+            onItemClick = ::onItemClick,
+            onRetry = viewModel::refreshAnimeData
+        )
     }
 
-    private fun createExploreSection(
-        @StringRes titleRes: Int,
-        mediaSelector: MediaSelector,
-        view: View
-    ): ExploreSection {
-        val title = getString(titleRes)
-        val glide = Glide.with(this)
+    @Composable
+    private fun MangaExploreContent() {
+        val trendingTitle = stringResource(R.string.section_trending)
+        val topAiringTitle = stringResource(R.string.section_top_airing_manga)
+        val topUpcomingTitle = stringResource(R.string.section_top_upcoming_manga)
+        val highestRatedTitle = stringResource(R.string.section_highest_rated_manga)
+        val mostPopularTitle = stringResource(R.string.section_most_popular_manga)
 
-        val section = ExploreSection(glide, title, null, this) {
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.navigate(NavigationAction.OpenMediaList(mediaSelector, title))
-            }
-        }
-        section.bindView(view)
-        return section
+        val trendingState by mangaSection(MainFragmentViewModel.TRENDING).collectAsStateWithLifecycle()
+        val topAiringState by mangaSection(MainFragmentViewModel.TOP_AIRING).collectAsStateWithLifecycle()
+        val topUpcomingState by mangaSection(MainFragmentViewModel.TOP_UPCOMING).collectAsStateWithLifecycle()
+        val highestRatedState by mangaSection(MainFragmentViewModel.HIGHEST_RATED).collectAsStateWithLifecycle()
+        val mostPopularState by mangaSection(MainFragmentViewModel.MOST_POPULAR).collectAsStateWithLifecycle()
+
+        val topAiringSelector = mangaSelector(MainFragmentViewModel.FILTER_TOP_AIRING_MANGA, RequestType.ALL)
+        val topUpcomingSelector = mangaSelector(MainFragmentViewModel.FILTER_TOP_UPCOMING_MANGA, RequestType.ALL)
+        val highestRatedSelector = mangaSelector(MainFragmentViewModel.FILTER_HIGHEST_RATED_MANGA, RequestType.ALL)
+        val mostPopularSelector = mangaSelector(MainFragmentViewModel.FILTER_MOST_POPULAR_MANGA, RequestType.ALL)
+
+        HomeExploreScreen(
+            sections = listOf(
+                HomeExploreSectionUiState(trendingTitle, trendingState) {
+                    navigateToMediaList(mangaSelector(Filter().limit(30), RequestType.TRENDING), trendingTitle)
+                },
+                HomeExploreSectionUiState(topAiringTitle, topAiringState) {
+                    navigateToMediaList(topAiringSelector, topAiringTitle)
+                },
+                HomeExploreSectionUiState(topUpcomingTitle, topUpcomingState) {
+                    navigateToMediaList(topUpcomingSelector, topUpcomingTitle)
+                },
+                HomeExploreSectionUiState(highestRatedTitle, highestRatedState) {
+                    navigateToMediaList(highestRatedSelector, highestRatedTitle)
+                },
+                HomeExploreSectionUiState(mostPopularTitle, mostPopularState) {
+                    navigateToMediaList(mostPopularSelector, mostPopularTitle)
+                }
+            ),
+            onItemClick = ::onItemClick,
+            onRetry = viewModel::refreshMangaData
+        )
     }
 
-    override fun onItemClick(view: View, item: Media) {
+    @Suppress("UNCHECKED_CAST")
+    private fun animeSection(key: String): LiveData<ResponseData<List<Media>>> =
+        viewModel.getAnimeExploreLiveData(key) as LiveData<ResponseData<List<Media>>>
+
+    @Suppress("UNCHECKED_CAST")
+    private fun mangaSection(key: String): LiveData<ResponseData<List<Media>>> =
+        viewModel.getMangaExploreLiveData(key) as LiveData<ResponseData<List<Media>>>
+
+    private fun animeSelector(filter: Filter, type: RequestType) =
+        MediaSelector(MediaType.Anime, filter.options, type)
+
+    private fun mangaSelector(filter: Filter, type: RequestType) =
+        MediaSelector(MediaType.Manga, filter.options, type)
+
+    private fun onItemClick(media: Media) {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.navigate(NavigationAction.OpenMediaDetails(item.toMediaDto(), view))
+            viewModel.navigate(NavigationAction.OpenMediaDetails(media.toMediaDto()))
+        }
+    }
+
+    private fun navigateToMediaList(mediaSelector: MediaSelector, title: String) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.navigate(NavigationAction.OpenMediaList(mediaSelector, title))
         }
     }
 }
