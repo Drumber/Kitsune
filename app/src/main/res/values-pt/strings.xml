@@ -390,6 +390,8 @@
     <string name="profile_data_bio">Bio</string>
     <string name="onboarding_welcome_feature_track">Seguir</string>
     <string name="onboarding_welcome_feature_track_description">Siga o controlo do que viu e leu.</string>
+    <string name="action_copy_url">Copiar URL</string>
+    <string name="relationship_spinoff">Spin-off</string>
     <string name="press_back_again_to_exit">Pressione voltar novamente para sair</string>
     <string name="nav_feed">Feed</string>
     <string name="notifications_title">Notificações</string>
@@ -424,7 +426,6 @@
     <string name="db_request_open_anime">Ver pedidos de anime abertos</string>
     <string name="db_request_manga">Solicitar alteração na BD de manga</string>
     <string name="db_request_open_manga">Ver pedidos de manga abertos</string>
-    <string name="action_copy_url">Copiar URL</string>
     <string name="title_reaction">Reação</string>
     <string name="action_add_reaction">Adicionar reação</string>
     <string name="reaction_compose_title">Escrever uma reação</string>
@@ -515,7 +516,6 @@
     <string name="follow_list_following_title">A seguir</string>
     <string name="follow_list_followers_title">Seguidores</string>
     <string name="follow_list_empty">Nada para mostrar aqui.</string>
-    <string name="relationship_spinoff">Spin-off</string>
     <string name="library_edit_rewatch_count">Contagem de revisto</string>
     <string name="library_edit_start_rewatch">Começar a rever</string>
 </resources>

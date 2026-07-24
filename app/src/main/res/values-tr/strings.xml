@@ -44,7 +44,7 @@
     <string name="action_update">Güncelle</string>
     <string name="action_start">Başlat</string>
     <string name="action_allow">İzin</string>
-    <string name="action_rate">Puan</string>
+    <string name="action_rate">Puanla</string>
     <string name="action_update_rating">Puanı Güncelle</string>
     <string name="action_remove_rating">Puanı Kaldır</string>
     <string name="action_add_profile_link">Profile Link Ekle</string>
@@ -243,9 +243,9 @@
     <string name="preference_force_legacy_image_picker">Geçmiş Fotoğraf Seçiciyi Zorla</string>
     <string name="preference_force_legacy_image_picker_description">Sistem dosya seçicisini kullanmak için yeni fotoğraf seçicisi yerine zorla.</string>
     <string name="preference_check_for_updates">Başlangıçta Güncellemeleri Kontrol Et</string>
-    <string name="preference_check_for_updates_description">Her başlatmada yeni bir uygulama sürümü olup olmadığını kontrol edin.</string>
+    <string name="preference_check_for_updates_description">Uygulama başlatıldığında yeni sürümü denetle.</string>
     <string name="preference_app_logs_description">Uygulama günlük mesajlarını gör ve paylaş.</string>
-    <string name="preference_app_version">Versiyon Bİlgisi</string>
+    <string name="preference_app_version">Sürüm Bilgisi</string>
     <string name="preference_app_version_description">Tıkla ve güncellemeyi kontrol et.</string>
     <string name="preference_github_repo">GitHub Deposu</string>
     <string name="preference_open_source_libraries_description">Kullanılan tüm açık kaynak kütüphanelerinin listesi.</string>
@@ -389,6 +389,9 @@
     <string name="action_continue">Devam Et</string>
     <string name="action_create_account">Hesap oluştur</string>
     <string name="onboarding_setup_title_language">Başlık Dili</string>
+    <string name="action_copy_url">URL\'yi Kopyala</string>
+    <string name="profile_data_following">%d Takip Edilen</string>
+    <string name="profile_data_followers">%d Takipçi</string>
     <string name="press_back_again_to_exit">Çıkmak için tekrar geri tuşuna basın</string>
     <string name="nav_feed">Akış</string>
     <string name="notifications_title">Bildirimler</string>
@@ -423,7 +426,6 @@
     <string name="db_request_open_anime">Açık anime isteklerini gör</string>
     <string name="db_request_manga">Manga VT değişikliği iste</string>
     <string name="db_request_open_manga">Açık manga isteklerini gör</string>
-    <string name="action_copy_url">URL\'yi kopyala</string>
     <string name="title_reaction">Tepki</string>
     <string name="action_add_reaction">Tepki ekle</string>
     <string name="reaction_compose_title">Tepki yaz</string>
@@ -509,8 +511,6 @@
     <string name="delete_comment_confirm_message">Bu yorum kalıcı olarak silinecek.</string>
     <string name="comment_editing">Yorum düzenleniyor</string>
     <string name="prompt_email_or_username">E-posta veya kullanıcı adı</string>
-    <string name="profile_data_following">%d Takip</string>
-    <string name="profile_data_followers">%d Takipçi</string>
     <string name="follow_list_following_title">Takip Edilenler</string>
     <string name="follow_list_followers_title">Takipçiler</string>
     <string name="follow_list_empty">Burada gösterilecek bir şey yok.</string>

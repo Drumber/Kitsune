@@ -331,7 +331,7 @@
     <string name="preference_sfw_filter_show_all">Contenuti per adulti ovunque</string>
     <string name="preference_rating_system_regular">Normale</string>
     <string name="preference_rating_system_advanced">Avanzato</string>
-    <string name="preference_check_for_updates_description">Controlla se è disponibile una nuova versione dell\'app ad ogni avvio.</string>
+    <string name="preference_check_for_updates_description">Controlla se è disponibile una nuova versione dell\'app all\'avvio.</string>
     <string name="preference_app_version_description">Clicca per cercare aggiornamenti.</string>
     <string name="preference_not_logged_in">Devi avere effettuato l\'accesso per modificare questa impostazione.</string>
     <string name="preference_app_logs_description">Vedi e condividi i messaggi log dell\'app.</string>
@@ -393,6 +393,9 @@
         <item quantity="many">%s giorni</item>
         <item quantity="other">%s giorni</item>
     </plurals>
+    <string name="action_copy_url">Copia URL</string>
+    <string name="profile_data_followers">%d Seguaci</string>
+    <string name="profile_data_following">%d Seguiti</string>
     <string name="press_back_again_to_exit">Premi di nuovo indietro per uscire</string>
     <string name="nav_feed">Feed</string>
     <string name="notifications_title">Notifiche</string>
@@ -427,7 +430,6 @@
     <string name="db_request_open_anime">Vedi le richieste anime aperte</string>
     <string name="db_request_manga">Richiedi modifica al DB manga</string>
     <string name="db_request_open_manga">Vedi le richieste manga aperte</string>
-    <string name="action_copy_url">Copia URL</string>
     <string name="title_reaction">Reazione</string>
     <string name="action_add_reaction">Aggiungi reazione</string>
     <string name="reaction_compose_title">Scrivi una reazione</string>
@@ -513,8 +515,6 @@
     <string name="delete_comment_confirm_message">Questo commento verrà eliminato definitivamente.</string>
     <string name="comment_editing">Modifica del commento</string>
     <string name="prompt_email_or_username">Email o nome utente</string>
-    <string name="profile_data_following">%d Seguiti</string>
-    <string name="profile_data_followers">%d Follower</string>
     <string name="follow_list_following_title">Seguiti</string>
     <string name="follow_list_followers_title">Follower</string>
     <string name="follow_list_empty">Niente da mostrare qui.</string>

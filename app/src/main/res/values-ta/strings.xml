@@ -292,7 +292,7 @@
     <string name="preference_force_legacy_image_picker">படை மரபு புகைப்படத் தேர்வாளர்</string>
     <string name="preference_force_legacy_image_picker_description">புதிய புகைப்பட தேர்வுக்கு பதிலாக கணினி கோப்பு தேர்வாளரைப் பயன்படுத்தவும்.</string>
     <string name="preference_check_for_updates">துவக்கத்தில் புதுப்பிப்புகளைச் சரிபார்க்கவும்</string>
-    <string name="preference_check_for_updates_description">ஒவ்வொரு துவக்கத்திலும் புதிய பயன்பாட்டு பதிப்பைச் சரிபார்க்கவும்.</string>
+    <string name="preference_check_for_updates_description">தொடக்கத்தில் பயன்பாட்டின் புதிய பதிப்பைச் சரிபார்க்கவும்.</string>
     <string name="preference_app_logs_description">பயன்பாட்டு பதிவு செய்திகளைப் பார்த்து பகிரவும்.</string>
     <string name="preference_app_version_description">புதுப்பிப்புகளை சரிபார்க்க சொடுக்கு செய்க.</string>
     <string name="preference_github_repo">அறிவிலிமையம் களஞ்சியம்</string>
@@ -383,9 +383,12 @@
         <item quantity="other">%s பக்கங்கள்</item>
     </plurals>
     <plurals name="duration_seconds">
-        <item quantity="one">%s இரண்டாவது</item>
+        <item quantity="one">%s நொடி</item>
         <item quantity="other">%s வினாடிகள்</item>
     </plurals>
+    <string name="action_copy_url">முகவரி ஐ நகலெடுக்கவும்</string>
+    <string name="profile_data_following">%d பின்தொடர்பவை</string>
+    <string name="profile_data_followers">%d பின்தொடர்பவர்கள்</string>
     <string name="press_back_again_to_exit">வெளியேற மீண்டும் பின் செல் பொத்தானை அழுத்தவும்</string>
     <string name="nav_feed">ஊட்டம்</string>
     <string name="notifications_title">அறிவிப்புகள்</string>
@@ -420,7 +423,6 @@
     <string name="db_request_open_anime">திறந்த அனிமே கோரிக்கைகளைப் பார்</string>
     <string name="db_request_manga">மங்கா DB மாற்றத்தைக் கோரு</string>
     <string name="db_request_open_manga">திறந்த மங்கா கோரிக்கைகளைப் பார்</string>
-    <string name="action_copy_url">URL ஐ நகலெடு</string>
     <string name="title_reaction">எதிர்வினை</string>
     <string name="action_add_reaction">எதிர்வினையைச் சேர்</string>
     <string name="reaction_compose_title">எதிர்வினை எழுது</string>
@@ -506,8 +508,6 @@
     <string name="delete_comment_confirm_message">இந்த கருத்து நிரந்தரமாக நீக்கப்படும்.</string>
     <string name="comment_editing">கருத்தைத் திருத்துகிறது</string>
     <string name="prompt_email_or_username">மின்னஞ்சல் அல்லது பயனர்பெயர்</string>
-    <string name="profile_data_following">%d பின்தொடர்பவை</string>
-    <string name="profile_data_followers">%d பின்தொடர்பவர்கள்</string>
     <string name="follow_list_following_title">பின்தொடர்பவை</string>
     <string name="follow_list_followers_title">பின்தொடர்பவர்கள்</string>
     <string name="follow_list_empty">இங்கே காட்ட எதுவும் இல்லை.</string>

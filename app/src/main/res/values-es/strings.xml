@@ -243,7 +243,7 @@
     <string name="preference_force_legacy_image_picker">Forzar Selector de Fotos heredado</string>
     <string name="preference_force_legacy_image_picker_description">Usa el selector de fotos del sistema en lugar del nuevo.</string>
     <string name="preference_check_for_updates">Buscar Actualizaciones al Iniciar</string>
-    <string name="preference_check_for_updates_description">Buscar actualizaciones de la aplicación en cada inicio.</string>
+    <string name="preference_check_for_updates_description">Buscar nueva actualización al iniciar la app.</string>
     <string name="preference_app_logs_description">Ver y compartir archivos log de la aplicación.</string>
     <string name="preference_app_version">Información de la versión</string>
     <string name="preference_app_version_description">Clic para comprobar actualizaciones.</string>
@@ -393,6 +393,9 @@
     <string name="onboarding_login_is_logged_in">Has iniciado sesión en</string>
     <string name="onboarding_setup_subtitle">Establece tus preferencias para comenzar. Puede cambiarlas en cualquier momento más tarde en las configuraciones.</string>
     <string name="onboarding_setup_title_language_selected">Seleccionado: %1$s</string>
+    <string name="action_copy_url">Copiar URL</string>
+    <string name="profile_data_following">%d Siguiendo</string>
+    <string name="profile_data_followers">%d Seguidores</string>
     <string name="press_back_again_to_exit">Pulsa atrás de nuevo para salir</string>
     <string name="nav_feed">Feed</string>
     <string name="notifications_title">Notificaciones</string>
@@ -427,7 +430,6 @@
     <string name="db_request_open_anime">Ver solicitudes de anime abiertas</string>
     <string name="db_request_manga">Solicitar cambio en la BD de manga</string>
     <string name="db_request_open_manga">Ver solicitudes de manga abiertas</string>
-    <string name="action_copy_url">Copiar URL</string>
     <string name="title_reaction">Reacción</string>
     <string name="action_add_reaction">Añadir reacción</string>
     <string name="reaction_compose_title">Escribir una reacción</string>
@@ -513,8 +515,6 @@
     <string name="delete_comment_confirm_message">Este comentario se eliminará permanentemente.</string>
     <string name="comment_editing">Editando comentario</string>
     <string name="prompt_email_or_username">Correo o nombre de usuario</string>
-    <string name="profile_data_following">%d Siguiendo</string>
-    <string name="profile_data_followers">%d Seguidores</string>
     <string name="follow_list_following_title">Siguiendo</string>
     <string name="follow_list_followers_title">Seguidores</string>
     <string name="follow_list_empty">No hay nada que mostrar aquí.</string>

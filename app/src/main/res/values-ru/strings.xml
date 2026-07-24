@@ -229,7 +229,7 @@
     <string name="preference_github_repo">Репозиторий на GitHub</string>
     <string name="preference_force_legacy_image_picker_description">Используйте системный выбор файлов вместо нового выбора фото.</string>
     <string name="preference_check_for_updates">Проверять на обновления при запуске</string>
-    <string name="preference_check_for_updates_description">Проверять наличие новой версии приложения при каждом запуске.</string>
+    <string name="preference_check_for_updates_description">Проверять обновления приложения при запуске.</string>
     <string name="preference_not_logged_in">Вы должны войти в систему, чтобы изменить эту настройку.</string>
     <string name="prompt_email">Электронная почта</string>
     <string name="prompt_password">Пароль</string>
@@ -332,11 +332,11 @@
     <string name="profile_data_location">Локация</string>
     <string name="profile_data_private">Это секрет.</string>
     <string name="profile_gender_custom">Ручной</string>
-    <string name="profile_find_waifu">Найдите своего особого человека</string>
+    <string name="profile_find_waifu">Найди свою особенную</string>
     <string name="onboarding_welcome_title">Добро пожаловать в Kitsune!</string>
     <string name="onboarding_welcome_subtitle">Ваш личный компаньон по аниме и манге.</string>
     <string name="onboarding_welcome_feature_search">Поиск</string>
-    <string name="onboarding_welcome_feature_explore">Проводник</string>
+    <string name="onboarding_welcome_feature_explore">Обзор</string>
     <plurals name="duration_hours">
         <item quantity="one">%s час</item>
         <item quantity="few">%s часа</item>
@@ -366,12 +366,12 @@
     <string name="profile_data_husbando">Хусбандо</string>
     <string name="profile_data_bio">Биография</string>
     <string name="widget_description">Прогресс библиотеки</string>
-    <string name="widget_empty_text">В вашей библиотеке нет активного отслеживаемого объекта</string>
+    <string name="widget_empty_text">В библиотеке нет отслеживаемых элементов</string>
     <string name="onboarding_welcome_feature_search_description">Найдите свое любимое аниме и мангу.</string>
     <string name="nav_app_logs">Журналы приложения</string>
     <string name="filter_kind">Тип</string>
-    <string name="onboarding_welcome_feature_track">Трек</string>
-    <string name="onboarding_welcome_feature_track_description">Следите за тем, что вы смотрели и читали.</string>
+    <string name="onboarding_welcome_feature_track">Отслеживать</string>
+    <string name="onboarding_welcome_feature_track_description">Отслеживайте, что смотрели/читали.</string>
     <string name="onboarding_welcome_action">Начать</string>
     <string name="onboarding_login_title">Войти в Kitsu</string>
     <string name="onboarding_login_is_logged_in">Вы вошли в систему</string>
@@ -400,6 +400,9 @@
         <item quantity="other">%s страниц</item>
     </plurals>
     <string name="onboarding_setup_title_language">Язык тайтлов</string>
+    <string name="action_copy_url">Копировать URL</string>
+    <string name="profile_data_following">%d в подписках</string>
+    <string name="profile_data_followers">%d подписчиков</string>
     <string name="press_back_again_to_exit">Нажмите «Назад» ещё раз, чтобы выйти</string>
     <string name="nav_feed">Лента</string>
     <string name="notifications_title">Уведомления</string>
@@ -434,7 +437,6 @@
     <string name="db_request_open_anime">Открытые запросы по аниме</string>
     <string name="db_request_manga">Запросить изменение в БД манги</string>
     <string name="db_request_open_manga">Открытые запросы по манге</string>
-    <string name="action_copy_url">Копировать URL</string>
     <string name="title_reaction">Реакция</string>
     <string name="action_add_reaction">Добавить реакцию</string>
     <string name="reaction_compose_title">Написать реакцию</string>
@@ -520,8 +522,6 @@
     <string name="delete_comment_confirm_message">Этот комментарий будет удалён навсегда.</string>
     <string name="comment_editing">Редактирование комментария</string>
     <string name="prompt_email_or_username">Эл. почта или имя пользователя</string>
-    <string name="profile_data_following">%d подписок</string>
-    <string name="profile_data_followers">%d подписчиков</string>
     <string name="follow_list_following_title">Подписки</string>
     <string name="follow_list_followers_title">Подписчики</string>
     <string name="follow_list_empty">Здесь пока ничего нет.</string>
