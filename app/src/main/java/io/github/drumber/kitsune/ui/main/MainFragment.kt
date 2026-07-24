@@ -1,10 +1,8 @@
 package io.github.drumber.kitsune.ui.main
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -128,18 +126,8 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        val isAtTop = binding.nsvContent.scrollY == 0 &&
-                binding.appBarLayout.bottom >= binding.appBarLayout.height
-        if (isAtTop) {
-            binding.swipeRefreshLayout.isRefreshing = true
-            when (binding.viewPagerExplore.currentItem) {
-                0 -> viewModel.refreshAnimeData()
-                1 -> viewModel.refreshMangaData()
-            }
-        } else {
-            binding.nsvContent.smoothScrollTo(0, 0)
-            binding.appBarLayout.setExpanded(true)
-        }
+        binding.nsvContent.smoothScrollTo(0, 0)
+        binding.appBarLayout.setExpanded(true)
     }
 
     override fun onDestroyView() {

@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.fastlane
 import android.net.Uri
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.IdlingRegistry
@@ -18,7 +19,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.constants.AppTheme
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.main.MainActivity
@@ -50,6 +50,8 @@ class CaptureScreenshots : KoinComponent {
         android.Manifest.permission.POST_NOTIFICATIONS,
         android.Manifest.permission.DUMP
     )
+
+    private val screenshotsConfig = captureScreenshotsConfig
 
     companion object {
         @BeforeClass
@@ -88,36 +90,47 @@ class CaptureScreenshots : KoinComponent {
         }
         IdlingRegistry.getInstance().register(*idlingResource.toTypedArray())
 
+        // wait for initial data load on first launch
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        Thread.sleep(3000)
+
         // Light Mode
         KitsunePref.darkMode = AppCompatDelegate.MODE_NIGHT_NO.toString()
-        takeHomeScreenshots("light")
-        takeSearchScreenshots("light")
-        takeDetailsScreenshot("light")
+        screenshotsConfig.filter { !it.isDarkMode }.forEach { config ->
+            UiThreadStatement.runOnUiThread {
+                KitsunePref.appTheme = config.appTheme
+            }
+
+            captureScreenshots(config)
+        }
 
         // Dark Mode
         UiThreadStatement.runOnUiThread {
             KitsunePref.darkMode = AppCompatDelegate.MODE_NIGHT_YES.toString()
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         }
-        takeHomeScreenshots("dark")
-        takeSearchScreenshots("dark")
-        takeDetailsScreenshot("dark")
+        screenshotsConfig.filter { it.isDarkMode }.forEach { config ->
+            UiThreadStatement.runOnUiThread {
+                KitsunePref.appTheme = config.appTheme
+            }
 
-        // Purple theme with Dark Mode
-        UiThreadStatement.runOnUiThread {
-            KitsunePref.appTheme = AppTheme.PURPLE
+            captureScreenshots(config)
         }
-        takeHomeScreenshots("dark_purple")
-
-        // Purple theme with Light Mode
-        UiThreadStatement.runOnUiThread {
-            KitsunePref.darkMode = AppCompatDelegate.MODE_NIGHT_NO.toString()
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        }
-        takeHomeScreenshots("light_purple")
 
         IdlingRegistry.getInstance().unregister(*idlingResource.toTypedArray())
         idlingResource.clear()
+    }
+
+    private fun captureScreenshots(config: CaptureConfig) {
+        if (ScreenshotTarget.HOME_SCREEN in config.targets) {
+            takeHomeScreenshots(config.name)
+        }
+        if (ScreenshotTarget.SEARCH_SCREEN in config.targets) {
+            takeSearchScreenshots(config.name)
+        }
+        if (ScreenshotTarget.DETAILS_SCREEN in config.targets || ScreenshotTarget.DETAILS_RATINGS_SCREEN in config.targets) {
+            takeDetailsScreenshot(config.name, config.targets)
+        }
     }
 
     private fun takeHomeScreenshots(prefix: String) {
@@ -127,20 +140,25 @@ class CaptureScreenshots : KoinComponent {
         Thread.sleep(1000)
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
 
-        Screengrab.screenshot("${prefix}_home_screen")
+        Screengrab.screenshot("${prefix}_0_home_screen")
     }
 
     private fun takeSearchScreenshots(prefix: String) {
-        onView(withId(R.id.search_fragment)).perform(click())
+        onView(withId(R.id.main_fragment)).perform(click())
+        onView(withId(R.id.search_bar)).perform(click())
 
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         Thread.sleep(3000)
+
+        onView(withId(R.id.btn_search)).perform(click())
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
 
-        Screengrab.screenshot("${prefix}_search_screen")
+        Screengrab.screenshot("${prefix}_3_search_screen")
+
+        pressBack()
     }
 
-    private fun takeDetailsScreenshot(prefix: String) {
+    private fun takeDetailsScreenshot(prefix: String, targets: Set<ScreenshotTarget>) {
         activityRule.scenario.onActivity { activity ->
             val navController = activity.findNavController(R.id.nav_host_fragment)
             navController.navigate(Uri.parse("${Kitsu.BASE_URL}/anime/12"))
@@ -151,7 +169,9 @@ class CaptureScreenshots : KoinComponent {
         Thread.sleep(3000)
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
 
-        Screengrab.screenshot("${prefix}_details_screen")
+        if (ScreenshotTarget.DETAILS_SCREEN in targets) {
+            Screengrab.screenshot("${prefix}_1_details_screen")
+        }
 
         Thread.sleep(3000)
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
@@ -161,7 +181,17 @@ class CaptureScreenshots : KoinComponent {
         Thread.sleep(100) // wait for scroll
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
 
-        Screengrab.screenshot("${prefix}_details_ratings_screen")
+        if (ScreenshotTarget.DETAILS_RATINGS_SCREEN in targets) {
+            Screengrab.screenshot("${prefix}_2_details_ratings_screen")
+        }
+
         pressBack()
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        activityRule.scenario.onActivity { activity ->
+            val navHostFragment = activity.supportFragmentManager
+                .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            navHostFragment.childFragmentManager.executePendingTransactions()
+        }
+        Thread.sleep(300)
     }
 }

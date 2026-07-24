@@ -99,6 +99,16 @@ android {
     }
 }
 
+tasks.matching { it.name.contains("connected\\w*AndroidTest".toRegex()) }.configureEach {
+    val screenShotModeEnabled = screenshotMode.toBoolean()
+    doFirst {
+        if (!screenShotModeEnabled) {
+            // test will be skipped by 'assumeTrue(BuildConfig.SCREENSHOT_MODE_ENABLED)' in @BeforeClass
+            logger.lifecycle("NOTE: SCREENSHOT_MODE_ENABLED is disabled. Instrumented test 'CaptureScreenshots.kt' will be skipped...")
+        }
+    }
+}
+
 kotlin {
     compilerOptions {
         jvmTarget = JvmTarget.JVM_11

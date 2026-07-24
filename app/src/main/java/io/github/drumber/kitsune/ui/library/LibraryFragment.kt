@@ -4,11 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.annotation.OptIn
@@ -641,15 +639,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        val isAtTop = !binding.rvLibraryEntries.canScrollVertically(-1) &&
-                binding.appBarLayout.bottom >= binding.appBarLayout.height
-        if (isAtTop) {
-            binding.swipeRefreshLayout.isRefreshing = true
-            viewModel.doRefreshListener?.invoke()
-        } else {
-            binding.rvLibraryEntries.smoothScrollToPosition(0)
-            binding.appBarLayout.setExpanded(true)
-        }
+        binding.rvLibraryEntries.smoothScrollToPosition(0)
+        binding.appBarLayout.setExpanded(true)
     }
 
     override fun onDestroyView() {
