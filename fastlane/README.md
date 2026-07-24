@@ -1,56 +1,20 @@
-fastlane documentation
-----
+# Fastlane
 
-# Installation
+## Upgrade fastlane
 
-Make sure you have the latest version of the Xcode command line tools installed:
+`bundle update`
 
-```sh
-xcode-select --install
-```
+## Update metadata
 
-For _fastlane_ installation instructions, see [Installing _fastlane_](https://docs.fastlane.tools/#installing-fastlane)
+> This assumes that you have installed [Fastlane](https://docs.fastlane.tools/) using Bundler.
 
-# Available Actions
+If you're getting 'Permission denied' errors from adb, restart the adb daemon as root: `adb root`
 
-## Android
+### Capture Screenshots
+1. Make sure the emulator is running (preferably Pixel 5 with API 32+)
+2. Make sure System UI demo mode is enabled in developer settings
+3. Run `bundle exec fastlane android build_and_screengrab` to build the debug/test apks and run the instrumentation test on the device
 
-### android test
-
-```sh
-[bundle exec] fastlane android test
-```
-
-Runs all the tests
-
-### android build_and_screengrab
-
-```sh
-[bundle exec] fastlane android build_and_screengrab
-```
-
-Build debug and test APK for screenshots
-
-### android do_screengrab
-
-```sh
-[bundle exec] fastlane android do_screengrab
-```
-
-Take screenshots
-
-### android process_screenshots
-
-```sh
-[bundle exec] fastlane android process_screenshots
-```
-
-Add a device frame to the screenshots and copy them to the phoneScreenshots and media folders
-
-----
-
-This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
-
-More information about _fastlane_ can be found on [fastlane.tools](https://fastlane.tools).
-
-The documentation of _fastlane_ can be found on [docs.fastlane.tools](https://docs.fastlane.tools).
+### Process Screenshots
+1. This actions assumes that the screenshots have been created in the `fastlane/screenshots` directory
+2. Run `bundle exec fastlane android process_screenshots` to add a device frame to each screenshot and copy the framed screenshots to the `media` folder
