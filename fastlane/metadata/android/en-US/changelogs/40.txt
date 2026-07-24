@@ -1,0 +1,17 @@
+New Features and Improvements
+* Added social feeds, posts, comments, reactions, groups, follows and notifications (by @punoqun)
+* Added user search and updated profile screen with profile feed (by @punoqun)
+* Fixed potential crash when opening external URLs in embedded browser (by @jim-daf)
+* Added region information to language picker
+* Updated "external sites" dialog
+* Other technical improvements
+
+Localization
+* Added Arabic by @j-neko, @Hollow-04 and E Ta
+* Updated Italian by Nicola Bortoletto
+* Updated Tamil by @TamilNeram
+* Updated Portuguese by Crono
+* Updated Russian by @Xapitonov
+* Updated Spanish by @Kiimby
+* Updated Afrikaans by @MikeWowzoski
+* Updated Turkish by @oersen
