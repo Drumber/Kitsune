@@ -6,32 +6,16 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.paging.LoadState
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
 import io.github.drumber.kitsune.databinding.DialogComposeReactionBinding
-import io.github.drumber.kitsune.databinding.FragmentReactionsBinding
-import io.github.drumber.kitsune.ui.adapter.paging.MediaReactionPagingAdapter
-import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
-import io.github.drumber.kitsune.ui.component.updateLoadState
-import io.github.drumber.kitsune.util.extensions.setAppTheme
-import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.viewBinding
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import io.github.drumber.kitsune.ui.compose.composeView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ReactionsFragment : Fragment(R.layout.fragment_reactions),
@@ -39,122 +23,29 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
 
     private val args: ReactionsFragmentArgs by navArgs()
 
-    private val binding by viewBinding(FragmentReactionsBinding::bind)
-
     private val viewModel: ReactionsViewModel by viewModel()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = composeView {
+        val items = viewModel.dataSource.collectAsLazyPagingItems()
+        ReactionsScreen(
+            title = getString(R.string.title_reactions),
+            items = items,
+            currentUserId = viewModel.currentUserId,
+            onNavigateUp = { findNavController().navigateUp() },
+            onAddReactionClick = { showComposeReactionDialog(null) },
+            onUpvoteClick = { viewModel.upvote(it) },
+            onEditClick = { reaction -> showComposeReactionDialog(reaction) },
+            onDeleteClick = { reaction -> confirmDeleteReaction(reaction) }
+        )
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setMedia(args.mediaId, args.isAnime)
-
-        binding.apply {
-            collapsingToolbar.initWindowInsetsListener(consume = false)
-            toolbar.initWindowInsetsListener(false)
-            toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-            rvReactions.initPaddingWindowInsetsListener(
-                left = true,
-                right = true,
-                bottom = true,
-                consume = false
-            )
-            fabAddReaction.initMarginWindowInsetsListener(
-                right = true,
-                bottom = true,
-                consume = false
-            )
-            fabAddReaction.setOnClickListener { showComposeReactionDialog(null) }
-        }
-
-        val adapter = MediaReactionPagingAdapter(
-            glide = Glide.with(this),
-            currentUserId = viewModel.currentUserId,
-            onUpvoteClick = { reaction -> viewModel.upvote(reaction) },
-            onEditClick = { reaction -> showComposeReactionDialog(reaction) },
-            onDeleteClick = { reaction -> confirmDeleteReaction(reaction) }
-        )
-        binding.rvReactions.adapter = adapter.withLoadStateFooter(
-            footer = ResourceLoadStateAdapter(adapter)
-        )
-        binding.rvReactions.layoutManager =
-            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-
-        binding.layoutLoading.btnRetry.setOnClickListener { adapter.retry() }
-
-        binding.swipeRefreshLayout.apply {
-            setAppTheme()
-            setOnRefreshListener { adapter.refresh() }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                adapter.loadStateFlow.collectLatest { loadState ->
-                    binding.layoutLoading.updateLoadState(
-                        binding.rvReactions,
-                        adapter.itemCount,
-                        loadState
-                    )
-                    binding.swipeRefreshLayout.isRefreshing =
-                        loadState.refresh is LoadState.Loading && adapter.itemCount > 0
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.dataSource.collectLatest { data ->
-                    adapter.submitData(data)
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.upvoteEvents.collectLatest { event ->
-                    when (event) {
-                        is ReactionsViewModel.UpvoteEvent.Success ->
-                            adapter.markUpvoted(event.reactionId, event.newCount)
-
-                        ReactionsViewModel.UpvoteEvent.LoginRequired ->
-                            showSnackbar(R.string.reactions_upvote_login_required)
-
-                        ReactionsViewModel.UpvoteEvent.Failed ->
-                            showSnackbar(R.string.reactions_upvote_failed)
-                    }
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.editEvents.collectLatest { event ->
-                    when (event) {
-                        ReactionsViewModel.EditEvent.LoginRequired ->
-                            showSnackbar(R.string.reaction_login_required)
-
-                        ReactionsViewModel.EditEvent.AddToLibraryRequired ->
-                            showSnackbar(R.string.reaction_add_to_library_required)
-
-                        ReactionsViewModel.EditEvent.Created -> {
-                            showSnackbar(R.string.reaction_posted)
-                            adapter.refresh()
-                        }
-
-                        ReactionsViewModel.EditEvent.Updated -> {
-                            showSnackbar(R.string.reaction_updated)
-                            adapter.refresh()
-                        }
-
-                        ReactionsViewModel.EditEvent.Deleted -> {
-                            showSnackbar(R.string.reaction_deleted)
-                            adapter.refresh()
-                        }
-
-                        ReactionsViewModel.EditEvent.Failed ->
-                            showSnackbar(R.string.action_failed)
-                    }
-                }
-            }
-        }
     }
 
     private fun showComposeReactionDialog(existing: MediaReaction?) {
@@ -162,7 +53,6 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
         val initialText = existing?.reaction?.takeUnless { it.isBlank() } ?: existing?.content
         dialogBinding.etReaction.setText(initialText)
         dialogBinding.etReaction.setSelection(dialogBinding.etReaction.text?.length ?: 0)
-
         val titleRes = if (existing == null) {
             R.string.reaction_compose_title
         } else {
@@ -173,7 +63,6 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
         } else {
             R.string.action_save
         }
-
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(titleRes)
             .setView(dialogBinding.root)
@@ -199,16 +88,7 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
             .show()
     }
 
-    private fun showSnackbar(messageResId: Int) {
-        Snackbar.make(binding.root, messageResId, Snackbar.LENGTH_SHORT).show()
-    }
-
     override fun onNavigationItemReselected(item: MenuItem) {
-        if (binding.rvReactions.canScrollVertically(-1)) {
-            binding.rvReactions.smoothScrollToPosition(0)
-            binding.appBarLayout.setExpanded(true)
-        } else {
-            findNavController().navigateUp()
-        }
+        findNavController().navigateUp()
     }
 }

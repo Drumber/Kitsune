@@ -1,7 +1,5 @@
 package io.github.drumber.kitsune.ui.profile.about
 
-import android.view.View
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.dto.toCharacterDto
@@ -18,12 +16,10 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MyProfileAboutFragment : BaseProfileAboutFragment() {
     override val viewModel: MyProfileViewModel by viewModel(ownerProducer = { requireParentFragment() })
 
-    override fun onFavoriteMediaItemClicked(view: View, media: Media) {
+    override fun onMediaClick(media: Media) {
         val action =
             MyProfileFragmentDirections.actionProfileFragmentToDetailsFragment(media.toMediaDto())
-        val detailsTransitionName = getString(R.string.details_poster_transition_name)
-        val extras = FragmentNavigatorExtras(view to detailsTransitionName)
-        findNavController().navigateSafe(R.id.profile_fragment, action, extras)
+        findNavController().navigateSafe(R.id.profile_fragment, action)
     }
 
     override fun openCharacterDetailsBottomSheet(character: Character) {

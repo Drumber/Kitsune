@@ -5,13 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.BundleCompat
-import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.dto.MediaUnitDto
 import io.github.drumber.kitsune.data.presentation.dto.toMediaUnit
-import io.github.drumber.kitsune.databinding.SheetMediaUnitDetailsBinding
-import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
+import io.github.drumber.kitsune.ui.compose.composeView
 
 class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {
 
@@ -20,28 +17,14 @@ class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = SheetMediaUnitDetailsBinding.inflate(inflater, container, false)
         val mediaUnitDto: MediaUnitDto? = arguments?.let {
             BundleCompat.getParcelable(it, BUNDLE_MEDIA_UNIT_ADAPTER, MediaUnitDto::class.java)
         }
         val mediaUnit = mediaUnitDto?.toMediaUnit()
-        binding.mediaUnit = mediaUnit
-
         val thumbnailUrl = mediaUnit?.thumbnail?.smallOrHigher() ?: arguments?.getString(BUNDLE_THUMBNAIL)
-        Glide.with(this)
-            .load(thumbnailUrl)
-            .centerCrop()
-            .placeholder(R.drawable.ic_insert_photo_48)
-            .into(binding.ivThumbnail)
-
-        binding.ivThumbnail.setOnClickListener {
-            mediaUnit?.thumbnail?.originalOrDown()?.let { imageUrl ->
-                val title = mediaUnit.title(requireContext())
-                openPhotoViewActivity(imageUrl, title, thumbnailUrl)
-            }
+        return composeView {
+            MediaUnitDetailsScreen(mediaUnit = mediaUnit, thumbnailUrl = thumbnailUrl)
         }
-
-        return binding.root
     }
 
     companion object {

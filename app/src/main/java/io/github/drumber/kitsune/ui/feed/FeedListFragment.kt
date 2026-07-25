@@ -137,7 +137,7 @@ class FeedListFragment : Fragment(), NavigationBarView.OnItemReselectedListener 
         findNavController().navigateSafe(hostDestId, action)
     }
 
-    override fun onNavigationItemReselected(item: MenuItem) {}
+    override fun onNavigationItemReselected(item: MenuItem) = Unit
 
     companion object {
         const val ARG_FEED_TYPE = "feed_type"

@@ -8,7 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
-import io.github.drumber.kitsune.databinding.SheetManageLibraryBinding
+import io.github.drumber.kitsune.ui.compose.composeView
 
 class ManageLibraryBottomSheet : BottomSheetDialogFragment() {
 
@@ -16,13 +16,14 @@ class ManageLibraryBottomSheet : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        val binding = SheetManageLibraryBinding.inflate(inflater, container, false)
-        binding.apply {
-            instance = this@ManageLibraryBottomSheet
-            title = arguments?.getString(BUNDLE_TITLE)
-        }
-        return binding.root
+    ): View = composeView {
+        ManageLibraryScreen(
+            title = arguments?.getString(BUNDLE_TITLE),
+            isAnime = isAnime(),
+            existsInLibrary = existsInLibrary(),
+            onStatusClick = { status -> onStatusClicked(status) },
+            onRemoveClick = { onRemoveClicked() }
+        )
     }
 
     fun onStatusClicked(status: LibraryStatus) {
@@ -50,5 +51,4 @@ class ManageLibraryBottomSheet : BottomSheetDialogFragment() {
         const val STATUS_REQUEST_KEY = "status_request_key"
         const val REMOVE_REQUEST_KEY = "remove_request_key"
     }
-
 }

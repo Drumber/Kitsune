@@ -34,7 +34,7 @@ class FeedFragment : Fragment(), NavigationBarView.OnItemReselectedListener {
         savedInstanceState: Bundle?
     ): View = composeView { Content() }
 
-    override fun onNavigationItemReselected(item: MenuItem) {}
+    override fun onNavigationItemReselected(item: MenuItem) = Unit
 
     @Composable
     @Suppress("LongMethod")
@@ -101,18 +101,24 @@ class FeedFragment : Fragment(), NavigationBarView.OnItemReselectedListener {
             onGlobalSnackbarShown = { globalSnackbar = null },
             onFollowingSnackbarShown = { followingSnackbar = null },
             onNavigateToGroups = {
-                findNavController().navigateSafe(R.id.feed_fragment, FeedFragmentDirections.actionGlobalGroupsFragment())
+                val action = FeedFragmentDirections.actionGlobalGroupsFragment()
+                findNavController().navigateSafe(R.id.feed_fragment, action)
             },
             onNavigateToNotifications = {
-                findNavController().navigateSafe(R.id.feed_fragment, FeedFragmentDirections.actionGlobalNotificationsFragment())
+                val action = FeedFragmentDirections.actionGlobalNotificationsFragment()
+                findNavController().navigateSafe(R.id.feed_fragment, action)
             },
             onCreatePost = {
-                findNavController().navigateSafe(R.id.feed_fragment, FeedFragmentDirections.actionGlobalCreatePostFragment())
+                val action = FeedFragmentDirections.actionGlobalCreatePostFragment()
+                findNavController().navigateSafe(R.id.feed_fragment, action)
             },
             onPostClick = { post -> navigateToPostDetail(post) },
             onLikeClick = { post, targetLiked, page ->
-                if (page == 0) globalVm.togglePostLike(post, targetLiked)
-                else followingVm.togglePostLike(post, targetLiked)
+                if (page == 0) {
+                    globalVm.togglePostLike(post, targetLiked)
+                } else {
+                    followingVm.togglePostLike(post, targetLiked)
+                }
             },
             onRevealClick = { post, page ->
                 if (page == 0) globalVm.revealPost(post) else followingVm.revealPost(post)

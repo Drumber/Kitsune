@@ -143,8 +143,8 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
                 updateFabVisibility()
             }
 
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {}
+            override fun onTabUnselected(tab: TabLayout.Tab) = Unit
+            override fun onTabReselected(tab: TabLayout.Tab) = Unit
         })
 
         binding.fabPost.setOnClickListener {

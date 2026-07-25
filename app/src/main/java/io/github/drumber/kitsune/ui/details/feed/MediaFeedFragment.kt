@@ -6,117 +6,58 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.paging.LoadState
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
-import io.github.drumber.kitsune.databinding.FragmentMediaFeedBinding
-import io.github.drumber.kitsune.ui.adapter.paging.PostInteractionListener
-import io.github.drumber.kitsune.ui.adapter.paging.PostPagingAdapter
-import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
-import io.github.drumber.kitsune.ui.component.updateLoadState
+import io.github.drumber.kitsune.ui.compose.composeView
 import io.github.drumber.kitsune.ui.webview.WebViewFragmentDirections
 import io.github.drumber.kitsune.util.extensions.navigateSafe
-import io.github.drumber.kitsune.util.extensions.setAppTheme
-import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.viewBinding
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
-    PostInteractionListener, NavigationBarView.OnItemReselectedListener {
+    NavigationBarView.OnItemReselectedListener {
 
     private val args: MediaFeedFragmentArgs by navArgs()
 
-    private val binding by viewBinding(FragmentMediaFeedBinding::bind)
-
     private val viewModel: MediaFeedViewModel by viewModel()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = composeView {
+        val items = viewModel.dataSource.collectAsLazyPagingItems()
+        MediaFeedScreen(
+            title = getString(R.string.title_posts),
+            items = items,
+            onNavigateUp = { findNavController().navigateUp() },
+            onPostClick = { post -> navigateToPost(post) },
+            onAuthorClick = { userId -> navigateToUser(userId) }
+        )
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setMedia(args.mediaId, args.isAnime)
-
-        binding.apply {
-            collapsingToolbar.initWindowInsetsListener(consume = false)
-            toolbar.initWindowInsetsListener(false)
-            toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-            rvFeed.initPaddingWindowInsetsListener(
-                left = true,
-                right = true,
-                bottom = true,
-                consume = false
-            )
-        }
-
-        val adapter = PostPagingAdapter(
-            glide = Glide.with(this),
-            listener = this
-        )
-        binding.rvFeed.adapter = adapter.withLoadStateFooter(
-            footer = ResourceLoadStateAdapter(adapter)
-        )
-        binding.rvFeed.layoutManager =
-            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-
-        binding.layoutLoading.btnRetry.setOnClickListener { adapter.retry() }
-
-        binding.swipeRefreshLayout.apply {
-            setAppTheme()
-            setOnRefreshListener { adapter.refresh() }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                adapter.loadStateFlow.collectLatest { loadState ->
-                    binding.layoutLoading.updateLoadState(
-                        binding.rvFeed,
-                        adapter.itemCount,
-                        loadState
-                    )
-                    binding.swipeRefreshLayout.isRefreshing =
-                        loadState.refresh is LoadState.Loading && adapter.itemCount > 0
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.dataSource.collectLatest { data ->
-                    adapter.submitData(data)
-                }
-            }
-        }
     }
 
-    override fun onPostClick(view: View, post: Post) {
+    private fun navigateToPost(post: Post) {
         val url = "${Kitsu.BASE_URL}/posts/${post.id}"
         val action = WebViewFragmentDirections.actionGlobalWebViewFragment(url)
         findNavController().navigateSafe(R.id.media_feed_fragment, action)
     }
 
-    override fun onAuthorClick(userId: String) {
+    private fun navigateToUser(userId: String) {
         val action = io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
             .actionGlobalUserProfileFragment(userId)
         findNavController().navigateSafe(R.id.media_feed_fragment, action)
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        if (binding.rvFeed.canScrollVertically(-1)) {
-            binding.rvFeed.smoothScrollToPosition(0)
-            binding.appBarLayout.setExpanded(true)
-        } else {
-            findNavController().navigateUp()
-        }
+        findNavController().navigateUp()
     }
 }

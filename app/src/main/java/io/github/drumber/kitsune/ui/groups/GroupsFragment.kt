@@ -42,20 +42,7 @@ class GroupsFragment : Fragment(R.layout.fragment_groups),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.apply {
-            appBarLayout.statusBarForeground =
-                MaterialShapeDrawable.createWithElevationOverlay(context)
-            toolbar.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
-            toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-            inputLayoutSearch.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
-            horizontalScrollView.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
-            rvGroups.initPaddingWindowInsetsListener(
-                left = true,
-                right = true,
-                bottom = true,
-                consume = false
-            )
-        }
+        applyWindowInsets()
 
         val adapter = GroupsPagingAdapter(Glide.with(this)) { group ->
             findNavController().navigateSafe(
@@ -76,6 +63,28 @@ class GroupsFragment : Fragment(R.layout.fragment_groups),
             setOnRefreshListener { adapter.refresh() }
         }
 
+        setupSearchAndFilterControls()
+        observeViewModel(adapter)
+    }
+
+    private fun applyWindowInsets() {
+        binding.apply {
+            appBarLayout.statusBarForeground =
+                MaterialShapeDrawable.createWithElevationOverlay(context)
+            toolbar.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
+            toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+            inputLayoutSearch.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
+            horizontalScrollView.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
+            rvGroups.initPaddingWindowInsetsListener(
+                left = true,
+                right = true,
+                bottom = true,
+                consume = false
+            )
+        }
+    }
+
+    private fun setupSearchAndFilterControls() {
         binding.editSearch.apply {
             doAfterTextChanged { text ->
                 viewModel.setSearchQuery(text?.toString())
@@ -96,7 +105,9 @@ class GroupsFragment : Fragment(R.layout.fragment_groups),
             setOnClickListener { viewModel.setFollowingEnabled(isChecked) }
         }
         binding.dividerFollowing.isVisible = viewModel.isLoggedIn
+    }
 
+    private fun observeViewModel(adapter: GroupsPagingAdapter) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 adapter.loadStateFlow.collectLatest { loadState ->
@@ -106,7 +117,9 @@ class GroupsFragment : Fragment(R.layout.fragment_groups),
                         loadState
                     )
                     binding.swipeRefreshLayout.isRefreshing =
-                        binding.swipeRefreshLayout.isRefreshing && loadState.refresh is LoadState.Loading && adapter.itemCount > 0
+                        binding.swipeRefreshLayout.isRefreshing &&
+                        loadState.refresh is LoadState.Loading &&
+                        adapter.itemCount > 0
                 }
             }
         }
