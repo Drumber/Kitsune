@@ -746,8 +746,15 @@ private fun WebViewDestination(navController: NavHostController, url: String) {
     // The WebView reference is retained so BackHandler can call goBack().
     var webView by remember { mutableStateOf<WebView?>(null) }
 
-    BackHandler(enabled = webView?.canGoBack() == true) {
-        webView?.goBack()
+    // `canGoBack()` is not observable by Compose, so the handler stays enabled and decides at
+    // press time whether to walk the page history or leave the destination.
+    BackHandler {
+        val wv = webView
+        if (wv != null && wv.canGoBack()) {
+            wv.goBack()
+        } else {
+            navController.navigateUp()
+        }
     }
 
     WebViewScreen(

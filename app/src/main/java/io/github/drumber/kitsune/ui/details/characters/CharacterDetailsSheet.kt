@@ -11,7 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
-import io.github.drumber.kitsune.ui.photoview.PhotoViewActivity
+import io.github.drumber.kitsune.ui.photoview.openPhotoView
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -36,7 +36,7 @@ fun CharacterDetailsSheet(
     onNavigateToMedia: (mediaId: String, isAnime: Boolean) -> Unit,
     onFavoriteChanged: () -> Unit = {}
 ) {
-    val viewModel: CharacterDetailsViewModel = koinViewModel()
+    val viewModel: CharacterDetailsViewModel = koinViewModel(key = characterId)
     val context = LocalContext.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -80,12 +80,11 @@ fun CharacterDetailsSheet(
                 val c = viewModel.characterFlow.replayCache.lastOrNull()
                 val imageUrl = c?.image?.originalOrDown()
                 if (c != null && imageUrl != null) {
-                    val intent = Intent(context, PhotoViewActivity::class.java).apply {
-                        putExtra("imageUrl", imageUrl)
-                        putExtra("title", c.name)
-                        putExtra("thumbnailUrl", c.image?.smallOrHigher())
-                    }
-                    context.startActivity(intent)
+                    context.openPhotoView(
+                        imageUrl = imageUrl,
+                        title = c.name,
+                        thumbnailUrl = c.image?.smallOrHigher()
+                    )
                 }
             }
         )

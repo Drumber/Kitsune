@@ -20,9 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.github.drumber.kitsune.ui.KitsuneTestTags
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 
 /**
@@ -34,7 +36,7 @@ import io.github.drumber.kitsune.ui.theme.KitsuneTheme
  * inside whatever box the caller gives it (mirrors the existing SMALL/MEDIUM/LARGE presets from
  * [MediaItemSize] which are 106×150 / 141×200 / 169×240 dp).
  *
- * Replaces: [MediaRecyclerViewAdapter] / [MediaViewHolder] / [MediaItemCard] custom view.
+ * Replaces the old RecyclerView media card and custom view.
  *
  * @param imageUrl     Poster image URL; null shows the placeholder.
  * @param title        Media title drawn at the bottom of the card.
@@ -51,7 +53,7 @@ fun MediaItemCard(
     contentDescription: String? = null,
     onClick: (() -> Unit)? = null
 ) {
-    val cardModifier = if (onClick != null) modifier else modifier
+    val cardModifier = modifier.testTag(KitsuneTestTags.MediaCard)
     Card(
         onClick = onClick ?: {},
         enabled = onClick != null,

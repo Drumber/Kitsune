@@ -119,8 +119,6 @@ import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImage
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
 import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStats
-import io.github.drumber.kitsune.util.ui.MarkdownPreviewRenderer
-import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -422,8 +420,6 @@ val dataModule = module {
     single { UploadNetworkDataSource(get()) }
     single { UploadRepository(get()) }
     single { ContentRevealStore() }
-    single { PostContentRenderer(androidContext()) }
-    single { MarkdownPreviewRenderer(androidContext()) }
 
     // Media Reactions
     factory {

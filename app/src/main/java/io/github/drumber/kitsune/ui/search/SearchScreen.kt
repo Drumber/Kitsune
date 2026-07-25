@@ -48,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -59,6 +60,7 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.user.UserSearchResult
+import io.github.drumber.kitsune.ui.KitsuneTestTags
 import io.github.drumber.kitsune.ui.component.compose.list.PagingEmptyContent
 import io.github.drumber.kitsune.ui.component.compose.list.PagingErrorContent
 import io.github.drumber.kitsune.ui.component.compose.list.PagingLoadingContent
@@ -189,7 +191,9 @@ private fun SearchInputCard(
             TextField(
                 value = query,
                 onValueChange = onQueryChange,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag(KitsuneTestTags.SearchInput),
                 placeholder = { Text(stringResource(R.string.hint_search)) },
                 singleLine = true,
                 colors = TextFieldDefaults.colors(
@@ -283,6 +287,7 @@ private fun SearchMediaGrid(
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 120.dp),
         state = state,
+        modifier = Modifier.testTag(KitsuneTestTags.SearchResults),
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)

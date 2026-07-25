@@ -58,7 +58,9 @@ class CharacterDetailsViewModel(
 
         viewModelScope.launch {
             _characterFlow.emit(character)
-
+            // Drop the previous character's favorite so a stale value cannot be toggled while the
+            // new one is still loading (this view model is shared across sheet instances).
+            _favoriteFlow.emit(null)
             launch(Dispatchers.IO) fetchFavorite@{
                 val characterId = character.id
                 val favorite = fetchFavorite(characterId)

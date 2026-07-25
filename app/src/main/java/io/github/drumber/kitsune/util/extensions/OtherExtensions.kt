@@ -6,10 +6,7 @@ import android.content.Context
 import android.content.res.Resources
 import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.elevation.ElevationOverlayProvider
-import io.github.drumber.kitsune.R
 import java.text.NumberFormat
 
 /**
@@ -17,13 +14,6 @@ import java.text.NumberFormat
  */
 val ViewPager2.recyclerView: RecyclerView
     get() = this[0] as RecyclerView
-
-fun SwipeRefreshLayout.setAppTheme() {
-    setProgressBackgroundColorSchemeColor(
-        ElevationOverlayProvider(context).compositeOverlayWithThemeSurfaceColorIfNeeded(8.0f)
-    )
-    setColorSchemeColors(context.theme.getColor(R.attr.colorPrimary))
-}
 
 fun Context.copyToClipboard(label: String, text: String) {
     val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager

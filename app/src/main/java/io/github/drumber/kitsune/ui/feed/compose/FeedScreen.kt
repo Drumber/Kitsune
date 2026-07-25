@@ -3,6 +3,8 @@ package io.github.drumber.kitsune.ui.feed.compose
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
@@ -19,6 +21,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,6 +29,7 @@ import androidx.paging.compose.LazyPagingItems
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.data.repository.PostInteractionStore
+import io.github.drumber.kitsune.ui.navigation.LocalReselectEvents
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,14 +57,26 @@ fun FeedScreen(
     onDeleteClick: (Post, Int) -> Unit,
     onAuthorClick: (String) -> Unit,
     onRefresh: (Int) -> Unit,
+    globalListState: LazyListState = rememberLazyListState(),
+    followingListState: LazyListState = rememberLazyListState(),
     modifier: Modifier = Modifier
 ) {
     val pagerState = rememberPagerState(pageCount = { FEED_PAGE_COUNT })
     val coroutineScope = rememberCoroutineScope()
+    val scrollToTopEvents = LocalReselectEvents.current
     val tabTitles = listOf(
         stringResource(R.string.feed_tab_global),
         stringResource(R.string.feed_tab_following)
     )
+
+    LaunchedEffect(Unit) {
+        scrollToTopEvents.collect {
+            when (pagerState.currentPage) {
+                PAGE_GLOBAL -> globalListState.animateScrollToItem(0)
+                PAGE_FOLLOWING -> followingListState.animateScrollToItem(0)
+            }
+        }
+    }
 
     Scaffold(
         modifier = modifier,
@@ -88,6 +104,7 @@ fun FeedScreen(
             }
             HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
                 val pagePosts = if (page == PAGE_GLOBAL) globalPosts else followingPosts
+                val listState = if (page == PAGE_GLOBAL) globalListState else followingListState
                 FeedListScreen(
                     posts = pagePosts,
                     pinnedPost = null,
@@ -110,6 +127,7 @@ fun FeedScreen(
                     onEditClick = onEditClick,
                     onDeleteClick = { post -> onDeleteClick(post, page) },
                     onAuthorClick = onAuthorClick,
+                    lazyListState = listState,
                     modifier = Modifier.fillMaxSize()
                 )
             }

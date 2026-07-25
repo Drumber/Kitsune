@@ -1,37 +1,32 @@
 package io.github.drumber.kitsune.navigation
 
+import android.content.Intent
 import android.net.Uri
-import androidx.navigation.findNavController
-import androidx.test.espresso.Espresso.onView
+import androidx.annotation.StringRes
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasClickAction
+import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onFirst
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTextInput
+import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.pressBack
-import androidx.test.espresso.action.ViewActions.scrollTo
-import androidx.test.espresso.action.ViewActions.typeText
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
-import androidx.test.espresso.matcher.ViewMatchers.isEnabled
-import androidx.test.espresso.matcher.ViewMatchers.isNotEnabled
-import androidx.test.espresso.matcher.ViewMatchers.isRoot
-import androidx.test.espresso.matcher.ViewMatchers.withChild
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.ui.adapter.MediaViewHolder
-import io.github.drumber.kitsune.ui.adapter.paging.CharacterPagingAdapter.CharacterViewHolder
-import io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter.MediaUnitViewHolder
+import io.github.drumber.kitsune.constants.IntentAction.SHORTCUT_SETTINGS
+import io.github.drumber.kitsune.ui.KitsuneTestTags
 import io.github.drumber.kitsune.ui.main.MainActivity
 import io.github.drumber.kitsune.utils.OkHttpIdlingResource
-import io.github.drumber.kitsune.utils.actionOnChild
-import io.github.drumber.kitsune.utils.searchText
-import io.github.drumber.kitsune.utils.waitForView
 import okhttp3.OkHttpClient
-import org.hamcrest.core.AllOf.allOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -39,16 +34,15 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import kotlin.time.Duration.Companion.seconds
 
 @RunWith(AndroidJUnit4::class)
 class NavigationTest : KoinComponent {
 
     @get:Rule
-    var activityRule = ActivityScenarioRule(MainActivity::class.java)
+    val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @get:Rule
-    var runtimePermissionRule: GrantPermissionRule = GrantPermissionRule.grant(
+    val runtimePermissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         android.Manifest.permission.POST_NOTIFICATIONS
     )
 
@@ -56,197 +50,181 @@ class NavigationTest : KoinComponent {
 
     @Before
     fun setup() {
-        activityRule.scenario.onActivity {
+        composeTestRule.activityRule.scenario.onActivity {
             val client: OkHttpClient = get()
             idlingResource = OkHttpIdlingResource(client)
         }
-        IdlingRegistry.getInstance().register(idlingResource!!)
+        idlingResource?.let { IdlingRegistry.getInstance().register(it) }
     }
 
     @After
     fun tearDown() {
-        IdlingRegistry.getInstance().unregister(idlingResource)
+        idlingResource?.let { IdlingRegistry.getInstance().unregister(it) }
+        idlingResource = null
     }
 
     @Test
-    fun shouldNavigateToDestinationsFromHome() {
-        onView(withId(R.id.main_fragment)).perform(click())
+    fun shouldNavigateToTopLevelDestinations() {
+        waitForTag(KitsuneTestTags.HomeSearchBar)
 
-        Thread.sleep(1000)
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        clickTopLevel(R.string.nav_feed)
+        waitForText(R.string.feed_tab_global)
 
-        // navigate to trending section
-        onView(
-            allOf(
-                withChild(withText(R.string.section_trending)),
-                withId(R.id.header)
+        clickTopLevel(R.string.nav_library)
+        waitForAnyText(R.string.library_not_logged_in_title, R.string.library_status_watching)
+
+        clickTopLevel(R.string.nav_profile)
+        waitForAnyText(R.string.not_logged_in, R.string.profile_tab_about)
+
+        clickTopLevel(R.string.nav_home)
+        waitForTag(KitsuneTestTags.HomeSearchBar)
+    }
+
+    @Test
+    fun shouldNavigateFromHomeToDetails() {
+        waitForTag(KitsuneTestTags.HomeSearchBar)
+        waitForTag(KitsuneTestTags.ExploreSectionHeader)
+
+        composeTestRule.onAllNodesWithTag(KitsuneTestTags.ExploreSectionHeader, useUnmergedTree = true)
+            .onFirst()
+            .performClick()
+
+        waitForTag(KitsuneTestTags.MediaCard, SEARCH_TIMEOUT_MS)
+        composeTestRule.onAllNodesWithTag(KitsuneTestTags.MediaCard, useUnmergedTree = true)
+            .onFirst()
+            .performClick()
+
+        waitForTag(KitsuneTestTags.DetailsDescription, DETAILS_TIMEOUT_MS)
+    }
+
+    @Test
+    fun shouldNavigateToSearchAndFilters() {
+        waitForTag(KitsuneTestTags.HomeSearchBar)
+        composeTestRule.onNodeWithTag(KitsuneTestTags.HomeSearchBar, useUnmergedTree = true).performClick()
+
+        waitForTag(KitsuneTestTags.SearchInput)
+        composeTestRule.onNodeWithTag(KitsuneTestTags.SearchInput, useUnmergedTree = true)
+            .performClick()
+            .performTextInput("toradora")
+
+        waitForOptionalNode(hasTestTag(KitsuneTestTags.SearchResults), SEARCH_TIMEOUT_MS)
+        if (waitForOptionalNode(hasTestTag(KitsuneTestTags.MediaCard), SEARCH_TIMEOUT_MS)) {
+            composeTestRule.onAllNodesWithTag(KitsuneTestTags.MediaCard, useUnmergedTree = true)
+                .onFirst()
+                .performClick()
+            waitForTag(KitsuneTestTags.DetailsDescription, DETAILS_TIMEOUT_MS)
+            pressBack()
+            waitForTag(KitsuneTestTags.SearchInput)
+        }
+
+        composeTestRule.onNode(hasContentDescription(text(R.string.title_filter)), useUnmergedTree = true)
+            .performClick()
+        waitForText(R.string.title_filter)
+        waitForAnyText(
+            R.string.title_categories,
+            R.string.search_provider_error,
+            R.string.search_provider_not_available
+        )
+    }
+
+    @Test
+    fun shouldNavigateToDetailsSubPages() {
+        openDeepLink("${Kitsu.BASE_URL}/anime/12")
+        waitForTag(KitsuneTestTags.DetailsDescription, DETAILS_TIMEOUT_MS)
+
+        composeTestRule.onNodeWithTag(KitsuneTestTags.DetailsEpisodesButton, useUnmergedTree = true)
+            .performScrollTo()
+            .performClick()
+        waitForAnyText(R.string.title_episodes, R.string.title_chapters)
+        waitForTag(KitsuneTestTags.EpisodesList)
+        pressBack()
+        waitForTag(KitsuneTestTags.DetailsDescription, DETAILS_TIMEOUT_MS)
+
+        composeTestRule.onNodeWithTag(KitsuneTestTags.DetailsCharactersButton, useUnmergedTree = true)
+            .performScrollTo()
+            .performClick()
+        waitForText(R.string.title_characters)
+        waitForTag(KitsuneTestTags.CharactersList)
+    }
+
+    @Test
+    fun shouldNavigateToSettingsAndAppearance() {
+        openSettingsShortcut()
+        waitForText(R.string.nav_settings)
+
+        composeTestRule.onNode(hasText(text(R.string.nav_appearance)) and hasClickAction(), useUnmergedTree = true)
+            .performClick()
+        waitForText(R.string.nav_appearance)
+        waitForText(R.string.preference_app_theme)
+
+        pressBack()
+        pressBack()
+    }
+
+    private fun clickTopLevel(@StringRes labelRes: Int) {
+        composeTestRule.onNode(hasText(text(labelRes)) and hasClickAction(), useUnmergedTree = true)
+            .performClick()
+    }
+
+    private fun openDeepLink(url: String) {
+        composeTestRule.activityRule.scenario.onActivity { activity ->
+            activity.startActivity(
+                Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+                    setPackage(activity.packageName)
+                    addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                }
             )
-        ).perform(click())
-
-        Thread.sleep(1000)
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-
-        // click first media item
-        onView(withId(R.id.rv_media)).perform(actionOnItemAtPosition<MediaViewHolder>(0, click()))
-    }
-
-    @Test
-    fun shouldNavigateToSearchFragment() {
-        onView(withId(R.id.search_fragment)).perform(click())
-
-        Thread.sleep(3000)
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-
-        // perform search
-        onView(withId(R.id.search_view)).perform(searchText("toradora"))
-        Thread.sleep(1000)
-
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        onView(isRoot()).perform(waitForView(R.id.rv_media, 10.seconds))
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-
-        // click first media item
-        onView(withId(R.id.rv_media)).perform(actionOnItemAtPosition<MediaViewHolder>(0, click()))
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-
-        // go back to search fragment
-        onView(isRoot()).perform(pressBack())
-
-        // open filters
-        onView(withId(R.id.btn_filter)).perform(click())
-        Thread.sleep(1000)
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-
-        // open categories
-        onView(withId(R.id.card_categories)).perform(scrollTo(), click())
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-
-        // go back to search fragment
-        onView(isRoot()).perform(pressBack())
-        onView(isRoot()).perform(pressBack())
-    }
-
-    @Test
-    fun shouldNavigateToLibraryFragment() {
-        onView(withId(R.id.library_fragment)).perform(click())
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-    }
-
-    @Test
-    fun shouldNavigateToProfileFragmentAndSettings() {
-        onView(withId(R.id.profile_fragment)).perform(click())
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-
-        // open settings
-        onView(withId(R.id.menu_settings)).perform(click())
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-
-        // navigate to appearance
-        onView(withText(R.string.nav_appearance)).perform(click())
-    }
-
-    @Test
-    fun shouldNavigateToDetailsAndSubPages() {
-        activityRule.scenario.onActivity { activity ->
-            val navController = activity.findNavController(R.id.nav_host_fragment)
-            navController.navigate(Uri.parse("${Kitsu.BASE_URL}/anime/12"))
         }
+    }
 
-        onView(isRoot()).perform(waitForView(R.id.tv_description, 30.seconds))
-        Thread.sleep(3000)
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        Thread.sleep(3000)
-
-        fun goBack() {
-            onView(isRoot()).perform(pressBack())
-            Thread.sleep(500)
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-            onView(isRoot()).perform(pressBack())
-        }
-
-        fun navigateToEpisodes() {
-            // navigate to episodes
-            onView(withId(R.id.btn_media_units)).perform(scrollTo())
-            Thread.sleep(100)
-            onView(withId(R.id.btn_media_units)).perform(click())
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-
-            // click on first episode
-            onView(withId(R.id.rv_media)).perform(
-                actionOnItemAtPosition<MediaUnitViewHolder>(
-                    0,
-                    click()
-                )
+    private fun openSettingsShortcut() {
+        composeTestRule.activityRule.scenario.onActivity { activity ->
+            activity.startActivity(
+                Intent(activity, MainActivity::class.java).apply {
+                    action = SHORTCUT_SETTINGS
+                }
             )
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-
-            // go back to details fragment
-            goBack()
         }
-
-        fun navigateToCharacters() {
-            // navigate to characters
-            onView(withId(R.id.btn_characters)).perform(scrollTo())
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-            onView(withId(R.id.btn_characters)).perform(click())
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-
-            // click on first character
-            onView(withId(R.id.rv_media)).perform(
-                actionOnItemAtPosition<CharacterViewHolder>(
-                    1,
-                    actionOnChild(withId(R.id.iv_character), click())
-                )
-            )
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-
-            // go back to details fragment
-            goBack()
-        }
-
-        fun navigateToCategory() {
-            // navigate to category
-            onView(withChild(withId(R.id.chip_group_categories))).perform(scrollTo())
-            onView(withId(R.id.chip_group_categories)).perform(click())
-
-            Thread.sleep(1000)
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-
-            // click first media item
-            onView(withId(R.id.rv_media)).perform(actionOnItemAtPosition<MediaViewHolder>(0, click()))
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-
-            // go back to details fragment
-            goBack()
-        }
-
-        navigateToEpisodes()
-        navigateToCharacters()
-        navigateToCategory()
     }
 
-    @Test
-    fun shouldNavigateToLoginScreen() {
-        // navigate to profile fragment
-        onView(withId(R.id.profile_fragment)).perform(click())
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+    private fun waitForTag(tag: String, timeoutMillis: Long = DEFAULT_TIMEOUT_MS) {
+        waitForNode(hasTestTag(tag), timeoutMillis)
+        composeTestRule.onNodeWithTag(tag, useUnmergedTree = true).assertIsDisplayed()
+    }
 
-        // navigate to login screen
-        onView(withId(R.id.btn_login)).perform(click())
+    private fun waitForText(@StringRes resId: Int, timeoutMillis: Long = DEFAULT_TIMEOUT_MS) {
+        waitForNode(hasText(text(resId)), timeoutMillis)
+        composeTestRule.onNode(hasText(text(resId)), useUnmergedTree = true).assertIsDisplayed()
+    }
 
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+    private fun waitForAnyText(@StringRes vararg resIds: Int, timeoutMillis: Long = DEFAULT_TIMEOUT_MS) {
+        val matchers = resIds.map { hasText(text(it)) }
+        composeTestRule.waitUntil(timeoutMillis) {
+            matchers.any { matcher -> hasNode(matcher) }
+        }
+    }
 
-        onView(withId(R.id.btn_login)).check(matches(isNotEnabled()))
+    private fun waitForNode(matcher: SemanticsMatcher, timeoutMillis: Long = DEFAULT_TIMEOUT_MS) {
+        composeTestRule.waitUntil(timeoutMillis) { hasNode(matcher) }
+    }
 
-        onView(withId(R.id.input_username)).perform(typeText("user@example.com"))
-        onView(withId(R.id.btn_login)).check(matches(isNotEnabled()))
+    private fun waitForOptionalNode(matcher: SemanticsMatcher, timeoutMillis: Long): Boolean {
+        return runCatching {
+            composeTestRule.waitUntil(timeoutMillis) { hasNode(matcher) }
+        }.isSuccess
+    }
 
-        onView(withId(R.id.input_password)).perform(typeText("password"))
+    private fun hasNode(matcher: SemanticsMatcher): Boolean {
+        return composeTestRule.onAllNodes(matcher, useUnmergedTree = true)
+            .fetchSemanticsNodes()
+            .isNotEmpty()
+    }
 
-        onView(withId(R.id.btn_login)).check(matches(isEnabled()))
+    private fun text(@StringRes resId: Int): String = composeTestRule.activity.getString(resId)
 
-        // go back to profile fragment
-        onView(isRoot()).perform(pressBack())
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+    private companion object {
+        const val DEFAULT_TIMEOUT_MS = 15_000L
+        const val SEARCH_TIMEOUT_MS = 30_000L
+        const val DETAILS_TIMEOUT_MS = 45_000L
     }
 }

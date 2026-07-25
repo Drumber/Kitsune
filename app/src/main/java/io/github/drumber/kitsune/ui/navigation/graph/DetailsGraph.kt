@@ -183,7 +183,11 @@ fun NavGraphBuilder.detailsGraph(navController: NavHostController) {
                     }
                 },
                 onNavigateToEpisodes = {
-                    media?.let { m -> navController.navigateSafe(Routes.Episodes(m.id, m is Anime)) }
+                    media?.let { m ->
+                        navController.navigateSafe(
+                            Routes.Episodes(m.id, m is Anime, m.posterImageUrl)
+                        )
+                    }
                 },
                 onNavigateToCharacters = {
                     media?.let { m -> navController.navigateSafe(Routes.Characters(m.id, m is Anime)) }
@@ -325,7 +329,7 @@ fun NavGraphBuilder.detailsGraph(navController: NavHostController) {
         } else {
             stringResource(R.string.title_chapters)
         }
-        val posterUrl = libraryEntry?.media?.posterImageUrl
+        val posterUrl = route.posterUrl ?: libraryEntry?.media?.posterImageUrl
 
         Box {
             EpisodesScreen(

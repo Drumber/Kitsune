@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -53,6 +54,7 @@ import io.github.drumber.kitsune.data.presentation.model.media.category.Category
 import io.github.drumber.kitsune.data.presentation.model.media.relationship.MediaRelationship
 import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
+import io.github.drumber.kitsune.ui.KitsuneTestTags
 import io.github.drumber.kitsune.ui.component.compose.list.KitsuneBackButton
 import io.github.drumber.kitsune.ui.component.compose.list.KitsuneCollapsingTopAppBar
 import io.github.drumber.kitsune.ui.component.compose.media.ExpandableText
@@ -202,6 +204,7 @@ private fun DetailsContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .testTag(KitsuneTestTags.DetailsContent)
             .padding(paddingValues)
             .verticalScroll(rememberScrollState())
             .padding(15.dp)
@@ -228,6 +231,7 @@ private fun DetailsContent(
                 text = media?.description,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .testTag(KitsuneTestTags.DetailsDescription)
                     .padding(bottom = 24.dp)
             )
         }
@@ -314,6 +318,7 @@ private fun CategoryChipsRow(categories: List<Category>, onCategoryClick: (Categ
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .testTag(KitsuneTestTags.DetailsCategories)
             .padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -335,11 +340,21 @@ private fun NavigationButtonsSection(
     onNavigateToFeed: () -> Unit
 ) {
     val episodeBtnText = if (media is Anime) R.string.title_episodes else R.string.title_chapters
-    OutlinedButton(onClick = onNavigateToEpisodes, modifier = Modifier.fillMaxWidth()) {
+    OutlinedButton(
+        onClick = onNavigateToEpisodes,
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(KitsuneTestTags.DetailsEpisodesButton)
+    ) {
         Text(stringResource(episodeBtnText))
     }
     Spacer(Modifier.height(8.dp))
-    OutlinedButton(onClick = onNavigateToCharacters, modifier = Modifier.fillMaxWidth()) {
+    OutlinedButton(
+        onClick = onNavigateToCharacters,
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(KitsuneTestTags.DetailsCharactersButton)
+    ) {
         Text(stringResource(R.string.title_characters))
     }
     Spacer(Modifier.height(8.dp))

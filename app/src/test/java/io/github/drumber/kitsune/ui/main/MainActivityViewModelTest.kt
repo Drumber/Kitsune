@@ -1,7 +1,6 @@
 package io.github.drumber.kitsune.ui.main
 
 import app.cash.turbine.test
-import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.repository.AccessTokenRepository
 import io.github.drumber.kitsune.data.repository.AccessTokenRepository.AccessTokenState
 import io.github.drumber.kitsune.data.repository.UserRepository
@@ -37,12 +36,6 @@ class MainActivityViewModelTest {
         userRepository: UserRepository = userRepository(),
         accessTokenRepository: AccessTokenRepository = accessTokenRepository(AccessTokenState.NOT_PRESENT)
     ) = MainActivityViewModel(userRepository, accessTokenRepository)
-
-    @Test
-    fun `currentNavRootDestId defaults to main fragment`() {
-        val vm = viewModel()
-        assertThat(vm.currentNavRootDestId).isEqualTo(R.id.main_fragment)
-    }
 
     @Test
     fun `isLoggedIn returns true when access token is present`() {

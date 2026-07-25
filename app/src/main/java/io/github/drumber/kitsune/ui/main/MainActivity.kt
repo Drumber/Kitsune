@@ -80,8 +80,10 @@ class MainActivity : BaseActivity() {
             ?.takeIf { it.containsKey(LAST_HANDLED_INTENT_KEY) }
             ?.getInt(LAST_HANDLED_INTENT_KEY)
 
-        val startDestination =
-            if (savedInstanceState == null) resolveStartDestination() else Routes.Home
+        // The graph start destination has to stay Home for the whole session: `navigateToTopLevel`
+        // pops up to it, and a restored back stack keeps the root it was created with. A configured
+        // start page or an app shortcut is therefore an explicit navigation on top of Home.
+        val initialRoute = if (savedInstanceState == null) resolveInitialRoute() else null
 
         setContent {
             KitsuneMdcTheme {
@@ -91,11 +93,17 @@ class MainActivity : BaseActivity() {
 
                 KitsuneApp(
                     avatarUrl = localUser?.avatar?.originalOrDown(),
-                    startDestination = startDestination,
+                    startDestination = Routes.Home,
                     navController = controller,
                     doubleBackToExit = KitsunePref.doubleBackToExit,
                     onExitRequested = ::handleBackPressToExit
                 )
+
+                LaunchedEffect(initialRoute) {
+                    if (initialRoute != null) {
+                        controller.navigateToTopLevel(initialRoute)
+                    }
+                }
 
                 val intentToHandle = pendingIntent
                 LaunchedEffect(intentToHandle) {
@@ -140,16 +148,17 @@ class MainActivity : BaseActivity() {
     }
 
     /**
-     * Start destination of a clean launch: an app shortcut wins over the user's configured start
-     * page, and neither applies when the app was opened through a deep link.
+     * Route to open on top of [Routes.Home] on a clean launch: an app shortcut wins over the user's
+     * configured start page, and neither applies when the app was opened through a deep link.
+     * `null` means staying on Home.
      */
-    private fun resolveStartDestination(): Any {
-        if (isLaunchedByDeepLink()) return Routes.Home
+    private fun resolveInitialRoute(): Any? {
+        if (isLaunchedByDeepLink()) return null
 
         shortcutStartDestination()?.let { return it }
 
         return when (KitsunePref.startFragment) {
-            StartPagePref.Home -> Routes.Home
+            StartPagePref.Home -> null
             StartPagePref.Search -> Routes.Search()
             StartPagePref.Library -> Routes.Library
             StartPagePref.Profile -> Routes.MyProfile

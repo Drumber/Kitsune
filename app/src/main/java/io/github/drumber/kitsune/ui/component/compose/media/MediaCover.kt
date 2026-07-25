@@ -26,9 +26,8 @@ import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 /**
  * Loads a media poster image (or cover image) using GlideImage.
  *
- * Replaces the [ImageView] + Glide setup in [MediaViewHolder]/[MediaRecyclerViewAdapter].
- * Mirrors the same placeholder ([R.drawable.ic_insert_photo_48]) and crossfade used in the
- * existing adapters.
+ * Replaces the old [ImageView] + Glide setup.
+ * Mirrors the same placeholder ([R.drawable.ic_insert_photo_48]) and crossfade behavior.
  *
  * @param imageUrl URL of the poster/cover to load. Null or blank shows the placeholder.
  * @param contentDescription Accessibility description for the image.

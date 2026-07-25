@@ -53,8 +53,14 @@ object Routes {
         val filterOptionsJson: String
     )
 
+    /** @param posterUrl poster of the media, carried along so the header does not depend on the
+     *  media being in the user's library. */
     @Serializable
-    data class Episodes(val mediaId: String, val isAnime: Boolean)
+    data class Episodes(
+        val mediaId: String,
+        val isAnime: Boolean,
+        val posterUrl: String? = null
+    )
 
     @Serializable
     data class Characters(val mediaId: String, val isAnime: Boolean)

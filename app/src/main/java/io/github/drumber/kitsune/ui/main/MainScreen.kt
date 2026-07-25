@@ -32,9 +32,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.ui.KitsuneTestTags
 import io.github.drumber.kitsune.ui.component.compose.list.KitsunePullToRefreshBox
 import kotlinx.coroutines.launch
 
@@ -122,7 +124,9 @@ private fun SearchBarButton(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = modifier.clickable(onClick = onClick),
+        modifier = modifier
+            .testTag(KitsuneTestTags.HomeSearchBar)
+            .clickable(onClick = onClick),
         shape = MaterialTheme.shapes.extraLarge,
         tonalElevation = 3.dp,
         color = MaterialTheme.colorScheme.surfaceContainerHigh

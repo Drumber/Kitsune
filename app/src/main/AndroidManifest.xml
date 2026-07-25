@@ -43,8 +43,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="https" android:host="kitsu.app" />
-                <data android:scheme="http" android:host="kitsu.app" />
+                <data android:scheme="https" android:host="kitsu.app" android:pathPattern="/.*/.*" />
+                <data android:scheme="http" android:host="kitsu.app" android:pathPattern="/.*/.*" />
             </intent-filter>
 
             <intent-filter>

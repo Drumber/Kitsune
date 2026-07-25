@@ -180,9 +180,7 @@ dependencies {
 
     // Navigation
     implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.fragment.ktx)
-    implementation(libs.androidx.fragment.compose)
 
     // Preference
     implementation(libs.androidx.preference.ktx)
@@ -232,7 +230,6 @@ dependencies {
 
     // Koin DI
     implementation(libs.insert.koin.android)
-    implementation(libs.insert.koin.androidx.navigation)
 
     // jsonapi-converter
     implementation(libs.jasminb.jsonapi)
@@ -274,12 +271,6 @@ dependencies {
     // Expandable text view
     implementation(libs.blogc.expandabletextview)
 
-    // CircleImageView
-    implementation(libs.hdodenhof.circleimageview)
-
-    // Material Rating Bar
-    implementation(libs.zhanghai.materialratingbar)
-
     // MPAndroidCharts
     implementation(libs.philjay.mpandroidchart)
 
@@ -288,7 +279,6 @@ dependencies {
 
     // Hauler Gesture
     implementation(libs.futured.hauler)
-    implementation(libs.futured.hauler.databinding)
 
     // AboutLibraries
     implementation(libs.mikepenz.aboutlibraries.core)

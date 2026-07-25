@@ -73,6 +73,7 @@ import io.github.drumber.kitsune.ui.component.compose.list.PagingEmptyContent
 import io.github.drumber.kitsune.ui.component.compose.list.PagingErrorContent
 import io.github.drumber.kitsune.ui.component.compose.list.PagingLoadingContent
 import io.github.drumber.kitsune.ui.component.compose.media.MediaCover
+import io.github.drumber.kitsune.ui.navigation.LocalReselectEvents
 import kotlinx.coroutines.delay
 
 private val libraryStatusFilters = listOf(
@@ -107,10 +108,17 @@ fun LibraryScreen(
 ) {
     var searchQuery by rememberSaveable { mutableStateOf(uiState.filter.searchQuery) }
     var searchActive by rememberSaveable { mutableStateOf(uiState.filter.searchQuery.isNotBlank()) }
+    val scrollToTopEvents = LocalReselectEvents.current
 
     LaunchedEffect(searchQuery) {
         delay(300L)
         onSearch(searchQuery)
+    }
+
+    LaunchedEffect(Unit) {
+        scrollToTopEvents.collect {
+            gridState.animateScrollToItem(0)
+        }
     }
 
     LaunchedEffect(uiState.filter.createTime) {

@@ -24,11 +24,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.github.drumber.kitsune.ui.KitsuneTestTags
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 
 /**
@@ -92,6 +94,7 @@ private fun ExploreSectionHeader(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .testTag(KitsuneTestTags.ExploreSectionHeader)
             .then(clickableModifier)
             .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically

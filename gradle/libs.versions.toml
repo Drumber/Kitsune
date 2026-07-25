@@ -17,7 +17,6 @@ androidxWorkManager = "2.11.2"
 appCompat = "1.7.1"
 archUnit = "1.4.2"
 assertj = "3.27.7"
-circleImageView = "3.1.0"
 composeBom = "2026.05.01"
 constraintLayout = "2.2.1"
 coreKtx = "1.17.0"
@@ -45,7 +44,6 @@ ktorClient = "1.6.8"
 leakCanary = "2.14"
 markwon = "4.6.2"
 material = "1.14.0"
-materialRatingBar = "1.4.0"
 mockito = "6.2.3"
 mpAndroidChart = "v3.1.0"
 okHttp = "5.4.0"
@@ -83,7 +81,6 @@ androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx"
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashScreen" }
 androidx-espresso-contrib = { module = "androidx.test.espresso:espresso-contrib", version.ref = "espressoCore" }
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
-androidx-fragment-compose = { module = "androidx.fragment:fragment-compose", version.ref = "androidxFragment" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "androidxFragment" }
 androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "androidxGlance" }
 androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "androidxGlance" }
@@ -96,7 +93,6 @@ androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidxNavigation" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidxNavigation" }
-androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidxNavigation" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidxPaging" }
 androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "androidxPaging" }
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
@@ -126,12 +122,9 @@ fasterxml-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-data
 fasterxml-jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
 fastlane-screengrab = { module = "tools.fastlane:screengrab", version.ref = "screengrab" }
 futured-hauler = { module = "app.futured.hauler:hauler", version.ref = "hauler" }
-futured-hauler-databinding = { module = "app.futured.hauler:databinding", version.ref = "hauler" }
 google-android-material = { module = "com.google.android.material:material", version.ref = "material" }
-hdodenhof-circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleImageView" }
 insert-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 insert-koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
-insert-koin-androidx-navigation = { module = "io.insert-koin:koin-androidx-navigation", version.ref = "koin" }
 insert-koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
 jasminb-jsonapi = { module = "com.github.jasminb:jsonapi-converter", version.ref = "jsonApi" }
 jetbrains-kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
@@ -159,13 +152,11 @@ squareup-retrofit2-retrofit = { module = "com.squareup.retrofit2:retrofit", vers
 tngtech-archunit-junit4 = { module = "com.tngtech.archunit:archunit-junit4", version.ref = "archUnit" }
 cashapp-turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 wasabeef-glide-transformations = { module = "jp.wasabeef:glide-transformations", version.ref = "glideTransformations" }
-zhanghai-materialratingbar = { module = "me.zhanghai.android.materialratingbar:library", version.ref = "materialRatingBar" }
 
 [plugins]
 aboutlibraries-plugin = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutLibraries" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-legacy-kapt = { id = "com.android.legacy-kapt", version.ref = "agp" }
-androidx-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidxNavigation" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
@@ -32,6 +33,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.character.Character
 import io.github.drumber.kitsune.data.presentation.model.media.production.Casting
+import io.github.drumber.kitsune.ui.KitsuneTestTags
 import io.github.drumber.kitsune.ui.component.compose.list.KitsuneBackButton
 import io.github.drumber.kitsune.ui.component.compose.list.KitsuneCollapsingTopAppBar
 import io.github.drumber.kitsune.ui.component.compose.list.PagingColumn
@@ -73,7 +75,9 @@ fun CharactersScreen(
             }
             PagingColumn(
                 items = items,
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag(KitsuneTestTags.CharactersList),
                 contentPadding = PaddingValues(
                     start = paddingValues.calculateLeftPadding(layoutDir),
                     end = paddingValues.calculateRightPadding(layoutDir),
@@ -117,6 +121,7 @@ private fun CastingItem(casting: Casting, onCharacterClick: (Character) -> Unit)
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .testTag(KitsuneTestTags.CharacterItem)
             .clickable { onCharacterClick(character) }
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically

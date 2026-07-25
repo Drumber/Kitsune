@@ -20,14 +20,12 @@ import io.noties.markwon.linkify.LinkifyPlugin
  * Renders Kitsu post/comment content inside an `AndroidView`-hosted [TextView] using Markwon.
  *
  * Per the migration plan, this is a deliberate `AndroidView`-wrapper for now (low risk, Compose-
- * native is a follow-up); it mirrors [PostContentRenderer] and [MarkdownPreviewRenderer] exactly,
- * including HTML rendering, Glide-backed inline images, and URL autolinking.
+ * native is a follow-up), including HTML rendering, Glide-backed inline images, and URL autolinking.
  *
  * Two rendering modes:
  * - **HTML** (default, [isHtml] = `true`): parses `contentFormatted` — the pre-rendered
- *   server-side HTML produced by Kramdown. Matches [PostContentRenderer].
+ *   server-side HTML produced by Kramdown.
  * - **Markdown** ([isHtml] = `false`): parses raw CommonMark Markdown (preview mode).
- *   Matches [MarkdownPreviewRenderer].
  *
  * @param content  The text to render. Null or blank renders nothing (empty TextView).
  * @param isHtml   `true` to parse as sanitized HTML; `false` for raw Markdown.
