@@ -42,6 +42,17 @@ class CharacterDetailsViewModel(
     val uiState
         get() = _uiState.asStateFlow()
 
+    /** Initialises the screen by id without requiring a pre-fetched [Character] object. */
+    fun initCharacterById(id: String) {
+        initCharacter(
+            Character(
+                id = id, slug = null, name = null, names = null,
+                otherNames = null, malId = null, description = null,
+                image = null, mediaCharacters = null
+            )
+        )
+    }
+
     fun initCharacter(character: Character) {
         if (_characterFlow.replayCache.isNotEmpty() && _characterFlow.replayCache.firstOrNull()?.id == character.id) return
 

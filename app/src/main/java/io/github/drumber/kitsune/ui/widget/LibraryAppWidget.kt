@@ -65,6 +65,7 @@ import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.constants.IntentAction.OPEN_LIBRARY
 import io.github.drumber.kitsune.constants.IntentAction.OPEN_MEDIA
 import io.github.drumber.kitsune.constants.LibraryWidget
+import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
@@ -76,7 +77,6 @@ import io.github.drumber.kitsune.data.repository.LibraryRepository
 import io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase
 import io.github.drumber.kitsune.domain.library.UpdateLibraryEntryProgressUseCase
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.details.DetailsFragmentArgs
 import io.github.drumber.kitsune.ui.main.MainActivity
 import io.github.drumber.kitsune.ui.widget.KitsuneWidgetTheme.applyTheme
 import io.github.drumber.kitsune.util.logE
@@ -130,12 +130,11 @@ class LibraryAppWidget : GlanceAppWidget(), KoinComponent {
                         clickItemAction = { libraryEntry ->
                             val intent = getMainActivityIntent(context).apply {
                                 action = OPEN_MEDIA
-                                val args = DetailsFragmentArgs(
-                                    media = libraryEntry.media?.toMediaDto(),
-                                    type = libraryEntry.media?.mediaType?.identifier,
-                                    slug = libraryEntry.media?.id
+                                putExtra(MainActivity.EXTRA_MEDIA_ID, libraryEntry.media?.id)
+                                putExtra(
+                                    MainActivity.EXTRA_MEDIA_IS_ANIME,
+                                    libraryEntry.media?.mediaType == MediaType.Anime
                                 )
-                                putExtras(args.toBundle())
                             }
                             actionStartActivity(intent)
                         },

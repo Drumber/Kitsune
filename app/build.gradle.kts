@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.android.legacy.kapt)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.androidx.navigation.safeargs)
     alias(libs.plugins.aboutlibraries.plugin)
     alias(libs.plugins.jetbrains.kotlin.parcelize)
     alias(libs.plugins.jetbrains.kotlin.serialization)

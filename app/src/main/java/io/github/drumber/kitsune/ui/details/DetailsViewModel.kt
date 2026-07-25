@@ -13,6 +13,7 @@ import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.mapping.Mapping
 import io.github.drumber.kitsune.data.presentation.model.mapping.getSiteName
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
+import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
@@ -106,6 +107,33 @@ class DetailsViewModel(
         acceptInternalAction = { action ->
             viewModelScope.launch { internalActionFlow.emit(action) }
         }
+    }
+
+    /** Initialises the screen by id without requiring a full [Media] object from the caller. */
+    fun initMediaById(id: String, isAnime: Boolean) {
+        val stub = if (isAnime) {
+            Anime(
+                id = id, slug = null, description = null, titles = null, canonicalTitle = null,
+                abbreviatedTitles = null, averageRating = null, ratingFrequencies = null,
+                userCount = null, favoritesCount = null, popularityRank = null, ratingRank = null,
+                startDate = null, endDate = null, nextRelease = null, tba = null, status = null,
+                ageRating = null, ageRatingGuide = null, nsfw = null, posterImage = null,
+                coverImage = null, totalLength = null, episodeCount = null, episodeLength = null,
+                youtubeVideoId = null, subtype = null, categories = null, animeProduction = null,
+                streamingLinks = null, mediaRelationships = null
+            )
+        } else {
+            Manga(
+                id = id, slug = null, description = null, titles = null, canonicalTitle = null,
+                abbreviatedTitles = null, averageRating = null, ratingFrequencies = null,
+                userCount = null, favoritesCount = null, popularityRank = null, ratingRank = null,
+                startDate = null, endDate = null, nextRelease = null, tba = null, status = null,
+                ageRating = null, ageRatingGuide = null, nsfw = null, posterImage = null,
+                coverImage = null, totalLength = null, chapterCount = null, volumeCount = null,
+                subtype = null, serialization = null, categories = null, mediaRelationships = null
+            )
+        }
+        initMediaModel(stub)
     }
 
     fun initFromDeepLink(isAnime: Boolean, slug: String) {

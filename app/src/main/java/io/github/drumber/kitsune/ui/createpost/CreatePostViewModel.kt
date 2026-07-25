@@ -81,6 +81,21 @@ class CreatePostViewModel(
     private val eventChannel = Channel<Event>(Channel.BUFFERED)
     val events: Flow<Event> = eventChannel.receiveAsFlow()
 
+    /**
+     * Fetches a post by its id and pre-fills the composer for editing. Used by the Compose
+     * navigation graph, which passes only the id via [Routes.CreatePost.editPostId].
+     */
+    fun initFromPostId(postId: String) {
+        if (editPostId != null) return
+        viewModelScope.launch {
+            try {
+                postManagementRepository.getPost(postId)?.let { initFromPost(it) }
+            } catch (e: Exception) {
+                logE("Failed to load post '$postId' for editing.", e)
+            }
+        }
+    }
+
     /** Prefills the composer from an existing post for editing. Called once on screen creation. */
     fun initFromPost(post: Post) {
         if (editPostId != null) return

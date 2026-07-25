@@ -78,6 +78,21 @@ class PostDetailViewModel(
     private val commentLikedState = mutableMapOf<String, Boolean>()
     private val commentLikeCounts = mutableMapOf<String, Int>()
 
+    /**
+     * Fetches a post by its id and calls [setPost] once the result is available. Used by the
+     * Compose navigation graph, which passes only the id as a route argument.
+     */
+    fun initFromPostId(postId: String) {
+        if (post.value?.id == postId) return
+        viewModelScope.launch {
+            try {
+                postManagementRepository.getPost(postId)?.let { setPost(it) }
+            } catch (e: Exception) {
+                logE("Failed to load post '$postId'.", e)
+            }
+        }
+    }
+
     fun setPost(newPost: Post) {
         if (post.value?.id == newPost.id) return
         post.value = newPost

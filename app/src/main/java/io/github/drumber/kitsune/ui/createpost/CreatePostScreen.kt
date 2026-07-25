@@ -72,7 +72,9 @@ fun CreatePostScreen(
     onAddImageClick: () -> Unit,
     onRemoveImage: (Int) -> Unit,
     onPublish: () -> Unit,
-    onNavigateUp: () -> Unit
+    onNavigateUp: () -> Unit,
+    /** Called (instead of [onNavigateUp]) when the post was successfully published. */
+    onPublished: () -> Unit = onNavigateUp
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
@@ -91,7 +93,7 @@ fun CreatePostScreen(
                 CreatePostViewModel.Event.Published -> {
                     val msg = if (uiState.isEditMode) updatedMsg else publishedMsg
                     snackbarHostState.showSnackbar(msg)
-                    onNavigateUp()
+                    onPublished()
                 }
 
                 CreatePostViewModel.Event.Error ->

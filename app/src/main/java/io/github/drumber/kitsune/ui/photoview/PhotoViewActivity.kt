@@ -51,7 +51,7 @@ class PhotoViewActivity : BaseActivity(setAppTheme = false) {
 
     private lateinit var binding: ActivityPhotoViewBinding
 
-    private val args by navArgs<PhotoViewActivityArgs>()
+    private val args by lazy { PhotoViewArgs.fromIntent(intent) }
 
     private var isFullscreen: Boolean = false
 
