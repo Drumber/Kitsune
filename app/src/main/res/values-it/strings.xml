@@ -233,7 +233,7 @@
     <string name="action_log_in">Accedi</string>
     <string name="action_log_in_to_kitsu">Accedi a Kitsu</string>
     <string name="action_create_account">Crea un account</string>
-    <string name="invalid_username">Indirizzo email non valido</string>
+    <string name="invalid_username">Inserisci l\'e-mail o il nome utente</string>
     <string name="login_failed">Accesso fallito</string>
     <string name="status_logging_in">Accesso in corso…</string>
     <string name="not_logged_in">Non connesso</string>
@@ -518,4 +518,22 @@
     <string name="follow_list_following_title">Seguiti</string>
     <string name="follow_list_followers_title">Follower</string>
     <string name="follow_list_empty">Niente da mostrare qui.</string>
+    <string name="feed_pinned_post">Fissati</string>
+    <string name="title_replies">Risposte</string>
+    <string name="preference_double_back_to_exit">Premi indietro due volte per uscire</string>
+    <plurals name="notification_actor_and_others">
+        <item quantity="one">%1$s e %2$d altro</item>
+        <item quantity="many">%1$s e %2$d altri</item>
+        <item quantity="other">%1$s e %2$d altri</item>
+    </plurals>
+    <plurals name="group_members_count">
+        <item quantity="one">%d membro</item>
+        <item quantity="many">%d membri</item>
+        <item quantity="other">%d membri</item>
+    </plurals>
+    <plurals name="comment_view_all_replies">
+        <item quantity="one">Visualizza %d risposta</item>
+        <item quantity="many">Visualizza tutte le %d risposte</item>
+        <item quantity="other">Visualizza tutte le %d risposte</item>
+    </plurals>
 </resources>
