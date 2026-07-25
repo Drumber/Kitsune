@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.ui.navigation.graph
 import android.content.Intent
 import android.net.ConnectivityManager
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -297,10 +298,12 @@ private fun SearchDestination(
     navController: NavHostController,
     focusSearch: Boolean
 ) {
+    val activity = LocalActivity.current as? ComponentActivity ?: return
+
     // SearchViewModel is activity-scoped so state persists across Search ↔ Facet navigation,
     // matching the original activityViewModel() binding in SearchFragment/FacetFragment.
     val viewModel: SearchViewModel = koinViewModel(
-        viewModelStoreOwner = LocalContext.current as ComponentActivity
+        viewModelStoreOwner = activity
     )
 
     val searchBoxView = remember { SearchBoxViewCompose() }
@@ -401,8 +404,10 @@ private class SearchResponseListener(
 
 @Composable
 private fun FacetDestination(navController: NavHostController) {
+    val activity = LocalActivity.current as? FragmentActivity ?: return
+
     val viewModel: SearchViewModel = koinViewModel(
-        viewModelStoreOwner = LocalContext.current as ComponentActivity
+        viewModelStoreOwner = activity
     )
 
     val connection = remember { ConnectionHandler() }
@@ -437,8 +442,6 @@ private fun FacetDestination(navController: NavHostController) {
         onDispose { connection.clear() }
     }
 
-    val context = LocalContext.current
-
     FacetScreen(
         clientStatus = clientStatus ?: SearchViewModel.SearchClientStatus.NotInitialized,
         onRetrySearchClient = { viewModel.initializeSearchClient() },
@@ -447,7 +450,7 @@ private fun FacetDestination(navController: NavHostController) {
         onNavigateUp = { navController.navigateUp() },
         onCategoriesClick = {
             val dialog = CategoriesDialogFragment.showDialog(
-                (context as FragmentActivity).supportFragmentManager
+                activity.supportFragmentManager
             )
             dialog.setOnDismissListener { viewModel.updateCategoryFilters() }
         },
@@ -689,9 +692,10 @@ private fun libraryChangeSnackbarMessage(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LibraryEditEntryDestination(navController: NavHostController, libraryEntryId: String) {
+    val activity = LocalActivity.current as? FragmentActivity ?: return
+
     val viewModel: LibraryEditEntryViewModel = koinViewModel()
-    val context = LocalContext.current
-    val fragmentManager = (context as FragmentActivity).supportFragmentManager
+    val fragmentManager = activity.supportFragmentManager
 
     // Initialise the entry once (guards against repeated calls via LibraryEditEntryViewModel).
     LaunchedEffect(libraryEntryId) {
@@ -713,6 +717,8 @@ private fun LibraryEditEntryDestination(navController: NavHostController, librar
     // Rating bottom sheet state.
     var showRatingSheet by remember { mutableStateOf(false) }
     val ratingSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val startedDatePickerTitle = stringResource(R.string.library_edit_started)
+    val finishedDatePickerTitle = stringResource(R.string.library_edit_finished)
 
     if (showRatingSheet) {
         val entry = wrapper
@@ -754,7 +760,7 @@ private fun LibraryEditEntryDestination(navController: NavHostController, librar
                 ?: DateValidatorPointBackward.now()
             showDatePicker(
                 fragmentManager = fragmentManager,
-                title = context.getString(R.string.library_edit_started),
+                title = startedDatePickerTitle,
                 selection = selection,
                 validator = validator
             ) { dateMillis ->
@@ -770,7 +776,7 @@ private fun LibraryEditEntryDestination(navController: NavHostController, librar
                 ?: DateValidatorPointBackward.now()
             showDatePicker(
                 fragmentManager = fragmentManager,
-                title = context.getString(R.string.library_edit_finished),
+                title = finishedDatePickerTitle,
                 selection = selection,
                 validator = validator
             ) { dateMillis ->

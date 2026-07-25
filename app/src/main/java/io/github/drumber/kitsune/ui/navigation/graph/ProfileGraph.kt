@@ -457,7 +457,6 @@ private fun ProfileFeedTab(
     if (userId == null) return
 
     val feedViewModel: FeedListViewModel = koinViewModel(key = feedKey)
-    val context = LocalContext.current
 
     LaunchedEffect(userId) { feedViewModel.setUserFeed(userId) }
 
@@ -467,28 +466,31 @@ private fun ProfileFeedTab(
     val interactionStates by feedViewModel.interactionStates.collectAsStateWithLifecycle(emptyMap())
     val revealedPosts by feedViewModel.revealedPosts.collectAsStateWithLifecycle(emptySet())
     var snackbarMessage by remember { mutableStateOf<String?>(null) }
+    val commentLoginRequiredMessage = stringResource(R.string.comment_login_required)
+    val commentActionFailedMessage = stringResource(R.string.comment_action_failed)
+    val postDeletedMessage = stringResource(R.string.post_deleted)
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(commentLoginRequiredMessage, commentActionFailedMessage) {
         feedViewModel.likeEvents.collect { event ->
             snackbarMessage = when (event) {
                 FeedListViewModel.LikeEvent.LoginRequired ->
-                    context.getString(R.string.comment_login_required)
+                    commentLoginRequiredMessage
                 is FeedListViewModel.LikeEvent.Failed ->
-                    context.getString(R.string.comment_action_failed)
+                    commentActionFailedMessage
                 is FeedListViewModel.LikeEvent.Updated -> null
             }
         }
     }
-    LaunchedEffect(Unit) {
+    LaunchedEffect(postDeletedMessage, commentActionFailedMessage) {
         feedViewModel.actionEvents.collect { event ->
             when (event) {
                 FeedListViewModel.ActionEvent.PostDeleted -> {
                     posts.refresh()
                     feedViewModel.reloadPinnedPost()
-                    snackbarMessage = context.getString(R.string.post_deleted)
+                    snackbarMessage = postDeletedMessage
                 }
                 FeedListViewModel.ActionEvent.Error ->
-                    snackbarMessage = context.getString(R.string.comment_action_failed)
+                    snackbarMessage = commentActionFailedMessage
             }
         }
     }
@@ -786,15 +788,19 @@ private fun SettingsDestination(navController: NavHostController) {
     val scope = rememberCoroutineScope()
     val viewModel: SettingsViewModel = koinViewModel()
     val appUpdateRepository: AppUpdateRepository = koinInject()
+    val dismissActionLabel = stringResource(R.string.action_dismiss)
+    val githubRepoUrl = stringResource(R.string.github_repo_url)
+    val newVersionAvailableMessage = stringResource(R.string.info_update_new_version_available_text)
+    val viewActionLabel = stringResource(R.string.action_view)
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    DisposableEffect(viewModel) {
+    DisposableEffect(viewModel, dismissActionLabel) {
         viewModel.errorMessageListener = { error ->
             scope.launch {
                 snackbarHostState.showSnackbar(
                     message = "Error: ${error.getMessage(context)}",
-                    actionLabel = context.getString(R.string.action_dismiss),
+                    actionLabel = dismissActionLabel,
                     duration = SnackbarDuration.Long
                 )
             }
@@ -860,7 +866,7 @@ private fun SettingsDestination(navController: NavHostController) {
         onNavigateToGitHub = {
             try {
                 context.startActivity(
-                    Intent(Intent.ACTION_VIEW, Uri.parse(context.getString(R.string.github_repo_url)))
+                    Intent(Intent.ACTION_VIEW, Uri.parse(githubRepoUrl))
                 )
             } catch (e: Exception) {
                 context.logE("Failed to open GitHub URL.", e)
@@ -926,13 +932,10 @@ private fun SettingsDestination(navController: NavHostController) {
                     is UpdateCheckResult.NewVersion -> {
                         val release = result.release
                         Notifications.showNewVersion(context, release)
-                        val message = context.getString(
-                            R.string.info_update_new_version_available_text,
-                            release.version
-                        )
+                        val message = newVersionAvailableMessage.format(release.version)
                         val snackResult = snackbarHostState.showSnackbar(
                             message = message,
-                            actionLabel = context.getString(R.string.action_view),
+                            actionLabel = viewActionLabel,
                             duration = SnackbarDuration.Long
                         )
                         if (snackResult == SnackbarResult.ActionPerformed) {

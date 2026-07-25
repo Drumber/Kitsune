@@ -99,23 +99,34 @@ fun NavGraphBuilder.detailsGraph(navController: NavHostController) {
         val snackbarHostState = remember { SnackbarHostState() }
         val scope = rememberCoroutineScope()
         val context = LocalContext.current
+        val libraryUpdateNotFoundMessage = stringResource(R.string.error_library_update_not_found)
+        val libraryUpdateFailedMessage = stringResource(R.string.error_library_update_failed)
+        val libraryAddFailedMessage = stringResource(R.string.error_library_add_failed)
+        val libraryDeleteFailedMessage = stringResource(R.string.error_library_delete_failed)
+        val errorSomethingWrongMessage = stringResource(R.string.error_something_wrong)
+        val logInRequiredMessage = stringResource(R.string.info_log_in_required)
+        val noInformation = stringResource(R.string.no_information)
 
         // Library-change results → snackbar
-        LaunchedEffect(Unit) {
+        LaunchedEffect(
+            libraryUpdateNotFoundMessage,
+            libraryUpdateFailedMessage,
+            libraryAddFailedMessage,
+            libraryDeleteFailedMessage
+        ) {
             viewModel.libraryChangeResultFlow.collect { result ->
-                val msgRes = when (result) {
+                val message = when (result) {
                     is LibraryChangeResult.LibraryUpdateResult -> when (val r = result.result) {
                         is LibraryEntryUpdateResult.Failure -> when (r.reason) {
-                            LibraryEntryUpdateFailureReason.NotFound ->
-                                R.string.error_library_update_not_found
-                            else -> R.string.error_library_update_failed
+                            LibraryEntryUpdateFailureReason.NotFound -> libraryUpdateNotFoundMessage
+                            else -> libraryUpdateFailedMessage
                         }
                         else -> null
                     }
-                    LibraryChangeResult.AddNewLibraryEntryFailed -> R.string.error_library_add_failed
-                    LibraryChangeResult.DeleteLibraryEntryFailed -> R.string.error_library_delete_failed
+                    LibraryChangeResult.AddNewLibraryEntryFailed -> libraryAddFailedMessage
+                    LibraryChangeResult.DeleteLibraryEntryFailed -> libraryDeleteFailedMessage
                 }
-                if (msgRes != null) snackbarHostState.showSnackbar(context.getString(msgRes))
+                if (message != null) snackbarHostState.showSnackbar(message)
             }
         }
 
@@ -148,7 +159,7 @@ fun NavGraphBuilder.detailsGraph(navController: NavHostController) {
                         context.startActivity(shareIntent)
                     } else {
                         scope.launch {
-                            snackbarHostState.showSnackbar(context.getString(R.string.error_something_wrong))
+                            snackbarHostState.showSnackbar(errorSomethingWrongMessage)
                         }
                     }
                 },
@@ -157,7 +168,7 @@ fun NavGraphBuilder.detailsGraph(navController: NavHostController) {
                         viewModel.toggleFavorite()
                     } else {
                         scope.launch {
-                            snackbarHostState.showSnackbar(context.getString(R.string.info_log_in_required))
+                            snackbarHostState.showSnackbar(logInRequiredMessage)
                         }
                     }
                 },
@@ -170,7 +181,7 @@ fun NavGraphBuilder.detailsGraph(navController: NavHostController) {
                         showManageLibrary = true
                     } else {
                         scope.launch {
-                            snackbarHostState.showSnackbar(context.getString(R.string.info_log_in_required))
+                            snackbarHostState.showSnackbar(logInRequiredMessage)
                         }
                     }
                 },
@@ -200,7 +211,7 @@ fun NavGraphBuilder.detailsGraph(navController: NavHostController) {
                 },
                 onNavigateToCategory = { category ->
                     val slug = category.slug
-                    val title = category.title ?: context.getString(R.string.no_information)
+                    val title = category.title ?: noInformation
                     if (slug != null) {
                         val mediaType = if (media is Anime) MediaType.Anime else MediaType.Manga
                         val selector = MediaSelector(
@@ -309,17 +320,17 @@ fun NavGraphBuilder.detailsGraph(navController: NavHostController) {
         val items = viewModel.dataSource.collectAsLazyPagingItems()
         val libraryEntry by viewModel.libraryEntryWrapper.collectAsStateWithLifecycle()
         val snackbarHostState = remember { SnackbarHostState() }
-        val context = LocalContext.current
+        val libraryUpdateNotFoundMessage = stringResource(R.string.error_library_update_not_found)
+        val libraryUpdateFailedMessage = stringResource(R.string.error_library_update_failed)
 
-        LaunchedEffect(Unit) {
+        LaunchedEffect(libraryUpdateNotFoundMessage, libraryUpdateFailedMessage) {
             viewModel.libraryUpdateResultFlow.collect { result ->
                 if (result is LibraryEntryUpdateResult.Failure) {
-                    val msgRes = when (result.reason) {
-                        LibraryEntryUpdateFailureReason.NotFound ->
-                            R.string.error_library_update_not_found
-                        else -> R.string.error_library_update_failed
+                    val message = when (result.reason) {
+                        LibraryEntryUpdateFailureReason.NotFound -> libraryUpdateNotFoundMessage
+                        else -> libraryUpdateFailedMessage
                     }
-                    snackbarHostState.showSnackbar(context.getString(msgRes))
+                    snackbarHostState.showSnackbar(message)
                 }
             }
         }

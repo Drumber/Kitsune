@@ -88,9 +88,10 @@ fun SetupPageAdapter(
     }
 
     val titleLanguages = LocalTitleLanguagePreference.entries.map { it.name }
-    val selectedTitleLanguageIndex by KitsunePref.getTitleLanguageAsFlow()
-        .map { it.ordinal }
-        .collectAsState(KitsunePref.titles.ordinal)
+    val selectedTitleLanguageFlow = remember {
+        KitsunePref.getTitleLanguageAsFlow().map { it.ordinal }
+    }
+    val selectedTitleLanguageIndex by selectedTitleLanguageFlow.collectAsState(KitsunePref.titles.ordinal)
     val selectTitleLanguage = { index: Int ->
         KitsunePref.titles = LocalTitleLanguagePreference.entries[index]
     }

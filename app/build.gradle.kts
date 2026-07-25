@@ -175,11 +175,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
-    // SwipeRefresh layout
-    implementation(libs.androidx.swiperefreshlayout)
-
     // Navigation
-    implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.fragment.ktx)
 
     // Preference
@@ -267,9 +263,6 @@ dependencies {
 
     // TreeView
     implementation(libs.bmelnychuk.treeview)
-
-    // Expandable text view
-    implementation(libs.blogc.expandabletextview)
 
     // MPAndroidCharts
     implementation(libs.philjay.mpandroidchart)

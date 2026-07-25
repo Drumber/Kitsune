@@ -24,7 +24,6 @@ coreSplashScreen = "1.0.1"
 dataFaker = "2.0.1"
 detekt = "1.23.8"
 espressoCore = "3.7.0"
-expandableTextView = "1.0.5"
 glide = "5.0.9"
 glide-compose = "1.0.0-beta10"
 glideTransformations = "4.3.0"
@@ -52,7 +51,6 @@ preferenceKtx = "1.2.1"
 retrofit = "3.0.0"
 robolectric = "4.16.1"
 screengrab = "2.1.1"
-swiperefreshlayout = "1.2.0"
 testRules = "1.7.0"
 treeView = "1.2.9"
 turbine = "1.2.1"
@@ -92,7 +90,6 @@ androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-ru
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidxNavigation" }
-androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidxNavigation" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidxPaging" }
 androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "androidxPaging" }
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
@@ -101,12 +98,10 @@ androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx
 androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "androidxRoom" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidxRoom" }
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "androidxSecurityCrypto" }
-androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "testRules" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "androidxViewPager2" }
 androidx-workmanager = { module = "androidx.work:work-runtime-ktx", version.ref = "androidxWorkManager" }
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
-blogc-expandabletextview = { module = "at.blogc:expandabletextview", version.ref = "expandableTextView" }
 bmelnychuk-treeview = { module = "com.github.bmelnychuk:atv", version.ref = "treeView" }
 bumptech-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 bumptech-glide-compose = { module = "com.github.bumptech.glide:compose", version.ref = "glide-compose" }
