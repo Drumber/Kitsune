@@ -22,8 +22,7 @@
     <fragment
         android:id="@+id/appLogsFragment"
         android:name="io.github.drumber.kitsune.ui.settings.AppLogsFragment"
-        android:label="fragment_app_logs"
-        tools:layout="@layout/fragment_app_logs" />
+        android:label="fragment_app_logs" />
     <fragment
         android:id="@+id/osLibrariesFragment"
         android:name="io.github.drumber.kitsune.ui.settings.OSLibrariesFragment"

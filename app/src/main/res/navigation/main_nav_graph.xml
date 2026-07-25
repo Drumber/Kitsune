@@ -8,8 +8,7 @@
     <fragment
         android:id="@+id/main_fragment"
         android:name="io.github.drumber.kitsune.ui.main.MainFragment"
-        android:label="@string/nav_home"
-        tools:layout="@layout/fragment_main" >
+        android:label="@string/nav_home" >
         <action
             android:id="@+id/action_main_fragment_to_detailsFragment"
             app:destination="@id/details_fragment"
@@ -25,8 +24,7 @@
     <fragment
         android:id="@+id/search_fragment"
         android:name="io.github.drumber.kitsune.ui.search.SearchFragment"
-        android:label="@string/nav_search"
-        tools:layout="@layout/fragment_search" >
+        android:label="@string/nav_search" >
         <argument
             android:name="focusSearch"
             android:defaultValue="false"
@@ -50,8 +48,7 @@
     <fragment
         android:id="@+id/profile_fragment"
         android:name="io.github.drumber.kitsune.ui.profile.MyProfileFragment"
-        android:label="@string/nav_profile"
-        tools:layout="@layout/fragment_profile" >
+        android:label="@string/nav_profile" >
         <action
             android:id="@+id/action_profile_fragment_to_details_fragment"
             app:destination="@id/details_fragment"
@@ -73,14 +70,12 @@
     <fragment
         android:id="@+id/feed_fragment"
         android:name="io.github.drumber.kitsune.ui.feed.FeedFragment"
-        android:label="@string/nav_feed"
-        tools:layout="@layout/fragment_feed" />
+        android:label="@string/nav_feed" />
 
     <fragment
         android:id="@+id/notifications_fragment"
         android:name="io.github.drumber.kitsune.ui.notifications.NotificationsFragment"
-        android:label="@string/notifications_title"
-        tools:layout="@layout/fragment_notifications" />
+        android:label="@string/notifications_title" />
 
     <action
         android:id="@+id/action_global_notifications_fragment"
@@ -150,8 +145,7 @@
     <fragment
         android:id="@+id/media_list_fragment"
         android:name="io.github.drumber.kitsune.ui.medialist.MediaListFragment"
-        android:label="fragment_media_list"
-        tools:layout="@layout/fragment_media_list">
+        android:label="fragment_media_list">
         <action
             android:id="@+id/action_mediaListFragment_to_details_fragment"
             app:destination="@id/details_fragment"
@@ -166,8 +160,7 @@
     <fragment
         android:id="@+id/library_fragment"
         android:name="io.github.drumber.kitsune.ui.library.LibraryFragment"
-        android:label="@string/nav_library"
-        tools:layout="@layout/fragment_library">
+        android:label="@string/nav_library">
         <action
             android:id="@+id/action_library_fragment_to_details_fragment"
             app:destination="@id/details_fragment"
@@ -229,8 +222,7 @@
     <activity
         android:id="@+id/photo_view_activity"
         android:name="io.github.drumber.kitsune.ui.photoview.PhotoViewActivity"
-        android:label="activity_photo_view"
-        tools:layout="@layout/activity_photo_view" >
+        android:label="activity_photo_view" >
         <argument
             android:name="imageUrl"
             app:argType="string" />
@@ -316,8 +308,7 @@
     <fragment
         android:id="@+id/webViewFragment"
         android:name="io.github.drumber.kitsune.ui.webview.WebViewFragment"
-        android:label="fragment_web_view"
-        tools:layout="@layout/fragment_web_view" >
+        android:label="fragment_web_view" >
         <argument
             android:name="url"
             app:argType="string" />
@@ -326,8 +317,7 @@
     <fragment
         android:id="@+id/post_detail_fragment"
         android:name="io.github.drumber.kitsune.ui.postdetail.PostDetailFragment"
-        android:label="PostDetailFragment"
-        tools:layout="@layout/fragment_post_detail" >
+        android:label="PostDetailFragment" >
         <argument
             android:name="post"
             app:argType="io.github.drumber.kitsune.data.presentation.model.feed.Post" />
@@ -338,8 +328,7 @@
     <fragment
         android:id="@+id/replies_fragment"
         android:name="io.github.drumber.kitsune.ui.replies.RepliesFragment"
-        android:label="RepliesFragment"
-        tools:layout="@layout/fragment_replies" >
+        android:label="RepliesFragment" >
         <argument
             android:name="parentCommentId"
             app:argType="string" />
@@ -353,8 +342,7 @@
     <fragment
         android:id="@+id/reaction_detail_fragment"
         android:name="io.github.drumber.kitsune.ui.reactiondetail.ReactionDetailFragment"
-        android:label="ReactionDetailFragment"
-        tools:layout="@layout/fragment_reaction_detail" >
+        android:label="ReactionDetailFragment" >
         <argument
             android:name="reactionId"
             app:argType="string" />
@@ -388,8 +376,7 @@
     <fragment
         android:id="@+id/user_profile_fragment"
         android:name="io.github.drumber.kitsune.ui.profile.UserProfileFragment"
-        android:label="UserProfileFragment"
-        tools:layout="@layout/fragment_profile" >
+        android:label="UserProfileFragment" >
         <argument
             android:name="userId"
             app:argType="string" />
@@ -405,8 +392,7 @@
     <fragment
         android:id="@+id/follow_list_fragment"
         android:name="io.github.drumber.kitsune.ui.profile.follow.FollowListFragment"
-        android:label="FollowListFragment"
-        tools:layout="@layout/fragment_follow_list" >
+        android:label="FollowListFragment" >
         <argument
             android:name="userId"
             app:argType="string" />
@@ -428,8 +414,7 @@
     <fragment
         android:id="@+id/create_post_fragment"
         android:name="io.github.drumber.kitsune.ui.createpost.CreatePostFragment"
-        android:label="CreatePostFragment"
-        tools:layout="@layout/fragment_create_post" >
+        android:label="CreatePostFragment" >
         <argument
             android:name="editPost"
             app:argType="io.github.drumber.kitsune.data.presentation.model.feed.Post"
