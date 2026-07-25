@@ -1,10 +1,14 @@
 package io.github.drumber.kitsune.ui.profile.editprofile
 
+import android.content.Context
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,9 +16,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -27,27 +35,46 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.InputChipDefaults
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.algolia.instantsearch.core.connection.ConnectionHandler
+import com.algolia.instantsearch.core.hits.HitsView
+import com.algolia.instantsearch.core.hits.connectHitsView
+import com.algolia.instantsearch.searchbox.connectView
+import com.algolia.search.helper.deserialize
+import com.algolia.search.model.response.ResponseSearch
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toCharacterSearchResult
+import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
+import io.github.drumber.kitsune.data.presentation.model.character.CharacterSearchResult
+import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaCharacterSearchResult
 import io.github.drumber.kitsune.ui.component.compose.media.Avatar
+import io.github.drumber.kitsune.ui.search.SearchBoxViewCompose
 import io.github.drumber.kitsune.util.DataUtil
+import io.github.drumber.kitsune.util.fixImageUrl
 import io.github.drumber.kitsune.util.parseDate
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
 
@@ -61,8 +88,7 @@ fun EditProfileScreen(
     onBirthdayClick: (currentDateMs: Long) -> Unit,
     onAddProfileLink: () -> Unit,
     onEditProfileLink: (ProfileLinkEntry) -> Unit,
-    onSaveClick: () -> Unit,
-    onWaifuCharacterSearchClick: () -> Unit
+    onSaveClick: () -> Unit
 ) {
     val profileState by viewModel.profileStateFlow.collectAsStateWithLifecycle()
     val profileImageState by viewModel.profileImageStateFlow.collectAsStateWithLifecycle()
@@ -70,6 +96,48 @@ fun EditProfileScreen(
     val canUpdate by viewModel.canUpdateProfileFlow.collectAsStateWithLifecycle(initialValue = false)
     val loadingState by viewModel.loadingStateFlow.collectAsStateWithLifecycle()
     val isLoading = loadingState is LoadingState.Loading
+
+    // Character search state and Algolia wiring
+    var characterSearchVisible by remember { mutableStateOf(false) }
+    val searchBoxView = remember { SearchBoxViewCompose() }
+    val characterSearchResultsState = remember { mutableStateOf<List<CharacterSearchResult>>(emptyList()) }
+    val connectionHandler = remember { ConnectionHandler() }
+    val characterSearchQuery by searchBoxView.queryFlow.collectAsStateWithLifecycle(initialValue = "")
+
+    LaunchedEffect(Unit) {
+        viewModel.searchBoxConnectorFlow.collect { connector ->
+            connectionHandler.clear()
+            connectionHandler += connector.connectView(searchBoxView)
+            connectionHandler += connector.searcher.connectHitsView(
+                object : HitsView<CharacterSearchResult> {
+                    override fun setHits(hits: List<CharacterSearchResult>) {
+                        characterSearchResultsState.value = hits
+                    }
+                }
+            ) { response: ResponseSearch ->
+                response.hits.deserialize(AlgoliaCharacterSearchResult.serializer())
+                    .map { it.toCharacterSearchResult() }
+            }
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose { connectionHandler.clear() }
+    }
+
+    // Consume loading state changes: auto-dismiss on success, Toast on error
+    val context = LocalContext.current
+    LaunchedEffect(loadingState) {
+        when (val state = loadingState) {
+            is LoadingState.Success -> onDismiss()
+            is LoadingState.Error -> if (!state.isConsumed) {
+                state.isConsumed = true
+                val message = buildProfileUpdateErrorMessage(context, state.exception, viewModel)
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            }
+            else -> {}
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -96,7 +164,10 @@ fun EditProfileScreen(
                 onEditProfileLink = onEditProfileLink,
                 onSaveClick = onSaveClick,
                 onProfileStateChange = viewModel.acceptProfileChanges,
-                onWaifuCharacterSearchClick = onWaifuCharacterSearchClick,
+                onWaifuCharacterSearchClick = {
+                    characterSearchVisible = true
+                    viewModel.initSearchClient()
+                },
                 modifier = Modifier.padding(innerPadding)
             )
         }
@@ -104,6 +175,28 @@ fun EditProfileScreen(
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
+        }
+        // Full-screen character search overlay, drawn on top of the form
+        if (characterSearchVisible) {
+            BackHandler { characterSearchVisible = false }
+            CharacterSearchOverlay(
+                query = characterSearchQuery,
+                results = characterSearchResultsState.value,
+                onQueryChange = { query ->
+                    searchBoxView.notifyQueryChanged(query)
+                    if (query.isBlank()) {
+                        characterSearchResultsState.value = emptyList()
+                    }
+                },
+                onCharacterSelected = { character ->
+                    viewModel.acceptProfileChanges(
+                        viewModel.profileState.copy(character = character.toCharacter())
+                    )
+                    characterSearchVisible = false
+                },
+                onDismiss = { characterSearchVisible = false },
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }
@@ -142,6 +235,13 @@ private fun EditProfileForm(
             value = profileState.location,
             onValueChange = { onProfileStateChange(profileState.copy(location = it)) },
             label = { Text(stringResource(R.string.profile_data_location)) },
+            trailingIcon = {
+                if (profileState.location.isNotEmpty()) {
+                    IconButton(onClick = { onProfileStateChange(profileState.copy(location = "")) }) {
+                        Icon(Icons.Default.Close, contentDescription = null)
+                    }
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -355,7 +455,7 @@ private fun WaifuFields(
             value = displayWaifu,
             onValueChange = {},
             readOnly = true,
-            label = { Text(stringResource(R.string.profile_data_waifu)) },
+            label = { Text(stringResource(R.string.profile_waifu_or_husbando)) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = waifuExpanded) },
             modifier = Modifier.fillMaxWidth().menuAnchor()
         )
@@ -381,7 +481,10 @@ private fun WaifuFields(
             trailingIcon = {
                 if (characterName != null) {
                     IconButton(onClick = onClearCharacter) {
-                        Icon(Icons.Default.Close, contentDescription = null)
+                        Icon(
+                            painterResource(R.drawable.ic_heart_broken_24),
+                            contentDescription = null
+                        )
                     }
                 } else {
                     Icon(painterResource(R.drawable.ic_search_24), contentDescription = null)
@@ -430,4 +533,120 @@ private fun ProfileLinksSection(
             }
         )
     }
+}
+
+// ---------------------------------------------------------------------------
+// Character search overlay
+// ---------------------------------------------------------------------------
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+private fun CharacterSearchOverlay(
+    query: String,
+    results: List<CharacterSearchResult>,
+    onQueryChange: (String) -> Unit,
+    onCharacterSelected: (CharacterSearchResult) -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 4.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = onDismiss) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = null
+                    )
+                }
+                OutlinedTextField(
+                    value = query,
+                    onValueChange = onQueryChange,
+                    placeholder = { Text(stringResource(R.string.hint_search_characters)) },
+                    singleLine = true,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                items(results, key = { it.id }) { character ->
+                    CharacterSearchResultItem(
+                        character = character,
+                        onClick = { onCharacterSelected(character) }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+private fun CharacterSearchResultItem(
+    character: CharacterSearchResult,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    ListItem(
+        headlineContent = { Text(character.name.orEmpty()) },
+        supportingContent = if (!character.primaryMediaTitle.isNullOrBlank()) {
+            { Text(character.primaryMediaTitle) }
+        } else null,
+        leadingContent = {
+            GlideImage(
+                model = character.image?.originalOrDown()?.fixImageUrl(),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+            ) {
+                it.placeholder(R.drawable.character_placeholder)
+                    .error(R.drawable.character_placeholder)
+                    .circleCrop()
+            }
+        },
+        modifier = modifier.clickable(onClick = onClick)
+    )
+}
+
+// ---------------------------------------------------------------------------
+// Error message builder (used in LaunchedEffect for loading state)
+// ---------------------------------------------------------------------------
+
+private fun buildProfileUpdateErrorMessage(
+    context: Context,
+    exception: Exception,
+    viewModel: EditProfileViewModel
+): String = when (exception) {
+    is ProfileUpdateException.ProfileDataError -> when (exception.type) {
+        ProfileDataErrorType.UpdateProfile -> context.getString(R.string.error_user_update_failed)
+        ProfileDataErrorType.DeleteWaifu -> context.getString(R.string.error_user_delete_waifu_failed)
+    }
+    is ProfileUpdateException.ProfileImageError ->
+        context.getString(R.string.error_user_update_image_failed)
+    is ProfileUpdateException.ProfileLinkError -> {
+        val siteName = exception.profileLinkEntry.site.name
+            ?: viewModel.profileLinkSites
+                ?.find { it.id == exception.profileLinkEntry.site.id }?.name
+            ?: exception.profileLinkEntry.url
+        when (exception.operation) {
+            ProfileLinkOperation.Create -> context.getString(
+                R.string.error_user_create_profile_link_failed, siteName
+            )
+            ProfileLinkOperation.Update -> context.getString(
+                R.string.error_user_update_profile_link_failed, siteName
+            )
+            ProfileLinkOperation.Delete -> context.getString(
+                R.string.error_user_delete_profile_link_failed, siteName
+            )
+        }
+    }
+    else -> context.getString(R.string.error_user_update_failed)
 }

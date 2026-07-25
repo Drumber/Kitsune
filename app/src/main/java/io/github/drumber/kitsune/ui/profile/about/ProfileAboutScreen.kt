@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -59,6 +61,7 @@ fun ProfileAboutScreen(
     isRefreshing: Boolean,
     isInitialLoading: Boolean,
     followState: UserProfileUiState? = null,
+    lazyListState: LazyListState = rememberLazyListState(),
     onRefresh: () -> Unit,
     onFollowClick: () -> Unit = {},
     onFollowingClick: () -> Unit,
@@ -79,6 +82,7 @@ fun ProfileAboutScreen(
             user = user,
             isInitialLoading = isInitialLoading,
             followState = followState,
+            lazyListState = lazyListState,
             onFollowClick = onFollowClick,
             onFollowingClick = onFollowingClick,
             onFollowersClick = onFollowersClick,
@@ -95,6 +99,7 @@ private fun ProfileAboutContent(
     user: User,
     isInitialLoading: Boolean,
     followState: UserProfileUiState?,
+    lazyListState: LazyListState,
     onFollowClick: () -> Unit,
     onFollowingClick: () -> Unit,
     onFollowersClick: () -> Unit,
@@ -103,7 +108,7 @@ private fun ProfileAboutContent(
     onCharacterClick: (Character) -> Unit,
     onProfileLinkClick: (ProfileLink) -> Unit
 ) {
-    LazyColumn(contentPadding = PaddingValues(bottom = 16.dp)) {
+    LazyColumn(state = lazyListState, contentPadding = PaddingValues(bottom = 16.dp)) {
         if (!user.title.isNullOrBlank()) {
                 item(key = "title_badge") { UserTitleBadge(title = user.title!!) }
             }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.Search
@@ -26,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -43,6 +45,7 @@ import io.github.drumber.kitsune.ui.component.compose.list.KitsunePullToRefreshB
 import io.github.drumber.kitsune.ui.component.compose.list.KitsuneTopAppBar
 import io.github.drumber.kitsune.ui.component.compose.list.PagingColumn
 import io.github.drumber.kitsune.ui.component.compose.media.Avatar
+import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,9 +61,17 @@ fun GroupsScreen(
     onFollowingToggle: (Boolean) -> Unit,
     onCategorySelect: (String?) -> Unit,
     onGroupClick: (Group) -> Unit,
-    onNavigateUp: () -> Unit
+    onNavigateUp: () -> Unit,
+    scrollToTopEvents: Flow<Unit>? = null
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(scrollToTopEvents) {
+        scrollToTopEvents?.collect {
+            listState.animateScrollToItem(0)
+        }
+    }
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -101,6 +112,7 @@ fun GroupsScreen(
         ) {
             PagingColumn(
                 items = groups,
+                state = listState,
                 modifier = Modifier.fillMaxSize(),
                 key = { it.id }
             ) { group ->

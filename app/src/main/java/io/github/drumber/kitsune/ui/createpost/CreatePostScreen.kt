@@ -26,6 +26,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -42,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -57,6 +59,9 @@ fun CreatePostScreen(
     modifier: Modifier = Modifier,
     uiState: CreatePostViewModel.UiState,
     events: Flow<CreatePostViewModel.Event>,
+    /** Set to true to show a snackbar for image-encoding failures; reset via [onImageEncodingErrorShown]. */
+    imageEncodingError: Boolean = false,
+    onImageEncodingErrorShown: () -> Unit = {},
     onContentChange: (String) -> Unit,
     onSpoilerToggle: (Boolean) -> Unit,
     onNsfwToggle: (Boolean) -> Unit,
@@ -95,6 +100,13 @@ fun CreatePostScreen(
         }
     }
 
+    if (imageEncodingError) {
+        LaunchedEffect(imageEncodingError) {
+            snackbarHostState.showSnackbar(errorMsg)
+            onImageEncodingErrorShown()
+        }
+    }
+
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -112,21 +124,28 @@ fun CreatePostScreen(
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
-        CreatePostContent(
-            uiState = uiState,
-            onContentChange = onContentChange,
-            onSpoilerToggle = onSpoilerToggle,
-            onNsfwToggle = onNsfwToggle,
-            onTagMediaClick = onTagMediaClick,
-            onTagUnitClick = onTagUnitClick,
-            onClearMedia = onClearMedia,
-            onClearUnit = onClearUnit,
-            onAddImageClick = onAddImageClick,
-            onRemoveImage = onRemoveImage,
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-        )
+        ) {
+            if (uiState.isPublishing) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
+            CreatePostContent(
+                uiState = uiState,
+                onContentChange = onContentChange,
+                onSpoilerToggle = onSpoilerToggle,
+                onNsfwToggle = onNsfwToggle,
+                onTagMediaClick = onTagMediaClick,
+                onTagUnitClick = onTagUnitClick,
+                onClearMedia = onClearMedia,
+                onClearUnit = onClearUnit,
+                onAddImageClick = onAddImageClick,
+                onRemoveImage = onRemoveImage,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
     }
 }
 
@@ -202,6 +221,17 @@ private fun CreatePostContent(
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(8.dp))
+        SectionLabel(stringResource(R.string.label_post_options))
+        Spacer(Modifier.height(4.dp))
+        PostTogglesRow(
+            spoiler = uiState.spoiler,
+            nsfw = uiState.nsfw,
+            onSpoilerToggle = onSpoilerToggle,
+            onNsfwToggle = onNsfwToggle
+        )
+        Spacer(Modifier.height(12.dp))
+        SectionLabel(stringResource(R.string.label_add_tags))
+        Spacer(Modifier.height(4.dp))
         PostTagsSection(
             media = uiState.media,
             unit = uiState.unit,
@@ -217,17 +247,12 @@ private fun CreatePostContent(
             onAddImageClick = onAddImageClick,
             onRemoveImage = onRemoveImage
         )
-        Spacer(Modifier.height(8.dp))
-        PostTogglesRow(
-            spoiler = uiState.spoiler,
-            nsfw = uiState.nsfw,
-            onSpoilerToggle = onSpoilerToggle,
-            onNsfwToggle = onNsfwToggle
-        )
         if (uiState.content.isNotBlank()) {
             Spacer(Modifier.height(12.dp))
             HorizontalDivider()
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(8.dp))
+            SectionLabel(stringResource(R.string.label_preview))
+            Spacer(Modifier.height(4.dp))
             MarkdownText(
                 content = uiState.content,
                 isHtml = false,
@@ -238,6 +263,18 @@ private fun CreatePostContent(
 }
 
 @Composable
+private fun SectionLabel(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.titleSmall,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = modifier
+    )
+}
+
+private const val MAX_POST_LENGTH = 9000
+
+@Composable
 private fun PostTextInput(
     content: String,
     onContentChange: (String) -> Unit,
@@ -245,9 +282,16 @@ private fun PostTextInput(
 ) {
     OutlinedTextField(
         value = content,
-        onValueChange = onContentChange,
+        onValueChange = { if (it.length <= MAX_POST_LENGTH) onContentChange(it) },
         modifier = modifier.height(140.dp),
         placeholder = { Text(stringResource(R.string.hint_post_content)) },
+        supportingText = {
+            Text(
+                text = "${content.length}/$MAX_POST_LENGTH",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.End
+            )
+        },
         shape = MaterialTheme.shapes.medium
     )
 }

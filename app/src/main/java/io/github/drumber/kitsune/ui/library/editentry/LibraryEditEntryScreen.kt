@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -48,6 +49,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -60,6 +63,8 @@ import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.ui.component.compose.media.MediaCover
 import io.github.drumber.kitsune.ui.compose.collectAsStateWithLifecycle
 import io.github.drumber.kitsune.util.formatDate
+import io.github.drumber.kitsune.util.formatUtcDate
+import io.github.drumber.kitsune.util.getLocalCalendar
 import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.rating.RatingSystemUtil.formatRatingTwenty
 import org.koin.androidx.compose.koinViewModel
@@ -139,6 +144,7 @@ private fun LibraryEditTopBar(
 
     if (showRemoveDialog) {
         RemoveEntryConfirmDialog(
+            mediaTitle = title,
             onConfirm = { showRemoveDialog = false; onRemove() },
             onDismiss = { showRemoveDialog = false }
         )
@@ -163,10 +169,15 @@ private fun LibraryEditTopBar(
 }
 
 @Composable
-private fun RemoveEntryConfirmDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
+private fun RemoveEntryConfirmDialog(
+    mediaTitle: String,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.dialog_remove_from_library_title)) },
+        text = { Text(stringResource(R.string.dialog_remove_from_library_msg_compose, mediaTitle)) },
         confirmButton = {
             TextButton(onClick = onConfirm) { Text(stringResource(R.string.action_remove)) }
         },
@@ -243,10 +254,13 @@ private fun LibraryEditMediaHeader(
     entry: LibraryEntryWithModification,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         MediaCover(
             imageUrl = entry.media?.posterImageUrl,
-            modifier = Modifier.size(width = 57.dp, height = 80.dp)
+            modifier = Modifier
+                .size(width = 57.dp, height = 80.dp)
+                .clip(RoundedCornerShape(4.dp))
         )
         Column(modifier = Modifier.weight(1f)) {
             Text(
@@ -255,8 +269,11 @@ private fun LibraryEditMediaHeader(
                 maxLines = 2
             )
             Spacer(Modifier.height(4.dp))
+            val year = entry.media?.publishingYearText(context) ?: ""
+            val subtype = entry.media?.subtypeFormatted ?: ""
             Text(
-                text = entry.media?.subtypeFormatted ?: "",
+                text = if (year.isNotBlank() && subtype.isNotBlank()) "$year • $subtype"
+                       else (year + subtype),
                 style = MaterialTheme.typography.bodyMedium
             )
         }
@@ -306,7 +323,12 @@ private fun LibraryEditProgressField(
         onValueChange = { newProgress ->
             if (newProgress == mediaEpCount && mediaEpCount != null) {
                 viewModel.updateLibraryEntry { mod ->
-                    mod.copy(progress = newProgress, status = LibraryStatus.Completed)
+                    mod.copy(
+                        progress = newProgress,
+                        status = LibraryStatus.Completed,
+                        finishedAt = mod.finishedAt?.takeIf { it.isNotEmpty() }
+                            ?: getLocalCalendar().formatUtcDate()
+                    )
                 }
             } else {
                 viewModel.updateLibraryEntry { mod -> mod.copy(progress = newProgress) }

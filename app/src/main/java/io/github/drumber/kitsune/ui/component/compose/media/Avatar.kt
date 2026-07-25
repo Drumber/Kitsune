@@ -25,8 +25,7 @@ import io.github.drumber.kitsune.ui.theme.KitsuneTheme
  * A circular avatar image backed by GlideImage.
  *
  * Replaces all usages of `de.hdodenhof:circleimageview` (`CircleImageView`) across the app
- * (e.g. `fragment_edit_profile.xml`, `item_character_search_result.xml`) and the existing
- * `GlideImage + clip(CircleShape)` pattern already used in the Compose-based [LoginPage].
+ * and the `GlideImage + clip(CircleShape)` pattern already used in the Compose-based [LoginPage].
  *
  * @param imageUrl URL of the avatar to load; null or blank shows a person icon placeholder.
  * @param size     Diameter of the circle.

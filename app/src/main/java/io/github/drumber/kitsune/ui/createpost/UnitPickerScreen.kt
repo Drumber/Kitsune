@@ -15,11 +15,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.ui.component.compose.list.PagingColumn
 
@@ -30,16 +32,23 @@ fun UnitPickerScreen(
     posterUrl: String?,
     onUnitClick: (MediaUnit) -> Unit
 ) {
-    PagingColumn(
-        items = units,
-        modifier = modifier.fillMaxSize(),
-        key = { it.id ?: it.hashCode().toString() }
-    ) { unit ->
-        UnitRow(
-            unit = unit,
-            posterUrl = posterUrl,
-            onClick = { unit?.let(onUnitClick) }
+    Column(modifier = modifier.fillMaxSize()) {
+        Text(
+            text = stringResource(R.string.title_tag_unit),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         )
+        PagingColumn(
+            items = units,
+            modifier = Modifier.fillMaxSize(),
+            key = { it.id ?: it.hashCode().toString() }
+        ) { unit ->
+            UnitRow(
+                unit = unit,
+                posterUrl = posterUrl,
+                onClick = { unit?.let(onUnitClick) }
+            )
+        }
     }
 }
 

@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -56,6 +58,7 @@ import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 fun <T : Any> PagingColumn(
     items: LazyPagingItems<T>,
     modifier: Modifier = Modifier,
+    state: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     key: ((item: T) -> Any)? = null,
@@ -82,6 +85,7 @@ fun <T : Any> PagingColumn(
 
         else -> LazyColumn(
             modifier = modifier,
+            state = state,
             contentPadding = contentPadding,
             verticalArrangement = verticalArrangement
         ) {

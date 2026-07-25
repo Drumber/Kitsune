@@ -1,232 +1,98 @@
 package io.github.drumber.kitsune.ui.groupdetail
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.core.view.isVisible
+import android.view.ViewGroup
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.fragment.compose.AndroidFragment
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.google.android.material.tabs.TabLayout
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.data.presentation.model.group.Group
-import io.github.drumber.kitsune.databinding.FragmentGroupDetailBinding
+import io.github.drumber.kitsune.ui.compose.composeView
 import io.github.drumber.kitsune.ui.feed.FeedListFragment
+import io.github.drumber.kitsune.ui.feed.FeedType
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
-import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.showSnackbar
-import io.github.drumber.kitsune.util.ui.viewBinding
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
+class GroupDetailFragment : Fragment() {
 
     private val args: GroupDetailFragmentArgs by navArgs()
-
-    private val binding by viewBinding(FragmentGroupDetailBinding::bind)
 
     private val viewModel: GroupDetailViewModel by viewModel {
         parametersOf(args.groupId)
     }
 
-    private var isPostsTab = false
-    private var canPost = false
-    private var hasSelectedDefaultTab = false
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        // Don't override the tab the user already had selected before a config change.
-        if (savedInstanceState != null) {
-            hasSelectedDefaultTab = true
-        }
-
-        binding.collapsingToolbar.initWindowInsetsListener(consume = false)
-        binding.toolbar.initWindowInsetsListener(consume = false)
-        binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-        binding.nestedScrollView.initPaddingWindowInsetsListener(
-            left = true,
-            right = true,
-            bottom = true,
-            consume = false
-        )
-
-        binding.btnJoin.setOnClickListener {
-            viewModel.toggleMembership()
-        }
-
-        binding.ivCover.setOnClickListener {
-            viewModel.group.value?.let { group ->
-                val groupName = group.name
-                group.coverImageUrl?.let { imageUrl ->
-                    openPhotoViewActivity(imageUrl, groupName, sharedElement = binding.ivCover)
-                }
-            }
-        }
-
-        initGroupFeed()
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.isLoading.collectLatest { loading ->
-                    binding.progressBar.isVisible = loading && viewModel.group.value == null
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.group.collectLatest { group ->
-                    group?.let { bindGroup(it) }
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.membershipState.collectLatest { state ->
-                    bindMembershipState(state)
-                    canPost = state.isVisible
-                    updateFabVisibility()
-                    if (!hasSelectedDefaultTab && state.isMember) {
-                        hasSelectedDefaultTab = true
-                        binding.tabLayoutGroup.getTabAt(TAB_POSTS)?.select()
-                    }
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.events.collectLatest { event ->
-                    when (event) {
-                        GroupDetailViewModel.Event.LoginRequired ->
-                            showSnackbar(binding.root, R.string.group_login_required)
-
-                        GroupDetailViewModel.Event.JoinFailed ->
-                            showSnackbar(binding.root, R.string.group_join_failed)
-
-                        GroupDetailViewModel.Event.LeaveFailed ->
-                            showSnackbar(binding.root, R.string.group_leave_failed)
-                    }
-                }
-            }
-        }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = composeView {
+        GroupDetailContent()
     }
 
-    private fun initGroupFeed() {
-        binding.tabLayoutGroup.isVisible = true
+    @Composable
+    private fun GroupDetailContent() {
+        val group by viewModel.group.collectAsStateWithLifecycle()
+        val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+        val membershipState by viewModel.membershipState.collectAsStateWithLifecycle()
 
-        if (childFragmentManager.findFragmentById(R.id.feed_container) == null) {
-            childFragmentManager.beginTransaction()
-                .replace(
-                    R.id.feed_container,
-                    FeedListFragment.newGroupFeedInstance(args.groupId, R.id.group_detail_fragment)
+        GroupDetailScreen(
+            group = group,
+            isLoading = isLoading,
+            membershipState = membershipState,
+            events = viewModel.events,
+            isMemberDefault = membershipState.isMember,
+            onNavigateUp = { findNavController().navigateUp() },
+            onJoinLeave = { viewModel.toggleMembership() },
+            onOpenCover = {
+                group?.coverImageUrl?.let { url ->
+                    openPhotoViewActivity(url, group?.name)
+                }
+            },
+            onNavigateToCreatePost = {
+                val action = GroupDetailFragmentDirections.actionGlobalCreatePostFragment(
+                    targetGroupId = args.groupId,
+                    targetGroupName = viewModel.group.value?.name
                 )
-                .commit()
-        }
+                findNavController().navigateSafe(R.id.group_detail_fragment, action)
+            },
+            feedContent = { GroupFeedContent() }
+        )
+    }
 
-        binding.tabLayoutGroup.addOnTabSelectedListener(object :
-            TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                isPostsTab = tab.position == TAB_POSTS
-                binding.nestedScrollView.isVisible = !isPostsTab
-                binding.feedContainer.isVisible = isPostsTab
-                updateFabVisibility()
+    /**
+     * Embeds [FeedListFragment] inside the Compose tree using [AndroidFragment].
+     *
+     * [AndroidFragment] adds the child via [FragmentTransaction.add(ViewGroup, Fragment, String)]
+     * which sets `mInDynamicContainer = true`. This tells the Fragment system that the container
+     * is provided dynamically — it does not try to find the container by a static resource ID
+     * when restoring the fragment after back-stack navigation or a config change. Fragment
+     * instance state is saved via [rememberFragmentState] (backed by [rememberSaveable]) so it
+     * survives both back-stack-return and process death.
+     *
+     * The parent [GroupDetailContent] always keeps this composable in the tree (even when the
+     * About tab is selected) so the Fragment is not destroyed on tab switch.
+     */
+    @Composable
+    private fun GroupFeedContent() {
+        val groupId = args.groupId
+        AndroidFragment<FeedListFragment>(
+            modifier = Modifier.fillMaxSize(),
+            arguments = Bundle().apply {
+                putString(FeedListFragment.ARG_FEED_TYPE, FeedType.GROUP.name)
+                putString(FeedListFragment.ARG_GROUP_ID, groupId)
+                putInt(FeedListFragment.ARG_HOST_DEST_ID, R.id.group_detail_fragment)
             }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) = Unit
-            override fun onTabReselected(tab: TabLayout.Tab) = Unit
-        })
-
-        binding.fabPost.setOnClickListener {
-            val action = GroupDetailFragmentDirections.actionGlobalCreatePostFragment(
-                targetGroupId = args.groupId,
-                targetGroupName = viewModel.group.value?.name
-            )
-            findNavController().navigateSafe(R.id.group_detail_fragment, action)
-        }
-    }
-
-    private fun updateFabVisibility() {
-        binding.fabPost.isVisible = isPostsTab && canPost
-    }
-
-    private fun bindMembershipState(state: GroupDetailViewModel.MembershipState) {
-        binding.btnJoin.apply {
-            isVisible = state.isVisible
-            isEnabled = !state.isLoading
-            setText(
-                if (state.isMember) {
-                    R.string.group_action_leave
-                } else {
-                    R.string.group_action_join
-                }
-            )
-        }
-    }
-
-    private fun bindGroup(group: Group) {
-        val glide = Glide.with(this)
-
-        glide.load(group.coverImageUrl)
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .placeholder(R.drawable.cover_placeholder)
-            .into(binding.ivCover)
-
-        glide.load(group.avatarUrl)
-            .placeholder(R.drawable.ic_group_24)
-            .into(binding.ivAvatar)
-
-        binding.toolbar.title = group.name
-        binding.tvName.text = group.name
-
-        binding.tvTagline.apply {
-            val tagline = group.tagline?.takeUnless { it.isBlank() }
-            isVisible = tagline != null
-            text = tagline
-        }
-
-        binding.tvMembersCount.text = resources.getQuantityString(
-            R.plurals.group_members_count,
-            group.membersCount,
-            group.membersCount
         )
-
-        binding.chipCategory.apply {
-            val name = group.categoryName?.takeUnless { it.isBlank() }
-            isVisible = name != null
-            text = name
-        }
-
-        bindSection(
-            header = binding.tvAboutHeader,
-            content = binding.tvAbout,
-            text = group.about
-        )
-        bindSection(
-            header = binding.tvRulesHeader,
-            content = binding.tvRules,
-            text = group.rules
-        )
-    }
-
-    private fun bindSection(header: View, content: android.widget.TextView, text: String?) {
-        val value = text?.takeUnless { it.isBlank() }
-        header.isVisible = value != null
-        content.isVisible = value != null
-        content.text = value
-    }
-
-    companion object {
-        private const val TAB_POSTS = 1
     }
 }
+
+

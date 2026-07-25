@@ -38,13 +38,18 @@ fun MediaPickerScreen(
     onMediaClick: (Media) -> Unit
 ) {
     Column(modifier = modifier) {
+        Text(
+            text = stringResource(R.string.title_tag_media),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        )
         OutlinedTextField(
             value = searchQuery,
             onValueChange = onSearchQueryChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 8.dp),
-            placeholder = { Text(stringResource(R.string.groups_search_hint)) },
+                .padding(horizontal = 12.dp, vertical = 4.dp),
+            placeholder = { Text(stringResource(R.string.hint_search_media)) },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             singleLine = true,
             shape = MaterialTheme.shapes.large

@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -59,6 +61,7 @@ fun FeedListScreen(
     onEditClick: (Post) -> Unit,
     onDeleteClick: (Post) -> Unit,
     onAuthorClick: (String) -> Unit,
+    lazyListState: LazyListState = rememberLazyListState(),
     modifier: Modifier = Modifier
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -88,6 +91,7 @@ fun FeedListScreen(
                     revealedPosts = revealedPosts,
                     nsfwAllowed = nsfwAllowed,
                     currentUserId = currentUserId,
+                    lazyListState = lazyListState,
                     onPostClick = onPostClick,
                     onLikeClick = onLikeClick,
                     onRevealClick = onRevealClick,
@@ -128,6 +132,7 @@ private fun FeedPostColumn(
     revealedPosts: Set<String>,
     nsfwAllowed: Boolean,
     currentUserId: String?,
+    lazyListState: LazyListState,
     onPostClick: (Post) -> Unit,
     onLikeClick: (Post, Boolean) -> Unit,
     onRevealClick: (Post) -> Unit,
@@ -152,7 +157,7 @@ private fun FeedPostColumn(
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 PagingEmptyContent()
             }
-        else -> LazyColumn(modifier = Modifier.fillMaxSize()) {
+        else -> LazyColumn(state = lazyListState, modifier = Modifier.fillMaxSize()) {
             if (hasPinnedPost) {
                 item(key = "pinned_${pinnedPost!!.id}") {
                     PostCard(

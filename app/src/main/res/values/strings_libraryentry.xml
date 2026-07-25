@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Compose-friendly plain-text variant used in the Compose remove-entry AlertDialog
+         (the HTML version in strings.xml is for the View-based MaterialAlertDialogBuilder). -->
+    <string name="dialog_remove_from_library_msg_compose">%s will be removed from your library.</string>
+</resources>

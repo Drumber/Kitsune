@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.ui.groupdetail
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -40,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -143,7 +146,6 @@ fun GroupDetailScreen(
 }
 
 @Composable
-@Suppress("UnusedParameter")
 private fun GroupDetailContent(
     group: Group?,
     membershipState: GroupDetailViewModel.MembershipState,
@@ -155,11 +157,29 @@ private fun GroupDetailContent(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        GroupDetailHeader(group = group, membershipState = membershipState, onJoinLeave = onJoinLeave)
+        GroupDetailHeader(
+            group = group,
+            membershipState = membershipState,
+            onJoinLeave = onJoinLeave,
+            onOpenCover = onOpenCover
+        )
         GroupDetailTabs(selectedTab = selectedTab, onTabSelected = onTabSelected)
-        when (selectedTab) {
-            TAB_ABOUT -> GroupAboutTab(group = group, modifier = Modifier.fillMaxSize())
-            TAB_POSTS -> Box(modifier = Modifier.fillMaxSize()) { feedContent() }
+        // Both tab bodies share the remaining space. The feed container is kept permanently
+        // in the Compose tree (even when the About tab is selected) so the embedded child
+        // Fragment (FeedListFragment) is not destroyed on tab switch. When hidden it is
+        // constrained to 0×0 via requiredSize(0.dp); when active it fills all available space.
+        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+            if (selectedTab == TAB_ABOUT) {
+                GroupAboutTab(group = group, modifier = Modifier.fillMaxSize())
+            }
+            Box(
+                modifier = if (selectedTab == TAB_POSTS)
+                    Modifier.fillMaxSize()
+                else
+                    Modifier.requiredSize(0.dp)
+            ) {
+                feedContent()
+            }
         }
     }
 }
@@ -169,7 +189,8 @@ private fun GroupDetailContent(
 private fun GroupDetailHeader(
     group: Group?,
     membershipState: GroupDetailViewModel.MembershipState,
-    onJoinLeave: () -> Unit
+    onJoinLeave: () -> Unit,
+    onOpenCover: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Box(
@@ -181,7 +202,12 @@ private fun GroupDetailHeader(
                 model = group?.coverImageUrl,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable(
+                        enabled = group?.coverImageUrl != null,
+                        onClick = onOpenCover
+                    )
             ) { it.placeholder(R.drawable.cover_placeholder) }
             Avatar(
                 imageUrl = group?.avatarUrl,
@@ -219,6 +245,12 @@ private fun GroupDetailInfo(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
+        val membersCount = group?.membersCount ?: 0
+        Text(
+            text = pluralStringResource(R.plurals.group_members_count, membersCount, membersCount),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
         Spacer(Modifier.height(4.dp))
         val categoryName = group?.categoryName?.takeUnless { it.isBlank() }
         if (categoryName != null) {

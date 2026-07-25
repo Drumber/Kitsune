@@ -52,6 +52,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -230,6 +232,14 @@ private fun LibrarySearchField(
     onQueryChange: (String) -> Unit,
     onClose: () -> Unit
 ) {
+    val focusRequester = remember { FocusRequester() }
+
+    // Only steal focus when the field is opened empty, so a query restored across
+    // configuration change or process death doesn't re-open the keyboard.
+    LaunchedEffect(Unit) {
+        if (query.isEmpty()) focusRequester.requestFocus()
+    }
+
     TextField(
         value = query,
         onValueChange = onQueryChange,
@@ -246,7 +256,9 @@ private fun LibrarySearchField(
                 Icon(Icons.Default.Remove, stringResource(R.string.action_close))
             }
         },
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester)
     )
 }
 

@@ -11,7 +11,10 @@ import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
@@ -42,6 +45,10 @@ class GroupsViewModel(
     private val _isFollowingEnabled = MutableStateFlow(isLoggedIn)
     val isFollowingEnabled = _isFollowingEnabled.asStateFlow()
 
+    /** Raw text of the search field, kept here so it survives configuration changes. */
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery = _searchQuery.asStateFlow()
+
     val dataSource: Flow<PagingData<Group>> = groupsQuery.flatMapLatest { q ->
         val userId = getLocalUserId()
         if (q.following && userId != null) {
@@ -56,6 +63,7 @@ class GroupsViewModel(
     }
 
     fun setSearchQuery(query: String?) {
+        _searchQuery.value = query.orEmpty()
         val trimmed = query?.trim()?.takeUnless { it.isBlank() }
         if (groupsQuery.value.query != trimmed) {
             groupsQuery.value = groupsQuery.value.copy(query = trimmed)
@@ -74,6 +82,13 @@ class GroupsViewModel(
             _isFollowingEnabled.value = enabled
             groupsQuery.value = groupsQuery.value.copy(following = enabled)
         }
+    }
+
+    private val _scrollToTopRequested = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val scrollToTopRequested: SharedFlow<Unit> = _scrollToTopRequested.asSharedFlow()
+
+    fun requestScrollToTop() {
+        _scrollToTopRequested.tryEmit(Unit)
     }
 
     private fun loadCategories() {

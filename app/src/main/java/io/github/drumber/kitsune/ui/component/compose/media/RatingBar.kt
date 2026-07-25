@@ -31,7 +31,7 @@ import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 
 /**
  * A star-rating bar that supports full and half stars, matching the behaviour of
- * `me.zhanghai.android.materialratingbar.MaterialRatingBar` used in `sheet_library_rating.xml`.
+ * the former `me.zhanghai.android.materialratingbar.MaterialRatingBar` (replaced by [RatingScreen]).
  *
  * The default configuration mirrors the app's rating sheet:
  *  - 5 stars (full integer range = [0, numStars])

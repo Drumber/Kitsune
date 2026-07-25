@@ -365,8 +365,7 @@
     <fragment
         android:id="@+id/groups_fragment"
         android:name="io.github.drumber.kitsune.ui.groups.GroupsFragment"
-        android:label="GroupsFragment"
-        tools:layout="@layout/fragment_groups" >
+        android:label="GroupsFragment" >
         <action
             android:id="@+id/action_groups_fragment_to_group_detail_fragment"
             app:destination="@id/group_detail_fragment"
@@ -381,8 +380,7 @@
     <fragment
         android:id="@+id/group_detail_fragment"
         android:name="io.github.drumber.kitsune.ui.groupdetail.GroupDetailFragment"
-        android:label="GroupDetailFragment"
-        tools:layout="@layout/fragment_group_detail" >
+        android:label="GroupDetailFragment" >
         <argument
             android:name="groupId"
             app:argType="string" />
