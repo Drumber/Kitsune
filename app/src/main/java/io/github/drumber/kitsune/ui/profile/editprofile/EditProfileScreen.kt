@@ -64,8 +64,7 @@ import com.algolia.instantsearch.core.hits.connectHitsView
 import com.algolia.instantsearch.searchbox.connectView
 import com.algolia.search.helper.deserialize
 import com.algolia.search.model.response.ResponseSearch
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil3.compose.AsyncImage
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toCharacterSearchResult
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
@@ -77,6 +76,8 @@ import io.github.drumber.kitsune.util.DataUtil
 import io.github.drumber.kitsune.util.fixImageUrl
 import io.github.drumber.kitsune.util.parseDate
 import io.github.drumber.kitsune.util.ui.getProfileSiteLogoResourceId
+import java.util.Calendar
+import java.util.TimeZone
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -201,7 +202,7 @@ fun EditProfileScreen(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalGlideComposeApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun EditProfileForm(
     profileState: ProfileState,
@@ -292,7 +293,6 @@ private fun EditProfileForm(
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun CoverAndAvatarSection(
     profileImageState: ProfileImageState,
@@ -309,14 +309,14 @@ private fun CoverAndAvatarSection(
             .aspectRatio(3f)
             .clickable(onClick = onCoverClick)
     ) {
-        GlideImage(
+        AsyncImage(
             model = coverImage,
             contentDescription = stringResource(R.string.profile_cover_image_description),
             contentScale = ContentScale.Crop,
+            placeholder = painterResource(R.drawable.cover_placeholder),
+            error = painterResource(R.drawable.cover_placeholder),
             modifier = Modifier.fillMaxSize()
-        ) {
-            it.placeholder(R.drawable.cover_placeholder).error(R.drawable.cover_placeholder)
-        }
+        )
         Avatar(
             imageUrl = avatarImage?.toString(),
             size = 72.dp,
@@ -350,8 +350,7 @@ private fun BirthdayField(
                     modifier = Modifier.clickable {
                         onBirthdayClick(
                             birthday.parseDate()?.time
-                                ?: com.google.android.material.datepicker.MaterialDatePicker
-                                    .todayInUtcMilliseconds()
+                                ?: todayUtcMillis()
                         )
                     }
                 )
@@ -366,12 +365,19 @@ private fun BirthdayField(
             .clickable {
                 onBirthdayClick(
                     birthday.parseDate()?.time
-                        ?: com.google.android.material.datepicker.MaterialDatePicker
-                            .todayInUtcMilliseconds()
+                        ?: todayUtcMillis()
                 )
             }
     )
 }
+
+private fun todayUtcMillis(): Long =
+    Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }.timeInMillis
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -539,7 +545,6 @@ private fun ProfileLinksSection(
 // Character search overlay
 // ---------------------------------------------------------------------------
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun CharacterSearchOverlay(
     query: String,
@@ -586,7 +591,6 @@ private fun CharacterSearchOverlay(
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun CharacterSearchResultItem(
     character: CharacterSearchResult,
@@ -599,18 +603,16 @@ private fun CharacterSearchResultItem(
             { Text(character.primaryMediaTitle) }
         } else null,
         leadingContent = {
-            GlideImage(
+            AsyncImage(
                 model = character.image?.originalOrDown()?.fixImageUrl(),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.character_placeholder),
+                error = painterResource(R.drawable.character_placeholder),
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
-            ) {
-                it.placeholder(R.drawable.character_placeholder)
-                    .error(R.drawable.character_placeholder)
-                    .circleCrop()
-            }
+            )
         },
         modifier = modifier.clickable(onClick = onClick)
     )

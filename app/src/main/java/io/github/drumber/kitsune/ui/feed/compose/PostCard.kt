@@ -41,11 +41,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil3.compose.AsyncImage
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Embed
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
@@ -202,8 +202,7 @@ private fun PostContentBody(
 ) {
     if (!post.content.isNullOrBlank()) {
         MarkdownText(
-            content = post.contentFormatted ?: post.content,
-            isHtml = post.contentFormatted != null,
+            content = post.content,
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -230,20 +229,19 @@ private fun PostContentBody(
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun PostImagePreview(imageUrls: List<String>) {
-    GlideImage(
+    AsyncImage(
         model = imageUrls.first(),
         contentDescription = null,
         contentScale = ContentScale.Crop,
+        placeholder = painterResource(R.drawable.ic_insert_photo_48),
+        error = painterResource(R.drawable.ic_insert_photo_48),
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(16f / 9f)
             .clip(RoundedCornerShape(12.dp))
-    ) {
-        it.placeholder(R.drawable.ic_insert_photo_48).error(R.drawable.ic_insert_photo_48)
-    }
+    )
     if (imageUrls.size > 1) {
         Text(
             text = stringResource(R.string.feed_image_count_more, imageUrls.size - 1),

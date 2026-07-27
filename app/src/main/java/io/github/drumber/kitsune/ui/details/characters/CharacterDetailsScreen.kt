@@ -26,11 +26,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil3.compose.AsyncImage
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.character.Character
 import io.github.drumber.kitsune.data.presentation.model.character.MediaCharacter
@@ -128,19 +128,18 @@ private fun CharacterHeader(
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun CharacterImage(imageUrl: String?, name: String?, onImageClick: () -> Unit) {
-    GlideImage(
+    AsyncImage(
         model = imageUrl,
         contentDescription = name,
         contentScale = ContentScale.Fit,
+        placeholder = painterResource(R.drawable.ic_insert_photo_48),
+        error = painterResource(R.drawable.ic_insert_photo_48),
         modifier = Modifier
             .size(width = 106.dp, height = 150.dp)
             .clickable(onClick = onImageClick)
-    ) {
-        it.placeholder(R.drawable.ic_insert_photo_48).error(R.drawable.ic_insert_photo_48)
-    }
+    )
 }
 
 @Composable

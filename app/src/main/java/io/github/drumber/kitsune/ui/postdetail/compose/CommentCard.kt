@@ -78,8 +78,7 @@ fun CommentCard(
         Spacer(Modifier.height(4.dp))
         if (!comment.content.isNullOrBlank()) {
             MarkdownText(
-                content = comment.contentFormatted ?: comment.content,
-                isHtml = comment.contentFormatted != null,
+                content = comment.content,
                 modifier = Modifier.fillMaxWidth()
             )
         }

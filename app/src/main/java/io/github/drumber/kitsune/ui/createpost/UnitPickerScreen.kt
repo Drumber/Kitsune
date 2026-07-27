@@ -19,8 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil3.compose.AsyncImage
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.ui.component.compose.list.PagingColumn
@@ -52,7 +51,6 @@ fun UnitPickerScreen(
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun UnitRow(unit: MediaUnit?, posterUrl: String?, onClick: () -> Unit) {
     val thumbnailUrl = unit?.thumbnail?.original ?: posterUrl
@@ -64,7 +62,7 @@ private fun UnitRow(unit: MediaUnit?, posterUrl: String?, onClick: () -> Unit) {
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        GlideImage(
+        AsyncImage(
             model = thumbnailUrl,
             contentDescription = null,
             contentScale = ContentScale.Crop,

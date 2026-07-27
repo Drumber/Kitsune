@@ -45,8 +45,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil3.compose.AsyncImage
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.ui.component.compose.list.KitsuneBackButton
 import io.github.drumber.kitsune.ui.component.compose.list.KitsuneTopAppBar
@@ -257,7 +256,6 @@ private fun CreatePostContent(
             Spacer(Modifier.height(4.dp))
             MarkdownText(
                 content = uiState.content,
-                isHtml = false,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -350,7 +348,6 @@ private fun PostTagsSection(
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun PostImageSection(
     images: List<CreatePostViewModel.SelectedImage>,
@@ -385,11 +382,10 @@ private fun PostImageSection(
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun PostImageThumbnail(imageUrl: String, onRemove: () -> Unit) {
     Box {
-        GlideImage(
+        AsyncImage(
             model = imageUrl,
             contentDescription = null,
             contentScale = ContentScale.Crop,

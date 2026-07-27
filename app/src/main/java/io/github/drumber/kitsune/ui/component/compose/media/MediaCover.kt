@@ -15,16 +15,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.integration.compose.placeholder
+import coil3.compose.AsyncImage
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 
 /**
- * Loads a media poster image (or cover image) using GlideImage.
+ * Loads a media poster image (or cover image) using Coil's [AsyncImage].
  *
  * Replaces the old [ImageView] + Glide setup.
  * Mirrors the same placeholder ([R.drawable.ic_insert_photo_48]) and crossfade behavior.
@@ -32,7 +31,6 @@ import io.github.drumber.kitsune.ui.theme.KitsuneTheme
  * @param imageUrl URL of the poster/cover to load. Null or blank shows the placeholder.
  * @param contentDescription Accessibility description for the image.
  */
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun MediaCover(
     modifier: Modifier = Modifier,
@@ -51,15 +49,14 @@ fun MediaCover(
                 modifier = Modifier.size(48.dp)
             )
         } else {
-            GlideImage(
+            AsyncImage(
                 model = imageUrl,
                 contentDescription = contentDescription,
                 contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.ic_insert_photo_48),
+                error = painterResource(R.drawable.ic_insert_photo_48),
                 modifier = Modifier.fillMaxSize()
-            ) {
-                it.placeholder(R.drawable.ic_insert_photo_48)
-                    .error(R.drawable.ic_insert_photo_48)
-            }
+            )
         }
     }
 }

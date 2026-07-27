@@ -3,6 +3,9 @@ package io.github.drumber.kitsune
 import android.app.Application
 import android.os.StrictMode
 import androidx.appcompat.app.AppCompatDelegate
+import coil3.ImageLoader
+import coil3.PlatformContext
+import coil3.SingletonImageLoader
 import com.algolia.instantsearch.core.InstantSearchTelemetry
 import com.chibatching.kotpref.Kotpref
 import com.chibatching.kotpref.livedata.asLiveData
@@ -18,6 +21,7 @@ import io.github.drumber.kitsune.util.logD
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.logI
 import io.github.drumber.kitsune.util.logW
+import io.github.drumber.kitsune.util.image.buildKitsuneImageLoader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,10 +32,11 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
+import org.koin.core.qualifier.named
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 
-class KitsuneApplication : Application() {
+class KitsuneApplication : Application(), SingletonImageLoader.Factory {
 
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
@@ -72,8 +77,14 @@ class KitsuneApplication : Application() {
         }
     }
 
-    private fun enableStrictMode() {
-        StrictMode.setThreadPolicy(
+    override fun newImageLoader(context: PlatformContext): ImageLoader =
+        buildKitsuneImageLoader(
+            context = context,
+            okHttpClient = get(named("images")),
+            cacheDirectory = cacheDir
+        )
+
+    private fun enableStrictMode() {        StrictMode.setThreadPolicy(
             StrictMode.ThreadPolicy.Builder()
                 .detectAll()
                 .penaltyLog()

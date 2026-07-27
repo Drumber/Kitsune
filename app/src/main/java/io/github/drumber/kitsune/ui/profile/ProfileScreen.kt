@@ -46,8 +46,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil3.compose.AsyncImage
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.user.User
 import io.github.drumber.kitsune.ui.component.compose.list.KitsuneBackButton
@@ -208,7 +207,7 @@ fun ProfileScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProfileTopBar(
     user: User?,
@@ -229,7 +228,7 @@ private fun ProfileTopBar(
 
     Box {
         // Cover image sits behind the toolbar; fades out as the bar collapses.
-        GlideImage(
+        AsyncImage(
             model = user?.coverImage?.originalOrDown(),
             contentDescription = null,
             contentScale = ContentScale.Crop,

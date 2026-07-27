@@ -53,15 +53,15 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import androidx.lifecycle.asFlow
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
+import coil3.SingletonImageLoader
+import coil3.request.ErrorResult
+import coil3.request.ImageRequest
+import coil3.request.SuccessResult
+import coil3.request.transformations
+import coil3.toBitmap
+import coil3.transform.RoundedCornersTransformation
 import com.chibatching.kotpref.livedata.asLiveData
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.constants.IntentAction.OPEN_LIBRARY
 import io.github.drumber.kitsune.constants.IntentAction.OPEN_MEDIA
 import io.github.drumber.kitsune.constants.LibraryWidget
@@ -82,18 +82,14 @@ import io.github.drumber.kitsune.ui.widget.KitsuneWidgetTheme.applyTheme
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.cancelFutureOnCancellation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 class LibraryAppWidget : GlanceAppWidget(), KoinComponent {
 
@@ -369,35 +365,15 @@ class LibraryAppWidget : GlanceAppWidget(), KoinComponent {
         context: Context,
         url: String?,
         cornerRadius: Int
-    ) = suspendCancellableCoroutine { cont ->
-        val request = Glide.with(context)
-            .asBitmap()
-            .load(url)
-            .addTransform(RoundedCorners(cornerRadius))
-            .listener(object : RequestListener<Bitmap> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Bitmap>,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    cont.resumeWithException(e ?: Exception("Image failed to load."))
-                    return false
-                }
-
-                override fun onResourceReady(
-                    resource: Bitmap,
-                    model: Any,
-                    target: Target<Bitmap>?,
-                    dataSource: DataSource,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    cont.resume(resource)
-                    return false
-                }
-            })
-            .submit()
-        cont.cancelFutureOnCancellation(request)
+    ): Bitmap {
+        val request = ImageRequest.Builder(context)
+            .data(url)
+            .transformations(RoundedCornersTransformation(cornerRadius.toFloat()))
+            .build()
+        return when (val result = SingletonImageLoader.get(context).execute(request)) {
+            is SuccessResult -> result.image.toBitmap()
+            is ErrorResult -> throw result.throwable
+        }
     }
 
     private fun getMainActivityIntent(context: Context): Intent {

@@ -1,5 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     alias(libs.plugins.android.application)
@@ -67,8 +69,6 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
-        dataBinding = true
         buildConfig = true
         compose = true
     }
@@ -100,6 +100,158 @@ android {
 
 tasks.matching { it.name.contains("connected\\w*AndroidTest".toRegex()) }.configureEach {
     val screenShotModeEnabled = screenshotMode.toBoolean()
+                classes(
+                    "*.BuildConfig",
+                    "*_Factory",
+                    "*_Impl",
+                    "hilt_aggregated_deps.*"
+                )
+                annotatedBy("androidx.compose.runtime.Composable")
+            }
+        }
+    }
+}
+
+dependencies {
+    // Android core and support libs
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.constraint.layout)
+    implementation(libs.androidx.core.splashscreen)
+
+    // Compose
+    val composeBom = platform(libs.androidx.compose.bom)
+    implementation(composeBom)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material3.adaptive)
+    implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.insert.koin.androidx.compose)
+    implementation(libs.accompanist.permissions)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+
+    // Preference
+    implementation(libs.androidx.preference.ktx)
+
+    // Lifecycle
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+
+    // WorkManager
+    implementation(libs.androidx.workmanager)
+
+    // Material
+    implementation(libs.google.android.material)
+
+    // Glance AppWidget
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.material3)
+    implementation(libs.androidx.glance.preview)
+
+    // Kotlin coroutines
+    implementation(libs.jetbrains.kotlinx.coroutines.core)
+    implementation(libs.jetbrains.kotlinx.coroutines.android)
+
+    // Paging
+    implementation(libs.androidx.paging.runtime.ktx)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.paging)
+
+    // Coil (Compose image loading)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.coil.gif)
+    implementation(libs.mikepenz.markdown.renderer.coil3)
+    implementation(libs.saket.telephoto.zoomable.image.coil3)
+
+    // AboutLibraries
+    implementation(libs.mikepenz.aboutlibraries.core)
+    implementation(libs.mikepenz.aboutlibraries)
+    implementation(libs.mikepenz.aboutlibraries.compose.m3)
+
+    // LeakCanary
+    debugImplementation(libs.squareup.leakcanary)
+
+    // Tests
+    testImplementation(libs.junit)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.tngtech.archunit.junit4)
+    testImplementation(libs.robolectric)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.junit.ktx)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.espresso.contrib)
+
+    // Compose tests
+    androidTestImplementation(composeBom)
+    androidTestImplementation(libs.androidx.compose.ui.test)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    // testBuildType is "instrumented", so the test-manifest (provides the host
+    // ComponentActivity for createComposeRule) must also be on that build type.
+    "instrumentedImplementation"(libs.androidx.compose.ui.test.manifest)
+
+    testImplementation(libs.jetbrains.kotlinx.coroutines.test)
+    testImplementation(libs.insert.koin.test.junit4)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.datafaker)
+    testImplementation(libs.cashapp.turbine)
+    testImplementation(libs.androidx.arch.core.testing)
+    testImplementation(libs.squareup.okhttp3.mockwebserver)
+
+    // fastlane screengrab
+    androidTestImplementation(libs.fastlane.screengrab)
+}
+
+        buildConfigField("boolean", "INSTRUMENTED_TEST", "false")
+    }
+
+    androidResources {
+        generateLocaleConfig = true
+    }
+
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            signingConfig = signingConfigs.getByName("debug")
+            vcsInfo.include = false
+        }
+
+        getByName("debug") {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+            isDebuggable = true
+        }
+
+        create("instrumented") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".instrumented"
+            buildConfigField("boolean", "INSTRUMENTED_TEST", "true")
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    buildFeatures {
+        viewBinding = true
+        dataBinding = true
     doFirst {
         if (!screenShotModeEnabled) {
             // test will be skipped by 'assumeTrue(BuildConfig.SCREENSHOT_MODE_ENABLED)' in @BeforeClass
@@ -139,7 +291,6 @@ kover {
                     "*Binding",
                     "*Args",
                     "*Directions",
-                    "*GlideModule*",
                     "*_Factory",
                     "*_Impl",
                     "hilt_aggregated_deps.*"
@@ -212,16 +363,9 @@ dependencies {
     // ViewPager
     implementation(libs.androidx.viewpager2)
 
-    // Glide
-    implementation(libs.bumptech.glide)
-    ksp(libs.bumptech.glide.ksp)
-    implementation(libs.bumptech.glide.okhttp3)
-    implementation(libs.bumptech.glide.compose)
-
     // Markwon (post content formatting)
     implementation(libs.noties.markwon.core)
     implementation(libs.noties.markwon.html)
-    implementation(libs.noties.markwon.image.glide)
     implementation(libs.noties.markwon.linkify)
 
     // Koin DI
@@ -272,47 +416,3 @@ dependencies {
 
     // Hauler Gesture
     implementation(libs.futured.hauler)
-
-    // AboutLibraries
-    implementation(libs.mikepenz.aboutlibraries.core)
-    implementation(libs.mikepenz.aboutlibraries)
-    implementation(libs.mikepenz.aboutlibraries.compose.m3)
-
-    // LeakCanary
-    debugImplementation(libs.squareup.leakcanary)
-
-    // Glide Transformations (only used for demo screenshots)
-    if (screenshotMode.toBoolean()) {
-        implementation(libs.wasabeef.glide.transformations)
-    }
-
-    // Tests
-    testImplementation(libs.junit)
-    testImplementation(libs.assertj.core)
-    testImplementation(libs.tngtech.archunit.junit4)
-    testImplementation(libs.robolectric)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.junit.ktx)
-    androidTestImplementation(libs.androidx.test.rules)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.espresso.contrib)
-
-    // Compose tests
-    androidTestImplementation(composeBom)
-    androidTestImplementation(libs.androidx.compose.ui.test)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
-    // testBuildType is "instrumented", so the test-manifest (provides the host
-    // ComponentActivity for createComposeRule) must also be on that build type.
-    "instrumentedImplementation"(libs.androidx.compose.ui.test.manifest)
-
-    testImplementation(libs.jetbrains.kotlinx.coroutines.test)
-    testImplementation(libs.insert.koin.test.junit4)
-    testImplementation(libs.mockito.kotlin)
-    testImplementation(libs.datafaker)
-    testImplementation(libs.cashapp.turbine)
-    testImplementation(libs.androidx.arch.core.testing)
-    testImplementation(libs.squareup.okhttp3.mockwebserver)
-
-    // fastlane screengrab
-    androidTestImplementation(libs.fastlane.screengrab)
-}

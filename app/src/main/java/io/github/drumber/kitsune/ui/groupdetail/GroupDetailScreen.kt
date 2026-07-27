@@ -43,11 +43,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil3.compose.AsyncImage
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.group.Group
 import io.github.drumber.kitsune.ui.component.compose.list.KitsuneBackButton
@@ -184,7 +184,6 @@ private fun GroupDetailContent(
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun GroupDetailHeader(
     group: Group?,
@@ -198,17 +197,18 @@ private fun GroupDetailHeader(
                 .fillMaxWidth()
                 .height(160.dp)
         ) {
-            GlideImage(
+            AsyncImage(
                 model = group?.coverImageUrl,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.cover_placeholder),
                 modifier = Modifier
                     .fillMaxSize()
                     .clickable(
                         enabled = group?.coverImageUrl != null,
                         onClick = onOpenCover
                     )
-            ) { it.placeholder(R.drawable.cover_placeholder) }
+            )
             Avatar(
                 imageUrl = group?.avatarUrl,
                 size = 64.dp,

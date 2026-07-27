@@ -40,11 +40,11 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil3.compose.AsyncImage
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
 import io.github.drumber.kitsune.data.presentation.model.library.getStringResId
@@ -126,7 +126,7 @@ fun DetailsScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DetailsTopBar(
     media: Media?,
@@ -139,7 +139,7 @@ private fun DetailsTopBar(
     scrollBehavior: androidx.compose.material3.TopAppBarScrollBehavior
 ) {
     Box {
-        GlideImage(
+        AsyncImage(
             model = media?.coverImageUrl,
             contentDescription = null,
             contentScale = ContentScale.Crop,
@@ -266,7 +266,6 @@ private fun DetailsContent(
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun MediaHeaderSection(
     media: Media?,
@@ -280,16 +279,16 @@ private fun MediaHeaderSection(
             .fillMaxWidth()
             .padding(bottom = 10.dp)
     ) {
-        GlideImage(
+        AsyncImage(
             model = media?.posterImageUrl,
             contentDescription = media?.title,
             contentScale = ContentScale.Crop,
+            placeholder = painterResource(R.drawable.ic_insert_photo_48),
+            error = painterResource(R.drawable.ic_insert_photo_48),
             modifier = Modifier
                 .size(width = 106.dp, height = 150.dp)
                 .clickable(onClick = onPosterClick)
-        ) {
-            it.placeholder(R.drawable.ic_insert_photo_48).error(R.drawable.ic_insert_photo_48)
-        }
+        )
         Spacer(Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
             val isManga = media !is Anime

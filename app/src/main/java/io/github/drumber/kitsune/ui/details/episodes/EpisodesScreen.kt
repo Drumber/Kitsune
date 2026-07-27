@@ -17,6 +17,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -24,8 +25,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil3.compose.AsyncImage
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.ui.KitsuneTestTags
@@ -77,7 +77,6 @@ fun EpisodesScreen(
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Suppress("UnusedParameter")
 @Composable
 private fun EpisodeItem(
@@ -96,16 +95,16 @@ private fun EpisodeItem(
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        GlideImage(
+        AsyncImage(
             model = item.thumbnail?.originalOrDown() ?: posterUrl,
             contentDescription = null,
             contentScale = ContentScale.Crop,
+            placeholder = painterResource(R.drawable.ic_insert_photo_48),
+            error = painterResource(R.drawable.ic_insert_photo_48),
             modifier = Modifier
                 .width(96.dp)
                 .aspectRatio(16f / 9f)
-        ) {
-            it.placeholder(R.drawable.ic_insert_photo_48).error(R.drawable.ic_insert_photo_48)
-        }
+        )
         Spacer(Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(

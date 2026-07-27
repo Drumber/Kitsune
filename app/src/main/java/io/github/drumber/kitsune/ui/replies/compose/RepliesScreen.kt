@@ -240,8 +240,7 @@ private fun ParentCommentHeader(
         }
         if (!comment.content.isNullOrBlank()) {
             MarkdownText(
-                content = comment.contentFormatted ?: comment.content,
-                isHtml = comment.contentFormatted != null,
+                content = comment.content,
                 modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
             )
         }
