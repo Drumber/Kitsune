@@ -13,12 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 
 /**
@@ -45,20 +43,19 @@ fun Avatar(
             .background(MaterialTheme.colorScheme.surfaceVariant),
         contentAlignment = Alignment.Center
     ) {
-        if (imageUrl.isNullOrBlank()) {
-            Icon(
-                imageVector = Icons.Default.Person,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(size * 0.6f)
-            )
-        } else {
+        // The person icon stays underneath so it acts as placeholder/error state
+        // while the remote avatar is loading or fails to load.
+        Icon(
+            imageVector = Icons.Default.Person,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(size * 0.6f)
+        )
+        if (!imageUrl.isNullOrBlank()) {
             AsyncImage(
                 model = imageUrl,
                 contentDescription = contentDescription,
                 contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.profile_picture_placeholder),
-                error = painterResource(R.drawable.profile_picture_placeholder),
                 modifier = Modifier
                     .size(size)
                     .clip(CircleShape)
