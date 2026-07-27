@@ -57,8 +57,6 @@ import io.github.drumber.kitsune.ui.navigation.navigateSafe
 import io.github.drumber.kitsune.ui.navigation.setNavResult
 import io.github.drumber.kitsune.ui.notifications.NotificationsScreen
 import io.github.drumber.kitsune.ui.notifications.NotificationsViewModel
-import io.github.drumber.kitsune.ui.photoview.PhotoViewActivity
-import io.github.drumber.kitsune.ui.photoview.openPhotoView
 import io.github.drumber.kitsune.ui.postdetail.PostDetailViewModel
 import io.github.drumber.kitsune.ui.postdetail.compose.PostDetailScreen
 import io.github.drumber.kitsune.ui.reactiondetail.ReactionDetailViewModel
@@ -518,7 +516,7 @@ private fun GroupDetailDestination(
         onJoinLeave = { viewModel.toggleMembership() },
         onOpenCover = {
             group?.coverImageUrl?.let { url ->
-                context.openPhotoView(imageUrl = url, title = group?.name)
+                navController.navigateSafe(Routes.PhotoView(imageUrl = url, title = group?.name))
             }
         },
         onNavigateToCreatePost = {

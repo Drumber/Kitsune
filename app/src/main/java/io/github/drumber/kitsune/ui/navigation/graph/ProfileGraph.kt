@@ -70,7 +70,6 @@ import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.domain.work.UpdateLibraryWidgetUseCase
 import io.github.drumber.kitsune.notification.Notifications
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.compose.collectAsStateWithLifecycle
 import io.github.drumber.kitsune.ui.details.characters.CharacterDetailsSheet
 import io.github.drumber.kitsune.ui.feed.FeedListViewModel
@@ -82,8 +81,6 @@ import io.github.drumber.kitsune.ui.navigation.navigateSafe
 import io.github.drumber.kitsune.ui.navigation.routeValue
 import io.github.drumber.kitsune.ui.permissions.isNotificationPermissionGranted
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
-import io.github.drumber.kitsune.ui.photoview.PhotoViewActivity
-import io.github.drumber.kitsune.ui.photoview.openPhotoView
 import io.github.drumber.kitsune.ui.profile.MyProfileViewModel
 import io.github.drumber.kitsune.ui.profile.ProfileScreen
 import io.github.drumber.kitsune.ui.profile.ProfileUiState
@@ -214,6 +211,7 @@ private fun MyProfileDestination(navController: NavHostController) {
                 selectedCharacterId = null
                 navController.navigateSafe(Routes.Details(mediaId = mediaId, isAnime = isAnime))
             },
+            onOpenPhoto = { imageUrl, title -> navController.navigateSafe(Routes.PhotoView(imageUrl, title)) },
             onFavoriteChanged = { viewModel.refreshUser() }
         )
     }
@@ -258,11 +256,11 @@ private fun MyProfileDestination(navController: NavHostController) {
         },
         onCoverClick = {
             val url = viewModel.getUser()?.coverImage?.originalOrDown() ?: return@ProfileScreen
-            context.openPhotoView(url, viewModel.getUser()?.name?.let { "$it Cover" })
+            navController.navigateSafe(Routes.PhotoView(url, viewModel.getUser()?.name?.let { "$it Cover" }))
         },
         onAvatarClick = {
             val url = viewModel.getUser()?.avatar?.originalOrDown() ?: return@ProfileScreen
-            context.openPhotoView(url, viewModel.getUser()?.name?.let { "$it Avatar" })
+            navController.navigateSafe(Routes.PhotoView(url, viewModel.getUser()?.name?.let { "$it Avatar" }))
         },
         onNavigateToSettings = {
             navController.navigateSafe(Routes.SettingsGraph)
@@ -272,7 +270,7 @@ private fun MyProfileDestination(navController: NavHostController) {
         },
         onLogOut = { showLogoutDialog = true },
         onSignIn = {
-            context.startActivity(Intent(context, AuthenticationActivity::class.java))
+            navController.navigateSafe(Routes.Login())
         },
         onNavigateUp = { navController.navigateUp() }
     )
@@ -342,6 +340,7 @@ private fun UserProfileDestination(
                 selectedCharacterId = null
                 navController.navigateSafe(Routes.Details(mediaId = mediaId, isAnime = isAnime))
             },
+            onOpenPhoto = { imageUrl, title -> navController.navigateSafe(Routes.PhotoView(imageUrl, title)) },
             onFavoriteChanged = { viewModel.refreshUser() }
         )
     }
@@ -391,11 +390,11 @@ private fun UserProfileDestination(
         },
         onCoverClick = {
             val url = viewModel.getUser()?.coverImage?.originalOrDown() ?: return@ProfileScreen
-            context.openPhotoView(url, viewModel.getUser()?.name?.let { "$it Cover" })
+            navController.navigateSafe(Routes.PhotoView(url, viewModel.getUser()?.name?.let { "$it Cover" }))
         },
         onAvatarClick = {
             val url = viewModel.getUser()?.avatar?.originalOrDown() ?: return@ProfileScreen
-            context.openPhotoView(url, viewModel.getUser()?.name?.let { "$it Avatar" })
+            navController.navigateSafe(Routes.PhotoView(url, viewModel.getUser()?.name?.let { "$it Avatar" }))
         },
         onNavigateToSettings = {},
         onNavigateToEditProfile = {},

@@ -81,3 +81,6 @@ object Routes {
 
     @Serializable
     data object Categories
+
+    @Serializable
+    data class PhotoView(val imageUrl: String, val title: String? = null)

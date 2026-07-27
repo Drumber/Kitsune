@@ -400,7 +400,8 @@ fun NavGraphBuilder.detailsGraph(navController: NavHostController) {
                 onNavigateToMedia = { mediaId, isAnime ->
                     selectedCharacterId = null
                     navController.navigateSafe(Routes.Details(mediaId = mediaId, isAnime = isAnime))
-                }
+                },
+                onOpenPhoto = { imageUrl, title -> navController.navigateSafe(Routes.PhotoView(imageUrl, title)) }
             )
         }
     }
