@@ -1,7 +1,5 @@
 package io.github.drumber.kitsune.ui.authentication
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.R
@@ -9,57 +7,83 @@ import io.github.drumber.kitsune.domain.auth.LogInUserUseCase
 import io.github.drumber.kitsune.domain.auth.LoginResult
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+data class LoginUiState(
+    val username: String = "",
+    val password: String = "",
+    val usernameError: Int? = null,
+    val passwordError: Int? = null,
+    val isLoggingIn: Boolean = false
+) {
+    val isDataValid: Boolean
+        get() = usernameError == null && username.isNotBlank() && password.isNotBlank()
+}
+
 class LoginViewModel(private val logInUser: LogInUserUseCase) : ViewModel() {
 
-    private val _loginForm = MutableLiveData<LoginFormState>()
-    val loginFormState: LiveData<LoginFormState> = _loginForm
+    private val _uiState = MutableStateFlow(LoginUiState())
+    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-    private val _loginResult = MutableLiveData<LoginResultUi>()
-    val loginResult: LiveData<LoginResultUi> = _loginResult
+    private val _loginResult = MutableSharedFlow<LoginResultUi>(extraBufferCapacity = 1)
+    val loginResult: SharedFlow<LoginResultUi> = _loginResult.asSharedFlow()
 
-    private val _isLoggingIn = MutableLiveData<Boolean>()
-    val isLoggingIn: LiveData<Boolean> = _isLoggingIn
+    fun setUsername(username: String) {
+        _uiState.update {
+            it.copy(
+                username = username,
+                usernameError = if (isUserNameValid(username)) null else R.string.invalid_username,
+                passwordError = null
+            )
+        }
+    }
 
-    fun login(username: String, password: String) {
-        _isLoggingIn.value = true
+    fun setPassword(password: String) {
+        _uiState.update { it.copy(password = password, passwordError = null) }
+    }
+
+    fun login() {
+        val state = _uiState.value
+        if (!state.isDataValid || state.isLoggingIn) return
+
+        _uiState.update { it.copy(isLoggingIn = true) }
         viewModelScope.launch(Dispatchers.IO) {
-            val result = logInUser(username, password)
+            val result = logInUser(state.username, state.password)
 
-            if(result is LoginResult.Error) {
+            if (result is LoginResult.Error) {
                 logE("Failed to login to Kitsu.", result.exception)
             }
 
             withContext(Dispatchers.Main) {
                 if (result is LoginResult.Success) {
-                    _loginResult.value =
-                        LoginResultUi(success = LoggedInUserView(displayName = result.localUser?.name ?: "Unknown"))
-
+                    _loginResult.tryEmit(
+                        LoginResultUi(
+                            success = LoggedInUserView(
+                                displayName = result.localUser?.name ?: "Unknown"
+                            )
+                        )
+                    )
                 } else {
-                    _loginResult.value = LoginResultUi(error = R.string.login_failed)
+                    _uiState.update { it.copy(passwordError = R.string.login_failed) }
+                    _loginResult.tryEmit(LoginResultUi(error = R.string.login_failed))
                 }
-                _isLoggingIn.value = false
+                _uiState.update { it.copy(isLoggingIn = false) }
             }
         }
     }
 
-    fun loginDataChanged(username: String, password: String) {
-        if (!isUserNameValid(username)) {
-            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
-        } else if (isPasswordValid(password)) {
-            _loginForm.value = LoginFormState(isDataValid = true)
-        }
-    }
-
-    private fun isUserNameValid(username: String): Boolean {
-        // Kitsu accepts either an email address or a username for login,
-        // so just verify the input is non-blank and contains no whitespace.
-        return username.isNotBlank() && username.none { it.isWhitespace() }
-    }
-
-    private fun isPasswordValid(password: String): Boolean {
-        return password.isNotBlank()
-    }
+    /**
+     * Kitsu accepts either an email address or a username for login, so just verify the input
+     * is non-blank and contains no whitespace.
+     */
+    private fun isUserNameValid(username: String) =
+        username.isBlank() || username.none { it.isWhitespace() }
 }

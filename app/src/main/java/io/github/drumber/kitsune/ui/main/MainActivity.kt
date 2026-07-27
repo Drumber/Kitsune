@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,15 +27,15 @@ import io.github.drumber.kitsune.constants.IntentAction.SHORTCUT_SETTINGS
 import io.github.drumber.kitsune.domain.work.UpdateLibraryWidgetUseCase
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.preference.StartPagePref
-import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.navigation.KitsuneApp
 import io.github.drumber.kitsune.ui.navigation.Routes
+import io.github.drumber.kitsune.ui.navigation.navigateSafe
 import io.github.drumber.kitsune.ui.navigation.navigateToTopLevel
 import io.github.drumber.kitsune.ui.onboarding.OnboardingActivity
 import io.github.drumber.kitsune.ui.permissions.requestNotificationPermission
 import io.github.drumber.kitsune.ui.permissions.showNotificationPermissionRejectedDialog
-import io.github.drumber.kitsune.ui.theme.KitsuneMdcTheme
+import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -86,7 +88,17 @@ class MainActivity : BaseActivity() {
         val initialRoute = if (savedInstanceState == null) resolveInitialRoute() else null
 
         setContent {
-            KitsuneMdcTheme {
+            val isDarkModeEnabled = when (KitsunePref.darkMode.toInt()) {
+                AppCompatDelegate.MODE_NIGHT_NO -> false
+                AppCompatDelegate.MODE_NIGHT_YES -> true
+                else -> isSystemInDarkTheme()
+            }
+            KitsuneTheme(
+                darkTheme = isDarkModeEnabled,
+                dynamicColor = KitsunePref.useDynamicColorTheme,
+                variant = KitsunePref.appTheme,
+                amoled = KitsunePref.oledBlackMode
+            ) {
                 val controller = rememberNavController()
                 navController = controller
                 val localUser by viewModel.localUser.collectAsStateWithLifecycle(initialValue = null)
@@ -231,10 +243,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun promptUserReLogin() {
-        val intent = Intent(this, AuthenticationActivity::class.java)
-        intent.putExtra(AuthenticationActivity.EXTRA_LOGGED_OUT, true)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        startActivity(intent)
+        navController?.navigateSafe(Routes.Login(wasLoggedOut = true))
     }
 
     private fun startNewMainActivity() {

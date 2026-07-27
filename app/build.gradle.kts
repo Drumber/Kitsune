@@ -257,44 +257,6 @@ dependencies {
     androidTestImplementation(libs.fastlane.screengrab)
 }
 
-        buildConfigField("boolean", "INSTRUMENTED_TEST", "false")
-    }
-
-    androidResources {
-        generateLocaleConfig = true
-    }
-
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-            signingConfig = signingConfigs.getByName("debug")
-            vcsInfo.include = false
-        }
-
-        getByName("debug") {
-            applicationIdSuffix = ".debug"
-            versionNameSuffix = "-debug"
-            isDebuggable = true
-        }
-
-        create("instrumented") {
-            initWith(getByName("debug"))
-            applicationIdSuffix = ".instrumented"
-            buildConfigField("boolean", "INSTRUMENTED_TEST", "true")
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    buildFeatures {
-        viewBinding = true
     doFirst {
         if (!screenShotModeEnabled) {
             // test will be skipped by 'assumeTrue(BuildConfig.SCREENSHOT_MODE_ENABLED)' in @BeforeClass

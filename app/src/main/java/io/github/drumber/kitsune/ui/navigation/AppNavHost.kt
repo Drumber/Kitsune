@@ -1,3 +1,10 @@
+package io.github.drumber.kitsune.ui.navigation
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import io.github.drumber.kitsune.ui.navigation.graph.authGraph
 import io.github.drumber.kitsune.ui.navigation.graph.detailsGraph
 import io.github.drumber.kitsune.ui.navigation.graph.homeGraph
 import io.github.drumber.kitsune.ui.navigation.graph.photoViewGraph
@@ -24,3 +31,6 @@ fun AppNavHost(
         socialGraph(navController)
         profileGraph(navController)
         photoViewGraph(navController)
+        authGraph(navController)
+    }
+}

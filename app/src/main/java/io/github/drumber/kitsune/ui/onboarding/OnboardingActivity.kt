@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.SystemBarStyle
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatDelegate
@@ -58,8 +59,8 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
+import io.github.drumber.kitsune.ui.navigation.graph.LoginDestination
 import io.github.drumber.kitsune.ui.onboarding.pages.LoginPage
 import io.github.drumber.kitsune.ui.onboarding.pages.SetupPageAdapter
 import io.github.drumber.kitsune.ui.onboarding.pages.WelcomePage
@@ -87,6 +88,12 @@ class OnboardingActivity : BaseActivity() {
             val darkModePreference by KitsunePref.asLiveData(KitsunePref::darkMode)
                 .asFlow()
                 .collectAsState(initial = KitsunePref.darkMode)
+            val appTheme by KitsunePref.asLiveData(KitsunePref::appTheme)
+                .asFlow()
+                .collectAsState(initial = KitsunePref.appTheme)
+            val oledBlackMode by KitsunePref.asLiveData(KitsunePref::oledBlackMode)
+                .asFlow()
+                .collectAsState(initial = KitsunePref.oledBlackMode)
 
             val isDarkModeEnabled = when (darkModePreference.toInt()) {
                 AppCompatDelegate.MODE_NIGHT_NO -> false
@@ -98,8 +105,14 @@ class OnboardingActivity : BaseActivity() {
             val localUser by viewModel.localUser.collectAsState()
 
             var openCreateAccountForwardDialog by remember { mutableStateOf(false) }
+            var showLogin by remember { mutableStateOf(false) }
 
-            KitsuneTheme(dynamicColor = useDynamicColorTheme, darkTheme = isDarkModeEnabled) {
+            KitsuneTheme(
+                dynamicColor = useDynamicColorTheme,
+                darkTheme = isDarkModeEnabled,
+                variant = appTheme,
+                amoled = oledBlackMode
+            ) {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     contentWindowInsets = WindowInsets.safeDrawing
@@ -109,7 +122,7 @@ class OnboardingActivity : BaseActivity() {
                         localUser = localUser,
                         contentPadding = innerPadding,
                         onNavigateToLogin = {
-                            startActivity(Intent(this, AuthenticationActivity::class.java))
+                            showLogin = true
                         },
                         onNavigateToCreateAccount = {
                             openCreateAccountForwardDialog = true
@@ -126,6 +139,13 @@ class OnboardingActivity : BaseActivity() {
                                 openCreateAccountForwardDialog = false
                                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Kitsu.BASE_URL)))
                             }
+                        )
+                    }
+                    if (showLogin) {
+                        BackHandler { showLogin = false }
+                        LoginDestination(
+                            wasLoggedOut = false,
+                            onFinished = { showLogin = false }
                         )
                     }
                 }

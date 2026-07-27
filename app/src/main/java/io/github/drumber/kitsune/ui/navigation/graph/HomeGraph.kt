@@ -515,6 +515,163 @@ private fun CategoriesDestination(navController: NavHostController) {
         onToggleExpand = { viewModel.toggleExpanded(it.node) },
         onToggleSelection = { row, isSelected ->
             viewModel.setCategorySelected(row.wrapper, isSelected)
+        }
+    )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MediaList
+// ─────────────────────────────────────────────────────────────────────────────
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun MediaListDestination(navController: NavHostController, route: Routes.MediaList) {
+    val viewModel: MediaListViewModel = koinViewModel()
+    val mediaSelector = remember(route) { route.toMediaSelector() }
+
+    LaunchedEffect(mediaSelector) {
+        viewModel.setMediaSelector(mediaSelector)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    val items = (viewModel.dataSource as kotlinx.coroutines.flow.Flow<androidx.paging.PagingData<Media>>)
+        .collectAsLazyPagingItems()
+
+    val gridState = rememberLazyGridState()
+    val appBarState = rememberTopAppBarState()
+
+    val itemWidth = dimensionResource(KitsunePref.mediaItemSize.widthRes)
+    val itemHeight = dimensionResource(KitsunePref.mediaItemSize.heightRes)
+    val itemMargin = dimensionResource(R.dimen.media_item_margin)
+    val columns = GridCells.Adaptive(itemWidth + itemMargin * 2)
+    val itemAspectRatio = itemWidth / itemHeight
+
+    MediaListScreen(
+        title = route.title,
+        items = items,
+        columns = columns,
+        itemAspectRatio = itemAspectRatio,
+        gridState = gridState,
+        topAppBarState = appBarState,
+        onNavigateUp = { navController.navigateUp() },
+        onMediaClick = { media ->
+            navController.navigateSafe(Routes.Details(mediaId = media.id, isAnime = media is Anime))
+        }
+    )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Library
+// ─────────────────────────────────────────────────────────────────────────────
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LibraryDestination(navController: NavHostController, backStackEntry: NavBackStackEntry) {
+    val viewModel: LibraryViewModel = koinViewModel()
+    val context = LocalContext.current
+
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
+    val libraryEntries = viewModel.pagingDataFlow.collectAsLazyPagingItems()
+    val modifications by viewModel.notSynchronizedLibraryEntryModifications.collectAsStateWithLifecycle()
+    val offlineSyncCount = modifications?.size ?: 0
+    val localUser by viewModel.localUser.collectAsStateWithLifecycle()
+    val gridState = rememberLazyGridState()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // Keep the paging refresh callback wired and clean up on exit, matching the SideEffect +
+    // onDestroyView pattern from LibraryFragment.
+    SideEffect { viewModel.doRefreshListener = { libraryEntries.refresh() } }
+    DisposableEffect(Unit) { onDispose { viewModel.doRefreshListener = null } }
+
+    // Show snackbar on library update errors.
+    val errorUpdateFailed = stringResource(R.string.error_library_update_failed)
+    val errorUpdateNotFound = stringResource(R.string.error_library_update_not_found)
+    LaunchedEffect(Unit) {
+        viewModel.libraryChangeResultFlow.collect { result ->
+            val msg = libraryChangeSnackbarMessage(result, context, errorUpdateFailed, errorUpdateNotFound)
+            if (msg != null) snackbarHostState.showSnackbar(msg)
+        }
+    }
+
+    // Debounced auto-sync when unsynced modifications appear and the network is unmetered,
+    // replacing the Debouncer(5000L) from LibraryFragment.onViewCreated.
+    LaunchedEffect(modifications) {
+        if (!viewModel.hasUser()) return@LaunchedEffect
+        viewModel.invalidatePagingSource()
+        delay(5_000L)
+        val mods = modifications ?: return@LaunchedEffect
+        if (mods.isNotEmpty()) {
+            val cm = context.getSystemService(android.content.Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            if (!cm.isActiveNetworkMetered) {
+                viewModel.synchronizeOfflineLibraryUpdates()
+            }
+        }
+    }
+
+    // Consume the "entry updated" nav result from LibraryEditEntry and refresh the list.
+    backStackEntry.NavResultEffect<Boolean>(NavResults.LIBRARY_ENTRY_UPDATED) {
+        viewModel.triggerAdapterUpdate()
+    }
+
+    // Rating bottom sheet state — replaces the RatingBottomSheet dialog-fragment (plan decision 4).
+    var ratingSheetEntry by remember { mutableStateOf<LibraryEntryWithModification?>(null) }
+    val ratingSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    // DB-request dialog state.
+    var showDbDialog by remember { mutableStateOf(false) }
+
+    if (showDbDialog) {
+        DbRequestDialog(
+            onDismiss = { showDbDialog = false },
+            onUrlSelected = { url ->
+                showDbDialog = false
+                navController.navigateSafe(Routes.WebView(url))
+            }
+        )
+    }
+
+    ratingSheetEntry?.let { item ->
+        ModalBottomSheet(
+            onDismissRequest = { ratingSheetEntry = null },
+            sheetState = ratingSheetState
+        ) {
+            RatingScreen(
+                title = item.media?.title ?: "",
+                ratingTwenty = item.ratingTwenty?.takeIf { it != -1 },
+                ratingSystem = RatingSystemUtil.getRatingSystem(),
+                onRate = { rating ->
+                    viewModel.lastRatedLibraryEntry = item.libraryEntry
+                    viewModel.updateRating(rating)
+                    ratingSheetEntry = null
+                },
+                onRemoveRating = {
+                    viewModel.lastRatedLibraryEntry = item.libraryEntry
+                    viewModel.updateRating(null)
+                    ratingSheetEntry = null
+                },
+                onDismiss = { ratingSheetEntry = null }
+            )
+        }
+    }
+
+    LibraryScreen(
+        uiState = uiState,
+        libraryEntries = libraryEntries,
+        offlineSyncCount = offlineSyncCount,
+        isLoggedIn = localUser != null,
+        gridState = gridState,
+        snackbarHostState = snackbarHostState,
+        onSearch = { viewModel.searchLibrary(it) },
+        onKindSelected = { viewModel.setLibraryEntryKind(it) },
+        onStatusToggle = { status ->
+            val current = uiState.filter.libraryStatus.toMutableList()
+            if (current.contains(status)) current.remove(status) else current.add(status)
+            viewModel.setLibraryEntryStatus(current)
+        },
+        onSyncClicked = { viewModel.synchronizeOfflineLibraryUpdates() },
+        onDbRequestClicked = { showDbDialog = true },
+        onLoginClicked = {
+            navController.navigateSafe(Routes.Login())
         },
         onEntryClicked = { item ->
             val media = item.libraryEntry.media ?: return@LibraryScreen
@@ -749,178 +906,3 @@ private fun DatePickerRequestDialog(
         )
     }
 }
-
-import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.data.common.Filter
-import io.github.drumber.kitsune.data.common.media.MediaType
-import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
-import io.github.drumber.kitsune.data.presentation.model.media.Anime
-import io.github.drumber.kitsune.data.presentation.model.media.Media
-import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
-import io.github.drumber.kitsune.data.presentation.model.media.RequestType
-import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
-        kindState = kindState,
-        yearState = yearState,
-        avgRatingState = avgRatingState,
-        seasonState = seasonState,
-        subtypeState = subtypeState,
-        streamersState = streamersState,
-        ageRatingState = ageRatingState
-    )
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// MediaList
-// ─────────────────────────────────────────────────────────────────────────────
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun MediaListDestination(navController: NavHostController, route: Routes.MediaList) {
-    val viewModel: MediaListViewModel = koinViewModel()
-    val mediaSelector = remember(route) { route.toMediaSelector() }
-
-    LaunchedEffect(mediaSelector) {
-        viewModel.setMediaSelector(mediaSelector)
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    val items = (viewModel.dataSource as kotlinx.coroutines.flow.Flow<androidx.paging.PagingData<Media>>)
-        .collectAsLazyPagingItems()
-
-    val gridState = rememberLazyGridState()
-    val appBarState = rememberTopAppBarState()
-
-    val itemWidth = dimensionResource(KitsunePref.mediaItemSize.widthRes)
-    val itemHeight = dimensionResource(KitsunePref.mediaItemSize.heightRes)
-    val itemMargin = dimensionResource(R.dimen.media_item_margin)
-    val columns = GridCells.Adaptive(itemWidth + itemMargin * 2)
-    val itemAspectRatio = itemWidth / itemHeight
-
-    MediaListScreen(
-        title = route.title,
-        items = items,
-        columns = columns,
-        itemAspectRatio = itemAspectRatio,
-        gridState = gridState,
-        topAppBarState = appBarState,
-        onNavigateUp = { navController.navigateUp() },
-        onMediaClick = { media ->
-            navController.navigateSafe(Routes.Details(mediaId = media.id, isAnime = media is Anime))
-        }
-    )
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Library
-// ─────────────────────────────────────────────────────────────────────────────
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun LibraryDestination(navController: NavHostController, backStackEntry: NavBackStackEntry) {
-    val viewModel: LibraryViewModel = koinViewModel()
-    val context = LocalContext.current
-
-    val uiState by viewModel.state.collectAsStateWithLifecycle()
-    val libraryEntries = viewModel.pagingDataFlow.collectAsLazyPagingItems()
-    val modifications by viewModel.notSynchronizedLibraryEntryModifications.collectAsStateWithLifecycle()
-    val offlineSyncCount = modifications?.size ?: 0
-    val localUser by viewModel.localUser.collectAsStateWithLifecycle()
-    val gridState = rememberLazyGridState()
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    // Keep the paging refresh callback wired and clean up on exit, matching the SideEffect +
-    // onDestroyView pattern from LibraryFragment.
-    SideEffect { viewModel.doRefreshListener = { libraryEntries.refresh() } }
-    DisposableEffect(Unit) { onDispose { viewModel.doRefreshListener = null } }
-
-    // Show snackbar on library update errors.
-    val errorUpdateFailed = stringResource(R.string.error_library_update_failed)
-    val errorUpdateNotFound = stringResource(R.string.error_library_update_not_found)
-    LaunchedEffect(Unit) {
-        viewModel.libraryChangeResultFlow.collect { result ->
-            val msg = libraryChangeSnackbarMessage(result, context, errorUpdateFailed, errorUpdateNotFound)
-            if (msg != null) snackbarHostState.showSnackbar(msg)
-        }
-    }
-
-    // Debounced auto-sync when unsynced modifications appear and the network is unmetered,
-    // replacing the Debouncer(5000L) from LibraryFragment.onViewCreated.
-    LaunchedEffect(modifications) {
-        if (!viewModel.hasUser()) return@LaunchedEffect
-        viewModel.invalidatePagingSource()
-        delay(5_000L)
-        val mods = modifications ?: return@LaunchedEffect
-        if (mods.isNotEmpty()) {
-            val cm = context.getSystemService(android.content.Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            if (!cm.isActiveNetworkMetered) {
-                viewModel.synchronizeOfflineLibraryUpdates()
-            }
-        }
-    }
-
-    // Consume the "entry updated" nav result from LibraryEditEntry and refresh the list.
-    backStackEntry.NavResultEffect<Boolean>(NavResults.LIBRARY_ENTRY_UPDATED) {
-        viewModel.triggerAdapterUpdate()
-    }
-
-    // Rating bottom sheet state — replaces the RatingBottomSheet dialog-fragment (plan decision 4).
-    var ratingSheetEntry by remember { mutableStateOf<LibraryEntryWithModification?>(null) }
-    val ratingSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
-    // DB-request dialog state.
-    var showDbDialog by remember { mutableStateOf(false) }
-
-    if (showDbDialog) {
-        DbRequestDialog(
-            onDismiss = { showDbDialog = false },
-            onUrlSelected = { url ->
-                showDbDialog = false
-                navController.navigateSafe(Routes.WebView(url))
-            }
-        )
-    }
-
-    ratingSheetEntry?.let { item ->
-        ModalBottomSheet(
-            onDismissRequest = { ratingSheetEntry = null },
-            sheetState = ratingSheetState
-        ) {
-            RatingScreen(
-                title = item.media?.title ?: "",
-                ratingTwenty = item.ratingTwenty?.takeIf { it != -1 },
-                ratingSystem = RatingSystemUtil.getRatingSystem(),
-                onRate = { rating ->
-                    viewModel.lastRatedLibraryEntry = item.libraryEntry
-                    viewModel.updateRating(rating)
-                    ratingSheetEntry = null
-                },
-                onRemoveRating = {
-                    viewModel.lastRatedLibraryEntry = item.libraryEntry
-                    viewModel.updateRating(null)
-                    ratingSheetEntry = null
-                },
-                onDismiss = { ratingSheetEntry = null }
-            )
-        }
-    }
-
-    LibraryScreen(
-        uiState = uiState,
-        libraryEntries = libraryEntries,
-        offlineSyncCount = offlineSyncCount,
-        isLoggedIn = localUser != null,
-        gridState = gridState,
-        snackbarHostState = snackbarHostState,
-        onSearch = { viewModel.searchLibrary(it) },
-        onKindSelected = { viewModel.setLibraryEntryKind(it) },
-        onStatusToggle = { status ->
-            val current = uiState.filter.libraryStatus.toMutableList()
-            if (current.contains(status)) current.remove(status) else current.add(status)
-            viewModel.setLibraryEntryStatus(current)
-        },
-        onSyncClicked = { viewModel.synchronizeOfflineLibraryUpdates() },
-        onDbRequestClicked = { showDbDialog = true },
-        onLoginClicked = {
-            context.startActivity(Intent(context, AuthenticationActivity::class.java))
