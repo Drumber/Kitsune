@@ -1,3 +1,22 @@
+package io.github.drumber.kitsune.ui.navigation.graph
+
+import android.content.Intent
+import android.net.ConnectivityManager
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarHostState
@@ -496,55 +515,241 @@ private fun CategoriesDestination(navController: NavHostController) {
         onToggleExpand = { viewModel.toggleExpanded(it.node) },
         onToggleSelection = { row, isSelected ->
             viewModel.setCategorySelected(row.wrapper, isSelected)
+        },
+        onEntryClicked = { item ->
+            val media = item.libraryEntry.media ?: return@LibraryScreen
+            navController.navigateSafe(Routes.Details(mediaId = media.id, isAnime = media is Anime))
+        },
+        onEntryLongClicked = { item ->
+            navController.navigateSafe(Routes.LibraryEditEntry(libraryEntryId = item.libraryEntry.id))
+        },
+        onEpisodeWatched = { viewModel.markEpisodeWatched(it) },
+        onEpisodeUnwatched = { viewModel.markEpisodeUnwatched(it) },
+        onRatingClicked = { item -> ratingSheetEntry = item }
+    )
+}
 
-import android.content.Intent
-import android.net.ConnectivityManager
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.rememberTopAppBarState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.navDeepLink
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.algolia.instantsearch.core.connection.AbstractConnection
-import com.algolia.instantsearch.core.connection.ConnectionHandler
-import com.algolia.instantsearch.filter.facet.connectView
-import com.algolia.instantsearch.searchbox.SearchBoxConnector
-import com.algolia.instantsearch.searchbox.connectView
-import com.algolia.search.model.response.ResponseSearch
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.DateValidatorPointBackward
-import com.google.android.material.datepicker.MaterialDatePicker
+@Composable
+private fun DbRequestDialog(onDismiss: () -> Unit, onUrlSelected: (String) -> Unit) {
+    val options = listOf(
+        stringResource(R.string.db_request_anime) to Kitsu.ANIME_DB_REQUEST_URL,
+        stringResource(R.string.db_request_open_anime) to Kitsu.OPEN_ANIME_REQUESTS_URL,
+        stringResource(R.string.db_request_manga) to Kitsu.MANGA_DB_REQUEST_URL,
+        stringResource(R.string.db_request_open_manga) to Kitsu.OPEN_MANGA_REQUESTS_URL
+    )
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.action_db_request)) },
+        text = {
+            Column {
+                options.forEach { (label, url) ->
+                    TextButton(onClick = { onUrlSelected(url) }) { Text(label) }
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(android.R.string.cancel)) }
+        }
+    )
+}
+
+/** Lifted from [LibraryFragment] so the identical snackbar-message logic is reused here. */
+private fun libraryChangeSnackbarMessage(
+    result: io.github.drumber.kitsune.ui.library.LibraryChangeResult,
+    context: android.content.Context,
+    errorUpdateFailed: String,
+    errorUpdateNotFound: String
+): String? = when (result) {
+    is io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibraryUpdateResult ->
+        when (val r = result.result) {
+            is io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Success -> null
+            is io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Failure ->
+                when (r.reason) {
+                    is io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.NotFound -> errorUpdateNotFound
+                    else -> errorUpdateFailed
+                }
+        }
+    is io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibrarySynchronizationResult -> {
+        val failedCount = result.results.count {
+            it !is io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Success
+        }
+        when {
+            failedCount == 0 -> null
+            failedCount == 1 -> errorUpdateFailed
+            else -> context.getString(R.string.error_library_update_failed_multiple, failedCount)
+        }
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LibraryEditEntry
+// ─────────────────────────────────────────────────────────────────────────────
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LibraryEditEntryDestination(navController: NavHostController, libraryEntryId: String) {
+    val viewModel: LibraryEditEntryViewModel = koinViewModel()
+
+    // Initialise the entry once (guards against repeated calls via LibraryEditEntryViewModel).
+    LaunchedEffect(libraryEntryId) {
+        viewModel.initLibraryEntry(libraryEntryId)
+    }
+
+    // When the save/delete operation completes, report the update to Library and pop.
+    val loadState by viewModel.loadState.collectAsStateWithLifecycle()
+    LaunchedEffect(loadState) {
+        if (loadState == LibraryEditEntryViewModel.LoadState.CloseDialog) {
+            navController.setNavResult(NavResults.LIBRARY_ENTRY_UPDATED, true)
+            navController.popBackStack()
+        }
+    }
+
+    // Current entry values (needed for date pickers and the rating sheet).
+    val wrapper by viewModel.libraryEntryWithModification.collectAsStateWithLifecycle()
+
+    // Rating bottom sheet state.
+    var showRatingSheet by remember { mutableStateOf(false) }
+    var datePickerRequest by remember { mutableStateOf<DatePickerRequest?>(null) }
+    val ratingSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val startedDatePickerTitle = stringResource(R.string.library_edit_started)
+    val finishedDatePickerTitle = stringResource(R.string.library_edit_finished)
+
+    datePickerRequest?.let { request ->
+        DatePickerRequestDialog(
+            request = request,
+            onDismiss = { datePickerRequest = null }
+        )
+    }
+
+    if (showRatingSheet) {
+        val entry = wrapper
+        if (entry != null) {
+            ModalBottomSheet(
+                onDismissRequest = { showRatingSheet = false },
+                sheetState = ratingSheetState
+            ) {
+                RatingScreen(
+                    title = entry.media?.title ?: "",
+                    ratingTwenty = entry.ratingTwenty?.takeIf { it != -1 },
+                    ratingSystem = RatingSystemUtil.getRatingSystem(),
+                    onRate = { rating ->
+                        viewModel.updateLibraryEntry { it.copy(ratingTwenty = rating) }
+                        showRatingSheet = false
+                    },
+                    onRemoveRating = {
+                        // -1 signals "remove" only when there was a prior server-side rating;
+                        // null means no rating was ever set (matches the Fragment's logic).
+                        val oldRating = viewModel.uneditedLibraryEntryWrapper?.ratingTwenty
+                        val ratingToSet = if (oldRating == null) null else -1
+                        viewModel.updateLibraryEntry { it.copy(ratingTwenty = ratingToSet) }
+                        showRatingSheet = false
+                    },
+                    onDismiss = { showRatingSheet = false }
+                )
+            }
+        }
+    }
+
+    LibraryEditEntryScreen(
+        onDismiss = { navController.popBackStack() },
+        onOpenStartedDatePicker = {
+            val entry = wrapper ?: return@LibraryEditEntryScreen
+            val today = todayUtcMillis()
+            val selection = entry.startedAt?.parseUtcDate()?.time?.stripTimeUtcMillis() ?: today
+            val finished = entry.finishedAt?.parseUtcDate()?.time?.stripTimeUtcMillis()
+            datePickerRequest = DatePickerRequest(
+                title = startedDatePickerTitle,
+                initialSelection = selection,
+                minDateMillis = null,
+                maxDateMillis = minOf(finished ?: today, today)
+            ) { dateMillis ->
+                viewModel.updateLibraryEntry { it.copy(startedAt = dateMillis.toDate().formatDate(DATE_FORMAT_ISO)) }
+            }
+        },
+        onOpenFinishedDatePicker = {
+            val entry = wrapper ?: return@LibraryEditEntryScreen
+            val today = todayUtcMillis()
+            val selection = entry.finishedAt?.parseUtcDate()?.time?.stripTimeUtcMillis() ?: today
+            val started = entry.startedAt?.parseUtcDate()?.time?.stripTimeUtcMillis()
+            datePickerRequest = DatePickerRequest(
+                title = finishedDatePickerTitle,
+                initialSelection = selection,
+                minDateMillis = started,
+                maxDateMillis = today
+            ) { dateMillis ->
+                viewModel.updateLibraryEntry { it.copy(finishedAt = dateMillis.toDate().formatDate(DATE_FORMAT_ISO)) }
+            }
+        },
+        onShowRatingSheet = { showRatingSheet = true }
+    )
+}
+
+private data class DatePickerRequest(
+    val title: String,
+    val initialSelection: Long,
+    val minDateMillis: Long?,
+    val maxDateMillis: Long,
+    val onDateSelected: (Long) -> Unit
+)
+
+private fun todayUtcMillis(): Long =
+    Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }.timeInMillis
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun DatePickerRequestDialog(
+    request: DatePickerRequest,
+    onDismiss: () -> Unit
+) {
+    val selectableDates = remember(request) {
+        object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long) =
+                utcTimeMillis <= request.maxDateMillis &&
+                        (request.minDateMillis == null || utcTimeMillis >= request.minDateMillis)
+        }
+    }
+    val state = rememberDatePickerState(
+        initialSelectedDateMillis = request.initialSelection,
+        selectableDates = selectableDates
+    )
+
+    DatePickerDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    state.selectedDateMillis?.let(request.onDateSelected)
+                    onDismiss()
+                },
+                enabled = state.selectedDateMillis != null
+            ) {
+                Text(stringResource(android.R.string.ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(android.R.string.cancel))
+            }
+        }
+    ) {
+        DatePicker(
+            state = state,
+            title = {
+                Text(
+                    text = request.title,
+                    modifier = Modifier.padding(start = 24.dp, end = 12.dp, top = 16.dp)
+                )
+            }
+        )
+    }
+}
+
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.common.Filter
@@ -556,18 +761,6 @@ import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
 import io.github.drumber.kitsune.data.presentation.model.media.RequestType
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
-import io.github.drumber.kitsune.ui.search.filter.FacetListViewState
-import io.github.drumber.kitsune.ui.search.filter.FacetScreen
-import io.github.drumber.kitsune.ui.search.filter.NumberRangeViewState
-import io.github.drumber.kitsune.ui.component.algolia.range.connectView
-import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
-import io.github.drumber.kitsune.util.formatDate
-import io.github.drumber.kitsune.util.network.ResponseData
-import io.github.drumber.kitsune.util.parseUtcDate
-import io.github.drumber.kitsune.util.rating.RatingSystemUtil
-import io.github.drumber.kitsune.util.stripTimeUtcMillis
-import io.github.drumber.kitsune.util.toDate
-import io.github.drumber.kitsune.util.ui.DateValidatorPointBetween
         kindState = kindState,
         yearState = yearState,
         avgRatingState = avgRatingState,
@@ -731,191 +924,3 @@ private fun LibraryDestination(navController: NavHostController, backStackEntry:
         onDbRequestClicked = { showDbDialog = true },
         onLoginClicked = {
             context.startActivity(Intent(context, AuthenticationActivity::class.java))
-        },
-        onEntryClicked = { item ->
-            val media = item.libraryEntry.media ?: return@LibraryScreen
-            navController.navigateSafe(Routes.Details(mediaId = media.id, isAnime = media is Anime))
-        },
-        onEntryLongClicked = { item ->
-            navController.navigateSafe(Routes.LibraryEditEntry(libraryEntryId = item.libraryEntry.id))
-        },
-        onEpisodeWatched = { viewModel.markEpisodeWatched(it) },
-        onEpisodeUnwatched = { viewModel.markEpisodeUnwatched(it) },
-        onRatingClicked = { item -> ratingSheetEntry = item }
-    )
-}
-
-@Composable
-private fun DbRequestDialog(onDismiss: () -> Unit, onUrlSelected: (String) -> Unit) {
-    val options = listOf(
-        stringResource(R.string.db_request_anime) to Kitsu.ANIME_DB_REQUEST_URL,
-        stringResource(R.string.db_request_open_anime) to Kitsu.OPEN_ANIME_REQUESTS_URL,
-        stringResource(R.string.db_request_manga) to Kitsu.MANGA_DB_REQUEST_URL,
-        stringResource(R.string.db_request_open_manga) to Kitsu.OPEN_MANGA_REQUESTS_URL
-    )
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.action_db_request)) },
-        text = {
-            Column {
-                options.forEach { (label, url) ->
-                    TextButton(onClick = { onUrlSelected(url) }) { Text(label) }
-                }
-            }
-        },
-        confirmButton = {},
-        dismissButton = {
-            TextButton(onClick = onDismiss) { Text(stringResource(android.R.string.cancel)) }
-        }
-    )
-}
-
-/** Lifted from [LibraryFragment] so the identical snackbar-message logic is reused here. */
-private fun libraryChangeSnackbarMessage(
-    result: io.github.drumber.kitsune.ui.library.LibraryChangeResult,
-    context: android.content.Context,
-    errorUpdateFailed: String,
-    errorUpdateNotFound: String
-): String? = when (result) {
-    is io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibraryUpdateResult ->
-        when (val r = result.result) {
-            is io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Success -> null
-            is io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Failure ->
-                when (r.reason) {
-                    is io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.NotFound -> errorUpdateNotFound
-                    else -> errorUpdateFailed
-                }
-        }
-    is io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibrarySynchronizationResult -> {
-        val failedCount = result.results.count {
-            it !is io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Success
-        }
-        when {
-            failedCount == 0 -> null
-            failedCount == 1 -> errorUpdateFailed
-            else -> context.getString(R.string.error_library_update_failed_multiple, failedCount)
-        }
-    }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// LibraryEditEntry
-// ─────────────────────────────────────────────────────────────────────────────
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun LibraryEditEntryDestination(navController: NavHostController, libraryEntryId: String) {
-    val activity = LocalActivity.current as? FragmentActivity ?: return
-
-    val viewModel: LibraryEditEntryViewModel = koinViewModel()
-    val fragmentManager = activity.supportFragmentManager
-
-    // Initialise the entry once (guards against repeated calls via LibraryEditEntryViewModel).
-    LaunchedEffect(libraryEntryId) {
-        viewModel.initLibraryEntry(libraryEntryId)
-    }
-
-    // When the save/delete operation completes, report the update to Library and pop.
-    val loadState by viewModel.loadState.collectAsStateWithLifecycle()
-    LaunchedEffect(loadState) {
-        if (loadState == LibraryEditEntryViewModel.LoadState.CloseDialog) {
-            navController.setNavResult(NavResults.LIBRARY_ENTRY_UPDATED, true)
-            navController.popBackStack()
-        }
-    }
-
-    // Current entry values (needed for date pickers and the rating sheet).
-    val wrapper by viewModel.libraryEntryWithModification.collectAsStateWithLifecycle()
-
-    // Rating bottom sheet state.
-    var showRatingSheet by remember { mutableStateOf(false) }
-    val ratingSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val startedDatePickerTitle = stringResource(R.string.library_edit_started)
-    val finishedDatePickerTitle = stringResource(R.string.library_edit_finished)
-
-    if (showRatingSheet) {
-        val entry = wrapper
-        if (entry != null) {
-            ModalBottomSheet(
-                onDismissRequest = { showRatingSheet = false },
-                sheetState = ratingSheetState
-            ) {
-                RatingScreen(
-                    title = entry.media?.title ?: "",
-                    ratingTwenty = entry.ratingTwenty?.takeIf { it != -1 },
-                    ratingSystem = RatingSystemUtil.getRatingSystem(),
-                    onRate = { rating ->
-                        viewModel.updateLibraryEntry { it.copy(ratingTwenty = rating) }
-                        showRatingSheet = false
-                    },
-                    onRemoveRating = {
-                        // -1 signals "remove" only when there was a prior server-side rating;
-                        // null means no rating was ever set (matches the Fragment's logic).
-                        val oldRating = viewModel.uneditedLibraryEntryWrapper?.ratingTwenty
-                        val ratingToSet = if (oldRating == null) null else -1
-                        viewModel.updateLibraryEntry { it.copy(ratingTwenty = ratingToSet) }
-                        showRatingSheet = false
-                    },
-                    onDismiss = { showRatingSheet = false }
-                )
-            }
-        }
-    }
-
-    LibraryEditEntryScreen(
-        onDismiss = { navController.popBackStack() },
-        onOpenStartedDatePicker = {
-            val entry = wrapper ?: return@LibraryEditEntryScreen
-            val selection = entry.startedAt?.parseUtcDate()?.time?.stripTimeUtcMillis()
-                ?: MaterialDatePicker.todayInUtcMilliseconds()
-            val validator = entry.finishedAt?.parseUtcDate()?.time?.stripTimeUtcMillis()
-                ?.let { DateValidatorPointBackward.before(it) }
-                ?: DateValidatorPointBackward.now()
-            showDatePicker(
-                fragmentManager = fragmentManager,
-                title = startedDatePickerTitle,
-                selection = selection,
-                validator = validator
-            ) { dateMillis ->
-                viewModel.updateLibraryEntry { it.copy(startedAt = dateMillis.toDate().formatDate(DATE_FORMAT_ISO)) }
-            }
-        },
-        onOpenFinishedDatePicker = {
-            val entry = wrapper ?: return@LibraryEditEntryScreen
-            val selection = entry.finishedAt?.parseUtcDate()?.time?.stripTimeUtcMillis()
-                ?: MaterialDatePicker.todayInUtcMilliseconds()
-            val validator = entry.startedAt?.parseUtcDate()?.time?.stripTimeUtcMillis()
-                ?.let { DateValidatorPointBetween.nowAndFrom(it) }
-                ?: DateValidatorPointBackward.now()
-            showDatePicker(
-                fragmentManager = fragmentManager,
-                title = finishedDatePickerTitle,
-                selection = selection,
-                validator = validator
-            ) { dateMillis ->
-                viewModel.updateLibraryEntry { it.copy(finishedAt = dateMillis.toDate().formatDate(DATE_FORMAT_ISO)) }
-            }
-        },
-        onShowRatingSheet = { showRatingSheet = true }
-    )
-}
-
-private fun showDatePicker(
-    fragmentManager: androidx.fragment.app.FragmentManager,
-    title: String,
-    selection: Long,
-    validator: CalendarConstraints.DateValidator,
-    onDateSelected: (Long) -> Unit
-) {
-    val constraints = CalendarConstraints.Builder()
-        .setValidator(validator)
-        .setEnd(MaterialDatePicker.todayInUtcMilliseconds())
-        .build()
-    val picker = MaterialDatePicker.Builder.datePicker()
-        .setTitleText(title)
-        .setSelection(selection)
-        .setCalendarConstraints(constraints)
-        .build()
-    picker.addOnPositiveButtonClickListener(onDateSelected)
-    picker.show(fragmentManager, "DATE_PICKER_$title")
-}
