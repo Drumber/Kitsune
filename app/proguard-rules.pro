@@ -6,35 +6,6 @@
 #   http://developer.android.com/guide/developing/tools/proguard.html
 #-printusage r8-report/usage.txt
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
-
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
-
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
-
--dontobfuscate
-
-# General
--keepattributes SourceFile,LineNumberTable,Signature,*Annotation*,EnclosingMethod,Exceptions,InnerClasses
-
-# Kotlin reflection
--keep class kotlin.Metadata { *; }
-
-# Slf4j
--dontwarn org.slf4j.impl.StaticLoggerBinder
--dontwarn org.slf4j.impl.StaticMDCBinder
-
-# Markwon (optional commonmark strikethrough extension is not on the classpath)
--dontwarn org.commonmark.ext.gfm.strikethrough.Strikethrough
 
 # Jackson
 -keepnames class com.fasterxml.jackson.** { *; }

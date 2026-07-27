@@ -171,6 +171,10 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.coil.gif)
+
+    // Markdown rendering (post content)
+    implementation(libs.mikepenz.markdown.renderer)
+    implementation(libs.mikepenz.markdown.renderer.m3)
     implementation(libs.mikepenz.markdown.renderer.coil3)
     implementation(libs.saket.telephoto.zoomable.image.coil3)
 
@@ -362,11 +366,6 @@ dependencies {
 
     // ViewPager
     implementation(libs.androidx.viewpager2)
-
-    // Markwon (post content formatting)
-    implementation(libs.noties.markwon.core)
-    implementation(libs.noties.markwon.html)
-    implementation(libs.noties.markwon.linkify)
 
     // Koin DI
     implementation(libs.insert.koin.android)
