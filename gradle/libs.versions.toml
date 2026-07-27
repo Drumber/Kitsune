@@ -9,13 +9,6 @@ androidxFragment = "1.8.9"
 hauler = "5.0.0"
 okHttp = "5.4.0"
 photoView = "2.3.0"
-preferenceKtx = "1.2.1"
-retrofit = "3.0.0"
-robolectric = "4.16.1"
-screengrab = "2.1.1"
-testRules = "1.7.0"
-treeView = "1.2.9"
-turbine = "1.2.1"
 [versions]
 aboutLibraries = "11.1.4"
 accompanist = "0.36.0"
@@ -183,9 +176,6 @@ androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", versi
 androidx-espresso-contrib = { module = "androidx.test.espresso:espresso-contrib", version.ref = "espressoCore" }
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "androidxFragment" }
-androidx-workmanager = { module = "androidx.work:work-runtime-ktx", version.ref = "androidxWorkManager" }
-assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
-bmelnychuk-treeview = { module = "com.github.bmelnychuk:atv", version.ref = "treeView" }
 chibatching-kotpref = { module = "com.chibatching.kotpref:kotpref", version.ref = "kotpref" }
 chibatching-kotpref-enum = { module = "com.chibatching.kotpref:enum-support", version.ref = "kotpref" }
 chibatching-kotpref-livedata = { module = "com.chibatching.kotpref:livedata-support", version.ref = "kotpref" }

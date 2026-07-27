@@ -333,46 +333,6 @@ dependencies {
     // Navigation
     implementation(libs.androidx.fragment.ktx)
 
-    // Koin DI
-    implementation(libs.insert.koin.android)
-
-    // jsonapi-converter
-    implementation(libs.jasminb.jsonapi)
-
-    // Jackson
-    implementation(libs.fasterxml.jackson.databind)
-    implementation(libs.fasterxml.jackson.kotlin)
-
-    // Retrofit
-    implementation(libs.squareup.retrofit2.retrofit)
-    implementation(libs.squareup.retrofit2.jackson)
-
-    // OkHttp
-    implementation(libs.squareup.okhttp3.okhttp)
-    implementation(libs.squareup.okhttp3.logging)
-
-    // Algolia Instantsearch
-    implementation(libs.algolia.instantsearch.android)
-    implementation(libs.algolia.instantsearch.android.paging3)
-    implementation(libs.algolia.instantsearch.coroutines)
-
-    // Kotlinx serialization
-    implementation(libs.jetbrains.kotlinx.serialization)
-
-    // Ktor client
-    implementation(libs.ktor.client.okhttp)
-
-    // Kotpref
-    implementation(libs.chibatching.kotpref)
-    implementation(libs.chibatching.kotpref.enum)
-    implementation(libs.chibatching.kotpref.livedata)
-
-    // Security Crypto
-    implementation(libs.androidx.security.crypto)
-
-    // TreeView
-    implementation(libs.bmelnychuk.treeview)
-
     // Photo View
     implementation(libs.chrisbanes.photoview)
 

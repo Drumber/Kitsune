@@ -1,16 +1,3 @@
-package io.github.drumber.kitsune.ui.navigation.graph
-
-import android.content.Intent
-import android.net.ConnectivityManager
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarHostState
@@ -24,13 +11,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.fragment.app.FragmentActivity
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
@@ -45,9 +35,6 @@ import com.algolia.instantsearch.filter.facet.connectView
 import com.algolia.instantsearch.searchbox.SearchBoxConnector
 import com.algolia.instantsearch.searchbox.connectView
 import com.algolia.search.model.response.ResponseSearch
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.DateValidatorPointBackward
-import com.google.android.material.datepicker.MaterialDatePicker
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.common.Filter
@@ -58,7 +45,6 @@ import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
 import io.github.drumber.kitsune.data.presentation.model.media.RequestType
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.compose.collectAsStateWithLifecycle
 import io.github.drumber.kitsune.ui.library.LibraryScreen
 import io.github.drumber.kitsune.ui.library.LibraryViewModel
@@ -82,7 +68,9 @@ import io.github.drumber.kitsune.ui.navigation.toMediaSelector
 import io.github.drumber.kitsune.ui.search.SearchBoxViewCompose
 import io.github.drumber.kitsune.ui.search.SearchScreen
 import io.github.drumber.kitsune.ui.search.SearchViewModel
-import io.github.drumber.kitsune.ui.search.categories.CategoriesDialogFragment
+import io.github.drumber.kitsune.ui.search.categories.CategoriesScreen
+import io.github.drumber.kitsune.ui.search.categories.CategoriesViewModel
+import io.github.drumber.kitsune.ui.search.categories.rememberCategoryRows
 import io.github.drumber.kitsune.ui.search.filter.FacetListViewState
 import io.github.drumber.kitsune.ui.search.filter.FacetScreen
 import io.github.drumber.kitsune.ui.search.filter.NumberRangeViewState
@@ -94,11 +82,12 @@ import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.rating.RatingSystemUtil
 import io.github.drumber.kitsune.util.stripTimeUtcMillis
 import io.github.drumber.kitsune.util.toDate
-import io.github.drumber.kitsune.util.ui.DateValidatorPointBetween
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.koin.androidx.compose.koinViewModel
 import java.lang.ref.WeakReference
+import java.util.Calendar
+import java.util.TimeZone
 
 fun NavGraphBuilder.homeGraph(navController: NavHostController) {
     composable<Routes.Home> {
@@ -114,6 +103,10 @@ fun NavGraphBuilder.homeGraph(navController: NavHostController) {
 
     composable<Routes.Facet> {
         FacetDestination(navController)
+    }
+
+    composable<Routes.Categories> {
+        CategoriesDestination(navController)
     }
 
     composable<Routes.MediaList> { backStackEntry ->
@@ -404,7 +397,7 @@ private class SearchResponseListener(
 
 @Composable
 private fun FacetDestination(navController: NavHostController) {
-    val activity = LocalActivity.current as? FragmentActivity ?: return
+    val activity = LocalActivity.current as? ComponentActivity ?: return
 
     val viewModel: SearchViewModel = koinViewModel(
         viewModelStoreOwner = activity
@@ -423,7 +416,11 @@ private fun FacetDestination(navController: NavHostController) {
     val clientStatus by viewModel.searchClientStatus.collectAsStateWithLifecycle()
     val filters by viewModel.filtersLiveData.collectAsStateWithLifecycle()
     val filterCount = filters?.getFilters()?.size ?: 0
-    val categoriesCount = KitsunePref.searchCategories.size
+    var categoriesCount by remember { mutableIntStateOf(KitsunePref.searchCategories.size) }
+    LifecycleResumeEffect(Unit) {
+        categoriesCount = KitsunePref.searchCategories.size
+        onPauseOrDispose { }
+    }
 
     // Connect the Algolia filter facet connectors to the Compose view states, mirroring
     // FacetFragment.observeFilterFacets(). Re-runs when filterFacets changes (client recreation).
@@ -448,13 +445,129 @@ private fun FacetDestination(navController: NavHostController) {
         filterCount = filterCount,
         onResetFilter = { viewModel.clearSearchFilter() },
         onNavigateUp = { navController.navigateUp() },
-        onCategoriesClick = {
-            val dialog = CategoriesDialogFragment.showDialog(
-                activity.supportFragmentManager
-            )
-            dialog.setOnDismissListener { viewModel.updateCategoryFilters() }
-        },
+        onCategoriesClick = { navController.navigateSafe(Routes.Categories) },
         categoriesCount = categoriesCount,
+        kindState = kindState,
+        yearState = yearState,
+        avgRatingState = avgRatingState,
+        seasonState = seasonState,
+        subtypeState = subtypeState,
+        streamersState = streamersState,
+        ageRatingState = ageRatingState
+    )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Categories
+// ─────────────────────────────────────────────────────────────────────────────
+
+@Composable
+private fun CategoriesDestination(navController: NavHostController) {
+    val activity = LocalActivity.current as? ComponentActivity ?: return
+
+    val viewModel: CategoriesViewModel = koinViewModel()
+    val searchViewModel: SearchViewModel = koinViewModel(viewModelStoreOwner = activity)
+
+    val rootNodes by viewModel.rootNodes.collectAsStateWithLifecycle()
+    val revision by viewModel.revision.collectAsStateWithLifecycle()
+    val expandedIds by viewModel.expandedIds.collectAsStateWithLifecycle()
+    val selected by viewModel.selectedCategories.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val hasError by viewModel.hasError.collectAsStateWithLifecycle()
+
+    val rows = rememberCategoryRows(rootNodes, revision, expandedIds, selected)
+
+    val dismiss = {
+        viewModel.storeSelectedCategories()
+        searchViewModel.updateCategoryFilters()
+        navController.navigateUp()
+        Unit
+    }
+
+    BackHandler { dismiss() }
+
+    CategoriesScreen(
+        rows = rows,
+        isLoading = isLoading,
+        hasError = hasError,
+        onRetry = { viewModel.fetchChildCategories(null) },
+        onDismiss = dismiss,
+        onUnselectAll = { viewModel.clearSelectedCategories() },
+        onToggleExpand = { viewModel.toggleExpanded(it.node) },
+        onToggleSelection = { row, isSelected ->
+            viewModel.setCategorySelected(row.wrapper, isSelected)
+
+import android.content.Intent
+import android.net.ConnectivityManager
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.navDeepLink
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.algolia.instantsearch.core.connection.AbstractConnection
+import com.algolia.instantsearch.core.connection.ConnectionHandler
+import com.algolia.instantsearch.filter.facet.connectView
+import com.algolia.instantsearch.searchbox.SearchBoxConnector
+import com.algolia.instantsearch.searchbox.connectView
+import com.algolia.search.model.response.ResponseSearch
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
+import com.google.android.material.datepicker.MaterialDatePicker
+import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.common.media.MediaType
+import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification
+import io.github.drumber.kitsune.data.presentation.model.media.Anime
+import io.github.drumber.kitsune.data.presentation.model.media.Media
+import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
+import io.github.drumber.kitsune.data.presentation.model.media.RequestType
+import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
+import io.github.drumber.kitsune.ui.search.filter.FacetListViewState
+import io.github.drumber.kitsune.ui.search.filter.FacetScreen
+import io.github.drumber.kitsune.ui.search.filter.NumberRangeViewState
+import io.github.drumber.kitsune.ui.component.algolia.range.connectView
+import io.github.drumber.kitsune.util.DATE_FORMAT_ISO
+import io.github.drumber.kitsune.util.formatDate
+import io.github.drumber.kitsune.util.network.ResponseData
+import io.github.drumber.kitsune.util.parseUtcDate
+import io.github.drumber.kitsune.util.rating.RatingSystemUtil
+import io.github.drumber.kitsune.util.stripTimeUtcMillis
+import io.github.drumber.kitsune.util.toDate
+import io.github.drumber.kitsune.util.ui.DateValidatorPointBetween
         kindState = kindState,
         yearState = yearState,
         avgRatingState = avgRatingState,
