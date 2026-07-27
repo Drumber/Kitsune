@@ -1,7 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     alias(libs.plugins.android.application)
@@ -100,6 +98,38 @@ android {
 
 tasks.matching { it.name.contains("connected\\w*AndroidTest".toRegex()) }.configureEach {
     val screenShotModeEnabled = screenshotMode.toBoolean()
+    doFirst {
+        if (!screenShotModeEnabled) {
+            // test will be skipped by 'assumeTrue(BuildConfig.SCREENSHOT_MODE_ENABLED)' in @BeforeClass
+            logger.lifecycle("NOTE: SCREENSHOT_MODE_ENABLED is disabled. Instrumented test 'CaptureScreenshots.kt' will be skipped...")
+        }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
+        languageVersion = KotlinVersion.KOTLIN_2_2
+        freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
+        freeCompilerArgs.add("-Xannotation-default-target=param-property")
+    }
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
+aboutLibraries {
+    offlineMode = true
+    // Remove the "generated" timestamp to allow for reproducible builds
+    excludeFields = arrayOf("generated")
+}
+
+kover {
+    reports {
+        filters {
+            excludes {
+                // Generated code (Room, KSP, etc.)
                 classes(
                     "*.BuildConfig",
                     "*_Factory",
@@ -256,80 +286,3 @@ dependencies {
     // fastlane screengrab
     androidTestImplementation(libs.fastlane.screengrab)
 }
-
-    doFirst {
-        if (!screenShotModeEnabled) {
-            // test will be skipped by 'assumeTrue(BuildConfig.SCREENSHOT_MODE_ENABLED)' in @BeforeClass
-            logger.lifecycle("NOTE: SCREENSHOT_MODE_ENABLED is disabled. Instrumented test 'CaptureScreenshots.kt' will be skipped...")
-        }
-    }
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget = JvmTarget.JVM_11
-        languageVersion = KotlinVersion.KOTLIN_2_2
-        freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
-        freeCompilerArgs.add("-Xannotation-default-target=param-property")
-    }
-}
-
-ksp {
-    arg("room.schemaLocation", "$projectDir/schemas")
-}
-
-aboutLibraries {
-    offlineMode = true
-    // Remove the "generated" timestamp to allow for reproducible builds
-    excludeFields = arrayOf("generated")
-}
-
-kover {
-    reports {
-        filters {
-            excludes {
-                // Generated code (data binding, navigation safe-args, Glide, Room, KSP, etc.)
-                classes(
-                    "*.databinding.*",
-                    "*.BR",
-                    "*.BuildConfig",
-                    "*Binding",
-                    "*Args",
-                    "*Directions",
-                    "*_Factory",
-                    "*_Impl",
-                    "hilt_aggregated_deps.*"
-                )
-                annotatedBy("androidx.compose.runtime.Composable")
-            }
-        }
-    }
-}
-
-dependencies {
-    // Android core and support libs
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.constraint.layout)
-    implementation(libs.androidx.core.splashscreen)
-
-    // Compose
-    val composeBom = platform(libs.androidx.compose.bom)
-    implementation(composeBom)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.material3.adaptive)
-    implementation(libs.androidx.compose.material.icons.core)
-    implementation(libs.androidx.compose.material.icons.extended)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.paging.compose)
-    implementation(libs.androidx.lifecycle.runtime.compose)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.insert.koin.androidx.compose)
-    implementation(libs.accompanist.themeadapter.material3)
-    implementation(libs.accompanist.permissions)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-
-    // Navigation
-    implementation(libs.androidx.fragment.ktx)
