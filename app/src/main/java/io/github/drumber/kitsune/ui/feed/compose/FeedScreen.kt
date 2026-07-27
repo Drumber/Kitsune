@@ -20,10 +20,13 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.paging.compose.LazyPagingItems
 import io.github.drumber.kitsune.R
@@ -63,6 +66,7 @@ fun FeedScreen(
 ) {
     val pagerState = rememberPagerState(pageCount = { FEED_PAGE_COUNT })
     val coroutineScope = rememberCoroutineScope()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val scrollToTopEvents = LocalReselectEvents.current
     val tabTitles = listOf(
         stringResource(R.string.feed_tab_global),
@@ -71,6 +75,8 @@ fun FeedScreen(
 
     LaunchedEffect(Unit) {
         scrollToTopEvents.collect {
+            scrollBehavior.state.heightOffset = 0f
+            scrollBehavior.state.contentOffset = 0f
             when (pagerState.currentPage) {
                 PAGE_GLOBAL -> globalListState.animateScrollToItem(0)
                 PAGE_FOLLOWING -> followingListState.animateScrollToItem(0)
@@ -79,12 +85,26 @@ fun FeedScreen(
     }
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            FeedTopBar(
-                onNavigateToGroups = onNavigateToGroups,
-                onNavigateToNotifications = onNavigateToNotifications
-            )
+            Column {
+                FeedTopBar(
+                    onNavigateToGroups = onNavigateToGroups,
+                    onNavigateToNotifications = onNavigateToNotifications,
+                    scrollBehavior = scrollBehavior
+                )
+                TabRow(selectedTabIndex = pagerState.currentPage) {
+                    tabTitles.forEachIndexed { index, title ->
+                        Tab(
+                            selected = pagerState.currentPage == index,
+                            onClick = {
+                                coroutineScope.launch { pagerState.animateScrollToPage(index) }
+                            },
+                            text = { Text(title) }
+                        )
+                    }
+                }
+            }
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onCreatePost) {
@@ -92,45 +112,37 @@ fun FeedScreen(
             }
         }
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
-            TabRow(selectedTabIndex = pagerState.currentPage) {
-                tabTitles.forEachIndexed { index, title ->
-                    Tab(
-                        selected = pagerState.currentPage == index,
-                        onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
-                        text = { Text(title) }
-                    )
-                }
-            }
-            HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
-                val pagePosts = if (page == PAGE_GLOBAL) globalPosts else followingPosts
-                val listState = if (page == PAGE_GLOBAL) globalListState else followingListState
-                FeedListScreen(
-                    posts = pagePosts,
-                    pinnedPost = null,
-                    loginRequired = loginRequired && page == PAGE_FOLLOWING,
-                    interactionStates = interactionStates,
-                    revealedPosts = revealedPosts,
-                    nsfwAllowed = nsfwAllowed,
-                    currentUserId = currentUserId,
-                    snackbarMessage = if (pagerState.currentPage == page) {
-                        if (page == PAGE_GLOBAL) globalSnackbarMessage else followingSnackbarMessage
-                    } else {
-                        null
-                    },
-                    onSnackbarShown = if (page == PAGE_GLOBAL) onGlobalSnackbarShown else onFollowingSnackbarShown,
-                    onRefresh = { onRefresh(page) },
-                    onPostClick = onPostClick,
-                    onLikeClick = { post, targetLiked -> onLikeClick(post, targetLiked, page) },
-                    onRevealClick = { post -> onRevealClick(post, page) },
-                    onMediaClick = onMediaClick,
-                    onEditClick = onEditClick,
-                    onDeleteClick = { post -> onDeleteClick(post, page) },
-                    onAuthorClick = onAuthorClick,
-                    lazyListState = listState,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxSize().padding(innerPadding)
+        ) { page ->
+            val pagePosts = if (page == PAGE_GLOBAL) globalPosts else followingPosts
+            val listState = if (page == PAGE_GLOBAL) globalListState else followingListState
+            FeedListScreen(
+                posts = pagePosts,
+                pinnedPost = null,
+                loginRequired = loginRequired && page == PAGE_FOLLOWING,
+                interactionStates = interactionStates,
+                revealedPosts = revealedPosts,
+                nsfwAllowed = nsfwAllowed,
+                currentUserId = currentUserId,
+                snackbarMessage = if (pagerState.currentPage == page) {
+                    if (page == PAGE_GLOBAL) globalSnackbarMessage else followingSnackbarMessage
+                } else {
+                    null
+                },
+                onSnackbarShown = if (page == PAGE_GLOBAL) onGlobalSnackbarShown else onFollowingSnackbarShown,
+                onRefresh = { onRefresh(page) },
+                onPostClick = onPostClick,
+                onLikeClick = { post, targetLiked -> onLikeClick(post, targetLiked, page) },
+                onRevealClick = { post -> onRevealClick(post, page) },
+                onMediaClick = onMediaClick,
+                onEditClick = onEditClick,
+                onDeleteClick = { post -> onDeleteClick(post, page) },
+                onAuthorClick = onAuthorClick,
+                lazyListState = listState,
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }
@@ -139,7 +151,8 @@ fun FeedScreen(
 @Composable
 private fun FeedTopBar(
     onNavigateToGroups: () -> Unit,
-    onNavigateToNotifications: () -> Unit
+    onNavigateToNotifications: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior
 ) {
     TopAppBar(
         title = { Text(stringResource(R.string.nav_feed)) },
@@ -153,7 +166,8 @@ private fun FeedTopBar(
                     contentDescription = stringResource(R.string.action_notifications)
                 )
             }
-        }
+        },
+        scrollBehavior = scrollBehavior
     )
 }
 

@@ -44,6 +44,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.zIndex
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import io.github.drumber.kitsune.R
@@ -95,7 +96,6 @@ fun PostCard(
         } else {
             PostContentBody(
                 post = post,
-                interactionState = interactionState,
                 onMediaClick = onMediaClick
             )
         }
@@ -197,12 +197,12 @@ private fun PostContentWarning(isNsfw: Boolean, onReveal: () -> Unit) {
 @Composable
 private fun PostContentBody(
     post: Post,
-    interactionState: PostInteractionStore.State?,
     onMediaClick: (Post) -> Unit
 ) {
-    if (!post.content.isNullOrBlank()) {
+    if (!post.contentFormatted.isNullOrBlank() || !post.content.isNullOrBlank()) {
         MarkdownText(
             content = post.content,
+            contentFormatted = post.contentFormatted,
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -218,14 +218,6 @@ private fun PostContentBody(
     if (!post.mediaTitle.isNullOrBlank()) {
         Spacer(Modifier.height(8.dp))
         PostMediaCard(post = post, onMediaClick = onMediaClick)
-    }
-    val likerAvatars = interactionState?.likerAvatars.orEmpty()
-    if (likerAvatars.isNotEmpty()) {
-        Spacer(Modifier.height(4.dp))
-        PostLikerAvatars(
-            likerAvatars = likerAvatars,
-            totalLikes = interactionState?.likesCount ?: post.likesCount
-        )
     }
 }
 
@@ -332,11 +324,19 @@ private fun PostMediaCard(post: Post, onMediaClick: (Post) -> Unit) {
 @Composable
 private fun PostLikerAvatars(likerAvatars: List<String>, totalLikes: Int) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        likerAvatars.take(3).forEach { url ->
-            Avatar(imageUrl = url, size = 20.dp, modifier = Modifier.padding(end = 2.dp))
+        val visibleLikers = likerAvatars.take(3)
+        Row(horizontalArrangement = Arrangement.spacedBy((-6).dp)) {
+            visibleLikers.forEachIndexed { index, url ->
+                Avatar(
+                    imageUrl = url,
+                    size = 20.dp,
+                    modifier = Modifier.zIndex((visibleLikers.size - index).toFloat())
+                )
+            }
         }
-        val remaining = totalLikes - likerAvatars.size
+        val remaining = (totalLikes - visibleLikers.size).coerceAtLeast(0)
         if (remaining > 0) {
+            Spacer(Modifier.width(6.dp))
             Text(
                 text = stringResource(R.string.feed_likers_more, remaining),
                 style = MaterialTheme.typography.labelSmall,
@@ -355,31 +355,40 @@ private fun PostCardFooter(
     val isLiked = interactionState?.isLiked ?: false
     val likesCount = interactionState?.likesCount ?: post.likesCount
     val commentsCount = interactionState?.commentsCount ?: post.commentsCount
+    val likerAvatars = interactionState?.likerAvatars.orEmpty()
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = { onLikeClick(post, !isLiked) }, modifier = Modifier.size(36.dp)) {
-            Icon(
-                imageVector = if (isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                contentDescription = stringResource(
-                    if (isLiked) R.string.cd_unlike_post else R.string.cd_like_post,
-                    likesCount
-                ),
-                tint = if (isLiked) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    MaterialTheme.colorScheme.onSurfaceVariant
-                }
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = { onLikeClick(post, !isLiked) }, modifier = Modifier.size(36.dp)) {
+                Icon(
+                    imageVector = if (isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription = stringResource(
+                        if (isLiked) R.string.cd_unlike_post else R.string.cd_like_post,
+                        likesCount
+                    ),
+                    tint = if (isLiked) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    }
+                )
+            }
+            Text(
+                text = likesCount.toString(),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+            if (likerAvatars.isNotEmpty()) {
+                Spacer(Modifier.width(8.dp))
+                PostLikerAvatars(likerAvatars = likerAvatars, totalLikes = likesCount)
+            }
         }
-        Text(
-            text = likesCount.toString(),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(Modifier.width(16.dp))
+        Spacer(Modifier.width(12.dp))
         Icon(
             imageVector = Icons.Outlined.ChatBubbleOutline,
             contentDescription = stringResource(R.string.cd_comments_count, commentsCount),

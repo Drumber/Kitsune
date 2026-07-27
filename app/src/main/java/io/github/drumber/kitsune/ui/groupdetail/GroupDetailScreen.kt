@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.ui.groupdetail
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -29,6 +31,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,10 +43,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -51,9 +58,10 @@ import coil3.compose.AsyncImage
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.group.Group
 import io.github.drumber.kitsune.ui.component.compose.list.KitsuneBackButton
-import io.github.drumber.kitsune.ui.component.compose.list.KitsuneTopAppBar
 import io.github.drumber.kitsune.ui.component.compose.media.Avatar
+import io.github.drumber.kitsune.util.extensions.getColor
 import kotlinx.coroutines.flow.Flow
+import kotlin.math.roundToInt
 
 private const val TAB_ABOUT = 0
 private const val TAB_POSTS = 1
@@ -74,7 +82,7 @@ fun GroupDetailScreen(
     feedContent: @Composable () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
     val loginRequiredMsg = stringResource(R.string.group_login_required)
     val joinFailedMsg = stringResource(R.string.group_join_failed)
@@ -104,11 +112,22 @@ fun GroupDetailScreen(
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            KitsuneTopAppBar(
-                title = { Text(group?.name.orEmpty()) },
-                navigationIcon = { KitsuneBackButton(onNavigateUp = onNavigateUp) },
-                scrollBehavior = scrollBehavior
-            )
+            Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
+                GroupDetailTopBar(
+                    group = group,
+                    collapsedFraction = scrollBehavior.state.collapsedFraction,
+                    scrollBehavior = scrollBehavior,
+                    onNavigateUp = onNavigateUp,
+                    onOpenCover = onOpenCover
+                )
+                GroupDetailHeader(
+                    group = group,
+                    membershipState = membershipState,
+                    onJoinLeave = onJoinLeave,
+                    modifier = Modifier.collapseWith(scrollBehavior.state.collapsedFraction)
+                )
+                GroupDetailTabs(selectedTab = selectedTab, onTabSelected = { selectedTab = it })
+            }
         },
         floatingActionButton = {
             if (selectedTab == TAB_POSTS && membershipState.isVisible) {
@@ -131,11 +150,7 @@ fun GroupDetailScreen(
         } else {
             GroupDetailContent(
                 group = group,
-                membershipState = membershipState,
                 selectedTab = selectedTab,
-                onTabSelected = { selectedTab = it },
-                onJoinLeave = onJoinLeave,
-                onOpenCover = onOpenCover,
                 feedContent = feedContent,
                 modifier = Modifier
                     .fillMaxSize()
@@ -148,39 +163,70 @@ fun GroupDetailScreen(
 @Composable
 private fun GroupDetailContent(
     group: Group?,
-    membershipState: GroupDetailViewModel.MembershipState,
     selectedTab: Int,
-    onTabSelected: (Int) -> Unit,
-    onJoinLeave: () -> Unit,
-    onOpenCover: () -> Unit,
     feedContent: @Composable () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
-        GroupDetailHeader(
-            group = group,
-            membershipState = membershipState,
-            onJoinLeave = onJoinLeave,
-            onOpenCover = onOpenCover
-        )
-        GroupDetailTabs(selectedTab = selectedTab, onTabSelected = onTabSelected)
-        // Both tab bodies share the remaining space. The feed container is kept permanently
-        // in the Compose tree (even when the About tab is selected) so the embedded child
-        // Fragment (FeedListFragment) is not destroyed on tab switch. When hidden it is
-        // constrained to 0×0 via requiredSize(0.dp); when active it fills all available space.
-        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
-            if (selectedTab == TAB_ABOUT) {
-                GroupAboutTab(group = group, modifier = Modifier.fillMaxSize())
-            }
-            Box(
-                modifier = if (selectedTab == TAB_POSTS)
-                    Modifier.fillMaxSize()
-                else
-                    Modifier.requiredSize(0.dp)
-            ) {
-                feedContent()
-            }
+    // The feed container remains in the tree to preserve its paging and scroll state.
+    Box(modifier = modifier) {
+        if (selectedTab == TAB_ABOUT) {
+            GroupAboutTab(group = group, modifier = Modifier.fillMaxSize())
         }
+        Box(
+            modifier = if (selectedTab == TAB_POSTS)
+                Modifier.fillMaxSize()
+            else
+                Modifier.requiredSize(0.dp)
+        ) {
+            feedContent()
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun GroupDetailTopBar(
+    group: Group?,
+    collapsedFraction: Float,
+    scrollBehavior: TopAppBarScrollBehavior,
+    onNavigateUp: () -> Unit,
+    onOpenCover: () -> Unit
+) {
+    val context = LocalContext.current
+    val coverPlaceholder = Brush.verticalGradient(
+        colors = listOf(
+            Color(context.theme.getColor(R.attr.colorPlaceholderGradientStart)),
+            Color(context.theme.getColor(R.attr.colorPlaceholderGradientEnd))
+        )
+    )
+
+    Box(modifier = Modifier.background(coverPlaceholder)) {
+        AsyncImage(
+            model = group?.coverImageUrl,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .matchParentSize()
+                .graphicsLayer { alpha = 1f - collapsedFraction }
+                .clickable(
+                    enabled = group?.coverImageUrl != null,
+                    onClick = onOpenCover
+                )
+        )
+        LargeTopAppBar(
+            title = {
+                Text(
+                    text = group?.name.orEmpty(),
+                    modifier = Modifier.graphicsLayer { alpha = collapsedFraction }
+                )
+            },
+            navigationIcon = { KitsuneBackButton(onNavigateUp = onNavigateUp) },
+            colors = TopAppBarDefaults.largeTopAppBarColors(
+                containerColor = Color.Transparent,
+                scrolledContainerColor = MaterialTheme.colorScheme.surface
+            ),
+            scrollBehavior = scrollBehavior
+        )
     }
 }
 
@@ -189,36 +235,34 @@ private fun GroupDetailHeader(
     group: Group?,
     membershipState: GroupDetailViewModel.MembershipState,
     onJoinLeave: () -> Unit,
-    onOpenCover: () -> Unit
+    modifier: Modifier = Modifier
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Box(
+    Column(modifier = modifier.fillMaxWidth()) {
+        Avatar(
+            imageUrl = group?.avatarUrl,
+            size = 64.dp,
             modifier = Modifier
-                .fillMaxWidth()
-                .height(160.dp)
-        ) {
-            AsyncImage(
-                model = group?.coverImageUrl,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.cover_placeholder),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clickable(
-                        enabled = group?.coverImageUrl != null,
-                        onClick = onOpenCover
-                    )
-            )
-            Avatar(
-                imageUrl = group?.avatarUrl,
-                size = 64.dp,
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(12.dp)
-            )
-        }
+                .align(Alignment.Start)
+                .padding(start = 16.dp, top = 12.dp)
+        )
         GroupDetailInfo(group = group, membershipState = membershipState, onJoinLeave = onJoinLeave)
     }
+}
+
+private fun Modifier.collapseWith(collapsedFraction: Float): Modifier {
+    val visibleFraction = 1f - collapsedFraction.coerceIn(0f, 1f)
+    return this
+        .layout { measurable, constraints ->
+            val placeable = measurable.measure(constraints)
+            val visibleHeight = (placeable.height * visibleFraction).roundToInt()
+            layout(placeable.width, visibleHeight) {
+                placeable.placeRelative(0, 0)
+            }
+        }
+        .graphicsLayer {
+            alpha = visibleFraction
+            clip = true
+        }
 }
 
 @Composable
