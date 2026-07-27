@@ -333,40 +333,6 @@ dependencies {
     // Navigation
     implementation(libs.androidx.fragment.ktx)
 
-    // Preference
-    implementation(libs.androidx.preference.ktx)
-
-    // Lifecycle
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.livedata.ktx)
-
-    // WorkManager
-    implementation(libs.androidx.workmanager)
-
-    // Material
-    implementation(libs.google.android.material)
-
-    // Glance AppWidget
-    implementation(libs.androidx.glance.appwidget)
-    implementation(libs.androidx.glance.material3)
-    implementation(libs.androidx.glance.preview)
-
-    // Kotlin coroutines
-    implementation(libs.jetbrains.kotlinx.coroutines.core)
-    implementation(libs.jetbrains.kotlinx.coroutines.android)
-
-    // Paging
-    implementation(libs.androidx.paging.runtime.ktx)
-
-    // Room
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.paging)
-
-    // ViewPager
-    implementation(libs.androidx.viewpager2)
-
     // Koin DI
     implementation(libs.insert.koin.android)
 
@@ -406,9 +372,6 @@ dependencies {
 
     // TreeView
     implementation(libs.bmelnychuk.treeview)
-
-    // MPAndroidCharts
-    implementation(libs.philjay.mpandroidchart)
 
     // Photo View
     implementation(libs.chrisbanes.photoview)

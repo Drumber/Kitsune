@@ -1,8 +1,5 @@
 package io.github.drumber.kitsune.ui.profile.about
 
-import android.widget.LinearLayout
-import android.widget.LinearLayout.LayoutParams.MATCH_PARENT
-import android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,9 +34,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.character.Character
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
@@ -405,34 +399,12 @@ private fun StatsCard(
     isLoading: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val statsSectionRef = remember { arrayOfNulls<ProfileStatsSection>(1) }
-
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.outlinedCardColors(),
         border = CardDefaults.outlinedCardBorder()
     ) {
-        AndroidView(
-            factory = { ctx ->
-                val tabLayout = TabLayout(ctx)
-                val viewPager = ViewPager2(ctx).apply {
-                    (getChildAt(0) as? androidx.recyclerview.widget.RecyclerView)
-                        ?.isNestedScrollingEnabled = false
-                }
-                val section = ProfileStatsSection(viewPager, tabLayout)
-                section.init(true)
-                statsSectionRef[0] = section
-                LinearLayout(ctx).apply {
-                    orientation = LinearLayout.VERTICAL
-                    addView(tabLayout, LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT))
-                    addView(viewPager, LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT))
-                }
-            },
-            update = {
-                statsSectionRef[0]?.submitStats(stats, false)
-                statsSectionRef[0]?.setLoading(isLoading)
-            }
-        )
+        ProfileStatsPager(stats = stats, isLoading = isLoading)
     }
 }
 

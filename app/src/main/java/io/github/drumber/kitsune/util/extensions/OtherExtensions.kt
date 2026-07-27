@@ -4,16 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.Resources
-import androidx.core.view.get
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 import java.text.NumberFormat
-
-/**
- * Make the internal RecyclerView of ViewPager2 accessible.
- */
-val ViewPager2.recyclerView: RecyclerView
-    get() = this[0] as RecyclerView
 
 fun Context.copyToClipboard(label: String, text: String) {
     val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
