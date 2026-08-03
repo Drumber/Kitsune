@@ -536,4 +536,5 @@
         <item quantity="many">Visualizza tutte le %d risposte</item>
         <item quantity="other">Visualizza tutte le %d risposte</item>
     </plurals>
+    <string name="preference_double_back_to_exit_description">Richiedi di premere indietro due volte per chiudere l\'app.</string>
 </resources>
