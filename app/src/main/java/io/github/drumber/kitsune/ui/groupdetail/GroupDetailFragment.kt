@@ -2,7 +2,6 @@ package io.github.drumber.kitsune.ui.groupdetail
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -12,15 +11,14 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.group.Group
 import io.github.drumber.kitsune.databinding.FragmentGroupDetailBinding
-import io.github.drumber.kitsune.ui.feed.FeedListFragment
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.showSnackbar
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -37,8 +35,6 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
         parametersOf(args.groupId)
     }
 
-    private var isPostsTab = false
-    private var canPost = false
     private var hasSelectedDefaultTab = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,16 +48,7 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
         binding.collapsingToolbar.initWindowInsetsListener(consume = false)
         binding.toolbar.initWindowInsetsListener(consume = false)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-        binding.nestedScrollView.initPaddingWindowInsetsListener(
-            left = true,
-            right = true,
-            bottom = true,
-            consume = false
-        )
-
-        binding.btnJoin.setOnClickListener {
-            viewModel.toggleMembership()
-        }
+        binding.tabLayoutGroup.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
 
         binding.ivCover.setOnClickListener {
             viewModel.group.value?.let { group ->
@@ -76,14 +63,6 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.isLoading.collectLatest { loading ->
-                    binding.progressBar.isVisible = loading && viewModel.group.value == null
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.group.collectLatest { group ->
                     group?.let { bindGroup(it) }
                 }
@@ -93,29 +72,9 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.membershipState.collectLatest { state ->
-                    bindMembershipState(state)
-                    canPost = state.isVisible
-                    updateFabVisibility()
                     if (!hasSelectedDefaultTab && state.isMember) {
                         hasSelectedDefaultTab = true
-                        binding.tabLayoutGroup.getTabAt(TAB_POSTS)?.select()
-                    }
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.events.collectLatest { event ->
-                    when (event) {
-                        GroupDetailViewModel.Event.LoginRequired ->
-                            showSnackbar(binding.root, R.string.group_login_required)
-
-                        GroupDetailViewModel.Event.JoinFailed ->
-                            showSnackbar(binding.root, R.string.group_join_failed)
-
-                        GroupDetailViewModel.Event.LeaveFailed ->
-                            showSnackbar(binding.root, R.string.group_leave_failed)
+                        binding.tabLayoutGroup.getTabAt(GroupDetailViewPagerAdapter.POS_FEED)?.select()
                     }
                 }
             }
@@ -123,24 +82,20 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
     }
 
     private fun initGroupFeed() {
-        binding.tabLayoutGroup.isVisible = true
+        binding.viewPagerGroup.adapter = GroupDetailViewPagerAdapter(args.groupId, this)
 
-        if (childFragmentManager.findFragmentById(R.id.feed_container) == null) {
-            childFragmentManager.beginTransaction()
-                .replace(
-                    R.id.feed_container,
-                    FeedListFragment.newGroupFeedInstance(args.groupId, R.id.group_detail_fragment)
-                )
-                .commit()
-        }
+        TabLayoutMediator(binding.tabLayoutGroup, binding.viewPagerGroup) { tab, position ->
+            when (position) {
+                GroupDetailViewPagerAdapter.POS_ABOUT -> tab.setText(R.string.group_tab_about)
+                GroupDetailViewPagerAdapter.POS_FEED -> tab.setText(R.string.group_tab_posts)
+            }
+        }.attach()
 
-        binding.tabLayoutGroup.addOnTabSelectedListener(object :
-            TabLayout.OnTabSelectedListener {
+        binding.tabLayoutGroup.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                isPostsTab = tab.position == TAB_POSTS
-                binding.nestedScrollView.isVisible = !isPostsTab
-                binding.feedContainer.isVisible = isPostsTab
-                updateFabVisibility()
+                val isPostsTab = tab.position == GroupDetailViewPagerAdapter.POS_FEED
+                val isMember = viewModel.membershipState.value.isMember
+                updateFabVisibility(isPostsTab)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) {}
@@ -156,21 +111,11 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
         }
     }
 
-    private fun updateFabVisibility() {
-        binding.fabPost.isVisible = isPostsTab && canPost
-    }
-
-    private fun bindMembershipState(state: GroupDetailViewModel.MembershipState) {
-        binding.btnJoin.apply {
-            isVisible = state.isVisible
-            isEnabled = !state.isLoading
-            setText(
-                if (state.isMember) {
-                    R.string.group_action_leave
-                } else {
-                    R.string.group_action_join
-                }
-            )
+    private fun updateFabVisibility(visible: Boolean) {
+        if (visible) {
+            binding.fabPost.show()
+        } else {
+            binding.fabPost.hide()
         }
     }
 
@@ -182,51 +127,6 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
             .placeholder(R.drawable.cover_placeholder)
             .into(binding.ivCover)
 
-        glide.load(group.avatarUrl)
-            .placeholder(R.drawable.ic_group_24)
-            .into(binding.ivAvatar)
-
         binding.toolbar.title = group.name
-        binding.tvName.text = group.name
-
-        binding.tvTagline.apply {
-            val tagline = group.tagline?.takeUnless { it.isBlank() }
-            isVisible = tagline != null
-            text = tagline
-        }
-
-        binding.tvMembersCount.text = resources.getQuantityString(
-            R.plurals.group_members_count,
-            group.membersCount,
-            group.membersCount
-        )
-
-        binding.chipCategory.apply {
-            val name = group.categoryName?.takeUnless { it.isBlank() }
-            isVisible = name != null
-            text = name
-        }
-
-        bindSection(
-            header = binding.tvAboutHeader,
-            content = binding.tvAbout,
-            text = group.about
-        )
-        bindSection(
-            header = binding.tvRulesHeader,
-            content = binding.tvRules,
-            text = group.rules
-        )
-    }
-
-    private fun bindSection(header: View, content: android.widget.TextView, text: String?) {
-        val value = text?.takeUnless { it.isBlank() }
-        header.isVisible = value != null
-        content.isVisible = value != null
-        content.text = value
-    }
-
-    companion object {
-        private const val TAB_POSTS = 1
     }
 }
