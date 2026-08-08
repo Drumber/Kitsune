@@ -24,6 +24,7 @@ import io.github.drumber.kitsune.ui.adapter.paging.CommentPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
 import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
@@ -70,7 +71,8 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
             currentUserId = currentUserId,
             onEditClick = { post -> navigateToEditPost(post) },
             onDeleteClick = { confirmDeletePost() },
-            onAuthorClick = { userId -> navigateToUserProfile(userId) }
+            onAuthorClick = { userId -> navigateToUserProfile(userId) },
+            onImageClick = { imageUrl -> openPhotoViewActivity(imageUrl) }
         )
         headerAdapter.setPost(args.post)
 
@@ -83,7 +85,8 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
             currentUserId = currentUserId,
             onEditClick = { comment -> startEditComment(comment) },
             onDeleteClick = { comment -> confirmDeleteComment(comment) },
-            onAuthorClick = { userId -> navigateToUserProfile(userId) }
+            onAuthorClick = { userId -> navigateToUserProfile(userId) },
+            onImageClick = { imageUrl -> openPhotoViewActivity(imageUrl) }
         )
 
         val commentsFooter = ResourceLoadStateAdapter(commentsAdapter)

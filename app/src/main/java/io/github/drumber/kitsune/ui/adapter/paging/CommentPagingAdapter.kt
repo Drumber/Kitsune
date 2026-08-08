@@ -14,20 +14,22 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.databinding.ItemCommentBinding
 import io.github.drumber.kitsune.util.extensions.setOnDoubleTapListener
+import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.EmbedBinder
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
 
 class CommentPagingAdapter(
     private val glide: RequestManager,
-    private val onLikeClick: ((Comment) -> Unit)? = null,
-    private val contentRenderer: PostContentRenderer? = null,
-    private val onReplyClick: ((Comment) -> Unit)? = null,
-    private val onViewAllRepliesClick: ((Comment) -> Unit)? = null,
-    private val currentUserId: String? = null,
-    private val onEditClick: ((Comment) -> Unit)? = null,
-    private val onDeleteClick: ((Comment) -> Unit)? = null,
-    private val onAuthorClick: ((String) -> Unit)? = null
+    private val contentRenderer: PostContentRenderer?,
+    private val currentUserId: String?,
+    private val onLikeClick: ((Comment) -> Unit)?,
+    private val onReplyClick: ((Comment) -> Unit)?,
+    private val onViewAllRepliesClick: ((Comment) -> Unit)?,
+    private val onEditClick: ((Comment) -> Unit)?,
+    private val onDeleteClick: ((Comment) -> Unit)?,
+    private val onAuthorClick: ((String) -> Unit)?,
+    private val onImageClick: (String) -> Unit,
 ) : PagingDataAdapter<Comment, CommentPagingAdapter.CommentViewHolder>(CommentComparator) {
 
     private data class LikeState(val isLiked: Boolean, val count: Int)
@@ -114,6 +116,12 @@ class CommentPagingAdapter(
             } else {
                 glide.clear(this)
             }
+
+            setOnClickListener {
+                if (!comment.imageUrl.isNullOrBlank()) {
+                    onImageClick(comment.imageUrl)
+                }
+            }
         }
 
         EmbedBinder.bind(binding.embed, glide, comment.embed, visible = true)
@@ -137,15 +145,13 @@ class CommentPagingAdapter(
         // Only top-level comments get a trailing divider; replies are nested with less indentation
         // and a smaller avatar so the thread reads as a clear, tighter group.
         binding.dividerComment.isVisible = !isReply
-        val density = binding.root.resources.displayMetrics.density
-        fun dp(value: Int) = (value * density).toInt()
         binding.layoutCommentBody.setPaddingRelative(
-            if (isReply) 0 else dp(16),
-            dp(10),
-            dp(16),
-            dp(10)
+            if (isReply) 0 else 16.toPx(),
+            10.toPx(),
+            16.toPx(),
+            10.toPx()
         )
-        val avatarSize = dp(if (isReply) 30 else 36)
+        val avatarSize = if (isReply) 30.toPx() else 36.toPx()
         binding.ivAvatar.updateLayoutParams {
             width = avatarSize
             height = avatarSize

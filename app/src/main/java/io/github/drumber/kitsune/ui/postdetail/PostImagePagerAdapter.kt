@@ -16,8 +16,9 @@ import io.github.drumber.kitsune.databinding.ItemPostImageBinding
 class PostImagePagerAdapter(
     private val glide: RequestManager,
     private val imageUrls: List<String>,
+    private val onImageClicked: (String) -> Unit,
     /** Reports the aspect ratio (width / height) of the first image once it is loaded. */
-    private val onFirstImageReady: ((aspectRatio: Float) -> Unit)? = null
+    private val onFirstImageReady: ((aspectRatio: Float) -> Unit),
 ) : RecyclerView.Adapter<PostImagePagerAdapter.ImageViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
@@ -67,6 +68,8 @@ class PostImagePagerAdapter(
             }
 
             request.into(binding.ivImage)
+
+            binding.root.setOnClickListener { onImageClicked(url) }
         }
 
     }

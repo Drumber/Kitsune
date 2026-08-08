@@ -20,6 +20,7 @@ import io.github.drumber.kitsune.ui.adapter.paging.CommentPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
@@ -68,7 +69,12 @@ class RepliesFragment : Fragment(R.layout.fragment_replies) {
             onLikeClick = { comment -> viewModel.toggleCommentLike(comment) },
             contentRenderer = contentRenderer,
             currentUserId = viewModel.currentUserId(),
-            onAuthorClick = { userId -> navigateToUserProfile(userId) }
+            onAuthorClick = { userId -> navigateToUserProfile(userId) },
+            onImageClick = { imageUrl -> openPhotoViewActivity(imageUrl) },
+            onReplyClick = null,
+            onViewAllRepliesClick = null,
+            onEditClick = null,
+            onDeleteClick = null,
         )
 
         val parentCommentAdapter = RepliesParentCommentAdapter(

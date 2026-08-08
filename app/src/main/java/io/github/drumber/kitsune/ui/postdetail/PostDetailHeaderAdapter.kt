@@ -21,14 +21,15 @@ import io.github.drumber.kitsune.util.ui.PostMediaBinder
 class PostDetailHeaderAdapter(
     private val glide: RequestManager,
     private val onLikeClick: () -> Unit,
-    private val contentRenderer: PostContentRenderer? = null,
-    private val nsfwAllowed: Boolean = false,
-    private val onRevealClick: () -> Unit = {},
-    private val onMediaClick: (Post) -> Unit = {},
-    private val currentUserId: String? = null,
-    private val onEditClick: (Post) -> Unit = {},
-    private val onDeleteClick: (Post) -> Unit = {},
-    private val onAuthorClick: (String) -> Unit = {}
+    private val contentRenderer: PostContentRenderer?,
+    private val nsfwAllowed: Boolean,
+    private val currentUserId: String?,
+    private val onRevealClick: () -> Unit,
+    private val onMediaClick: (Post) -> Unit,
+    private val onEditClick: (Post) -> Unit,
+    private val onDeleteClick: (Post) -> Unit,
+    private val onAuthorClick: (String) -> Unit,
+    private val onImageClick: (String) -> Unit,
 ) : RecyclerView.Adapter<PostDetailHeaderAdapter.HeaderViewHolder>() {
 
     private var post: Post? = null
@@ -193,7 +194,7 @@ class PostDetailHeaderAdapter(
                 return
             }
 
-            binding.vpImages.adapter = PostImagePagerAdapter(glide, images) { aspectRatio ->
+            binding.vpImages.adapter = PostImagePagerAdapter(glide, images, onImageClick) { aspectRatio ->
                 val pager = binding.vpImages
                 val width = pager.width
                 if (width > 0 && aspectRatio > 0f) {
