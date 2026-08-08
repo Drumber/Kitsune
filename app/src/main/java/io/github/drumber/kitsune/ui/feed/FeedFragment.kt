@@ -5,11 +5,13 @@ import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentFeedBinding
+import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
@@ -31,8 +33,6 @@ class FeedFragment : Fragment(R.layout.fragment_feed),
             right = true,
             consume = false
         )
-
-        binding.viewPagerFeed.adapter = FeedViewPagerAdapter(this)
 
         binding.toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
@@ -69,6 +69,9 @@ class FeedFragment : Fragment(R.layout.fragment_feed),
             )
         }
 
+        val feedViewPagerAdapter = FeedViewPagerAdapter(this)
+        binding.viewPagerFeed.adapter = feedViewPagerAdapter
+
         TabLayoutMediator(binding.tabLayoutFeed, binding.viewPagerFeed) { tab, position ->
             tab.text = when (position) {
                 FeedViewPagerAdapter.POS_GLOBAL -> getString(R.string.feed_tab_global)
@@ -76,6 +79,22 @@ class FeedFragment : Fragment(R.layout.fragment_feed),
                 else -> null
             }
         }.attach()
+
+        // restore previously selected feed tab
+        if (savedInstanceState == null) {
+            val lastSelectedTab = KitsunePref.selectedFeedTab.coerceIn(0, feedViewPagerAdapter.itemCount)
+            if (lastSelectedTab != binding.viewPagerFeed.currentItem) {
+                binding.viewPagerFeed.setCurrentItem(lastSelectedTab, false)
+            }
+        }
+
+        binding.viewPagerFeed.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                if (KitsunePref.selectedFeedTab != position) {
+                    KitsunePref.selectedFeedTab = position
+                }
+            }
+        })
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {

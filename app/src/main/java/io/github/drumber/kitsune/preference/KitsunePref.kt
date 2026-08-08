@@ -18,6 +18,7 @@ import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
 import io.github.drumber.kitsune.data.source.local.user.model.LocalTitleLanguagePreference
 import io.github.drumber.kitsune.domain.algolia.FilterCollection
+import io.github.drumber.kitsune.ui.feed.FeedViewPagerAdapter
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.flow.combine
 import org.koin.core.component.KoinComponent
@@ -121,6 +122,9 @@ object KitsunePref : KotprefModel(), KoinComponent {
 
 
     var ratingChartRatingSystem by enumValuePref(LocalRatingSystemPreference.Regular)
+
+
+    var selectedFeedTab by intPref(FeedViewPagerAdapter.POS_GLOBAL)
 
 
     var lastLibraryFetchForWidget by longPref(default = -1L)

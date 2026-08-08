@@ -97,7 +97,6 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail),
         binding.tabLayoutGroup.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 val isPostsTab = tab.position == GroupDetailViewPagerAdapter.POS_FEED
-                val isMember = viewModel.membershipState.value.isMember
                 updateFabVisibility(isPostsTab)
             }
 
