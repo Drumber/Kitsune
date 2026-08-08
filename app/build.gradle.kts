@@ -63,8 +63,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     buildFeatures {
@@ -111,8 +111,8 @@ tasks.matching { it.name.contains("connected\\w*AndroidTest".toRegex()) }.config
 
 kotlin {
     compilerOptions {
-        jvmTarget = JvmTarget.JVM_11
-        languageVersion = KotlinVersion.KOTLIN_2_2
+        jvmTarget = JvmTarget.JVM_17
+        languageVersion = KotlinVersion.KOTLIN_2_4
         freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
         freeCompilerArgs.add("-Xannotation-default-target=param-property")
     }
@@ -153,7 +153,7 @@ kover {
 
 dependencies {
     // Android core and support libs
-    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraint.layout)
     implementation(libs.androidx.core.splashscreen)
