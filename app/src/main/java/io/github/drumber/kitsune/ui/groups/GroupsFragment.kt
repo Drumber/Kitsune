@@ -26,6 +26,7 @@ import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
+import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -155,7 +156,7 @@ class GroupsFragment : Fragment(R.layout.fragment_groups),
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
+        binding.rvGroups.smoothScrollOrJumpToTop()
         binding.appBarLayout.setExpanded(true)
-        binding.rvGroups.smoothScrollToPosition(0)
     }
 }

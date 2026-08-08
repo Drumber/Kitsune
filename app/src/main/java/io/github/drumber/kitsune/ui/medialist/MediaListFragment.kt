@@ -1,10 +1,8 @@
 package io.github.drumber.kitsune.ui.medialist
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -33,6 +31,7 @@ import io.github.drumber.kitsune.ui.component.LoadStateSpanSizeLookup
 import io.github.drumber.kitsune.ui.component.ResponsiveGridLayoutManager
 import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
@@ -146,7 +145,7 @@ class MediaListFragment : Fragment(R.layout.fragment_media_list),
 
     override fun onNavigationItemReselected(item: MenuItem) {
         if (binding.rvMedia.canScrollVertically(-1)) {
-            binding.rvMedia.smoothScrollToPosition(0)
+            binding.rvMedia.smoothScrollOrJumpToTop()
             binding.appBarLayout.setExpanded(true)
         } else {
             findNavController().navigateUp()

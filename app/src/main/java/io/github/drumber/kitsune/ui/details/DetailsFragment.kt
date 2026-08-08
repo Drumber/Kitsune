@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.os.BundleCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
@@ -57,6 +56,7 @@ import io.github.drumber.kitsune.util.extensions.getColor
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
+import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.logW
@@ -552,7 +552,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
     override fun onNavigationItemReselected(item: MenuItem) {
         if (binding.nsvContent.canScrollVertically(-1)) {
-            binding.nsvContent.smoothScrollTo(0, 0)
+            binding.nsvContent.smoothScrollOrJumpToTop()
             binding.appBarLayout.setExpanded(true)
         } else {
             goBack()

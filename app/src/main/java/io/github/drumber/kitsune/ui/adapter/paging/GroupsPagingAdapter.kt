@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.ui.adapter.paging
 
+import android.icu.text.NumberFormat
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -48,7 +49,7 @@ class GroupsPagingAdapter(
                 .getQuantityString(
                     R.plurals.group_members_count,
                     group.membersCount,
-                    group.membersCount
+                    NumberFormat.getNumberInstance().format(group.membersCount)
                 )
 
             binding.cardGroup.setOnClickListener { onGroupClick?.invoke(group) }

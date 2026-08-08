@@ -568,8 +568,8 @@
         <item quantity="other">%1$s and %2$d others</item>
     </plurals>
     <plurals name="group_members_count">
-        <item quantity="one">%d member</item>
-        <item quantity="other">%d members</item>
+        <item quantity="one">%s member</item>
+        <item quantity="other">%s members</item>
     </plurals>
     <plurals name="comment_view_all_replies">
         <item quantity="one">View %d reply</item>

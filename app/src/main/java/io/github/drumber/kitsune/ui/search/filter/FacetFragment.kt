@@ -1,10 +1,8 @@
 package io.github.drumber.kitsune.ui.search.filter
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -34,6 +32,7 @@ import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.In
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotAvailable
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotInitialized
 import io.github.drumber.kitsune.ui.search.categories.CategoriesDialogFragment
+import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
@@ -238,7 +237,7 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
 
     override fun onNavigationItemReselected(item: MenuItem) {
         if (binding.nsvContent.canScrollVertically(-1)) {
-            binding.nsvContent.smoothScrollTo(0, 0)
+            binding.nsvContent.smoothScrollOrJumpToTop()
         } else {
             findNavController().navigateUp()
         }

@@ -25,6 +25,7 @@ import io.github.drumber.kitsune.ui.profile.BaseProfileViewModel
 import io.github.drumber.kitsune.util.extensions.copyToClipboard
 import io.github.drumber.kitsune.util.extensions.openUrl
 import io.github.drumber.kitsune.util.extensions.setAppTheme
+import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -153,7 +154,7 @@ abstract class BaseProfileAboutFragment : BaseFragment(R.layout.fragment_profile
 
     override fun onNavigationItemReselected(item: MenuItem) {
         if (view == null) return
-        binding.nsvContent.smoothScrollTo(0, 0)
+        binding.nsvContent.smoothScrollOrJumpToTop()
     }
 
     override fun onDestroyView() {

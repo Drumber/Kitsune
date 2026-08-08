@@ -55,6 +55,7 @@ import io.github.drumber.kitsune.ui.library.LibraryChangeResult.LibraryUpdateRes
 import io.github.drumber.kitsune.ui.webview.WebViewFragmentDirections
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
+import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.rating.RatingSystemUtil
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
@@ -639,7 +640,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        binding.rvLibraryEntries.smoothScrollToPosition(0)
+        binding.rvLibraryEntries.smoothScrollOrJumpToTop()
         binding.appBarLayout.setExpanded(true)
     }
 

@@ -1,10 +1,8 @@
 package io.github.drumber.kitsune.ui.details.reactions
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -26,6 +24,7 @@ import io.github.drumber.kitsune.ui.adapter.paging.MediaReactionPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.extensions.setAppTheme
+import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
@@ -205,7 +204,7 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
 
     override fun onNavigationItemReselected(item: MenuItem) {
         if (binding.rvReactions.canScrollVertically(-1)) {
-            binding.rvReactions.smoothScrollToPosition(0)
+            binding.rvReactions.smoothScrollOrJumpToTop()
             binding.appBarLayout.setExpanded(true)
         } else {
             findNavController().navigateUp()

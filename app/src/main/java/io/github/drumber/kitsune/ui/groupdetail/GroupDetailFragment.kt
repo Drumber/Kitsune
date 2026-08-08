@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.ui.groupdetail
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -10,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.R
@@ -25,7 +27,8 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
+class GroupDetailFragment : Fragment(R.layout.fragment_group_detail),
+    NavigationBarView.OnItemReselectedListener {
 
     private val args: GroupDetailFragmentArgs by navArgs()
 
@@ -128,5 +131,14 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail) {
             .into(binding.ivCover)
 
         binding.toolbar.title = group.name
+    }
+
+    override fun onNavigationItemReselected(item: MenuItem) {
+        binding.appBarLayout.setExpanded(true)
+        val currentChild = childFragmentManager
+            .findFragmentByTag("f" + binding.viewPagerGroup.currentItem)
+        if (currentChild is NavigationBarView.OnItemReselectedListener) {
+            currentChild.onNavigationItemReselected(item)
+        }
     }
 }

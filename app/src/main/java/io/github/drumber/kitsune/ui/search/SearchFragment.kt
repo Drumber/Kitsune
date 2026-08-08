@@ -3,10 +3,8 @@ package io.github.drumber.kitsune.ui.search
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
@@ -50,6 +48,7 @@ import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.In
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotAvailable
 import io.github.drumber.kitsune.ui.search.SearchViewModel.SearchClientStatus.NotInitialized
 import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -341,7 +340,7 @@ class SearchFragment : Fragment(R.layout.fragment_search),
     override fun onNavigationItemReselected(item: MenuItem) {
         binding.appBarLayout.setExpanded(true)
         if (binding.rvMedia.canScrollVertically(-1)) {
-            binding.rvMedia.smoothScrollToPosition(0)
+            binding.rvMedia.smoothScrollOrJumpToTop()
         } else {
             focusSearchView()
         }

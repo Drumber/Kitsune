@@ -19,6 +19,7 @@ import io.github.drumber.kitsune.ui.main.MainFragmentViewModel.NavigationAction
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.recyclerView
 import io.github.drumber.kitsune.util.extensions.setAppTheme
+import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
@@ -126,7 +127,7 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
-        binding.nsvContent.smoothScrollTo(0, 0)
+        binding.nsvContent.smoothScrollOrJumpToTop()
         binding.appBarLayout.setExpanded(true)
     }
 

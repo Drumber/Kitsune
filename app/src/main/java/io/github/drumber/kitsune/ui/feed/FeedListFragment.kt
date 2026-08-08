@@ -29,6 +29,7 @@ import io.github.drumber.kitsune.ui.postdetail.PostDetailFragmentDirections
 import io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
+import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbar
@@ -320,7 +321,7 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
 
     override fun onNavigationItemReselected(p0: MenuItem) {
         if (view == null) return
-        binding.rvFeed.smoothScrollToPosition(0)
+        binding.rvFeed.smoothScrollOrJumpToTop()
     }
 
     override fun onDestroyView() {

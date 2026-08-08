@@ -4,6 +4,12 @@ import android.annotation.SuppressLint
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+
+const val SCROLL_JUMP_THRESHOLD_DP = 2500
+const val SCROLL_JUMP_THRESHOLD_POS = 30
 
 /**
  * Configures the view so that a confirmed single tap invokes [onSingleTap] (if provided) and a
@@ -36,4 +42,22 @@ fun View.setOnDoubleTapListener(
         setOnClickListener { onSingleTap() }
     }
     setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
+}
+
+fun NestedScrollView.smoothScrollOrJumpToTop() {
+    if (scrollY > SCROLL_JUMP_THRESHOLD_DP.toPx()) {
+        scrollTo(0, 0)
+    } else {
+        smoothScrollTo(0, 0)
+    }
+}
+
+fun RecyclerView.smoothScrollOrJumpToTop() {
+    val currentItemPosition = (layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition()
+
+    if (currentItemPosition != null && currentItemPosition > SCROLL_JUMP_THRESHOLD_POS) {
+        scrollToPosition(0)
+    } else {
+        smoothScrollToPosition(0)
+    }
 }

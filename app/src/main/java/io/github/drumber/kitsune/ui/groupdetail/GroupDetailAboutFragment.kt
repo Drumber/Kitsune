@@ -1,6 +1,8 @@
 package io.github.drumber.kitsune.ui.groupdetail
 
+import android.icu.text.NumberFormat
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -9,9 +11,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
+import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.group.Group
 import io.github.drumber.kitsune.databinding.FragmentGroupDetailAboutBinding
+import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbar
 import io.github.drumber.kitsune.util.ui.viewBinding
@@ -19,7 +23,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class GroupDetailAboutFragment : Fragment(R.layout.fragment_group_detail_about) {
+class GroupDetailAboutFragment : Fragment(R.layout.fragment_group_detail_about),
+    NavigationBarView.OnItemReselectedListener {
 
     private val binding by viewBinding(FragmentGroupDetailAboutBinding::bind)
 
@@ -113,7 +118,7 @@ class GroupDetailAboutFragment : Fragment(R.layout.fragment_group_detail_about) 
         binding.tvMembersCount.text = resources.getQuantityString(
             R.plurals.group_members_count,
             group.membersCount,
-            group.membersCount
+            NumberFormat.getNumberInstance().format(group.membersCount)
         )
 
         binding.chipCategory.apply {
@@ -139,6 +144,10 @@ class GroupDetailAboutFragment : Fragment(R.layout.fragment_group_detail_about) 
         header.isVisible = value != null
         content.isVisible = value != null
         content.text = value
+    }
+
+    override fun onNavigationItemReselected(item: MenuItem) {
+        binding.nestedScrollView.smoothScrollOrJumpToTop()
     }
 
     companion object {
