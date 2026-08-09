@@ -236,7 +236,6 @@
     <string name="preference_open_source_libraries_description">所有已使用的开源库的列表。</string>
     <string name="preference_not_logged_in">您必须登录才能编辑此设置。</string>
     <string name="app_logs_no_data">没有可用的日志。</string>
-    <string name="prompt_email">电子邮件</string>
     <string name="prompt_password">密码</string>
     <string name="action_sign_in">登录</string>
     <string name="action_log_in">登录</string>
@@ -336,10 +335,6 @@
     <string name="preference_media_item_size_small">小</string>
     <string name="preference_media_item_size_medium">中</string>
     <string name="preference_media_item_size_large">大</string>
-    <string name="preference_start_fragment_home">主页</string>
-    <string name="preference_start_fragment_search">搜索</string>
-    <string name="preference_start_fragment_library">库</string>
-    <string name="preference_start_fragment_profile">资料</string>
     <string name="preference_titles_canonical">规范名</string>
     <string name="preference_titles_romanized">罗马名</string>
     <string name="preference_titles_english">英文名</string>
@@ -367,12 +362,10 @@
     <string name="feed_tab_global">全球</string>
     <string name="feed_tab_following">关注</string>
     <string name="feed_login_required">登录以查看你关注的人的帖子。</string>
-    <string name="feed_spoiler_warning">剧透</string>
     <string name="feed_spoiler_warning_title">剧透</string>
     <string name="feed_nsfw_warning_title">NSFW 内容</string>
     <string name="feed_content_warning_tap_to_view">点击查看</string>
     <string name="feed_unknown_user">未知用户</string>
-    <string name="feed_post_about">关于 %1$s</string>
     <string name="feed_post_spoiled_episode">第 %1$d 集</string>
     <string name="feed_post_spoiled_chapter">第 %1$d 话</string>
     <string name="cd_like_post">点赞帖子，%1$d 个赞</string>
@@ -412,7 +405,6 @@
     <string name="group_tab_about">关于</string>
     <string name="group_tab_posts">帖子</string>
     <string name="group_compose_post">在小组中发帖</string>
-    <string name="group_post_login_required">登录以在小组中发帖。</string>
     <string name="title_post">帖子</string>
     <string name="title_comments">评论</string>
     <string name="hint_add_comment">添加评论…</string>
@@ -473,7 +465,6 @@
     <string name="profile_data_followers">%d 粉丝</string>
     <string name="follow_list_following_title">关注</string>
     <string name="follow_list_followers_title">粉丝</string>
-    <string name="follow_list_empty">这里没有内容。</string>
     <string name="action_skip">跳过</string>
     <string name="action_next">下一步</string>
     <string name="action_continue">继续</string>

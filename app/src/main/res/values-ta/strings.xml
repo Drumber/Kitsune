@@ -209,10 +209,6 @@
     <string name="preference_media_item_size_medium">சராசரி</string>
     <string name="preference_media_item_size_large">பெரிய</string>
     <string name="preference_start_fragment">இயல்புநிலை பக்கம்</string>
-    <string name="preference_start_fragment_home">வீடு</string>
-    <string name="preference_start_fragment_search">தேடல்</string>
-    <string name="preference_start_fragment_library">நூலகம்</string>
-    <string name="preference_start_fragment_profile">சுயவிவரம்</string>
     <string name="library_edit_finished">முடிந்தது</string>
     <string name="library_edit_no_date_set">தேதி அமைக்கப்படவில்லை</string>
     <string name="library_edit_notes">தனிப்பட்ட குறிப்புகள்</string>
@@ -299,7 +295,6 @@
     <string name="preference_open_source_libraries_description">பயன்படுத்தப்பட்ட அனைத்து திறந்த மூல நூலகங்களின் பட்டியல்.</string>
     <string name="preference_not_logged_in">இந்த அமைப்பைத் திருத்த நீங்கள் உள்நுழைய வேண்டும்.</string>
     <string name="app_logs_no_data">பதிவுகள் எதுவும் கிடைக்கவில்லை.</string>
-    <string name="prompt_email">மின்னஞ்சல்</string>
     <string name="prompt_password">கடவுச்சொல்</string>
     <string name="action_sign_in">விடுபதிகை</string>
     <string name="action_log_in">புகுபதிகை</string>
@@ -407,12 +402,10 @@
     <string name="feed_tab_global">உலகளாவிய</string>
     <string name="feed_tab_following">பின்தொடர்பவை</string>
     <string name="feed_login_required">நீங்கள் பின்தொடரும் நபர்களின் இடுகைகளைப் பார்க்க உள்நுழையவும்.</string>
-    <string name="feed_spoiler_warning">ஸ்பாய்லர்</string>
     <string name="feed_spoiler_warning_title">ஸ்பாய்லர்</string>
     <string name="feed_nsfw_warning_title">NSFW உள்ளடக்கம்</string>
     <string name="feed_content_warning_tap_to_view">பார்க்க தட்டவும்</string>
     <string name="feed_unknown_user">தெரியாத பயனர்</string>
-    <string name="feed_post_about">%1$s பற்றி</string>
     <string name="feed_post_spoiled_episode">எபி. %1$d</string>
     <string name="feed_post_spoiled_chapter">அத். %1$d</string>
     <string name="cd_like_post">இடுகையை விரும்பு, %1$d விருப்பங்கள்</string>
@@ -451,7 +444,6 @@
     <string name="group_tab_about">பற்றி</string>
     <string name="group_tab_posts">இடுகைகள்</string>
     <string name="group_compose_post">குழுவில் இடு</string>
-    <string name="group_post_login_required">குழுக்களில் இட உள்நுழையவும்.</string>
     <string name="title_post">இடுகை</string>
     <string name="title_comments">கருத்துகள்</string>
     <string name="hint_add_comment">கருத்தைச் சேர்…</string>
@@ -510,5 +502,4 @@
     <string name="prompt_email_or_username">மின்னஞ்சல் அல்லது பயனர்பெயர்</string>
     <string name="follow_list_following_title">பின்தொடர்பவை</string>
     <string name="follow_list_followers_title">பின்தொடர்பவர்கள்</string>
-    <string name="follow_list_empty">இங்கே காட்ட எதுவும் இல்லை.</string>
 </resources>

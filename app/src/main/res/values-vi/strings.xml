@@ -158,12 +158,9 @@
     <string name="preference_oled_black_mode">OLED đen</string>
     <string name="preference_dynamic_color_theme_description">Thích ứng với chủ đề hệ thống.</string>
     <string name="preference_app_theme_blue">Màu lam</string>
-    <string name="preference_start_fragment_profile">Hồ sơ</string>
     <string name="preference_app_theme_green">Màu lục</string>
     <string name="preference_media_item_size_small">Nhỏ</string>
     <string name="preference_media_item_size_large">Lớn</string>
-    <string name="preference_start_fragment_home">Trang chủ</string>
-    <string name="preference_start_fragment_library">Thư viện</string>
     <string name="preference_remember_search_filters">Ghi nhớ bộ lọc tìm kiếm</string>
     <string name="library_not_started">Chưa bắt đầu</string>
     <string name="library_not_logged_in_title">Đăng nhập để truy cập thư viện của bạn</string>
@@ -207,7 +204,6 @@
     <string name="action_select_profile_link_site">Chọn một trang</string>
     <string name="action_delete_profile_link">Xóa liên kết hồ sơ</string>
     <string name="error_search_provider_unavailable">Nhà cung cấp dịch vụ tìm kiếm không có sẵn.</string>
-    <string name="preference_start_fragment_search">Tìm kiếm</string>
     <string name="preference_remember_search_filters_description">Áp dụng các bộ lọc tìm kiếm được sử dụng gần đây nhất sau khi khởi động lại ứng dụng.</string>
     <string name="title_login">Đăng nhập vào tài khoản Kitsu của bạn</string>
     <string name="title_play_trailer">Phát đoạn giới thiệu</string>
@@ -303,7 +299,6 @@
     <string name="preference_check_for_updates_description">Kiểm tra phiên bản ứng dụng mới mỗi lần khởi chạy.</string>
     <string name="preference_not_logged_in">Bạn phải đăng nhập để chỉnh sửa thiết đặt này.</string>
     <string name="app_logs_no_data">Không có sẵn nhật ký.</string>
-    <string name="prompt_email">Email</string>
     <string name="action_log_in_to_kitsu">Đăng nhập vào Kitsu</string>
     <string name="info_log_in_required">Đăng nhập để truy cập tất cả các tính năng.</string>
     <string name="prompt_password">Mật khẩu</string>
@@ -397,12 +392,10 @@
     <string name="feed_tab_global">Toàn cầu</string>
     <string name="feed_tab_following">Đang theo dõi</string>
     <string name="feed_login_required">Đăng nhập để xem bài viết từ những người bạn theo dõi.</string>
-    <string name="feed_spoiler_warning">Spoiler</string>
     <string name="feed_spoiler_warning_title">Spoiler</string>
     <string name="feed_nsfw_warning_title">Nội dung NSFW</string>
     <string name="feed_content_warning_tap_to_view">Chạm để xem</string>
     <string name="feed_unknown_user">Người dùng không xác định</string>
-    <string name="feed_post_about">về %1$s</string>
     <string name="feed_post_spoiled_episode">Tập %1$d</string>
     <string name="feed_post_spoiled_chapter">Chương %1$d</string>
     <string name="cd_like_post">Thích bài viết, %1$d lượt thích</string>
@@ -442,7 +435,6 @@
     <string name="group_tab_about">Giới thiệu</string>
     <string name="group_tab_posts">Bài viết</string>
     <string name="group_compose_post">Đăng trong nhóm</string>
-    <string name="group_post_login_required">Đăng nhập để đăng bài trong nhóm.</string>
     <string name="title_post">Bài viết</string>
     <string name="title_comments">Bình luận</string>
     <string name="hint_add_comment">Thêm bình luận…</string>
@@ -503,5 +495,4 @@
     <string name="profile_data_followers">%d Người theo dõi</string>
     <string name="follow_list_following_title">Đang theo dõi</string>
     <string name="follow_list_followers_title">Người theo dõi</string>
-    <string name="follow_list_empty">Không có gì để hiển thị ở đây.</string>
 </resources>

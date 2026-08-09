@@ -210,10 +210,6 @@
     <string name="preference_media_item_size_medium">Médio</string>
     <string name="preference_media_item_size_large">Grande</string>
     <string name="preference_start_fragment">Página Padrão</string>
-    <string name="preference_start_fragment_home">Início</string>
-    <string name="preference_start_fragment_search">Pesquisar</string>
-    <string name="preference_start_fragment_library">Biblioteca</string>
-    <string name="preference_start_fragment_profile">Perfil</string>
     <string name="preference_start_fragment_description">A página padrão está selecionada para %s.</string>
     <string name="preference_language">Idioma</string>
     <string name="preference_language_default">Idioma padrão</string>
@@ -251,7 +247,6 @@
     <string name="preference_open_source_libraries_description">A lista de todas as bibliotecas de código aberto usadas.</string>
     <string name="preference_not_logged_in">Precisa estar logado para editar esta configuração.</string>
     <string name="app_logs_no_data">Nenhum registo disponível.</string>
-    <string name="prompt_email">Email</string>
     <string name="prompt_password">Palavra-passe</string>
     <string name="action_sign_in">Registar</string>
     <string name="action_log_in">Logar</string>
@@ -410,12 +405,10 @@
     <string name="feed_tab_global">Global</string>
     <string name="feed_tab_following">A seguir</string>
     <string name="feed_login_required">Logue para ver publicações das pessoas que segue.</string>
-    <string name="feed_spoiler_warning">Spoiler</string>
     <string name="feed_spoiler_warning_title">Spoiler</string>
     <string name="feed_nsfw_warning_title">Conteúdo NSFW</string>
     <string name="feed_content_warning_tap_to_view">Toque para ver</string>
     <string name="feed_unknown_user">Utilizador desconhecido</string>
-    <string name="feed_post_about">sobre %1$s</string>
     <string name="feed_post_spoiled_episode">Ep. %1$d</string>
     <string name="feed_post_spoiled_chapter">Cap. %1$d</string>
     <string name="cd_like_post">Gostar da publicação, %1$d gostos</string>
@@ -454,7 +447,6 @@
     <string name="group_tab_about">Sobre</string>
     <string name="group_tab_posts">Publicações</string>
     <string name="group_compose_post">Publicar no grupo</string>
-    <string name="group_post_login_required">Logue para publicar em grupos.</string>
     <string name="title_post">Publicação</string>
     <string name="title_comments">Comentários</string>
     <string name="hint_add_comment">Adicionar um comentário…</string>
@@ -515,7 +507,6 @@
     <string name="profile_data_followers">%d Seguidores</string>
     <string name="follow_list_following_title">A seguir</string>
     <string name="follow_list_followers_title">Seguidores</string>
-    <string name="follow_list_empty">Nada para mostrar aqui.</string>
     <string name="library_edit_rewatch_count">Contagem de revisto</string>
     <string name="library_edit_start_rewatch">Começar a rever</string>
 </resources>

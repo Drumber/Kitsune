@@ -194,10 +194,6 @@
     <string name="preference_media_item_size_small">Маленький</string>
     <string name="preference_media_item_size_large">Большой</string>
     <string name="preference_start_fragment">Страница по умолчанию</string>
-    <string name="preference_start_fragment_home">Главная</string>
-    <string name="preference_start_fragment_search">Поиск</string>
-    <string name="preference_start_fragment_library">Библиотека</string>
-    <string name="preference_start_fragment_profile">Профиль</string>
     <string name="preference_start_fragment_description">Страница по умолчанию имеет значение %s.</string>
     <string name="preference_language_default">Язык по умолчанию</string>
     <string name="preference_language">Язык</string>
@@ -231,7 +227,6 @@
     <string name="preference_check_for_updates">Проверять на обновления при запуске</string>
     <string name="preference_check_for_updates_description">Проверять обновления приложения при запуске.</string>
     <string name="preference_not_logged_in">Вы должны войти в систему, чтобы изменить эту настройку.</string>
-    <string name="prompt_email">Электронная почта</string>
     <string name="prompt_password">Пароль</string>
     <string name="action_log_in_to_kitsu">Вход в Kitsu</string>
     <string name="action_log_in">Вход</string>
@@ -421,12 +416,10 @@
     <string name="feed_tab_global">Общее</string>
     <string name="feed_tab_following">Подписки</string>
     <string name="feed_login_required">Войдите, чтобы видеть посты людей, на которых вы подписаны.</string>
-    <string name="feed_spoiler_warning">Спойлер</string>
     <string name="feed_spoiler_warning_title">Спойлер</string>
     <string name="feed_nsfw_warning_title">Контент NSFW</string>
     <string name="feed_content_warning_tap_to_view">Нажмите, чтобы посмотреть</string>
     <string name="feed_unknown_user">Неизвестный пользователь</string>
-    <string name="feed_post_about">о %1$s</string>
     <string name="feed_post_spoiled_episode">Эп. %1$d</string>
     <string name="feed_post_spoiled_chapter">Гл. %1$d</string>
     <string name="cd_like_post">Оценить пост, лайков: %1$d</string>
@@ -465,7 +458,6 @@
     <string name="group_tab_about">О группе</string>
     <string name="group_tab_posts">Посты</string>
     <string name="group_compose_post">Опубликовать в группе</string>
-    <string name="group_post_login_required">Войдите, чтобы публиковать в группах.</string>
     <string name="title_post">Пост</string>
     <string name="title_comments">Комментарии</string>
     <string name="hint_add_comment">Добавить комментарий…</string>
@@ -524,5 +516,4 @@
     <string name="prompt_email_or_username">Эл. почта или имя пользователя</string>
     <string name="follow_list_following_title">Подписки</string>
     <string name="follow_list_followers_title">Подписчики</string>
-    <string name="follow_list_empty">Здесь пока ничего нет.</string>
 </resources>

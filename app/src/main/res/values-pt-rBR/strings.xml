@@ -139,10 +139,6 @@
     <string name="preference_media_item_size">Tamanho da Imagem do Pôster</string>
     <string name="preference_media_item_size_large">Grande</string>
     <string name="preference_start_fragment">Página Padrão</string>
-    <string name="preference_start_fragment_home">Início</string>
-    <string name="preference_start_fragment_search">Pesquisar</string>
-    <string name="preference_start_fragment_library">Biblioteca</string>
-    <string name="preference_start_fragment_profile">Perfil</string>
     <string name="preference_start_fragment_description">A página padrão está selecionada pra %s.</string>
     <string name="preference_titles_description">Defina como os títulos das mídias serão mostrados.</string>
     <string name="preference_titles_canonical">Canônico</string>
@@ -298,7 +294,6 @@
     <string name="preference_remember_search_filters_description">Aplicar o último filtro de pesquisa usado após fechar o app.</string>
     <string name="preference_app_logs_description">Ver e compartilhar mensagens de registro do aplicativo.</string>
     <string name="app_logs_no_data">Nenhum registro disponível.</string>
-    <string name="prompt_email">Email</string>
     <string name="prompt_password">Senha</string>
     <string name="invalid_username">Não é um endereço de email válido</string>
     <string name="login_failed">Falha ao logar</string>
@@ -411,12 +406,10 @@
     <string name="feed_tab_global">Global</string>
     <string name="feed_tab_following">Seguindo</string>
     <string name="feed_login_required">Entre para ver publicações das pessoas que você segue.</string>
-    <string name="feed_spoiler_warning">Spoiler</string>
     <string name="feed_spoiler_warning_title">Spoiler</string>
     <string name="feed_nsfw_warning_title">Conteúdo NSFW</string>
     <string name="feed_content_warning_tap_to_view">Toque para ver</string>
     <string name="feed_unknown_user">Usuário desconhecido</string>
-    <string name="feed_post_about">sobre %1$s</string>
     <string name="feed_post_spoiled_episode">Ep. %1$d</string>
     <string name="feed_post_spoiled_chapter">Cap. %1$d</string>
     <string name="cd_like_post">Curtir publicação, %1$d curtidas</string>
@@ -456,7 +449,6 @@
     <string name="group_tab_about">Sobre</string>
     <string name="group_tab_posts">Publicações</string>
     <string name="group_compose_post">Publicar no grupo</string>
-    <string name="group_post_login_required">Entre para publicar em grupos.</string>
     <string name="title_post">Publicação</string>
     <string name="title_comments">Comentários</string>
     <string name="hint_add_comment">Adicionar um comentário…</string>
@@ -517,5 +509,4 @@
     <string name="profile_data_followers">%d Seguidores</string>
     <string name="follow_list_following_title">Seguindo</string>
     <string name="follow_list_followers_title">Seguidores</string>
-    <string name="follow_list_empty">Nada para mostrar aqui.</string>
 </resources>

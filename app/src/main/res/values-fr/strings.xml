@@ -115,12 +115,8 @@
     <string name="preference_media_item_size_large">Grandes</string>
     <string name="section_highest_rated_anime">Animés les mieux notés</string>
     <string name="section_most_popular_anime">Animés les plus populaires</string>
-    <string name="preference_start_fragment_home">Accueil</string>
-    <string name="preference_start_fragment_search">Chercher</string>
     <string name="section_highest_rated_manga">Mangas les mieux notés</string>
-    <string name="preference_start_fragment_library">Bibliothèque</string>
     <string name="section_most_popular_manga">Mangas les plus populaires</string>
-    <string name="preference_start_fragment_profile">Profil</string>
     <string name="preference_language">Langue</string>
     <string name="preference_language_default">Langue par défaut</string>
     <string name="preference_category_account">Compte</string>
@@ -290,7 +286,6 @@
     <string name="login_failed">La connexion a échoué</string>
     <string name="logged_in_success">Connecté en tant que %s.</string>
     <string name="app_logs_no_data">Pas de logs disponible.</string>
-    <string name="prompt_email">Email</string>
     <string name="status_logging_in">Connexion…</string>
     <string name="action_sign_in">S\'inscrire</string>
     <string name="action_log_in">Se connecter</string>
@@ -411,12 +406,10 @@
     <string name="feed_tab_global">Global</string>
     <string name="feed_tab_following">Abonnements</string>
     <string name="feed_login_required">Connectez-vous pour voir les publications des personnes que vous suivez.</string>
-    <string name="feed_spoiler_warning">Spoiler</string>
     <string name="feed_spoiler_warning_title">Spoiler</string>
     <string name="feed_nsfw_warning_title">Contenu NSFW</string>
     <string name="feed_content_warning_tap_to_view">Appuyez pour voir</string>
     <string name="feed_unknown_user">Utilisateur inconnu</string>
-    <string name="feed_post_about">à propos de %1$s</string>
     <string name="feed_post_spoiled_episode">Ép. %1$d</string>
     <string name="feed_post_spoiled_chapter">Chap. %1$d</string>
     <string name="cd_like_post">Aimer la publication, %1$d j\'aime</string>
@@ -456,7 +449,6 @@
     <string name="group_tab_about">À propos</string>
     <string name="group_tab_posts">Publications</string>
     <string name="group_compose_post">Publier dans le groupe</string>
-    <string name="group_post_login_required">Connectez-vous pour publier dans des groupes.</string>
     <string name="title_post">Publication</string>
     <string name="title_comments">Commentaires</string>
     <string name="hint_add_comment">Ajouter un commentaire…</string>
@@ -517,5 +509,4 @@
     <string name="profile_data_followers">%d Abonnés</string>
     <string name="follow_list_following_title">Abonnements</string>
     <string name="follow_list_followers_title">Abonnés</string>
-    <string name="follow_list_empty">Rien à afficher ici.</string>
 </resources>

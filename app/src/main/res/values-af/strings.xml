@@ -213,10 +213,6 @@
     <string name="preference_media_item_size_medium">Medium</string>
     <string name="preference_media_item_size_large">Groot</string>
     <string name="preference_start_fragment">Verstekbladsy</string>
-    <string name="preference_start_fragment_home">Tuis</string>
-    <string name="preference_start_fragment_search">Soek</string>
-    <string name="preference_start_fragment_library">Biblioteek</string>
-    <string name="preference_start_fragment_profile">Profiel</string>
     <string name="preference_start_fragment_description">Die verstekbladsy is gestel op %s.</string>
     <string name="preference_language">Taal</string>
     <string name="preference_language_default">Verstektaal</string>
@@ -254,12 +250,10 @@
     <string name="feed_tab_global">Globaal</string>
     <string name="feed_tab_following">Volg</string>
     <string name="feed_login_required">Teken in om plasings van mense wat jy volg te sien.</string>
-    <string name="feed_spoiler_warning">Bederwer</string>
     <string name="feed_spoiler_warning_title">Bederwer</string>
     <string name="feed_nsfw_warning_title">NSFW-inhoud</string>
     <string name="feed_content_warning_tap_to_view">Tik om te sien</string>
     <string name="feed_unknown_user">Onbekende gebruiker</string>
-    <string name="feed_post_about">oor %1$s</string>
     <string name="feed_post_spoiled_episode">Ep. %1$d</string>
     <string name="feed_post_spoiled_chapter">Hfst. %1$d</string>
     <string name="cd_like_post">Hou van plasing, %1$d laaiks</string>
@@ -298,7 +292,6 @@
     <string name="group_tab_about">Aangaande</string>
     <string name="group_tab_posts">Plasings</string>
     <string name="group_compose_post">Plaas in groep</string>
-    <string name="group_post_login_required">Teken in om in groepe te plaas.</string>
     <string name="title_post">Plasing</string>
     <string name="title_comments">Kommentaar</string>
     <string name="hint_add_comment">Voeg \'n kommentaar by…</string>
@@ -359,7 +352,6 @@
     <string name="profile_data_followers">%d Volgers</string>
     <string name="follow_list_following_title">Volg</string>
     <string name="follow_list_followers_title">Volgers</string>
-    <string name="follow_list_empty">Niks om hier te wys nie.</string>
     <string name="preference_sfw_filter_limit_to_feed">Beperk tot Volg-voer</string>
     <string name="preference_sfw_filter_show_all">Inhoud vir volwassenes oral</string>
     <string name="preference_rating_system">Graderingstelsel</string>
@@ -379,7 +371,6 @@
     <string name="preference_open_source_libraries_description">\'n Lys van alle gebruikte oopbron-biblioteke.</string>
     <string name="preference_not_logged_in">Jy moet ingeteken wees om hierdie instelling te wysig.</string>
     <string name="app_logs_no_data">Geen logboeke beskikbaar nie.</string>
-    <string name="prompt_email">E-pos</string>
     <string name="prompt_password">Wagwoord</string>
     <string name="action_sign_in">Teken aan</string>
     <string name="action_log_in">Teken in</string>

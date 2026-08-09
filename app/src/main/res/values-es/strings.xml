@@ -123,8 +123,6 @@
     <string name="status_upcoming">Próximamente</string>
     <string name="character_role_supporting">Soporte</string>
     <string name="character_role_main">Principal</string>
-    <string name="preference_start_fragment_search">Buscar</string>
-    <string name="preference_start_fragment_home">Inicio</string>
     <string name="character_role_recurring">Recurrente</string>
     <string name="character_role_cameo">Cameo</string>
     <string name="library_status_watching">Viendo</string>
@@ -211,8 +209,6 @@
     <string name="preference_media_item_size_medium">Medio</string>
     <string name="preference_media_item_size_large">Grande</string>
     <string name="preference_start_fragment">Página Predeterminada</string>
-    <string name="preference_start_fragment_library">Biblioteca</string>
-    <string name="preference_start_fragment_profile">Perfil</string>
     <string name="preference_start_fragment_description">La página predeterminada es %s.</string>
     <string name="preference_language">Idioma</string>
     <string name="preference_language_default">Idioma predeterminado</string>
@@ -251,7 +247,6 @@
     <string name="preference_open_source_libraries_description">Lista de todas las librerías open source usadas.</string>
     <string name="preference_not_logged_in">Debes iniciar sesión para cambiar esta configuración.</string>
     <string name="app_logs_no_data">No hay registros disponibles.</string>
-    <string name="prompt_email">Correo electrónico</string>
     <string name="prompt_password">Contraseña</string>
     <string name="action_sign_in">Registrarse</string>
     <string name="action_log_in">Iniciar sesión</string>
@@ -414,12 +409,10 @@
     <string name="feed_tab_global">Global</string>
     <string name="feed_tab_following">Siguiendo</string>
     <string name="feed_login_required">Inicia sesión para ver publicaciones de las personas que sigues.</string>
-    <string name="feed_spoiler_warning">Spoiler</string>
     <string name="feed_spoiler_warning_title">Spoiler</string>
     <string name="feed_nsfw_warning_title">Contenido NSFW</string>
     <string name="feed_content_warning_tap_to_view">Toca para ver</string>
     <string name="feed_unknown_user">Usuario desconocido</string>
-    <string name="feed_post_about">sobre %1$s</string>
     <string name="feed_post_spoiled_episode">Ep. %1$d</string>
     <string name="feed_post_spoiled_chapter">Cap. %1$d</string>
     <string name="cd_like_post">Dar me gusta a la publicación, %1$d me gusta</string>
@@ -458,7 +451,6 @@
     <string name="group_tab_about">Acerca de</string>
     <string name="group_tab_posts">Publicaciones</string>
     <string name="group_compose_post">Publicar en el grupo</string>
-    <string name="group_post_login_required">Inicia sesión para publicar en grupos.</string>
     <string name="title_post">Publicación</string>
     <string name="title_comments">Comentarios</string>
     <string name="hint_add_comment">Añadir un comentario…</string>
@@ -517,5 +509,4 @@
     <string name="prompt_email_or_username">Correo o nombre de usuario</string>
     <string name="follow_list_following_title">Siguiendo</string>
     <string name="follow_list_followers_title">Seguidores</string>
-    <string name="follow_list_empty">No hay nada que mostrar aquí.</string>
 </resources>

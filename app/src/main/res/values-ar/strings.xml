@@ -209,10 +209,6 @@
     <string name="preference_media_item_size_medium">متوسط</string>
     <string name="preference_media_item_size_large">كبير</string>
     <string name="preference_start_fragment">الصفحة الافتراضية</string>
-    <string name="preference_start_fragment_home">الصفحة الرئيسة</string>
-    <string name="preference_start_fragment_search">البحث</string>
-    <string name="preference_start_fragment_library">المكتبة</string>
-    <string name="preference_start_fragment_profile">الملف الشخصي</string>
     <string name="preference_start_fragment_description">تم تعيين الصفحة الافتراضية على %s.</string>
     <string name="preference_language">اللغة</string>
     <string name="preference_language_default">اللغة الافتراضية</string>
@@ -251,7 +247,6 @@
     <string name="preference_open_source_libraries_description">قائمة بجميع المكتبات المفتوحة المصدر المستخدمة.</string>
     <string name="preference_not_logged_in">يجب عليك تسجيل الدخول لتعديل هذا الإعداد.</string>
     <string name="app_logs_no_data">لا توجد سجلّات متاحة.</string>
-    <string name="prompt_email">البريد الإلكتروني</string>
     <string name="prompt_password">كلمة المرور</string>
     <string name="action_sign_in">سجّل</string>
     <string name="action_log_in">سجل الدخول</string>
