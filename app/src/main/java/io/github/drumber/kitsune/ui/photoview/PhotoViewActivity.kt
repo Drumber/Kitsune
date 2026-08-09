@@ -33,6 +33,8 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ActivityPhotoViewBinding
 import io.github.drumber.kitsune.ui.base.BaseActivity
+import io.github.drumber.kitsune.ui.photoview.PhotoViewActivity.Companion.AUTO_HIDE
+import io.github.drumber.kitsune.ui.photoview.PhotoViewActivity.Companion.AUTO_HIDE_DELAY_MILLIS
 import io.github.drumber.kitsune.util.extensions.clearLightNavigationBar
 import io.github.drumber.kitsune.util.extensions.clearLightStatusBar
 import io.github.drumber.kitsune.util.extensions.isNightMode
@@ -92,6 +94,7 @@ class PhotoViewActivity : BaseActivity(setAppTheme = false) {
 
         Glide.with(this)
             .load(args.imageUrl)
+            .override(2048, 2048) // cap decode size to avoid "Canvas: trying to draw too large bitmap" crash on huge images
             .thumbnail(
                 Glide.with(this)
                     .load(args.thumbnailUrl)
