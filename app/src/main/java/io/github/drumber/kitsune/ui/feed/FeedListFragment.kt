@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.FragmentFeedListBinding
 import io.github.drumber.kitsune.ui.adapter.paging.PinnedPostAdapter
@@ -30,6 +31,7 @@ import io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
+import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbar
@@ -294,6 +296,10 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
 
     override fun onMediaClick(post: Post) {
         openMedia(post)
+    }
+
+    override fun onShareClick(post: Post) {
+        startUrlShareIntent("${Kitsu.BASE_URL}/posts/${post.id}")
     }
 
     override fun onEditClick(post: Post) {

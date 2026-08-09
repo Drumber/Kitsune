@@ -53,7 +53,7 @@ val viewModelModule = module {
     viewModel { EditProfileViewModel(get(), get(), get()) }
     viewModel { DetailsViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { EpisodesViewModel(get(), get(), get(), get()) }
-    viewModel { MediaFeedViewModel(get()) }
+    viewModel { MediaFeedViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ReactionsViewModel(get(), get(), get()) }
     viewModel { (reactionId: String) -> ReactionDetailViewModel(reactionId, get(), get()) }
     viewModel { GroupsViewModel(get(), get()) }

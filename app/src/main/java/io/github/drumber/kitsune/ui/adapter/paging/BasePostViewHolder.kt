@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.ui.adapter.paging
 
 import android.text.format.DateUtils
 import android.widget.ImageView
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -37,9 +38,12 @@ abstract class BasePostViewHolder(
     protected abstract fun isPostRevealed(post: Post): Boolean
     protected abstract fun onRevealPost(post: Post)
     protected abstract fun onMediaClick(post: Post)
+    protected abstract fun onShareClick(post: Post)
+    protected abstract fun onEditClick(post: Post)
+    protected abstract fun onDeleteClick(post: Post)
     protected abstract fun getInteractionOverride(post: Post): InteractionOverride?
     protected abstract fun onLike(post: Post, isLiked: Boolean, likesCount: Int)
-    protected abstract fun onBindOverflowMenu(post: Post)
+    protected abstract fun getLocalUserId(): String?
 
     open fun bind(post: Post) {
         binding.root.setOnDoubleTapListener(
@@ -64,7 +68,7 @@ abstract class BasePostViewHolder(
         binding.tvAuthor.text = post.authorName
             ?: binding.root.context.getString(R.string.feed_unknown_user)
 
-        onBindOverflowMenu(post)
+        bindOverflowMenu(post)
 
         binding.tvTimestamp.apply {
             val date = post.createdAt?.parseUtcDate()
@@ -221,6 +225,43 @@ abstract class BasePostViewHolder(
         binding.tvImageCount.apply {
             isVisible = images.size > 1
             text = context.getString(R.string.feed_image_count_more, images.size - 1)
+        }
+    }
+
+    private fun bindOverflowMenu(post: Post) {
+        val currentUserId = getLocalUserId()
+        val isOwner = currentUserId != null && post.authorId == currentUserId
+
+        binding.btnOverflow.setOnClickListener { anchor ->
+            PopupMenu(anchor.context, anchor).apply {
+                menuInflater.inflate(R.menu.feed_item_options_menu, menu)
+                if (!isOwner) {
+                    menu.removeItem(R.id.action_edit_item)
+                    menu.removeItem(R.id.action_delete_item)
+                }
+
+                setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        R.id.action_share_item -> {
+                            onShareClick(post)
+                            true
+                        }
+
+                        R.id.action_edit_item -> {
+                            onEditClick(post)
+                            true
+                        }
+
+                        R.id.action_delete_item -> {
+                            onDeleteClick(post)
+                            true
+                        }
+
+                        else -> false
+                    }
+                }
+                show()
+            }
         }
     }
 

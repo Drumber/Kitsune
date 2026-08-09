@@ -6,6 +6,7 @@ import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.data.repository.FeedRepository
 import io.github.drumber.kitsune.testutils.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -27,10 +28,20 @@ class MediaFeedViewModelTest {
         on { mediaFeedPager(any(), any(), any()) } doReturn flowOf(PagingData.empty<Post>())
     }
 
+    private fun vm(feedRepository: FeedRepository) = MediaFeedViewModel(
+        feedRepository = feedRepository,
+        userRepository = mock { on { localUser } doReturn MutableStateFlow(null) },
+        getLocalUserId = mock { on { invoke() } doReturn "user-1" },
+        postManagementRepository = mock(),
+        postInteractionRepository = mock(),
+        postInteractionStore = mock(),
+        contentRevealStore = mock(),
+    )
+
     @Test
     fun `dataSource requests a pager for the selected media`() = runTest {
         val repository = feedRepository()
-        val vm = MediaFeedViewModel(repository)
+        val vm = vm(repository)
 
         vm.dataSource.test {
             vm.setMedia("media-1", isAnime = true)
@@ -44,7 +55,7 @@ class MediaFeedViewModelTest {
     @Test
     fun `dataSource does not request a pager before media is set`() = runTest {
         val repository = feedRepository()
-        val vm = MediaFeedViewModel(repository)
+        val vm = vm(repository)
 
         vm.dataSource.test {
             expectNoEvents()

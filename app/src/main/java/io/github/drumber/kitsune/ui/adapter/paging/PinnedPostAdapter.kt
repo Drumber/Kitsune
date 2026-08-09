@@ -2,11 +2,9 @@ package io.github.drumber.kitsune.ui.adapter.paging
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
-import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.ItemPostBinding
 import io.github.drumber.kitsune.ui.adapter.paging.BasePostViewHolder.InteractionOverride
@@ -86,6 +84,8 @@ class PinnedPostAdapter(
     inner class PinnedPostViewHolder(binding: ItemPostBinding) :
         BasePostViewHolder(binding, glide, contentRenderer, nsfwAllowed) {
 
+        override fun getLocalUserId() = currentUserId
+
         override fun onPostClick(post: Post) {
             listener?.onPostClick(binding.root, post)
         }
@@ -107,6 +107,18 @@ class PinnedPostAdapter(
             listener?.onMediaClick(post)
         }
 
+        override fun onShareClick(post: Post) {
+            listener?.onShareClick(post)
+        }
+
+        override fun onEditClick(post: Post) {
+            listener?.onEditClick(post)
+        }
+
+        override fun onDeleteClick(post: Post) {
+            listener?.onDeleteClick(post)
+        }
+
         override fun getInteractionOverride(post: Post): InteractionOverride = interactionOverride
 
         override fun onLike(
@@ -121,36 +133,6 @@ class PinnedPostAdapter(
         override fun bind(post: Post) {
             binding.layoutPinnedLabel.isVisible = true
             super.bind(post)
-        }
-
-        override fun onBindOverflowMenu(post: Post) {
-            val isOwner = currentUserId != null && post.authorId == currentUserId
-            binding.btnOverflow.isVisible = isOwner
-            if (!isOwner) {
-                binding.btnOverflow.setOnClickListener(null)
-                return
-            }
-            binding.btnOverflow.setOnClickListener { anchor ->
-                PopupMenu(anchor.context, anchor).apply {
-                    menuInflater.inflate(R.menu.feed_item_options_menu, menu)
-                    setOnMenuItemClickListener { menuItem ->
-                        when (menuItem.itemId) {
-                            R.id.action_edit_item -> {
-                                listener?.onEditClick(post)
-                                true
-                            }
-
-                            R.id.action_delete_item -> {
-                                listener?.onDeleteClick(post)
-                                true
-                            }
-
-                            else -> false
-                        }
-                    }
-                    show()
-                }
-            }
         }
     }
 }

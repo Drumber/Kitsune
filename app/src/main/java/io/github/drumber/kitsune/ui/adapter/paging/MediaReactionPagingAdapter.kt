@@ -16,10 +16,11 @@ import io.github.drumber.kitsune.util.parseUtcDate
 
 class MediaReactionPagingAdapter(
     private val glide: RequestManager,
-    private val currentUserId: String? = null,
-    private val onUpvoteClick: ((MediaReaction) -> Unit)? = null,
-    private val onEditClick: ((MediaReaction) -> Unit)? = null,
-    private val onDeleteClick: ((MediaReaction) -> Unit)? = null
+    private val currentUserId: String?,
+    private val onUpvoteClick: (MediaReaction) -> Unit,
+    private val onEditClick: (MediaReaction) -> Unit,
+    private val onDeleteClick: (MediaReaction) -> Unit,
+    private val onSharClick: (MediaReaction) -> Unit,
 ) : PagingDataAdapter<MediaReaction, MediaReactionPagingAdapter.ReactionViewHolder>(ReactionComparator) {
 
     private val upvotedIds = mutableSetOf<String>()
@@ -80,7 +81,7 @@ class MediaReactionPagingAdapter(
                     if (isUpvoted) R.drawable.ic_thumb_up_24 else R.drawable.ic_thumb_up_border_24
                 )
                 isEnabled = !isUpvoted
-                setOnClickListener { onUpvoteClick?.invoke(reaction) }
+                setOnClickListener { onUpvoteClick.invoke(reaction) }
             }
 
             bindOverflowMenu(reaction)
@@ -88,23 +89,29 @@ class MediaReactionPagingAdapter(
 
         private fun bindOverflowMenu(reaction: MediaReaction) {
             val isOwner = currentUserId != null && reaction.authorId == currentUserId
-            binding.btnOverflow.isVisible = isOwner
-            if (!isOwner) {
-                binding.btnOverflow.setOnClickListener(null)
-                return
-            }
+
             binding.btnOverflow.setOnClickListener { anchor ->
                 PopupMenu(anchor.context, anchor).apply {
                     menuInflater.inflate(R.menu.feed_item_options_menu, menu)
+                    if (!isOwner) {
+                        menu.removeItem(R.id.action_edit_item)
+                        menu.removeItem(R.id.action_delete_item)
+                    }
+
                     setOnMenuItemClickListener { item ->
                         when (item.itemId) {
+                            R.id.action_share_item -> {
+                                onSharClick.invoke(reaction)
+                                true
+                            }
+
                             R.id.action_edit_item -> {
-                                onEditClick?.invoke(reaction)
+                                onEditClick.invoke(reaction)
                                 true
                             }
 
                             R.id.action_delete_item -> {
-                                onDeleteClick?.invoke(reaction)
+                                onDeleteClick.invoke(reaction)
                                 true
                             }
 

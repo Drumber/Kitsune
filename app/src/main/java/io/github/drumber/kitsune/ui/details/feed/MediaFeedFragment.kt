@@ -13,6 +13,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
@@ -22,15 +23,21 @@ import io.github.drumber.kitsune.ui.adapter.paging.PostInteractionListener
 import io.github.drumber.kitsune.ui.adapter.paging.PostPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
-import io.github.drumber.kitsune.ui.webview.WebViewFragmentDirections
+import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
+import io.github.drumber.kitsune.ui.postdetail.PostDetailFragmentDirections
+import io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
+import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
+import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
+import io.github.drumber.kitsune.util.ui.showSnackbar
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
@@ -41,6 +48,8 @@ class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
     private val binding by viewBinding(FragmentMediaFeedBinding::bind)
 
     private val viewModel: MediaFeedViewModel by viewModel()
+
+    private val contentRenderer: PostContentRenderer by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -60,7 +69,10 @@ class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
 
         val adapter = PostPagingAdapter(
             glide = Glide.with(this),
-            listener = this
+            listener = this,
+            contentRenderer = contentRenderer,
+            nsfwAllowed = viewModel.nsfwAllowed,
+            currentUserId = viewModel.localUserId,
         )
         binding.rvFeed.adapter = adapter.withLoadStateFooter(
             footer = ResourceLoadStateAdapter(adapter)
@@ -96,18 +108,73 @@ class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.actionEvents.collectLatest { event ->
+                    when (event) {
+                        MediaFeedViewModel.ActionEvent.PostDeleted -> {
+                            adapter.refresh()
+                            showSnackbar(binding.root, R.string.post_deleted)
+                        }
+
+                        MediaFeedViewModel.ActionEvent.Error ->
+                            showSnackbar(binding.root, R.string.comment_action_failed)
+                    }
+                }
+            }
+        }
     }
 
     override fun onPostClick(view: View, post: Post) {
-        val url = "${Kitsu.BASE_URL}/posts/${post.id}"
-        val action = WebViewFragmentDirections.actionGlobalWebViewFragment(url)
+        val action = PostDetailFragmentDirections.actionGlobalPostDetailFragment(post)
         findNavController().navigateSafe(R.id.media_feed_fragment, action)
     }
 
-    override fun onAuthorClick(userId: String) {
-        val action = io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
-            .actionGlobalUserProfileFragment(userId)
+    override fun onLikeClick(post: Post, targetLiked: Boolean) {
+        viewModel.togglePostLike(post, targetLiked)
+    }
+
+    override fun onRevealClick(post: Post) {
+        viewModel.revealPost(post)
+    }
+
+    override fun onMediaClick(post: Post) {
+        val slug = post.mediaSlug
+        val isAnime = post.mediaIsAnime
+        if (slug.isNullOrBlank() || isAnime == null) return
+        val action = DetailsFragmentDirections.actionGlobalDetailsFragment(
+            type = if (isAnime) "anime" else "manga",
+            slug = slug
+        )
         findNavController().navigateSafe(R.id.media_feed_fragment, action)
+    }
+
+    override fun onShareClick(post: Post) {
+        startUrlShareIntent("${Kitsu.BASE_URL}/posts/${post.id}")
+    }
+
+    override fun onEditClick(post: Post) {
+        val action = PostDetailFragmentDirections.actionGlobalCreatePostFragment(post)
+        findNavController().navigateSafe(R.id.media_feed_fragment, action)
+    }
+
+    override fun onDeleteClick(post: Post) {
+        confirmDeletePost(post)
+    }
+
+    override fun onAuthorClick(userId: String) {
+        val action = UserProfileFragmentDirections.actionGlobalUserProfileFragment(userId)
+        findNavController().navigateSafe(R.id.media_feed_fragment, action)
+    }
+
+    private fun confirmDeletePost(post: Post) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.delete_post_confirm_title)
+            .setMessage(R.string.delete_post_confirm_message)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.action_delete) { _, _ -> viewModel.deletePost(post) }
+            .show()
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {

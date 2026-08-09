@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.FragmentPostDetailBinding
@@ -25,6 +26,7 @@ import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
+import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
@@ -72,7 +74,8 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
             onEditClick = { post -> navigateToEditPost(post) },
             onDeleteClick = { confirmDeletePost() },
             onAuthorClick = { userId -> navigateToUserProfile(userId) },
-            onImageClick = { imageUrl -> openPhotoViewActivity(imageUrl) }
+            onImageClick = { imageUrl -> openPhotoViewActivity(imageUrl) },
+            onShareClick = { post -> showShareMenu(post) },
         )
         headerAdapter.setPost(args.post)
 
@@ -86,7 +89,8 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
             onEditClick = { comment -> startEditComment(comment) },
             onDeleteClick = { comment -> confirmDeleteComment(comment) },
             onAuthorClick = { userId -> navigateToUserProfile(userId) },
-            onImageClick = { imageUrl -> openPhotoViewActivity(imageUrl) }
+            onImageClick = { imageUrl -> openPhotoViewActivity(imageUrl) },
+            onShareClick = { comment -> showShareMenu(comment) },
         )
 
         val commentsFooter = ResourceLoadStateAdapter(commentsAdapter)
@@ -307,5 +311,13 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         binding.etComment.clearFocus()
         imm.hideSoftInputFromWindow(binding.etComment.windowToken, 0)
+    }
+
+    private fun showShareMenu(comment: Comment) {
+        startUrlShareIntent("${Kitsu.BASE_URL}/comments/${comment.id}")
+    }
+
+    private fun showShareMenu(post: Post) {
+        startUrlShareIntent("${Kitsu.BASE_URL}/posts/${post.id}")
     }
 }

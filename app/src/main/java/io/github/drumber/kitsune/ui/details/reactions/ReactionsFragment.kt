@@ -17,6 +17,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
 import io.github.drumber.kitsune.databinding.DialogComposeReactionBinding
 import io.github.drumber.kitsune.databinding.FragmentReactionsBinding
@@ -25,6 +26,7 @@ import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
+import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
@@ -69,7 +71,8 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
             currentUserId = viewModel.currentUserId,
             onUpvoteClick = { reaction -> viewModel.upvote(reaction) },
             onEditClick = { reaction -> showComposeReactionDialog(reaction) },
-            onDeleteClick = { reaction -> confirmDeleteReaction(reaction) }
+            onDeleteClick = { reaction -> confirmDeleteReaction(reaction) },
+            onSharClick = { reaction -> showShareMenu(reaction) },
         )
         binding.rvReactions.adapter = adapter.withLoadStateFooter(
             footer = ResourceLoadStateAdapter(adapter)
@@ -196,6 +199,10 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
             .setNegativeButton(android.R.string.cancel, null)
             .setPositiveButton(R.string.action_delete) { _, _ -> viewModel.deleteReaction(reaction) }
             .show()
+    }
+
+    private fun showShareMenu(reaction: MediaReaction) {
+        startUrlShareIntent("${Kitsu.BASE_URL}/media-reactions/${reaction.id}")
     }
 
     private fun showSnackbar(messageResId: Int) {

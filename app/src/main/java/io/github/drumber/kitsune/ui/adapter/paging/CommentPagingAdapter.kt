@@ -29,6 +29,7 @@ class CommentPagingAdapter(
     private val onEditClick: ((Comment) -> Unit)?,
     private val onDeleteClick: ((Comment) -> Unit)?,
     private val onAuthorClick: ((String) -> Unit)?,
+    private val onShareClick: (Comment) -> Unit,
     private val onImageClick: (String) -> Unit,
 ) : PagingDataAdapter<Comment, CommentPagingAdapter.CommentViewHolder>(CommentComparator) {
 
@@ -163,16 +164,22 @@ class CommentPagingAdapter(
     private fun bindOverflowMenu(binding: ItemCommentBinding, comment: Comment) {
         val isOwner = currentUserId != null && comment.authorId == currentUserId
         val canManage = isOwner && (onEditClick != null || onDeleteClick != null)
-        binding.btnOverflow.isVisible = canManage
-        if (!canManage) {
-            binding.btnOverflow.setOnClickListener(null)
-            return
-        }
+
         binding.btnOverflow.setOnClickListener { anchor ->
             PopupMenu(anchor.context, anchor).apply {
                 menuInflater.inflate(R.menu.feed_item_options_menu, menu)
+                if (!canManage) {
+                    menu.removeItem(R.id.action_edit_item)
+                    menu.removeItem(R.id.action_delete_item)
+                }
+
                 setOnMenuItemClickListener { menuItem ->
                     when (menuItem.itemId) {
+                        R.id.action_share_item -> {
+                            onShareClick.invoke(comment)
+                            true
+                        }
+
                         R.id.action_edit_item -> {
                             onEditClick?.invoke(comment)
                             true

@@ -22,6 +22,9 @@ interface PostInteractionListener {
     /** Called when the media attached to a post is tapped. */
     fun onMediaClick(post: Post) {}
 
+    /** Called when the share menu is tapped. */
+    fun onShareClick(post: Post) {}
+
     /** Called when the owner chooses to edit their post. */
     fun onEditClick(post: Post) {}
 

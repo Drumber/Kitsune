@@ -15,12 +15,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.databinding.FragmentRepliesBinding
 import io.github.drumber.kitsune.ui.adapter.paging.CommentPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
+import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
@@ -71,6 +74,7 @@ class RepliesFragment : Fragment(R.layout.fragment_replies) {
             currentUserId = viewModel.currentUserId(),
             onAuthorClick = { userId -> navigateToUserProfile(userId) },
             onImageClick = { imageUrl -> openPhotoViewActivity(imageUrl) },
+            onShareClick = { comment -> showShareMenu(comment) },
             onReplyClick = null,
             onViewAllRepliesClick = null,
             onEditClick = null,
@@ -173,5 +177,9 @@ class RepliesFragment : Fragment(R.layout.fragment_replies) {
         val action = io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
             .actionGlobalUserProfileFragment(userId)
         findNavController().navigateSafe(R.id.replies_fragment, action)
+    }
+
+    private fun showShareMenu(comment: Comment) {
+        startUrlShareIntent("${Kitsu.BASE_URL}/comments/${comment.id}")
     }
 }

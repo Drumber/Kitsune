@@ -84,17 +84,15 @@
 
             </LinearLayout>
 
-            <ImageButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_overflow"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:contentDescription="@string/action_more_options"
-                android:padding="6dp"
-                android:src="@drawable/ic_more_vert"
-                android:visibility="gone"
-                app:tint="?android:attr/textColorSecondary"
-                tools:visibility="visible" />
+                app:icon="@drawable/ic_more_vert"
+                app:iconTint="?attr/colorControlNormal"
+                style="?attr/materialIconButtonStyle" />
 
         </LinearLayout>
 

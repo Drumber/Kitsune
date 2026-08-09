@@ -217,7 +217,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@{data instanceof Anime ? @string/title_episodes : @string/title_chapters}"
-                        android:textAllCaps="false" />
+                        android:textAllCaps="false"
+                        tools:text="Episodes" />
 
                     <Button
                         android:id="@+id/btn_characters"
@@ -275,18 +276,14 @@
                                     android:text="@string/title_reactions"
                                     android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
-                                <Button
+                                <com.google.android.material.button.MaterialButton
                                     android:id="@+id/btn_add_reaction"
-                                    style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
                                     android:contentDescription="@string/action_add_reaction"
-                                    android:insetTop="0dp"
-                                    android:insetBottom="0dp"
                                     app:icon="@drawable/ic_add_24"
-                                    app:iconGravity="textStart"
-                                    app:iconPadding="0dp" />
+                                    style="?attr/materialIconButtonFilledTonalStyle" />
 
                             </LinearLayout>
 
