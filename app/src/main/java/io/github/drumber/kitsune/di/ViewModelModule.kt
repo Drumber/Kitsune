@@ -46,7 +46,7 @@ val viewModelModule = module {
     viewModel { LibraryEditEntryViewModel(get(), get()) }
     viewModel { LoginViewModel(get()) }
     viewModel { MyProfileViewModel(get(), get()) }
-    viewModel { (userId: String) -> UserProfileViewModel(userId, get(), get(), get()) }
+    viewModel { (userIdOrSlug: String) -> UserProfileViewModel(userIdOrSlug, get(), get(), get()) }
     viewModel { (userId: String, type: FollowListType) ->
         FollowListViewModel(userId, type, get(), get())
     }

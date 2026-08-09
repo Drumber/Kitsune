@@ -13,11 +13,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class UserProfileViewModel(
-    private val userId: String,
+    private val userIdOrSlug: String,
     private val userRepository: UserRepository,
     private val followRepository: FollowRepository,
     private val getLocalUserId: GetLocalUserIdUseCase
 ) : BaseProfileViewModel() {
+
+    private var userId: String? = null
 
     private val _userModel = MutableStateFlow<User?>(null)
     override val userModel = _userModel.asStateFlow()
@@ -25,13 +27,25 @@ class UserProfileViewModel(
     private val _uiState = MutableStateFlow(UserProfileUiState())
     override val uiState = _uiState.asStateFlow()
 
-    /** Whether the viewed profile belongs to the currently logged-in user. */
-    val isOwnProfile: Boolean
-        get() = getLocalUserId() == userId
-
     init {
-        loadUser()
-        loadFollowState()
+        viewModelScope.launch {
+            userId = if (userIdOrSlug.matches(Regex("^\\d+$"))) {
+                userIdOrSlug
+            } else {
+                try {
+                    requireNotNull(userRepository.fetchUserIdBySlug(userIdOrSlug)) {
+                        "fetchUserIdBySlug returned null"
+                    }
+                } catch (e: Exception) {
+                    logE("Failed to fetch userId for slug '$userIdOrSlug'.", e)
+                    _uiState.update { it.copy(isInitialLoading = false, isRefreshing = false) }
+                    null
+                }
+            }
+
+            loadUser()
+            loadFollowState()
+        }
     }
 
     override fun refreshUser() {
@@ -43,6 +57,7 @@ class UserProfileViewModel(
     private fun loadUser() {
         viewModelScope.launch {
             try {
+                val userId = userId ?: return@launch
                 val user = userRepository.fetchUser(userId, MyProfileViewModel.FULL_USER_FILTER)
                     ?: throw NoDataException("Received data is null.")
                 _userModel.update { user }
@@ -56,7 +71,8 @@ class UserProfileViewModel(
 
     private fun loadFollowState() {
         val localUserId = getLocalUserId()
-        if (localUserId == null || localUserId == userId) {
+        val userId = userId
+        if (localUserId == null || userId == null || localUserId == userId) {
             _uiState.update { it.copy(canFollow = false) }
             return
         }
@@ -78,6 +94,7 @@ class UserProfileViewModel(
 
     fun toggleFollow() {
         val localUserId = getLocalUserId() ?: return
+        val userId = userId ?: return
         if (localUserId == userId) return
         val state = _uiState.value
         if (state.isFollowProcessing) return

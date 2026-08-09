@@ -51,7 +51,7 @@
         android:id="@+id/profile_fragment"
         android:name="io.github.drumber.kitsune.ui.profile.MyProfileFragment"
         android:label="@string/nav_profile"
-        tools:layout="@layout/fragment_profile" >
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profile_fragment_to_details_fragment"
             app:destination="@id/details_fragment"
@@ -304,7 +304,10 @@
     </dialog>
     <action
         android:id="@+id/action_global_photo_view_activity"
-        app:destination="@id/photo_view_activity" /><action android:id="@+id/action_global_details_fragment" app:destination="@id/details_fragment"/>
+        app:destination="@id/photo_view_activity" />
+    <action
+        android:id="@+id/action_global_details_fragment"
+        app:destination="@id/details_fragment"/>
     <activity
         android:id="@+id/onboardingActivity"
         android:name="io.github.drumber.kitsune.ui.onboarding.OnboardingActivity"
@@ -392,8 +395,11 @@
         android:name="io.github.drumber.kitsune.ui.profile.UserProfileFragment"
         android:label="UserProfileFragment"
         tools:layout="@layout/fragment_profile" >
+        <deepLink
+            android:id="@+id/deepLink_users"
+            app:uri="kitsu.app/users/{userIdOrSlug}" />
         <argument
-            android:name="userId"
+            android:name="userIdOrSlug"
             app:argType="string" />
         <argument
             android:name="userName"

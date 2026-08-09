@@ -76,6 +76,14 @@ class UserRepository(
         return remoteUserDataSource.getUser(userId, filter)?.toUser()
     }
 
+    suspend fun fetchUserIdBySlug(slug: String): String? {
+        val filter = Filter()
+            .filter("slug", slug)
+            .fields("users", "id")
+            .pageLimit(1)
+        return remoteUserDataSource.getAllUsers(filter)?.firstOrNull()?.id
+    }
+
     /**
      * Fetches the user's single pinned post (the post they pinned to the top of their profile),
      * with the relationships needed to fully render it. Returns `null` if the user has no pinned

@@ -18,7 +18,7 @@ class UserProfileFragment : BaseProfileFragment() {
     private val args: UserProfileFragmentArgs by navArgs()
 
     override val viewModel: UserProfileViewModel by viewModel {
-        parametersOf(args.userId)
+        parametersOf(args.userIdOrSlug)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,7 +76,7 @@ class UserProfileFragment : BaseProfileFragment() {
                 when (item.itemId) {
                     R.id.menu_share_profile_url -> {
                         val user = viewModel.getUser()
-                        val profileId = user?.slug ?: user?.id ?: args.userId
+                        val profileId = user?.slug ?: user?.id ?: args.userIdOrSlug
                         val url = io.github.drumber.kitsune.constants.Kitsu.USER_URL_PREFIX + profileId
                         startUrlShareIntent(url)
                         true

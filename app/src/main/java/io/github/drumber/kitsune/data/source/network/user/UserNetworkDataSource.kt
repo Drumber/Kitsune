@@ -1,12 +1,12 @@
 package io.github.drumber.kitsune.data.source.network.user
 
 import com.github.jasminb.jsonapi.JSONAPIDocument
+import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.source.network.user.api.UserApi
 import io.github.drumber.kitsune.data.source.network.user.api.UserImageUploadApi
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImageUpload
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
-import io.github.drumber.kitsune.data.common.Filter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -27,6 +27,12 @@ class UserNetworkDataSource(
     suspend fun getUser(userId: String, filter: Filter): NetworkUser? {
         return withContext(Dispatchers.IO) {
             userApi.getUser(userId, filter.options).get()
+        }
+    }
+
+    suspend fun getAllUsers(filter: Filter): List<NetworkUser>? {
+        return withContext(Dispatchers.IO) {
+            userApi.getAllUsers(filter.options).get()
         }
     }
 

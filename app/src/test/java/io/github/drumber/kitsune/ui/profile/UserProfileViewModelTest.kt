@@ -31,7 +31,7 @@ class UserProfileViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val faker = Faker()
-    private val userId = "user-1"
+    private val userId = "123"
 
     private fun userRepository(
         user: User? = localUser(faker).toUser(),
@@ -57,18 +57,6 @@ class UserProfileViewModelTest {
         followRepository: FollowRepository = followRepository(),
         getLocalUserId: GetLocalUserIdUseCase = getLocalUserId(null)
     ) = UserProfileViewModel(userId, userRepository, followRepository, getLocalUserId)
-
-    @Test
-    fun `isOwnProfile is true when the local user id matches`() {
-        val vm = viewModel(getLocalUserId = getLocalUserId(userId))
-        assertThat(vm.isOwnProfile).isTrue()
-    }
-
-    @Test
-    fun `isOwnProfile is false for another user`() {
-        val vm = viewModel(getLocalUserId = getLocalUserId("other"))
-        assertThat(vm.isOwnProfile).isFalse()
-    }
 
     @Test
     fun `loadUser populates the user model on success`() = runTest {

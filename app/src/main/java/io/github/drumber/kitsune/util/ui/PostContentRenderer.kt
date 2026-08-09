@@ -1,10 +1,19 @@
 package io.github.drumber.kitsune.util.ui
 
 import android.content.Context
+import android.net.Uri
 import android.text.SpannableStringBuilder
 import android.text.Spanned
+import android.view.View
 import android.widget.TextView
+import androidx.core.net.toUri
+import androidx.navigation.findNavController
+import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.util.logE
+import io.noties.markwon.AbstractMarkwonPlugin
+import io.noties.markwon.LinkResolverDef
 import io.noties.markwon.Markwon
+import io.noties.markwon.MarkwonConfiguration
 import io.noties.markwon.html.HtmlPlugin
 import io.noties.markwon.image.glide.GlideImagesPlugin
 import io.noties.markwon.linkify.LinkifyPlugin
@@ -25,6 +34,11 @@ class PostContentRenderer(context: Context) {
         .usePlugin(GlideImagesPlugin.create(context))
         .usePlugin(LinkifyPlugin.create())
         .usePlugin(MovementMethodPlugin.link())
+        .usePlugin(object : AbstractMarkwonPlugin() {
+            override fun configureConfiguration(builder: MarkwonConfiguration.Builder) {
+                builder.linkResolver(CustomLinkResolver())
+            }
+        })
         .build()
 
     /**
@@ -37,7 +51,7 @@ class PostContentRenderer(context: Context) {
             val rendered = markwon.toMarkdown(EmojiShortcodeConverter.convert(source))
             markwon.setParsedMarkdown(textView, rendered.trimTrailingWhitespace())
         } else {
-            textView.text = EmojiShortcodeConverter.convert(plain)?.trim()
+            textView.text = EmojiShortcodeConverter.convert(plain).trim()
         }
     }
 
@@ -54,4 +68,31 @@ class PostContentRenderer(context: Context) {
         return SpannableStringBuilder(this).delete(end, length)
     }
 
+    private class CustomLinkResolver : LinkResolverDef() {
+        override fun resolve(view: View, link: String) {
+            val uri = try {
+                getAbsoluteUri(link)
+            } catch (e: Exception) {
+                logE("Failed to resolve absolute URL for '$link'.", e)
+                return super.resolve(view, link)
+            }
+
+            // navigate to details or user fragment with deeplink
+            if (uri.host == Kitsu.API_HOST && uri.path?.matches(Regex("^/(users|anime|manga)/[\\w._-]+")) == true) {
+                try {
+                    return view.findNavController().navigate(uri)
+                } catch (e: Exception) {
+                    logE("Failed to navigate with deeplink '$uri'.", e)
+                }
+            }
+            super.resolve(view, link)
+        }
+
+        private fun getAbsoluteUri(link: String): Uri {
+            if (link.startsWith("https://", true) || link.startsWith("http://", true)) {
+                return link.toUri()
+            }
+            return "${Kitsu.BASE_URL}/${link.trimStart('/')}".toUri()
+        }
+    }
 }
