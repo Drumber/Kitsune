@@ -134,8 +134,11 @@
             android:id="@+id/action_details_fragment_to_libraryEditEntryFragment"
             app:destination="@id/libraryEditEntryFragment" />
         <deepLink
-            android:id="@+id/deepLink"
-            app:uri="kitsu.app/{type}/{slug}" />
+            android:id="@+id/deepLink_anime"
+            app:uri="kitsu.app/anime/{slug}" />
+        <deepLink
+            android:id="@+id/deepLink_manga"
+            app:uri="kitsu.app/manga/{slug}" />
         <argument
             android:name="type"
             android:defaultValue="@null"

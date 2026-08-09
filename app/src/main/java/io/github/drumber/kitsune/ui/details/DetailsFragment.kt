@@ -14,6 +14,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -129,15 +130,25 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
         if (args.media != null) {
             viewModel.initMediaModel(args.media!!.toMedia())
-        } else if (!args.type.isNullOrBlank() && !args.slug.isNullOrBlank()) {
-            val isAnime = when (args.type!!.lowercase()) {
+        } else if (!args.slug.isNullOrBlank()) {
+            // If the fragment is opened by slug (e.g. deeplink) the media type is determined either
+            // explicitly by the 'type' navigation argument or implicitly by the URL path segment.
+            val type = args.type ?: BundleCompat.getParcelable(
+                requireArguments(),
+                NavController.KEY_DEEP_LINK_INTENT,
+                Intent::class.java
+            )?.data
+                ?.pathSegments
+                ?.firstOrNull()
+
+            val isAnime = when (type?.lowercase()) {
                 "anime" -> true
                 "manga" -> false
                 else -> null
             }
 
             if (isAnime == null) {
-                logW("Unknown media type '${args.type}'.")
+                logW("Unknown media type '$type'.")
                 showSomethingWrongToast()
                 goBack()
             } else {
