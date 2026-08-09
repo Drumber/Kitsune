@@ -353,10 +353,11 @@
     <string name="preference_media_item_size_large">Large</string>
     <string name="preference_start_fragment">Default Page</string>
     <string-array name="preference_start_fragment_entries" translatable="false">
-        <item>@string/preference_start_fragment_home</item>
-        <item>@string/preference_start_fragment_search</item>
-        <item>@string/preference_start_fragment_library</item>
-        <item>@string/preference_start_fragment_profile</item>
+        <item>@string/nav_home</item>
+        <item>@string/nav_search</item>
+        <item>@string/nav_feed</item>
+        <item>@string/nav_library</item>
+        <item>@string/nav_profile</item>
     </string-array>
     <string name="preference_start_fragment_home">Home</string>
     <string name="preference_start_fragment_search">Search</string>

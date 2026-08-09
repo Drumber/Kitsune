@@ -5,6 +5,7 @@ import io.github.drumber.kitsune.R
 enum class StartPagePref {
     Home,
     Search,
+    Feed,
     Library,
     Profile
 }
@@ -12,6 +13,7 @@ enum class StartPagePref {
 fun StartPagePref.getDestinationId() = when (this) {
     StartPagePref.Home -> R.id.main_fragment
     StartPagePref.Search -> R.id.search_fragment
+    StartPagePref.Feed -> R.id.feed_fragment
     StartPagePref.Library -> R.id.library_fragment
     StartPagePref.Profile -> R.id.profile_fragment
 }
