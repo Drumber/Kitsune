@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.ui.postdetail
 
 import android.content.Context
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.comment.Comment
@@ -26,6 +28,7 @@ import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
+import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
@@ -37,7 +40,8 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
+class PostDetailFragment : Fragment(R.layout.fragment_post_detail),
+    NavigationBarView.OnItemReselectedListener {
 
     private val args: PostDetailFragmentArgs by navArgs()
 
@@ -191,7 +195,11 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
                         }
 
                         is PostDetailViewModel.Event.CommentLikeChanged ->
-                            commentsAdapter.setLikeState(event.commentId, event.isLiked, event.count)
+                            commentsAdapter.setLikeState(
+                                event.commentId,
+                                event.isLiked,
+                                event.count
+                            )
                     }
                 }
             }
@@ -225,7 +233,8 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
     }
 
     private fun navigateToReplies(comment: Comment) {
-        val action = PostDetailFragmentDirections.actionGlobalRepliesFragment(comment.id, args.post.id)
+        val action =
+            PostDetailFragmentDirections.actionGlobalRepliesFragment(comment.id, args.post.id)
         findNavController().navigateSafe(R.id.post_detail_fragment, action)
     }
 
@@ -303,12 +312,14 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
 
     private fun focusCommentInput() {
         binding.etComment.requestFocus()
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(binding.etComment, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun hideKeyboard() {
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         binding.etComment.clearFocus()
         imm.hideSoftInputFromWindow(binding.etComment.windowToken, 0)
     }
@@ -319,5 +330,13 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
 
     private fun showShareMenu(post: Post) {
         startUrlShareIntent("${Kitsu.BASE_URL}/posts/${post.id}")
+    }
+
+    override fun onNavigationItemReselected(p0: MenuItem) {
+        if (binding.rvComments.canScrollVertically(-1)) {
+            binding.rvComments.smoothScrollOrJumpToTop()
+        } else {
+            findNavController().navigateUp()
+        }
     }
 }

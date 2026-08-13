@@ -62,7 +62,6 @@ abstract class BasePostViewHolder(
 
         glide.load(post.authorAvatarUrl)
             .placeholder(R.drawable.ic_outline_person_24)
-            .circleCrop()
             .into(binding.ivAvatar)
 
         binding.tvAuthor.text = post.authorName

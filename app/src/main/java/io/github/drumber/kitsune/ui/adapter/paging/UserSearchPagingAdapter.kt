@@ -38,7 +38,6 @@ class UserSearchPagingAdapter(
 
             glide.load(user.avatar?.originalOrDown())
                 .placeholder(R.drawable.ic_outline_person_24)
-                .circleCrop()
                 .into(binding.ivAvatar)
 
             binding.tvName.text = user.name

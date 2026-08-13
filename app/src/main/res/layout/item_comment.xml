@@ -10,23 +10,9 @@
         android:id="@+id/layout_comment_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:paddingHorizontal="16dp"
         android:paddingVertical="10dp">
-
-    <ImageView
-        android:id="@+id/iv_avatar"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:contentDescription="@null"
-        tools:src="@drawable/ic_outline_person_24" />
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginStart="10dp"
-        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,15 +20,29 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:contentDescription="@null"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Kitsune.Circle"
+                tools:src="@drawable/ic_outline_person_24" />
+
             <TextView
                 android:id="@+id/tv_author"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:background="?attr/selectableItemBackground"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textAppearance="?attr/textAppearanceTitleSmall"
                 tools:text="Username" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/tv_timestamp"
@@ -57,131 +57,130 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_overflow"
+                style="?attr/materialIconButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:contentDescription="@string/action_more_options"
                 app:icon="@drawable/ic_more_vert"
-                app:iconTint="?attr/colorControlNormal"
-                style="?attr/materialIconButtonStyle" />
+                app:iconTint="?attr/colorControlNormal" />
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:lineSpacingMultiplier="1.1"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            tools:text="This is a comment on the post." />
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/iv_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="@null"
-            android:maxHeight="360dp"
-            android:scaleType="fitStart"
-            android:visibility="gone"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Kitsune.Rounded8"
-            tools:src="@drawable/ic_insert_photo_48"
-            tools:visibility="visible" />
-
-        <include
-            android:id="@+id/embed"
-            layout="@layout/view_embed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp" />
-
         <LinearLayout
-            android:id="@+id/layout_actions"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="-6dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_height="0dp"
+            android:layout_marginStart="46dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:lineSpacingMultiplier="1.1"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                tools:text="This is a comment on the post." />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/iv_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@null"
+                android:maxHeight="360dp"
+                android:scaleType="fitStart"
+                android:visibility="gone"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Kitsune.Rounded8"
+                tools:src="@drawable/ic_insert_photo_48"
+                tools:visibility="visible" />
+
+            <include
+                android:id="@+id/embed"
+                layout="@layout/view_embed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp" />
 
             <LinearLayout
-                android:id="@+id/layout_like"
-                android:layout_width="wrap_content"
+                android:id="@+id/layout_actions"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true"
+                android:layout_marginStart="-6dp"
+                android:layout_marginTop="4dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="6dp"
-                android:paddingVertical="3dp">
+                android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/iv_like"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_favorite_border_24"
-                    app:tint="?android:attr/textColorSecondary" />
-
-                <TextView
-                    android:id="@+id/tv_likes"
+                <LinearLayout
+                    android:id="@+id/layout_like"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="3dp">
+
+                    <ImageView
+                        android:id="@+id/iv_like"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_favorite_border_24"
+                        app:tint="?android:attr/textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/tv_likes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:textAppearance="?attr/textAppearanceBodySmall"
+                        android:textColor="?android:attr/textColorSecondary"
+                        tools:text="5" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_reply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="4dp"
+                    android:text="@string/comment_reply"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="?android:attr/textColorSecondary"
-                    tools:text="5" />
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_reply"
+            <LinearLayout
+                android:id="@+id/layout_replies"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_view_all_replies"
+                style="?attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true"
-                android:paddingHorizontal="6dp"
-                android:paddingVertical="4dp"
-                android:text="@string/comment_reply"
-                android:textAppearance="?attr/textAppearanceBodySmall"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textStyle="bold" />
+                android:layout_marginTop="2dp"
+                android:visibility="gone"
+                tools:text="View all 12 replies"
+                tools:visibility="visible" />
 
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_replies"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <TextView
-            android:id="@+id/tv_view_all_replies"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:paddingVertical="6dp"
-            android:paddingEnd="8dp"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textColor="?attr/colorPrimary"
-            android:textStyle="bold"
-            android:visibility="gone"
-            tools:ignore="RtlSymmetry"
-            tools:text="View all 12 replies"
-            tools:visibility="visible" />
-
-    </LinearLayout>
 
     </LinearLayout>
 

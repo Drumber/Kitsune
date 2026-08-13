@@ -17,10 +17,11 @@ import io.github.drumber.kitsune.util.parseUtcDate
 class MediaReactionPagingAdapter(
     private val glide: RequestManager,
     private val currentUserId: String?,
+    private val onItemClick: (MediaReaction) -> Unit,
     private val onUpvoteClick: (MediaReaction) -> Unit,
     private val onEditClick: (MediaReaction) -> Unit,
     private val onDeleteClick: (MediaReaction) -> Unit,
-    private val onSharClick: (MediaReaction) -> Unit,
+    private val onShareClick: (MediaReaction) -> Unit,
 ) : PagingDataAdapter<MediaReaction, MediaReactionPagingAdapter.ReactionViewHolder>(ReactionComparator) {
 
     private val upvotedIds = mutableSetOf<String>()
@@ -49,9 +50,10 @@ class MediaReactionPagingAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(reaction: MediaReaction) {
+            binding.root.setOnClickListener { onItemClick.invoke(reaction) }
+
             glide.load(reaction.authorAvatarUrl)
                 .placeholder(R.drawable.ic_outline_person_24)
-                .circleCrop()
                 .into(binding.ivAvatar)
 
             binding.tvAuthor.text = reaction.authorName
@@ -101,7 +103,7 @@ class MediaReactionPagingAdapter(
                     setOnMenuItemClickListener { item ->
                         when (item.itemId) {
                             R.id.action_share_item -> {
-                                onSharClick.invoke(reaction)
+                                onShareClick.invoke(reaction)
                                 true
                             }
 

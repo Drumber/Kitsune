@@ -42,7 +42,6 @@ class NotificationPagingAdapter(
 
             glide.load(notification.actorAvatarUrl)
                 .placeholder(R.drawable.ic_outline_person_24)
-                .circleCrop()
                 .into(binding.ivAvatar)
 
             binding.unreadIndicator.isVisible = !notification.isRead

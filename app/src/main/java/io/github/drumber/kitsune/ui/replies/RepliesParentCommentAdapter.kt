@@ -68,7 +68,6 @@ class RepliesParentCommentAdapter(
             glide
                 .load(comment.authorAvatarUrl)
                 .placeholder(R.drawable.ic_outline_person_24)
-                .circleCrop()
                 .into(header.ivAvatar)
 
             header.tvAuthor.text = comment.authorName ?: binding.root.context.getString(R.string.feed_unknown_user)
@@ -116,7 +115,7 @@ class RepliesParentCommentAdapter(
             header.tvReply.isVisible = false
             header.btnOverflow.isVisible = false
             header.layoutReplies.isVisible = false
-            header.tvViewAllReplies.isVisible = false
+            header.btnViewAllReplies.isVisible = false
             header.dividerComment.isVisible = false
         }
 

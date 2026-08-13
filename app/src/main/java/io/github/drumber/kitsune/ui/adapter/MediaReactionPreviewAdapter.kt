@@ -15,7 +15,8 @@ import io.github.drumber.kitsune.util.parseUtcDate
 
 class MediaReactionPreviewAdapter(
     private val glide: RequestManager,
-    private val onUpvoteClick: ((MediaReaction) -> Unit)? = null
+    private val onItemClick: (MediaReaction) -> Unit,
+    private val onUpvoteClick: (MediaReaction) -> Unit,
 ) : ListAdapter<MediaReaction, MediaReactionPreviewAdapter.ReactionViewHolder>(ReactionComparator) {
 
     private val upvotedIds = mutableSetOf<String>()
@@ -43,9 +44,10 @@ class MediaReactionPreviewAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(reaction: MediaReaction) {
+            binding.root.setOnClickListener { onItemClick.invoke(reaction) }
+
             glide.load(reaction.authorAvatarUrl)
                 .placeholder(R.drawable.ic_outline_person_24)
-                .circleCrop()
                 .into(binding.ivAvatar)
 
             binding.tvAuthor.text = reaction.authorName

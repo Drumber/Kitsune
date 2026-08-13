@@ -24,6 +24,8 @@ import io.github.drumber.kitsune.databinding.FragmentReactionsBinding
 import io.github.drumber.kitsune.ui.adapter.paging.MediaReactionPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
+import io.github.drumber.kitsune.ui.reactiondetail.ReactionDetailFragmentDirections
+import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
@@ -69,10 +71,11 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
         val adapter = MediaReactionPagingAdapter(
             glide = Glide.with(this),
             currentUserId = viewModel.currentUserId,
+            onItemClick = { reaction -> navigateToReaction(reaction) },
             onUpvoteClick = { reaction -> viewModel.upvote(reaction) },
             onEditClick = { reaction -> showComposeReactionDialog(reaction) },
             onDeleteClick = { reaction -> confirmDeleteReaction(reaction) },
-            onSharClick = { reaction -> showShareMenu(reaction) },
+            onShareClick = { reaction -> showShareMenu(reaction) },
         )
         binding.rvReactions.adapter = adapter.withLoadStateFooter(
             footer = ResourceLoadStateAdapter(adapter)
@@ -207,6 +210,12 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
 
     private fun showSnackbar(messageResId: Int) {
         Snackbar.make(binding.root, messageResId, Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun navigateToReaction(reaction: MediaReaction) {
+        val action = ReactionDetailFragmentDirections
+            .actionGlobalReactionDetailFragment(reaction.id)
+        findNavController().navigateSafe(R.id.reactions_fragment, action)
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {

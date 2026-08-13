@@ -64,7 +64,6 @@ class FollowUserPagingAdapter(
 
             glide.load(followUser.avatarUrl)
                 .placeholder(R.drawable.ic_outline_person_24)
-                .circleCrop()
                 .into(binding.ivAvatar)
 
             binding.tvName.text = followUser.name

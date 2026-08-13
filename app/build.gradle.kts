@@ -268,9 +268,6 @@ dependencies {
     // Expandable text view
     implementation(libs.blogc.expandabletextview)
 
-    // CircleImageView
-    implementation(libs.hdodenhof.circleimageview)
-
     // Material Rating Bar
     implementation(libs.zhanghai.materialratingbar)
 

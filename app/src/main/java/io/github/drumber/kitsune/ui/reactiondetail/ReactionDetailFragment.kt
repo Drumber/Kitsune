@@ -100,7 +100,6 @@ class ReactionDetailFragment : Fragment(R.layout.fragment_reaction_detail) {
     private fun bindReaction(reaction: MediaReaction, glide: com.bumptech.glide.RequestManager) {
         glide.load(reaction.authorAvatarUrl)
             .placeholder(R.drawable.ic_outline_person_24)
-            .circleCrop()
             .into(binding.ivAvatar)
 
         binding.tvAuthor.text = reaction.authorName

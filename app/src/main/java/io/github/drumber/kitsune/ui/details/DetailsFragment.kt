@@ -48,6 +48,7 @@ import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.media.MediaSelector
 import io.github.drumber.kitsune.data.presentation.model.media.category.Category
+import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
 import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
 import io.github.drumber.kitsune.databinding.DialogComposeReactionBinding
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
@@ -63,6 +64,7 @@ import io.github.drumber.kitsune.ui.component.chart.StepAxisValueFormatter
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.LibraryUpdateResult
+import io.github.drumber.kitsune.ui.reactiondetail.ReactionDetailFragmentDirections
 import io.github.drumber.kitsune.util.extensions.getColor
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
@@ -446,9 +448,11 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     }
 
     private fun setupReactions() {
-        val adapter = MediaReactionPreviewAdapter(Glide.with(this)) { reaction ->
-            viewModel.upvoteReaction(reaction)
-        }
+        val adapter = MediaReactionPreviewAdapter(
+            Glide.with(this),
+            onItemClick = { reaction -> navigateToReaction(reaction) },
+            onUpvoteClick = { reaction -> viewModel.upvoteReaction(reaction) }
+        )
         reactionsAdapter = adapter
         binding.rvReactions.adapter = adapter
 
@@ -635,6 +639,12 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
     private fun goBack() {
         findNavController().navigateUp()
+    }
+
+    private fun navigateToReaction(reaction: MediaReaction) {
+        val action = ReactionDetailFragmentDirections
+            .actionGlobalReactionDetailFragment(reaction.id)
+        findNavController().navigateSafe(R.id.details_fragment, action)
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {

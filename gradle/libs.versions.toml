@@ -17,7 +17,6 @@ androidxWorkManager = "2.11.2"
 appCompat = "1.7.1"
 archUnit = "1.5.0"
 assertj = "3.27.7"
-circleImageView = "3.1.0"
 composeBom = "2026.06.01"
 constraintLayout = "2.2.2"
 core = "1.19.0"
@@ -122,7 +121,6 @@ fastlane-screengrab = { module = "tools.fastlane:screengrab", version.ref = "scr
 futured-hauler = { module = "app.futured.hauler:hauler", version.ref = "hauler" }
 futured-hauler-databinding = { module = "app.futured.hauler:databinding", version.ref = "hauler" }
 google-android-material = { module = "com.google.android.material:material", version.ref = "material" }
-hdodenhof-circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleImageView" }
 insert-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 insert-koin-androidx-navigation = { module = "io.insert-koin:koin-androidx-navigation", version.ref = "koin" }
 insert-koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }

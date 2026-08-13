@@ -70,11 +70,12 @@
                 app:strokeColor="?attr/colorSurface"
                 app:strokeWidth="2dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/iv_avatar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/profile_avatar_image_description"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Kitsune.Circle"
                     tools:src="@drawable/profile_picture_placeholder" />
 
             </com.google.android.material.card.MaterialCardView>

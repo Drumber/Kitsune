@@ -75,7 +75,6 @@ class CommentPagingAdapter(
     ) {
         glide.load(comment.authorAvatarUrl)
             .placeholder(R.drawable.ic_outline_person_24)
-            .circleCrop()
             .into(binding.ivAvatar)
 
         binding.tvAuthor.text = comment.authorName
@@ -223,16 +222,16 @@ class CommentPagingAdapter(
         }
 
         val hasMore = comment.repliesCount > replies.size
-        binding.tvViewAllReplies.isVisible = hasMore
+        binding.btnViewAllReplies.isVisible = hasMore
         if (hasMore) {
-            binding.tvViewAllReplies.text = binding.root.context.resources.getQuantityString(
+            binding.btnViewAllReplies.text = binding.root.context.resources.getQuantityString(
                 R.plurals.comment_view_all_replies,
                 comment.repliesCount,
                 comment.repliesCount
             )
-            binding.tvViewAllReplies.setOnClickListener { onViewAllRepliesClick?.invoke(comment) }
+            binding.btnViewAllReplies.setOnClickListener { onViewAllRepliesClick?.invoke(comment) }
         } else {
-            binding.tvViewAllReplies.setOnClickListener(null)
+            binding.btnViewAllReplies.setOnClickListener(null)
         }
     }
 
@@ -247,7 +246,7 @@ class CommentPagingAdapter(
         fun clear() {
             binding.layoutReplies.removeAllViews()
             binding.layoutReplies.isVisible = false
-            binding.tvViewAllReplies.isVisible = false
+            binding.btnViewAllReplies.isVisible = false
         }
 
     }
