@@ -24,6 +24,7 @@ import io.github.drumber.kitsune.databinding.FragmentReactionsBinding
 import io.github.drumber.kitsune.ui.adapter.paging.MediaReactionPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
+import io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
 import io.github.drumber.kitsune.ui.reactiondetail.ReactionDetailFragmentDirections
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
@@ -76,6 +77,7 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
             onEditClick = { reaction -> showComposeReactionDialog(reaction) },
             onDeleteClick = { reaction -> confirmDeleteReaction(reaction) },
             onShareClick = { reaction -> showShareMenu(reaction) },
+            onAuthorClick = { userId -> navigateToUserProfile(userId) },
         )
         binding.rvReactions.adapter = adapter.withLoadStateFooter(
             footer = ResourceLoadStateAdapter(adapter)
@@ -215,6 +217,11 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
     private fun navigateToReaction(reaction: MediaReaction) {
         val action = ReactionDetailFragmentDirections
             .actionGlobalReactionDetailFragment(reaction.id)
+        findNavController().navigateSafe(R.id.reactions_fragment, action)
+    }
+
+    private fun navigateToUserProfile(userId: String) {
+        val action = UserProfileFragmentDirections.actionGlobalUserProfileFragment(userId)
         findNavController().navigateSafe(R.id.reactions_fragment, action)
     }
 

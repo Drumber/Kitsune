@@ -17,6 +17,7 @@ class MediaReactionPreviewAdapter(
     private val glide: RequestManager,
     private val onItemClick: (MediaReaction) -> Unit,
     private val onUpvoteClick: (MediaReaction) -> Unit,
+    private val onAuthorClick: (String) -> Unit,
 ) : ListAdapter<MediaReaction, MediaReactionPreviewAdapter.ReactionViewHolder>(ReactionComparator) {
 
     private val upvotedIds = mutableSetOf<String>()
@@ -77,7 +78,15 @@ class MediaReactionPreviewAdapter(
                     if (isUpvoted) R.drawable.ic_thumb_up_24 else R.drawable.ic_thumb_up_border_24
                 )
                 isEnabled = !isUpvoted
-                setOnClickListener { onUpvoteClick?.invoke(reaction) }
+                setOnClickListener { onUpvoteClick.invoke(reaction) }
+            }
+
+            if (reaction.authorId != null) {
+                binding.tvAuthor.setOnClickListener { onAuthorClick.invoke(reaction.authorId) }
+                binding.ivAvatar.setOnClickListener { onAuthorClick.invoke(reaction.authorId) }
+            } else {
+                binding.tvAuthor.setOnClickListener(null)
+                binding.ivAvatar.setOnClickListener(null)
             }
         }
 

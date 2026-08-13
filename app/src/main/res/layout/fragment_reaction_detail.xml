@@ -60,11 +60,12 @@
 
                     <TextView
                         android:id="@+id/tv_author"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:background="?attr/selectableItemBackground"
                         tools:text="Username" />
 
                     <TextView
@@ -95,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="10dp">
+                    android:padding="8dp">
 
                     <ImageView
                         android:id="@+id/iv_media_poster"

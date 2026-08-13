@@ -22,6 +22,7 @@ class MediaReactionPagingAdapter(
     private val onEditClick: (MediaReaction) -> Unit,
     private val onDeleteClick: (MediaReaction) -> Unit,
     private val onShareClick: (MediaReaction) -> Unit,
+    private val onAuthorClick: (String) -> Unit,
 ) : PagingDataAdapter<MediaReaction, MediaReactionPagingAdapter.ReactionViewHolder>(ReactionComparator) {
 
     private val upvotedIds = mutableSetOf<String>()
@@ -84,6 +85,14 @@ class MediaReactionPagingAdapter(
                 )
                 isEnabled = !isUpvoted
                 setOnClickListener { onUpvoteClick.invoke(reaction) }
+            }
+
+            if (reaction.authorId != null) {
+                binding.tvAuthor.setOnClickListener { onAuthorClick.invoke(reaction.authorId) }
+                binding.ivAvatar.setOnClickListener { onAuthorClick.invoke(reaction.authorId) }
+            } else {
+                binding.tvAuthor.setOnClickListener(null)
+                binding.ivAvatar.setOnClickListener(null)
             }
 
             bindOverflowMenu(reaction)

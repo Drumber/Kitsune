@@ -64,6 +64,7 @@ import io.github.drumber.kitsune.ui.component.chart.StepAxisValueFormatter
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.LibraryUpdateResult
+import io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
 import io.github.drumber.kitsune.ui.reactiondetail.ReactionDetailFragmentDirections
 import io.github.drumber.kitsune.util.extensions.getColor
 import io.github.drumber.kitsune.util.extensions.navigateSafe
@@ -451,7 +452,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         val adapter = MediaReactionPreviewAdapter(
             Glide.with(this),
             onItemClick = { reaction -> navigateToReaction(reaction) },
-            onUpvoteClick = { reaction -> viewModel.upvoteReaction(reaction) }
+            onUpvoteClick = { reaction -> viewModel.upvoteReaction(reaction) },
+            onAuthorClick = { userId -> navigateToUserProfile(userId) },
         )
         reactionsAdapter = adapter
         binding.rvReactions.adapter = adapter
@@ -644,6 +646,11 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     private fun navigateToReaction(reaction: MediaReaction) {
         val action = ReactionDetailFragmentDirections
             .actionGlobalReactionDetailFragment(reaction.id)
+        findNavController().navigateSafe(R.id.details_fragment, action)
+    }
+
+    private fun navigateToUserProfile(userId: String) {
+        val action = UserProfileFragmentDirections.actionGlobalUserProfileFragment(userId)
         findNavController().navigateSafe(R.id.details_fragment, action)
     }
 

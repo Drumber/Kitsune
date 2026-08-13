@@ -11,11 +11,13 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
 import io.github.drumber.kitsune.databinding.FragmentReactionDetailBinding
 import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
+import io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
@@ -49,6 +51,9 @@ class ReactionDetailFragment : Fragment(R.layout.fragment_reaction_detail) {
         )
 
         binding.btnUpvote.setOnClickListener { viewModel.upvote() }
+
+        binding.tvAuthor.setOnClickListener { navigateToAuthorProfile() }
+        binding.ivAvatar.setOnClickListener { navigateToAuthorProfile() }
 
         val glide = Glide.with(this)
 
@@ -97,7 +102,7 @@ class ReactionDetailFragment : Fragment(R.layout.fragment_reaction_detail) {
         }
     }
 
-    private fun bindReaction(reaction: MediaReaction, glide: com.bumptech.glide.RequestManager) {
+    private fun bindReaction(reaction: MediaReaction, glide: RequestManager) {
         glide.load(reaction.authorAvatarUrl)
             .placeholder(R.drawable.ic_outline_person_24)
             .into(binding.ivAvatar)
@@ -142,5 +147,11 @@ class ReactionDetailFragment : Fragment(R.layout.fragment_reaction_detail) {
 
     private fun showSnackbar(messageResId: Int) {
         Snackbar.make(binding.root, messageResId, Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun navigateToAuthorProfile() {
+        val authorId = viewModel.reaction.value?.authorId ?: return
+        val action = UserProfileFragmentDirections.actionGlobalUserProfileFragment(authorId)
+        findNavController().navigateSafe(R.id.reaction_detail_fragment, action)
     }
 }

@@ -36,11 +36,12 @@
 
                 <TextView
                     android:id="@+id/tv_author"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:textAppearance="?attr/textAppearanceTitleSmall"
+                    android:background="?attr/selectableItemBackground"
                     tools:text="Username" />
 
                 <TextView
