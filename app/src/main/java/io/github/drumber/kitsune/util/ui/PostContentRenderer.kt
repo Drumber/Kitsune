@@ -33,10 +33,18 @@ class PostContentRenderer(context: Context) {
         .usePlugin(HtmlPlugin.create())
         .usePlugin(GlideImagesPlugin.create(context))
         .usePlugin(LinkifyPlugin.create())
-        .usePlugin(MovementMethodPlugin.link())
+        .usePlugin(MovementMethodPlugin.create(NonScrollingLinkMovementMethod.instance))
         .usePlugin(object : AbstractMarkwonPlugin() {
             override fun configureConfiguration(builder: MarkwonConfiguration.Builder) {
                 builder.linkResolver(CustomLinkResolver())
+            }
+
+            override fun afterSetText(textView: TextView) {
+                // The MovementMethod will set the TextView to focusable.
+                // Revert to non-focusable to allow parents to consume touch events for e.g. ripple effect.
+                textView.isFocusable = false
+                textView.isClickable = false
+                textView.isLongClickable = false
             }
         })
         .build()
