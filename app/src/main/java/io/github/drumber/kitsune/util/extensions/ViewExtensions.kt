@@ -1,9 +1,13 @@
 package io.github.drumber.kitsune.util.extensions
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.view.AccessibilityDelegateCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,11 +41,21 @@ fun View.setOnDoubleTapListener(
             }
         }
     )
-    // Keep a click listener so accessibility services can still trigger the primary action.
-    if (onSingleTap != null) {
-        setOnClickListener { onSingleTap() }
+
+    ViewCompat.setAccessibilityDelegate(this, object : AccessibilityDelegateCompat() {
+        override fun performAccessibilityAction(host: View, action: Int, args: Bundle?): Boolean {
+            if (onSingleTap != null && action == AccessibilityNodeInfoCompat.ACTION_CLICK) {
+                onSingleTap.invoke()
+                return true
+            }
+            return super.performAccessibilityAction(host, action, args)
+        }
+    })
+
+    setOnTouchListener { _, event ->
+        gestureDetector.onTouchEvent(event)
+        false
     }
-    setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
 }
 
 fun NestedScrollView.smoothScrollOrJumpToTop() {
