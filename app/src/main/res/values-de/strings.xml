@@ -62,7 +62,7 @@
     <string name="preference_app_version_description">Klicken, um nach Aktualisierungen zu suchen.</string>
     <string name="action_log_in_to_kitsu">Bei Kitsu anmelden</string>
     <string name="action_create_account">Account erstellen</string>
-    <string name="invalid_username">Keine gültige E-Mail Adresse</string>
+    <string name="invalid_username">Gebe deine E-Mail oder Benutzername ein</string>
     <string name="not_logged_in">Nicht angemeldet</string>
     <string name="app_logs_no_data">Keine Protokolle verfügbar.</string>
     <string name="library_edit_privacy_private">Privat</string>
@@ -502,4 +502,20 @@
     <string name="profile_data_followers">%d Follower</string>
     <string name="follow_list_following_title">Folge ich</string>
     <string name="follow_list_followers_title">Follower</string>
+    <string name="feed_pinned_post">Angepinnt</string>
+    <string name="title_replies">Antworten</string>
+    <string name="preference_double_back_to_exit">Zweimal Zurück drücken zum Beenden</string>
+    <string name="preference_double_back_to_exit_description">Zum Beenden der App muss zweimal auf Zurück gedrückt werden.</string>
+    <plurals name="notification_actor_and_others">
+        <item quantity="one">%1$s und %2$d weiterer</item>
+        <item quantity="other">%1$s und %2$d weitere</item>
+    </plurals>
+    <plurals name="group_members_count">
+        <item quantity="one">%d Mitglied</item>
+        <item quantity="other">%d Mitglieder</item>
+    </plurals>
+    <plurals name="comment_view_all_replies">
+        <item quantity="one">%d Antwort ansehen</item>
+        <item quantity="other">Alle %d Antworten ansehen</item>
+    </plurals>
 </resources>

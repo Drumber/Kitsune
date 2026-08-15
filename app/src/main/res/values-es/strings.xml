@@ -251,7 +251,7 @@
     <string name="action_sign_in">Registrarse</string>
     <string name="action_log_in">Iniciar sesión</string>
     <string name="action_log_in_to_kitsu">Inicia sesión en Kitsu</string>
-    <string name="invalid_username">No es un correo válido</string>
+    <string name="invalid_username">Ingrese su correo o nombre de usuario</string>
     <string name="login_failed">Error al iniciar sesión</string>
     <string name="status_logging_in">Iniciando sesión…</string>
     <string name="logged_in_success">Iniciado como %s.</string>
@@ -509,4 +509,13 @@
     <string name="prompt_email_or_username">Correo o nombre de usuario</string>
     <string name="follow_list_following_title">Siguiendo</string>
     <string name="follow_list_followers_title">Seguidores</string>
+    <string name="feed_pinned_post">Pineado</string>
+    <string name="title_replies">Respuestas</string>
+    <string name="preference_double_back_to_exit">Doble toque atrás para salir</string>
+    <string name="preference_double_back_to_exit_description">Se requiere presionar dos veces atrás para cerrar la aplicación.</string>
+    <plurals name="notification_actor_and_others">
+        <item quantity="one">%1$s y %2$d otro</item>
+        <item quantity="many">%1$s y %2$d otros</item>
+        <item quantity="other">%1$s y %2$d otros</item>
+    </plurals>
 </resources>
