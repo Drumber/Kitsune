@@ -13,7 +13,6 @@
     <string name="notification_mentioned">%1$s te-a menționat</string>
     <string name="notification_generic">%1$s ți-a trimis o notificare</string>
     <string name="login_no_account">Nu ai încă cont? Crează-ți unul aici: <a href="https://kitsu.app">kitsu.app</a>.</string>
-    <string name="feed_spoiler_warning">Spoiler</string>
     <string name="feed_spoiler_warning_title">Spoiler</string>
     <string name="feed_unknown_user">Utilizator necunoscut</string>
     <string name="feed_post_spoiled_episode">Ep. %1$d</string>
@@ -102,7 +101,6 @@
     <string name="press_back_again_to_exit">Apasă înapoi din nou pentru a ieși</string>
     <string name="nav_feed">Feed</string>
     <string name="notification_aired">%1$s a postat o actualizare</string>
-    <string name="feed_post_about">în legătură cu %1$s</string>
     <string name="cd_like_post">Dă like, %1$d like-uri</string>
     <string name="cd_unlike_post">Nu mai da like, %1$d like-uri</string>
     <string name="cd_comments_count">%1$d comentarii</string>
@@ -180,7 +178,6 @@
     <string name="group_tab_about">Despre</string>
     <string name="group_tab_posts">Postări</string>
     <string name="group_compose_post">Postează în grup</string>
-    <string name="group_post_login_required">Conectează-te pentru a posta în grupuri.</string>
     <string name="title_post">Postare</string>
     <string name="title_comments">Comentarii</string>
     <string name="hint_add_comment">Adaugă un comentariu…</string>
@@ -335,10 +332,6 @@
     <string name="preference_media_item_size_medium">Medie</string>
     <string name="preference_media_item_size_large">Mare</string>
     <string name="preference_start_fragment">Pagina de Bază</string>
-    <string name="preference_start_fragment_home">Acasă</string>
-    <string name="preference_start_fragment_search">Căutare</string>
-    <string name="preference_start_fragment_library">Colecție</string>
-    <string name="preference_start_fragment_profile">Profil</string>
     <string name="preference_start_fragment_description">Pagina de bază este %s.</string>
     <string name="preference_language">Limbă</string>
     <string name="preference_language_default">Limba de bază</string>
@@ -379,7 +372,6 @@
     <string name="preference_open_source_libraries_description">Lista cu toate librăriile open source folosite.</string>
     <string name="preference_not_logged_in">Trebuie să fii conectat pentru a modifica această setare.</string>
     <string name="app_logs_no_data">Nici un log disponibil.</string>
-    <string name="prompt_email">Email</string>
     <string name="prompt_email_or_username">Email sau Nume de Utilzator</string>
     <string name="prompt_password">Parolă</string>
     <string name="action_sign_in">Conectează-te</string>
@@ -434,7 +426,6 @@
     <string name="profile_data_followers">%d Urmăritori</string>
     <string name="follow_list_following_title">Urmăriți</string>
     <string name="follow_list_followers_title">Urmăritori</string>
-    <string name="follow_list_empty">Nimic de văzut aici.</string>
     <string name="profile_anime_stats">Statistici Anime</string>
     <string name="profile_manga_stats">Statistici Manga</string>
     <string name="profile_stats_anime_watch_time">%s petrecut văzând anime.</string>
