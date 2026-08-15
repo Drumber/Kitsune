@@ -2,17 +2,16 @@ package io.github.drumber.kitsune.ui.authentication
 
 import android.app.Activity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
-import com.google.android.material.textfield.TextInputLayout
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ActivityAuthenticationBinding
 import io.github.drumber.kitsune.ui.base.BaseActivity
+import io.github.drumber.kitsune.util.extensions.afterTextChanged
+import io.github.drumber.kitsune.util.extensions.text
 import io.github.drumber.kitsune.util.ui.initImePaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
@@ -141,20 +140,3 @@ class AuthenticationActivity : BaseActivity() {
     }
 
 }
-
-/**
- * Extension function to simplify setting an afterTextChanged action to EditText components.
- */
-fun TextInputLayout.afterTextChanged(afterTextChanged: (String) -> Unit) {
-    this.editText?.addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(editable: Editable?) {
-            afterTextChanged.invoke(editable.toString())
-        }
-
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-    })
-}
-
-fun TextInputLayout.text(): String = this.editText!!.text.toString()

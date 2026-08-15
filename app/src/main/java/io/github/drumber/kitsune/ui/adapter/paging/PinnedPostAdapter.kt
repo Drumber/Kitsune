@@ -119,6 +119,10 @@ class PinnedPostAdapter(
             listener?.onDeleteClick(post)
         }
 
+        override fun onReportClick(post: Post) {
+            listener?.onReportClick(post)
+        }
+
         override fun getInteractionOverride(post: Post): InteractionOverride = interactionOverride
 
         override fun onLike(

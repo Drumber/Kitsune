@@ -571,4 +571,20 @@
     <string name="unique_poster_transition_name" translatable="false">media_item_poster_%1$s</string>
     <string name="details_poster_transition_name" translatable="false">media_details_poster</string>
     <string name="character_picture_transition_name" translatable="false">character_picture</string>
+
+    <string name="action_report">Report</string>
+    <string name="report_post_title">Report Post</string>
+    <string name="report_reason">Reason</string>
+    <string name="report_reason_nsfw">NSFW</string>
+    <string name="report_reason_offensive">Offensive</string>
+    <string name="report_reason_spoiler">Spoiler</string>
+    <string name="report_reason_bullying">Bullying</string>
+    <string name="report_reason_spam">Spam</string>
+    <string name="report_reason_other">Other</string>
+    <string name="report_explanation_hint">Please explain</string>
+    <string name="report_error_explanation_required">Explanation is required</string>
+    <string name="report_submit">Submit</string>
+    <string name="report_success">Post reported successfully</string>
+    <string name="report_failure">Failed to report post</string>
+    <string name="report_already_reported">You have already reported this post.</string>
 </resources>

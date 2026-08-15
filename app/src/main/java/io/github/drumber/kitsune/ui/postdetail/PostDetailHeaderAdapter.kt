@@ -31,6 +31,7 @@ class PostDetailHeaderAdapter(
     private val onAuthorClick: (String) -> Unit,
     private val onImageClick: (String) -> Unit,
     private val onShareClick: (Post) -> Unit,
+    private val onReportClick: (Post) -> Unit,
 ) : RecyclerView.Adapter<PostDetailHeaderAdapter.HeaderViewHolder>() {
 
     private var post: Post? = null
@@ -160,6 +161,9 @@ class PostDetailHeaderAdapter(
                         menu.removeItem(R.id.action_edit_item)
                         menu.removeItem(R.id.action_delete_item)
                     }
+                    if (isOwner || currentUserId == null) {
+                        menu.removeItem(R.id.action_report_item)
+                    }
 
                     setOnMenuItemClickListener { menuItem ->
                         when (menuItem.itemId) {
@@ -175,6 +179,11 @@ class PostDetailHeaderAdapter(
 
                             R.id.action_delete_item -> {
                                 onDeleteClick(post)
+                                true
+                            }
+
+                            R.id.action_report_item -> {
+                                onReportClick(post)
                                 true
                             }
 

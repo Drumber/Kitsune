@@ -27,6 +27,7 @@ import io.github.drumber.kitsune.data.repository.PostInteractionRepository
 import io.github.drumber.kitsune.data.repository.PostInteractionStore
 import io.github.drumber.kitsune.data.repository.PostManagementRepository
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
+import io.github.drumber.kitsune.data.repository.ReportRepository
 import io.github.drumber.kitsune.data.repository.UploadRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.repository.WidgetLibraryChangeListener
@@ -103,6 +104,9 @@ import io.github.drumber.kitsune.data.source.network.reaction.ReactionNetworkDat
 import io.github.drumber.kitsune.data.source.network.reaction.api.MediaReactionApi
 import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReaction
 import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReactionVote
+import io.github.drumber.kitsune.data.source.network.report.ReportNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.report.api.ReportApi
+import io.github.drumber.kitsune.data.source.network.report.model.NetworkReport
 import io.github.drumber.kitsune.data.source.network.user.FavoriteNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.user.FollowNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.user.ProfileLinkNetworkDataSource
@@ -440,6 +444,19 @@ val dataModule = module {
     }
     single { ReactionNetworkDataSource(get()) }
     single { MediaReactionRepository(get()) }
+
+    // Report
+    factory {
+        createService<ReportApi>(
+            get(),
+            get(),
+            NetworkReport::class.java,
+            NetworkUser::class.java,
+            NetworkPost::class.java
+        )
+    }
+    single { ReportNetworkDataSource(get()) }
+    single { ReportRepository(get(), get()) }
 
     // Groups
     factory {
