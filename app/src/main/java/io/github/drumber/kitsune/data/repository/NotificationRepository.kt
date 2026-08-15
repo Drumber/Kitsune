@@ -59,6 +59,11 @@ class NotificationRepository(
         }
     }
 
+    suspend fun markAsRead(userId: String, notifications: List<Notification>) {
+        val notificationIds = notifications.map { it.id }
+        notificationNetworkDataSource.markNotificationsAsRead(userId, notificationIds)
+    }
+
     fun notificationsPager(userId: String, pageSize: Int = Kitsu.DEFAULT_PAGE_SIZE) = Pager(
         config = PagingConfig(
             pageSize = pageSize,

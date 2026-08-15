@@ -21,4 +21,10 @@ interface NotificationApi {
         @Path("userId") userId: String,
         @Body notificationIds: List<String>,
     ): JSONAPIDocument<List<NetworkActivityGroup>>
+
+    @POST("feeds/notifications/{userId}/_read")
+    suspend fun markRead(
+        @Path("userId") userId: String,
+        @Body notificationIds: List<String>,
+    ): JSONAPIDocument<List<NetworkActivityGroup>>
 }

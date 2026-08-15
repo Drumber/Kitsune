@@ -9,10 +9,12 @@ import io.github.drumber.kitsune.data.repository.NotificationRepository
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.time.Duration.Companion.seconds
 
 class NotificationsViewModel(
@@ -44,6 +46,20 @@ class NotificationsViewModel(
         pendingSeenNotifications.addAll(notifications)
         if (markAsSeenJob?.isCompleted ?: true) {
             markAsSeenJob = viewModelScope.launch { flushSeenNotifications() }
+        }
+    }
+
+    fun markNotificationAsRead(notification: Notification) {
+        val userId = getLocalUserId() ?: return
+        viewModelScope.launch {
+            try {
+                // use NonCancellable context to run the request even when navigating to another screen
+                withContext(NonCancellable) {
+                    notificationRepository.markAsRead(userId, listOf(notification))
+                }
+            } catch (e: Exception) {
+                logE("Failed to mark notification as read.", e)
+            }
         }
     }
 

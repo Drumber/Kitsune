@@ -34,6 +34,7 @@ object NotificationMapper {
             verb = NotificationVerb.fromString(latest?.verb),
             isRead = isRead ?: false,
             isSeen = isSeen ?: false,
+            actorId = actor?.id,
             actorName = actor?.name,
             actorAvatarUrl = actor?.avatar?.originalOrDown(),
             actorCount = actorCount ?: activities.mapNotNull { it.actor?.id }.distinct().size,

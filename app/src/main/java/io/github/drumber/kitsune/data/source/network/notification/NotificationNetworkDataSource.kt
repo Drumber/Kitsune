@@ -33,4 +33,10 @@ class NotificationNetworkDataSource(
             notificationApi.markSeen(userId, notificationIds)
         }
     }
+
+    suspend fun markNotificationsAsRead(userId: String, notificationIds: List<String>) {
+        withContext(Dispatchers.IO) {
+            notificationApi.markRead(userId, notificationIds)
+        }
+    }
 }

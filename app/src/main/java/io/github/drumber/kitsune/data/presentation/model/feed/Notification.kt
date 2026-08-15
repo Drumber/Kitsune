@@ -39,6 +39,7 @@ data class Notification(
     val isRead: Boolean,
     val isSeen: Boolean,
 
+    val actorId: String?,
     val actorName: String?,
     val actorAvatarUrl: String?,
     /** Number of distinct actors aggregated into this notification group. */
