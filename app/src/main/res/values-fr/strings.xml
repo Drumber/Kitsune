@@ -245,7 +245,7 @@
     <string name="preference_rating_system_advanced">Avancé</string>
     <string name="preference_check_for_updates">Vérifier les mise à jour au démarrage</string>
     <string name="preference_app_version">Infos sur la version</string>
-    <string name="preference_check_for_updates_description">Vérifie si une nouvelle version de l\'appication est disponible à chaque lancement.</string>
+    <string name="preference_check_for_updates_description">Vérifie si une nouvelle version de l\'application est disponible à chaque lancement.</string>
     <string name="preference_app_logs_description">Voir et partager les messages de log.</string>
     <string name="preference_app_version_description">Cliquez pour vérifier les mises à jours.</string>
     <string name="preference_open_source_libraries_description">Liste de toutes les bibliothèques open source utilisées.</string>

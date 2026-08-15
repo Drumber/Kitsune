@@ -256,7 +256,7 @@
     <string name="action_sign_in">Oturum aç</string>
     <string name="action_log_in">Giriş yap</string>
     <string name="action_log_in_to_kitsu">Kitsu ile giriş yap</string>
-    <string name="invalid_username">Email adresi bulunamadı</string>
+    <string name="invalid_username">E-posta adresinizi veya kullanıcı adınızı girin</string>
     <string name="login_failed">"Giriş başarısız"</string>
     <string name="status_logging_in">Giriş…</string>
     <string name="logged_in_success">Olarak oturum açtı %s.</string>
@@ -514,4 +514,20 @@
     <string name="follow_list_following_title">Takip Edilenler</string>
     <string name="follow_list_followers_title">Takipçiler</string>
     <string name="follow_list_empty">Burada gösterilecek bir şey yok.</string>
+    <string name="feed_pinned_post">Sabitlendi</string>
+    <string name="title_replies">Yanıtlar</string>
+    <string name="preference_double_back_to_exit">Çıkmak İçin Geri Düğmesine İki Kere Bas</string>
+    <string name="preference_double_back_to_exit_description">Uygulamayı kapatmak için geri düğmesine iki kez basılmasını gerektir.</string>
+    <plurals name="notification_actor_and_others">
+        <item quantity="one">%1$s ve %2$d başkası</item>
+        <item quantity="other">%1$s ve %2$d başkası</item>
+    </plurals>
+    <plurals name="group_members_count">
+        <item quantity="one">%d üye</item>
+        <item quantity="other">%d üye</item>
+    </plurals>
+    <plurals name="comment_view_all_replies">
+        <item quantity="one">%d yanıtı görüntüle</item>
+        <item quantity="other">%d yanıtı görüntüle</item>
+    </plurals>
 </resources>
