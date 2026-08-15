@@ -52,8 +52,14 @@ class NotificationsFragment : Fragment(R.layout.fragment_notifications),
         binding.rvNotifications.adapter = adapter.withLoadStateFooter(
             footer = ResourceLoadStateAdapter(adapter)
         )
-        binding.rvNotifications.layoutManager =
-            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        binding.rvNotifications.layoutManager = layoutManager
+
+        binding.rvNotifications.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                markVisibleNotificationsAsSeen(adapter, layoutManager)
+            }
+        })
 
         binding.layoutLoading.btnRetry.setOnClickListener { adapter.retry() }
 
@@ -81,6 +87,12 @@ class NotificationsFragment : Fragment(R.layout.fragment_notifications),
                     )
                     binding.swipeRefreshLayout.isRefreshing =
                         loadState.refresh is LoadState.Loading && adapter.itemCount > 0
+
+                    if (loadState.source.refresh is LoadState.NotLoading) {
+                        binding.rvNotifications.post {
+                            markVisibleNotificationsAsSeen(adapter, layoutManager)
+                        }
+                    }
                 }
             }
         }
@@ -105,6 +117,23 @@ class NotificationsFragment : Fragment(R.layout.fragment_notifications),
         val post = item.targetPost ?: return
         val action = PostDetailFragmentDirections.actionGlobalPostDetailFragment(post)
         findNavController().navigateSafe(R.id.notifications_fragment, action)
+    }
+
+    private fun markVisibleNotificationsAsSeen(
+        adapter: NotificationPagingAdapter,
+        layoutManager: LinearLayoutManager
+    ) {
+        val first = layoutManager.findFirstCompletelyVisibleItemPosition()
+        val last = layoutManager.findLastCompletelyVisibleItemPosition()
+        if (first == RecyclerView.NO_POSITION) return
+
+        val unseenNotifications = (first..last).mapNotNull { position ->
+            adapter.peek(position)
+        }.filter { !it.isSeen }
+
+        if (unseenNotifications.isNotEmpty()) {
+            viewModel.markNotificationsAsSeen(unseenNotifications)
+        }
     }
 
     override fun onDestroyView() {

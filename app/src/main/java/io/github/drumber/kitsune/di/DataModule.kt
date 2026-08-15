@@ -11,23 +11,23 @@ import io.github.drumber.kitsune.data.repository.CastingRepository
 import io.github.drumber.kitsune.data.repository.CategoryRepository
 import io.github.drumber.kitsune.data.repository.CharacterRepository
 import io.github.drumber.kitsune.data.repository.CommentRepository
+import io.github.drumber.kitsune.data.repository.ContentRevealStore
 import io.github.drumber.kitsune.data.repository.FavoriteRepository
 import io.github.drumber.kitsune.data.repository.FeedRepository
-import io.github.drumber.kitsune.data.repository.NotificationRepository
+import io.github.drumber.kitsune.data.repository.FollowRepository
+import io.github.drumber.kitsune.data.repository.GroupsRepository
 import io.github.drumber.kitsune.data.repository.LibraryChangeListener
 import io.github.drumber.kitsune.data.repository.LibraryRepository
 import io.github.drumber.kitsune.data.repository.MangaRepository
 import io.github.drumber.kitsune.data.repository.MappingRepository
 import io.github.drumber.kitsune.data.repository.MediaReactionRepository
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository
-import io.github.drumber.kitsune.data.repository.ContentRevealStore
-import io.github.drumber.kitsune.data.repository.FollowRepository
-import io.github.drumber.kitsune.data.repository.GroupsRepository
+import io.github.drumber.kitsune.data.repository.NotificationRepository
 import io.github.drumber.kitsune.data.repository.PostInteractionRepository
-import io.github.drumber.kitsune.data.repository.PostManagementRepository
-import io.github.drumber.kitsune.data.repository.UploadRepository
 import io.github.drumber.kitsune.data.repository.PostInteractionStore
+import io.github.drumber.kitsune.data.repository.PostManagementRepository
 import io.github.drumber.kitsune.data.repository.ProfileLinkRepository
+import io.github.drumber.kitsune.data.repository.UploadRepository
 import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.data.repository.WidgetLibraryChangeListener
 import io.github.drumber.kitsune.data.source.local.auth.AccessTokenLocalDataSource
@@ -55,31 +55,25 @@ import io.github.drumber.kitsune.data.source.network.feed.PostNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.feed.UploadNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.feed.api.FeedApi
 import io.github.drumber.kitsune.data.source.network.feed.api.PostApi
-import io.github.drumber.kitsune.data.source.network.feed.api.UploadApi
 import io.github.drumber.kitsune.data.source.network.feed.api.PostLikeApi
+import io.github.drumber.kitsune.data.source.network.feed.api.UploadApi
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivity
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivityGroup
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPostLike
-import io.github.drumber.kitsune.data.source.network.notification.NotificationNetworkDataSource
-import io.github.drumber.kitsune.data.source.network.notification.api.NotificationApi
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUpload
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUploadRequest
+import io.github.drumber.kitsune.data.source.network.group.GroupsNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.group.api.GroupsApi
+import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroup
+import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroupCategory
+import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroupMember
 import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.library.api.LibraryEntryApi
 import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry
 import io.github.drumber.kitsune.data.source.network.mapping.MappingNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.mapping.api.MappingApi
 import io.github.drumber.kitsune.data.source.network.mapping.model.NetworkMapping
-import io.github.drumber.kitsune.data.source.network.group.GroupsNetworkDataSource
-import io.github.drumber.kitsune.data.source.network.group.api.GroupsApi
-import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroup
-import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroupCategory
-import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroupMember
-import io.github.drumber.kitsune.data.source.network.reaction.ReactionNetworkDataSource
-import io.github.drumber.kitsune.data.source.network.reaction.api.MediaReactionApi
-import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReaction
-import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReactionVote
 import io.github.drumber.kitsune.data.source.network.media.AnimeNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.media.CastingNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.media.CategoryNetworkDataSource
@@ -103,6 +97,12 @@ import io.github.drumber.kitsune.data.source.network.media.model.streamer.Networ
 import io.github.drumber.kitsune.data.source.network.media.model.streamer.NetworkStreamingLink
 import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkChapter
 import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkEpisode
+import io.github.drumber.kitsune.data.source.network.notification.NotificationNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.notification.api.NotificationApi
+import io.github.drumber.kitsune.data.source.network.reaction.ReactionNetworkDataSource
+import io.github.drumber.kitsune.data.source.network.reaction.api.MediaReactionApi
+import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReaction
+import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReactionVote
 import io.github.drumber.kitsune.data.source.network.user.FavoriteNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.user.FollowNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.user.ProfileLinkNetworkDataSource
@@ -363,7 +363,7 @@ val dataModule = module {
         )
     }
     single { NotificationNetworkDataSource(get()) }
-    single { NotificationRepository(get()) }
+    single { NotificationRepository(get(), get()) }
 
     // Comments
     factory {

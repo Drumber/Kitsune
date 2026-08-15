@@ -21,4 +21,16 @@ class NotificationNetworkDataSource(
         }
     }
 
+    suspend fun getUnseenNotificationsCount(userId: String): Int? {
+        return withContext(Dispatchers.IO) {
+            val filter = Filter().limit(1)
+            notificationApi.getNotifications(userId, filter.options).meta?.get("unseenCount") as? Int
+        }
+    }
+
+    suspend fun markNotificationsAsSeen(userId: String, notificationIds: List<String>) {
+        withContext(Dispatchers.IO) {
+            notificationApi.markSeen(userId, notificationIds)
+        }
+    }
 }

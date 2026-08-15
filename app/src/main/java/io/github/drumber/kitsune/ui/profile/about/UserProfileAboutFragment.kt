@@ -27,6 +27,10 @@ class UserProfileAboutFragment : BaseProfileAboutFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.btnFollow.setOnClickListener {
+            viewModel.toggleFollow()
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
                 binding.btnFollow.apply {

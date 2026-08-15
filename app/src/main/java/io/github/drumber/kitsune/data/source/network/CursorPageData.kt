@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.source.network
 
-import android.net.Uri
+import androidx.core.net.toUri
 import com.github.jasminb.jsonapi.JSONAPIDocument
 
 /**
@@ -19,4 +19,4 @@ fun <Value : Any> JSONAPIDocument<List<Value>>.toCursorPageData() = CursorPageDa
 )
 
 private fun String.parseCursor() =
-    Uri.parse(this).getQueryParameter("page[cursor]")
+    this.toUri().getQueryParameter("page[cursor]")

@@ -3,9 +3,16 @@ package io.github.drumber.kitsune.ui.feed
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.OptIn
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.badge.BadgeUtils
+import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.tabs.TabLayoutMediator
@@ -16,12 +23,25 @@ import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.ui.initMarginWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FeedFragment : Fragment(R.layout.fragment_feed),
     NavigationBarView.OnItemReselectedListener {
 
     private val binding by viewBinding(FragmentFeedBinding::bind)
 
+    private val viewModel: FeedViewModel by viewModel()
+
+    private lateinit var notificationsBadge: BadgeDrawable
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        notificationsBadge = BadgeDrawable.create(requireContext())
+    }
+
+    @OptIn(ExperimentalBadgeUtils::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -53,6 +73,20 @@ class FeedFragment : Fragment(R.layout.fragment_feed),
                 }
 
                 else -> false
+            }
+        }
+
+        BadgeUtils.attachBadgeDrawable(notificationsBadge, binding.toolbar, R.id.menu_notifications)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.unseenNotificationsCount.collectLatest { unseenNotificationsCount ->
+                    val count = unseenNotificationsCount ?: 0
+                    notificationsBadge.apply {
+                        isVisible = count > 0
+                        number = count
+                    }
+                }
             }
         }
 
@@ -95,6 +129,11 @@ class FeedFragment : Fragment(R.layout.fragment_feed),
                 }
             }
         })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.updateUnseenNotificationsCount()
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {

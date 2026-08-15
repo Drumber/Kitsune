@@ -12,6 +12,7 @@ import io.github.drumber.kitsune.ui.details.episodes.EpisodesViewModel
 import io.github.drumber.kitsune.ui.details.feed.MediaFeedViewModel
 import io.github.drumber.kitsune.ui.details.reactions.ReactionsViewModel
 import io.github.drumber.kitsune.ui.feed.FeedListViewModel
+import io.github.drumber.kitsune.ui.feed.FeedViewModel
 import io.github.drumber.kitsune.ui.groupdetail.GroupDetailViewModel
 import io.github.drumber.kitsune.ui.groups.GroupsViewModel
 import io.github.drumber.kitsune.ui.library.LibraryViewModel
@@ -58,6 +59,7 @@ val viewModelModule = module {
     viewModel { (reactionId: String) -> ReactionDetailViewModel(reactionId, get(), get()) }
     viewModel { GroupsViewModel(get(), get()) }
     viewModel { (groupId: String) -> GroupDetailViewModel(groupId, get(), get()) }
+    viewModel { FeedViewModel(get()) }
     viewModel { FeedListViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { NotificationsViewModel(get(), get()) }
     viewModel { PostDetailViewModel(get(), get(), get(), get(), get(), get(), get()) }

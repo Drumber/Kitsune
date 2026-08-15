@@ -37,6 +37,7 @@ data class Notification(
     val time: String?,
     val verb: NotificationVerb,
     val isRead: Boolean,
+    val isSeen: Boolean,
 
     val actorName: String?,
     val actorAvatarUrl: String?,
