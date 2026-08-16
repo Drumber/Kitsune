@@ -1,0 +1,20 @@
+Improvements
+* Add option to set feed as default start page
+* Add share option for posts and comments
+* Show a badge for new notifications and mark them as read
+* Remember last selected feed tab
+* Tap images in posts to open them in the photo viewer
+* Improve touch interaction with posts
+* Improve the post replies screen for better readability
+* Improve the scroll-to-top action for large scroll distances
+* Fix deeplinks for tagged users and kitsu media links
+* Fix missing navigation actions for media reactions
+* Fix some images failing to load in photo viewer
+
+Localization
+* Added Romanian by @ghostnear
+* Updated Italian by Nicola Bortoletto
+* Updated Turkish by @oersen
+* Updated French by @niohIguess
+* Updated Spanish by @Kiimby
+* Updated German
