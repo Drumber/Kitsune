@@ -520,8 +520,8 @@
     </plurals>
     <plurals name="group_members_count">
         <item quantity="one">Un membru</item>
-        <item quantity="few">%d membrii</item>
-        <item quantity="other">%d membrii</item>
+        <item quantity="few">%s membrii</item>
+        <item quantity="other">%s membrii</item>
     </plurals>
     <plurals name="comment_view_all_replies">
         <item quantity="one">Vezi o replică</item>
