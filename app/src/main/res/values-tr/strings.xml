@@ -514,8 +514,8 @@
         <item quantity="other">%1$s ve %2$d başkası</item>
     </plurals>
     <plurals name="group_members_count">
-        <item quantity="one">%d üye</item>
-        <item quantity="other">%d üye</item>
+        <item quantity="one">%s üye</item>
+        <item quantity="other">%s üye</item>
     </plurals>
     <plurals name="comment_view_all_replies">
         <item quantity="one">%d yanıtı görüntüle</item>
