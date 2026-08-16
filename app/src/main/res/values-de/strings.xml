@@ -511,8 +511,8 @@
         <item quantity="other">%1$s und %2$d weitere</item>
     </plurals>
     <plurals name="group_members_count">
-        <item quantity="one">%d Mitglied</item>
-        <item quantity="other">%d Mitglieder</item>
+        <item quantity="one">%s Mitglied</item>
+        <item quantity="other">%s Mitglieder</item>
     </plurals>
     <plurals name="comment_view_all_replies">
         <item quantity="one">%d Antwort ansehen</item>
