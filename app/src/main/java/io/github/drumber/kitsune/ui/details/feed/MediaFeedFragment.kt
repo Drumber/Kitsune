@@ -12,20 +12,22 @@ import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.FragmentMediaFeedBinding
+import io.github.drumber.kitsune.di.SocialImagesLoader
 import io.github.drumber.kitsune.ui.adapter.paging.PostInteractionListener
 import io.github.drumber.kitsune.ui.adapter.paging.PostPagingAdapter
-import io.github.drumber.kitsune.ui.report.ReportBottomSheet
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
 import io.github.drumber.kitsune.ui.postdetail.PostDetailFragmentDirections
 import io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
+import io.github.drumber.kitsune.ui.report.ReportBottomSheet
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
@@ -39,6 +41,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.qualifier.named
 
 class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
     PostInteractionListener, NavigationBarView.OnItemReselectedListener {
@@ -49,6 +52,7 @@ class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
 
     private val viewModel: MediaFeedViewModel by viewModel()
 
+    private val imageLoader: ImageLoader by inject(named<SocialImagesLoader>())
     private val contentRenderer: PostContentRenderer by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,6 +73,7 @@ class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
 
         val adapter = PostPagingAdapter(
             listener = this,
+            imageLoader = imageLoader,
             contentRenderer = contentRenderer,
             nsfwAllowed = viewModel.nsfwAllowed,
             currentUserId = viewModel.localUserId,

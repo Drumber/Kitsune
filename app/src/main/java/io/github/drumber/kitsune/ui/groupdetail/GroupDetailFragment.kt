@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import coil3.ImageLoader
 import coil3.load
 import coil3.request.error
 import coil3.request.fallback
@@ -19,6 +20,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.group.Group
 import io.github.drumber.kitsune.databinding.FragmentGroupDetailBinding
+import io.github.drumber.kitsune.di.SocialImagesLoader
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
@@ -26,8 +28,10 @@ import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 
 class GroupDetailFragment : Fragment(R.layout.fragment_group_detail),
     NavigationBarView.OnItemReselectedListener {
@@ -39,6 +43,8 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail),
     private val viewModel: GroupDetailViewModel by viewModel {
         parametersOf(args.groupId)
     }
+
+    private val imageLoader: ImageLoader by inject(named<SocialImagesLoader>())
 
     private var hasSelectedDefaultTab = false
 
@@ -59,7 +65,12 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail),
             viewModel.group.value?.let { group ->
                 val groupName = group.name
                 group.coverImageUrl?.let { imageUrl ->
-                    openPhotoViewActivity(imageUrl, groupName, sharedElement = binding.ivCover)
+                    openPhotoViewActivity(
+                        imageUrl,
+                        groupName,
+                        sharedElement = binding.ivCover,
+                        useSocialImageLoader = true
+                    )
                 }
             }
         }
@@ -124,7 +135,7 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail),
     }
 
     private fun bindGroup(group: Group) {
-        binding.ivCover.load(group.coverImageUrl) {
+        binding.ivCover.load(group.coverImageUrl, imageLoader = imageLoader) {
             placeholder(R.drawable.cover_placeholder)
             error(R.drawable.cover_placeholder)
             fallback(R.drawable.cover_placeholder)

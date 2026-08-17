@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import coil3.ImageLoader
 import coil3.load
 import coil3.request.error
 import coil3.request.fallback
@@ -18,13 +19,16 @@ import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.group.Group
 import io.github.drumber.kitsune.databinding.FragmentGroupDetailAboutBinding
+import io.github.drumber.kitsune.di.SocialImagesLoader
 import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbar
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.qualifier.named
 
 class GroupDetailAboutFragment : Fragment(R.layout.fragment_group_detail_about),
     NavigationBarView.OnItemReselectedListener {
@@ -32,6 +36,8 @@ class GroupDetailAboutFragment : Fragment(R.layout.fragment_group_detail_about),
     private val binding by viewBinding(FragmentGroupDetailAboutBinding::bind)
 
     private val viewModel: GroupDetailViewModel by viewModel(ownerProducer = { requireParentFragment() })
+
+    private val imageLoader: ImageLoader by inject(named<SocialImagesLoader>())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -104,7 +110,7 @@ class GroupDetailAboutFragment : Fragment(R.layout.fragment_group_detail_about),
     }
 
     private fun bindGroup(group: Group) {
-        binding.ivAvatar.load(group.avatarUrl) {
+        binding.ivAvatar.load(group.avatarUrl, imageLoader = imageLoader) {
             placeholder(R.drawable.ic_group_24)
             error(R.drawable.ic_group_24)
             fallback(R.drawable.ic_group_24)

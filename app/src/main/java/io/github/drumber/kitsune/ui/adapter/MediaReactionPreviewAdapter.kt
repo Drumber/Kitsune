@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import coil3.load
 import coil3.request.error
 import coil3.request.fallback
@@ -16,6 +17,7 @@ import io.github.drumber.kitsune.databinding.ItemMediaReactionPreviewBinding
 import io.github.drumber.kitsune.util.parseUtcDate
 
 class MediaReactionPreviewAdapter(
+    private val imageLoader: ImageLoader,
     private val onItemClick: (MediaReaction) -> Unit,
     private val onUpvoteClick: (MediaReaction) -> Unit,
     private val onAuthorClick: (String) -> Unit,
@@ -48,7 +50,7 @@ class MediaReactionPreviewAdapter(
         fun bind(reaction: MediaReaction) {
             binding.root.setOnClickListener { onItemClick.invoke(reaction) }
 
-            binding.ivAvatar.load(reaction.authorAvatarUrl) {
+            binding.ivAvatar.load(reaction.authorAvatarUrl, imageLoader = imageLoader) {
                 error(R.drawable.ic_outline_person_24)
                 fallback(R.drawable.ic_outline_person_24)
             }

@@ -22,7 +22,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import app.futured.hauler.setOnDragActivityListener
 import app.futured.hauler.setOnDragDismissedListener
-import coil3.imageLoader
+import coil3.ImageLoader
+import coil3.SingletonImageLoader
 import coil3.load
 import coil3.memory.MemoryCache
 import coil3.request.CachePolicy
@@ -37,6 +38,7 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.ActivityPhotoViewBinding
+import io.github.drumber.kitsune.di.SocialImagesLoader
 import io.github.drumber.kitsune.ui.base.BaseActivity
 import io.github.drumber.kitsune.ui.photoview.PhotoViewActivity.Companion.AUTO_HIDE
 import io.github.drumber.kitsune.ui.photoview.PhotoViewActivity.Companion.AUTO_HIDE_DELAY_MILLIS
@@ -52,6 +54,8 @@ import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.android.ext.android.get
+import org.koin.core.qualifier.named
 import java.io.IOException
 
 class PhotoViewActivity : BaseActivity(setAppTheme = false) {
@@ -63,6 +67,12 @@ class PhotoViewActivity : BaseActivity(setAppTheme = false) {
     private var isFullscreen: Boolean = false
 
     private val hideHandler = Handler(Looper.getMainLooper())
+
+    private val imageLoader: ImageLoader
+        get() = when (args.useSocialImageLoader) {
+            true -> get(named<SocialImagesLoader>())
+            false -> SingletonImageLoader.get(this)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,7 +147,7 @@ class PhotoViewActivity : BaseActivity(setAppTheme = false) {
         val hasThumbnail = !args.thumbnailUrl.isNullOrBlank() && args.imageUrl != args.thumbnailUrl
         if (hasThumbnail) {
             // low thumbnail image from cache
-            binding.photoView.load(args.thumbnailUrl) {
+            binding.photoView.load(args.thumbnailUrl, imageLoader = imageLoader) {
                 diskCachePolicy(CachePolicy.READ_ONLY)
                 networkCachePolicy(CachePolicy.DISABLED)
                 crossfade(false)
@@ -156,7 +166,7 @@ class PhotoViewActivity : BaseActivity(setAppTheme = false) {
     }
 
     private fun loadFullImage(placeholderKey: MemoryCache.Key?) {
-        binding.photoView.load(args.imageUrl) {
+        binding.photoView.load(args.imageUrl, imageLoader = imageLoader) {
             size(2048, 2048) // cap decode size to avoid "Canvas: trying to draw too large bitmap" crash on huge images
             placeholderMemoryCacheKey(placeholderKey)
             crossfade(false)

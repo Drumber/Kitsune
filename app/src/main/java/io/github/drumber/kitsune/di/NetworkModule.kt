@@ -11,6 +11,7 @@ import coil3.disk.DiskCache
 import coil3.disk.directory
 import coil3.gif.AnimatedImageDecoder
 import coil3.gif.GifDecoder
+import coil3.memory.MemoryCache
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.crossfade
 import coil3.svg.SvgDecoder
@@ -46,13 +47,43 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 import com.github.jasminb.jsonapi.DeserializationFeature as JsonApiDeserializationFeature
 
+private const val HTTP_CACHE_DIR = "http_cache"
+private const val HTTP_CACHE_SIZE = 1024L * 1024L * 5L // 5 MiB
+
+private const val DEFAULT_IMAGE_CACHE_DIR = "image_cache"
+private const val DEFAULT_IMAGE_CACHE_SIZE = 1024 * 1024 * 192L // 192 MB
+private const val DEFAULT_IMAGE_MEMORY_CACHE_PERCENT = 0.15
+private const val SOCIAL_IMAGE_CACHE_DIR = "image_cache_social"
+private const val SOCIAL_IMAGE_CACHE_SIZE = 1024 * 1024 * 16L // 64 MB
+private const val SOCIAL_IMAGE_MEMORY_CACHE_PERCENT = 0.25
+
+object UnauthenticatedHttpClient
+object ImagesHttpClient
+object SocialImagesLoader
+
 val networkModule = module {
+    // default API HTTP client with authentication, logging and caching
     single { createHttpClient(get(), get()) }
-    single(named("unauthenticated")) { createHttpClientBuilder().build() }
-    single(named("images")) { createHttpClientBuilder(false).build() }
-    single { createImageLoader(androidApplication(), get(named("images"))) }
+    // unauthenticated HTTP client
+    single(named<UnauthenticatedHttpClient>()) { createHttpClientBuilder().build() }
+    // image loading HTTP client without caching and without logging
+    single(named<ImagesHttpClient>()) { createHttpClientBuilder(false).build() }
+
     single { createObjectMapper() }
     factory<AuthenticationInterceptor> { AuthenticationInterceptorImpl(get()) }
+
+    // default Coil image loader
+    single { createImageLoader(androidApplication(), get(named<ImagesHttpClient>())) }
+    // social Coil image loader (with separate cache folder)
+    single(named<SocialImagesLoader>()) {
+        createImageLoader(
+            androidApplication(),
+            get(named<ImagesHttpClient>()),
+            cacheDir = SOCIAL_IMAGE_CACHE_DIR,
+            diskCacheSize = SOCIAL_IMAGE_CACHE_SIZE,
+            memoryCacheSizePercent = SOCIAL_IMAGE_MEMORY_CACHE_PERCENT
+        )
+    }
 }
 
 fun createHttpClientBuilder(addLoggingInterceptor: Boolean = true) = OkHttpClient.Builder()
@@ -66,14 +97,19 @@ fun createHttpClientBuilder(addLoggingInterceptor: Boolean = true) = OkHttpClien
     .readTimeout(60, TimeUnit.SECONDS)
     .writeTimeout(60, TimeUnit.SECONDS)
 
-private fun createHttpClient(context: Context, authenticationInterceptor: AuthenticationInterceptor) =
+private fun createHttpClient(
+    context: Context,
+    authenticationInterceptor: AuthenticationInterceptor
+) =
     createHttpClientBuilder()
         .addInterceptor(authenticationInterceptor)
         .authenticator(authenticationInterceptor)
-        .cache(Cache(
-            directory = File(context.cacheDir, "http_cache"),
-            maxSize = 1024L * 1024L * 5L // 5 MiB
-        ))
+        .cache(
+            Cache(
+                directory = File(context.cacheDir, HTTP_CACHE_DIR),
+                maxSize = HTTP_CACHE_SIZE
+            )
+        )
         .build()
 
 private fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
@@ -87,12 +123,23 @@ private fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
 fun createUserAgentInterceptor() =
     UserAgentInterceptor("Kitsune/${BuildConfig.VERSION_NAME}")
 
-fun createImageLoader(context: Context, imageHttpClient: OkHttpClient): ImageLoader {
+fun createImageLoader(
+    context: Context,
+    imageHttpClient: OkHttpClient,
+    cacheDir: String = DEFAULT_IMAGE_CACHE_DIR,
+    diskCacheSize: Long = DEFAULT_IMAGE_CACHE_SIZE,
+    memoryCacheSizePercent: Double = DEFAULT_IMAGE_MEMORY_CACHE_PERCENT,
+): ImageLoader {
     return ImageLoader.Builder(context)
         .diskCache {
             DiskCache.Builder()
-                .directory(context.cacheDir.resolve("image_cache"))
-                .maxSizeBytes(1024 * 1024 * 256L) // 256 MB
+                .directory(context.cacheDir.resolve(cacheDir))
+                .maxSizeBytes(diskCacheSize)
+                .build()
+        }
+        .memoryCache {
+            MemoryCache.Builder()
+                .maxSizePercent(context, memoryCacheSizePercent)
                 .build()
         }
         .components {
@@ -106,8 +153,12 @@ fun createImageLoader(context: Context, imageHttpClient: OkHttpClient): ImageLoa
         }
         .crossfade(true)
         .placeholder { SurfaceColors.SURFACE_1.getColor(it.context).toDrawable().asImage() }
-        .error { AppCompatResources.getDrawable(it.context, R.drawable.default_placeholder)?.asImage() }
-        .fallback { AppCompatResources.getDrawable(it.context, R.drawable.default_placeholder)?.asImage() }
+        .error {
+            AppCompatResources.getDrawable(it.context, R.drawable.default_placeholder)?.asImage()
+        }
+        .fallback {
+            AppCompatResources.getDrawable(it.context, R.drawable.default_placeholder)?.asImage()
+        }
         .build()
 }
 

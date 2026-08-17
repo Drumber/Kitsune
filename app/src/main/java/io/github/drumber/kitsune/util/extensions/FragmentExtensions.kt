@@ -1,10 +1,10 @@
 package io.github.drumber.kitsune.util.extensions
 
 import android.content.Intent
-import android.net.Uri
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.core.app.ActivityOptionsCompat
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.ActivityNavigatorExtras
@@ -58,7 +58,7 @@ fun Fragment.startUrlShareIntent(url: String, title: String? = null) {
 }
 
 fun Fragment.openUrl(url: String) {
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
     try {
         startActivity(intent)
     } catch (e: Exception) {
@@ -79,14 +79,16 @@ fun Fragment.openPhotoViewActivity(
     imageUrl: String,
     title: String? = null,
     thumbnailUrl: String? = null,
-    sharedElement: View? = null
+    sharedElement: View? = null,
+    useSocialImageLoader: Boolean = false,
 ) {
     val transitionName = sharedElement?.let { ViewCompat.getTransitionName(it) }
     val action = PhotoViewActivityDirections.actionGlobalPhotoViewActivity(
         imageUrl,
         title,
         thumbnailUrl,
-        transitionName
+        transitionName,
+        useSocialImageLoader
     )
     val options = if (sharedElement != null && transitionName != null) {
         ActivityOptionsCompat.makeSceneTransitionAnimation(

@@ -7,6 +7,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import coil3.ImageLoader
 import coil3.load
 import coil3.request.error
 import coil3.request.fallback
@@ -22,10 +23,11 @@ import io.github.drumber.kitsune.util.ui.PostMediaBinder
 
 /** Single-item adapter rendering the full post card at the top of the post detail screen. */
 class PostDetailHeaderAdapter(
-    private val onLikeClick: () -> Unit,
+    private val imageLoader: ImageLoader,
     private val contentRenderer: PostContentRenderer?,
     private val nsfwAllowed: Boolean,
     private val currentUserId: String?,
+    private val onLikeClick: () -> Unit,
     private val onRevealClick: () -> Unit,
     private val onMediaClick: (Post) -> Unit,
     private val onEditClick: (Post) -> Unit,
@@ -81,7 +83,7 @@ class PostDetailHeaderAdapter(
                 if (!isLiked) onLikeClick()
             }
 
-            binding.ivAvatar.load(post.authorAvatarUrl) {
+            binding.ivAvatar.load(post.authorAvatarUrl, imageLoader = imageLoader) {
                 placeholder(R.drawable.ic_outline_person_24)
                 error(R.drawable.ic_outline_person_24)
                 fallback(R.drawable.ic_outline_person_24)
@@ -138,7 +140,7 @@ class PostDetailHeaderAdapter(
 
             bindImageGallery(post, gated)
 
-            EmbedBinder.bind(binding.embed, post.embed, visible = !gated)
+            EmbedBinder.bind(binding.embed, imageLoader, post.embed, visible = !gated)
 
             PostMediaBinder.bind(binding.postMedia, post, visible = true) {
                 onMediaClick(post)
@@ -213,7 +215,7 @@ class PostDetailHeaderAdapter(
                 return
             }
 
-            binding.vpImages.adapter = PostImagePagerAdapter(images, onImageClick) { aspectRatio ->
+            binding.vpImages.adapter = PostImagePagerAdapter(imageLoader, images, onImageClick) { aspectRatio ->
                 val pager = binding.vpImages
                 val width = pager.width
                 if (width > 0 && aspectRatio > 0f) {

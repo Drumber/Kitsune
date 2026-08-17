@@ -15,6 +15,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
@@ -22,10 +23,11 @@ import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.FragmentPostDetailBinding
+import io.github.drumber.kitsune.di.SocialImagesLoader
 import io.github.drumber.kitsune.ui.adapter.paging.CommentPagingAdapter
-import io.github.drumber.kitsune.ui.report.ReportBottomSheet
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
+import io.github.drumber.kitsune.ui.report.ReportBottomSheet
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
@@ -39,6 +41,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.qualifier.named
 
 class PostDetailFragment : Fragment(R.layout.fragment_post_detail),
     NavigationBarView.OnItemReselectedListener {
@@ -49,6 +52,7 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail),
 
     private val viewModel: PostDetailViewModel by viewModel()
 
+    private val imageLoader: ImageLoader by inject(named<SocialImagesLoader>())
     private val contentRenderer: PostContentRenderer by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,31 +71,33 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail),
 
         val currentUserId = viewModel.currentUserId()
         val headerAdapter = PostDetailHeaderAdapter(
-            onLikeClick = { viewModel.togglePostLike() },
+            imageLoader = imageLoader,
             contentRenderer = contentRenderer,
             nsfwAllowed = viewModel.nsfwAllowed,
+            onLikeClick = { viewModel.togglePostLike() },
             onRevealClick = { viewModel.revealCurrentPost() },
             onMediaClick = { post -> openMedia(post) },
             currentUserId = currentUserId,
             onEditClick = { post -> navigateToEditPost(post) },
             onDeleteClick = { confirmDeletePost() },
             onAuthorClick = { userId -> navigateToUserProfile(userId) },
-            onImageClick = { imageUrl -> openPhotoViewActivity(imageUrl) },
+            onImageClick = { imageUrl -> openPhotoViewActivity(imageUrl, useSocialImageLoader = true) },
             onShareClick = { post -> showShareMenu(post) },
             onReportClick = { post -> openReportBottomSheet(post) },
         )
         headerAdapter.setPost(args.post)
 
         val commentsAdapter = CommentPagingAdapter(
-            onLikeClick = { comment -> viewModel.toggleCommentLike(comment) },
+            imageLoader = imageLoader,
             contentRenderer = contentRenderer,
+            currentUserId = currentUserId,
+            onLikeClick = { comment -> viewModel.toggleCommentLike(comment) },
             onReplyClick = { comment -> startReply(comment) },
             onViewAllRepliesClick = { comment -> navigateToReplies(comment) },
-            currentUserId = currentUserId,
             onEditClick = { comment -> startEditComment(comment) },
             onDeleteClick = { comment -> confirmDeleteComment(comment) },
             onAuthorClick = { userId -> navigateToUserProfile(userId) },
-            onImageClick = { imageUrl -> openPhotoViewActivity(imageUrl) },
+            onImageClick = { imageUrl -> openPhotoViewActivity(imageUrl, useSocialImageLoader = true) },
             onShareClick = { comment -> showShareMenu(comment) },
         )
 

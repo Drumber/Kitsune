@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import coil3.load
 import coil3.request.error
 import coil3.request.fallback
@@ -19,6 +20,7 @@ import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.util.parseUtcDate
 
 class NotificationPagingAdapter(
+    private val imageLoader: ImageLoader,
     private val listener: OnItemClickListener<Notification>? = null
 ) : PagingDataAdapter<Notification, NotificationPagingAdapter.NotificationViewHolder>(
     NotificationComparator
@@ -42,7 +44,7 @@ class NotificationPagingAdapter(
         fun bind(notification: Notification) {
             val context = binding.root.context
 
-            binding.ivAvatar.load(notification.actorAvatarUrl) {
+            binding.ivAvatar.load(notification.actorAvatarUrl, imageLoader = imageLoader) {
                 placeholder(R.drawable.ic_outline_person_24)
                 error(R.drawable.ic_outline_person_24)
                 fallback(R.drawable.ic_outline_person_24)

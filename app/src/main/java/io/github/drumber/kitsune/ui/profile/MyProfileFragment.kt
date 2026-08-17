@@ -24,6 +24,8 @@ class MyProfileFragment : BaseProfileFragment() {
 
     override val viewModel: MyProfileViewModel by viewModel()
 
+    override val useSocialImageLoader = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         updateOptionsMenu()

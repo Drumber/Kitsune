@@ -35,7 +35,11 @@ class ReportViewModel(
     }
 
     fun setExplanation(explanation: String?) {
-        _uiState.update { it.copy(explanation = explanation) }
+        _uiState.update {
+            it.copy(
+                explanation = explanation?.trim()
+                    ?.takeIf { explanation -> explanation.isNotBlank() })
+        }
     }
 
     fun submitReport() {

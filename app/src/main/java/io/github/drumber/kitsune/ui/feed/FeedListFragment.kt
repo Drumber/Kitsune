@@ -13,12 +13,14 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.FragmentFeedListBinding
+import io.github.drumber.kitsune.di.SocialImagesLoader
 import io.github.drumber.kitsune.ui.adapter.paging.PinnedPostAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.PostInteractionListener
 import io.github.drumber.kitsune.ui.adapter.paging.PostPagingAdapter
@@ -40,6 +42,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.qualifier.named
 
 class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionListener,
     NavigationBarView.OnItemReselectedListener {
@@ -53,6 +56,7 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
 
     private val viewModel: FeedListViewModel by viewModel()
 
+    private val imageLoader: ImageLoader by inject(named<SocialImagesLoader>())
     private val contentRenderer: PostContentRenderer by inject()
 
     private var isLoginRequired = false
@@ -82,6 +86,7 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
         }
 
         val adapter = PostPagingAdapter(
+            imageLoader = imageLoader,
             contentRenderer = contentRenderer,
             nsfwAllowed = viewModel.nsfwAllowed,
             currentUserId = viewModel.currentUserId(),
@@ -94,6 +99,7 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
         )
         binding.rvFeed.adapter = if (feedType == FeedType.USER) {
             val pinnedAdapter = PinnedPostAdapter(
+                imageLoader = imageLoader,
                 contentRenderer = contentRenderer,
                 nsfwAllowed = viewModel.nsfwAllowed,
                 currentUserId = viewModel.currentUserId(),

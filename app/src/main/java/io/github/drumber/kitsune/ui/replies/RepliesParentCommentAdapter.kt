@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import coil3.load
 import coil3.request.error
 import coil3.request.fallback
@@ -18,6 +19,7 @@ import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.EmbedBinder
 
 class RepliesParentCommentAdapter(
+    private val imageLoader: ImageLoader,
     private val contentRenderer: PostContentRenderer,
     private val onAuthorClicked: (String) -> Unit,
     private val onLikeClicked: (Comment) -> Unit,
@@ -67,7 +69,7 @@ class RepliesParentCommentAdapter(
         fun bind(comment: Comment) {
             val header = binding.parentComment
 
-            header.ivAvatar.load(comment.authorAvatarUrl) {
+            header.ivAvatar.load(comment.authorAvatarUrl, imageLoader = imageLoader) {
                 placeholder(R.drawable.ic_outline_person_24)
                 error(R.drawable.ic_outline_person_24)
                 fallback(R.drawable.ic_outline_person_24)
@@ -106,7 +108,7 @@ class RepliesParentCommentAdapter(
                 }
             }
 
-            EmbedBinder.bind(header.embed, comment.embed, visible = true)
+            EmbedBinder.bind(header.embed, imageLoader, comment.embed, visible = true)
 
             bindParentLikeRow(comment.isLikedByMe, comment.likesCount)
             header.layoutLike.setOnClickListener { onLikeClicked(comment) }

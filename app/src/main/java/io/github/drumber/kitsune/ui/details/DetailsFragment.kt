@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
+import coil3.ImageLoader
 import coil3.load
 import coil3.request.error
 import coil3.request.fallback
@@ -52,6 +53,7 @@ import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
 import io.github.drumber.kitsune.data.source.local.user.model.LocalRatingSystemPreference
 import io.github.drumber.kitsune.databinding.DialogComposeReactionBinding
 import io.github.drumber.kitsune.databinding.FragmentDetailsBinding
+import io.github.drumber.kitsune.di.SocialImagesLoader
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.MediaReactionPreviewAdapter
 import io.github.drumber.kitsune.ui.adapter.MediaRelationshipRecyclerViewAdapter
@@ -85,7 +87,9 @@ import io.github.drumber.kitsune.util.ui.showSnackbarOnFailure
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.qualifier.named
 import java.text.NumberFormat
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.math.roundToInt
@@ -98,6 +102,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     private val binding by viewBinding(FragmentDetailsBinding::bind)
 
     private val viewModel: DetailsViewModel by viewModel()
+
+    private val socialImageLoader: ImageLoader by inject(named<SocialImagesLoader>())
 
     private var reactionsAdapter: MediaReactionPreviewAdapter? = null
 
@@ -441,6 +447,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
     private fun setupReactions() {
         val adapter = MediaReactionPreviewAdapter(
+            imageLoader = socialImageLoader,
             onItemClick = { reaction -> navigateToReaction(reaction) },
             onUpvoteClick = { reaction -> viewModel.upvoteReaction(reaction) },
             onAuthorClick = { userId -> navigateToUserProfile(userId) },

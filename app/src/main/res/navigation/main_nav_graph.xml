@@ -250,6 +250,10 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
+        <argument
+            android:name="useSocialImageLoader"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </activity>
     <fragment
         android:id="@+id/facet_fragment"

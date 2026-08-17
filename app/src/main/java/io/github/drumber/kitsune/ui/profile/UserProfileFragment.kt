@@ -21,6 +21,8 @@ class UserProfileFragment : BaseProfileFragment() {
         parametersOf(args.userIdOrSlug)
     }
 
+    override val useSocialImageLoader = true
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

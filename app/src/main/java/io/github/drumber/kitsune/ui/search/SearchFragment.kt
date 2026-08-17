@@ -18,6 +18,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil3.ImageLoader
 import com.algolia.instantsearch.android.searchbox.SearchBoxViewAppCompat
 import com.algolia.instantsearch.core.connection.AbstractConnection
 import com.algolia.instantsearch.core.connection.ConnectionHandler
@@ -33,6 +34,7 @@ import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.data.presentation.model.user.UserSearchResult
 import io.github.drumber.kitsune.databinding.FragmentSearchBinding
+import io.github.drumber.kitsune.di.SocialImagesLoader
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.paging.MediaSearchPagingAdapter
@@ -52,7 +54,9 @@ import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
+import org.koin.core.qualifier.named
 import java.lang.ref.WeakReference
 
 class SearchFragment : Fragment(R.layout.fragment_search),
@@ -67,6 +71,8 @@ class SearchFragment : Fragment(R.layout.fragment_search),
     private val viewModel: SearchViewModel by activityViewModel()
 
     private val args: SearchFragmentArgs by navArgs()
+
+    private val imageLoader: ImageLoader by inject(named<SocialImagesLoader>())
 
     private val connectionHandler = ConnectionHandler()
 
@@ -120,7 +126,7 @@ class SearchFragment : Fragment(R.layout.fragment_search),
     private fun initRecyclerView() {
         val adapter = MediaSearchPagingAdapter(listener = this)
         mediaAdapter = adapter
-        userAdapter = UserSearchPagingAdapter { _, item ->
+        userAdapter = UserSearchPagingAdapter(imageLoader) { _, item ->
             onUserClick(item)
         }
         val columnWidth = resources.getDimension(KitsunePref.mediaItemSize.widthRes) +

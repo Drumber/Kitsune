@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.ItemPostBinding
 import io.github.drumber.kitsune.ui.adapter.paging.BasePostViewHolder.InteractionOverride
@@ -11,6 +12,7 @@ import io.github.drumber.kitsune.util.markwon.PostContentRenderer
 
 /** Single-item adapter rendering a pinned profile post above a feed. */
 class PinnedPostAdapter(
+    private val imageLoader: ImageLoader,
     private val contentRenderer: PostContentRenderer? = null,
     private val nsfwAllowed: Boolean = false,
     private val currentUserId: String? = null,
@@ -80,7 +82,7 @@ class PinnedPostAdapter(
     override fun getItemCount() = if (post != null) 1 else 0
 
     inner class PinnedPostViewHolder(binding: ItemPostBinding) :
-        BasePostViewHolder(binding, contentRenderer, nsfwAllowed) {
+        BasePostViewHolder(binding, imageLoader, contentRenderer, nsfwAllowed) {
 
         override fun getLocalUserId() = currentUserId
 

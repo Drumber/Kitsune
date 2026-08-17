@@ -14,12 +14,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import com.google.android.material.chip.Chip
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.shape.MaterialShapeDrawable
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.group.GroupCategory
 import io.github.drumber.kitsune.databinding.FragmentGroupsBinding
+import io.github.drumber.kitsune.di.SocialImagesLoader
 import io.github.drumber.kitsune.ui.adapter.paging.GroupsPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
@@ -30,7 +32,9 @@ import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.qualifier.named
 
 class GroupsFragment : Fragment(R.layout.fragment_groups),
  NavigationBarView.OnItemReselectedListener {
@@ -38,6 +42,8 @@ class GroupsFragment : Fragment(R.layout.fragment_groups),
     private val binding by viewBinding(FragmentGroupsBinding::bind)
 
     private val viewModel: GroupsViewModel by viewModel()
+
+    private val imageLoader: ImageLoader by inject(named<SocialImagesLoader>())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -57,7 +63,7 @@ class GroupsFragment : Fragment(R.layout.fragment_groups),
             )
         }
 
-        val adapter = GroupsPagingAdapter { group ->
+        val adapter = GroupsPagingAdapter(imageLoader) { group ->
             findNavController().navigateSafe(
                 R.id.groups_fragment,
                 GroupsFragmentDirections.actionGroupsFragmentToGroupDetailFragment(group.id)

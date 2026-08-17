@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import coil3.load
 import coil3.request.error
 import coil3.request.fallback
@@ -16,6 +17,7 @@ import io.github.drumber.kitsune.data.presentation.model.group.Group
 import io.github.drumber.kitsune.databinding.ItemGroupBinding
 
 class GroupsPagingAdapter(
+    private val imageLoader: ImageLoader,
     private val onGroupClick: ((Group) -> Unit)? = null
 ) : PagingDataAdapter<Group, GroupsPagingAdapter.GroupViewHolder>(GroupComparator) {
 
@@ -34,7 +36,7 @@ class GroupsPagingAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(group: Group) {
-            binding.ivAvatar.load(group.avatarUrl) {
+            binding.ivAvatar.load(group.avatarUrl, imageLoader = imageLoader) {
                 placeholder(R.drawable.ic_group_24)
                 error(R.drawable.ic_group_24)
                 fallback(R.drawable.ic_group_24)

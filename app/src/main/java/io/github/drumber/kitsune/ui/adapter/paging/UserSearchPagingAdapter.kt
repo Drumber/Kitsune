@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import coil3.load
 import coil3.request.error
 import coil3.request.fallback
@@ -16,6 +17,7 @@ import io.github.drumber.kitsune.databinding.ItemUserSearchBinding
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 
 class UserSearchPagingAdapter(
+    private val imageLoader: ImageLoader,
     private val listener: OnItemClickListener<UserSearchResult>? = null
 ) : PagingDataAdapter<UserSearchResult, UserSearchPagingAdapter.UserViewHolder>(UserComparator) {
 
@@ -38,7 +40,7 @@ class UserSearchPagingAdapter(
                 listener?.onItemClick(binding.root, user)
             }
 
-            binding.ivAvatar.load(user.avatar?.originalOrDown()) {
+            binding.ivAvatar.load(user.avatar?.originalOrDown(), imageLoader = imageLoader) {
                 placeholder(R.drawable.ic_outline_person_24)
                 error(R.drawable.ic_outline_person_24)
                 fallback(R.drawable.ic_outline_person_24)

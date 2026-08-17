@@ -12,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
@@ -35,7 +36,9 @@ import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.qualifier.named
 
 class ReactionsFragment : Fragment(R.layout.fragment_reactions),
     NavigationBarView.OnItemReselectedListener {
@@ -45,6 +48,8 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
     private val binding by viewBinding(FragmentReactionsBinding::bind)
 
     private val viewModel: ReactionsViewModel by viewModel()
+
+    private val imageLoader: ImageLoader by inject(named<ImageLoader>())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -69,6 +74,7 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
         }
 
         val adapter = MediaReactionPagingAdapter(
+            imageLoader = imageLoader,
             currentUserId = viewModel.currentUserId,
             onItemClick = { reaction -> navigateToReaction(reaction) },
             onUpvoteClick = { reaction -> viewModel.upvote(reaction) },

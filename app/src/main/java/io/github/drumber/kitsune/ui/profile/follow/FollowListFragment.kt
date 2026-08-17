@@ -11,10 +11,12 @@ import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import com.google.android.material.shape.MaterialShapeDrawable
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.repository.FollowListType
 import io.github.drumber.kitsune.databinding.FragmentFollowListBinding
+import io.github.drumber.kitsune.di.SocialImagesLoader
 import io.github.drumber.kitsune.ui.adapter.paging.FollowUserPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
@@ -25,8 +27,10 @@ import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 
 class FollowListFragment : Fragment(R.layout.fragment_follow_list) {
 
@@ -38,6 +42,8 @@ class FollowListFragment : Fragment(R.layout.fragment_follow_list) {
         parametersOf(args.userId, args.listType)
     }
 
+    private val imageLoader: ImageLoader by inject(named<SocialImagesLoader>())
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -48,6 +54,7 @@ class FollowListFragment : Fragment(R.layout.fragment_follow_list) {
         binding.toolbar.title = buildTitle()
 
         val adapter = FollowUserPagingAdapter(
+            imageLoader = imageLoader,
             onUserClick = ::navigateToUser,
             onFollowClick = { userId -> viewModel.toggleFollow(userId) },
             onBindUser = { userId -> viewModel.resolveFollowState(userId) },

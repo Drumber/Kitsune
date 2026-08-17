@@ -6,6 +6,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import coil3.load
 import coil3.request.error
 import coil3.request.fallback
@@ -22,6 +23,7 @@ import io.github.drumber.kitsune.util.ui.isTextTruncated
 
 abstract class BasePostViewHolder(
     protected val binding: ItemPostBinding,
+    private val imageLoader: ImageLoader,
     private val contentRenderer: PostContentRenderer?,
     private val nsfwAllowed: Boolean,
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -61,7 +63,7 @@ abstract class BasePostViewHolder(
             binding.tvAuthor.setOnClickListener(null)
         }
 
-        binding.ivAvatar.load(post.authorAvatarUrl) {
+        binding.ivAvatar.load(post.authorAvatarUrl, imageLoader = imageLoader) {
             placeholder(R.drawable.ic_outline_person_24)
             error(R.drawable.ic_outline_person_24)
             fallback(R.drawable.ic_outline_person_24)
@@ -118,7 +120,7 @@ abstract class BasePostViewHolder(
 
         bindImagePreview(post, gated)
 
-        EmbedBinder.bind(binding.embed, post.embed, visible = !gated)
+        EmbedBinder.bind(binding.embed, imageLoader, post.embed, visible = !gated)
 
         PostMediaBinder.bind(binding.postMedia, post, visible = true) {
             onMediaClick(post)
@@ -218,7 +220,7 @@ abstract class BasePostViewHolder(
         binding.layoutImage.isVisible = show
         if (!show) return
 
-        binding.ivImage.load(images.first())
+        binding.ivImage.load(images.first(), imageLoader = imageLoader)
 
         binding.tvImageCount.apply {
             isVisible = images.size > 1
@@ -272,7 +274,7 @@ abstract class BasePostViewHolder(
     }
 
     private fun loadAvatar(imageView: ImageView, url: String) {
-        imageView.load(url) {
+        imageView.load(url, imageLoader = imageLoader) {
             placeholder(R.drawable.ic_outline_person_24)
             error(R.drawable.ic_outline_person_24)
             fallback(R.drawable.ic_outline_person_24)

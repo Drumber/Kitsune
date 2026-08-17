@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import coil3.load
 import coil3.request.error
 import coil3.request.fallback
@@ -16,6 +17,7 @@ import io.github.drumber.kitsune.databinding.ItemFollowUserBinding
 import io.github.drumber.kitsune.ui.profile.follow.FollowButtonState
 
 class FollowUserPagingAdapter(
+    private val imageLoader: ImageLoader,
     private val onUserClick: ((String) -> Unit)? = null,
     private val onFollowClick: ((String) -> Unit)? = null,
     private val onBindUser: ((String) -> Unit)? = null,
@@ -64,7 +66,7 @@ class FollowUserPagingAdapter(
         fun bind(followUser: FollowUser) {
             val context = binding.root.context
 
-            binding.ivAvatar.load(followUser.avatarUrl) {
+            binding.ivAvatar.load(followUser.avatarUrl, imageLoader = imageLoader) {
                 placeholder(R.drawable.ic_outline_person_24)
                 error(R.drawable.ic_outline_person_24)
                 fallback(R.drawable.ic_outline_person_24)

@@ -3,11 +3,13 @@ package io.github.drumber.kitsune.ui.postdetail
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import coil3.load
 import io.github.drumber.kitsune.databinding.ItemPostImageBinding
 
 /** Adapter backing the swipeable image gallery on the post detail screen. */
 class PostImagePagerAdapter(
+    private val imageLoader: ImageLoader,
     private val imageUrls: List<String>,
     private val onImageClicked: (String) -> Unit,
     /** Reports the aspect ratio (width / height) of the first image once it is loaded. */
@@ -30,7 +32,7 @@ class PostImagePagerAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(url: String, position: Int) {
-            binding.ivImage.load(url) {
+            binding.ivImage.load(url, imageLoader = imageLoader) {
                 if (position == 0) {
                     listener(
                         onSuccess = { _, result ->

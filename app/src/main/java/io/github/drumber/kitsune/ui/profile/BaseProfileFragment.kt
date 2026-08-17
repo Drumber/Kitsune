@@ -9,8 +9,9 @@ import androidx.core.view.children
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import coil3.ImageLoader
+import coil3.SingletonImageLoader
 import coil3.asDrawable
-import coil3.imageLoader
 import coil3.load
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -26,6 +27,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.user.User
 import io.github.drumber.kitsune.databinding.FragmentProfileBinding
+import io.github.drumber.kitsune.di.SocialImagesLoader
 import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.recyclerView
@@ -36,6 +38,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.get
+import org.koin.core.qualifier.named
 
 abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, true),
     NavigationBarView.OnItemReselectedListener {
@@ -43,6 +47,14 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
     protected val binding by viewBinding(FragmentProfileBinding::bind)
 
     protected abstract val viewModel: BaseProfileViewModel
+
+    protected abstract val useSocialImageLoader: Boolean
+
+    private val imageLoader: ImageLoader
+        get() = when (useSocialImageLoader) {
+            true -> get(named<SocialImagesLoader>())
+            false -> SingletonImageLoader.get(requireContext())
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -57,7 +69,13 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
                 val coverImgUrl = viewModel.getUser()?.coverImage?.originalOrDown()
                     ?: return@setOnClickListener
                 val title = viewModel.getUser()?.name?.let { "$it Cover" }
-                openPhotoViewActivity(coverImgUrl, title, null, ivCover)
+                openPhotoViewActivity(
+                    coverImgUrl,
+                    title,
+                    null,
+                    ivCover,
+                    useSocialImageLoader = useSocialImageLoader
+                )
             }
         }
 
@@ -69,7 +87,8 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
-                binding.progressBarProfile.isVisible = state.isInitialLoading && viewModel.getUser() == null
+                binding.progressBarProfile.isVisible =
+                    state.isInitialLoading && viewModel.getUser() == null
             }
         }
     }
@@ -110,7 +129,10 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
                 binding.viewPagerProfile.adapter = viewPagerAdapter
                 binding.viewPagerProfile.recyclerView.isNestedScrollingEnabled = false
 
-                tabLayoutMediator = TabLayoutMediator(binding.tabLayoutProfile, binding.viewPagerProfile) { tab, position ->
+                tabLayoutMediator = TabLayoutMediator(
+                    binding.tabLayoutProfile,
+                    binding.viewPagerProfile
+                ) { tab, position ->
                     when (position) {
                         0 -> tab.setText(R.string.profile_tab_about)
                         1 -> tab.setText(R.string.profile_tab_posts)
@@ -145,7 +167,13 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
             val avatarImgUrl = viewModel.getUser()?.avatar?.originalOrDown()
                 ?: return@setOnClickListener
             val title = viewModel.getUser()?.name?.let { "$it Avatar" }
-            openPhotoViewActivity(avatarImgUrl, title, null, logoView)
+            openPhotoViewActivity(
+                avatarImgUrl,
+                title,
+                null,
+                logoView,
+                useSocialImageLoader = useSocialImageLoader
+            )
         }
     }
 
@@ -165,10 +193,11 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
                 }
             )
             .build()
-        requireContext().imageLoader.enqueue(request)
+        imageLoader.enqueue(request)
 
-        binding.ivCover.load(user?.coverImage?.originalOrDown()) {
-            val placeholderDrawable = SurfaceColors.SURFACE_0.getColor(requireContext()).toDrawable()
+        binding.ivCover.load(user?.coverImage?.originalOrDown(), imageLoader = imageLoader) {
+            val placeholderDrawable =
+                SurfaceColors.SURFACE_0.getColor(requireContext()).toDrawable()
             placeholder(placeholderDrawable)
             error(placeholderDrawable)
             fallback(placeholderDrawable)

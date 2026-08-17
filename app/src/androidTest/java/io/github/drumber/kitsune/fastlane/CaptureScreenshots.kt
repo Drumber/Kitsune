@@ -20,6 +20,7 @@ import androidx.test.rule.GrantPermissionRule
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.di.ImagesHttpClient
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.main.MainActivity
 import io.github.drumber.kitsune.utils.OkHttpIdlingResource
@@ -84,7 +85,7 @@ class CaptureScreenshots : KoinComponent {
         val idlingResource = mutableListOf<OkHttpIdlingResource>()
         activityRule.scenario.onActivity {
             val client: OkHttpClient = get()
-            val imageClient: OkHttpClient = get(named("images"))
+            val imageClient: OkHttpClient = get(named<ImagesHttpClient>())
             idlingResource.add(OkHttpIdlingResource(client))
             idlingResource.add(OkHttpIdlingResource(imageClient))
         }

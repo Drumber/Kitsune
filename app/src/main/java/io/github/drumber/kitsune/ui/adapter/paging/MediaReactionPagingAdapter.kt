@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import coil3.load
 import coil3.request.error
 import coil3.request.fallback
@@ -18,6 +19,7 @@ import io.github.drumber.kitsune.databinding.ItemMediaReactionBinding
 import io.github.drumber.kitsune.util.parseUtcDate
 
 class MediaReactionPagingAdapter(
+    private val imageLoader: ImageLoader,
     private val currentUserId: String?,
     private val onItemClick: (MediaReaction) -> Unit,
     private val onUpvoteClick: (MediaReaction) -> Unit,
@@ -55,7 +57,7 @@ class MediaReactionPagingAdapter(
         fun bind(reaction: MediaReaction) {
             binding.root.setOnClickListener { onItemClick.invoke(reaction) }
 
-            binding.ivAvatar.load(reaction.authorAvatarUrl) {
+            binding.ivAvatar.load(reaction.authorAvatarUrl, imageLoader = imageLoader) {
                 placeholder(R.drawable.ic_outline_person_24)
                 error(R.drawable.ic_outline_person_24)
                 fallback(R.drawable.ic_outline_person_24)

@@ -9,6 +9,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import coil3.dispose
 import coil3.load
 import coil3.request.crossfade
@@ -25,6 +26,7 @@ import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.EmbedBinder
 
 class CommentPagingAdapter(
+    private val imageLoader: ImageLoader,
     private val contentRenderer: PostContentRenderer?,
     private val currentUserId: String?,
     private val onLikeClick: ((Comment) -> Unit)?,
@@ -77,7 +79,7 @@ class CommentPagingAdapter(
         comment: Comment,
         isReply: Boolean
     ) {
-        binding.ivAvatar.load(comment.authorAvatarUrl) {
+        binding.ivAvatar.load(comment.authorAvatarUrl, imageLoader = imageLoader) {
             placeholder(R.drawable.ic_outline_person_24)
             error(R.drawable.ic_outline_person_24)
             fallback(R.drawable.ic_outline_person_24)
@@ -116,7 +118,7 @@ class CommentPagingAdapter(
         binding.ivImage.apply {
             isVisible = !comment.imageUrl.isNullOrBlank()
             if (!comment.imageUrl.isNullOrBlank()) {
-                load(comment.imageUrl) {
+                load(comment.imageUrl, imageLoader = imageLoader) {
                     crossfade(false)
                     placeholder(null)
                 }
@@ -132,7 +134,7 @@ class CommentPagingAdapter(
             }
         }
 
-        EmbedBinder.bind(binding.embed, comment.embed, visible = true)
+        EmbedBinder.bind(binding.embed, imageLoader, comment.embed, visible = true)
 
         val override = likeOverrides[comment.id]
         val isLiked = override?.isLiked ?: comment.isLikedByMe

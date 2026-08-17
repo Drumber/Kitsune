@@ -14,11 +14,13 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.databinding.FragmentRepliesBinding
+import io.github.drumber.kitsune.di.SocialImagesLoader
 import io.github.drumber.kitsune.ui.adapter.paging.CommentPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
@@ -36,6 +38,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 
 class RepliesFragment : Fragment(R.layout.fragment_replies),
     NavigationBarView.OnItemReselectedListener {
@@ -48,6 +51,7 @@ class RepliesFragment : Fragment(R.layout.fragment_replies),
         parametersOf(args.parentCommentId, args.postId)
     }
 
+    private val imageLoader: ImageLoader by inject(named<SocialImagesLoader>())
     private val contentRenderer: PostContentRenderer by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,9 +73,10 @@ class RepliesFragment : Fragment(R.layout.fragment_replies),
         )
 
         val repliesAdapter = CommentPagingAdapter(
-            onLikeClick = { comment -> viewModel.toggleCommentLike(comment) },
+            imageLoader = imageLoader,
             contentRenderer = contentRenderer,
             currentUserId = viewModel.currentUserId(),
+            onLikeClick = { comment -> viewModel.toggleCommentLike(comment) },
             onAuthorClick = { userId -> navigateToUserProfile(userId) },
             onImageClick = { imageUrl -> openPhotoViewActivity(imageUrl) },
             onShareClick = { comment -> showShareMenu(comment) },
@@ -82,6 +87,7 @@ class RepliesFragment : Fragment(R.layout.fragment_replies),
         )
 
         val parentCommentAdapter = RepliesParentCommentAdapter(
+            imageLoader = imageLoader,
             contentRenderer = contentRenderer,
             onAuthorClicked = { userId -> navigateToUserProfile(userId) },
             onLikeClicked = { comment -> viewModel.toggleCommentLike(comment) }

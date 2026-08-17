@@ -4,12 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import coil3.ImageLoader
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.ItemPostBinding
 import io.github.drumber.kitsune.ui.adapter.paging.BasePostViewHolder.InteractionOverride
 import io.github.drumber.kitsune.util.markwon.PostContentRenderer
 
 class PostPagingAdapter(
+    private val imageLoader: ImageLoader,
     private val contentRenderer: PostContentRenderer?,
     private val nsfwAllowed: Boolean,
     private val currentUserId: String?,
@@ -73,7 +75,7 @@ class PostPagingAdapter(
     }
 
     inner class PostViewHolder(binding: ItemPostBinding) :
-        BasePostViewHolder(binding, contentRenderer, nsfwAllowed) {
+        BasePostViewHolder(binding, imageLoader, contentRenderer, nsfwAllowed) {
 
         override fun getLocalUserId() = currentUserId
 

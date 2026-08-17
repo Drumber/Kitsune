@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.util.ui
 import android.content.Intent
 import android.net.Uri
 import androidx.core.view.isVisible
+import coil3.ImageLoader
 import coil3.dispose
 import coil3.load
 import io.github.drumber.kitsune.R
@@ -17,7 +18,7 @@ import io.github.drumber.kitsune.util.logE
  */
 object EmbedBinder {
 
-    fun bind(binding: ViewEmbedBinding, embed: Embed?, visible: Boolean) {
+    fun bind(binding: ViewEmbedBinding, imageLoader: ImageLoader, embed: Embed?, visible: Boolean) {
         val hasContent = embed != null &&
                 (!embed.imageUrl.isNullOrBlank() || !embed.title.isNullOrBlank())
         val show = visible && hasContent
@@ -33,7 +34,7 @@ object EmbedBinder {
         val hasImage = !embed.imageUrl.isNullOrBlank()
         binding.layoutEmbedImage.isVisible = hasImage
         if (hasImage) {
-            binding.ivEmbedImage.load(embed.imageUrl)
+            binding.ivEmbedImage.load(embed.imageUrl, imageLoader = imageLoader)
         } else {
             binding.ivEmbedImage.dispose()
             binding.ivEmbedImage.setImageResource(R.drawable.default_placeholder)

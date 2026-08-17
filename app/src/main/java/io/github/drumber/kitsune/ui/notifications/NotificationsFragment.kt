@@ -11,10 +11,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil3.ImageLoader
 import com.google.android.material.shape.MaterialShapeDrawable
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Notification
 import io.github.drumber.kitsune.databinding.FragmentNotificationsBinding
+import io.github.drumber.kitsune.di.SocialImagesLoader
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.paging.NotificationPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
@@ -28,7 +30,9 @@ import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.qualifier.named
 
 class NotificationsFragment : Fragment(R.layout.fragment_notifications),
     OnItemClickListener<Notification> {
@@ -36,6 +40,8 @@ class NotificationsFragment : Fragment(R.layout.fragment_notifications),
     private val binding by viewBinding(FragmentNotificationsBinding::bind)
 
     private val viewModel: NotificationsViewModel by viewModel()
+
+    private val imageLoader: ImageLoader by inject(named<SocialImagesLoader>())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,7 +51,7 @@ class NotificationsFragment : Fragment(R.layout.fragment_notifications),
         binding.toolbar.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
-        val adapter = NotificationPagingAdapter(listener = this)
+        val adapter = NotificationPagingAdapter(imageLoader, listener = this)
         binding.rvNotifications.adapter = adapter.withLoadStateFooter(
             footer = ResourceLoadStateAdapter(adapter)
         )
