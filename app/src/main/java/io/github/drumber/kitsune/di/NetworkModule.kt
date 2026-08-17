@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
-import com.github.jasminb.jsonapi.DeserializationFeature as JsonApiDeserializationFeature
 import com.github.jasminb.jsonapi.ResourceConverter
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
 import io.github.drumber.kitsune.BuildConfig
@@ -30,6 +29,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import java.io.File
 import java.util.concurrent.TimeUnit
+import com.github.jasminb.jsonapi.DeserializationFeature as JsonApiDeserializationFeature
 
 val networkModule = module {
     single { createHttpClient(get(), get()) }
@@ -72,7 +72,7 @@ fun createUserAgentInterceptor() =
     UserAgentInterceptor("Kitsune/${BuildConfig.VERSION_NAME}")
 
 fun createObjectMapper(): ObjectMapper = jacksonMapperBuilder()
-    .serializationInclusion(JsonInclude.Include.NON_NULL)
+    .defaultPropertyInclusion(JsonInclude.Value.ALL_NON_NULL)
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
     .configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, false)

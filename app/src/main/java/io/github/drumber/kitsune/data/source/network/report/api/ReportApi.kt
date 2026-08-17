@@ -15,7 +15,7 @@ interface ReportApi {
     ): JSONAPIDocument<List<NetworkReport>>
 
     @POST("reports")
-    fun postReport(
+    suspend fun postReport(
         @Body report: JSONAPIDocument<NetworkReport>
     ): JSONAPIDocument<NetworkReport>
 

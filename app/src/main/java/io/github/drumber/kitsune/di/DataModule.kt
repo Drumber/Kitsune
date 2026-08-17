@@ -452,7 +452,9 @@ val dataModule = module {
             get(),
             NetworkReport::class.java,
             NetworkUser::class.java,
-            NetworkPost::class.java
+            NetworkPost::class.java,
+            NetworkComment::class.java,
+            NetworkUser::class.java,
         )
     }
     single { ReportNetworkDataSource(get()) }
