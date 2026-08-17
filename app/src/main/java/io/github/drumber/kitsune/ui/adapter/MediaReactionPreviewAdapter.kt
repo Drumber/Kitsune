@@ -7,14 +7,15 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
+import coil3.load
+import coil3.request.error
+import coil3.request.fallback
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
 import io.github.drumber.kitsune.databinding.ItemMediaReactionPreviewBinding
 import io.github.drumber.kitsune.util.parseUtcDate
 
 class MediaReactionPreviewAdapter(
-    private val glide: RequestManager,
     private val onItemClick: (MediaReaction) -> Unit,
     private val onUpvoteClick: (MediaReaction) -> Unit,
     private val onAuthorClick: (String) -> Unit,
@@ -47,9 +48,10 @@ class MediaReactionPreviewAdapter(
         fun bind(reaction: MediaReaction) {
             binding.root.setOnClickListener { onItemClick.invoke(reaction) }
 
-            glide.load(reaction.authorAvatarUrl)
-                .placeholder(R.drawable.ic_outline_person_24)
-                .into(binding.ivAvatar)
+            binding.ivAvatar.load(reaction.authorAvatarUrl) {
+                error(R.drawable.ic_outline_person_24)
+                fallback(R.drawable.ic_outline_person_24)
+            }
 
             binding.tvAuthor.text = reaction.authorName
                 ?: binding.root.context.getString(R.string.feed_unknown_user)

@@ -46,6 +46,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/profile_cover_image_description"
+                    android:scaleType="centerCrop"
                     tools:src="@drawable/cover_placeholder" />
 
                 <ImageView
@@ -75,6 +76,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/profile_avatar_image_description"
+                    android:scaleType="centerCrop"
                     app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Kitsune.Circle"
                     tools:src="@drawable/profile_picture_placeholder" />
 

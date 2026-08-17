@@ -1,15 +1,14 @@
 package io.github.drumber.kitsune.ui.createpost
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
+import coil3.load
+import coil3.toUri
 import io.github.drumber.kitsune.databinding.ItemCreatePostImageBinding
 import java.util.Collections
 
 class PostImageThumbnailAdapter(
-    private val glide: RequestManager,
     private val onRemoveClick: (Int) -> Unit
 ) : RecyclerView.Adapter<PostImageThumbnailAdapter.ImageViewHolder>() {
 
@@ -46,9 +45,7 @@ class PostImageThumbnailAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(uri: String) {
-            glide.load(Uri.parse(uri))
-                .centerCrop()
-                .into(binding.ivThumbnail)
+            binding.ivThumbnail.load(uri.toUri())
 
             binding.btnRemoveImage.setOnClickListener {
                 val position = bindingAdapterPosition

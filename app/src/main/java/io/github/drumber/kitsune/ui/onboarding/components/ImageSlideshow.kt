@@ -22,18 +22,18 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import com.bumptech.glide.Glide
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil3.SingletonImageLoader
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlin.random.Random
+import kotlin.time.Duration.Companion.seconds
 
 private const val ANIMATION_TRANSFORM_DURATION = 20000
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ImageSlideshow(
     modifier: Modifier = Modifier,
@@ -78,11 +78,12 @@ fun ImageSlideshow(
 
     LaunchedEffect(currentImage) {
         // preload next image
-        Glide.with(context)
-            .load(nextImage)
-            .preload()
+        val request = ImageRequest.Builder(context)
+            .data(nextImage)
+            .build()
+        SingletonImageLoader.get(context).enqueue(request)
 
-        delay(8000)
+        delay(8.seconds)
         currentImage = nextImage
         nextImage = imagePresenter.getNextImage()
     }
@@ -94,7 +95,7 @@ fun ImageSlideshow(
         animationSpec = tween(3000)
     ) { image ->
         if (image != null) {
-            GlideImage(
+            AsyncImage(
                 model = image,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,

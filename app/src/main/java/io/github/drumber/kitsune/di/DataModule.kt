@@ -123,8 +123,8 @@ import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImage
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
 import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStats
-import io.github.drumber.kitsune.util.ui.MarkdownPreviewRenderer
-import io.github.drumber.kitsune.util.ui.PostContentRenderer
+import io.github.drumber.kitsune.util.markwon.MarkdownPreviewRenderer
+import io.github.drumber.kitsune.util.markwon.PostContentRenderer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

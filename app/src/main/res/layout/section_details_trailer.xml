@@ -26,7 +26,8 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/details_trailer_height"
-                android:src="@drawable/ic_insert_photo_48"
+                android:src="@drawable/default_placeholder"
+                android:scaleType="centerCrop"
                 app:imageUrl="@{coverUrl}"
                 android:contentDescription="@null" />
 

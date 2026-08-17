@@ -13,7 +13,6 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
@@ -33,7 +32,7 @@ import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
-import io.github.drumber.kitsune.util.ui.PostContentRenderer
+import io.github.drumber.kitsune.util.markwon.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbar
 import io.github.drumber.kitsune.util.ui.viewBinding
@@ -83,7 +82,6 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
         }
 
         val adapter = PostPagingAdapter(
-            glide = Glide.with(this),
             contentRenderer = contentRenderer,
             nsfwAllowed = viewModel.nsfwAllowed,
             currentUserId = viewModel.currentUserId(),
@@ -96,7 +94,6 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
         )
         binding.rvFeed.adapter = if (feedType == FeedType.USER) {
             val pinnedAdapter = PinnedPostAdapter(
-                glide = Glide.with(this),
                 contentRenderer = contentRenderer,
                 nsfwAllowed = viewModel.nsfwAllowed,
                 currentUserId = viewModel.currentUserId(),

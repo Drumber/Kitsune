@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.common.media.MediaType
@@ -74,7 +73,6 @@ class EpisodesFragment : Fragment(R.layout.fragment_media_list),
         }
 
         val adapter = MediaUnitPagingAdapter(
-            Glide.with(this),
             args.media.toMedia().posterImageUrl,
             viewModel.libraryEntryWrapper.value != null,
             this

@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.util.ui
+package io.github.drumber.kitsune.util.markwon
 
 import android.content.Context
 import android.net.Uri
@@ -10,12 +10,13 @@ import androidx.core.net.toUri
 import androidx.navigation.findNavController
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.util.logE
+import io.github.drumber.kitsune.util.ui.EmojiShortcodeConverter
+import io.github.drumber.kitsune.util.ui.NonScrollingLinkMovementMethod
 import io.noties.markwon.AbstractMarkwonPlugin
 import io.noties.markwon.LinkResolverDef
 import io.noties.markwon.Markwon
 import io.noties.markwon.MarkwonConfiguration
 import io.noties.markwon.html.HtmlPlugin
-import io.noties.markwon.image.glide.GlideImagesPlugin
 import io.noties.markwon.linkify.LinkifyPlugin
 import io.noties.markwon.movement.MovementMethodPlugin
 
@@ -24,14 +25,14 @@ import io.noties.markwon.movement.MovementMethodPlugin
  *
  * Kitsu serves a pre-rendered, sanitized HTML representation of the content (`content_formatted`)
  * produced server-side by Kramdown + HTML::Pipeline. We render that HTML with Markwon's
- * [HtmlPlugin], loading inline images through Glide and autolinking bare URLs, which mirrors the
+ * [HtmlPlugin], loading inline images through Coil and autolinking bare URLs, which mirrors the
  * formatting shown on the website without re-parsing Markdown on the client.
  */
 class PostContentRenderer(context: Context) {
 
     private val markwon: Markwon = Markwon.builder(context)
         .usePlugin(HtmlPlugin.create())
-        .usePlugin(GlideImagesPlugin.create(context))
+        .usePlugin(Coil3ImagesPlugin.create(context))
         .usePlugin(LinkifyPlugin.create())
         .usePlugin(MovementMethodPlugin.create(NonScrollingLinkMovementMethod.instance))
         .usePlugin(object : AbstractMarkwonPlugin() {

@@ -3,7 +3,8 @@ package io.github.drumber.kitsune.util.ui
 import android.content.Intent
 import android.net.Uri
 import androidx.core.view.isVisible
-import com.bumptech.glide.RequestManager
+import coil3.dispose
+import coil3.load
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Embed
 import io.github.drumber.kitsune.databinding.ViewEmbedBinding
@@ -16,7 +17,7 @@ import io.github.drumber.kitsune.util.logE
  */
 object EmbedBinder {
 
-    fun bind(binding: ViewEmbedBinding, glide: RequestManager, embed: Embed?, visible: Boolean) {
+    fun bind(binding: ViewEmbedBinding, embed: Embed?, visible: Boolean) {
         val hasContent = embed != null &&
                 (!embed.imageUrl.isNullOrBlank() || !embed.title.isNullOrBlank())
         val show = visible && hasContent
@@ -24,19 +25,18 @@ object EmbedBinder {
 
         if (!show || embed == null) {
             binding.root.setOnClickListener(null)
-            glide.clear(binding.ivEmbedImage)
+            binding.ivEmbedImage.dispose()
+            binding.ivEmbedImage.setImageResource(R.drawable.default_placeholder)
             return
         }
 
         val hasImage = !embed.imageUrl.isNullOrBlank()
         binding.layoutEmbedImage.isVisible = hasImage
         if (hasImage) {
-            glide.load(embed.imageUrl)
-                .placeholder(R.drawable.ic_insert_photo_48)
-                .centerCrop()
-                .into(binding.ivEmbedImage)
+            binding.ivEmbedImage.load(embed.imageUrl)
         } else {
-            glide.clear(binding.ivEmbedImage)
+            binding.ivEmbedImage.dispose()
+            binding.ivEmbedImage.setImageResource(R.drawable.default_placeholder)
         }
         binding.ivEmbedPlay.isVisible = embed.isVideo && !embed.isGif
 

@@ -9,8 +9,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import coil3.load
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -122,12 +124,11 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail),
     }
 
     private fun bindGroup(group: Group) {
-        val glide = Glide.with(this)
-
-        glide.load(group.coverImageUrl)
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .placeholder(R.drawable.cover_placeholder)
-            .into(binding.ivCover)
+        binding.ivCover.load(group.coverImageUrl) {
+            placeholder(R.drawable.cover_placeholder)
+            error(R.drawable.cover_placeholder)
+            fallback(R.drawable.cover_placeholder)
+        }
 
         binding.toolbar.title = group.name
     }

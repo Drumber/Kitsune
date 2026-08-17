@@ -5,9 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.BundleCompat
-import com.bumptech.glide.Glide
+import coil3.load
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.dto.MediaUnitDto
 import io.github.drumber.kitsune.data.presentation.dto.toMediaUnit
 import io.github.drumber.kitsune.databinding.SheetMediaUnitDetailsBinding
@@ -28,11 +27,7 @@ class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {
         binding.mediaUnit = mediaUnit
 
         val thumbnailUrl = mediaUnit?.thumbnail?.smallOrHigher() ?: arguments?.getString(BUNDLE_THUMBNAIL)
-        Glide.with(this)
-            .load(thumbnailUrl)
-            .centerCrop()
-            .placeholder(R.drawable.ic_insert_photo_48)
-            .into(binding.ivThumbnail)
+        binding.ivThumbnail.load(thumbnailUrl)
 
         binding.ivThumbnail.setOnClickListener {
             mediaUnit?.thumbnail?.originalOrDown()?.let { imageUrl ->

@@ -6,14 +6,16 @@ import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
+import coil3.load
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.user.UserSearchResult
 import io.github.drumber.kitsune.databinding.ItemUserSearchBinding
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 
 class UserSearchPagingAdapter(
-    private val glide: RequestManager,
     private val listener: OnItemClickListener<UserSearchResult>? = null
 ) : PagingDataAdapter<UserSearchResult, UserSearchPagingAdapter.UserViewHolder>(UserComparator) {
 
@@ -36,9 +38,11 @@ class UserSearchPagingAdapter(
                 listener?.onItemClick(binding.root, user)
             }
 
-            glide.load(user.avatar?.originalOrDown())
-                .placeholder(R.drawable.ic_outline_person_24)
-                .into(binding.ivAvatar)
+            binding.ivAvatar.load(user.avatar?.originalOrDown()) {
+                placeholder(R.drawable.ic_outline_person_24)
+                error(R.drawable.ic_outline_person_24)
+                fallback(R.drawable.ic_outline_person_24)
+            }
 
             binding.tvName.text = user.name
                 ?: binding.root.context.getString(R.string.feed_unknown_user)

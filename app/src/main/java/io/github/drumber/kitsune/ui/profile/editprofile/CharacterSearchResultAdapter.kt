@@ -6,8 +6,11 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil3.load
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
 import com.algolia.instantsearch.core.hits.HitsView
-import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.character.CharacterSearchResult
 import io.github.drumber.kitsune.databinding.ItemCharacterSearchResultBinding
@@ -49,10 +52,11 @@ class CharacterSearchResultAdapter(private val onCharacterClicked: (CharacterSea
                 tvMedia.text = character.primaryMediaTitle
                 tvMedia.isVisible = !character.primaryMediaTitle.isNullOrBlank()
 
-                Glide.with(root)
-                    .load(character.image?.originalOrDown()?.fixImageUrl())
-                    .placeholder(R.drawable.character_placeholder)
-                    .into(ivCharacter)
+                ivCharacter.load(character.image?.originalOrDown()?.fixImageUrl()) {
+                    placeholder(R.drawable.character_placeholder)
+                    error(R.drawable.character_placeholder)
+                    fallback(R.drawable.character_placeholder)
+                }
 
                 root.setOnClickListener {
                     onCharacterClicked(character)

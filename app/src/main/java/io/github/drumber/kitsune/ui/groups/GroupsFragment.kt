@@ -14,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.shape.MaterialShapeDrawable
@@ -58,7 +57,7 @@ class GroupsFragment : Fragment(R.layout.fragment_groups),
             )
         }
 
-        val adapter = GroupsPagingAdapter(Glide.with(this)) { group ->
+        val adapter = GroupsPagingAdapter { group ->
             findNavController().navigateSafe(
                 R.id.groups_fragment,
                 GroupsFragmentDirections.actionGroupsFragmentToGroupDetailFragment(group.id)

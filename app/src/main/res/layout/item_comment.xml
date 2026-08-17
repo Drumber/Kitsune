@@ -24,6 +24,7 @@
                 android:id="@+id/iv_avatar"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
+                android:scaleType="centerCrop"
                 android:contentDescription="@null"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Kitsune.Circle"
                 tools:src="@drawable/ic_outline_person_24" />
@@ -94,7 +95,7 @@
                 android:scaleType="fitStart"
                 android:visibility="gone"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Kitsune.Rounded8"
-                tools:src="@drawable/ic_insert_photo_48"
+                tools:src="@drawable/default_placeholder"
                 tools:visibility="visible" />
 
             <include

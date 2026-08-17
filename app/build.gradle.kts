@@ -132,7 +132,7 @@ kover {
     reports {
         filters {
             excludes {
-                // Generated code (data binding, navigation safe-args, Glide, Room, KSP, etc.)
+                // Generated code (data binding, navigation safe-args, Room, KSP, etc.)
                 classes(
                     "*.databinding.*",
                     "*.BR",
@@ -140,7 +140,6 @@ kover {
                     "*Binding",
                     "*Args",
                     "*Directions",
-                    "*GlideModule*",
                     "*_Factory",
                     "*_Impl",
                     "hilt_aggregated_deps.*"
@@ -212,16 +211,16 @@ dependencies {
     // ViewPager
     implementation(libs.androidx.viewpager2)
 
-    // Glide
-    implementation(libs.bumptech.glide)
-    ksp(libs.bumptech.glide.ksp)
-    implementation(libs.bumptech.glide.okhttp3)
-    implementation(libs.bumptech.glide.compose)
+    // Coil
+    implementation(libs.coil)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.coil.gif)
+    implementation(libs.coil.svg)
 
     // Markwon (post content formatting)
     implementation(libs.noties.markwon.core)
     implementation(libs.noties.markwon.html)
-    implementation(libs.noties.markwon.image.glide)
     implementation(libs.noties.markwon.linkify)
 
     // Koin DI
@@ -287,11 +286,6 @@ dependencies {
 
     // LeakCanary
     debugImplementation(libs.squareup.leakcanary)
-
-    // Glide Transformations (only used for demo screenshots)
-    if (screenshotMode.toBoolean()) {
-        implementation(libs.wasabeef.glide.transformations)
-    }
 
     // Tests
     testImplementation(libs.junit)

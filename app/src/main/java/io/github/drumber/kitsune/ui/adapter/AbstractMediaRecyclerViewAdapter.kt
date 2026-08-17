@@ -7,14 +7,12 @@ import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
 import androidx.databinding.OnRebindCallback
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
 import io.github.drumber.kitsune.ui.adapter.AbstractMediaRecyclerViewAdapter.AbstractMediaViewHolder
 import java.util.concurrent.CopyOnWriteArrayList
 
 abstract class AbstractMediaRecyclerViewAdapter<ViewHolder : AbstractMediaViewHolder<Item>, Item>(
     val dataSet: CopyOnWriteArrayList<Item>,
-    private val glide: RequestManager,
     private val transitionNameSuffix: String?,
     private val listener: OnItemClickListener<Item>?
 ) : RecyclerView.Adapter<ViewHolder>() {
@@ -39,7 +37,7 @@ abstract class AbstractMediaRecyclerViewAdapter<ViewHolder : AbstractMediaViewHo
             }
         })
 
-        return onCreateViewHolder(binding, glide) { view, position ->
+        return onCreateViewHolder(binding) { view, position ->
             if (position < dataSet.size) {
                 listener?.onItemClick(view, dataSet[position])
             }
@@ -48,7 +46,6 @@ abstract class AbstractMediaRecyclerViewAdapter<ViewHolder : AbstractMediaViewHo
 
     abstract fun onCreateViewHolder(
         binding: ItemMediaBinding,
-        glide: RequestManager,
         listener: (View, Int) -> Unit
     ): ViewHolder
 

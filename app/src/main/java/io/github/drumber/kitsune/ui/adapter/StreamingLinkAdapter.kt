@@ -6,14 +6,12 @@ import androidx.appcompat.widget.TooltipCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
-import io.github.drumber.kitsune.R
+import coil3.load
 import io.github.drumber.kitsune.constants.StreamingLogo
 import io.github.drumber.kitsune.data.presentation.model.media.streamer.StreamingLink
 import io.github.drumber.kitsune.databinding.ItemStreamerBinding
 
 class StreamingLinkAdapter(
-    private val glide: RequestManager,
     private val listener: OnItemClickListener<StreamingLink>? = null
 ) : ListAdapter<StreamingLink, StreamingLinkAdapter.StreamingLinkViewHolder>(DIFF_CALLBACK) {
 
@@ -48,10 +46,7 @@ class StreamingLinkAdapter(
             val logo = streamingLink.streamer?.siteName?.let { siteName ->
                 StreamingLogo.entries.find { it.name.equals(siteName, true) }?.drawable
             }
-            glide.load(logo)
-                .centerInside()
-                .placeholder(R.drawable.ic_insert_photo_48)
-                .into(binding.ivLogo)
+            binding.ivLogo.load(logo)
 
             TooltipCompat.setTooltipText(binding.root, streamingLink.streamer?.siteName)
         }

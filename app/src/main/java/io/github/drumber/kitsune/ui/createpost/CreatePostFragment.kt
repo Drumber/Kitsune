@@ -17,13 +17,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentCreatePostBinding
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.logE
-import io.github.drumber.kitsune.util.ui.MarkdownPreviewRenderer
+import io.github.drumber.kitsune.util.markwon.MarkdownPreviewRenderer
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbar
@@ -84,7 +83,7 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
 
         setupTagging()
 
-        imageAdapter = PostImageThumbnailAdapter(Glide.with(this)) { position ->
+        imageAdapter = PostImageThumbnailAdapter { position ->
             viewModel.removeImage(position)
         }
         binding.rvImages.adapter = imageAdapter

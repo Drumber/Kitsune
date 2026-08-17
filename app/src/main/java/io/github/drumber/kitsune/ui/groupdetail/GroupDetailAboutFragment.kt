@@ -10,7 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.bumptech.glide.Glide
+import coil3.load
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.group.Group
@@ -101,11 +104,11 @@ class GroupDetailAboutFragment : Fragment(R.layout.fragment_group_detail_about),
     }
 
     private fun bindGroup(group: Group) {
-        val glide = Glide.with(this)
-
-        glide.load(group.avatarUrl)
-            .placeholder(R.drawable.ic_group_24)
-            .into(binding.ivAvatar)
+        binding.ivAvatar.load(group.avatarUrl) {
+            placeholder(R.drawable.ic_group_24)
+            error(R.drawable.ic_group_24)
+            fallback(R.drawable.ic_group_24)
+        }
 
         binding.tvName.text = group.name
 

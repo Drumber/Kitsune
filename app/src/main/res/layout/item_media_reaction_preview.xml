@@ -24,6 +24,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:contentDescription="@null"
+                android:scaleType="centerCrop"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Kitsune.Circle"
                 tools:src="@drawable/ic_outline_person_24" />
 

@@ -10,11 +10,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat.AnimationCallback
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import coil3.load
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.data.common.Titles
 import io.github.drumber.kitsune.data.presentation.dto.toCharacter
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
@@ -27,7 +25,6 @@ import io.github.drumber.kitsune.util.DataUtil.mapLanguageCodesToDisplayName
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openCharacterOnMAL
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
-import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -45,9 +42,7 @@ class CharacterDetailsBottomSheet :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.rvMediaCharacters.adapter = MediaCharacterAdapter(
-            Glide.with(this)
-        ) { _, mediaCharacter ->
+        binding.rvMediaCharacters.adapter = MediaCharacterAdapter { _, mediaCharacter ->
             val media = mediaCharacter.media
                 ?: return@MediaCharacterAdapter
             val action =
@@ -156,12 +151,7 @@ class CharacterDetailsBottomSheet :
         updateMediaCharactersRecyclerView(character.mediaCharacters)
         binding.btnOpenOnMal.isVisible = character.malId != null
 
-        Glide.with(this)
-            .load(character.image?.originalOrDown())
-            .fitCenter()
-            .addTransform(RoundedCorners(8.toPx()))
-            .placeholder(R.drawable.ic_insert_photo_48)
-            .into(binding.ivCharacter)
+        binding.ivCharacter.load(character.image?.originalOrDown())
     }
 
     private fun updateNamesInTable(names: Titles?) {

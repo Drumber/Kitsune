@@ -3,11 +3,11 @@ package io.github.drumber.kitsune.ui.details
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.net.toUri
 import androidx.core.os.BundleCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
@@ -20,9 +20,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import coil3.load
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -33,7 +34,6 @@ import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialContainerTransform
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.constants.SortFilter
 import io.github.drumber.kitsune.data.common.Filter
@@ -72,7 +72,6 @@ import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.showSomethingWrongToast
 import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
-import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.logW
 import io.github.drumber.kitsune.util.rating.RatingFrequenciesUtil.calculateAverageRating
 import io.github.drumber.kitsune.util.rating.RatingFrequenciesUtil.transformToRatingSystem
@@ -175,18 +174,12 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             showStreamingLinks(model)
             showRatingChart(model)
 
-            val glide = Glide.with(this)
-
-            glide.load(model.coverImageUrl)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .placeholder(R.drawable.cover_placeholder)
-                .into(binding.ivCover)
-
-            glide.load(model.posterImageUrl)
-                .addTransform(RoundedCorners(8.toPx()))
-                .placeholder(R.drawable.ic_insert_photo_48)
-                .into(binding.ivThumbnail)
-
+            binding.ivCover.load(model.coverImageUrl) {
+                placeholder(R.drawable.cover_placeholder)
+                error(R.drawable.cover_placeholder)
+                fallback(R.drawable.cover_placeholder)
+            }
+            binding.ivThumbnail.load(model.posterImageUrl)
         }
 
         binding.ivThumbnail.setOnClickListener {
@@ -426,10 +419,8 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         val data = media.mediaRelationships?.sortedBy { it.role?.ordinal } ?: emptyList()
 
         if (binding.rvFranchise.adapter !is MediaRelationshipRecyclerViewAdapter) {
-            val glide = Glide.with(this)
             val adapter = MediaRelationshipRecyclerViewAdapter(
                 CopyOnWriteArrayList(data),
-                glide
             ) { view, clickedMedia ->
                 clickedMedia.media?.let { onFranchiseItemClicked(view, it) }
             }
@@ -450,7 +441,6 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
 
     private fun setupReactions() {
         val adapter = MediaReactionPreviewAdapter(
-            Glide.with(this),
             onItemClick = { reaction -> navigateToReaction(reaction) },
             onUpvoteClick = { reaction -> viewModel.upvoteReaction(reaction) },
             onAuthorClick = { userId -> navigateToUserProfile(userId) },
@@ -520,14 +510,12 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
     private fun showStreamingLinks(media: Media) {
         val data = (media as? Anime)?.streamingLinks ?: emptyList()
         if (binding.rvStreamer.adapter !is StreamingLinkAdapter) {
-            val glide = Glide.with(this)
-            val adapter =
-                StreamingLinkAdapter(glide) { _, streamingLink ->
-                    streamingLink.url?.let { url ->
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                        startActivity(intent)
-                    }
+            val adapter = StreamingLinkAdapter { _, streamingLink ->
+                streamingLink.url?.let { url ->
+                    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+                    startActivity(intent)
                 }
+            }
             binding.rvStreamer.adapter = adapter
             adapter.submitList(data)
         } else {

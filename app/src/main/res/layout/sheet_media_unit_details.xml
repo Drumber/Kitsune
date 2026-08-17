@@ -26,8 +26,9 @@
                     android:id="@+id/iv_thumbnail"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
+                    android:scaleType="centerCrop"
                     android:contentDescription="@null"
-                    tools:src="@drawable/ic_insert_photo_48" />
+                    tools:src="@drawable/default_placeholder" />
 
                 <View
                     android:layout_width="match_parent"

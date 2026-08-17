@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.SectionMainExploreBinding
 import io.github.drumber.kitsune.preference.KitsunePref
@@ -13,7 +12,6 @@ import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import java.util.concurrent.CopyOnWriteArrayList
 
 class ExploreSection(
-    private val glide: RequestManager,
     private val title: String,
     private val initialData: List<Media>? = null,
     private val itemListener: OnItemClickListener<Media>? = null,
@@ -30,7 +28,6 @@ class ExploreSection(
     private fun initView(context: Context, binding: SectionMainExploreBinding) {
         exploreAdapter = MediaRecyclerViewAdapter(
             if(initialData != null) CopyOnWriteArrayList(initialData) else CopyOnWriteArrayList(),
-            glide,
             itemSize = KitsunePref.mediaItemSize,
             transitionNameSuffix = "_$title",
             listener = itemListener

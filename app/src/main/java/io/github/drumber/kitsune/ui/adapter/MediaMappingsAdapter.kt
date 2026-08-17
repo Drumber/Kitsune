@@ -3,12 +3,15 @@ package io.github.drumber.kitsune.ui.adapter
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import com.bumptech.glide.Glide
+import androidx.core.net.toUri
+import coil3.load
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.mapping.Mapping
 import io.github.drumber.kitsune.data.presentation.model.mapping.getExternalUrl
@@ -42,11 +45,12 @@ class MediaMappingsAdapter(
 
         mapping.getExternalUrl()?.let { url ->
             try {
-                val domain = Uri.parse(url).host
-                Glide.with(context)
-                    .load("https://icons.duckduckgo.com/ip3/$domain.ico")
-                    .placeholder(R.drawable.ic_website)
-                    .into(binding.ivSiteIcon)
+                val domain = url.toUri().host
+                binding.ivSiteIcon.load("https://icons.duckduckgo.com/ip3/$domain.ico") {
+                    placeholder(R.drawable.ic_website)
+                    error(R.drawable.ic_website)
+                    fallback(R.drawable.ic_website)
+                }
             } catch (e: Exception) {
                 logD("Failed to load favicon for url: $url", e)
             }
@@ -56,7 +60,7 @@ class MediaMappingsAdapter(
             val url = mapping.getExternalUrl()
             if (url != null) {
                 try {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
                     context.startActivity(intent)
                 } catch (e: Exception) {
                     logE("Failed to open URL: $url", e)

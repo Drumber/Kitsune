@@ -21,13 +21,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
-import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.algolia.instantsearch.core.searcher.Debouncer
-import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
@@ -294,15 +292,11 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     }
 
     private fun initRecyclerView() {
-        val glide = Glide.with(this)
-        val adapter = LibraryEntriesAdapter(glide, this)
-
-        var lastLoadState: CombinedLoadStates? = null
+        val adapter = LibraryEntriesAdapter(this)
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 adapter.loadStateFlow.collectLatest { state ->
-                    lastLoadState = state
                     if (view?.parent == null) return@collectLatest
 
                     if (!state.source.isIdle) {

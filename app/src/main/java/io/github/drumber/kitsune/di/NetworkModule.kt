@@ -1,7 +1,19 @@
 package io.github.drumber.kitsune.di
 
 import android.content.Context
+import android.os.Build
 import android.os.Parcelable
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.drawable.toDrawable
+import coil3.ImageLoader
+import coil3.asImage
+import coil3.disk.DiskCache
+import coil3.disk.directory
+import coil3.gif.AnimatedImageDecoder
+import coil3.gif.GifDecoder
+import coil3.network.okhttp.OkHttpNetworkFetcherFactory
+import coil3.request.crossfade
+import coil3.svg.SvgDecoder
 import com.algolia.search.model.filter.Filter
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -11,7 +23,9 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.github.jasminb.jsonapi.ResourceConverter
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory
+import com.google.android.material.elevation.SurfaceColors
 import io.github.drumber.kitsune.BuildConfig
+import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.util.json.AlgoliaFacetValueDeserializer
 import io.github.drumber.kitsune.util.json.AlgoliaNumericValueDeserializer
@@ -23,6 +37,7 @@ import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.android.ext.koin.androidApplication
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -35,6 +50,7 @@ val networkModule = module {
     single { createHttpClient(get(), get()) }
     single(named("unauthenticated")) { createHttpClientBuilder().build() }
     single(named("images")) { createHttpClientBuilder(false).build() }
+    single { createImageLoader(androidApplication(), get(named("images"))) }
     single { createObjectMapper() }
     factory<AuthenticationInterceptor> { AuthenticationInterceptorImpl(get()) }
 }
@@ -70,6 +86,30 @@ private fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
 
 fun createUserAgentInterceptor() =
     UserAgentInterceptor("Kitsune/${BuildConfig.VERSION_NAME}")
+
+fun createImageLoader(context: Context, imageHttpClient: OkHttpClient): ImageLoader {
+    return ImageLoader.Builder(context)
+        .diskCache {
+            DiskCache.Builder()
+                .directory(context.cacheDir.resolve("image_cache"))
+                .maxSizeBytes(1024 * 1024 * 256L) // 256 MB
+                .build()
+        }
+        .components {
+            add(OkHttpNetworkFetcherFactory(callFactory = { imageHttpClient }))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                add(AnimatedImageDecoder.Factory())
+            } else {
+                add(GifDecoder.Factory())
+            }
+            add(SvgDecoder.Factory())
+        }
+        .crossfade(true)
+        .placeholder { SurfaceColors.SURFACE_1.getColor(it.context).toDrawable().asImage() }
+        .error { AppCompatResources.getDrawable(it.context, R.drawable.default_placeholder)?.asImage() }
+        .fallback { AppCompatResources.getDrawable(it.context, R.drawable.default_placeholder)?.asImage() }
+        .build()
+}
 
 fun createObjectMapper(): ObjectMapper = jacksonMapperBuilder()
     .defaultPropertyInclusion(JsonInclude.Value.ALL_NON_NULL)

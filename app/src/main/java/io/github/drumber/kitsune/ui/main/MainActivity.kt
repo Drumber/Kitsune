@@ -1,8 +1,6 @@
 package io.github.drumber.kitsune.ui.main
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -24,9 +22,11 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
+import coil3.imageLoader
+import coil3.request.ImageRequest
+import coil3.request.allowHardware
+import coil3.request.crossfade
+import coil3.toBitmap
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.navigationrail.NavigationRailView
@@ -197,21 +197,18 @@ class MainActivity : BaseActivity() {
                                     .setIcon(R.drawable.selector_profile)
                                 return@collectLatest
                             }
-                            Glide.with(this@MainActivity)
-                                .asBitmap()
-                                .load(avatarUrl)
-                                .dontAnimate()
-                                .into(object : CustomTarget<Bitmap>() {
-                                    override fun onResourceReady(
-                                        resource: Bitmap,
-                                        transition: Transition<in Bitmap>?
-                                    ) {
+                            val request = ImageRequest.Builder(this@MainActivity)
+                                .data(avatarUrl)
+                                .allowHardware(false)
+                                .crossfade(false)
+                                .target(
+                                    onSuccess = { result ->
                                         menu.findItem(R.id.profile_fragment).icon =
-                                            RoundBitmapDrawable(resource)
+                                            RoundBitmapDrawable(result.toBitmap())
                                     }
-
-                                    override fun onLoadCleared(placeholder: Drawable?) {}
-                                })
+                                )
+                                .build()
+                            imageLoader.enqueue(request)
                         }
                 }
             }

@@ -9,18 +9,22 @@ import androidx.core.view.updateLayoutParams
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
+import coil3.dispose
+import coil3.load
+import coil3.request.crossfade
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.databinding.ItemCommentBinding
 import io.github.drumber.kitsune.util.extensions.setOnDoubleTapListener
 import io.github.drumber.kitsune.util.extensions.toPx
+import io.github.drumber.kitsune.util.markwon.PostContentRenderer
 import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.EmbedBinder
-import io.github.drumber.kitsune.util.ui.PostContentRenderer
 
 class CommentPagingAdapter(
-    private val glide: RequestManager,
     private val contentRenderer: PostContentRenderer?,
     private val currentUserId: String?,
     private val onLikeClick: ((Comment) -> Unit)?,
@@ -73,9 +77,11 @@ class CommentPagingAdapter(
         comment: Comment,
         isReply: Boolean
     ) {
-        glide.load(comment.authorAvatarUrl)
-            .placeholder(R.drawable.ic_outline_person_24)
-            .into(binding.ivAvatar)
+        binding.ivAvatar.load(comment.authorAvatarUrl) {
+            placeholder(R.drawable.ic_outline_person_24)
+            error(R.drawable.ic_outline_person_24)
+            fallback(R.drawable.ic_outline_person_24)
+        }
 
         binding.tvAuthor.text = comment.authorName
             ?: binding.root.context.getString(R.string.feed_unknown_user)
@@ -110,11 +116,13 @@ class CommentPagingAdapter(
         binding.ivImage.apply {
             isVisible = !comment.imageUrl.isNullOrBlank()
             if (!comment.imageUrl.isNullOrBlank()) {
-                glide.load(comment.imageUrl)
-                    .placeholder(R.drawable.ic_insert_photo_48)
-                    .into(this)
+                load(comment.imageUrl) {
+                    crossfade(false)
+                    placeholder(null)
+                }
             } else {
-                glide.clear(this)
+                dispose()
+                setImageResource(R.drawable.default_placeholder)
             }
 
             setOnClickListener {
@@ -124,7 +132,7 @@ class CommentPagingAdapter(
             }
         }
 
-        EmbedBinder.bind(binding.embed, glide, comment.embed, visible = true)
+        EmbedBinder.bind(binding.embed, comment.embed, visible = true)
 
         val override = likeOverrides[comment.id]
         val isLiked = override?.isLiked ?: comment.isLikedByMe

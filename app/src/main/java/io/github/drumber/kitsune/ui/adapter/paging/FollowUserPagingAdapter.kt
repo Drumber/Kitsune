@@ -6,14 +6,16 @@ import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
+import coil3.load
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.user.FollowUser
 import io.github.drumber.kitsune.databinding.ItemFollowUserBinding
 import io.github.drumber.kitsune.ui.profile.follow.FollowButtonState
 
 class FollowUserPagingAdapter(
-    private val glide: RequestManager,
     private val onUserClick: ((String) -> Unit)? = null,
     private val onFollowClick: ((String) -> Unit)? = null,
     private val onBindUser: ((String) -> Unit)? = null,
@@ -62,9 +64,11 @@ class FollowUserPagingAdapter(
         fun bind(followUser: FollowUser) {
             val context = binding.root.context
 
-            glide.load(followUser.avatarUrl)
-                .placeholder(R.drawable.ic_outline_person_24)
-                .into(binding.ivAvatar)
+            binding.ivAvatar.load(followUser.avatarUrl) {
+                placeholder(R.drawable.ic_outline_person_24)
+                error(R.drawable.ic_outline_person_24)
+                fallback(R.drawable.ic_outline_person_24)
+            }
 
             binding.tvName.text = followUser.name
                 ?: context.getString(R.string.feed_unknown_user)

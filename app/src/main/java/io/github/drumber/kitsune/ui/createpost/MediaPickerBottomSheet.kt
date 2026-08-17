@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.algolia.instantsearch.android.searchbox.SearchBoxViewAppCompat
 import com.algolia.instantsearch.core.connection.ConnectionHandler
 import com.algolia.instantsearch.searchbox.connectView
-import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
@@ -46,7 +45,7 @@ class MediaPickerBottomSheet : BottomSheetDialogFragment(), OnItemClickListener<
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = MediaSearchPagingAdapter(Glide.with(this), this)
+        val adapter = MediaSearchPagingAdapter(this)
         binding.rvMedia.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.rvMedia.adapter = adapter
 

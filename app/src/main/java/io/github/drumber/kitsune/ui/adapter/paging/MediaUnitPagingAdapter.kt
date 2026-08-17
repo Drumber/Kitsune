@@ -6,14 +6,12 @@ import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
-import io.github.drumber.kitsune.R
+import coil3.load
 import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.databinding.ItemEpisodeBinding
 import kotlin.math.max
 
 class MediaUnitPagingAdapter(
-    private val glide: RequestManager,
     private val posterUrl: String?,
     private var enableWatchedCheckbox: Boolean,
     private val listener: MediaUnitActionListener
@@ -60,9 +58,7 @@ class MediaUnitPagingAdapter(
         }
 
         fun bind(unit: MediaUnit) {
-            glide.load(unit.thumbnail?.originalOrDown() ?: posterUrl)
-                .placeholder(R.drawable.ic_insert_photo_48)
-                .into(binding.ivThumbnail)
+            binding.ivThumbnail.load(unit.thumbnail?.originalOrDown() ?: posterUrl)
 
             binding.apply {
                 tvEpisodeTitle.text = unit.title(root.context)

@@ -98,13 +98,14 @@
                     android:orientation="horizontal"
                     android:padding="8dp">
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/iv_media_poster"
                         android:layout_width="56dp"
                         android:layout_height="80dp"
                         android:contentDescription="@null"
                         android:scaleType="centerCrop"
-                        tools:src="@drawable/ic_insert_photo_48" />
+                        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Kitsune.Rounded8"
+                        tools:src="@drawable/default_placeholder" />
 
                     <TextView
                         android:id="@+id/tv_media_title"

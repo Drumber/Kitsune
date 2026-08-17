@@ -6,22 +6,22 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import coil3.load
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.ItemPostBinding
 import io.github.drumber.kitsune.util.extensions.setOnDoubleTapListener
+import io.github.drumber.kitsune.util.markwon.PostContentRenderer
 import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.EmbedBinder
-import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.PostMediaBinder
 import io.github.drumber.kitsune.util.ui.isTextTruncated
 
 abstract class BasePostViewHolder(
     protected val binding: ItemPostBinding,
-    private val glide: RequestManager,
     private val contentRenderer: PostContentRenderer?,
     private val nsfwAllowed: Boolean,
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -61,9 +61,11 @@ abstract class BasePostViewHolder(
             binding.tvAuthor.setOnClickListener(null)
         }
 
-        glide.load(post.authorAvatarUrl)
-            .placeholder(R.drawable.ic_outline_person_24)
-            .into(binding.ivAvatar)
+        binding.ivAvatar.load(post.authorAvatarUrl) {
+            placeholder(R.drawable.ic_outline_person_24)
+            error(R.drawable.ic_outline_person_24)
+            fallback(R.drawable.ic_outline_person_24)
+        }
 
         binding.tvAuthor.text = post.authorName
             ?: binding.root.context.getString(R.string.feed_unknown_user)
@@ -116,9 +118,9 @@ abstract class BasePostViewHolder(
 
         bindImagePreview(post, gated)
 
-        EmbedBinder.bind(binding.embed, glide, post.embed, visible = !gated)
+        EmbedBinder.bind(binding.embed, post.embed, visible = !gated)
 
-        PostMediaBinder.bind(binding.postMedia, glide, post, visible = true) {
+        PostMediaBinder.bind(binding.postMedia, post, visible = true) {
             onMediaClick(post)
         }
 
@@ -216,11 +218,7 @@ abstract class BasePostViewHolder(
         binding.layoutImage.isVisible = show
         if (!show) return
 
-        val radius = (12 * binding.root.resources.displayMetrics.density).toInt()
-        glide.load(images.first())
-            .placeholder(R.drawable.ic_insert_photo_48)
-            .transform(CenterCrop(), RoundedCorners(radius))
-            .into(binding.ivImage)
+        binding.ivImage.load(images.first())
 
         binding.tvImageCount.apply {
             isVisible = images.size > 1
@@ -274,9 +272,10 @@ abstract class BasePostViewHolder(
     }
 
     private fun loadAvatar(imageView: ImageView, url: String) {
-        glide.load(url)
-            .placeholder(R.drawable.ic_outline_person_24)
-            .circleCrop()
-            .into(imageView)
+        imageView.load(url) {
+            placeholder(R.drawable.ic_outline_person_24)
+            error(R.drawable.ic_outline_person_24)
+            fallback(R.drawable.ic_outline_person_24)
+        }
     }
 }

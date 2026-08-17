@@ -3,6 +3,9 @@ package io.github.drumber.kitsune
 import android.app.Application
 import android.os.StrictMode
 import androidx.appcompat.app.AppCompatDelegate
+import coil3.ImageLoader
+import coil3.PlatformContext
+import coil3.SingletonImageLoader
 import com.algolia.instantsearch.core.InstantSearchTelemetry
 import com.chibatching.kotpref.Kotpref
 import com.chibatching.kotpref.livedata.asLiveData
@@ -28,12 +31,15 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
+import java.io.File
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 
-class KitsuneApplication : Application() {
+class KitsuneApplication : Application(), SingletonImageLoader.Factory {
 
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
+    private val imageLoader: ImageLoader by inject()
 
     override fun onCreate() {
         super.onCreate()
@@ -72,6 +78,10 @@ class KitsuneApplication : Application() {
         }
     }
 
+    override fun newImageLoader(context: PlatformContext): ImageLoader {
+        return imageLoader
+    }
+
     private fun enableStrictMode() {
         StrictMode.setThreadPolicy(
             StrictMode.ThreadPolicy.Builder()
@@ -106,6 +116,20 @@ class KitsuneApplication : Application() {
                         e
                     )
                 }
+            }
+        }
+
+        // 2.1.3 - migrated from Glide to Coil
+        val glideCacheDir = File(cacheDir, "image_manager_disk_cache")
+        if (glideCacheDir.exists() && glideCacheDir.isDirectory) {
+            try {
+                val isDeleted = glideCacheDir.deleteRecursively()
+                if (isDeleted)
+                    logI("[Migration-2.1.3] Deleted Glide image cache directory '${glideCacheDir.absolutePath}'.")
+                else
+                    logW("[Migration-2.1.3] Failed to delete Glide image cache directory '${glideCacheDir.absolutePath}'.")
+            } catch (e: Exception) {
+                logE("[Migration-2.1.3] Error deleting Glide image cache directory '${glideCacheDir.absolutePath}'.", e)
             }
         }
     }

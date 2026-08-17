@@ -10,8 +10,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestManager
+import coil3.load
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
@@ -55,8 +57,6 @@ class ReactionDetailFragment : Fragment(R.layout.fragment_reaction_detail) {
         binding.tvAuthor.setOnClickListener { navigateToAuthorProfile() }
         binding.ivAvatar.setOnClickListener { navigateToAuthorProfile() }
 
-        val glide = Glide.with(this)
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.isLoading.collectLatest { loading ->
@@ -68,7 +68,7 @@ class ReactionDetailFragment : Fragment(R.layout.fragment_reaction_detail) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.reaction.collectLatest { reaction ->
-                    reaction?.let { bindReaction(it, glide) }
+                    reaction?.let { bindReaction(it) }
                 }
             }
         }
@@ -102,10 +102,12 @@ class ReactionDetailFragment : Fragment(R.layout.fragment_reaction_detail) {
         }
     }
 
-    private fun bindReaction(reaction: MediaReaction, glide: RequestManager) {
-        glide.load(reaction.authorAvatarUrl)
-            .placeholder(R.drawable.ic_outline_person_24)
-            .into(binding.ivAvatar)
+    private fun bindReaction(reaction: MediaReaction) {
+        binding.ivAvatar.load(reaction.authorAvatarUrl) {
+            placeholder(R.drawable.ic_outline_person_24)
+            error(R.drawable.ic_outline_person_24)
+            fallback(R.drawable.ic_outline_person_24)
+        }
 
         binding.tvAuthor.text = reaction.authorName
             ?: getString(R.string.feed_unknown_user)
@@ -125,9 +127,7 @@ class ReactionDetailFragment : Fragment(R.layout.fragment_reaction_detail) {
         binding.cardMedia.isVisible = hasMedia
         if (hasMedia) {
             binding.tvMediaTitle.text = reaction.mediaTitle
-            glide.load(reaction.mediaPosterUrl)
-                .placeholder(R.drawable.ic_insert_photo_48)
-                .into(binding.ivMediaPoster)
+            binding.ivMediaPoster.load(reaction.mediaPosterUrl)
             binding.cardMedia.setOnClickListener { openMedia(reaction) }
         }
 

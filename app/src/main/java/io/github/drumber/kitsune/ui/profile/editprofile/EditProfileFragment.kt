@@ -19,12 +19,15 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil3.load
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
 import com.algolia.instantsearch.android.searchbox.SearchBoxViewEditText
 import com.algolia.instantsearch.core.connection.ConnectionHandler
 import com.algolia.instantsearch.core.hits.connectHitsView
 import com.algolia.instantsearch.searchbox.connectView
 import com.algolia.search.helper.deserialize
-import com.bumptech.glide.Glide
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.search.SearchView
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
@@ -307,17 +310,19 @@ class EditProfileFragment : BaseDialogFragment(R.layout.fragment_edit_profile) {
             viewModel.profileImageStateFlow.collectLatest { profileImageState ->
                 val avatarImage = profileImageState.selectedAvatarUri
                     ?: profileImageState.currentAvatarUrl
-                Glide.with(this@EditProfileFragment)
-                    .load(avatarImage)
-                    .placeholder(R.drawable.profile_picture_placeholder)
-                    .into(binding.ivAvatar)
+                binding.ivAvatar.load(avatarImage) {
+                    placeholder(R.drawable.profile_picture_placeholder)
+                    error(R.drawable.profile_picture_placeholder)
+                    fallback(R.drawable.profile_picture_placeholder)
+                }
 
                 val coverImage = profileImageState.selectedCoverUri
                     ?: profileImageState.currentCoverUrl
-                Glide.with(this@EditProfileFragment)
-                    .load(coverImage)
-                    .placeholder(R.drawable.cover_placeholder)
-                    .into(binding.ivCover)
+                binding.ivCover.load(coverImage) {
+                    placeholder(R.drawable.cover_placeholder)
+                    error(R.drawable.cover_placeholder)
+                    fallback(R.drawable.cover_placeholder)
+                }
 
                 binding.ivCoverAddImage.isVisible = coverImage == null
             }

@@ -55,16 +55,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/iv_character"
                         android:layout_width="@dimen/media_item_width_small"
                         android:layout_height="wrap_content"
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
-                        android:src="@drawable/ic_insert_photo_48"
+                        android:src="@drawable/default_placeholder"
                         android:transitionName="@string/character_picture_transition_name"
                         android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"/>
+                        android:layout_alignParentTop="true"
+                        android:contentDescription="@null"
+                        app:shapeAppearanceOverlay="?attr/shapeAppearanceMediumComponent" />
 
                     <LinearLayout
                         android:layout_width="match_parent"

@@ -10,7 +10,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.data.presentation.model.media.unit.Episode
 import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
@@ -47,7 +46,6 @@ class UnitPickerBottomSheet : BottomSheetDialogFragment(),
         val posterUrl = arguments?.getString(BUNDLE_POSTER)
 
         val adapter = MediaUnitPagingAdapter(
-            glide = Glide.with(this),
             posterUrl = posterUrl,
             enableWatchedCheckbox = false,
             listener = this

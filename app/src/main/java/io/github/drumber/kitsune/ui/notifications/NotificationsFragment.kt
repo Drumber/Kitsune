@@ -11,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.google.android.material.shape.MaterialShapeDrawable
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Notification
@@ -46,10 +45,7 @@ class NotificationsFragment : Fragment(R.layout.fragment_notifications),
         binding.toolbar.initPaddingWindowInsetsListener(left = true, right = true, consume = false)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
-        val adapter = NotificationPagingAdapter(
-            glide = Glide.with(this),
-            listener = this
-        )
+        val adapter = NotificationPagingAdapter(listener = this)
         binding.rvNotifications.adapter = adapter.withLoadStateFooter(
             footer = ResourceLoadStateAdapter(adapter)
         )

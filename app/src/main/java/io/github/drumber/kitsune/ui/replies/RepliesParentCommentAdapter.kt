@@ -6,16 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
+import coil3.load
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.databinding.ItemRepliesParentCommentBinding
+import io.github.drumber.kitsune.util.markwon.PostContentRenderer
 import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.EmbedBinder
-import io.github.drumber.kitsune.util.ui.PostContentRenderer
 
 class RepliesParentCommentAdapter(
-    private val glide: RequestManager,
     private val contentRenderer: PostContentRenderer,
     private val onAuthorClicked: (String) -> Unit,
     private val onLikeClicked: (Comment) -> Unit,
@@ -65,10 +67,11 @@ class RepliesParentCommentAdapter(
         fun bind(comment: Comment) {
             val header = binding.parentComment
 
-            glide
-                .load(comment.authorAvatarUrl)
-                .placeholder(R.drawable.ic_outline_person_24)
-                .into(header.ivAvatar)
+            header.ivAvatar.load(comment.authorAvatarUrl) {
+                placeholder(R.drawable.ic_outline_person_24)
+                error(R.drawable.ic_outline_person_24)
+                fallback(R.drawable.ic_outline_person_24)
+            }
 
             header.tvAuthor.text = comment.authorName ?: binding.root.context.getString(R.string.feed_unknown_user)
 
@@ -99,14 +102,11 @@ class RepliesParentCommentAdapter(
             header.ivImage.apply {
                 isVisible = !comment.imageUrl.isNullOrBlank()
                 if (!comment.imageUrl.isNullOrBlank()) {
-                    glide
-                        .load(comment.imageUrl)
-                        .placeholder(R.drawable.ic_insert_photo_48)
-                        .into(this)
+                    load(comment.imageUrl)
                 }
             }
 
-            EmbedBinder.bind(header.embed, glide, comment.embed, visible = true)
+            EmbedBinder.bind(header.embed, comment.embed, visible = true)
 
             bindParentLikeRow(comment.isLikedByMe, comment.likesCount)
             header.layoutLike.setOnClickListener { onLikeClicked(comment) }

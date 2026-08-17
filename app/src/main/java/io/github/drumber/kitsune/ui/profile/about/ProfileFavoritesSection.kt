@@ -3,7 +3,6 @@ package io.github.drumber.kitsune.ui.profile.about
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.data.presentation.model.character.Character
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
@@ -22,7 +21,6 @@ import java.util.concurrent.CopyOnWriteArrayList
  */
 class ProfileFavoritesSection(
     private val binding: FragmentProfileAboutBinding,
-    private val glide: RequestManager,
     private val onMediaClick: (View, Media) -> Unit,
     private val onCharacterClick: (Character) -> Unit
 ) {
@@ -51,7 +49,6 @@ class ProfileFavoritesSection(
         if (recyclerView.adapter !is MediaRecyclerViewAdapter) {
             recyclerView.adapter = MediaRecyclerViewAdapter(
                 CopyOnWriteArrayList(data),
-                glide,
                 itemSize = MediaItemSize.SMALL
             ) { view, media ->
                 onMediaClick(view, media)
@@ -69,7 +66,7 @@ class ProfileFavoritesSection(
         data: List<Character>
     ) {
         if (recyclerView.adapter !is CharacterAdapter) {
-            val adapter = CharacterAdapter(glide) { _, character ->
+            val adapter = CharacterAdapter { _, character ->
                 onCharacterClick(character)
             }
             recyclerView.adapter = adapter

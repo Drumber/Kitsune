@@ -7,19 +7,21 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.bumptech.glide.RequestManager
+import coil3.load
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.ItemPostDetailHeaderBinding
 import io.github.drumber.kitsune.util.extensions.setOnDoubleTapListener
+import io.github.drumber.kitsune.util.markwon.PostContentRenderer
 import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.EmbedBinder
-import io.github.drumber.kitsune.util.ui.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.PostMediaBinder
 
 /** Single-item adapter rendering the full post card at the top of the post detail screen. */
 class PostDetailHeaderAdapter(
-    private val glide: RequestManager,
     private val onLikeClick: () -> Unit,
     private val contentRenderer: PostContentRenderer?,
     private val nsfwAllowed: Boolean,
@@ -79,9 +81,11 @@ class PostDetailHeaderAdapter(
                 if (!isLiked) onLikeClick()
             }
 
-            glide.load(post.authorAvatarUrl)
-                .placeholder(R.drawable.ic_outline_person_24)
-                .into(binding.ivAvatar)
+            binding.ivAvatar.load(post.authorAvatarUrl) {
+                placeholder(R.drawable.ic_outline_person_24)
+                error(R.drawable.ic_outline_person_24)
+                fallback(R.drawable.ic_outline_person_24)
+            }
 
             binding.tvAuthor.text = post.authorName
                 ?: binding.root.context.getString(R.string.feed_unknown_user)
@@ -134,9 +138,9 @@ class PostDetailHeaderAdapter(
 
             bindImageGallery(post, gated)
 
-            EmbedBinder.bind(binding.embed, glide, post.embed, visible = !gated)
+            EmbedBinder.bind(binding.embed, post.embed, visible = !gated)
 
-            PostMediaBinder.bind(binding.postMedia, glide, post, visible = true) {
+            PostMediaBinder.bind(binding.postMedia, post, visible = true) {
                 onMediaClick(post)
             }
 
@@ -209,7 +213,7 @@ class PostDetailHeaderAdapter(
                 return
             }
 
-            binding.vpImages.adapter = PostImagePagerAdapter(glide, images, onImageClick) { aspectRatio ->
+            binding.vpImages.adapter = PostImagePagerAdapter(images, onImageClick) { aspectRatio ->
                 val pager = binding.vpImages
                 val width = pager.width
                 if (width > 0 && aspectRatio > 0f) {

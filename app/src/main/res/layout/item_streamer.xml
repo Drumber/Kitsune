@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp"
+        android:scaleType="centerInside"
         android:contentDescription="@null" />
 
 </com.google.android.material.card.MaterialCardView>

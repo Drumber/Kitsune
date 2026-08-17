@@ -13,7 +13,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.dto.toCharacterDto
@@ -63,7 +62,7 @@ class CharactersFragment : Fragment(R.layout.fragment_characters),
         val filterAdapter = CharacterFilterAdapter(false) { language ->
             viewModel.setLanguage(language)
         }
-        val pagingAdapter = CharacterPagingAdapter(Glide.with(this)) { _, character ->
+        val pagingAdapter = CharacterPagingAdapter { _, character ->
             val action = CharactersFragmentDirections
                 .actionCharactersFragmentToCharacterDetailsBottomSheet(character.toCharacterDto())
             findNavController().navigateSafe(R.id.characters_fragment, action)

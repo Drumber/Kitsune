@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:width="48dp"
+        android:height="48dp">
+        <shape android:shape="rectangle">
+            <solid android:color="?attr/colorSurfaceContainer" />
+        </shape>
+    </item>
+
+    <item
+        android:width="32dp"
+        android:height="32dp"
+        android:drawable="@drawable/ic_insert_photo_48"
+        android:gravity="center" />
+</layer-list>

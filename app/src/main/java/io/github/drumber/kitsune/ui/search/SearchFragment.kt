@@ -24,7 +24,6 @@ import com.algolia.instantsearch.core.connection.ConnectionHandler
 import com.algolia.instantsearch.searchbox.SearchBoxConnector
 import com.algolia.instantsearch.searchbox.connectView
 import com.algolia.search.model.response.ResponseSearch
-import com.bumptech.glide.Glide
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.navigation.NavigationBarView
@@ -119,16 +118,11 @@ class SearchFragment : Fragment(R.layout.fragment_search),
     }
 
     private fun initRecyclerView() {
-        val adapter = MediaSearchPagingAdapter(Glide.with(this), this)
+        val adapter = MediaSearchPagingAdapter(listener = this)
         mediaAdapter = adapter
-        userAdapter = UserSearchPagingAdapter(
-            Glide.with(this),
-            object : OnItemClickListener<UserSearchResult> {
-                override fun onItemClick(view: View, item: UserSearchResult) {
-                    onUserClick(item)
-                }
-            }
-        )
+        userAdapter = UserSearchPagingAdapter { _, item ->
+            onUserClick(item)
+        }
         val columnWidth = resources.getDimension(KitsunePref.mediaItemSize.widthRes) +
                 2 * resources.getDimension(R.dimen.media_item_margin)
         val gridLayout = ResponsiveGridLayoutManager(requireContext(), columnWidth.toInt(), 2)

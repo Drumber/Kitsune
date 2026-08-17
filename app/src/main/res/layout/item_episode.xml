@@ -19,6 +19,7 @@
             android:layout_height="@dimen/episode_card_img_height"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
+            android:scaleType="centerCrop"
             android:contentDescription="@null" />
 
         <LinearLayout

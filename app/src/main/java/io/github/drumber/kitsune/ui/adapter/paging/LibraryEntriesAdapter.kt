@@ -7,7 +7,7 @@ import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
+import coil3.load
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel.EntryModel
@@ -18,7 +18,6 @@ import io.github.drumber.kitsune.databinding.ItemLibraryEntryBinding
 import io.github.drumber.kitsune.databinding.ItemLibraryStatusSeparatorBinding
 
 class LibraryEntriesAdapter(
-    private val glide: RequestManager,
     private val listener: LibraryEntryActionListener? = null
 ) : PagingDataAdapter<LibraryEntryUiModel, RecyclerView.ViewHolder>(LibraryEntryUiModelComparator) {
 
@@ -96,9 +95,7 @@ class LibraryEntriesAdapter(
         fun bind(libraryEntry: LibraryEntryWithModification) {
             binding.entry = libraryEntry
 
-            glide.load(libraryEntry.media?.posterImageUrl)
-                .placeholder(R.drawable.ic_insert_photo_48)
-                .into(binding.ivThumbnail)
+            binding.ivThumbnail.load(libraryEntry.media?.posterImageUrl)
 
             binding.tvNotSynced.isVisible = libraryEntry.isNotSynced
             binding.tvTitle.maxLines = if (libraryEntry.isNotSynced) 2 else 3

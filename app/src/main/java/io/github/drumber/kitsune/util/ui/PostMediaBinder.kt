@@ -1,7 +1,8 @@
 package io.github.drumber.kitsune.util.ui
 
 import androidx.core.view.isVisible
-import com.bumptech.glide.RequestManager
+import coil3.dispose
+import coil3.load
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.ViewPostMediaBinding
@@ -15,7 +16,6 @@ object PostMediaBinder {
 
     fun bind(
         binding: ViewPostMediaBinding,
-        glide: RequestManager,
         post: Post,
         visible: Boolean,
         onClick: (() -> Unit)? = null
@@ -24,7 +24,8 @@ object PostMediaBinder {
         binding.root.isVisible = show
 
         if (!show) {
-            glide.clear(binding.ivPostMediaPoster)
+            binding.ivPostMediaPoster.dispose()
+            binding.ivPostMediaPoster.setImageResource(R.drawable.default_placeholder)
             binding.root.setOnClickListener(null)
             return
         }
@@ -32,15 +33,12 @@ object PostMediaBinder {
         val canOpen = onClick != null && !post.mediaSlug.isNullOrBlank() && post.mediaIsAnime != null
         binding.root.isClickable = canOpen
         binding.root.setOnClickListener(if (canOpen) {
-            { onClick?.invoke() }
+            { onClick.invoke() }
         } else null)
 
         val context = binding.root.context
 
-        glide.load(post.mediaPosterUrl)
-            .placeholder(R.drawable.ic_insert_photo_48)
-            .centerCrop()
-            .into(binding.ivPostMediaPoster)
+        binding.ivPostMediaPoster.load(post.mediaPosterUrl)
 
         val unitLabel = post.spoiledUnitNumber?.let { number ->
             val label = context.getString(

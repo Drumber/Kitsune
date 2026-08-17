@@ -5,8 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -15,6 +13,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -23,11 +22,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import app.futured.hauler.setOnDragActivityListener
 import app.futured.hauler.setOnDragDismissedListener
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
+import coil3.imageLoader
+import coil3.load
+import coil3.memory.MemoryCache
+import coil3.request.CachePolicy
+import coil3.request.ErrorResult
+import coil3.request.ImageRequest
+import coil3.request.SuccessResult
+import coil3.request.allowHardware
+import coil3.request.crossfade
+import coil3.size.Size
+import coil3.toBitmap
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import io.github.drumber.kitsune.R
@@ -84,6 +89,7 @@ class PhotoViewActivity : BaseActivity(setAppTheme = false) {
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
         binding.photoView.apply {
+            maximumScale = 4.0f
             setOnClickListener { toggleSystemUi() }
             setAllowParentInterceptOnEdge(false) // we manage scroll interception on our own
             setOnMatrixChangeListener {
@@ -92,41 +98,7 @@ class PhotoViewActivity : BaseActivity(setAppTheme = false) {
             }
         }
 
-        Glide.with(this)
-            .load(args.imageUrl)
-            .override(2048, 2048) // cap decode size to avoid "Canvas: trying to draw too large bitmap" crash on huge images
-            .thumbnail(
-                Glide.with(this)
-                    .load(args.thumbnailUrl)
-                    .dontTransform()
-            )
-            .listener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Drawable>,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    binding.progressIndicator.hide()
-                    val shouldHaveThumbnailLoaded =
-                        !isFirstResource && !args.thumbnailUrl.isNullOrBlank()
-                    onImageLoadFailed(!shouldHaveThumbnailLoaded)
-                    return false
-                }
-
-                override fun onResourceReady(
-                    resource: Drawable,
-                    model: Any,
-                    target: Target<Drawable>?,
-                    dataSource: DataSource,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    binding.progressIndicator.hide()
-                    return false
-                }
-            })
-            .dontTransform()
-            .into(binding.photoView)
+        loadImage()
 
         binding.apply {
             btnClose.resetAutoHideOnTouch()
@@ -136,7 +108,7 @@ class PhotoViewActivity : BaseActivity(setAppTheme = false) {
             btnClose.setOnClickListener { finish() }
             btnSave.setOnClickListener { saveImage() }
             btnOpen.setOnClickListener {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(args.imageUrl))
+                val intent = Intent(Intent.ACTION_VIEW, args.imageUrl.toUri())
                 startActivity(intent)
             }
 
@@ -159,6 +131,46 @@ class PhotoViewActivity : BaseActivity(setAppTheme = false) {
         }
         // reset background color
         binding.root.setBackgroundColor(Color.BLACK)
+    }
+
+    private fun loadImage() {
+        val hasThumbnail = !args.thumbnailUrl.isNullOrBlank() && args.imageUrl != args.thumbnailUrl
+        if (hasThumbnail) {
+            // low thumbnail image from cache
+            binding.photoView.load(args.thumbnailUrl) {
+                diskCachePolicy(CachePolicy.READ_ONLY)
+                networkCachePolicy(CachePolicy.DISABLED)
+                crossfade(false)
+                listener(
+                    onSuccess = { _, result ->
+                        loadFullImage(placeholderKey = result.memoryCacheKey)
+                    },
+                    onError = { _, _ ->
+                        loadFullImage(placeholderKey = null)
+                    }
+                )
+            }
+        } else {
+            loadFullImage(placeholderKey = null)
+        }
+    }
+
+    private fun loadFullImage(placeholderKey: MemoryCache.Key?) {
+        binding.photoView.load(args.imageUrl) {
+            size(2048, 2048) // cap decode size to avoid "Canvas: trying to draw too large bitmap" crash on huge images
+            placeholderMemoryCacheKey(placeholderKey)
+            crossfade(false)
+            listener(
+                onSuccess = { _, _ ->
+                    binding.progressIndicator.hide()
+                },
+                onError = { _, _ ->
+                    binding.progressIndicator.hide()
+                    val hasThumbnailLoaded = placeholderKey != null
+                    onImageLoadFailed(exit = !hasThumbnailLoaded)
+                }
+            )
+        }
     }
 
     private fun onImageLoadFailed(exit: Boolean) {
@@ -257,15 +269,21 @@ class PhotoViewActivity : BaseActivity(setAppTheme = false) {
         }
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val bitmap = try {
-                Glide.with(this@PhotoViewActivity)
-                    .asBitmap()
-                    .load(args.imageUrl)
-                    .submit()
-                    .get()
-            } catch (e: Exception) {
-                runOnUiThread { onImageLoadFailed(false) }
-                return@launch
+            val imageRequest = ImageRequest.Builder(this@PhotoViewActivity)
+                .data(args.imageUrl)
+                .allowHardware(false) // need software bitmap to save to disk
+                .size(Size.ORIGINAL)
+                .diskCachePolicy(CachePolicy.READ_ONLY)
+                .build()
+
+            val bitmap = when (val result = imageLoader.execute(imageRequest)) {
+                is SuccessResult -> result.image.toBitmap()
+
+                is ErrorResult -> {
+                    logE("Failed to load image.", result.throwable)
+                    runOnUiThread { onImageLoadFailed(false) }
+                    return@launch
+                }
             }
 
             val success = try {

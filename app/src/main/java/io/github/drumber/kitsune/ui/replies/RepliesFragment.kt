@@ -14,7 +14,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
@@ -27,7 +26,7 @@ import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
-import io.github.drumber.kitsune.util.ui.PostContentRenderer
+import io.github.drumber.kitsune.util.markwon.PostContentRenderer
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbar
@@ -69,10 +68,7 @@ class RepliesFragment : Fragment(R.layout.fragment_replies),
             consume = false
         )
 
-        val glide = Glide.with(this)
-
         val repliesAdapter = CommentPagingAdapter(
-            glide = glide,
             onLikeClick = { comment -> viewModel.toggleCommentLike(comment) },
             contentRenderer = contentRenderer,
             currentUserId = viewModel.currentUserId(),
@@ -86,7 +82,6 @@ class RepliesFragment : Fragment(R.layout.fragment_replies),
         )
 
         val parentCommentAdapter = RepliesParentCommentAdapter(
-            glide = glide,
             contentRenderer = contentRenderer,
             onAuthorClicked = { userId -> navigateToUserProfile(userId) },
             onLikeClicked = { comment -> viewModel.toggleCommentLike(comment) }

@@ -12,7 +12,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
@@ -70,7 +69,6 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
         }
 
         val adapter = MediaReactionPagingAdapter(
-            glide = Glide.with(this),
             currentUserId = viewModel.currentUserId,
             onItemClick = { reaction -> navigateToReaction(reaction) },
             onUpvoteClick = { reaction -> viewModel.upvote(reaction) },

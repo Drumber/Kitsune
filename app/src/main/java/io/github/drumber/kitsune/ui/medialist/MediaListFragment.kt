@@ -14,7 +14,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
-import com.bumptech.glide.Glide
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.transition.MaterialSharedAxis
@@ -90,11 +89,9 @@ class MediaListFragment : Fragment(R.layout.fragment_media_list),
     }
 
     private fun initRecyclerView() {
-        val glide = Glide.with(this)
-
         val adapter = when (args.mediaSelector.mediaType) {
-            MediaType.Anime -> AnimeAdapter(glide, this::onMediaClicked)
-            MediaType.Manga -> MangaAdapter(glide, this::onMediaClicked)
+            MediaType.Anime -> AnimeAdapter(this::onMediaClicked)
+            MediaType.Manga -> MangaAdapter(this::onMediaClicked)
         } as PagingDataAdapter<Media, *>
 
         val columnWidth = resources.getDimension(KitsunePref.mediaItemSize.widthRes) +

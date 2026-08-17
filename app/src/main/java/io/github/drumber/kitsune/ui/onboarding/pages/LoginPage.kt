@@ -33,8 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil3.compose.AsyncImage
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.ui.onboarding.components.OnboardingNavigationControls
@@ -154,7 +153,6 @@ private fun HeaderSection(modifier: Modifier = Modifier) {
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun LoggedInUserSection(
     modifier: Modifier = Modifier,
@@ -170,7 +168,7 @@ private fun LoggedInUserSection(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(12.dp)
             ) {
-                GlideImage(
+                AsyncImage(
                     model = localUser.avatar?.originalOrDown(),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
@@ -178,9 +176,9 @@ private fun LoggedInUserSection(
                         .size(48.dp)
                         .clip(CircleShape)
                         .background(Color.Gray)
-                ) {
-                    it.placeholder(R.drawable.profile_picture_placeholder)
-                }
+                    ,
+                    placeholder = painterResource(R.drawable.profile_picture_placeholder)
+                )
                 Spacer(Modifier.width(16.dp))
                 Column {
                     Text(

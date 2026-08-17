@@ -7,7 +7,10 @@ import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
+import coil3.load
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Notification
 import io.github.drumber.kitsune.data.presentation.model.feed.NotificationVerb
@@ -16,7 +19,6 @@ import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.util.parseUtcDate
 
 class NotificationPagingAdapter(
-    private val glide: RequestManager,
     private val listener: OnItemClickListener<Notification>? = null
 ) : PagingDataAdapter<Notification, NotificationPagingAdapter.NotificationViewHolder>(
     NotificationComparator
@@ -40,9 +42,11 @@ class NotificationPagingAdapter(
         fun bind(notification: Notification) {
             val context = binding.root.context
 
-            glide.load(notification.actorAvatarUrl)
-                .placeholder(R.drawable.ic_outline_person_24)
-                .into(binding.ivAvatar)
+            binding.ivAvatar.load(notification.actorAvatarUrl) {
+                placeholder(R.drawable.ic_outline_person_24)
+                error(R.drawable.ic_outline_person_24)
+                fallback(R.drawable.ic_outline_person_24)
+            }
 
             binding.unreadIndicator.isVisible = !notification.isRead
 

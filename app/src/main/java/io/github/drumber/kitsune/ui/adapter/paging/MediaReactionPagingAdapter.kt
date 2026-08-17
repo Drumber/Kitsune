@@ -8,14 +8,16 @@ import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
+import coil3.load
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
 import io.github.drumber.kitsune.databinding.ItemMediaReactionBinding
 import io.github.drumber.kitsune.util.parseUtcDate
 
 class MediaReactionPagingAdapter(
-    private val glide: RequestManager,
     private val currentUserId: String?,
     private val onItemClick: (MediaReaction) -> Unit,
     private val onUpvoteClick: (MediaReaction) -> Unit,
@@ -53,9 +55,11 @@ class MediaReactionPagingAdapter(
         fun bind(reaction: MediaReaction) {
             binding.root.setOnClickListener { onItemClick.invoke(reaction) }
 
-            glide.load(reaction.authorAvatarUrl)
-                .placeholder(R.drawable.ic_outline_person_24)
-                .into(binding.ivAvatar)
+            binding.ivAvatar.load(reaction.authorAvatarUrl) {
+                placeholder(R.drawable.ic_outline_person_24)
+                error(R.drawable.ic_outline_person_24)
+                fallback(R.drawable.ic_outline_person_24)
+            }
 
             binding.tvAuthor.text = reaction.authorName
                 ?: binding.root.context.getString(R.string.feed_unknown_user)

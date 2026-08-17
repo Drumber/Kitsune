@@ -1,16 +1,13 @@
 package io.github.drumber.kitsune.ui.main
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.core.os.BundleCompat
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
-import com.bumptech.glide.Glide
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.media.MediaType
@@ -229,9 +226,8 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
         view: View
     ): ExploreSection {
         val title = getString(titleRes)
-        val glide = Glide.with(this)
 
-        val section = ExploreSection(glide, title, null, this) {
+        val section = ExploreSection(title, null, this) {
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.navigate(NavigationAction.OpenMediaList(mediaSelector, title))
             }

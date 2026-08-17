@@ -7,13 +7,15 @@ import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
+import coil3.load
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.group.Group
 import io.github.drumber.kitsune.databinding.ItemGroupBinding
 
 class GroupsPagingAdapter(
-    private val glide: RequestManager,
     private val onGroupClick: ((Group) -> Unit)? = null
 ) : PagingDataAdapter<Group, GroupsPagingAdapter.GroupViewHolder>(GroupComparator) {
 
@@ -32,9 +34,11 @@ class GroupsPagingAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(group: Group) {
-            glide.load(group.avatarUrl)
-                .placeholder(R.drawable.ic_group_24)
-                .into(binding.ivAvatar)
+            binding.ivAvatar.load(group.avatarUrl) {
+                placeholder(R.drawable.ic_group_24)
+                error(R.drawable.ic_group_24)
+                fallback(R.drawable.ic_group_24)
+            }
 
             binding.tvName.text = group.name
 

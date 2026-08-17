@@ -25,9 +25,7 @@ dataFaker = "2.0.1"
 detekt = "1.23.8"
 espressoCore = "3.7.0"
 expandableTextView = "1.0.5"
-glide = "5.0.9"
-glide-compose = "1.0.0-beta10"
-glideTransformations = "4.3.0"
+coil = "3.5.0"
 hauler = "5.0.0"
 jackson = "2.21.5"
 jsonApi = "0.15"
@@ -105,10 +103,11 @@ androidx-workmanager = { module = "androidx.work:work-runtime-ktx", version.ref 
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 blogc-expandabletextview = { module = "at.blogc:expandabletextview", version.ref = "expandableTextView" }
 bmelnychuk-treeview = { module = "com.github.bmelnychuk:atv", version.ref = "treeView" }
-bumptech-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
-bumptech-glide-compose = { module = "com.github.bumptech.glide:compose", version.ref = "glide-compose" }
-bumptech-glide-ksp = { module = "com.github.bumptech.glide:ksp", version.ref = "glide" }
-bumptech-glide-okhttp3 = { module = "com.github.bumptech.glide:okhttp3-integration", version.ref = "glide" }
+coil = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
+coil-gif = { module = "io.coil-kt.coil3:coil-gif", version.ref = "coil" }
+coil-svg = { module = "io.coil-kt.coil3:coil-svg", version.ref = "coil" }
 chibatching-kotpref = { module = "com.chibatching.kotpref:kotpref", version.ref = "kotpref" }
 chibatching-kotpref-enum = { module = "com.chibatching.kotpref:enum-support", version.ref = "kotpref" }
 chibatching-kotpref-livedata = { module = "com.chibatching.kotpref:livedata-support", version.ref = "kotpref" }
@@ -136,7 +135,6 @@ mikepenz-aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", ve
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito" }
 noties-markwon-core = { module = "io.noties.markwon:core", version.ref = "markwon" }
 noties-markwon-html = { module = "io.noties.markwon:html", version.ref = "markwon" }
-noties-markwon-image-glide = { module = "io.noties.markwon:image-glide", version.ref = "markwon" }
 noties-markwon-linkify = { module = "io.noties.markwon:linkify", version.ref = "markwon" }
 philjay-mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpAndroidChart" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
@@ -148,7 +146,6 @@ squareup-retrofit2-jackson = { module = "com.squareup.retrofit2:converter-jackso
 squareup-retrofit2-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 tngtech-archunit-junit4 = { module = "com.tngtech.archunit:archunit-junit4", version.ref = "archUnit" }
 cashapp-turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
-wasabeef-glide-transformations = { module = "jp.wasabeef:glide-transformations", version.ref = "glideTransformations" }
 zhanghai-materialratingbar = { module = "me.zhanghai.android.materialratingbar:library", version.ref = "materialRatingBar" }
 
 [plugins]

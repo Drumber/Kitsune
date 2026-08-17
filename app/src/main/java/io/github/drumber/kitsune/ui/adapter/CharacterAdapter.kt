@@ -5,13 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
-import io.github.drumber.kitsune.R
+import coil3.load
 import io.github.drumber.kitsune.data.presentation.model.character.Character
 import io.github.drumber.kitsune.databinding.ItemSingleCharacterBinding
 
 class CharacterAdapter(
-    private val glide: RequestManager,
     private val listener: OnItemClickListener<Character>? = null
 ) : ListAdapter<Character, CharacterAdapter.SingleCharacterViewHolder>(DIFF_CALLBACK) {
 
@@ -37,9 +35,7 @@ class CharacterAdapter(
                 listener?.onItemClick(binding.cardCharacter, character)
             }
 
-            glide.load(character.image?.originalOrDown())
-                .placeholder(R.drawable.ic_insert_photo_48)
-                .into(binding.ivCharacter)
+            binding.ivCharacter.load(character.image?.originalOrDown())
 
             binding.tvName.text = character.name
         }

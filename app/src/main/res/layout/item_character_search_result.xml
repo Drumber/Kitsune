@@ -13,6 +13,7 @@
         android:layout_height="50dp"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
+        android:scaleType="centerCrop"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Kitsune.Circle"
         tools:src="@drawable/character_placeholder" />
 

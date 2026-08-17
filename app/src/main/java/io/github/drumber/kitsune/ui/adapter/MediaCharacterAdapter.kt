@@ -6,15 +6,13 @@ import android.widget.FrameLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
-import io.github.drumber.kitsune.R
+import coil3.load
 import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.data.presentation.model.character.MediaCharacter
 import io.github.drumber.kitsune.data.presentation.model.character.getStringRes
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
 
 class MediaCharacterAdapter(
-    private val glide: RequestManager,
     private val listener: OnItemClickListener<MediaCharacter>? = null
 ) : ListAdapter<MediaCharacter, MediaCharacterAdapter.MediaCharacterViewHolder>(DIFF_CALLBACK) {
 
@@ -48,9 +46,7 @@ class MediaCharacterAdapter(
             binding.data = media
             binding.overlayTagText = data.role?.getStringRes()?.let { binding.root.context.getString(it) }
 
-            glide.load(media?.posterImageUrl)
-                .placeholder(R.drawable.ic_insert_photo_48)
-                .into(binding.ivThumbnail)
+            binding.ivThumbnail.load(media?.posterImageUrl)
 
             binding.cardMedia.setOnClickListener {
                 listener?.onItemClick(binding.cardMedia, data)

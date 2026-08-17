@@ -1,16 +1,16 @@
 package io.github.drumber.kitsune.ui.profile.about
 
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.webkit.URLUtil
-import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.lifecycleScope
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
+import coil3.asDrawable
+import coil3.imageLoader
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import coil3.request.transformations
+import coil3.transform.CircleCropTransformation
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.character.Character
@@ -49,7 +49,6 @@ abstract class BaseProfileAboutFragment : BaseFragment(R.layout.fragment_profile
         statsSection.init(savedInstanceState == null)
         favoritesSection = ProfileFavoritesSection(
             binding = binding,
-            glide = Glide.with(this),
             onMediaClick = { view, media -> onFavoriteMediaItemClicked(view, media) },
             onCharacterClick = { character -> openCharacterDetailsBottomSheet(character) }
         )
@@ -109,20 +108,17 @@ abstract class BaseProfileAboutFragment : BaseFragment(R.layout.fragment_profile
         binding.invalidateAll()
 
         user?.waifu?.let { waifu ->
-            Glide.with(this).asBitmap()
-                .load(waifu.image?.originalOrDown())
-                .circleCrop()
-                .dontAnimate()
-                .into(object : CustomTarget<Bitmap>() {
-                    override fun onResourceReady(
-                        resource: Bitmap,
-                        transition: Transition<in Bitmap>?
-                    ) {
-                        binding.layoutWaifuRow.icon = resource.toDrawable(resources)
+            val request = ImageRequest.Builder(requireContext())
+                .data(waifu.image?.originalOrDown())
+                .transformations(CircleCropTransformation())
+                .crossfade(false)
+                .target(
+                    onSuccess = { result ->
+                        binding.layoutWaifuRow.icon = result.asDrawable(resources)
                     }
-
-                    override fun onLoadCleared(placeholder: Drawable?) {}
-                })
+                )
+                .build()
+            requireContext().imageLoader.enqueue(request)
         }
 
         user?.favorites?.let { updateFavoritesData(it) }

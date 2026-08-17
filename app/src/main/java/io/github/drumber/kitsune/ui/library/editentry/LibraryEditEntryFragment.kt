@@ -17,15 +17,13 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import coil3.load
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.addTransform
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.presentation.model.library.getStringResId
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
@@ -165,11 +163,7 @@ class LibraryEditEntryFragment : BaseDialogFragment(R.layout.fragment_edit_libra
 
             binding.tvMediaInfo.text = media?.let { "${it.publishingYearText(binding.root.context)} • ${it.subtypeFormatted}" }
 
-            Glide.with(this)
-                .load(media?.posterImageUrl)
-                .addTransform(RoundedCorners(8))
-                .placeholder(R.drawable.ic_insert_photo_48)
-                .into(binding.ivThumbnail)
+            binding.ivThumbnail.load(media?.posterImageUrl)
         }
 
         viewModel.libraryEntryWithModification.observe(viewLifecycleOwner) { libraryEntry ->

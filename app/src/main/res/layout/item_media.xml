@@ -39,7 +39,8 @@
                     android:layout_height="match_parent"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    tools:src="@drawable/ic_insert_photo_48"
+                    android:scaleType="centerCrop"
+                    tools:src="@drawable/default_placeholder"
                     android:contentDescription="@null" />
 
                 <ImageView

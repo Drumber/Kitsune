@@ -32,7 +32,7 @@
                 android:adjustViewBounds="true"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
-                tools:src="@drawable/ic_insert_photo_48" />
+                tools:src="@drawable/default_placeholder" />
 
             <ImageView
                 android:id="@+id/iv_embed_play"

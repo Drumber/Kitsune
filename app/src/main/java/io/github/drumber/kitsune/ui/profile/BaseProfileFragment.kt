@@ -1,18 +1,24 @@
 package io.github.drumber.kitsune.ui.profile
 
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.children
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
+import coil3.asDrawable
+import coil3.imageLoader
+import coil3.load
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
+import coil3.request.transformations
+import coil3.transform.CircleCropTransformation
 import com.google.android.material.elevation.SurfaceColors
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
@@ -144,29 +150,29 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
     }
 
     private fun updateUserAvatarAndCover(user: User?) {
-        val glide = Glide.with(this)
-
-        glide.load(user?.avatar?.originalOrDown())
-            .dontAnimate()
-            .circleCrop()
-            .override(45.toPx())
+        val request = ImageRequest.Builder(requireContext())
+            .data(user?.avatar?.originalOrDown())
+            .size(45.toPx())
+            .transformations(CircleCropTransformation())
+            .crossfade(false)
             .placeholder(R.drawable.profile_picture_placeholder)
-            .into(object : CustomTarget<Drawable>() {
-                override fun onResourceReady(
-                    resource: Drawable,
-                    transition: Transition<in Drawable>?
-                ) {
-                    binding.toolbar.logo = resource
+            .error(R.drawable.profile_picture_placeholder)
+            .fallback(R.drawable.profile_picture_placeholder)
+            .target(
+                onSuccess = { result ->
+                    binding.toolbar.logo = result.asDrawable(resources)
                     setToolbarLogoClickListener()
                 }
+            )
+            .build()
+        requireContext().imageLoader.enqueue(request)
 
-                override fun onLoadCleared(placeholder: Drawable?) {}
-            })
-
-        glide.load(user?.coverImage?.originalOrDown())
-            .centerCrop()
-            .placeholder(ColorDrawable(SurfaceColors.SURFACE_0.getColor(requireContext())))
-            .into(binding.ivCover)
+        binding.ivCover.load(user?.coverImage?.originalOrDown()) {
+            val placeholderDrawable = SurfaceColors.SURFACE_0.getColor(requireContext()).toDrawable()
+            placeholder(placeholderDrawable)
+            error(placeholderDrawable)
+            fallback(placeholderDrawable)
+        }
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {

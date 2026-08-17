@@ -11,7 +11,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.google.android.material.shape.MaterialShapeDrawable
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.repository.FollowListType
@@ -49,7 +48,6 @@ class FollowListFragment : Fragment(R.layout.fragment_follow_list) {
         binding.toolbar.title = buildTitle()
 
         val adapter = FollowUserPagingAdapter(
-            glide = Glide.with(this),
             onUserClick = ::navigateToUser,
             onFollowClick = { userId -> viewModel.toggleFollow(userId) },
             onBindUser = { userId -> viewModel.resolveFollowState(userId) },
