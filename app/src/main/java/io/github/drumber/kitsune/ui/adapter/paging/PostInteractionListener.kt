@@ -31,6 +31,9 @@ interface PostInteractionListener {
     /** Called when the owner chooses to delete their post. */
     fun onDeleteClick(post: Post) {}
 
+    /** Called when the user chooses to report the post. */
+    fun onReportClick(post: Post) {}
+
     /** Called when the post author's name or avatar is tapped. */
     fun onAuthorClick(userId: String) {}
 }

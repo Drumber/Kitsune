@@ -24,6 +24,7 @@ import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.FragmentPostDetailBinding
 import io.github.drumber.kitsune.ui.adapter.paging.CommentPagingAdapter
+import io.github.drumber.kitsune.ui.report.ReportBottomSheet
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
 import io.github.drumber.kitsune.util.extensions.navigateSafe
@@ -80,6 +81,7 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail),
             onAuthorClick = { userId -> navigateToUserProfile(userId) },
             onImageClick = { imageUrl -> openPhotoViewActivity(imageUrl) },
             onShareClick = { post -> showShareMenu(post) },
+            onReportClick = { post -> openReportBottomSheet(post) },
         )
         headerAdapter.setPost(args.post)
 
@@ -330,6 +332,14 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail),
 
     private fun showShareMenu(post: Post) {
         startUrlShareIntent("${Kitsu.BASE_URL}/posts/${post.id}")
+    }
+
+    private fun openReportBottomSheet(post: Post) {
+        ReportBottomSheet().apply {
+            arguments = Bundle().apply {
+                putString(ReportBottomSheet.BUNDLE_POST_ID, post.id)
+            }
+        }.show(childFragmentManager, ReportBottomSheet.TAG)
     }
 
     override fun onNavigationItemReselected(p0: MenuItem) {

@@ -2,6 +2,8 @@ package io.github.drumber.kitsune.util.extensions
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
@@ -11,6 +13,7 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputLayout
 
 const val SCROLL_JUMP_THRESHOLD_DP = 2500
 const val SCROLL_JUMP_THRESHOLD_POS = 30
@@ -57,6 +60,23 @@ fun View.setOnDoubleTapListener(
         false
     }
 }
+
+/**
+ * Extension function to simplify setting an afterTextChanged action to EditText components.
+ */
+fun TextInputLayout.afterTextChanged(afterTextChanged: (String) -> Unit) {
+    this.editText?.addTextChangedListener(object : TextWatcher {
+        override fun afterTextChanged(editable: Editable?) {
+            afterTextChanged.invoke(editable.toString())
+        }
+
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+    })
+}
+
+fun TextInputLayout.text(): String = this.editText!!.text.toString()
 
 fun NestedScrollView.smoothScrollOrJumpToTop() {
     if (scrollY > SCROLL_JUMP_THRESHOLD_DP.toPx()) {

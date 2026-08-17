@@ -21,6 +21,7 @@ import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.databinding.FragmentMediaFeedBinding
 import io.github.drumber.kitsune.ui.adapter.paging.PostInteractionListener
 import io.github.drumber.kitsune.ui.adapter.paging.PostPagingAdapter
+import io.github.drumber.kitsune.ui.report.ReportBottomSheet
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
@@ -161,6 +162,14 @@ class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
 
     override fun onDeleteClick(post: Post) {
         confirmDeletePost(post)
+    }
+
+    override fun onReportClick(post: Post) {
+        ReportBottomSheet().apply {
+            arguments = Bundle().apply {
+                putString(ReportBottomSheet.BUNDLE_POST_ID, post.id)
+            }
+        }.show(childFragmentManager, ReportBottomSheet.TAG)
     }
 
     override fun onAuthorClick(userId: String) {

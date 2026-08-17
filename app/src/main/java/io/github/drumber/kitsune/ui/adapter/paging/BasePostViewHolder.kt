@@ -41,6 +41,7 @@ abstract class BasePostViewHolder(
     protected abstract fun onShareClick(post: Post)
     protected abstract fun onEditClick(post: Post)
     protected abstract fun onDeleteClick(post: Post)
+    protected abstract fun onReportClick(post: Post)
     protected abstract fun getInteractionOverride(post: Post): InteractionOverride?
     protected abstract fun onLike(post: Post, isLiked: Boolean, likesCount: Int)
     protected abstract fun getLocalUserId(): String?
@@ -238,6 +239,9 @@ abstract class BasePostViewHolder(
                     menu.removeItem(R.id.action_edit_item)
                     menu.removeItem(R.id.action_delete_item)
                 }
+                if (isOwner || currentUserId == null) {
+                    menu.removeItem(R.id.action_report_item)
+                }
 
                 setOnMenuItemClickListener { menuItem ->
                     when (menuItem.itemId) {
@@ -253,6 +257,11 @@ abstract class BasePostViewHolder(
 
                         R.id.action_delete_item -> {
                             onDeleteClick(post)
+                            true
+                        }
+
+                        R.id.action_report_item -> {
+                            onReportClick(post)
                             true
                         }
 

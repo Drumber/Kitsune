@@ -112,6 +112,10 @@ class PostPagingAdapter(
             listener?.onDeleteClick(post)
         }
 
+        override fun onReportClick(post: Post) {
+            listener?.onReportClick(post)
+        }
+
         override fun getInteractionOverride(post: Post): InteractionOverride? = overrides[post.id]
 
         override fun onLike(

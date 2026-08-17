@@ -28,6 +28,7 @@ import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
 import io.github.drumber.kitsune.ui.postdetail.PostDetailFragmentDirections
 import io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
+import io.github.drumber.kitsune.ui.report.ReportBottomSheet
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.setAppTheme
 import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
@@ -308,6 +309,14 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
 
     override fun onDeleteClick(post: Post) {
         confirmDeletePost(post)
+    }
+
+    override fun onReportClick(post: Post) {
+        ReportBottomSheet().apply {
+            arguments = Bundle().apply {
+                putString(ReportBottomSheet.BUNDLE_POST_ID, post.id)
+            }
+        }.show(childFragmentManager, ReportBottomSheet.TAG)
     }
 
     override fun onAuthorClick(userId: String) {
