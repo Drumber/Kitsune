@@ -458,13 +458,11 @@
     <string name="action_post">Posten</string>
     <string name="hint_post_content">Was beschäftigt dich?</string>
     <string name="label_post_options">Optionen</string>
-    <string name="label_add_tags">Tags hinzufügen</string>
     <string name="label_spoiler">Spoiler</string>
     <string name="label_nsfw">NSFW</string>
     <string name="label_preview">Vorschau</string>
     <string name="label_preview_placeholder">Beginne zu schreiben, um eine Vorschau deines Beitrags zu sehen.</string>
     <string name="post_published">Beitrag veröffentlicht.</string>
-    <string name="action_tag_media">Medien markieren</string>
     <string name="action_tag_unit">Episode/Kapitel markieren</string>
     <string name="title_tag_media">Medien markieren</string>
     <string name="title_tag_unit">Episode/Kapitel markieren</string>

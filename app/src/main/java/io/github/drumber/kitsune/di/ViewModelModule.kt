@@ -67,7 +67,7 @@ val viewModelModule = module {
     viewModel { (parentCommentId: String, postId: String) ->
         RepliesViewModel(parentCommentId, postId, get(), get())
     }
-    viewModel { CreatePostViewModel(get(), get(), get()) }
+    viewModel { CreatePostViewModel(get(), get(), get(), get()) }
     viewModel { MediaPickerViewModel(get()) }
     viewModel { UnitPickerViewModel(get()) }
     viewModel { (postId: String) -> ReportViewModel(get(), postId) }

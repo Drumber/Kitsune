@@ -5,23 +5,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="8dp">
+    android:paddingTop="10dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp"
         android:text="@string/title_tag_media"
-        android:textAppearance="?attr/textAppearanceTitleMedium" />
+        style="@style/Widget.Kitsune.TextView.BottomSheetTitle" />
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/search_view"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        app:iconifiedByDefault="false"
-        app:queryHint="@string/hint_search_media" />
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="10dp"
+        app:cardCornerRadius="50dp"
+        style="?attr/materialCardViewFilledStyle">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:iconifiedByDefault="false"
+            app:queryHint="@string/hint_search_media"
+            style="@style/Widget.Kitsune.SearchView" />
+
+    </com.google.android.material.card.MaterialCardView>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -34,7 +44,6 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:paddingHorizontal="8dp"
-            android:paddingTop="8dp"
             tools:listitem="@layout/item_media" />
 
         <TextView

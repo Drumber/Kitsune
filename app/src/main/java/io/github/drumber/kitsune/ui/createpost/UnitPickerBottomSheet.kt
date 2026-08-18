@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -64,12 +63,12 @@ class UnitPickerBottomSheet : BottomSheetDialogFragment(),
         val id = mediaUnit.id ?: return
         setFragmentResult(
             REQUEST_KEY,
-            bundleOf(
-                BUNDLE_UNIT_ID to id,
-                BUNDLE_UNIT_NUMBER to (mediaUnit.number ?: 0),
-                BUNDLE_UNIT_TITLE to mediaUnit.title(requireContext()),
-                BUNDLE_UNIT_IS_EPISODE to (mediaUnit is Episode)
-            )
+            Bundle().apply {
+                putString(BUNDLE_UNIT_ID, id)
+                putInt(BUNDLE_UNIT_NUMBER, mediaUnit.number ?: 0)
+                putString(BUNDLE_UNIT_TITLE, mediaUnit.title(requireContext()))
+                putBoolean(BUNDLE_UNIT_IS_EPISODE, mediaUnit is Episode)
+            }
         )
         dismiss()
     }

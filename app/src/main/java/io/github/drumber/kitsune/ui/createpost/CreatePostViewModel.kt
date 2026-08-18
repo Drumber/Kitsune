@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.data.repository.PostManagementRepository
 import io.github.drumber.kitsune.data.repository.UploadRepository
+import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.channels.Channel
@@ -19,7 +20,8 @@ import kotlin.coroutines.cancellation.CancellationException
 class CreatePostViewModel(
     private val postManagementRepository: PostManagementRepository,
     private val uploadRepository: UploadRepository,
-    private val getLocalUserId: GetLocalUserIdUseCase
+    private val getLocalUserId: GetLocalUserIdUseCase,
+    userRepository: UserRepository
 ) : ViewModel() {
 
     sealed interface Event {
@@ -34,6 +36,7 @@ class CreatePostViewModel(
         val nsfw: Boolean = false,
         val isPublishing: Boolean = false,
         val isEditMode: Boolean = false,
+        val isPreview: Boolean = false,
         val media: SelectedMedia? = null,
         val unit: SelectedUnit? = null,
         val images: List<SelectedImage> = emptyList(),
@@ -65,6 +68,8 @@ class CreatePostViewModel(
         val dataUri: String? = null,
         val existingUploadId: String? = null
     )
+
+    val localUser = userRepository.localUser
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
@@ -121,6 +126,10 @@ class CreatePostViewModel(
 
     fun setContent(content: String) {
         _uiState.update { it.copy(content = content) }
+    }
+
+    fun setPreview(isPreview: Boolean) {
+        _uiState.update { it.copy(isPreview = isPreview) }
     }
 
     /** Marks this composer as a wall post targeting the given user. Called once on creation. */

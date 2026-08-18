@@ -3,11 +3,13 @@ package io.github.drumber.kitsune.ui.createpost
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.data.repository.PostManagementRepository
 import io.github.drumber.kitsune.data.repository.UploadRepository
+import io.github.drumber.kitsune.data.repository.UserRepository
 import io.github.drumber.kitsune.domain.user.GetLocalUserIdUseCase
 import io.github.drumber.kitsune.testutils.MainDispatcherRule
 import io.github.drumber.kitsune.testutils.onSuspend
 import io.github.drumber.kitsune.testutils.useMockedAndroidLogger
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
@@ -32,8 +34,9 @@ class CreatePostViewModelTest {
     private fun viewModel(
         postManagementRepository: PostManagementRepository = mock(),
         uploadRepository: UploadRepository = mock(),
-        getLocalUserId: GetLocalUserIdUseCase = mock { on { invoke() } doReturn "user-1" }
-    ) = CreatePostViewModel(postManagementRepository, uploadRepository, getLocalUserId)
+        getLocalUserId: GetLocalUserIdUseCase = mock { on { invoke() } doReturn "user-1" },
+        userRepository: UserRepository = mock { on { localUser } doReturn MutableStateFlow(null) }
+    ) = CreatePostViewModel(postManagementRepository, uploadRepository, getLocalUserId, userRepository)
 
     @Test
     fun `initial state is empty and cannot publish`() {

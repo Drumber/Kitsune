@@ -465,13 +465,11 @@
     <string name="action_post">Publier</string>
     <string name="hint_post_content">À quoi pensez-vous ?</string>
     <string name="label_post_options">Options</string>
-    <string name="label_add_tags">Ajouter des tags</string>
     <string name="label_spoiler">Spoiler</string>
     <string name="label_nsfw">NSFW</string>
     <string name="label_preview">Aperçu</string>
     <string name="label_preview_placeholder">Commencez à écrire pour voir un aperçu de votre publication.</string>
     <string name="post_published">Publication créée.</string>
-    <string name="action_tag_media">Identifier un média</string>
     <string name="action_tag_unit">Identifier un épisode/chapitre</string>
     <string name="title_tag_media">Identifier un média</string>
     <string name="title_tag_unit">Identifier un épisode/chapitre</string>

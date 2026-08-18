@@ -194,13 +194,11 @@
     <string name="action_post">Postează</string>
     <string name="hint_post_content">Ce-ți trece prin cap acum?</string>
     <string name="label_post_options">Opțiuni</string>
-    <string name="label_add_tags">Adaugă tag-uri</string>
     <string name="label_spoiler">Spoiler</string>
     <string name="label_nsfw">NSFW</string>
     <string name="label_preview">Vizualizare</string>
     <string name="label_preview_placeholder">Începe să scrii pentru a vedea o vizualizare a postării tale.</string>
     <string name="post_published">Postare publicată.</string>
-    <string name="action_tag_media">Mentionează media</string>
     <string name="action_tag_unit">Mentionează episod/capitol</string>
     <string name="title_tag_media">Menționează media</string>
     <string name="title_tag_unit">Menționează episod/capitol</string>

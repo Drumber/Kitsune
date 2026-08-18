@@ -1,10 +1,11 @@
 package io.github.drumber.kitsune.ui.createpost
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
+import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
@@ -70,18 +71,31 @@ class MediaPickerBottomSheet : BottomSheetDialogFragment(), OnItemClickListener<
             binding.tvStatus.text = message
             binding.tvStatus.isVisible = message != null
         }
+
+        if (savedInstanceState == null) {
+            binding.searchView.post {
+                if (isAdded) focusSearchView()
+            }
+        }
+    }
+
+    private fun focusSearchView() {
+        binding.searchView.requestFocus()
+        val imm =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.searchView.findFocus(), InputMethodManager.SHOW_IMPLICIT)
     }
 
     override fun onItemClick(view: View, item: Media) {
         val isAnime = item is Anime
         setFragmentResult(
             REQUEST_KEY,
-            bundleOf(
-                BUNDLE_MEDIA_ID to item.id,
-                BUNDLE_MEDIA_TITLE to item.title,
-                BUNDLE_MEDIA_POSTER to item.posterImageUrl,
-                BUNDLE_MEDIA_IS_ANIME to isAnime
-            )
+            Bundle().apply {
+                putString(BUNDLE_MEDIA_ID, item.id)
+                putString(BUNDLE_MEDIA_TITLE, item.title)
+                putString(BUNDLE_MEDIA_POSTER, item.posterImageUrl)
+                putBoolean(BUNDLE_MEDIA_IS_ANIME, isAnime)
+            }
         )
         dismiss()
     }

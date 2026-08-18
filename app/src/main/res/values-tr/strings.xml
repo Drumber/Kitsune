@@ -463,13 +463,11 @@
     <string name="action_post">Paylaş</string>
     <string name="hint_post_content">Aklında ne var?</string>
     <string name="label_post_options">Seçenekler</string>
-    <string name="label_add_tags">Etiket ekle</string>
     <string name="label_spoiler">Spoiler</string>
     <string name="label_nsfw">NSFW</string>
     <string name="label_preview">Önizleme</string>
     <string name="label_preview_placeholder">Gönderinin önizlemesini görmek için yazmaya başla.</string>
     <string name="post_published">Gönderi yayınlandı.</string>
-    <string name="action_tag_media">Medya etiketle</string>
     <string name="action_tag_unit">Bölüm etiketle</string>
     <string name="title_tag_media">Medya etiketle</string>
     <string name="title_tag_unit">Bölüm etiketle</string>

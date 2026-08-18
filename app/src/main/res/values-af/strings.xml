@@ -308,13 +308,11 @@
     <string name="action_post">Plaas</string>
     <string name="hint_post_content">Waaraan dink jy?</string>
     <string name="label_post_options">Opsies</string>
-    <string name="label_add_tags">Voeg etikette by</string>
     <string name="label_spoiler">Bederwer</string>
     <string name="label_nsfw">NSFW</string>
     <string name="label_preview">Voorskou</string>
     <string name="label_preview_placeholder">Begin tik om \'n voorskou van jou plasing te sien.</string>
     <string name="post_published">Plasing gepubliseer.</string>
-    <string name="action_tag_media">Etiketteer media</string>
     <string name="action_tag_unit">Etiketteer episode/hoofstuk</string>
     <string name="title_tag_media">Etiketteer media</string>
     <string name="title_tag_unit">Etiketteer episode/hoofstuk</string>

@@ -474,13 +474,11 @@
     <string name="action_post">Опубликовать</string>
     <string name="hint_post_content">О чём вы думаете?</string>
     <string name="label_post_options">Параметры</string>
-    <string name="label_add_tags">Добавить теги</string>
     <string name="label_spoiler">Спойлер</string>
     <string name="label_nsfw">NSFW</string>
     <string name="label_preview">Предпросмотр</string>
     <string name="label_preview_placeholder">Начните писать, чтобы увидеть предпросмотр поста.</string>
     <string name="post_published">Пост опубликован.</string>
-    <string name="action_tag_media">Отметить медиа</string>
     <string name="action_tag_unit">Отметить эпизод/главу</string>
     <string name="title_tag_media">Отметить медиа</string>
     <string name="title_tag_unit">Отметить эпизод/главу</string>

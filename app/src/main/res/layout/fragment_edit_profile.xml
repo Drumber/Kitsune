@@ -53,7 +53,7 @@
                     android:id="@+id/iv_cover_add_image"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/ic_add_a_photo_24"
+                    android:src="@drawable/ic_add_photo_24"
                     android:layout_gravity="center"
                     app:tint="?attr/colorOnPrimary"
                     android:contentDescription="@null" />

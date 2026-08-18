@@ -467,13 +467,11 @@
     <string name="action_post">Publicar</string>
     <string name="hint_post_content">¿Qué estás pensando?</string>
     <string name="label_post_options">Opciones</string>
-    <string name="label_add_tags">Añadir etiquetas</string>
     <string name="label_spoiler">Spoiler</string>
     <string name="label_nsfw">NSFW</string>
     <string name="label_preview">Vista previa</string>
     <string name="label_preview_placeholder">Empieza a escribir para ver una vista previa de tu publicación.</string>
     <string name="post_published">Publicación creada.</string>
-    <string name="action_tag_media">Etiquetar medio</string>
     <string name="action_tag_unit">Etiquetar episodio/capítulo</string>
     <string name="title_tag_media">Etiquetar medio</string>
     <string name="title_tag_unit">Etiquetar episodio/capítulo</string>

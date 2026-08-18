@@ -451,13 +451,11 @@
     <string name="action_post">Đăng</string>
     <string name="hint_post_content">Bạn đang nghĩ gì?</string>
     <string name="label_post_options">Tùy chọn</string>
-    <string name="label_add_tags">Thêm thẻ</string>
     <string name="label_spoiler">Spoiler</string>
     <string name="label_nsfw">NSFW</string>
     <string name="label_preview">Xem trước</string>
     <string name="label_preview_placeholder">Bắt đầu viết để xem trước bài viết của bạn.</string>
     <string name="post_published">Đã đăng bài viết.</string>
-    <string name="action_tag_media">Gắn thẻ media</string>
     <string name="action_tag_unit">Gắn thẻ tập/chương</string>
     <string name="title_tag_media">Gắn thẻ media</string>
     <string name="title_tag_unit">Gắn thẻ tập/chương</string>
