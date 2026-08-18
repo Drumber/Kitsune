@@ -56,6 +56,7 @@ import androidx.lifecycle.asFlow
 import coil3.imageLoader
 import coil3.request.ImageRequest
 import coil3.request.allowHardware
+import coil3.request.crossfade
 import coil3.request.transformations
 import coil3.toBitmap
 import coil3.transform.RoundedCornersTransformation
@@ -106,6 +107,7 @@ class LibraryAppWidget : GlanceAppWidget(), KoinComponent {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val initialEntries = loadData()
+        val dataFlow = getDataFlow()
         provideContent {
             val appTheme by KitsunePref.asLiveData(KitsunePref::appTheme)
                 .asFlow()
@@ -116,7 +118,7 @@ class LibraryAppWidget : GlanceAppWidget(), KoinComponent {
             LocalContext.current.applyTheme(appTheme)
 
             val scope = rememberCoroutineScope()
-            val entries by getDataFlow().collectAsState(initial = initialEntries)
+            val entries by dataFlow.collectAsState(initial = initialEntries)
 
             GlanceTheme(colors = KitsuneWidgetTheme.getColors(useDynamicColorTheme)) {
                 Scaffold(horizontalPadding = 0.dp) {
@@ -364,12 +366,18 @@ class LibraryAppWidget : GlanceAppWidget(), KoinComponent {
     private suspend fun loadBitmap(
         context: Context,
         url: String?,
-        cornerRadius: Int
+        cornerRadius: Int,
     ): Bitmap? {
+        val density = context.resources.displayMetrics.density
+        val widthPx = (POSTER_IMG_WIDTH * density).toInt()
+        val heightPx = (POSTER_IMG_HEIGHT * density).toInt()
+
         val request = ImageRequest.Builder(context)
             .data(url)
+            .size(widthPx, heightPx)
             .transformations(RoundedCornersTransformation(cornerRadius.toFloat()))
             .allowHardware(false)
+            .crossfade(false)
             .build()
         return withContext(Dispatchers.IO) {
             context.imageLoader.execute(request).image?.toBitmap()
