@@ -45,7 +45,7 @@ class CommentMapperTest {
         assertThat(comment.myLikeId).isEqualTo("like-1")
         assertThat(comment.authorId).isEqualTo(user.id)
         assertThat(comment.authorName).isEqualTo(user.name)
-        assertThat(comment.authorAvatar).isEqualTo(user.avatar?.originalOrDown())
+        assertThat(comment.authorAvatarUrl).isEqualTo(user.avatar?.originalOrDown())
         // imageUrl uses the first upload ordered by uploadOrder ascending
         assertThat(comment.imageUrl).isEqualTo(secondUpload.content?.originalOrDown())
     }

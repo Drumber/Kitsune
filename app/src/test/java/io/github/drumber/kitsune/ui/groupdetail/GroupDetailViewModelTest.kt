@@ -40,7 +40,7 @@ class GroupDetailViewModelTest {
         featured = true,
         membersCount = faker.number().numberBetween(1, 1000),
         leadersCount = faker.number().numberBetween(1, 10),
-        avatar = faker.internet().url(),
+        avatarUrl = faker.internet().url(),
         coverImageUrl = faker.internet().url(),
         categoryId = faker.number().positive().toString(),
         categoryName = faker.book().genre()

@@ -89,7 +89,7 @@ abstract class BasePostViewHolder(
         val needsWarning = post.spoiler || (post.nsfw && !nsfwAllowed)
         val gated = needsWarning && !isPostRevealed(post)
 
-        binding.layoutContentWarning.apply {
+        binding.cardContentWarning.apply {
             isVisible = gated
             if (gated) {
                 val isNsfwOnly = post.nsfw && !post.spoiler

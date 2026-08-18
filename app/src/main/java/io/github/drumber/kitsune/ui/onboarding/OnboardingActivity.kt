@@ -2,9 +2,9 @@ package io.github.drumber.kitsune.ui.onboarding
 
 import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.SystemBarStyle
+import androidx.activity.compose.PredictiveBackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatDelegate
@@ -51,6 +51,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.lifecycle.asFlow
 import com.chibatching.kotpref.livedata.asLiveData
 import io.github.drumber.kitsune.BuildConfig
@@ -60,10 +61,12 @@ import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
+import io.github.drumber.kitsune.ui.main.MainActivity
 import io.github.drumber.kitsune.ui.onboarding.pages.LoginPage
 import io.github.drumber.kitsune.ui.onboarding.pages.SetupPageAdapter
 import io.github.drumber.kitsune.ui.onboarding.pages.WelcomePage
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -116,6 +119,9 @@ class OnboardingActivity : BaseActivity() {
                         },
                         onFinish = {
                             KitsunePref.onboardingFinishedVersionCode = BuildConfig.VERSION_CODE
+                            val intent = Intent(this, MainActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
                             finish()
                         }
                     )
@@ -124,7 +130,7 @@ class OnboardingActivity : BaseActivity() {
                             onDismissRequest = { openCreateAccountForwardDialog = false },
                             onConfirmation = {
                                 openCreateAccountForwardDialog = false
-                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Kitsu.BASE_URL)))
+                                startActivity(Intent(Intent.ACTION_VIEW, Kitsu.BASE_URL.toUri()))
                             }
                         )
                     }
@@ -158,6 +164,20 @@ private fun OnboardingTour(
     )
 
     val coroutineScope = rememberCoroutineScope()
+
+    PredictiveBackHandler(enabled = pagerState.currentPage > 0) { progress ->
+        val currentPage = pagerState.currentPage
+        require(currentPage > 0) { "current page must be > 0, but was $currentPage" }
+        try {
+            progress.collect { backEvent ->
+                pagerState.scrollToPage(currentPage, -0.5f * backEvent.progress)
+            }
+            pagerState.animateScrollToPage(currentPage - 1)
+        } catch (e: CancellationException) {
+            pagerState.animateScrollToPage(currentPage)
+            throw e
+        }
+    }
 
     Surface(
         color = MaterialTheme.colorScheme.surface

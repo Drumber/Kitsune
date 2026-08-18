@@ -64,47 +64,54 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/layout_content_warning"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_content_warning"
+        style="?attr/materialCardViewFilledStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/bg_content_warning"
         android:clickable="true"
         android:focusable="true"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="20dp"
         android:visibility="gone"
+        app:cardBackgroundColor="?attr/colorSurfaceVariant"
         tools:visibility="visible">
 
-        <ImageView
-            android:id="@+id/iv_warning_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_visibility_off_24"
-            app:tint="?attr/colorError" />
-
-        <TextView
-            android:id="@+id/tv_warning_title"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
-            tools:text="@string/feed_spoiler_warning_title" />
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tv_warning_subtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:gravity="center"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?android:attr/textColorSecondary"
-            android:text="@string/feed_content_warning_tap_to_view" />
+            <ImageView
+                android:id="@+id/iv_warning_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_visibility_off_24"
+                app:tint="?attr/colorError" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tv_warning_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                tools:text="@string/feed_spoiler_warning_title" />
+
+            <TextView
+                android:id="@+id/tv_warning_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?android:attr/textColorSecondary"
+                android:text="@string/feed_content_warning_tap_to_view" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <TextView
         android:id="@+id/tv_content"

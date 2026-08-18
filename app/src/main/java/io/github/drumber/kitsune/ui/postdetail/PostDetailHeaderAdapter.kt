@@ -116,7 +116,7 @@ class PostDetailHeaderAdapter(
             val needsWarning = post.spoiler || (post.nsfw && !nsfwAllowed)
             val gated = needsWarning && !revealed
 
-            binding.layoutContentWarning.apply {
+            binding.cardContentWarning.apply {
                 isVisible = gated
                 if (gated) {
                     val isNsfwOnly = post.nsfw && !post.spoiler

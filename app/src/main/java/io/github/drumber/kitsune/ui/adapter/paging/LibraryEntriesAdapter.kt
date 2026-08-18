@@ -8,6 +8,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil3.load
+import coil3.request.crossfade
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryUiModel.EntryModel
@@ -95,14 +96,16 @@ class LibraryEntriesAdapter(
         fun bind(libraryEntry: LibraryEntryWithModification) {
             binding.entry = libraryEntry
 
-            binding.ivThumbnail.load(libraryEntry.media?.posterImageUrl)
+            binding.ivThumbnail.load(libraryEntry.media?.posterImageUrl) {
+                crossfade(false)
+            }
 
             binding.tvNotSynced.isVisible = libraryEntry.isNotSynced
             binding.tvTitle.maxLines = if (libraryEntry.isNotSynced) 2 else 3
         }
     }
 
-    inner class StatusSeparatorViewHolder(
+    class StatusSeparatorViewHolder(
         private val binding: ItemLibraryStatusSeparatorBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 

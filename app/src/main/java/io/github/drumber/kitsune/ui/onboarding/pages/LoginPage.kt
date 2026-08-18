@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -34,6 +35,10 @@ import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.error
+import coil3.request.fallback
+import coil3.request.placeholder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.ui.onboarding.components.OnboardingNavigationControls
@@ -169,7 +174,12 @@ private fun LoggedInUserSection(
                 modifier = Modifier.padding(12.dp)
             ) {
                 AsyncImage(
-                    model = localUser.avatar?.originalOrDown(),
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(localUser.avatar?.originalOrDown())
+                        .placeholder(R.drawable.profile_picture_placeholder)
+                        .error(R.drawable.profile_picture_placeholder)
+                        .fallback(R.drawable.profile_picture_placeholder)
+                        .build(),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -177,7 +187,6 @@ private fun LoggedInUserSection(
                         .clip(CircleShape)
                         .background(Color.Gray)
                     ,
-                    placeholder = painterResource(R.drawable.profile_picture_placeholder)
                 )
                 Spacer(Modifier.width(16.dp))
                 Column {
