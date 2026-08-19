@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.di
 
+import io.github.drumber.kitsune.data.presentation.model.report.ReportTarget
 import io.github.drumber.kitsune.data.repository.FollowListType
 import io.github.drumber.kitsune.ui.authentication.LoginViewModel
 import io.github.drumber.kitsune.ui.createpost.CreatePostViewModel
@@ -70,7 +71,7 @@ val viewModelModule = module {
     viewModel { CreatePostViewModel(get(), get(), get(), get()) }
     viewModel { MediaPickerViewModel(get()) }
     viewModel { UnitPickerViewModel(get()) }
-    viewModel { (postId: String) -> ReportViewModel(get(), postId) }
+    viewModel { (itemId: String, type: ReportTarget) -> ReportViewModel(get(), itemId, type) }
     viewModel { CharactersViewModel(get(), get()) }
     viewModel { CharacterDetailsViewModel(get(), get(), get()) }
     viewModel { SettingsViewModel(get(), get()) }

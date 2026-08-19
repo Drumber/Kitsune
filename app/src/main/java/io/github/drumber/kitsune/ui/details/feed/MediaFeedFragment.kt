@@ -18,6 +18,7 @@ import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
+import io.github.drumber.kitsune.data.presentation.model.report.ReportTarget
 import io.github.drumber.kitsune.databinding.FragmentMediaFeedBinding
 import io.github.drumber.kitsune.di.SocialImagesLoader
 import io.github.drumber.kitsune.ui.adapter.paging.PostInteractionListener
@@ -168,11 +169,8 @@ class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
     }
 
     override fun onReportClick(post: Post) {
-        ReportBottomSheet().apply {
-            arguments = Bundle().apply {
-                putString(ReportBottomSheet.BUNDLE_POST_ID, post.id)
-            }
-        }.show(childFragmentManager, ReportBottomSheet.TAG)
+        ReportBottomSheet.create(post.id, ReportTarget.POST)
+            .show(childFragmentManager, ReportBottomSheet.TAG)
     }
 
     override fun onAuthorClick(userId: String) {

@@ -1,47 +1,34 @@
 package io.github.drumber.kitsune.ui.adapter.paging
 
-import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import coil3.ImageLoader
-import coil3.dispose
-import coil3.load
-import coil3.request.crossfade
-import coil3.request.error
-import coil3.request.fallback
-import coil3.request.placeholder
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.databinding.ItemCommentBinding
-import io.github.drumber.kitsune.util.extensions.setOnDoubleTapListener
 import io.github.drumber.kitsune.util.extensions.toPx
 import io.github.drumber.kitsune.util.markwon.PostContentRenderer
-import io.github.drumber.kitsune.util.parseUtcDate
-import io.github.drumber.kitsune.util.ui.EmbedBinder
 
 class CommentPagingAdapter(
     private val imageLoader: ImageLoader,
-    private val contentRenderer: PostContentRenderer?,
+    private val contentRenderer: PostContentRenderer,
     private val currentUserId: String?,
-    private val onLikeClick: ((Comment) -> Unit)?,
-    private val onReplyClick: ((Comment) -> Unit)?,
+    private val onLikeClick: (Comment) -> Unit,
+    private val onReplyClick: (Comment) -> Unit,
     private val onViewAllRepliesClick: ((Comment) -> Unit)?,
-    private val onEditClick: ((Comment) -> Unit)?,
-    private val onDeleteClick: ((Comment) -> Unit)?,
-    private val onAuthorClick: ((String) -> Unit)?,
+    private val onEditClick: (Comment) -> Unit,
+    private val onDeleteClick: (Comment) -> Unit,
+    private val onAuthorClick: (String) -> Unit,
     private val onShareClick: (Comment) -> Unit,
+    private val onReportClick: (Comment) -> Unit,
     private val onImageClick: (String) -> Unit,
 ) : PagingDataAdapter<Comment, CommentPagingAdapter.CommentViewHolder>(CommentComparator) {
 
-    private data class LikeState(val isLiked: Boolean, val count: Int)
-
-    private val likeOverrides = mutableMapOf<String, LikeState>()
+    private val likeOverrides = mutableMapOf<String, BaseCommentViewHolder.InteractionOverride>()
 
     /**
      * Overrides the like state of the comment (top-level or reply) and refreshes its view. Replies
@@ -49,7 +36,7 @@ class CommentPagingAdapter(
      * item that owns it.
      */
     fun setLikeState(commentId: String, isLiked: Boolean, count: Int) {
-        likeOverrides[commentId] = LikeState(isLiked, count)
+        likeOverrides[commentId] = BaseCommentViewHolder.InteractionOverride(isLiked, count)
         val index = snapshot().items.indexOfFirst { comment ->
             comment.id == commentId || comment.replies.any { it.id == commentId }
         }
@@ -74,179 +61,23 @@ class CommentPagingAdapter(
         holder.clear()
     }
 
-    private fun bindCommentViews(
-        binding: ItemCommentBinding,
-        comment: Comment,
-        isReply: Boolean
+    inner class CommentViewHolder(
+        private val binding: ItemCommentBinding
+    ) : BaseCommentViewHolder(
+        imageLoader = imageLoader,
+        contentRenderer = contentRenderer,
+        onLikeClick = onLikeClick,
+        onEditClick = onEditClick,
+        onDeleteClick = onDeleteClick,
+        onAuthorClick = onAuthorClick,
+        onShareClick = onShareClick,
+        onReportClick = onReportClick,
+        onImageClick = onImageClick,
+        itemView = binding.root
     ) {
-        binding.ivAvatar.load(comment.authorAvatarUrl, imageLoader = imageLoader) {
-            placeholder(R.drawable.ic_outline_person_24)
-            error(R.drawable.ic_outline_person_24)
-            fallback(R.drawable.ic_outline_person_24)
-        }
 
-        binding.tvAuthor.text = comment.authorName
-            ?: binding.root.context.getString(R.string.feed_unknown_user)
-
-        val authorId = comment.authorId
-        val authorClickListener = if (authorId != null && onAuthorClick != null) {
-            android.view.View.OnClickListener { onAuthorClick.invoke(authorId) }
-        } else {
-            null
-        }
-        binding.ivAvatar.setOnClickListener(authorClickListener)
-        binding.tvAuthor.setOnClickListener(authorClickListener)
-
-        binding.tvTimestamp.apply {
-            val date = comment.createdAt?.parseUtcDate()
-            isVisible = date != null
-            text = date?.let {
-                DateUtils.getRelativeTimeSpanString(
-                    it.time,
-                    System.currentTimeMillis(),
-                    DateUtils.MINUTE_IN_MILLIS
-                )
-            }
-        }
-
-        binding.tvContent.apply {
-            isVisible = !comment.content.isNullOrBlank()
-            contentRenderer?.render(this, comment.contentFormatted, comment.content)
-                ?: run { text = comment.content }
-        }
-
-        binding.ivImage.apply {
-            isVisible = !comment.imageUrl.isNullOrBlank()
-            if (!comment.imageUrl.isNullOrBlank()) {
-                load(comment.imageUrl, imageLoader = imageLoader) {
-                    crossfade(false)
-                    placeholder(null)
-                }
-            } else {
-                dispose()
-                setImageResource(R.drawable.default_placeholder)
-            }
-
-            setOnClickListener {
-                if (!comment.imageUrl.isNullOrBlank()) {
-                    onImageClick(comment.imageUrl)
-                }
-            }
-        }
-
-        EmbedBinder.bind(binding.embed, imageLoader, comment.embed, visible = true)
-
-        val override = likeOverrides[comment.id]
-        val isLiked = override?.isLiked ?: comment.isLikedByMe
-        val count = override?.count ?: comment.likesCount
-        bindLikeRow(binding, isLiked, count)
-        binding.layoutLike.setOnClickListener { onLikeClick?.invoke(comment) }
-
-        // Double tapping the comment likes it (Instagram-style). Does nothing if already liked.
-        binding.layoutCommentBody.setOnDoubleTapListener {
-            val liked = likeOverrides[comment.id]?.isLiked ?: comment.isLikedByMe
-            if (!liked) onLikeClick?.invoke(comment)
-        }
-
-        // Replies are capped at one level, so only top-level comments can be replied to.
-        binding.tvReply.isVisible = !isReply && onReplyClick != null
-        binding.tvReply.setOnClickListener { onReplyClick?.invoke(comment) }
-
-        // Only top-level comments get a trailing divider; replies are nested with less indentation
-        // and a smaller avatar so the thread reads as a clear, tighter group.
-        binding.dividerComment.isVisible = !isReply
-        binding.layoutCommentBody.setPaddingRelative(
-            if (isReply) 0 else 16.toPx(),
-            10.toPx(),
-            16.toPx(),
-            10.toPx()
-        )
-        val avatarSize = if (isReply) 30.toPx() else 36.toPx()
-        binding.ivAvatar.updateLayoutParams {
-            width = avatarSize
-            height = avatarSize
-        }
-
-        bindOverflowMenu(binding, comment)
-    }
-
-    private fun bindOverflowMenu(binding: ItemCommentBinding, comment: Comment) {
-        val isOwner = currentUserId != null && comment.authorId == currentUserId
-        val canManage = isOwner && (onEditClick != null || onDeleteClick != null)
-
-        binding.btnOverflow.setOnClickListener { anchor ->
-            PopupMenu(anchor.context, anchor).apply {
-                menuInflater.inflate(R.menu.feed_item_options_menu, menu)
-                if (!canManage) {
-                    menu.removeItem(R.id.action_edit_item)
-                    menu.removeItem(R.id.action_delete_item)
-                }
-
-                setOnMenuItemClickListener { menuItem ->
-                    when (menuItem.itemId) {
-                        R.id.action_share_item -> {
-                            onShareClick.invoke(comment)
-                            true
-                        }
-
-                        R.id.action_edit_item -> {
-                            onEditClick?.invoke(comment)
-                            true
-                        }
-
-                        R.id.action_delete_item -> {
-                            onDeleteClick?.invoke(comment)
-                            true
-                        }
-
-                        else -> false
-                    }
-                }
-                show()
-            }
-        }
-    }
-
-    private fun bindLikeRow(binding: ItemCommentBinding, isLiked: Boolean, count: Int) {
-        binding.tvLikes.text = count.toString()
-        binding.ivLike.setImageResource(
-            if (isLiked) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_border_24
-        )
-    }
-
-    /**
-     * Renders the preview of [comment]'s replies as nested views and, when the comment has more
-     * replies than are previewed, a link that opens the full paginated replies screen.
-     */
-    private fun renderReplies(binding: ItemCommentBinding, comment: Comment) {
-        binding.layoutReplies.removeAllViews()
-        val replies = comment.replies
-        binding.layoutReplies.isVisible = replies.isNotEmpty()
-        if (replies.isNotEmpty()) {
-            val inflater = LayoutInflater.from(binding.root.context)
-            replies.forEach { reply ->
-                val replyBinding = ItemCommentBinding.inflate(inflater, binding.layoutReplies, false)
-                bindCommentViews(replyBinding, reply, isReply = true)
-                binding.layoutReplies.addView(replyBinding.root)
-            }
-        }
-
-        val hasMore = comment.repliesCount > replies.size
-        binding.btnViewAllReplies.isVisible = hasMore
-        if (hasMore) {
-            binding.btnViewAllReplies.text = binding.root.context.resources.getQuantityString(
-                R.plurals.comment_view_all_replies,
-                comment.repliesCount,
-                comment.repliesCount
-            )
-            binding.btnViewAllReplies.setOnClickListener { onViewAllRepliesClick?.invoke(comment) }
-        } else {
-            binding.btnViewAllReplies.setOnClickListener(null)
-        }
-    }
-
-    inner class CommentViewHolder(private val binding: ItemCommentBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        override fun getLocalUserId(): String? = currentUserId
+        override fun getInteractionOverride(comment: Comment) = likeOverrides[comment.id]
 
         fun bind(comment: Comment) {
             bindCommentViews(binding, comment, isReply = false)
@@ -259,6 +90,63 @@ class CommentPagingAdapter(
             binding.btnViewAllReplies.isVisible = false
         }
 
+        private fun bindCommentViews(
+            binding: ItemCommentBinding,
+            comment: Comment,
+            isReply: Boolean = false,
+        ) {
+            super.bindCommentViews(binding, comment)
+
+            // Replies are capped at one level, so only top-level comments can be replied to.
+            binding.tvReply.isVisible = !isReply
+            binding.tvReply.setOnClickListener { onReplyClick(comment) }
+
+            // Only top-level comments get a trailing divider; replies are nested with less indentation
+            // and a smaller avatar so the thread reads as a clear, tighter group.
+            binding.dividerComment.isVisible = !isReply
+            binding.layoutCommentBody.setPaddingRelative(
+                if (isReply) 0 else 16.toPx(),
+                10.toPx(),
+                16.toPx(),
+                10.toPx()
+            )
+            val avatarSize = if (isReply) 30.toPx() else 36.toPx()
+            binding.ivAvatar.updateLayoutParams {
+                width = avatarSize
+                height = avatarSize
+            }
+        }
+
+        /**
+         * Renders the preview of [comment]'s replies as nested views and, when the comment has more
+         * replies than are previewed, a link that opens the full paginated replies screen.
+         */
+        private fun renderReplies(binding: ItemCommentBinding, comment: Comment) {
+            binding.layoutReplies.removeAllViews()
+            val replies = comment.replies
+            binding.layoutReplies.isVisible = replies.isNotEmpty()
+            if (replies.isNotEmpty()) {
+                val inflater = LayoutInflater.from(binding.root.context)
+                replies.forEach { reply ->
+                    val replyBinding = ItemCommentBinding.inflate(inflater, binding.layoutReplies, false)
+                    bindCommentViews(replyBinding, reply, isReply = true)
+                    binding.layoutReplies.addView(replyBinding.root)
+                }
+            }
+
+            val hasMore = comment.repliesCount > replies.size
+            binding.btnViewAllReplies.isVisible = hasMore
+            if (hasMore) {
+                binding.btnViewAllReplies.text = binding.root.context.resources.getQuantityString(
+                    R.plurals.comment_view_all_replies,
+                    comment.repliesCount,
+                    comment.repliesCount
+                )
+                binding.btnViewAllReplies.setOnClickListener { onViewAllRepliesClick?.invoke(comment) }
+            } else {
+                binding.btnViewAllReplies.setOnClickListener(null)
+            }
+        }
     }
 
     object CommentComparator : DiffUtil.ItemCallback<Comment>() {

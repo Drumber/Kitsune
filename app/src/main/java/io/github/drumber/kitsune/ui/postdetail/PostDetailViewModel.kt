@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -80,15 +81,15 @@ class PostDetailViewModel(
 
     fun setPost(newPost: Post) {
         if (post.value?.id == newPost.id) return
-        post.value = newPost
-        _postLikeState.value = PostLikeUiState(isLiked = false, count = newPost.likesCount)
+        post.update { newPost }
+        _postLikeState.update { PostLikeUiState(isLiked = false, count = newPost.likesCount) }
         // Some entry points (e.g. notifications) only carry a partial post without images,
         // media or embed. Re-fetch the full post so the detail screen renders completely.
         viewModelScope.launch {
             try {
                 postManagementRepository.getPost(newPost.id)?.let { fullPost ->
-                    post.value = fullPost
-                    _postLikeState.value = _postLikeState.value.copy(count = fullPost.likesCount)
+                    post.update { fullPost }
+                    _postLikeState.update { it.copy(count = fullPost.likesCount) }
                 }
             } catch (e: Exception) {
                 logE("Failed to fetch full post '${newPost.id}'.", e)
@@ -99,7 +100,7 @@ class PostDetailViewModel(
             try {
                 val likeId = postInteractionRepository.getMyPostLikeId(newPost.id, userId)
                 postLikeId = likeId
-                _postLikeState.value = _postLikeState.value.copy(isLiked = likeId != null)
+                _postLikeState.update { it.copy(isLiked = likeId != null) }
             } catch (e: Exception) {
                 logE("Failed to load post like state for post '${newPost.id}'.", e)
             }
@@ -135,10 +136,12 @@ class PostDetailViewModel(
         val targetLiked = !state.isLiked
         val targetCount = (state.count + if (targetLiked) 1 else -1).coerceAtLeast(0)
         // Optimistic update.
-        _postLikeState.value = state.copy(
-            isLiked = targetLiked,
-            count = targetCount
-        )
+        _postLikeState.update {
+            state.copy(
+                isLiked = targetLiked,
+                count = targetCount
+            )
+        }
         postInteractionStore.setLikeState(currentPost.id, targetLiked, targetCount)
 
         viewModelScope.launch {
@@ -152,7 +155,7 @@ class PostDetailViewModel(
             } catch (e: Exception) {
                 logE("Failed to toggle like for post '${currentPost.id}'.", e)
                 // Revert optimistic update.
-                _postLikeState.value = state
+                _postLikeState.update { state }
                 postInteractionStore.setLikeState(currentPost.id, state.isLiked, state.count)
                 eventChannel.send(Event.Error)
             }
@@ -267,17 +270,17 @@ class PostDetailViewModel(
 
     /** Switches the composer into reply mode for the given [comment]. */
     fun startReply(comment: Comment) {
-        _composerMode.value = ComposerMode.Reply(comment)
+        _composerMode.update { ComposerMode.Reply(comment) }
     }
 
     /** Switches the composer into edit mode for the given [comment]. */
     fun startEditComment(comment: Comment) {
-        _composerMode.value = ComposerMode.Edit(comment)
+        _composerMode.update { ComposerMode.Edit(comment) }
     }
 
     /** Resets the composer back to posting a new top-level comment. */
     fun cancelComposer() {
-        _composerMode.value = ComposerMode.Normal
+        _composerMode.update { ComposerMode.Normal }
     }
 
     /** Deletes the current post. Emits [Event.PostDeleted] on success. */

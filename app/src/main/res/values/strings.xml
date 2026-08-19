@@ -574,6 +574,7 @@
 
     <string name="action_report">Report</string>
     <string name="report_post_title">Report Post</string>
+    <string name="report_comment_title">Report Comment</string>
     <string name="report_reason">Reason</string>
     <string name="report_reason_nsfw">NSFW</string>
     <string name="report_reason_offensive">Offensive</string>
@@ -584,7 +585,7 @@
     <string name="report_explanation_hint">Please explain</string>
     <string name="report_error_explanation_required">Explanation is required</string>
     <string name="report_submit">Submit</string>
-    <string name="report_success">Post reported successfully</string>
-    <string name="report_failure">Failed to report post</string>
-    <string name="report_already_reported">You have already reported this post.</string>
+    <string name="report_success">Report successfully sent</string>
+    <string name="report_failure">Failed to submit report</string>
+    <string name="report_already_reported">You have already reported this.</string>
 </resources>

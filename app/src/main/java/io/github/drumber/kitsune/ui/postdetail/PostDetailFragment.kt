@@ -22,6 +22,7 @@ import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
+import io.github.drumber.kitsune.data.presentation.model.report.ReportTarget
 import io.github.drumber.kitsune.databinding.FragmentPostDetailBinding
 import io.github.drumber.kitsune.di.SocialImagesLoader
 import io.github.drumber.kitsune.ui.adapter.paging.CommentPagingAdapter
@@ -62,6 +63,8 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail),
 
         binding.toolbar.initWindowInsetsListener(consume = false)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+        updateToolbarMenu(args.post)
+        binding.toolbar.setOnMenuItemClickListener { handleMenuItemClick(it) }
         binding.layoutInput.initPaddingWindowInsetsListener(
             left = true,
             right = true,
@@ -77,13 +80,8 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail),
             onLikeClick = { viewModel.togglePostLike() },
             onRevealClick = { viewModel.revealCurrentPost() },
             onMediaClick = { post -> openMedia(post) },
-            currentUserId = currentUserId,
-            onEditClick = { post -> navigateToEditPost(post) },
-            onDeleteClick = { confirmDeletePost() },
             onAuthorClick = { userId -> navigateToUserProfile(userId) },
             onImageClick = { imageUrl -> openPhotoViewActivity(imageUrl, useSocialImageLoader = true) },
-            onShareClick = { post -> showShareMenu(post) },
-            onReportClick = { post -> openReportBottomSheet(post) },
         )
         headerAdapter.setPost(args.post)
 
@@ -99,6 +97,7 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail),
             onAuthorClick = { userId -> navigateToUserProfile(userId) },
             onImageClick = { imageUrl -> openPhotoViewActivity(imageUrl, useSocialImageLoader = true) },
             onShareClick = { comment -> showShareMenu(comment) },
+            onReportClick = { comment -> openReportBottomSheet(comment) }
         )
 
         val commentsFooter = ResourceLoadStateAdapter(commentsAdapter)
@@ -133,7 +132,10 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail),
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.postState.collectLatest { post ->
-                    post?.let { headerAdapter.setPost(it) }
+                    post?.let {
+                        headerAdapter.setPost(it)
+                        updateToolbarMenu(it)
+                    }
                 }
             }
         }
@@ -328,6 +330,43 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail),
         imm.hideSoftInputFromWindow(binding.etComment.windowToken, 0)
     }
 
+    private fun updateToolbarMenu(post: Post) {
+        val localUserId = viewModel.currentUserId()
+        val isOwner = localUserId != null && post.authorId == localUserId
+        val menu = binding.toolbar.menu
+
+        menu.findItem(R.id.action_edit_item)?.isVisible = isOwner
+        menu.findItem(R.id.action_delete_item)?.isVisible = isOwner
+        menu.findItem(R.id.action_report_item)?.isVisible = !isOwner && localUserId != null
+    }
+
+    private fun handleMenuItemClick(menuItem: MenuItem): Boolean {
+        val post = viewModel.postState.value ?: return false
+        return when (menuItem.itemId) {
+            R.id.action_share_item -> {
+                showShareMenu(post)
+                true
+            }
+
+            R.id.action_edit_item -> {
+                navigateToEditPost(post)
+                true
+            }
+
+            R.id.action_delete_item -> {
+                confirmDeletePost()
+                true
+            }
+
+            R.id.action_report_item -> {
+                openReportBottomSheet(post)
+                true
+            }
+
+            else -> false
+        }
+    }
+
     private fun showShareMenu(comment: Comment) {
         startUrlShareIntent("${Kitsu.BASE_URL}/comments/${comment.id}")
     }
@@ -337,11 +376,13 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail),
     }
 
     private fun openReportBottomSheet(post: Post) {
-        ReportBottomSheet().apply {
-            arguments = Bundle().apply {
-                putString(ReportBottomSheet.BUNDLE_POST_ID, post.id)
-            }
-        }.show(childFragmentManager, ReportBottomSheet.TAG)
+        ReportBottomSheet.create(post.id, ReportTarget.POST)
+            .show(childFragmentManager, ReportBottomSheet.TAG)
+    }
+
+    private fun openReportBottomSheet(comment: Comment) {
+        ReportBottomSheet.create(comment.id, ReportTarget.COMMENT)
+            .show(childFragmentManager, ReportBottomSheet.TAG)
     }
 
     override fun onNavigationItemReselected(p0: MenuItem) {

@@ -19,6 +19,7 @@ object CommentMapper {
         myLikeId = myLikeId,
         repliesCount = repliesCount ?: 0,
         authorId = user?.id,
+        authorSlug = user?.slug,
         authorName = user?.name,
         authorAvatarUrl = user?.avatar?.originalOrDown(),
         imageUrl = uploads

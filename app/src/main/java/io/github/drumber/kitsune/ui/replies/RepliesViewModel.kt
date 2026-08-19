@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class RepliesViewModel(
@@ -27,7 +28,14 @@ class RepliesViewModel(
         data object LoginRequired : Event
         data object Error : Event
         data object ReplyPosted : Event
+        data class ReplyUpdated(val isParentComment: Boolean) : Event
         data class CommentLikeChanged(val commentId: String, val isLiked: Boolean, val count: Int) : Event
+        data class CommentDeleted(val isParentComment: Boolean) : Event
+    }
+
+    sealed interface ComposerMode {
+        data object Normal : ComposerMode
+        data class Edit(val comment: Comment) : ComposerMode
     }
 
     private val eventChannel = Channel<Event>(Channel.BUFFERED)
@@ -40,6 +48,9 @@ class RepliesViewModel(
     /** Fully paginated list of the parent comment's replies, oldest first. */
     val replies: Flow<PagingData<Comment>> =
         commentRepository.repliesPager(parentCommentId, getLocalUserId()).cachedIn(viewModelScope)
+
+    private val _composerMode = MutableStateFlow<ComposerMode>(ComposerMode.Normal)
+    val composerMode = _composerMode.asStateFlow()
 
     // In-session tracking of reply like ids for unliking.
     private val commentLikeIds = mutableMapOf<String, String?>()
@@ -88,6 +99,28 @@ class RepliesViewModel(
         }
     }
 
+    fun updateComment(commentId: String, content: String) {
+        val trimmed = content.trim()
+        if (trimmed.isEmpty()) return
+        val isParentComment = commentId == parentCommentId
+        viewModelScope.launch {
+            try {
+                val updated = commentRepository.updateComment(commentId, trimmed)
+                if (updated != null) {
+                    if (isParentComment) {
+                        _parentComment.update { updated }
+                    }
+                    eventChannel.send(Event.ReplyUpdated(isParentComment))
+                } else {
+                    eventChannel.send(Event.Error)
+                }
+            } catch (e: Exception) {
+                logE("Failed to update comment '$commentId'.", e)
+                eventChannel.send(Event.Error)
+            }
+        }
+    }
+
     fun toggleCommentLike(comment: Comment) {
         val userId = getLocalUserId()
         if (userId == null) {
@@ -126,6 +159,27 @@ class RepliesViewModel(
                 commentLikedState[comment.id] = currentlyLiked
                 commentLikeCounts[comment.id] = currentCount
                 eventChannel.send(Event.CommentLikeChanged(comment.id, currentlyLiked, currentCount))
+                eventChannel.send(Event.Error)
+            }
+        }
+    }
+
+    fun startEditComment(comment: Comment) {
+        _composerMode.update { ComposerMode.Edit(comment) }
+    }
+
+    fun cancelComposer() {
+        _composerMode.update { ComposerMode.Normal }
+    }
+
+    fun deleteComment(commentId: String) {
+        val isParentComment = commentId == parentCommentId
+        viewModelScope.launch {
+            try {
+                commentRepository.deleteComment(commentId)
+                eventChannel.send(Event.CommentDeleted(isParentComment))
+            } catch (e: Exception) {
+                logE("Failed to delete comment '$commentId'.", e)
                 eventChannel.send(Event.Error)
             }
         }

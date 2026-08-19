@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -15,15 +16,18 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil3.ImageLoader
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.constants.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.comment.Comment
+import io.github.drumber.kitsune.data.presentation.model.report.ReportTarget
 import io.github.drumber.kitsune.databinding.FragmentRepliesBinding
 import io.github.drumber.kitsune.di.SocialImagesLoader
 import io.github.drumber.kitsune.ui.adapter.paging.CommentPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
+import io.github.drumber.kitsune.ui.report.ReportBottomSheet
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
@@ -80,17 +84,24 @@ class RepliesFragment : Fragment(R.layout.fragment_replies),
             onAuthorClick = { userId -> navigateToUserProfile(userId) },
             onImageClick = { imageUrl -> openPhotoViewActivity(imageUrl) },
             onShareClick = { comment -> showShareMenu(comment) },
-            onReplyClick = null,
+            onReportClick = { comment -> openReportBottomSheet(comment) },
+            onReplyClick = { comment -> startSecondLevelReply(comment) },
+            onEditClick = { comment -> startEditComment(comment) },
+            onDeleteClick = { comment -> confirmDeleteComment(comment) },
             onViewAllRepliesClick = null,
-            onEditClick = null,
-            onDeleteClick = null,
         )
 
         val parentCommentAdapter = RepliesParentCommentAdapter(
             imageLoader = imageLoader,
             contentRenderer = contentRenderer,
-            onAuthorClicked = { userId -> navigateToUserProfile(userId) },
-            onLikeClicked = { comment -> viewModel.toggleCommentLike(comment) }
+            currentUserId = viewModel.currentUserId(),
+            onAuthorClick = { userId -> navigateToUserProfile(userId) },
+            onLikeClick = { comment -> viewModel.toggleCommentLike(comment) },
+            onEditClick = { comment -> startEditComment(comment) },
+            onReportClick = { comment -> openReportBottomSheet(comment) },
+            onDeleteClick = { comment -> confirmDeleteComment(comment) },
+            onShareClick = { comment -> showShareMenu(comment) },
+            onImageClick = { imageUrl -> openPhotoViewActivity(imageUrl) },
         )
 
         binding.rvReplies.apply {
@@ -103,6 +114,15 @@ class RepliesFragment : Fragment(R.layout.fragment_replies),
 
         binding.layoutLoading.btnRetry.setOnClickListener { repliesAdapter.retry() }
         binding.btnSend.setOnClickListener { submitReply() }
+        binding.btnCancelReply.setOnClickListener { cancelComposer() }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.composerMode.collectLatest { mode ->
+                    renderComposerMode(mode)
+                }
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -147,11 +167,31 @@ class RepliesFragment : Fragment(R.layout.fragment_replies),
                                 )
                             }
 
+                        is RepliesViewModel.Event.CommentDeleted -> {
+                            if (event.isParentComment) {
+                                findNavController().navigateUp()
+                            } else {
+                                repliesAdapter.refresh()
+                            }
+                            showSnackbar(binding.rootLayout, R.string.comment_deleted)
+                        }
+
                         RepliesViewModel.Event.ReplyPosted -> {
                             binding.etReply.text?.clear()
+                            viewModel.cancelComposer()
                             hideKeyboard()
                             repliesAdapter.refresh()
                             showSnackbar(binding.root, R.string.comment_posted)
+                        }
+
+                        is RepliesViewModel.Event.ReplyUpdated -> {
+                            binding.etReply.text?.clear()
+                            viewModel.cancelComposer()
+                            hideKeyboard()
+                            showSnackbar(binding.root, R.string.comment_updated)
+                            if (!event.isParentComment) {
+                                repliesAdapter.refresh()
+                            }
                         }
 
                         RepliesViewModel.Event.LoginRequired ->
@@ -165,10 +205,62 @@ class RepliesFragment : Fragment(R.layout.fragment_replies),
         }
     }
 
+    private fun renderComposerMode(mode: RepliesViewModel.ComposerMode) {
+        when (mode) {
+            RepliesViewModel.ComposerMode.Normal -> {
+                binding.layoutReplyContext.isVisible = false
+            }
+
+            is RepliesViewModel.ComposerMode.Edit -> {
+                binding.layoutReplyContext.isVisible = true
+            }
+        }
+    }
+
+    private fun cancelComposer() {
+        viewModel.cancelComposer()
+        binding.etReply.text?.clear()
+    }
+
+    private fun startSecondLevelReply(comment: Comment) {
+        // second level nested replies are not supported; instead mention user by slug/id
+        val existingContent = binding.etReply.text?.trim()?.let { existing ->
+            // remove any existing user mention at the beginning of the text
+            val userMentionRegex = Regex("^@[\\w._+-]+\\h?")
+            existing.replaceFirst(userMentionRegex, "")
+        }.orEmpty()
+        val userHandle = comment.authorSlug ?: comment.authorId
+        val newContent = "@$userHandle $existingContent"
+        binding.etReply.setText(newContent)
+        binding.etReply.setSelection(newContent.length)
+        focusReplyInput()
+    }
+
+    private fun startEditComment(comment: Comment) {
+        viewModel.startEditComment(comment)
+        binding.etReply.setText(comment.content)
+        binding.etReply.setSelection(comment.content?.length ?: 0)
+        focusReplyInput()
+    }
+
+    private fun confirmDeleteComment(comment: Comment) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.delete_comment_confirm_title)
+            .setMessage(R.string.delete_comment_confirm_message)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.action_delete) { _, _ -> viewModel.deleteComment(comment.id) }
+            .show()
+    }
+
     private fun submitReply() {
         val content = binding.etReply.text?.toString().orEmpty().trim()
         if (content.isEmpty()) return
-        viewModel.postReply(content)
+        when (val mode = viewModel.composerMode.value) {
+            is RepliesViewModel.ComposerMode.Edit ->
+                viewModel.updateComment(mode.comment.id, content)
+
+            RepliesViewModel.ComposerMode.Normal -> viewModel.postReply(content)
+        }
     }
 
     private fun hideKeyboard() {
@@ -176,6 +268,13 @@ class RepliesFragment : Fragment(R.layout.fragment_replies),
             requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         binding.etReply.clearFocus()
         imm.hideSoftInputFromWindow(binding.etReply.windowToken, 0)
+    }
+
+    private fun focusReplyInput() {
+        binding.etReply.requestFocus()
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.etReply, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun navigateToUserProfile(userId: String) {
@@ -186,6 +285,11 @@ class RepliesFragment : Fragment(R.layout.fragment_replies),
 
     private fun showShareMenu(comment: Comment) {
         startUrlShareIntent("${Kitsu.BASE_URL}/comments/${comment.id}")
+    }
+
+    private fun openReportBottomSheet(comment: Comment) {
+        ReportBottomSheet.create(comment.id, ReportTarget.COMMENT)
+            .show(childFragmentManager, ReportBottomSheet.TAG)
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {

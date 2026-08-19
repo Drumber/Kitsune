@@ -1,28 +1,26 @@
 package io.github.drumber.kitsune.ui.replies
 
-import android.text.format.DateUtils
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import coil3.ImageLoader
-import coil3.load
-import coil3.request.error
-import coil3.request.fallback
-import coil3.request.placeholder
-import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.databinding.ItemRepliesParentCommentBinding
+import io.github.drumber.kitsune.ui.adapter.paging.BaseCommentViewHolder
 import io.github.drumber.kitsune.util.markwon.PostContentRenderer
-import io.github.drumber.kitsune.util.parseUtcDate
-import io.github.drumber.kitsune.util.ui.EmbedBinder
 
 class RepliesParentCommentAdapter(
     private val imageLoader: ImageLoader,
     private val contentRenderer: PostContentRenderer,
-    private val onAuthorClicked: (String) -> Unit,
-    private val onLikeClicked: (Comment) -> Unit,
+    private val currentUserId: String?,
+    private val onLikeClick: (Comment) -> Unit,
+    private val onEditClick: (Comment) -> Unit,
+    private val onDeleteClick: (Comment) -> Unit,
+    private val onAuthorClick: (String) -> Unit,
+    private val onShareClick: (Comment) -> Unit,
+    private val onReportClick: (Comment) -> Unit,
+    private val onImageClick: (String) -> Unit,
 ) : RecyclerView.Adapter<RepliesParentCommentAdapter.RepliesParentCommentViewHolder>() {
 
     private var comment: Comment? = null
@@ -64,69 +62,31 @@ class RepliesParentCommentAdapter(
 
     inner class RepliesParentCommentViewHolder(
         private val binding: ItemRepliesParentCommentBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
+    ) : BaseCommentViewHolder(
+        imageLoader = imageLoader,
+        contentRenderer = contentRenderer,
+        onLikeClick = onLikeClick,
+        onEditClick = onEditClick,
+        onDeleteClick = onDeleteClick,
+        onAuthorClick = onAuthorClick,
+        onShareClick = onShareClick,
+        onReportClick = onReportClick,
+        onImageClick = onImageClick,
+        itemView = binding.root
+    ) {
+
+        override fun getLocalUserId(): String? = currentUserId
+        override fun getInteractionOverride(comment: Comment) = null
 
         fun bind(comment: Comment) {
             val header = binding.parentComment
-
-            header.ivAvatar.load(comment.authorAvatarUrl, imageLoader = imageLoader) {
-                placeholder(R.drawable.ic_outline_person_24)
-                error(R.drawable.ic_outline_person_24)
-                fallback(R.drawable.ic_outline_person_24)
-            }
-
-            header.tvAuthor.text = comment.authorName ?: binding.root.context.getString(R.string.feed_unknown_user)
-
-            val authorId = comment.authorId
-            val authorClickListener = authorId?.let { id ->
-                View.OnClickListener { onAuthorClicked(id) }
-            }
-            header.ivAvatar.setOnClickListener(authorClickListener)
-            header.tvAuthor.setOnClickListener(authorClickListener)
-
-            header.tvTimestamp.apply {
-                val date = comment.createdAt?.parseUtcDate()
-                isVisible = date != null
-                text = date?.let {
-                    DateUtils.getRelativeTimeSpanString(
-                        it.time,
-                        System.currentTimeMillis(),
-                        DateUtils.MINUTE_IN_MILLIS
-                    )
-                }
-            }
-
-            header.tvContent.apply {
-                isVisible = !comment.content.isNullOrBlank()
-                contentRenderer.render(this, comment.contentFormatted, comment.content)
-            }
-
-            header.ivImage.apply {
-                isVisible = !comment.imageUrl.isNullOrBlank()
-                if (!comment.imageUrl.isNullOrBlank()) {
-                    load(comment.imageUrl)
-                }
-            }
-
-            EmbedBinder.bind(header.embed, imageLoader, comment.embed, visible = true)
-
-            bindParentLikeRow(comment.isLikedByMe, comment.likesCount)
-            header.layoutLike.setOnClickListener { onLikeClicked(comment) }
+            bindCommentViews(header, comment)
 
             // The pinned header only represents the parent comment, so hide list-only affordances.
             header.tvReply.isVisible = false
-            header.btnOverflow.isVisible = false
             header.layoutReplies.isVisible = false
             header.btnViewAllReplies.isVisible = false
             header.dividerComment.isVisible = false
-        }
-
-        private fun bindParentLikeRow(isLiked: Boolean, count: Int) {
-            val header = binding.parentComment
-            header.tvLikes.text = count.toString()
-            header.ivLike.setImageResource(
-                if (isLiked) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_border_24
-            )
         }
     }
 }

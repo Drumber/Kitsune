@@ -3,6 +3,7 @@ package io.github.drumber.kitsune.ui.report
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.drumber.kitsune.data.presentation.model.report.ReportReason
+import io.github.drumber.kitsune.data.presentation.model.report.ReportTarget
 import io.github.drumber.kitsune.data.repository.ReportRepository
 import io.github.drumber.kitsune.util.logE
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 
 class ReportViewModel(
     private val reportRepository: ReportRepository,
-    private val postId: String,
+    private val itemId: String,
+    private val type: ReportTarget,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState>(UiState(ReportState.Loading))
@@ -27,8 +29,10 @@ class ReportViewModel(
     val canSubmit = uiState.map { it.canSubmit() }
 
     init {
-        checkReportStatus(postId)
+        checkReportStatus(itemId)
     }
+
+    fun getReportType() = type
 
     fun selectReason(reason: ReportReason) {
         _uiState.update { it.copy(selectedReason = reason) }
@@ -51,7 +55,7 @@ class ReportViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(state = ReportState.Loading) }
             try {
-                val success = reportRepository.submitReport(postId, reason, explanation)
+                val success = reportRepository.submitReport(itemId, type, reason, explanation)
                 if (success) {
                     _submitEvent.emit(SubmitEvent.ReportSent)
                 } else {
@@ -70,7 +74,7 @@ class ReportViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(state = ReportState.Loading) }
             try {
-                val alreadyReported = reportRepository.hasAlreadyReported(postId)
+                val alreadyReported = reportRepository.hasAlreadyReported(postId, type)
                 val state = if (alreadyReported) {
                     ReportState.AlreadyReported
                 } else {

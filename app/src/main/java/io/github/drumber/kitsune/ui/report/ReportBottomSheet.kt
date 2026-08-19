@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import androidx.core.os.BundleCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.report.ReportReason
+import io.github.drumber.kitsune.data.presentation.model.report.ReportTarget
 import io.github.drumber.kitsune.databinding.SheetReportPostBinding
 import io.github.drumber.kitsune.util.extensions.afterTextChanged
 import io.github.drumber.kitsune.util.extensions.text
@@ -27,7 +29,11 @@ class ReportBottomSheet : BottomSheetDialogFragment() {
     private val binding get() = _binding!!
 
     private val viewModel: ReportViewModel by viewModel {
-        parametersOf(requireArguments().getString(BUNDLE_POST_ID))
+        val args = requireArguments()
+        parametersOf(
+            args.getString(BUNDLE_REPORT_ITEM_ID),
+            BundleCompat.getSerializable(args, BUNDLE_REPORT_TYPE, ReportTarget::class.java)
+        )
     }
 
     override fun onCreateView(
@@ -41,6 +47,11 @@ class ReportBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.tvTitle.text = when (viewModel.getReportType()) {
+            ReportTarget.POST -> getString(R.string.report_post_title)
+            ReportTarget.COMMENT -> getString(R.string.report_comment_title)
+        }
 
         binding.btnCancel.setOnClickListener { dismiss() }
         binding.btnClose.setOnClickListener { dismiss() }
@@ -127,6 +138,14 @@ class ReportBottomSheet : BottomSheetDialogFragment() {
 
     companion object {
         const val TAG = "report_bottom_sheet"
-        const val BUNDLE_POST_ID = "post_id_bundle_key"
+        const val BUNDLE_REPORT_ITEM_ID = "report_item_id_bundle_key"
+        const val BUNDLE_REPORT_TYPE = "report_type_bundle_key"
+
+        fun create(itemId: String, type: ReportTarget) = ReportBottomSheet().apply {
+            arguments = Bundle().apply {
+                putString(BUNDLE_REPORT_ITEM_ID, itemId)
+                putSerializable(BUNDLE_REPORT_TYPE, type)
+            }
+        }
     }
 }
