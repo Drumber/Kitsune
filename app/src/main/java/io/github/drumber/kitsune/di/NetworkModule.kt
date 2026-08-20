@@ -54,8 +54,8 @@ private const val DEFAULT_IMAGE_CACHE_DIR = "image_cache"
 private const val DEFAULT_IMAGE_CACHE_SIZE = 1024 * 1024 * 192L // 192 MB
 private const val DEFAULT_IMAGE_MEMORY_CACHE_PERCENT = 0.15
 private const val SOCIAL_IMAGE_CACHE_DIR = "image_cache_social"
-private const val SOCIAL_IMAGE_CACHE_SIZE = 1024 * 1024 * 16L // 64 MB
-private const val SOCIAL_IMAGE_MEMORY_CACHE_PERCENT = 0.25
+private const val SOCIAL_IMAGE_CACHE_SIZE = 1024 * 1024 * 64L // 64 MB
+private const val SOCIAL_IMAGE_MEMORY_CACHE_PERCENT = 0.10
 
 object UnauthenticatedHttpClient
 object ImagesHttpClient
@@ -63,7 +63,7 @@ object SocialImagesLoader
 
 val networkModule = module {
     // default API HTTP client with authentication, logging and caching
-    single { createHttpClient(get(), get()) }
+    single { createApiHttpClient(get(), get()) }
     // unauthenticated HTTP client
     single(named<UnauthenticatedHttpClient>()) { createHttpClientBuilder().build() }
     // image loading HTTP client without caching and without logging
@@ -97,20 +97,19 @@ fun createHttpClientBuilder(addLoggingInterceptor: Boolean = true) = OkHttpClien
     .readTimeout(60, TimeUnit.SECONDS)
     .writeTimeout(60, TimeUnit.SECONDS)
 
-private fun createHttpClient(
+private fun createApiHttpClient(
     context: Context,
     authenticationInterceptor: AuthenticationInterceptor
-) =
-    createHttpClientBuilder()
-        .addInterceptor(authenticationInterceptor)
-        .authenticator(authenticationInterceptor)
-        .cache(
-            Cache(
-                directory = File(context.cacheDir, HTTP_CACHE_DIR),
-                maxSize = HTTP_CACHE_SIZE
-            )
+) = createHttpClientBuilder()
+    .addInterceptor(authenticationInterceptor)
+    .authenticator(authenticationInterceptor)
+    .cache(
+        Cache(
+            directory = File(context.cacheDir, HTTP_CACHE_DIR),
+            maxSize = HTTP_CACHE_SIZE
         )
-        .build()
+    )
+    .build()
 
 private fun createHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
     level = when (BuildConfig.DEBUG) {
