@@ -526,4 +526,22 @@
         <item quantity="other">Visualizza tutte le %d risposte</item>
     </plurals>
     <string name="preference_double_back_to_exit_description">Richiedi di premere indietro due volte per chiudere l\'app.</string>
+    <string name="label_write">Scrivi</string>
+    <string name="label_images">Immagini</string>
+    <string name="report_post_title">Segnala post</string>
+    <string name="action_report">Segnala</string>
+    <string name="report_comment_title">Segnala commento</string>
+    <string name="report_reason">Motivazione</string>
+    <string name="report_reason_nsfw">NSFW</string>
+    <string name="report_reason_offensive">Offensivo</string>
+    <string name="report_reason_spoiler">Spoiler</string>
+    <string name="report_reason_bullying">Bullismo</string>
+    <string name="report_reason_spam">Spam</string>
+    <string name="report_reason_other">Altro</string>
+    <string name="report_explanation_hint">Spiega il motivo</string>
+    <string name="report_error_explanation_required">La spiegazione è obbligatoria</string>
+    <string name="report_submit">Invia</string>
+    <string name="report_success">Segnalazione inviata correttamente</string>
+    <string name="report_failure">Impossibile inviare la segnalazione</string>
+    <string name="report_already_reported">Hai già segnalato questo elemento.</string>
 </resources>
