@@ -157,6 +157,7 @@ class FeedRepository(
             "subject.post.uploads",
             "actor"
         )
+        .fields("users", "avatar", "name", "slug", "title")
         .pageLimit(pageSize)
         .apply { cursor?.let { pageCursor(it) } }
 

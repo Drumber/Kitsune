@@ -164,13 +164,14 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
 
     private fun setToolbarLogoClickListener() {
         binding.toolbar.children.firstOrNull { it is ImageView }?.setOnClickListener { logoView ->
-            val avatarImgUrl = viewModel.getUser()?.avatar?.originalOrDown()
+            val user = viewModel.getUser()
+            val avatarImgUrl = user?.avatar?.originalOrDown()
                 ?: return@setOnClickListener
             val title = viewModel.getUser()?.name?.let { "$it Avatar" }
             openPhotoViewActivity(
                 avatarImgUrl,
                 title,
-                null,
+                user.avatar.largeOrDown(),
                 logoView,
                 useSocialImageLoader = useSocialImageLoader
             )
@@ -179,7 +180,7 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
 
     private fun updateUserAvatarAndCover(user: User?) {
         val request = ImageRequest.Builder(requireContext())
-            .data(user?.avatar?.originalOrDown())
+            .data(user?.avatar?.largeOrDown())
             .size(45.toPx())
             .transformations(CircleCropTransformation())
             .crossfade(false)
@@ -189,6 +190,7 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
             .target(
                 onSuccess = { result ->
                     binding.toolbar.logo = result.asDrawable(resources)
+                    binding.toolbar.isLogoAdjustViewBounds
                     setToolbarLogoClickListener()
                 }
             )

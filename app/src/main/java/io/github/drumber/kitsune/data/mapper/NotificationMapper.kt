@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.data.mapper
 
 import io.github.drumber.kitsune.data.mapper.FeedMapper.toPost
+import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
 import io.github.drumber.kitsune.data.presentation.model.feed.Notification
 import io.github.drumber.kitsune.data.presentation.model.feed.NotificationVerb
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
@@ -36,7 +37,7 @@ object NotificationMapper {
             isSeen = isSeen ?: false,
             actorId = actor?.id,
             actorName = actor?.name,
-            actorAvatarUrl = actor?.avatar?.originalOrDown(),
+            actorAvatarUrl = actor?.avatar?.toImage()?.largeOrDown(),
             actorCount = actorCount ?: activities.mapNotNull { it.actor?.id }.distinct().size,
             excerpt = excerpt,
             targetPost = resolvedPost,

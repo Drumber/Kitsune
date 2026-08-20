@@ -2,8 +2,8 @@ package io.github.drumber.kitsune.data.source.network.media.model.unit
 
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Type
-import io.github.drumber.kitsune.data.common.Image
 import io.github.drumber.kitsune.data.common.Titles
+import io.github.drumber.kitsune.data.source.network.NetworkImage
 
 @Type("episodes")
 data class NetworkEpisode(
@@ -20,7 +20,7 @@ data class NetworkEpisode(
     override val length: String?,
     val airdate: String?,
 
-    override val thumbnail: Image?
+    override val thumbnail: NetworkImage?
 ) : NetworkMediaUnit {
 
     companion object {

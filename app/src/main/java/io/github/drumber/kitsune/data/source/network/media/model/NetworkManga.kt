@@ -3,9 +3,9 @@ package io.github.drumber.kitsune.data.source.network.media.model
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
-import io.github.drumber.kitsune.data.common.Image
 import io.github.drumber.kitsune.data.common.Titles
 import io.github.drumber.kitsune.data.common.media.AgeRating
+import io.github.drumber.kitsune.data.source.network.NetworkImage
 import io.github.drumber.kitsune.data.source.network.media.model.category.NetworkCategory
 import io.github.drumber.kitsune.data.source.network.media.model.relationship.NetworkMediaRelationship
 
@@ -37,8 +37,8 @@ data class NetworkManga(
     override val ageRatingGuide: String?,
     override val nsfw: Boolean?,
 
-    override val posterImage: Image?,
-    override val coverImage: Image?,
+    override val posterImage: NetworkImage?,
+    override val coverImage: NetworkImage?,
 
     override val totalLength: Int?,
     val chapterCount: Int?,

@@ -1,8 +1,8 @@
 package io.github.drumber.kitsune.data.source.network.media.model
 
-import io.github.drumber.kitsune.data.common.Image
 import io.github.drumber.kitsune.data.common.Titles
 import io.github.drumber.kitsune.data.common.media.AgeRating
+import io.github.drumber.kitsune.data.source.network.NetworkImage
 import io.github.drumber.kitsune.data.source.network.media.model.category.NetworkCategory
 import io.github.drumber.kitsune.data.source.network.media.model.relationship.NetworkMediaRelationship
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavoriteItem
@@ -33,8 +33,8 @@ sealed interface NetworkMedia : NetworkFavoriteItem {
     val ageRatingGuide: String?
     val nsfw: Boolean?
 
-    val posterImage: Image?
-    val coverImage: Image?
+    val posterImage: NetworkImage?
+    val coverImage: NetworkImage?
 
     val totalLength: Int?
 

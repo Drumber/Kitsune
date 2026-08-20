@@ -1,5 +1,7 @@
 package io.github.drumber.kitsune.data.mapper
 
+import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
+import io.github.drumber.kitsune.data.mapper.ImageMapper.toNetworkImage
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toMedia
 import io.github.drumber.kitsune.data.presentation.model.character.Character
 import io.github.drumber.kitsune.data.presentation.model.character.CharacterSearchResult
@@ -24,7 +26,7 @@ object CharacterMapper {
         otherNames = otherNames,
         malId = malId,
         description = description,
-        image = image,
+        image = image?.toImage(),
         mediaCharacters = mediaCharacters?.map { it.toMediaCharacter() }
     )
 
@@ -36,7 +38,7 @@ object CharacterMapper {
         otherNames = otherNames,
         malId = malId,
         description = description,
-        image = image
+        image = image?.toImage()
     )
 
     fun CharacterSearchResult.toCharacter() = Character(
@@ -88,7 +90,7 @@ object CharacterMapper {
         otherNames = otherNames,
         malId = malId,
         description = description,
-        image = image,
+        image = image?.toNetworkImage(),
         mediaCharacters = null
     )
 }

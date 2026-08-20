@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.data.source.network.media.model.unit
 
-import io.github.drumber.kitsune.data.common.Image
 import io.github.drumber.kitsune.data.common.Titles
+import io.github.drumber.kitsune.data.source.network.NetworkImage
 
 sealed interface NetworkMediaUnit {
     val id: String?
@@ -12,5 +12,5 @@ sealed interface NetworkMediaUnit {
 
     val number: Int?
     val length: String?
-    val thumbnail: Image?
+    val thumbnail: NetworkImage?
 }

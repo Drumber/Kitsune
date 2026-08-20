@@ -65,7 +65,7 @@
                     android:layout_height="?attr/actionBarSize"
                     android:background="@android:color/transparent"
                     app:logo="@drawable/profile_picture_placeholder"
-                    app:logoAdjustViewBounds="true"
+                    app:logoScaleType="centerCrop"
                     app:title="@{user.name ?? @string/not_logged_in}"
                     app:layout_collapseMode="pin"
                     app:menu="@menu/profile_menu"

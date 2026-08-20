@@ -60,6 +60,7 @@ class CommentRepository(
         val filter = Filter()
             .filter("id", commentId)
             .include("user", "uploads")
+            .fields("users", "avatar", "name", "slug", "title")
             .pageLimit(1)
         val networkComment = commentNetworkDataSource.getAllComments(filter).firstOrNull() ?: return null
         val id = networkComment.id ?: return null
@@ -129,12 +130,14 @@ class CommentRepository(
         .filter("postId", postId)
         .filter("parentId", "_none")
         .include("user", "uploads")
+        .fields("users", "avatar", "name", "slug", "title")
         .sort("createdAt")
         .pageLimit(pageSize)
 
     private fun buildRepliesFilter(parentCommentId: String, pageSize: Int) = Filter()
         .filter("parentId", parentCommentId)
         .include("user", "uploads")
+        .fields("users", "avatar", "name", "slug", "title")
         .sort("createdAt")
         .pageLimit(pageSize)
 

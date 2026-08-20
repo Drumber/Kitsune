@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.data.source.network.group.model
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
-import io.github.drumber.kitsune.data.common.Image
+import io.github.drumber.kitsune.data.source.network.NetworkImage
 
 @Type("groups")
 data class NetworkGroup(
@@ -31,8 +31,8 @@ data class NetworkGroup(
     val leadersCount: Int? = null,
     val neighborsCount: Int? = null,
 
-    val avatar: Image? = null,
-    val coverImage: Image? = null,
+    val avatar: NetworkImage? = null,
+    val coverImage: NetworkImage? = null,
 
     @Relationship("category")
     val category: NetworkGroupCategory? = null

@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.data.mapper
 
 import io.github.drumber.kitsune.data.mapper.EmbedMapper.toEmbed
+import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime
@@ -21,10 +22,10 @@ object FeedMapper {
         likesCount = postLikesCount ?: 0,
         authorId = user?.id,
         authorName = user?.name,
-        authorAvatarUrl = user?.avatar?.originalOrDown(),
+        authorAvatarUrl = user?.avatar?.toImage()?.largeOrDown(),
         mediaTitle = media?.getPreferredTitle(),
         mediaId = media?.id,
-        mediaPosterUrl = media?.posterImage?.originalOrDown(),
+        mediaPosterUrl = media?.posterImage?.toImage()?.smallOrHigher(),
         mediaSynopsis = media?.description,
         mediaSlug = media?.slug,
         mediaIsAnime = media?.let { it is NetworkAnime },
@@ -34,7 +35,7 @@ object FeedMapper {
         spoiledUnitIsEpisode = spoiledUnit is NetworkEpisode,
         imageUrls = uploads
             ?.sortedBy { it.uploadOrder ?: 0 }
-            ?.mapNotNull { it.content?.originalOrDown() }
+            ?.mapNotNull { it.content?.toImage()?.largeOrDown() }
             ?: emptyList(),
         uploadIds = uploads
             ?.sortedBy { it.uploadOrder ?: 0 }

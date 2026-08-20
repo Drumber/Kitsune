@@ -2,8 +2,8 @@ package io.github.drumber.kitsune.data.source.network.media.model.unit
 
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Type
-import io.github.drumber.kitsune.data.common.Image
 import io.github.drumber.kitsune.data.common.Titles
+import io.github.drumber.kitsune.data.source.network.NetworkImage
 
 @Type("chapters")
 data class NetworkChapter(
@@ -18,7 +18,7 @@ data class NetworkChapter(
     val volumeNumber: Int?,
     override val length: String?,
 
-    override val thumbnail: Image?,
+    override val thumbnail: NetworkImage?,
     val published: String?
 ) : NetworkMediaUnit {
 

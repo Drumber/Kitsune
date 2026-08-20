@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.data.mapper
 
+import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
 import io.github.drumber.kitsune.data.presentation.model.user.FollowUser
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkFollow
 import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser
@@ -20,7 +21,7 @@ object FollowMapper {
             name = user.name,
             slug = user.slug,
             title = user.title,
-            avatarUrl = user.avatar?.originalOrDown()
+            avatarUrl = user.avatar?.toImage()?.smallOrHigher()
         )
     }
 }

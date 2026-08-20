@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.data.mapper
 
+import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
 import io.github.drumber.kitsune.data.presentation.model.media.unit.Chapter
 import io.github.drumber.kitsune.data.presentation.model.media.unit.Episode
 import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkChapter
@@ -22,7 +23,7 @@ object MediaUnitMapper {
         relativeNumber = relativeNumber,
         length = length,
         airdate = airdate,
-        thumbnail = thumbnail
+        thumbnail = thumbnail?.toImage()
     )
 
     fun NetworkChapter.toChapter() = Chapter(
@@ -33,7 +34,7 @@ object MediaUnitMapper {
         number = number,
         volumeNumber = volumeNumber,
         length = length,
-        thumbnail = thumbnail,
+        thumbnail = thumbnail?.toImage(),
         published = published,
     )
 }

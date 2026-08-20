@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.data.source.network.media.model.production
 
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Type
-import io.github.drumber.kitsune.data.common.Image
+import io.github.drumber.kitsune.data.source.network.NetworkImage
 
 @Type("people")
 data class NetworkPerson(
@@ -10,5 +10,5 @@ data class NetworkPerson(
     val id: String?,
     val name: String?,
     val description: String?,
-    val image: Image?
+    val image: NetworkImage?
 )

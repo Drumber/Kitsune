@@ -5,6 +5,7 @@ import io.github.drumber.kitsune.data.common.media.MangaSubtype
 import io.github.drumber.kitsune.data.common.media.RatingFrequencies
 import io.github.drumber.kitsune.data.common.media.ReleaseStatus
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
+import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.presentation.model.media.Media
@@ -63,8 +64,8 @@ object MediaMapper {
         ageRating = ageRating,
         ageRatingGuide = ageRatingGuide,
         nsfw = nsfw,
-        posterImage = posterImage,
-        coverImage = coverImage,
+        posterImage = posterImage?.toImage(),
+        coverImage = coverImage?.toImage(),
         totalLength = totalLength,
         episodeCount = episodeCount,
         episodeLength = episodeLength,
@@ -97,8 +98,8 @@ object MediaMapper {
         ageRating = ageRating,
         ageRatingGuide = ageRatingGuide,
         nsfw = nsfw,
-        posterImage = posterImage,
-        coverImage = coverImage,
+        posterImage = posterImage?.toImage(),
+        coverImage = coverImage?.toImage(),
         totalLength = totalLength,
         chapterCount = chapterCount,
         volumeCount = volumeCount,
@@ -207,7 +208,7 @@ object MediaMapper {
         id = id.require(),
         name = name,
         description = description,
-        image = image
+        image = image?.toImage()
     )
 
     //********************************************************************************************//

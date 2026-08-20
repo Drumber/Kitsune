@@ -3,6 +3,8 @@ package io.github.drumber.kitsune.data.mapper
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toLocalCharacter
 import io.github.drumber.kitsune.data.mapper.CharacterMapper.toNetworkCharacter
+import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
+import io.github.drumber.kitsune.data.mapper.ImageMapper.toNetworkImage
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toMedia
 import io.github.drumber.kitsune.data.mapper.ProfileLinksMapper.toProfileLink
 import io.github.drumber.kitsune.data.mapper.UserStatsMapper.toUserStats
@@ -35,8 +37,8 @@ object UserMapper {
         slug = slug,
         email = email,
         title = title,
-        avatar = avatar,
-        coverImage = coverImage,
+        avatar = avatar?.toImage(),
+        coverImage = coverImage?.toImage(),
         about = about,
         location = location,
         gender = gender,
@@ -61,8 +63,8 @@ object UserMapper {
         name = name,
         slug = slug,
         title = title,
-        avatar = avatar,
-        coverImage = coverImage,
+        avatar = avatar?.toImage(),
+        coverImage = coverImage?.toImage(),
         about = about,
         location = location,
         gender = gender,
@@ -145,8 +147,8 @@ object UserMapper {
         slug = slug,
         email = email,
         title = title,
-        avatar = avatar,
-        coverImage = coverImage,
+        avatar = avatar?.toNetworkImage(),
+        coverImage = coverImage?.toNetworkImage(),
         about = about,
         location = location,
         gender = gender,

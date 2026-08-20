@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.data.mapper
 
 import io.github.drumber.kitsune.data.mapper.EmbedMapper.toEmbed
+import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
 import io.github.drumber.kitsune.data.presentation.model.comment.Comment
 import io.github.drumber.kitsune.data.source.network.comment.model.NetworkComment
 
@@ -21,10 +22,10 @@ object CommentMapper {
         authorId = user?.id,
         authorSlug = user?.slug,
         authorName = user?.name,
-        authorAvatarUrl = user?.avatar?.originalOrDown(),
+        authorAvatarUrl = user?.avatar?.toImage()?.largeOrDown(),
         imageUrl = uploads
             ?.sortedBy { it.uploadOrder ?: 0 }
-            ?.firstNotNullOfOrNull { it.content?.originalOrDown() },
+            ?.firstNotNullOfOrNull { it.content?.toImage()?.largeOrDown() },
         embed = embed?.toEmbed()
     )
 

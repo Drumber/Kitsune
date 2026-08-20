@@ -1,6 +1,7 @@
 package io.github.drumber.kitsune.data.repository
 
 import io.github.drumber.kitsune.data.common.Filter
+import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
 import io.github.drumber.kitsune.data.source.network.feed.PostLikeNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPostLike
@@ -47,11 +48,12 @@ class PostInteractionRepository(
         val filter = Filter()
             .filter("postId", postId)
             .include("user")
+            .fields("users", "avatar")
             .pageLimit(limit * 4)
         return postLikeNetworkDataSource.getPostLikes(filter)
             .mapNotNull { it.user }
             .distinctBy { it.id }
-            .mapNotNull { it.avatar?.originalOrDown() }
+            .mapNotNull { it.avatar?.toImage()?.smallOrHigher() }
             .take(limit)
     }
 

@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.data.mapper
 
+import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
 import io.github.drumber.kitsune.data.presentation.model.group.Group
 import io.github.drumber.kitsune.data.presentation.model.group.GroupCategory
 import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroup
@@ -23,8 +24,8 @@ object GroupMapper {
             featured = featured ?: false,
             membersCount = membersCount ?: 0,
             leadersCount = leadersCount ?: 0,
-            avatarUrl = avatar?.originalOrDown(),
-            coverImageUrl = coverImage?.originalOrDown(),
+            avatarUrl = avatar?.toImage()?.largeOrDown(),
+            coverImageUrl = coverImage?.toImage()?.originalOrDown(),
             categoryId = category?.id,
             categoryName = category?.name
         )

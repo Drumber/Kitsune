@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.data.mapper
 
+import io.github.drumber.kitsune.config.ImageConfig
 import io.github.drumber.kitsune.data.common.Image
 import io.github.drumber.kitsune.data.common.ImageDimension
 import io.github.drumber.kitsune.data.common.ImageDimensions
@@ -125,16 +126,48 @@ object AlgoliaMapper {
         followersCount = followersCount
     )
 
-    fun AlgoliaImage.toImage() = Image(
-        tiny, small, medium, large, original, meta?.toImageMeta()
+    fun AlgoliaImage.toImage() = when (ImageConfig.useWebp) {
+        true -> toImageWebp()
+        false -> toImageRegular()
+    }
+
+    private fun AlgoliaImage.toImageRegular() = Image(
+        tiny = tiny,
+        small = small,
+        medium = medium,
+        large = large,
+        original = original,
+        meta = meta?.toImageMetaRegular()
     )
 
-    fun AlgoliaImageMeta.toImageMeta() = ImageMeta(dimensions?.toDimensions())
-    fun AlgoliaDimensions.toDimensions() = ImageDimensions(
-        tiny?.toDimension(), small?.toDimension(), medium?.toDimension(), large?.toDimension()
+    private fun AlgoliaImage.toImageWebp() = Image(
+        tiny = tinyWebp ?: tiny,
+        small = smallWebp ?: small,
+        medium = mediumWebp ?: medium,
+        large = largeWebp ?: large,
+        original = original,
+        meta = meta?.toImageMetaWebp()
     )
 
-    fun AlgoliaDimension.toDimension() = ImageDimension(width, height)
+    private fun AlgoliaImageMeta.toImageMetaRegular() = ImageMeta(dimensions?.toDimensionsRegular())
+
+    private fun AlgoliaImageMeta.toImageMetaWebp() = ImageMeta(dimensions?.toDimensionsWebp())
+
+    private fun AlgoliaDimensions.toDimensionsRegular() = ImageDimensions(
+        tiny = tiny?.toDimension(),
+        small = small?.toDimension(),
+        medium = medium?.toDimension(),
+        large = large?.toDimension()
+    )
+
+    private fun AlgoliaDimensions.toDimensionsWebp() = ImageDimensions(
+        tiny = tinyWebp?.toDimension() ?: tiny?.toDimension(),
+        small = smallWebp?.toDimension() ?: small?.toDimension(),
+        medium = mediumWebp?.toDimension() ?: medium?.toDimension(),
+        large = largeWebp?.toDimension() ?: large?.toDimension(),
+    )
+
+    private fun AlgoliaDimension.toDimension() = ImageDimension(width, height)
 
     private fun animeSubtypeFromString(subtype: String?) = AnimeSubtype.entries
         .find { it.name.equals(subtype, true) }

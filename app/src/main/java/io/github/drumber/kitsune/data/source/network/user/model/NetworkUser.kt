@@ -3,8 +3,8 @@ package io.github.drumber.kitsune.data.source.network.user.model
 import com.github.jasminb.jsonapi.annotations.Id
 import com.github.jasminb.jsonapi.annotations.Relationship
 import com.github.jasminb.jsonapi.annotations.Type
-import io.github.drumber.kitsune.data.common.Image
 import io.github.drumber.kitsune.data.common.user.UserThemePreference
+import io.github.drumber.kitsune.data.source.network.NetworkImage
 import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
@@ -22,8 +22,8 @@ data class NetworkUser(
     val email: String? = null,
     val title: String? = null,
 
-    val avatar: Image? = null,
-    val coverImage: Image? = null,
+    val avatar: NetworkImage? = null,
+    val coverImage: NetworkImage? = null,
 
     val about: String? = null,
     val location: String? = null,
