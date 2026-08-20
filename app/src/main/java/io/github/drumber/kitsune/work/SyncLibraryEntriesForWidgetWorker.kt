@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.work
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import io.github.drumber.kitsune.constants.LibraryWidget
+import io.github.drumber.kitsune.config.LibraryWidget
 import io.github.drumber.kitsune.domain.library.FetchLibraryEntriesForWidgetUseCase
 import io.github.drumber.kitsune.domain.library.SynchronizeLocalLibraryModificationsUseCase
 import io.github.drumber.kitsune.preference.KitsunePref

@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
-import io.github.drumber.kitsune.constants.Defaults
-import io.github.drumber.kitsune.constants.SortFilter
+import io.github.drumber.kitsune.config.KitsuJsonApi
+import io.github.drumber.kitsune.config.SortFilter
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.common.media.MediaType
@@ -195,7 +195,7 @@ class MainFragmentViewModel(
             pageLimit(10)
             filterType?.let { filter("status", it) }
             sort(sortBy.queryParam)
-            fields(type.identifier, *Defaults.MINIMUM_COLLECTION_FIELDS)
+            fields(type.identifier, *KitsuJsonApi.MINIMUM_COLLECTION_FIELDS)
         }
     }
 

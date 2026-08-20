@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
 import com.google.android.material.card.MaterialCardView
-import io.github.drumber.kitsune.constants.MediaItemSize
+import io.github.drumber.kitsune.preference.MediaItemSize
 import io.github.drumber.kitsune.preference.KitsunePref
 import kotlin.math.roundToInt
 

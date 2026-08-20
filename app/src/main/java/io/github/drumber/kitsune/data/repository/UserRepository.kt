@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.repository
 
-import io.github.drumber.kitsune.constants.Defaults
+import io.github.drumber.kitsune.config.KitsuJsonApi
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.mapper.FeedMapper.toPost
@@ -51,7 +51,7 @@ class UserRepository(
     suspend fun fetchAndStoreLocalUserFromNetwork() {
         val baseFilter = Filter()
             .include("waifu")
-            .fields("characters", *Defaults.MINIMUM_CHARACTER_FIELDS)
+            .fields("characters", *KitsuJsonApi.MINIMUM_CHARACTER_FIELDS)
 
         // fetch user model in the repository scope
         coroutineScope.async {

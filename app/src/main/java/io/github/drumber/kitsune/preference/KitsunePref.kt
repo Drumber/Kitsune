@@ -10,8 +10,6 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.constants.AppTheme
-import io.github.drumber.kitsune.constants.MediaItemSize
 import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus
 import io.github.drumber.kitsune.data.repository.UserRepository

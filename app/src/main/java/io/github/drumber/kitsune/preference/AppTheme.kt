@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.constants
+package io.github.drumber.kitsune.preference
 
 import androidx.annotation.StyleRes
 import io.github.drumber.kitsune.R

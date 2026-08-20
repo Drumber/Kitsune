@@ -7,7 +7,7 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.config.Kitsu
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.presentation.model.media.production.Casting
 import io.github.drumber.kitsune.data.repository.AnimeRepository

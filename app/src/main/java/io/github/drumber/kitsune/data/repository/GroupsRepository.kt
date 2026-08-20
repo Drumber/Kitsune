@@ -4,8 +4,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.filter
 import androidx.paging.map
-import io.github.drumber.kitsune.constants.Kitsu
-import io.github.drumber.kitsune.constants.Repository
+import io.github.drumber.kitsune.config.Kitsu
+import io.github.drumber.kitsune.config.Repository
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.mapper.GroupMapper.toGroup
 import io.github.drumber.kitsune.data.mapper.GroupMapper.toGroupCategory

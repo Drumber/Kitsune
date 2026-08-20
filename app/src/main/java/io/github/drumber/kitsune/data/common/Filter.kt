@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.data.common
 
-import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.config.Kitsu
 
 data class Filter(val options: FilterOptions = mutableMapOf()) {
 

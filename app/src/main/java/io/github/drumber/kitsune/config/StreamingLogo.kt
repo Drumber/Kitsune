@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.constants
+package io.github.drumber.kitsune.config
 
 import androidx.annotation.DrawableRes
 import io.github.drumber.kitsune.R

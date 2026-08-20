@@ -79,7 +79,7 @@ class UserProfileFragment : BaseProfileFragment() {
                     R.id.menu_share_profile_url -> {
                         val user = viewModel.getUser()
                         val profileId = user?.slug ?: user?.id ?: args.userIdOrSlug
-                        val url = io.github.drumber.kitsune.constants.Kitsu.USER_URL_PREFIX + profileId
+                        val url = io.github.drumber.kitsune.config.Kitsu.USER_URL_PREFIX + profileId
                         startUrlShareIntent(url)
                         true
                     }

@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.ui.details.characters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.drumber.kitsune.constants.Defaults
+import io.github.drumber.kitsune.config.KitsuJsonApi
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.presentation.model.character.Character
 import io.github.drumber.kitsune.data.presentation.model.user.Favorite
@@ -74,7 +74,7 @@ class CharacterDetailsViewModel(
     private suspend fun fetchCharacterData(id: String): Character? {
         val filter = Filter()
             .include("mediaCharacters", "mediaCharacters.media")
-            .fields("media", *Defaults.MINIMUM_COLLECTION_FIELDS)
+            .fields("media", *KitsuJsonApi.MINIMUM_COLLECTION_FIELDS)
 
         return try {
             characterRepository.getCharacter(id, filter)

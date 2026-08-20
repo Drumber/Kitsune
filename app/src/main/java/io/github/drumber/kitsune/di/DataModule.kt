@@ -1,8 +1,8 @@
 package io.github.drumber.kitsune.di
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.github.drumber.kitsune.constants.GitHub
-import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.config.GitHub
+import io.github.drumber.kitsune.config.Kitsu
 import io.github.drumber.kitsune.data.repository.AccessTokenRepository
 import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository
 import io.github.drumber.kitsune.data.repository.AnimeRepository

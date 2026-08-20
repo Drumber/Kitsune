@@ -1,4 +1,4 @@
-package io.github.drumber.kitsune.constants
+package io.github.drumber.kitsune.config
 
 object IntentAction {
     // Actions for app shortcuts

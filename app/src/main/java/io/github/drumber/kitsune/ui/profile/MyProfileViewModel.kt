@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.ui.profile
 
 import androidx.lifecycle.viewModelScope
-import io.github.drumber.kitsune.constants.Defaults
+import io.github.drumber.kitsune.config.KitsuJsonApi
 import io.github.drumber.kitsune.data.common.Filter
 import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.data.mapper.UserMapper.toUser
@@ -79,8 +79,8 @@ class MyProfileViewModel(
         val FULL_USER_FILTER
             get() = Filter()
                 .include("stats", "favorites.item", "waifu", "profileLinks.profileLinkSite")
-                .fields("media", *Defaults.MINIMUM_COLLECTION_FIELDS)
-                .fields("characters", *Defaults.MINIMUM_CHARACTER_FIELDS)
+                .fields("media", *KitsuJsonApi.MINIMUM_COLLECTION_FIELDS)
+                .fields("characters", *KitsuJsonApi.MINIMUM_CHARACTER_FIELDS)
     }
 }
 

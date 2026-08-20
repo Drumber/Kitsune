@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.ui.adapter
 
 import android.view.View
-import io.github.drumber.kitsune.constants.MediaItemSize
+import io.github.drumber.kitsune.preference.MediaItemSize
 import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.ItemMediaBinding
 import java.util.concurrent.CopyOnWriteArrayList

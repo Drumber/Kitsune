@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.ui.profile.about
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import io.github.drumber.kitsune.constants.MediaItemSize
+import io.github.drumber.kitsune.preference.MediaItemSize
 import io.github.drumber.kitsune.data.presentation.model.character.Character
 import io.github.drumber.kitsune.data.presentation.model.media.Anime
 import io.github.drumber.kitsune.data.presentation.model.media.Manga

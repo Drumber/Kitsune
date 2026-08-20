@@ -62,9 +62,9 @@ import coil3.toBitmap
 import coil3.transform.RoundedCornersTransformation
 import com.chibatching.kotpref.livedata.asLiveData
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.constants.IntentAction.OPEN_LIBRARY
-import io.github.drumber.kitsune.constants.IntentAction.OPEN_MEDIA
-import io.github.drumber.kitsune.constants.LibraryWidget
+import io.github.drumber.kitsune.config.IntentAction.OPEN_LIBRARY
+import io.github.drumber.kitsune.config.IntentAction.OPEN_MEDIA
+import io.github.drumber.kitsune.config.LibraryWidget
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntry
 import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryWithModification

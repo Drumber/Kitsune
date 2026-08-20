@@ -3,7 +3,7 @@ package io.github.drumber.kitsune.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.map
-import io.github.drumber.kitsune.constants.Repository
+import io.github.drumber.kitsune.config.Repository
 import io.github.drumber.kitsune.data.mapper.MediaMapper.toManga
 import io.github.drumber.kitsune.data.presentation.model.media.Manga
 import io.github.drumber.kitsune.data.source.network.media.MangaNetworkDataSource

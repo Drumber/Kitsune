@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.navigation.findNavController
-import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.config.Kitsu
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.ui.EmojiShortcodeConverter
 import io.github.drumber.kitsune.util.ui.NonScrollingLinkMovementMethod

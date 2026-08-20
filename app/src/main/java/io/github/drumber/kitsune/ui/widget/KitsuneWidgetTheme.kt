@@ -9,7 +9,7 @@ import androidx.glance.color.ColorProviders
 import androidx.glance.color.colorProviders
 import androidx.glance.unit.ColorProvider
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.constants.AppTheme
+import io.github.drumber.kitsune.preference.AppTheme
 import io.github.drumber.kitsune.util.extensions.getResourceId
 
 object KitsuneWidgetTheme {

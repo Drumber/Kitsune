@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil3.load
-import io.github.drumber.kitsune.constants.StreamingLogo
+import io.github.drumber.kitsune.config.StreamingLogo
 import io.github.drumber.kitsune.data.presentation.model.media.streamer.StreamingLink
 import io.github.drumber.kitsune.databinding.ItemStreamerBinding
 

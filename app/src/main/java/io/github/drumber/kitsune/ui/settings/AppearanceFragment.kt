@@ -9,8 +9,8 @@ import com.google.android.material.color.DynamicColors
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.constants.AppTheme
-import io.github.drumber.kitsune.constants.MediaItemSize
+import io.github.drumber.kitsune.preference.AppTheme
+import io.github.drumber.kitsune.preference.MediaItemSize
 import io.github.drumber.kitsune.domain.work.UpdateLibraryWidgetUseCase
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.base.BasePreferenceFragment

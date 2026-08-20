@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil3.load
-import io.github.drumber.kitsune.constants.MediaItemSize
+import io.github.drumber.kitsune.preference.MediaItemSize
 import io.github.drumber.kitsune.data.presentation.model.character.MediaCharacter
 import io.github.drumber.kitsune.data.presentation.model.character.getStringRes
 import io.github.drumber.kitsune.databinding.ItemMediaBinding

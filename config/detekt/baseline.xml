@@ -133,7 +133,7 @@
     <ID>FinalNewline:CustomPercentFormatter.kt$io.github.drumber.kitsune.ui.component.chart.CustomPercentFormatter.kt</ID>
     <ID>FinalNewline:DataUtil.kt$io.github.drumber.kitsune.util.DataUtil.kt</ID>
     <ID>FinalNewline:DateValidatorPointBetween.kt$io.github.drumber.kitsune.util.ui.DateValidatorPointBetween.kt</ID>
-    <ID>FinalNewline:Defaults.kt$io.github.drumber.kitsune.constants.Defaults.kt</ID>
+    <ID>FinalNewline:Defaults.kt$io.github.drumber.kitsune.config.Defaults.kt</ID>
     <ID>FinalNewline:DetailsFragment.kt$io.github.drumber.kitsune.ui.details.DetailsFragment.kt</ID>
     <ID>FinalNewline:DomainModule.kt$io.github.drumber.kitsune.di.DomainModule.kt</ID>
     <ID>FinalNewline:EditProfileFragment.kt$io.github.drumber.kitsune.ui.profile.editprofile.EditProfileFragment.kt</ID>
@@ -164,7 +164,7 @@
     <ID>FinalNewline:ImagePresenter.kt$io.github.drumber.kitsune.ui.onboarding.components.ImagePresenter.kt</ID>
     <ID>FinalNewline:ImageSlideshow.kt$io.github.drumber.kitsune.ui.onboarding.components.ImageSlideshow.kt</ID>
     <ID>FinalNewline:IntNumberRangeView.kt$io.github.drumber.kitsune.ui.component.algolia.range.IntNumberRangeView.kt</ID>
-    <ID>FinalNewline:IntentAction.kt$io.github.drumber.kitsune.constants.IntentAction.kt</ID>
+    <ID>FinalNewline:IntentAction.kt$io.github.drumber.kitsune.config.IntentAction.kt</ID>
     <ID>FinalNewline:InvalidDataException.kt$io.github.drumber.kitsune.data.common.exception.InvalidDataException.kt</ID>
     <ID>FinalNewline:InvalidatingPagingSourceFactory.kt$io.github.drumber.kitsune.data.utils.InvalidatingPagingSourceFactory.kt</ID>
     <ID>FinalNewline:IsUserLoggedInUseCase.kt$io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase.kt</ID>
@@ -195,7 +195,7 @@
     <ID>FinalNewline:LibraryRepository.kt$io.github.drumber.kitsune.data.repository.LibraryRepository.kt</ID>
     <ID>FinalNewline:LibraryRepositoryTest.kt$io.github.drumber.kitsune.data.repository.LibraryRepositoryTest.kt</ID>
     <ID>FinalNewline:LibraryStatus.kt$io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus.kt</ID>
-    <ID>FinalNewline:LibraryWidget.kt$io.github.drumber.kitsune.constants.LibraryWidget.kt</ID>
+    <ID>FinalNewline:LibraryWidget.kt$io.github.drumber.kitsune.config.LibraryWidget.kt</ID>
     <ID>FinalNewline:LoadStateSpanSizeLookup.kt$io.github.drumber.kitsune.ui.component.LoadStateSpanSizeLookup.kt</ID>
     <ID>FinalNewline:LocalAccessTokenTest.kt$io.github.drumber.kitsune.data.source.local.auth.LocalAccessTokenTest.kt</ID>
     <ID>FinalNewline:LocalDatabase.kt$io.github.drumber.kitsune.data.source.local.LocalDatabase.kt</ID>
@@ -342,10 +342,24 @@
     <ID>FinalNewline:WidgetUtils.kt$io.github.drumber.kitsune.ui.widget.WidgetUtils.kt</ID>
     <ID>ImportOrdering:AnimeNetworkDataSource.kt$import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.api.AnimeApi import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime import io.github.drumber.kitsune.data.source.network.toPageData import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
     <ID>ImportOrdering:AnimePagingDataSource.kt$import io.github.drumber.kitsune.data.source.network.BasePagingDataSource import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime import io.github.drumber.kitsune.data.common.Filter</ID>
-    <ID>ImportOrdering:AnimeRepository.kt$import androidx.paging.Pager import androidx.paging.PagingConfig import androidx.paging.map import io.github.drumber.kitsune.constants.Repository import io.github.drumber.kitsune.data.mapper.MediaMapper.toAnime import io.github.drumber.kitsune.data.presentation.model.media.Anime import io.github.drumber.kitsune.data.source.network.media.AnimeNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.AnimePagingDataSource import io.github.drumber.kitsune.data.source.network.media.TrendingAnimePagingDataSource import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.flow.map</ID>
+    <ID>ImportOrdering:AnimeRepository.kt$import androidx.paging.Pager import
+        androidx.paging.PagingConfig import androidx.paging.map import
+        io.github.drumber.kitsune.config.Repository import
+        io.github.drumber.kitsune.data.mapper.MediaMapper.toAnime import
+        io.github.drumber.kitsune.data.presentation.model.media.Anime import
+        io.github.drumber.kitsune.data.source.network.media.AnimeNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.media.AnimePagingDataSource import
+        io.github.drumber.kitsune.data.source.network.media.TrendingAnimePagingDataSource import
+        io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.flow.map</ID>
     <ID>ImportOrdering:CastingNetworkDataSource.kt$import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.api.CastingApi import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkCasting import io.github.drumber.kitsune.data.source.network.toPageData import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
     <ID>ImportOrdering:CastingPagingDataSource.kt$import io.github.drumber.kitsune.data.source.network.BasePagingDataSource import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkCasting import io.github.drumber.kitsune.data.common.Filter</ID>
-    <ID>ImportOrdering:CastingRepository.kt$import androidx.paging.Pager import androidx.paging.PagingConfig import androidx.paging.map import io.github.drumber.kitsune.constants.Repository import io.github.drumber.kitsune.data.mapper.MediaMapper.toCasting import io.github.drumber.kitsune.data.source.network.media.CastingNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.CastingPagingDataSource import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.flow.map</ID>
+    <ID>ImportOrdering:CastingRepository.kt$import androidx.paging.Pager import
+        androidx.paging.PagingConfig import androidx.paging.map import
+        io.github.drumber.kitsune.config.Repository import
+        io.github.drumber.kitsune.data.mapper.MediaMapper.toCasting import
+        io.github.drumber.kitsune.data.source.network.media.CastingNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.media.CastingPagingDataSource import
+        io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.flow.map</ID>
     <ID>ImportOrdering:CategoriesViewModel.kt$import androidx.lifecycle.LiveData import androidx.lifecycle.MutableLiveData import androidx.lifecycle.ViewModel import androidx.lifecycle.viewModelScope import io.github.drumber.kitsune.data.presentation.model.media.category.CategoryNode import io.github.drumber.kitsune.data.repository.CategoryRepository import io.github.drumber.kitsune.preference.CategoryPrefWrapper import io.github.drumber.kitsune.data.common.Filter import io.github.drumber.kitsune.preference.KitsunePref import io.github.drumber.kitsune.util.logE import io.github.drumber.kitsune.util.network.ResponseData import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.launch</ID>
     <ID>ImportOrdering:CategoryNetworkDataSource.kt$import io.github.drumber.kitsune.data.source.network.media.api.CategoryApi import io.github.drumber.kitsune.data.source.network.media.model.category.NetworkCategory import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
     <ID>ImportOrdering:CategoryRepository.kt$import io.github.drumber.kitsune.data.mapper.MediaMapper.toCategory import io.github.drumber.kitsune.data.presentation.model.media.category.Category import io.github.drumber.kitsune.data.source.network.media.CategoryNetworkDataSource import io.github.drumber.kitsune.data.common.Filter</ID>
@@ -353,8 +367,145 @@
     <ID>ImportOrdering:ChapterPagingDataSource.kt$import io.github.drumber.kitsune.data.source.network.BasePagingDataSource import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkChapter import io.github.drumber.kitsune.data.common.Filter</ID>
     <ID>ImportOrdering:CharacterNetworkDataSource.kt$import io.github.drumber.kitsune.data.source.network.character.api.CharacterApi import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
     <ID>ImportOrdering:CharacterRepository.kt$import io.github.drumber.kitsune.data.mapper.CharacterMapper.toCharacter import io.github.drumber.kitsune.data.presentation.model.character.Character import io.github.drumber.kitsune.data.source.network.character.CharacterNetworkDataSource import io.github.drumber.kitsune.data.common.Filter</ID>
-    <ID>ImportOrdering:CharactersViewModel.kt$import androidx.lifecycle.LiveData import androidx.lifecycle.MutableLiveData import androidx.lifecycle.ViewModel import androidx.lifecycle.asFlow import androidx.lifecycle.viewModelScope import androidx.paging.PagingData import androidx.paging.cachedIn import io.github.drumber.kitsune.constants.Kitsu import io.github.drumber.kitsune.data.presentation.model.media.production.Casting import io.github.drumber.kitsune.data.repository.AnimeRepository import io.github.drumber.kitsune.data.repository.CastingRepository import io.github.drumber.kitsune.data.common.Filter import io.github.drumber.kitsune.util.logE import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.flow.Flow import kotlinx.coroutines.flow.flatMapLatest import kotlinx.coroutines.launch import kotlinx.coroutines.withContext</ID>
-    <ID>ImportOrdering:DataModule.kt$import com.fasterxml.jackson.databind.ObjectMapper import io.github.drumber.kitsune.constants.GitHub import io.github.drumber.kitsune.constants.Kitsu import io.github.drumber.kitsune.data.repository.AccessTokenRepository import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository import io.github.drumber.kitsune.data.repository.AnimeRepository import io.github.drumber.kitsune.data.repository.AppUpdateRepository import io.github.drumber.kitsune.data.repository.CastingRepository import io.github.drumber.kitsune.data.repository.CategoryRepository import io.github.drumber.kitsune.data.repository.CharacterRepository import io.github.drumber.kitsune.data.repository.CommentRepository import io.github.drumber.kitsune.data.repository.FavoriteRepository import io.github.drumber.kitsune.data.repository.FeedRepository import io.github.drumber.kitsune.data.repository.NotificationRepository import io.github.drumber.kitsune.data.repository.LibraryChangeListener import io.github.drumber.kitsune.data.repository.LibraryRepository import io.github.drumber.kitsune.data.repository.MangaRepository import io.github.drumber.kitsune.data.repository.MappingRepository import io.github.drumber.kitsune.data.repository.MediaReactionRepository import io.github.drumber.kitsune.data.repository.MediaUnitRepository import io.github.drumber.kitsune.data.repository.ContentRevealStore import io.github.drumber.kitsune.data.repository.FollowRepository import io.github.drumber.kitsune.data.repository.GroupsRepository import io.github.drumber.kitsune.data.repository.PostInteractionRepository import io.github.drumber.kitsune.data.repository.PostManagementRepository import io.github.drumber.kitsune.data.repository.UploadRepository import io.github.drumber.kitsune.data.repository.PostInteractionStore import io.github.drumber.kitsune.data.repository.ProfileLinkRepository import io.github.drumber.kitsune.data.repository.UserRepository import io.github.drumber.kitsune.data.repository.WidgetLibraryChangeListener import io.github.drumber.kitsune.data.source.local.auth.AccessTokenLocalDataSource import io.github.drumber.kitsune.data.source.local.auth.AccessTokenPreference import io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource import io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource import io.github.drumber.kitsune.data.source.local.user.UserPreferences import io.github.drumber.kitsune.data.source.network.algolia.AlgoliaKeyNetworkDataSource import io.github.drumber.kitsune.data.source.network.algolia.api.AlgoliaKeyApi import io.github.drumber.kitsune.data.source.network.appupdate.AppReleaseNetworkDataSource import io.github.drumber.kitsune.data.source.network.appupdate.api.GitHubApi import io.github.drumber.kitsune.data.source.network.auth.AccessTokenNetworkDataSource import io.github.drumber.kitsune.data.source.network.auth.api.AuthenticationApi import io.github.drumber.kitsune.data.source.network.character.CharacterNetworkDataSource import io.github.drumber.kitsune.data.source.network.character.api.CharacterApi import io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter import io.github.drumber.kitsune.data.source.network.character.model.NetworkMediaCharacter import io.github.drumber.kitsune.data.source.network.comment.CommentNetworkDataSource import io.github.drumber.kitsune.data.source.network.comment.api.CommentApi import io.github.drumber.kitsune.data.source.network.comment.model.NetworkComment import io.github.drumber.kitsune.data.source.network.comment.model.NetworkCommentLike import io.github.drumber.kitsune.data.source.network.feed.FeedNetworkDataSource import io.github.drumber.kitsune.data.source.network.feed.PostLikeNetworkDataSource import io.github.drumber.kitsune.data.source.network.feed.PostNetworkDataSource import io.github.drumber.kitsune.data.source.network.feed.UploadNetworkDataSource import io.github.drumber.kitsune.data.source.network.feed.api.FeedApi import io.github.drumber.kitsune.data.source.network.feed.api.PostApi import io.github.drumber.kitsune.data.source.network.feed.api.UploadApi import io.github.drumber.kitsune.data.source.network.feed.api.PostLikeApi import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivity import io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivityGroup import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPostLike import io.github.drumber.kitsune.data.source.network.notification.NotificationNetworkDataSource import io.github.drumber.kitsune.data.source.network.notification.api.NotificationApi import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUpload import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUploadRequest import io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource import io.github.drumber.kitsune.data.source.network.library.api.LibraryEntryApi import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry import io.github.drumber.kitsune.data.source.network.mapping.MappingNetworkDataSource import io.github.drumber.kitsune.data.source.network.mapping.api.MappingApi import io.github.drumber.kitsune.data.source.network.mapping.model.NetworkMapping import io.github.drumber.kitsune.data.source.network.group.GroupsNetworkDataSource import io.github.drumber.kitsune.data.source.network.group.api.GroupsApi import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroup import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroupCategory import io.github.drumber.kitsune.data.source.network.group.model.NetworkGroupMember import io.github.drumber.kitsune.data.source.network.reaction.ReactionNetworkDataSource import io.github.drumber.kitsune.data.source.network.reaction.api.MediaReactionApi import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReaction import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReactionVote import io.github.drumber.kitsune.data.source.network.media.AnimeNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.CastingNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.CategoryNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.ChapterNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.EpisodeNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.MangaNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.api.AnimeApi import io.github.drumber.kitsune.data.source.network.media.api.CastingApi import io.github.drumber.kitsune.data.source.network.media.api.CategoryApi import io.github.drumber.kitsune.data.source.network.media.api.ChapterApi import io.github.drumber.kitsune.data.source.network.media.api.EpisodeApi import io.github.drumber.kitsune.data.source.network.media.api.MangaApi import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga import io.github.drumber.kitsune.data.source.network.media.model.category.NetworkCategory import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkAnimeProduction import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkCasting import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkProducer import io.github.drumber.kitsune.data.source.network.media.model.relationship.NetworkMediaRelationship import io.github.drumber.kitsune.data.source.network.media.model.streamer.NetworkStreamer import io.github.drumber.kitsune.data.source.network.media.model.streamer.NetworkStreamingLink import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkChapter import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkEpisode import io.github.drumber.kitsune.data.source.network.user.FavoriteNetworkDataSource import io.github.drumber.kitsune.data.source.network.user.FollowNetworkDataSource import io.github.drumber.kitsune.data.source.network.user.ProfileLinkNetworkDataSource import io.github.drumber.kitsune.data.source.network.user.UserNetworkDataSource import io.github.drumber.kitsune.data.source.network.user.api.FavoriteApi import io.github.drumber.kitsune.data.source.network.user.api.FollowApi import io.github.drumber.kitsune.data.source.network.user.api.ProfileLinkApi import io.github.drumber.kitsune.data.source.network.user.api.UserApi import io.github.drumber.kitsune.data.source.network.user.api.UserImageUploadApi import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite import io.github.drumber.kitsune.data.source.network.user.model.NetworkFollow import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser import io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImageUpload import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStats import io.github.drumber.kitsune.util.ui.MarkdownPreviewRenderer import io.github.drumber.kitsune.util.ui.PostContentRenderer import kotlinx.coroutines.CoroutineScope import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.SupervisorJob import org.koin.android.ext.koin.androidApplication import org.koin.android.ext.koin.androidContext import org.koin.core.qualifier.named import org.koin.dsl.module</ID>
+    <ID>ImportOrdering:CharactersViewModel.kt$import androidx.lifecycle.LiveData import
+        androidx.lifecycle.MutableLiveData import androidx.lifecycle.ViewModel import
+        androidx.lifecycle.asFlow import androidx.lifecycle.viewModelScope import
+        androidx.paging.PagingData import androidx.paging.cachedIn import
+        io.github.drumber.kitsune.config.Kitsu import
+        io.github.drumber.kitsune.data.presentation.model.media.production.Casting import
+        io.github.drumber.kitsune.data.repository.AnimeRepository import
+        io.github.drumber.kitsune.data.repository.CastingRepository import
+        io.github.drumber.kitsune.data.common.Filter import io.github.drumber.kitsune.util.logE
+        import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.flow.Flow import
+        kotlinx.coroutines.flow.flatMapLatest import kotlinx.coroutines.launch import
+        kotlinx.coroutines.withContext</ID>
+    <ID>ImportOrdering:DataModule.kt$import com.fasterxml.jackson.databind.ObjectMapper import
+        io.github.drumber.kitsune.config.GitHub import io.github.drumber.kitsune.config.Kitsu import
+        io.github.drumber.kitsune.data.repository.AccessTokenRepository import
+        io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository import
+        io.github.drumber.kitsune.data.repository.AnimeRepository import
+        io.github.drumber.kitsune.data.repository.AppUpdateRepository import
+        io.github.drumber.kitsune.data.repository.CastingRepository import
+        io.github.drumber.kitsune.data.repository.CategoryRepository import
+        io.github.drumber.kitsune.data.repository.CharacterRepository import
+        io.github.drumber.kitsune.data.repository.CommentRepository import
+        io.github.drumber.kitsune.data.repository.FavoriteRepository import
+        io.github.drumber.kitsune.data.repository.FeedRepository import
+        io.github.drumber.kitsune.data.repository.NotificationRepository import
+        io.github.drumber.kitsune.data.repository.LibraryChangeListener import
+        io.github.drumber.kitsune.data.repository.LibraryRepository import
+        io.github.drumber.kitsune.data.repository.MangaRepository import
+        io.github.drumber.kitsune.data.repository.MappingRepository import
+        io.github.drumber.kitsune.data.repository.MediaReactionRepository import
+        io.github.drumber.kitsune.data.repository.MediaUnitRepository import
+        io.github.drumber.kitsune.data.repository.ContentRevealStore import
+        io.github.drumber.kitsune.data.repository.FollowRepository import
+        io.github.drumber.kitsune.data.repository.GroupsRepository import
+        io.github.drumber.kitsune.data.repository.PostInteractionRepository import
+        io.github.drumber.kitsune.data.repository.PostManagementRepository import
+        io.github.drumber.kitsune.data.repository.UploadRepository import
+        io.github.drumber.kitsune.data.repository.PostInteractionStore import
+        io.github.drumber.kitsune.data.repository.ProfileLinkRepository import
+        io.github.drumber.kitsune.data.repository.UserRepository import
+        io.github.drumber.kitsune.data.repository.WidgetLibraryChangeListener import
+        io.github.drumber.kitsune.data.source.local.auth.AccessTokenLocalDataSource import
+        io.github.drumber.kitsune.data.source.local.auth.AccessTokenPreference import
+        io.github.drumber.kitsune.data.source.local.library.LibraryLocalDataSource import
+        io.github.drumber.kitsune.data.source.local.user.UserLocalDataSource import
+        io.github.drumber.kitsune.data.source.local.user.UserPreferences import
+        io.github.drumber.kitsune.data.source.network.algolia.AlgoliaKeyNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.algolia.api.AlgoliaKeyApi import
+        io.github.drumber.kitsune.data.source.network.appupdate.AppReleaseNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.appupdate.api.GitHubApi import
+        io.github.drumber.kitsune.data.source.network.auth.AccessTokenNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.auth.api.AuthenticationApi import
+        io.github.drumber.kitsune.data.source.network.character.CharacterNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.character.api.CharacterApi import
+        io.github.drumber.kitsune.data.source.network.character.model.NetworkCharacter import
+        io.github.drumber.kitsune.data.source.network.character.model.NetworkMediaCharacter import
+        io.github.drumber.kitsune.data.source.network.comment.CommentNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.comment.api.CommentApi import
+        io.github.drumber.kitsune.data.source.network.comment.model.NetworkComment import
+        io.github.drumber.kitsune.data.source.network.comment.model.NetworkCommentLike import
+        io.github.drumber.kitsune.data.source.network.feed.FeedNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.feed.PostLikeNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.feed.PostNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.feed.UploadNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.feed.api.FeedApi import
+        io.github.drumber.kitsune.data.source.network.feed.api.PostApi import
+        io.github.drumber.kitsune.data.source.network.feed.api.UploadApi import
+        io.github.drumber.kitsune.data.source.network.feed.api.PostLikeApi import
+        io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivity import
+        io.github.drumber.kitsune.data.source.network.feed.model.NetworkActivityGroup import
+        io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost import
+        io.github.drumber.kitsune.data.source.network.feed.model.NetworkPostLike import
+        io.github.drumber.kitsune.data.source.network.notification.NotificationNetworkDataSource
+        import io.github.drumber.kitsune.data.source.network.notification.api.NotificationApi import
+        io.github.drumber.kitsune.data.source.network.feed.model.NetworkUpload import
+        io.github.drumber.kitsune.data.source.network.feed.model.NetworkUploadRequest import
+        io.github.drumber.kitsune.data.source.network.library.LibraryNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.library.api.LibraryEntryApi import
+        io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry import
+        io.github.drumber.kitsune.data.source.network.mapping.MappingNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.mapping.api.MappingApi import
+        io.github.drumber.kitsune.data.source.network.mapping.model.NetworkMapping import
+        io.github.drumber.kitsune.data.source.network.group.GroupsNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.group.api.GroupsApi import
+        io.github.drumber.kitsune.data.source.network.group.model.NetworkGroup import
+        io.github.drumber.kitsune.data.source.network.group.model.NetworkGroupCategory import
+        io.github.drumber.kitsune.data.source.network.group.model.NetworkGroupMember import
+        io.github.drumber.kitsune.data.source.network.reaction.ReactionNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.reaction.api.MediaReactionApi import
+        io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReaction import
+        io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReactionVote import
+        io.github.drumber.kitsune.data.source.network.media.AnimeNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.media.CastingNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.media.CategoryNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.media.ChapterNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.media.EpisodeNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.media.MangaNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.media.api.AnimeApi import
+        io.github.drumber.kitsune.data.source.network.media.api.CastingApi import
+        io.github.drumber.kitsune.data.source.network.media.api.CategoryApi import
+        io.github.drumber.kitsune.data.source.network.media.api.ChapterApi import
+        io.github.drumber.kitsune.data.source.network.media.api.EpisodeApi import
+        io.github.drumber.kitsune.data.source.network.media.api.MangaApi import
+        io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime import
+        io.github.drumber.kitsune.data.source.network.media.model.NetworkManga import
+        io.github.drumber.kitsune.data.source.network.media.model.category.NetworkCategory import
+        io.github.drumber.kitsune.data.source.network.media.model.production.NetworkAnimeProduction
+        import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkCasting
+        import io.github.drumber.kitsune.data.source.network.media.model.production.NetworkProducer
+        import
+        io.github.drumber.kitsune.data.source.network.media.model.relationship.NetworkMediaRelationship
+        import io.github.drumber.kitsune.data.source.network.media.model.streamer.NetworkStreamer
+        import
+        io.github.drumber.kitsune.data.source.network.media.model.streamer.NetworkStreamingLink
+        import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkChapter import
+        io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkEpisode import
+        io.github.drumber.kitsune.data.source.network.user.FavoriteNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.user.FollowNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.user.ProfileLinkNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.user.UserNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.user.api.FavoriteApi import
+        io.github.drumber.kitsune.data.source.network.user.api.FollowApi import
+        io.github.drumber.kitsune.data.source.network.user.api.ProfileLinkApi import
+        io.github.drumber.kitsune.data.source.network.user.api.UserApi import
+        io.github.drumber.kitsune.data.source.network.user.api.UserImageUploadApi import
+        io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite import
+        io.github.drumber.kitsune.data.source.network.user.model.NetworkFollow import
+        io.github.drumber.kitsune.data.source.network.user.model.NetworkUser import
+        io.github.drumber.kitsune.data.source.network.user.model.NetworkUserImageUpload import
+        io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink
+        import
+        io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite
+        import io.github.drumber.kitsune.data.source.network.user.model.stats.NetworkUserStats
+        import io.github.drumber.kitsune.util.ui.MarkdownPreviewRenderer import
+        io.github.drumber.kitsune.util.ui.PostContentRenderer import
+        kotlinx.coroutines.CoroutineScope import kotlinx.coroutines.Dispatchers import
+        kotlinx.coroutines.SupervisorJob import org.koin.android.ext.koin.androidApplication import
+        org.koin.android.ext.koin.androidContext import org.koin.core.qualifier.named import
+        org.koin.dsl.module</ID>
     <ID>ImportOrdering:EpisodeNetworkDataSource.kt$import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.api.EpisodeApi import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkEpisode import io.github.drumber.kitsune.data.source.network.toPageData import io.github.drumber.kitsune.data.common.Filter</ID>
     <ID>ImportOrdering:EpisodePagingDataSource.kt$import io.github.drumber.kitsune.data.source.network.BasePagingDataSource import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkEpisode import io.github.drumber.kitsune.data.common.Filter</ID>
     <ID>ImportOrdering:FavoriteNetworkDataSource.kt$import com.github.jasminb.jsonapi.JSONAPIDocument import io.github.drumber.kitsune.data.source.network.user.api.FavoriteApi import io.github.drumber.kitsune.data.source.network.user.model.NetworkFavorite import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
@@ -368,16 +519,98 @@
     <ID>ImportOrdering:LibraryNetworkDataSource.kt$import com.github.jasminb.jsonapi.JSONAPIDocument import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.library.api.LibraryEntryApi import io.github.drumber.kitsune.data.source.network.library.model.NetworkLibraryEntry import io.github.drumber.kitsune.data.source.network.toPageData import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
     <ID>ImportOrdering:MangaNetworkDataSource.kt$import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.api.MangaApi import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga import io.github.drumber.kitsune.data.source.network.toPageData import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
     <ID>ImportOrdering:MangaPagingDataSource.kt$import io.github.drumber.kitsune.data.source.network.BasePagingDataSource import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga import io.github.drumber.kitsune.data.common.Filter</ID>
-    <ID>ImportOrdering:MangaRepository.kt$import androidx.paging.Pager import androidx.paging.PagingConfig import androidx.paging.map import io.github.drumber.kitsune.constants.Repository import io.github.drumber.kitsune.data.mapper.MediaMapper.toManga import io.github.drumber.kitsune.data.presentation.model.media.Manga import io.github.drumber.kitsune.data.source.network.media.MangaNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.MangaPagingDataSource import io.github.drumber.kitsune.data.source.network.media.TrendingMangaPagingDataSource import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.flow.map</ID>
+    <ID>ImportOrdering:MangaRepository.kt$import androidx.paging.Pager import
+        androidx.paging.PagingConfig import androidx.paging.map import
+        io.github.drumber.kitsune.config.Repository import
+        io.github.drumber.kitsune.data.mapper.MediaMapper.toManga import
+        io.github.drumber.kitsune.data.presentation.model.media.Manga import
+        io.github.drumber.kitsune.data.source.network.media.MangaNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.media.MangaPagingDataSource import
+        io.github.drumber.kitsune.data.source.network.media.TrendingMangaPagingDataSource import
+        io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.flow.map</ID>
     <ID>ImportOrdering:MappingNetworkDataSource.kt$import io.github.drumber.kitsune.data.source.network.mapping.api.MappingApi import io.github.drumber.kitsune.data.source.network.mapping.model.NetworkMapping import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
     <ID>ImportOrdering:MappingRepository.kt$import io.github.drumber.kitsune.data.mapper.MappingMapper.toMapping import io.github.drumber.kitsune.data.presentation.model.mapping.Mapping import io.github.drumber.kitsune.data.source.network.mapping.MappingNetworkDataSource import io.github.drumber.kitsune.data.common.Filter</ID>
-    <ID>ImportOrdering:MediaUnitRepository.kt$import androidx.paging.Pager import androidx.paging.PagingConfig import androidx.paging.map import io.github.drumber.kitsune.constants.Repository import io.github.drumber.kitsune.data.mapper.MediaUnitMapper.toMediaUnit import io.github.drumber.kitsune.data.source.network.media.ChapterNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.ChapterPagingDataSource import io.github.drumber.kitsune.data.source.network.media.EpisodeNetworkDataSource import io.github.drumber.kitsune.data.source.network.media.EpisodePagingDataSource import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.flow.map</ID>
+    <ID>ImportOrdering:MediaUnitRepository.kt$import androidx.paging.Pager import
+        androidx.paging.PagingConfig import androidx.paging.map import
+        io.github.drumber.kitsune.config.Repository import
+        io.github.drumber.kitsune.data.mapper.MediaUnitMapper.toMediaUnit import
+        io.github.drumber.kitsune.data.source.network.media.ChapterNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.media.ChapterPagingDataSource import
+        io.github.drumber.kitsune.data.source.network.media.EpisodeNetworkDataSource import
+        io.github.drumber.kitsune.data.source.network.media.EpisodePagingDataSource import
+        io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.flow.map</ID>
     <ID>ImportOrdering:NetworkMediaReaction.kt$import com.github.jasminb.jsonapi.annotations.Id import com.github.jasminb.jsonapi.annotations.Relationship import com.github.jasminb.jsonapi.annotations.Type import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga import io.github.drumber.kitsune.data.source.network.feed.model.NetworkFeedSubject import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser</ID>
-    <ID>ImportOrdering:NetworkModule.kt$import android.content.Context import android.os.Parcelable import com.algolia.search.model.filter.Filter import com.fasterxml.jackson.annotation.JsonInclude import com.fasterxml.jackson.databind.DeserializationFeature import com.fasterxml.jackson.databind.MapperFeature import com.fasterxml.jackson.databind.ObjectMapper import com.fasterxml.jackson.databind.module.SimpleModule import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder import com.github.jasminb.jsonapi.DeserializationFeature as JsonApiDeserializationFeature import com.github.jasminb.jsonapi.ResourceConverter import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory import io.github.drumber.kitsune.BuildConfig import io.github.drumber.kitsune.constants.Kitsu import io.github.drumber.kitsune.util.json.AlgoliaFacetValueDeserializer import io.github.drumber.kitsune.util.json.AlgoliaNumericValueDeserializer import io.github.drumber.kitsune.util.json.IgnoreParcelablePropertyMixin import io.github.drumber.kitsune.util.network.AuthenticationInterceptor import io.github.drumber.kitsune.util.network.AuthenticationInterceptorImpl import io.github.drumber.kitsune.util.network.UserAgentInterceptor import okhttp3.Cache import okhttp3.OkHttpClient import okhttp3.Request import okhttp3.logging.HttpLoggingInterceptor import org.koin.core.qualifier.named import org.koin.dsl.module import retrofit2.Retrofit import retrofit2.converter.jackson.JacksonConverterFactory import java.io.File import java.util.concurrent.TimeUnit</ID>
+    <ID>ImportOrdering:NetworkModule.kt$import android.content.Context import android.os.Parcelable
+        import com.algolia.search.model.filter.Filter import
+        com.fasterxml.jackson.annotation.JsonInclude import
+        com.fasterxml.jackson.databind.DeserializationFeature import
+        com.fasterxml.jackson.databind.MapperFeature import
+        com.fasterxml.jackson.databind.ObjectMapper import
+        com.fasterxml.jackson.databind.module.SimpleModule import
+        com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder import
+        com.github.jasminb.jsonapi.DeserializationFeature as JsonApiDeserializationFeature import
+        com.github.jasminb.jsonapi.ResourceConverter import
+        com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory import
+        io.github.drumber.kitsune.BuildConfig import io.github.drumber.kitsune.config.Kitsu import
+        io.github.drumber.kitsune.util.json.AlgoliaFacetValueDeserializer import
+        io.github.drumber.kitsune.util.json.AlgoliaNumericValueDeserializer import
+        io.github.drumber.kitsune.util.json.IgnoreParcelablePropertyMixin import
+        io.github.drumber.kitsune.util.network.AuthenticationInterceptor import
+        io.github.drumber.kitsune.util.network.AuthenticationInterceptorImpl import
+        io.github.drumber.kitsune.util.network.UserAgentInterceptor import okhttp3.Cache import
+        okhttp3.OkHttpClient import okhttp3.Request import okhttp3.logging.HttpLoggingInterceptor
+        import org.koin.core.qualifier.named import org.koin.dsl.module import retrofit2.Retrofit
+        import retrofit2.converter.jackson.JacksonConverterFactory import java.io.File import
+        java.util.concurrent.TimeUnit</ID>
     <ID>ImportOrdering:PostDetailFragment.kt$import android.content.Context import android.os.Bundle import android.view.View import android.view.inputmethod.InputMethodManager import androidx.fragment.app.Fragment import androidx.lifecycle.Lifecycle import androidx.lifecycle.lifecycleScope import androidx.lifecycle.repeatOnLifecycle import androidx.navigation.fragment.findNavController import androidx.navigation.fragment.navArgs import androidx.recyclerview.widget.ConcatAdapter import androidx.recyclerview.widget.LinearLayoutManager import androidx.recyclerview.widget.RecyclerView import com.bumptech.glide.Glide import com.google.android.material.dialog.MaterialAlertDialogBuilder import io.github.drumber.kitsune.R import io.github.drumber.kitsune.databinding.FragmentPostDetailBinding import io.github.drumber.kitsune.ui.adapter.paging.CommentPagingAdapter import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections import io.github.drumber.kitsune.data.presentation.model.comment.Comment import io.github.drumber.kitsune.data.presentation.model.feed.Post import io.github.drumber.kitsune.util.extensions.navigateSafe import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener import io.github.drumber.kitsune.util.ui.initWindowInsetsListener import io.github.drumber.kitsune.util.ui.PostContentRenderer import io.github.drumber.kitsune.util.ui.showSnackbar import io.github.drumber.kitsune.util.ui.viewBinding import kotlinx.coroutines.flow.collectLatest import kotlinx.coroutines.launch import org.koin.android.ext.android.inject import org.koin.androidx.viewmodel.ext.android.viewModel</ID>
     <ID>ImportOrdering:PostManagementRepository.kt$import io.github.drumber.kitsune.data.mapper.FeedMapper.toPost import io.github.drumber.kitsune.data.presentation.model.feed.Post import io.github.drumber.kitsune.data.common.Filter import io.github.drumber.kitsune.data.source.network.feed.PostNetworkDataSource import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUpload import io.github.drumber.kitsune.data.source.network.media.model.NetworkMedia import io.github.drumber.kitsune.data.source.network.media.model.unit.NetworkMediaUnit import io.github.drumber.kitsune.data.source.network.user.model.NetworkUser</ID>
     <ID>ImportOrdering:ProfileLinkNetworkDataSource.kt$import io.github.drumber.kitsune.data.source.network.user.api.ProfileLinkApi import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLink import io.github.drumber.kitsune.data.source.network.user.model.profilelinks.NetworkProfileLinkSite import io.github.drumber.kitsune.data.common.Filter import kotlinx.coroutines.Dispatchers import kotlinx.coroutines.withContext</ID>
-    <ID>ImportOrdering:SearchViewModel.kt$import androidx.lifecycle.LiveData import androidx.lifecycle.MutableLiveData import androidx.lifecycle.ViewModel import androidx.lifecycle.asFlow import androidx.lifecycle.viewModelScope import androidx.paging.PagingConfig import androidx.paging.cachedIn import com.algolia.instantsearch.android.paging3.Paginator import com.algolia.instantsearch.android.paging3.filterstate.connectPaginator import com.algolia.instantsearch.android.paging3.flow import com.algolia.instantsearch.android.paging3.searchbox.connectPaginator import com.algolia.instantsearch.core.connection.AbstractConnection import com.algolia.instantsearch.core.connection.ConnectionHandler import com.algolia.instantsearch.core.searchbox.SearchBoxViewModel import com.algolia.instantsearch.core.selectable.list.SelectionMode import com.algolia.instantsearch.filter.facet.DefaultFacetListPresenter import com.algolia.instantsearch.filter.facet.FacetListConnector import com.algolia.instantsearch.filter.facet.FacetSortCriterion import com.algolia.instantsearch.filter.state.FilterState import com.algolia.instantsearch.filter.state.Filters import com.algolia.instantsearch.filter.state.groupOr import com.algolia.instantsearch.searchbox.SearchBoxConnector import com.algolia.instantsearch.searcher.connectFilterState import com.algolia.instantsearch.searcher.hits.HitsSearcher import com.algolia.search.dsl.attributesToRetrieve import com.algolia.search.dsl.query import com.algolia.search.model.Attribute import com.algolia.search.model.filter.Filter import com.algolia.search.model.response.ResponseSearch import com.algolia.search.model.search.Query import io.github.drumber.kitsune.constants.Kitsu import io.github.drumber.kitsune.constants.Repository import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toMedia import io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toUserSearchResult import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType import io.github.drumber.kitsune.data.presentation.model.media.Media import io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaMediaSearchResult import io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaUserSearchResult import io.github.drumber.kitsune.domain.algolia.FilterCollection import io.github.drumber.kitsune.domain.algolia.SearchProvider import io.github.drumber.kitsune.domain.algolia.toCombinedMap import io.github.drumber.kitsune.domain.algolia.toFilterCollection import io.github.drumber.kitsune.data.common.exception.SearchProviderUnavailableException import io.github.drumber.kitsune.preference.KitsunePref import io.github.drumber.kitsune.ui.component.algolia.SeasonListPresenter import io.github.drumber.kitsune.ui.component.algolia.range.CustomFilterRangeConnector import io.github.drumber.kitsune.util.logE import io.github.drumber.kitsune.util.logI import kotlinx.coroutines.flow.flatMapLatest import kotlinx.coroutines.launch import kotlinx.serialization.json.Json import kotlinx.serialization.json.decodeFromJsonElement import java.util.Calendar</ID>
+    <ID>ImportOrdering:SearchViewModel.kt$import androidx.lifecycle.LiveData import
+        androidx.lifecycle.MutableLiveData import androidx.lifecycle.ViewModel import
+        androidx.lifecycle.asFlow import androidx.lifecycle.viewModelScope import
+        androidx.paging.PagingConfig import androidx.paging.cachedIn import
+        com.algolia.instantsearch.android.paging3.Paginator import
+        com.algolia.instantsearch.android.paging3.filterstate.connectPaginator import
+        com.algolia.instantsearch.android.paging3.flow import
+        com.algolia.instantsearch.android.paging3.searchbox.connectPaginator import
+        com.algolia.instantsearch.core.connection.AbstractConnection import
+        com.algolia.instantsearch.core.connection.ConnectionHandler import
+        com.algolia.instantsearch.core.searchbox.SearchBoxViewModel import
+        com.algolia.instantsearch.core.selectable.list.SelectionMode import
+        com.algolia.instantsearch.filter.facet.DefaultFacetListPresenter import
+        com.algolia.instantsearch.filter.facet.FacetListConnector import
+        com.algolia.instantsearch.filter.facet.FacetSortCriterion import
+        com.algolia.instantsearch.filter.state.FilterState import
+        com.algolia.instantsearch.filter.state.Filters import
+        com.algolia.instantsearch.filter.state.groupOr import
+        com.algolia.instantsearch.searchbox.SearchBoxConnector import
+        com.algolia.instantsearch.searcher.connectFilterState import
+        com.algolia.instantsearch.searcher.hits.HitsSearcher import
+        com.algolia.search.dsl.attributesToRetrieve import com.algolia.search.dsl.query import
+        com.algolia.search.model.Attribute import com.algolia.search.model.filter.Filter import
+        com.algolia.search.model.response.ResponseSearch import
+        com.algolia.search.model.search.Query import io.github.drumber.kitsune.config.Kitsu import
+        io.github.drumber.kitsune.config.Repository import
+        io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toMedia import
+        io.github.drumber.kitsune.data.mapper.AlgoliaMapper.toUserSearchResult import
+        io.github.drumber.kitsune.data.presentation.model.algolia.SearchType import
+        io.github.drumber.kitsune.data.presentation.model.media.Media import
+        io.github.drumber.kitsune.data.repository.AlgoliaKeyRepository import
+        io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaMediaSearchResult
+        import
+        io.github.drumber.kitsune.data.source.network.algolia.model.search.AlgoliaUserSearchResult
+        import io.github.drumber.kitsune.domain.algolia.FilterCollection import
+        io.github.drumber.kitsune.domain.algolia.SearchProvider import
+        io.github.drumber.kitsune.domain.algolia.toCombinedMap import
+        io.github.drumber.kitsune.domain.algolia.toFilterCollection import
+        io.github.drumber.kitsune.data.common.exception.SearchProviderUnavailableException import
+        io.github.drumber.kitsune.preference.KitsunePref import
+        io.github.drumber.kitsune.ui.component.algolia.SeasonListPresenter import
+        io.github.drumber.kitsune.ui.component.algolia.range.CustomFilterRangeConnector import
+        io.github.drumber.kitsune.util.logE import io.github.drumber.kitsune.util.logI import
+        kotlinx.coroutines.flow.flatMapLatest import kotlinx.coroutines.launch import
+        kotlinx.serialization.json.Json import kotlinx.serialization.json.decodeFromJsonElement
+        import java.util.Calendar</ID>
     <ID>ImportOrdering:TrendingAnimePagingDataSource.kt$import io.github.drumber.kitsune.data.source.network.BasePagingDataSource import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.model.NetworkAnime import io.github.drumber.kitsune.data.common.Filter</ID>
     <ID>ImportOrdering:TrendingMangaPagingDataSource.kt$import io.github.drumber.kitsune.data.source.network.BasePagingDataSource import io.github.drumber.kitsune.data.source.network.PageData import io.github.drumber.kitsune.data.source.network.media.model.NetworkManga import io.github.drumber.kitsune.data.common.Filter</ID>
     <ID>ImportOrdering:UpdateLibraryEntryUseCase.kt$import io.github.drumber.kitsune.data.presentation.model.library.LibraryEntryModification import io.github.drumber.kitsune.data.repository.LibraryRepository import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.NetworkError import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.NotFound import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateFailureReason.UnknownException import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Failure import io.github.drumber.kitsune.domain.library.LibraryEntryUpdateResult.Success import io.github.drumber.kitsune.data.common.exception.NotFoundException import java.io.IOException import kotlin.coroutines.cancellation.CancellationException</ID>
@@ -606,7 +839,7 @@
     <ID>NewLineAtEndOfFile:CustomPercentFormatter.kt$io.github.drumber.kitsune.ui.component.chart.CustomPercentFormatter.kt</ID>
     <ID>NewLineAtEndOfFile:DataUtil.kt$io.github.drumber.kitsune.util.DataUtil.kt</ID>
     <ID>NewLineAtEndOfFile:DateValidatorPointBetween.kt$io.github.drumber.kitsune.util.ui.DateValidatorPointBetween.kt</ID>
-    <ID>NewLineAtEndOfFile:Defaults.kt$io.github.drumber.kitsune.constants.Defaults.kt</ID>
+    <ID>NewLineAtEndOfFile:Defaults.kt$io.github.drumber.kitsune.config.Defaults.kt</ID>
     <ID>NewLineAtEndOfFile:DetailsFragment.kt$io.github.drumber.kitsune.ui.details.DetailsFragment.kt</ID>
     <ID>NewLineAtEndOfFile:DomainModule.kt$io.github.drumber.kitsune.di.DomainModule.kt</ID>
     <ID>NewLineAtEndOfFile:EditProfileFragment.kt$io.github.drumber.kitsune.ui.profile.editprofile.EditProfileFragment.kt</ID>
@@ -637,7 +870,7 @@
     <ID>NewLineAtEndOfFile:ImagePresenter.kt$io.github.drumber.kitsune.ui.onboarding.components.ImagePresenter.kt</ID>
     <ID>NewLineAtEndOfFile:ImageSlideshow.kt$io.github.drumber.kitsune.ui.onboarding.components.ImageSlideshow.kt</ID>
     <ID>NewLineAtEndOfFile:IntNumberRangeView.kt$io.github.drumber.kitsune.ui.component.algolia.range.IntNumberRangeView.kt</ID>
-    <ID>NewLineAtEndOfFile:IntentAction.kt$io.github.drumber.kitsune.constants.IntentAction.kt</ID>
+    <ID>NewLineAtEndOfFile:IntentAction.kt$io.github.drumber.kitsune.config.IntentAction.kt</ID>
     <ID>NewLineAtEndOfFile:InvalidDataException.kt$io.github.drumber.kitsune.data.common.exception.InvalidDataException.kt</ID>
     <ID>NewLineAtEndOfFile:InvalidatingPagingSourceFactory.kt$io.github.drumber.kitsune.data.utils.InvalidatingPagingSourceFactory.kt</ID>
     <ID>NewLineAtEndOfFile:IsUserLoggedInUseCase.kt$io.github.drumber.kitsune.domain.auth.IsUserLoggedInUseCase.kt</ID>
@@ -668,7 +901,7 @@
     <ID>NewLineAtEndOfFile:LibraryRepository.kt$io.github.drumber.kitsune.data.repository.LibraryRepository.kt</ID>
     <ID>NewLineAtEndOfFile:LibraryRepositoryTest.kt$io.github.drumber.kitsune.data.repository.LibraryRepositoryTest.kt</ID>
     <ID>NewLineAtEndOfFile:LibraryStatus.kt$io.github.drumber.kitsune.data.presentation.model.library.LibraryStatus.kt</ID>
-    <ID>NewLineAtEndOfFile:LibraryWidget.kt$io.github.drumber.kitsune.constants.LibraryWidget.kt</ID>
+    <ID>NewLineAtEndOfFile:LibraryWidget.kt$io.github.drumber.kitsune.config.LibraryWidget.kt</ID>
     <ID>NewLineAtEndOfFile:LoadStateSpanSizeLookup.kt$io.github.drumber.kitsune.ui.component.LoadStateSpanSizeLookup.kt</ID>
     <ID>NewLineAtEndOfFile:LocalAccessTokenTest.kt$io.github.drumber.kitsune.data.source.local.auth.LocalAccessTokenTest.kt</ID>
     <ID>NewLineAtEndOfFile:LocalDatabase.kt$io.github.drumber.kitsune.data.source.local.LocalDatabase.kt</ID>

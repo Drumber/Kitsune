@@ -1,7 +1,7 @@
 package io.github.drumber.kitsune.ui.createpost
 
 import androidx.paging.PagingData
-import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.config.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository
 import io.github.drumber.kitsune.data.repository.MediaUnitRepository.MediaUnitType

@@ -2,7 +2,7 @@ package io.github.drumber.kitsune.data.source.network
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.config.Kitsu
 import io.github.drumber.kitsune.data.common.exception.NoDataException
 import io.github.drumber.kitsune.util.logE
 

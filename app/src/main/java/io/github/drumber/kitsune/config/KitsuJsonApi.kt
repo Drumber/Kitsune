@@ -1,6 +1,15 @@
-package io.github.drumber.kitsune.constants
+package io.github.drumber.kitsune.config
 
 import io.github.drumber.kitsune.R
+
+object KitsuJsonApi {
+
+    /** The minimum of required fields to display resources in a collection, e.g. in RecyclerView. */
+    val MINIMUM_COLLECTION_FIELDS get() = arrayOf("slug", "titles", "canonicalTitle", "posterImage", "coverImage")
+
+    val MINIMUM_CHARACTER_FIELDS get() = arrayOf("slug", "name", "image")
+
+}
 
 enum class SortFilter(val queryParam: String) {
 
