@@ -24,7 +24,7 @@ android {
     defaultConfig {
         applicationId = "io.github.drumber.kitsune"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 42
         versionName = "2.1.2"
 
