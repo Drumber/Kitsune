@@ -1,9 +1,10 @@
 package io.github.drumber.kitsune.data.mapper
 
 import io.github.drumber.kitsune.data.mapper.CommentMapper.toComment
+import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
 import io.github.drumber.kitsune.data.source.network.comment.model.NetworkComment
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUpload
-import io.github.drumber.kitsune.testutils.image
+import io.github.drumber.kitsune.testutils.networkImage
 import io.github.drumber.kitsune.testutils.networkUser
 import net.datafaker.Faker
 import org.assertj.core.api.Assertions.assertThat
@@ -18,8 +19,8 @@ class CommentMapperTest {
     fun shouldMap_NetworkComment_to_Comment() {
         // given
         val user = networkUser(faker)
-        val firstUpload = NetworkUpload(id = "u1", content = image(faker), uploadOrder = 1)
-        val secondUpload = NetworkUpload(id = "u2", content = image(faker), uploadOrder = 0)
+        val firstUpload = NetworkUpload(id = "u1", content = networkImage(faker), uploadOrder = 1)
+        val secondUpload = NetworkUpload(id = "u2", content = networkImage(faker), uploadOrder = 0)
         val networkComment = NetworkComment(
             id = "7",
             content = "content",
@@ -45,9 +46,9 @@ class CommentMapperTest {
         assertThat(comment.myLikeId).isEqualTo("like-1")
         assertThat(comment.authorId).isEqualTo(user.id)
         assertThat(comment.authorName).isEqualTo(user.name)
-        assertThat(comment.authorAvatarUrl).isEqualTo(user.avatar?.originalOrDown())
+        assertThat(comment.authorAvatarUrl).isEqualTo(user.avatar?.toImage()?.largeOrDown())
         // imageUrl uses the first upload ordered by uploadOrder ascending
-        assertThat(comment.imageUrl).isEqualTo(secondUpload.content?.originalOrDown())
+        assertThat(comment.imageUrl).isEqualTo(secondUpload.content?.toImage()?.largeOrDown())
     }
 
     @Test

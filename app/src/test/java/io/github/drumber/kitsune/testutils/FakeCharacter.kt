@@ -17,7 +17,7 @@ fun networkCharacter(faker: Faker) = NetworkCharacter(
     otherNames = listOf(faker.name().name(), faker.name().name()),
     malId = faker.number().positive(),
     description = faker.lorem().sentence(),
-    image = image(faker),
+    image = networkImage(faker),
     mediaCharacters = listOf(
         NetworkMediaCharacter(
             id = faker.number().positive().toString(),

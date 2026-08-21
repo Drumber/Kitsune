@@ -1,5 +1,6 @@
 package io.github.drumber.kitsune.data.mapper
 
+import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
 import io.github.drumber.kitsune.data.mapper.ReactionMapper.toMediaReaction
 import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReaction
 import io.github.drumber.kitsune.testutils.networkAnime
@@ -42,10 +43,10 @@ class ReactionMapperTest {
         assertThat(reaction.createdAt).isEqualTo("2024-01-01T00:00:00.000Z")
         assertThat(reaction.authorId).isEqualTo(user.id)
         assertThat(reaction.authorName).isEqualTo(user.name)
-        assertThat(reaction.authorAvatarUrl).isEqualTo(user.avatar?.originalOrDown())
+        assertThat(reaction.authorAvatarUrl).isEqualTo(user.avatar?.toImage()?.largeOrDown())
         assertThat(reaction.mediaId).isEqualTo(anime.id)
         assertThat(reaction.mediaTitle).isEqualTo(anime.canonicalTitle)
-        assertThat(reaction.mediaPosterUrl).isEqualTo(anime.posterImage?.originalOrDown())
+        assertThat(reaction.mediaPosterUrl).isEqualTo(anime.posterImage?.toImage()?.smallOrHigher())
         assertThat(reaction.mediaSlug).isEqualTo(anime.slug)
         assertThat(reaction.mediaIsAnime).isTrue()
     }

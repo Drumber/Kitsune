@@ -21,6 +21,7 @@ import io.github.drumber.kitsune.config.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
 import io.github.drumber.kitsune.databinding.DialogComposeReactionBinding
 import io.github.drumber.kitsune.databinding.FragmentReactionsBinding
+import io.github.drumber.kitsune.di.SocialImagesLoader
 import io.github.drumber.kitsune.ui.adapter.paging.MediaReactionPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
@@ -49,7 +50,7 @@ class ReactionsFragment : Fragment(R.layout.fragment_reactions),
 
     private val viewModel: ReactionsViewModel by viewModel()
 
-    private val imageLoader: ImageLoader by inject(named<ImageLoader>())
+    private val imageLoader: ImageLoader by inject(named<SocialImagesLoader>())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

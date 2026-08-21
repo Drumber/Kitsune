@@ -1,10 +1,11 @@
 package io.github.drumber.kitsune.data.mapper
 
 import io.github.drumber.kitsune.data.mapper.FeedMapper.toPost
+import io.github.drumber.kitsune.data.mapper.ImageMapper.toImage
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkUpload
-import io.github.drumber.kitsune.testutils.image
 import io.github.drumber.kitsune.testutils.networkAnime
+import io.github.drumber.kitsune.testutils.networkImage
 import io.github.drumber.kitsune.testutils.networkManga
 import io.github.drumber.kitsune.testutils.networkUser
 import io.github.drumber.kitsune.util.DataUtil
@@ -23,8 +24,8 @@ class FeedMapperTest {
         // given
         val user = networkUser(faker)
         val media = networkAnime(faker)
-        val firstUpload = NetworkUpload(id = "u1", content = image(faker), uploadOrder = 1)
-        val secondUpload = NetworkUpload(id = "u2", content = image(faker), uploadOrder = 0)
+        val firstUpload = NetworkUpload(id = "u1", content = networkImage(faker), uploadOrder = 1)
+        val secondUpload = NetworkUpload(id = "u2", content = networkImage(faker), uploadOrder = 0)
         val networkPost = NetworkPost(
             id = "42",
             createdAt = "2024-01-01T00:00:00.000Z",
@@ -59,18 +60,18 @@ class FeedMapperTest {
         assertThat(post.likesCount).isEqualTo(9)
         assertThat(post.authorId).isEqualTo(user.id)
         assertThat(post.authorName).isEqualTo(user.name)
-        assertThat(post.authorAvatarUrl).isEqualTo(user.avatar?.originalOrDown())
+        assertThat(post.authorAvatarUrl).isEqualTo(user.avatar?.toImage()?.largeOrDown())
         assertThat(post.mediaTitle).isEqualTo(media.canonicalTitle)
         assertThat(post.mediaId).isEqualTo(media.id)
-        assertThat(post.mediaPosterUrl).isEqualTo(media.posterImage?.originalOrDown())
+        assertThat(post.mediaPosterUrl).isEqualTo(media.posterImage?.toImage()?.smallOrHigher())
         assertThat(post.mediaSynopsis).isEqualTo(media.description)
         assertThat(post.mediaSlug).isEqualTo(media.slug)
         assertThat(post.mediaIsAnime).isTrue()
         // uploads are ordered by uploadOrder ascending
         assertThat(post.uploadIds).containsExactly("u2", "u1")
         assertThat(post.imageUrls).containsExactly(
-            secondUpload.content?.originalOrDown(),
-            firstUpload.content?.originalOrDown()
+            secondUpload.content?.toImage()?.largeOrDown(),
+            firstUpload.content?.toImage()?.largeOrDown()
         )
     }
 
