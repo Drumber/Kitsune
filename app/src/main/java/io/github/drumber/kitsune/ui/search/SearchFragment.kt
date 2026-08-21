@@ -17,7 +17,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.paging.map
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import coil3.ImageLoader
 import com.algolia.instantsearch.android.searchbox.SearchBoxViewAppCompat
 import com.algolia.instantsearch.core.connection.AbstractConnection
@@ -58,6 +60,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.core.qualifier.named
 import java.lang.ref.WeakReference
+import kotlin.math.max
 
 class SearchFragment : Fragment(R.layout.fragment_search),
     FragmentDecorationPreference,
@@ -82,7 +85,7 @@ class SearchFragment : Fragment(R.layout.fragment_search),
 
     private lateinit var mediaAdapter: MediaSearchPagingAdapter
     private lateinit var userAdapter: UserSearchPagingAdapter
-    private lateinit var gridLayoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager
+    private lateinit var gridLayoutManager: GridLayoutManager
     private lateinit var listLayoutManager: LinearLayoutManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -129,18 +132,15 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         userAdapter = UserSearchPagingAdapter(imageLoader) { _, item ->
             onUserClick(item)
         }
-        val columnWidth = resources.getDimension(KitsunePref.mediaItemSize.widthRes) +
-                2 * resources.getDimension(R.dimen.media_item_margin)
-        val gridLayout = ResponsiveGridLayoutManager(requireContext(), columnWidth.toInt(), 2)
-        gridLayout.spanSizeLookup = LoadStateSpanSizeLookup(adapter, gridLayout)
-        gridLayoutManager = gridLayout
-        listLayoutManager = LinearLayoutManager(requireContext())
+
+        initLayoutManagers()
+        gridLayoutManager.spanSizeLookup = LoadStateSpanSizeLookup(adapter, gridLayoutManager)
 
         binding.rvMedia.adapter = adapter.withLoadStateHeaderAndFooter(
             header = ResourceLoadStateAdapter(adapter),
             footer = ResourceLoadStateAdapter(adapter)
         )
-        binding.rvMedia.layoutManager = gridLayout
+        binding.rvMedia.layoutManager = gridLayoutManager
         binding.rvMedia.itemAnimator = null
 
         binding.layoutLoading.btnRetry.setOnClickListener {
@@ -190,6 +190,37 @@ class SearchFragment : Fragment(R.layout.fragment_search),
                         mediaAdapter.submitData(data.map { it as Media })
                     }
                 }
+            }
+        }
+    }
+
+    private fun initLayoutManagers() {
+        val columnWidth = resources.getDimension(KitsunePref.mediaItemSize.widthRes) +
+                2 * resources.getDimension(R.dimen.media_item_margin)
+        val mediaItemHeight = resources.getDimension(KitsunePref.mediaItemSize.heightRes).toInt()
+
+        // Add extra space at the top to draw items behind the transparent topbar
+        gridLayoutManager = object : ResponsiveGridLayoutManager(
+            context = requireContext(),
+            columnWidth = columnWidth.toInt(),
+            minColumns = 2,
+        ) {
+            override fun calculateExtraLayoutSpace(
+                state: RecyclerView.State,
+                extraLayoutSpace: IntArray
+            ) {
+                super.calculateExtraLayoutSpace(state, extraLayoutSpace)
+                extraLayoutSpace[0] = max(extraLayoutSpace[0], mediaItemHeight)
+            }
+        }
+
+        listLayoutManager = object : LinearLayoutManager(requireContext()) {
+            override fun calculateExtraLayoutSpace(
+                state: RecyclerView.State,
+                extraLayoutSpace: IntArray
+            ) {
+                super.calculateExtraLayoutSpace(state, extraLayoutSpace)
+                extraLayoutSpace[0] = max(extraLayoutSpace[0], mediaItemHeight)
             }
         }
     }

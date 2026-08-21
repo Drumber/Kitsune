@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.max
 
-class ResponsiveGridLayoutManager(
+open class ResponsiveGridLayoutManager(
     context: Context,
     private val columnWidth: Int,
     private val minColumns: Int = 1,
