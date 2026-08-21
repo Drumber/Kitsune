@@ -516,4 +516,22 @@
         <item quantity="one">%d Antwort ansehen</item>
         <item quantity="other">Alle %d Antworten ansehen</item>
     </plurals>
+    <string name="label_write">Verfassen</string>
+    <string name="label_images">Bilder</string>
+    <string name="action_report">Melden</string>
+    <string name="report_post_title">Beitrag melden</string>
+    <string name="report_comment_title">Kommentar melden</string>
+    <string name="report_reason">Grund</string>
+    <string name="report_reason_nsfw">NSFW</string>
+    <string name="report_reason_offensive">Anstößig</string>
+    <string name="report_reason_spoiler">Spoiler</string>
+    <string name="report_reason_bullying">Mobbing</string>
+    <string name="report_reason_spam">Spam</string>
+    <string name="report_reason_other">Sonstiges</string>
+    <string name="report_explanation_hint">Bitte erläutern</string>
+    <string name="report_error_explanation_required">Eine Erläuterung ist erforderlich</string>
+    <string name="report_submit">Absenden</string>
+    <string name="report_success">Meldung erfolgreich gesendet</string>
+    <string name="report_failure">Meldung konnte nicht gesendet werden</string>
+    <string name="report_already_reported">Du hast dies bereits gemeldet.</string>
 </resources>
