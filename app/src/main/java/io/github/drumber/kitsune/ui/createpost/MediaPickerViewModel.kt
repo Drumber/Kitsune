@@ -99,7 +99,7 @@ class MediaPickerViewModel(
                     _status.postValue(Status.Initialized)
                 }
             } catch (e: SearchProviderUnavailableException) {
-                logI("Search provider not available. Is the device offline?")
+                logI("Search provider not available. Is the device offline?", e)
                 _status.postValue(Status.NotAvailable)
             } catch (e: Exception) {
                 logE("Could not create media picker search client.", e)
@@ -114,7 +114,6 @@ class MediaPickerViewModel(
     }.cachedIn(viewModelScope)
 
     override fun onCleared() {
-        super.onCleared()
         connectionHandler.clear()
         searchProvider.cancel()
     }

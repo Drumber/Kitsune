@@ -14,7 +14,7 @@
         android:text="@string/error_search_provider_unavailable" />
 
     <com.google.android.material.loadingindicator.LoadingIndicator
-        android:id="@+id/loading_indicator"
+        android:id="@+id/loading_indicator_search_provider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />

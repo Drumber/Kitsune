@@ -29,7 +29,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -43,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.asFlow
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.chibatching.kotpref.livedata.asLiveData
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -56,7 +56,6 @@ import io.github.drumber.kitsune.ui.onboarding.components.CustomDialog
 import io.github.drumber.kitsune.ui.onboarding.components.OnboardingNavigationControls
 import io.github.drumber.kitsune.ui.onboarding.components.PreferenceCard
 import io.github.drumber.kitsune.ui.theme.KitsuneTheme
-import kotlinx.coroutines.flow.map
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -83,16 +82,15 @@ fun SetupPageAdapter(
         if (isNotificationPermissionGranted) {
             KitsunePref.checkForUpdatesOnStart = value
         } else {
-            notificationPermissionState?.launchPermissionRequest()
+            notificationPermissionState.launchPermissionRequest()
         }
     }
 
-    val titleLanguages = LocalTitleLanguagePreference.entries.map { it.name }
-    val selectedTitleLanguageIndex by KitsunePref.getTitleLanguageAsFlow()
-        .map { it.ordinal }
-        .collectAsState(KitsunePref.titles.ordinal)
-    val selectTitleLanguage = { index: Int ->
-        KitsunePref.titles = LocalTitleLanguagePreference.entries[index]
+    val titleLanguages = LocalTitleLanguagePreference.entries
+    val selectedTitleLanguage by KitsunePref.getTitleLanguageAsFlow()
+        .collectAsStateWithLifecycle(KitsunePref.titles)
+    val selectTitleLanguage = { language: LocalTitleLanguagePreference ->
+        KitsunePref.titles = language
     }
 
     SetupPage(
@@ -104,7 +102,7 @@ fun SetupPageAdapter(
         onCheckForUpdatesPreferenceChanged = updateCheckForUpdatesPreference,
         hideTitleLanguagePreference = localUser != null,
         titleLanguages = titleLanguages,
-        selectedTitleLanguageIndex = selectedTitleLanguageIndex,
+        selectedTitleLanguage = selectedTitleLanguage,
         onTitleLanguageSelected = selectTitleLanguage
     )
 }
@@ -118,9 +116,9 @@ private fun SetupPage(
     checkForUpdatesPreference: Boolean = false,
     onCheckForUpdatesPreferenceChanged: (Boolean) -> Unit = {},
     hideTitleLanguagePreference: Boolean = false,
-    titleLanguages: List<String> = emptyList(),
-    selectedTitleLanguageIndex: Int = 0,
-    onTitleLanguageSelected: (Int) -> Unit = {}
+    titleLanguages: List<LocalTitleLanguagePreference> = emptyList(),
+    selectedTitleLanguage: LocalTitleLanguagePreference = LocalTitleLanguagePreference.Canonical,
+    onTitleLanguageSelected: (LocalTitleLanguagePreference) -> Unit = {}
 ) {
     val backgroundGradient = listOf(
         MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
@@ -132,7 +130,7 @@ private fun SetupPage(
     if (openSelectTitleLanguageDialog) {
         SelectTitleLanguageDialog(
             titleLanguages = titleLanguages,
-            selectedIndex = selectedTitleLanguageIndex,
+            selected = selectedTitleLanguage,
             onTitleLanguageSelected = {
                 onTitleLanguageSelected(it)
                 openSelectTitleLanguageDialog = false
@@ -197,14 +195,12 @@ private fun SetupPage(
                     title = { Text(stringResource(R.string.onboarding_setup_title_language)) },
                     description = {
                         Text(stringResource(R.string.onboarding_setup_title_language_description))
-                        if (selectedTitleLanguageIndex in titleLanguages.indices) {
-                            Text(
-                                stringResource(
-                                    R.string.onboarding_setup_title_language_selected,
-                                    titleLanguages[selectedTitleLanguageIndex]
-                                )
+                        Text(
+                            stringResource(
+                                R.string.onboarding_setup_title_language_selected,
+                                selectedTitleLanguage.name
                             )
-                        }
+                        )
                     },
                     onClick = { openSelectTitleLanguageDialog = true }
                 )
@@ -253,12 +249,12 @@ private fun HeaderSection(modifier: Modifier = Modifier) {
 
 @Composable
 private fun SelectTitleLanguageDialog(
-    titleLanguages: List<String>,
-    selectedIndex: Int,
-    onTitleLanguageSelected: (Int) -> Unit,
+    titleLanguages: List<LocalTitleLanguagePreference>,
+    selected: LocalTitleLanguagePreference,
+    onTitleLanguageSelected: (LocalTitleLanguagePreference) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var tmpSelectedOption by remember { mutableIntStateOf(selectedIndex) }
+    var tmpSelectedOption by remember { mutableStateOf(selected) }
 
     CustomDialog(
         title = { Text(stringResource(R.string.onboarding_setup_title_language)) },
@@ -275,25 +271,25 @@ private fun SelectTitleLanguageDialog(
         }
     ) { contentPadding ->
         Column(modifier = Modifier.selectableGroup()) {
-            titleLanguages.forEachIndexed { index, language ->
+            titleLanguages.forEach { language ->
                 Row(
                     Modifier
                         .fillMaxWidth()
                         .height(56.dp)
                         .selectable(
-                            selected = index == tmpSelectedOption,
-                            onClick = { tmpSelectedOption = index },
+                            selected = language == tmpSelectedOption,
+                            onClick = { tmpSelectedOption = language },
                             role = Role.RadioButton
                         )
                         .padding(contentPadding),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     RadioButton(
-                        selected = index == tmpSelectedOption,
+                        selected = language == tmpSelectedOption,
                         onClick = null
                     )
                     Text(
-                        text = language,
+                        text = language.name,
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(start = 16.dp)
                     )
@@ -316,8 +312,8 @@ private fun SetupPagePreview() {
 private fun SelectTitleLanguageDialogPreview() {
     KitsuneTheme {
         SelectTitleLanguageDialog(
-            titleLanguages = listOf("Canonical", "Romaji", "English"),
-            selectedIndex = 2,
+            titleLanguages = LocalTitleLanguagePreference.entries,
+            selected = LocalTitleLanguagePreference.English,
             onTitleLanguageSelected = {},
             onDismiss = {}
         )

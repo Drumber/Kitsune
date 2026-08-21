@@ -80,7 +80,7 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
                     root.isVisible = status != Initialized
                     btnRetrySearchProvider.isVisible = status == Error || status == NotAvailable
                     tvStatus.isVisible = btnRetrySearchProvider.isVisible
-                    loadingIndicator.isVisible = status == NotInitialized
+                    loadingIndicatorSearchProvider.isVisible = status == NotInitialized
                 }
             }
         }

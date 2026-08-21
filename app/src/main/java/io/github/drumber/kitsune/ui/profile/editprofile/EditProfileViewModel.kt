@@ -493,7 +493,6 @@ class EditProfileViewModel(
     }
 
     override fun onCleared() {
-        super.onCleared()
         connectionHandler.clear()
         searchProvider.cancel()
     }

@@ -190,7 +190,7 @@ class SearchViewModel(
                     _searchClientStatus.postValue(SearchClientStatus.Initialized)
                 }
             } catch (e: SearchProviderUnavailableException) {
-                logI("Search provider not available. Is the device offline?")
+                logI("Search provider not available. Is the device offline?", e)
                 _searchClientStatus.postValue(SearchClientStatus.NotAvailable)
             } catch (e: Exception) {
                 logE("Could not create search client.", e)
@@ -248,7 +248,6 @@ class SearchViewModel(
     }
 
     override fun onCleared() {
-        super.onCleared()
         searchProvider.cancel()
         connectionHandler.clear()
     }
