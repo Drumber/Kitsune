@@ -192,6 +192,9 @@
         <argument
             android:name="media"
             app:argType="io.github.drumber.kitsune.data.presentation.dto.MediaDto" />
+        <action
+            android:id="@+id/action_episodes_fragment_to_media_feed_fragment"
+            app:destination="@id/media_feed_fragment" />
     </fragment>
     <fragment
         android:id="@+id/characters_fragment"
@@ -212,10 +215,13 @@
         android:name="io.github.drumber.kitsune.ui.details.feed.MediaFeedFragment"
         android:label="MediaFeedFragment" >
         <argument
-            android:name="mediaId"
+            android:name="mediaFeedType"
+            app:argType="io.github.drumber.kitsune.ui.details.feed.MediaFeedType" />
+        <argument
+            android:name="mediaOrUnitId"
             app:argType="string" />
         <argument
-            android:name="isAnime"
+            android:name="isAnimeOrEpisode"
             app:argType="boolean" />
     </fragment>
     <fragment

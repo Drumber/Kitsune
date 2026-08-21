@@ -34,14 +34,17 @@ class MediaFeedViewModel(
     private val getLocalUserId: GetLocalUserIdUseCase,
 ) : ViewModel() {
 
-    private data class MediaKey(val mediaId: String, val isAnime: Boolean)
+    private sealed interface MediaFeedKey {
+        data class Media(val mediaId: String, val isAnime: Boolean) : MediaFeedKey
+        data class Unit(val unitId: String, val isEpisode: Boolean) : MediaFeedKey
+    }
 
     sealed interface ActionEvent {
         data object PostDeleted : ActionEvent
         data object Error : ActionEvent
     }
 
-    private val mediaKey = MutableStateFlow<MediaKey?>(null)
+    private val mediaFeedKey = MutableStateFlow<MediaFeedKey?>(null)
 
     // Known like ids keyed by post id, used to unlike without a lookup.
     private val postLikeIds = mutableMapOf<String, String?>()
@@ -56,15 +59,25 @@ class MediaFeedViewModel(
         get() = userRepository.localUser.value?.sfwFilterPreference ==
                 LocalSfwFilterPreference.NSFW_EVERYWHERE
 
-    fun setMedia(mediaId: String, isAnime: Boolean) {
-        val key = MediaKey(mediaId, isAnime)
-        if (mediaKey.value != key) {
-            mediaKey.value = key
+    fun initMediaFeed(mediaId: String, isAnime: Boolean) {
+        val key = MediaFeedKey.Media(mediaId, isAnime)
+        if (mediaFeedKey.value != key) {
+            mediaFeedKey.value = key
         }
     }
 
-    val dataSource: Flow<PagingData<Post>> = mediaKey.filterNotNull().flatMapLatest { key ->
-        feedRepository.mediaFeedPager(key.isAnime, key.mediaId)
+    fun initUnitFeed(unitId: String, isEpisode: Boolean) {
+        val key = MediaFeedKey.Unit(unitId, isEpisode)
+        if (mediaFeedKey.value != key) {
+            mediaFeedKey.value = key
+        }
+    }
+
+    val dataSource: Flow<PagingData<Post>> = mediaFeedKey.filterNotNull().flatMapLatest { key ->
+        when (key) {
+            is MediaFeedKey.Media -> feedRepository.mediaFeedPager(key.isAnime, key.mediaId)
+            is MediaFeedKey.Unit -> feedRepository.mediaUnitFeedPager(key.isEpisode, key.unitId)
+        }
     }.cachedIn(viewModelScope)
 
     /** Remembers that the user revealed the gated content of the given post. */

@@ -56,6 +56,17 @@ class FeedRepository(
         }
 
     /**
+     * Pager for the activity feed of a single media unit (episode for anime or chapter for manga).
+     */
+    fun mediaUnitFeedPager(isEpisode: Boolean, unitId: String, pageSize: Int = Kitsu.DEFAULT_PAGE_SIZE) =
+        feedPager(pageSize) { cursor ->
+            when (isEpisode) {
+                true -> feedNetworkDataSource.getMediaEpisodeFeed(unitId, buildFilter(pageSize, cursor))
+                false -> feedNetworkDataSource.getMediaChapterFeed(unitId, buildFilter(pageSize, cursor))
+            }
+        }
+
+    /**
      * Pager for a single group's activity feed, showing the posts published in the group.
      */
     fun groupFeedPager(groupId: String, pageSize: Int = Kitsu.DEFAULT_PAGE_SIZE) =

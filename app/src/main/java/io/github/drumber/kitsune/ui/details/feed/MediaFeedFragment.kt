@@ -58,7 +58,10 @@ class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.setMedia(args.mediaId, args.isAnime)
+        when (args.mediaFeedType) {
+            MediaFeedType.MEDIA -> viewModel.initMediaFeed(args.mediaOrUnitId, args.isAnimeOrEpisode)
+            MediaFeedType.UNIT -> viewModel.initUnitFeed(args.mediaOrUnitId, args.isAnimeOrEpisode)
+        }
 
         binding.apply {
             collapsingToolbar.initWindowInsetsListener(consume = false)

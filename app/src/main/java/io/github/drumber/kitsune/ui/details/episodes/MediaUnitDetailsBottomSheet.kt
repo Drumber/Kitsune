@@ -5,11 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.BundleCompat
+import androidx.navigation.fragment.findNavController
 import coil3.load
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import io.github.drumber.kitsune.data.presentation.dto.MediaUnitDto
 import io.github.drumber.kitsune.data.presentation.dto.toMediaUnit
+import io.github.drumber.kitsune.data.presentation.model.media.unit.Episode
 import io.github.drumber.kitsune.databinding.SheetMediaUnitDetailsBinding
+import io.github.drumber.kitsune.ui.details.feed.MediaFeedType
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 
 class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {
@@ -26,7 +29,8 @@ class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {
         val mediaUnit = mediaUnitDto?.toMediaUnit()
         binding.mediaUnit = mediaUnit
 
-        val thumbnailUrl = mediaUnit?.thumbnail?.smallOrHigher() ?: arguments?.getString(BUNDLE_THUMBNAIL)
+        val thumbnailUrl = mediaUnit?.thumbnail?.smallOrHigher()
+            ?: arguments?.getString(BUNDLE_THUMBNAIL)
         binding.ivThumbnail.load(thumbnailUrl)
 
         binding.ivThumbnail.setOnClickListener {
@@ -34,6 +38,19 @@ class MediaUnitDetailsBottomSheet : BottomSheetDialogFragment() {
                 val title = mediaUnit.title(requireContext())
                 openPhotoViewActivity(imageUrl, title, thumbnailUrl)
             }
+        }
+
+        binding.btnUnitFeed.setOnClickListener {
+            val unit = mediaUnit ?: return@setOnClickListener
+            val unitId = unit.id ?: return@setOnClickListener
+
+            val action = EpisodesFragmentDirections.actionEpisodesFragmentToMediaFeedFragment(
+                MediaFeedType.UNIT,
+                unitId,
+                unit is Episode
+            )
+            findNavController().navigate(action)
+            dismiss()
         }
 
         return binding.root

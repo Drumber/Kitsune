@@ -44,7 +44,7 @@ class MediaFeedViewModelTest {
         val vm = vm(repository)
 
         vm.dataSource.test {
-            vm.setMedia("media-1", isAnime = true)
+            vm.initMediaFeed("media-1", isAnime = true)
             awaitItem()
             cancelAndIgnoreRemainingEvents()
         }

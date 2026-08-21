@@ -96,6 +96,15 @@
                 android:text="@{mediaUnit.description}"
                 tools:text="Some description text." />
 
+            <Button
+                android:id="@+id/btn_unit_feed"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/title_posts"
+                android:textAllCaps="false" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

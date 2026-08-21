@@ -66,6 +66,7 @@ import io.github.drumber.kitsune.ui.component.chart.StepAxisValueFormatter
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.AddNewLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.DeleteLibraryEntryFailed
 import io.github.drumber.kitsune.ui.details.LibraryChangeResult.LibraryUpdateResult
+import io.github.drumber.kitsune.ui.details.feed.MediaFeedType
 import io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
 import io.github.drumber.kitsune.ui.reactiondetail.ReactionDetailFragmentDirections
 import io.github.drumber.kitsune.util.extensions.getColor
@@ -256,6 +257,7 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
             btnMediaFeed.setOnClickListener {
                 val media = viewModel.mediaModel.value ?: return@setOnClickListener
                 val action = DetailsFragmentDirections.actionDetailsFragmentToMediaFeedFragment(
+                    MediaFeedType.MEDIA,
                     media.id,
                     media is Anime
                 )
