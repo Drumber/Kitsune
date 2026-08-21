@@ -126,7 +126,7 @@
             app:icon="@drawable/ic_send_24"
             app:iconGravity="textStart"
             app:iconPadding="0dp"
-            style="@style/Widget.Material3.Button.IconButton.Filled" />
+            style="?attr/materialIconButtonFilledStyle" />
 
     </LinearLayout>
 

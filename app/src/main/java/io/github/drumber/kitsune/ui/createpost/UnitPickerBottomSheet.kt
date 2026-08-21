@@ -14,6 +14,8 @@ import io.github.drumber.kitsune.data.presentation.model.media.unit.Episode
 import io.github.drumber.kitsune.data.presentation.model.media.unit.MediaUnit
 import io.github.drumber.kitsune.databinding.SheetUnitPickerBinding
 import io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter
+import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
+import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -50,7 +52,24 @@ class UnitPickerBottomSheet : BottomSheetDialogFragment(),
             listener = this
         )
         binding.rvUnits.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvUnits.adapter = adapter
+        binding.rvUnits.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = ResourceLoadStateAdapter(adapter),
+            footer = ResourceLoadStateAdapter(adapter)
+        )
+
+        binding.layoutLoading.btnRetry.setOnClickListener { adapter.retry() }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                adapter.loadStateFlow.collectLatest { loadState ->
+                    binding.layoutLoading.updateLoadState(
+                        binding.rvUnits,
+                        adapter.itemCount,
+                        loadState
+                    )
+                }
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {

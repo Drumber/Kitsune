@@ -28,6 +28,7 @@ class MyProfileFragment : BaseProfileFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initToolbar()
         updateOptionsMenu()
 
         binding.btnLogin.setOnClickListener {
@@ -60,8 +61,7 @@ class MyProfileFragment : BaseProfileFragment() {
         updateOptionsMenu()
     }
 
-    override fun initToolbar() {
-        super.initToolbar()
+    private fun initToolbar() {
         binding.apply {
             toolbar.setOnMenuItemClickListener { item ->
                 when (item.itemId) {

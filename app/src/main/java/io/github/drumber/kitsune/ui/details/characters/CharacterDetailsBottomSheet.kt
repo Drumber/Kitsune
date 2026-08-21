@@ -63,7 +63,7 @@ class CharacterDetailsBottomSheet :
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
                 val isLoading = state.isLoadingMediaCharacters
-                binding.progressBar.isVisible = isLoading
+                binding.loadingIndicator.isVisible = isLoading
                 binding.loadingWrapper.isVisible = isLoading || !state.hasMediaCharacters
                 binding.tvNoData.isVisible = !isLoading && !state.hasMediaCharacters
                 binding.rvMediaCharacters.isVisible = !isLoading && state.hasMediaCharacters

@@ -123,7 +123,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/action_read_more"
                         android:layout_gravity="end"
-                        style="@style/Widget.Material3.Button.TextButton" />
+                        style="?attr/borderlessButtonStyle" />
 
                 </LinearLayout>
 
@@ -151,8 +151,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/media_item_height_small">
 
-                    <ProgressBar
-                        android:id="@+id/progress_bar"
+                    <com.google.android.material.loadingindicator.LoadingIndicator
+                        android:id="@+id/loading_indicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"/>
@@ -174,7 +174,7 @@
                     android:layout_gravity="end"
                     android:text="@string/action_open_on_mal"
                     app:icon="@drawable/ic_open_in_new_24"
-                    style="@style/Widget.Material3.Button.TextButton.Icon" />
+                    style="?attr/borderlessButtonStyle" />
 
             </LinearLayout>
 

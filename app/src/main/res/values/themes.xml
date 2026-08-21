@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.Kitsune.DayNight" parent="Theme.Kitsune" />
 
-    <style name="Theme.Kitsune" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.Kitsune" parent="Theme.Material3Expressive.DayNight.NoActionBar">
         <item name="colorPrimary">@color/md_theme_primary</item>
         <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
@@ -273,7 +273,7 @@
         <item name="postSplashScreenTheme">@style/Theme.Kitsune.DayNight</item>
     </style>
 
-    <style name="Theme.Kitsune.FullScreenDialog.Dynamic" parent="ThemeOverlay.Material3.DynamicColors.DayNight">
+    <style name="Theme.Kitsune.FullScreenDialog.Dynamic" parent="ThemeOverlay.Material3Expressive.DynamicColors.DayNight">
         <item name="android:windowIsFloating">false</item>
     </style>
 

@@ -25,14 +25,11 @@ class UserProfileFragment : BaseProfileFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initToolbar()
 
         binding.apply {
             // Self-only UI is not used in the read-only profile view.
             nsvNotLoggedIn.isVisible = false
-
-            // Show the provided name immediately, before the full profile loads.
-            toolbar.title = args.userName ?: getString(R.string.nav_profile)
-            collapsingToolbar.title = args.userName ?: getString(R.string.nav_profile)
 
             fabPostWall.setOnClickListener {
                 val user = viewModel.getUser() ?: return@setOnClickListener
@@ -53,17 +50,22 @@ class UserProfileFragment : BaseProfileFragment() {
         binding.executePendingBindings()
         val displayName = user?.name ?: user?.slug ?: args.userName
         ?: getString(R.string.nav_profile)
+
+        // Only show the @tag as subtitle when we also have a distinct display name.
+        val userTag = user?.slug?.takeIf { !user.name.isNullOrBlank() }?.let { "@$it" }
+
         // The CollapsingToolbarLayout draws its own title, so set it there directly.
-        binding.collapsingToolbar.title = displayName
+        binding.collapsingToolbar.apply {
+            title = displayName
+            subtitle = userTag
+        }
         binding.toolbar.apply {
             title = displayName
-            // Only show the @tag as subtitle when we also have a distinct display name.
-            subtitle = user?.slug?.takeIf { !user.name.isNullOrBlank() }?.let { "@$it" }
+            subtitle = userTag
         }
     }
 
-    override fun initToolbar() {
-        super.initToolbar()
+    private fun initToolbar() {
         binding.apply {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24)
             toolbar.setNavigationOnClickListener { findNavController().navigateUp() }

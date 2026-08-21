@@ -20,7 +20,6 @@ import coil3.load
 import coil3.request.error
 import coil3.request.fallback
 import coil3.request.placeholder
-import com.google.android.material.button.MaterialButton
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.databinding.FragmentCreatePostBinding
@@ -28,7 +27,6 @@ import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.markwon.MarkdownPreviewRenderer
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbar
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.Dispatchers
@@ -50,8 +48,6 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
 
     private var imageAdapter: PostImageThumbnailAdapter? = null
 
-    private var publishButton: MaterialButton? = null
-
     private val pickImages =
         registerForActivityResult(
             ActivityResultContracts.PickMultipleVisualMedia(CreatePostViewModel.MAX_IMAGES)
@@ -67,7 +63,7 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.toolbar.initWindowInsetsListener(consume = false)
+        binding.appBarLayout.initPaddingWindowInsetsListener(left = true, top = true, right = true, consume = false)
         binding.nsvContent.initPaddingWindowInsetsListener(
             left = true,
             right = true,
@@ -75,9 +71,7 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
         )
 
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-        publishButton = binding.toolbar.menu.findItem(R.id.menu_publish_post)
-            ?.actionView?.findViewById(R.id.btn_publish)
-        publishButton?.setOnClickListener { viewModel.publish() }
+        binding.btnPublish.setOnClickListener { viewModel.publish() }
 
         binding.etContent.doAfterTextChanged { text ->
             viewModel.setContent(text?.toString().orEmpty())
@@ -299,7 +293,7 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
     }
 
     private fun renderState(state: CreatePostViewModel.UiState) {
-        publishButton?.isEnabled = state.canPublish
+        binding.btnPublish.isEnabled = state.canPublish
 
         if (state.wallTargetName != null) {
             binding.toolbar.subtitle =
@@ -348,6 +342,5 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
         super.onDestroyView()
         binding.rvImages.adapter = null
         imageAdapter = null
-        publishButton = null
     }
 }

@@ -16,6 +16,7 @@ import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.common.media.MediaType
@@ -32,7 +33,6 @@ import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -78,9 +78,9 @@ class MediaListFragment : Fragment(R.layout.fragment_media_list),
 
         viewModel.setMediaSelector(args.mediaSelector)
 
-        binding.collapsingToolbar.initWindowInsetsListener(consume = false)
+        binding.appBarLayout.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(context)
         binding.toolbar.apply {
-            initWindowInsetsListener(consume = false)
+            initPaddingWindowInsetsListener(left = true, right = true, consume = false)
             title = args.title
             setNavigationOnClickListener { findNavController().navigateUp() }
         }

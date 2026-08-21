@@ -3,9 +3,7 @@ package io.github.drumber.kitsune.ui.settings
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -64,7 +62,7 @@ class AppLogsFragment : Fragment(R.layout.fragment_app_logs) {
 
         viewModel.logMessages.observe(viewLifecycleOwner) { logMessages ->
             binding.apply {
-                progressBar.isVisible = false
+                loadingIndicator.isVisible = false
                 tvNoLogs.isVisible = logMessages.isBlank()
                 tvLogMessages.isVisible = logMessages.isNotBlank()
                 tvLogMessages.text = logMessages

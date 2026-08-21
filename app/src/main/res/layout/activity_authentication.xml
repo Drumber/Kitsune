@@ -17,8 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_arrow_back_24"
-            app:navigationContentDescription="@string/action_back"
-            style="@style/Widget.Material3.Toolbar.OnSurface" />
+            app:navigationContentDescription="@string/action_back" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -153,7 +152,7 @@
             android:text="@string/status_logging_in"
             android:layout_gravity="center" />
 
-        <ProgressBar
+        <com.google.android.material.loadingindicator.LoadingIndicator
             android:id="@+id/loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

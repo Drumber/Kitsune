@@ -18,17 +18,6 @@
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
-    <style name="Widget.Kitsune.Button.IconButton.Dense" parent="Widget.Material3.Button.IconButton">
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="android:insetLeft">0dp</item>
-        <item name="android:insetRight">0dp</item>
-        <item name="android:paddingLeft">@dimen/icon_button_padding</item>
-        <item name="android:paddingRight">@dimen/icon_button_padding</item>
-        <item name="android:paddingTop">@dimen/icon_button_padding</item>
-        <item name="android:paddingBottom">@dimen/icon_button_padding</item>
-    </style>
-
     <style name="Widget.Kitsune.CardView.Surface" parent="Widget.Material3.CardView.Outlined">
         <item name="strokeWidth">0dp</item>
     </style>

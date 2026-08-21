@@ -26,8 +26,7 @@
                 app:title="@string/title_categories"
                 app:navigationIcon="@drawable/ic_close_24"
                 app:navigationContentDescription="@string/action_close"
-                app:layout_collapseMode="pin"
-                style="@style/Widget.Material3.Toolbar" />
+                app:layout_collapseMode="pin" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 

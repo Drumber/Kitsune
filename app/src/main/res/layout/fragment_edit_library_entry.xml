@@ -27,8 +27,7 @@
                 app:layout_scrollFlags="noScroll"
                 app:navigationContentDescription="@string/action_close"
                 app:navigationIcon="@drawable/ic_close_24"
-                app:title="@string/title_edit_library_entry"
-                style="@style/Widget.Material3.Toolbar" />
+                app:title="@string/title_edit_library_entry" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -388,7 +387,7 @@
         android:visibility="gone"
         tools:visibility="gone">
 
-        <ProgressBar
+        <com.google.android.material.loadingindicator.LoadingIndicator
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />

@@ -96,16 +96,14 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_search_media"
-                        style="?attr/materialButtonOutlinedStyle"
-                        app:backgroundTint="@color/button_outlined_opaque_background_color_selector"
+                        style="?attr/materialButtonTonalStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/search_type_media" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_search_users"
-                        style="?attr/materialButtonOutlinedStyle"
-                        app:backgroundTint="@color/button_outlined_opaque_background_color_selector"
+                        style="?attr/materialButtonTonalStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/search_type_users" />

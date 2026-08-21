@@ -32,7 +32,7 @@
                 app:cardCornerRadius="50dp"
                 app:cardElevation="2dp"
                 app:layout_scrollFlags="scroll|snap"
-                style="@style/Widget.Material3.CardView.Elevated">
+                style="?attr/materialCardViewElevatedStyle">
 
                 <LinearLayout
                     android:layout_width="match_parent"

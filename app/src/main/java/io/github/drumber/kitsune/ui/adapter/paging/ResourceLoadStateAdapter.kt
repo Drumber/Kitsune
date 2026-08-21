@@ -44,7 +44,7 @@ class ResourceLoadStateAdapter<T : Any, VH : RecyclerView.ViewHolder>(
 
         fun bind(loadState: LoadState) {
             with(binding.layoutLoading) {
-                progressBar.isVisible = loadState is LoadState.Loading
+                loadingIndicator.isVisible = loadState is LoadState.Loading
                 btnRetry.isVisible = loadState is LoadState.Error
                 tvError.isVisible = !(loadState as? LoadState.Error)?.error?.message.isNullOrBlank()
                 tvError.text = (loadState as? LoadState.Error)?.error?.message

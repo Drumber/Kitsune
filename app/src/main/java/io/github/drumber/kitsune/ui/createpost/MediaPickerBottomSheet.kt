@@ -22,6 +22,8 @@ import io.github.drumber.kitsune.data.presentation.model.media.Media
 import io.github.drumber.kitsune.databinding.SheetMediaPickerBinding
 import io.github.drumber.kitsune.ui.adapter.OnItemClickListener
 import io.github.drumber.kitsune.ui.adapter.paging.MediaSearchPagingAdapter
+import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
+import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -48,7 +50,24 @@ class MediaPickerBottomSheet : BottomSheetDialogFragment(), OnItemClickListener<
 
         val adapter = MediaSearchPagingAdapter(this)
         binding.rvMedia.layoutManager = GridLayoutManager(requireContext(), 3)
-        binding.rvMedia.adapter = adapter
+        binding.rvMedia.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = ResourceLoadStateAdapter(adapter),
+            footer = ResourceLoadStateAdapter(adapter)
+        )
+
+        binding.layoutLoading.btnRetry.setOnClickListener { adapter.retry() }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                adapter.loadStateFlow.collectLatest { loadState ->
+                    binding.layoutLoading.updateLoadState(
+                        binding.rvMedia,
+                        adapter.itemCount,
+                        loadState
+                    )
+                }
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -62,14 +81,19 @@ class MediaPickerBottomSheet : BottomSheetDialogFragment(), OnItemClickListener<
         }
 
         viewModel.status.observe(viewLifecycleOwner) { status ->
-            binding.progressBar.isVisible = status == MediaPickerViewModel.Status.NotInitialized
             val message = when (status) {
                 MediaPickerViewModel.Status.NotAvailable -> getString(R.string.search_provider_not_available)
                 MediaPickerViewModel.Status.Error -> getString(R.string.search_provider_error)
                 else -> null
             }
-            binding.tvStatus.text = message
-            binding.tvStatus.isVisible = message != null
+
+            binding.layoutLoading.apply {
+                root.isVisible = status != MediaPickerViewModel.Status.Initialized
+                loadingIndicator.isVisible = status == MediaPickerViewModel.Status.NotInitialized
+                tvNoData.isVisible = false
+                tvError.isVisible = message != null
+                tvError.text = message ?: getString(R.string.error_resource_loading)
+            }
         }
 
         if (savedInstanceState == null) {

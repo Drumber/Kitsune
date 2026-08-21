@@ -20,7 +20,7 @@
             android:layout_height="?attr/collapsingToolbarLayoutLargeSize"
             android:minHeight="0dp"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
-            style="@style/Widget.Material3.CollapsingToolbar.Large">
+            style="?attr/collapsingToolbarLayoutLargeStyle">
 
             <ImageView
                 android:id="@+id/iv_cover"

@@ -25,8 +25,7 @@
                 app:title="@string/nav_settings"
                 app:navigationIcon="@drawable/ic_arrow_back_24"
                 app:navigationContentDescription="@string/action_back"
-                app:layout_collapseMode="pin"
-                style="@style/Widget.Material3.Toolbar" />
+                app:layout_collapseMode="pin" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -49,7 +48,7 @@
         android:alpha="0.7"
         android:background="?attr/colorSurface">
 
-        <ProgressBar
+        <com.google.android.material.loadingindicator.LoadingIndicator
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />

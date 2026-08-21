@@ -24,7 +24,7 @@ fun LayoutResourceLoadingBinding.updateLoadState(
 
     recyclerView.isVisible = isNotLoading && !isEmpty
     root.isVisible = !isNotLoading || isEmpty
-    progressBar.isVisible = state.refresh is LoadState.Loading
+    loadingIndicator.isVisible = state.refresh is LoadState.Loading
     btnRetry.isVisible = isError
     tvError.isVisible = isError
     tvNoData.isVisible = isEmpty

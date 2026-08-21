@@ -36,7 +36,7 @@ class MediaMappingsBottomSheet : BottomSheetDialogFragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.mappingsSate.collectLatest { state ->
-                binding.progressBarMediaMappings.isVisible = state is MediaMappingsSate.Loading
+                binding.loadingIndicator.isVisible = state is MediaMappingsSate.Loading
                 binding.tvErrorMediaMappings.isVisible = state is MediaMappingsSate.Error
                 binding.listMediaMappings.isVisible = state is MediaMappingsSate.Success
 

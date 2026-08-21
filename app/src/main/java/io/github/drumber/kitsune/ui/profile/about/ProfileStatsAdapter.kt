@@ -67,7 +67,7 @@ class ProfileStatsAdapter(dataSet: List<ProfileStatsData>) :
         init {
             binding.apply {
                 pieChart.applyStyle(binding.root.context, animate = isChartAnimationEnabled)
-                progressBar.isVisible = true
+                loadingIndicator.isVisible = true
             }
         }
 
@@ -81,7 +81,7 @@ class ProfileStatsAdapter(dataSet: List<ProfileStatsData>) :
             updateCategoryChart(dataModel)
 
             binding.apply {
-                progressBar.isVisible = dataModel.isLoading
+                loadingIndicator.isVisible = dataModel.isLoading
 
                 dataModel.amountConsumedData?.let { stats ->
                     if (isAnime) {

@@ -36,7 +36,7 @@
                 android:tooltipText="@string/action_delete_profile_link"
                 app:icon="@drawable/ic_delete_24"
                 app:isVisible="@{!isCreatingNew}"
-                style="@style/Widget.Material3.Button.IconButton" />
+                style="?attr/materialIconButtonStyle" />
 
         </LinearLayout>
 

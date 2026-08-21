@@ -14,8 +14,8 @@
         android:text="@string/action_open_external"
         style="@style/Widget.Kitsune.TextView.BottomSheetTitle" />
 
-    <ProgressBar
-        android:id="@+id/progress_bar_media_mappings"
+    <com.google.android.material.loadingindicator.LoadingIndicator
+        android:id="@+id/loading_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

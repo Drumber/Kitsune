@@ -42,7 +42,7 @@ class SelectProfileLinkSiteBottomSheet :
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.profileLinkSitesLoadStateFlow.collectLatest {
-                binding.progressBarProfileLinkSites.isVisible = it
+                binding.loadingIndicator.isVisible = it
             }
         }
     }

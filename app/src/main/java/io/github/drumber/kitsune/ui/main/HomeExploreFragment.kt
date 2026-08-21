@@ -198,7 +198,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
                             root.isVisible = true
                             tvError.isVisible = false
                             tvNoData.isVisible = true
-                            progressBar.isVisible = false
+                            loadingIndicator.isVisible = false
                         }
                     }
                 }
@@ -210,7 +210,7 @@ class HomeExploreFragment : BaseFragment(R.layout.fragment_home_explore),
                             root.isVisible = true
                             tvError.isVisible = true
                             tvNoData.isVisible = false
-                            progressBar.isVisible = false
+                            loadingIndicator.isVisible = false
                         }
                     }
                 }

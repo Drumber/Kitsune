@@ -21,8 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="@string/nav_library"
-            app:layout_scrollFlags="scroll|snap|enterAlways"
-            style="@style/Widget.Material3.Toolbar" />
+            app:layout_scrollFlags="scroll|snap|enterAlways" />
 
         <HorizontalScrollView
             android:id="@+id/scroll_view_filter"

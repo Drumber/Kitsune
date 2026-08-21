@@ -26,7 +26,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_remove_image"
-        style="@style/Widget.Material3.Button.IconButton.Filled"
+        style="?attr/materialIconButtonFilledStyle"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_gravity="top|end"

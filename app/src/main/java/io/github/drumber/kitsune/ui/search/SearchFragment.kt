@@ -340,7 +340,7 @@ class SearchFragment : Fragment(R.layout.fragment_search),
                 root.isVisible = status != Initialized
                 btnRetrySearchProvider.isVisible = status == Error || status == NotAvailable
                 tvStatus.isVisible = btnRetrySearchProvider.isVisible
-                progressBarSearchProvider.isVisible = status == NotInitialized
+                loadingIndicator.isVisible = status == NotInitialized
             }
         }
     }

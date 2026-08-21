@@ -21,8 +21,7 @@
             app:menu="@menu/logs_menu"
             app:navigationIcon="@drawable/ic_arrow_back_24"
             app:navigationContentDescription="@string/action_back"
-            app:layout_scrollFlags="noScroll"
-            style="@style/Widget.Material3.Toolbar" />
+            app:layout_scrollFlags="noScroll" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -54,8 +53,8 @@
                android:text="@string/app_logs_no_data"
                android:visibility="gone"/>
 
-           <ProgressBar
-               android:id="@+id/progress_bar"
+           <com.google.android.material.loadingindicator.LoadingIndicator
+               android:id="@+id/loading_indicator"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:layout_gravity="center"

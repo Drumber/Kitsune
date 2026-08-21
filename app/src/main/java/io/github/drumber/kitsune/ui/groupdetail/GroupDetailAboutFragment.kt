@@ -56,7 +56,7 @@ class GroupDetailAboutFragment : Fragment(R.layout.fragment_group_detail_about),
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.isLoading.collectLatest { loading ->
-                    binding.progressBar.isVisible = loading && viewModel.group.value == null
+                    binding.loadingIndicator.isVisible = loading && viewModel.group.value == null
                 }
             }
         }

@@ -14,14 +14,30 @@
         android:layout_height="wrap_content"
         app:liftOnScroll="true">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:menu="@menu/create_post_menu"
-            app:navigationContentDescription="@string/action_close"
-            app:navigationIcon="@drawable/ic_close_24"
-            app:title="@string/title_create_post" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="0dp"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_weight="1"
+                app:navigationContentDescription="@string/action_close"
+                app:navigationIcon="@drawable/ic_close_24"
+                app:title="@string/title_create_post" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_publish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
+                android:text="@string/action_post"
+                app:icon="@drawable/ic_send_24" />
+
+        </LinearLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -81,12 +97,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="?attr/materialButtonOutlinedStyle"
+                        app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.Xsmall"
+                        android:minWidth="0dp"
                         android:checked="true"
                         android:checkable="true"
-                        android:textAppearance="?attr/textAppearanceLabelMedium"
-                        android:paddingVertical="10dp"
-                        android:minHeight="0dp"
-                        android:minWidth="0dp"
                         android:text="@string/label_write" />
 
                     <com.google.android.material.button.MaterialButton
@@ -94,11 +108,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="?attr/materialButtonOutlinedStyle"
-                        android:checkable="true"
-                        android:textAppearance="?attr/textAppearanceLabelMedium"
-                        android:paddingVertical="10dp"
-                        android:minHeight="0dp"
+                        app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.Xsmall"
                         android:minWidth="0dp"
+                        android:checkable="true"
                         android:text="@string/label_preview" />
 
                 </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -227,11 +239,11 @@
                 android:id="@+id/layout_empty_images_placeholder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp">
+                android:paddingVertical="10dp">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_add_image_large"
-                    style="@style/Widget.Material3.Button.TonalButton"
+                    style="?attr/materialButtonTonalStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"

@@ -77,6 +77,10 @@
                         tools:text="5"
                         app:tooltip="@{@string/hint_rating}"
                         app:activated="@{entry.hasRating}"
+                        android:textAppearance="?attr/textAppearanceLabelLarge"
+                        android:textColor="?attr/colorPrimary"
+                        app:iconTint="?attr/colorPrimary"
+                        app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Xsmall"
                         style="?attr/materialIconButtonStyle" />
 
                 </LinearLayout>
@@ -127,42 +131,37 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
-                <LinearLayout
+                <com.google.android.material.button.MaterialButtonGroup
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="1dp"
-                    android:background="@drawable/rectangle_background">
+                    android:spacing="0dp"
+                    app:shapeAppearance="?attr/shapeAppearanceCornerMedium"
+                    app:innerCornerSize="4dp"
+                    style="@style/Widget.Material3.MaterialButtonGroup.Connected">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_watched_removed"
-                        android:layout_width="48dp"
-                        android:layout_height="36dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:enabled="@{entry.hasStartedWatching}"
                         app:icon="@drawable/ic_remove_24"
                         app:iconGravity="textStart"
                         app:tooltip="@{@string/hint_mark_not_watched}"
-                        app:cornerRadius="5dp"
-                        style="@style/Widget.Kitsune.Button.IconButton.Dense" />
-
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="?attr/colorButtonNormal"
-                        android:layout_marginVertical="8dp" />
+                        app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Small"
+                        style="?attr/materialIconButtonFilledTonalStyle" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_watched_add"
-                        android:layout_width="48dp"
-                        android:layout_height="36dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:enabled="@{entry.canWatchEpisode}"
                         app:icon="@drawable/ic_add_24"
                         app:iconGravity="textStart"
                         app:tooltip="@{@string/hint_mark_watched}"
-                        app:cornerRadius="5dp"
-                        style="@style/Widget.Kitsune.Button.IconButton.Dense" />
+                        app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Small.Wide"
+                        style="?attr/materialIconButtonFilledTonalStyle" />
 
-                </LinearLayout>
+                </com.google.android.material.button.MaterialButtonGroup>
 
             </LinearLayout>
 

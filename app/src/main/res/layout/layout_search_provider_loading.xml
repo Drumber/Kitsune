@@ -13,8 +13,8 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/error_search_provider_unavailable" />
 
-    <ProgressBar
-        android:id="@+id/progress_bar_search_provider"
+    <com.google.android.material.loadingindicator.LoadingIndicator
+        android:id="@+id/loading_indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />

@@ -31,8 +31,7 @@
                     app:title="@string/title_reactions"
                     app:navigationIcon="@drawable/ic_arrow_back_24"
                     app:navigationContentDescription="@string/action_back"
-                    app:layout_collapseMode="pin"
-                    style="@style/Widget.Material3.Toolbar" />
+                    app:layout_collapseMode="pin" />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 

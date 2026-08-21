@@ -60,7 +60,8 @@ class ReactionDetailFragment : Fragment(R.layout.fragment_reaction_detail) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.isLoading.collectLatest { loading ->
-                    binding.progressBar.isVisible = loading
+                    binding.scrollView.isVisible = !loading
+                    binding.loadingIndicator.isVisible = loading
                 }
             }
         }

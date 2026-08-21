@@ -100,7 +100,7 @@ class CharactersFragment : Fragment(R.layout.fragment_characters),
         viewModel.isLoadingLanguages.observe(viewLifecycleOwner) { isLoading ->
             binding.layoutLoading.apply {
                 root.isVisible = isVisible
-                progressBar.isVisible = isLoading
+                loadingIndicator.isVisible = isLoading
                 tvError.isVisible = false
                 btnRetry.isVisible = false
             }

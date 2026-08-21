@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.shape.MaterialShapeDrawable
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.common.media.MediaType
 import io.github.drumber.kitsune.data.presentation.dto.toMedia
@@ -24,7 +25,6 @@ import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.component.updateLoadState
 import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
-import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.showSnackbarOnFailure
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -45,9 +45,9 @@ class EpisodesFragment : Fragment(R.layout.fragment_media_list),
         super.onViewCreated(view, savedInstanceState)
         viewModel.setMedia(args.media.toMedia())
 
-        binding.collapsingToolbar.initWindowInsetsListener(consume = false)
+        binding.appBarLayout.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(context)
         binding.toolbar.apply {
-            initWindowInsetsListener(consume = false)
+            initPaddingWindowInsetsListener(left = true, right = true, consume = false)
             title = getString(
                 when (args.media.type) {
                     MediaType.Anime -> R.string.title_episodes

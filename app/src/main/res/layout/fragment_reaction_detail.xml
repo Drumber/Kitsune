@@ -19,8 +19,7 @@
             android:layout_height="?attr/actionBarSize"
             app:title="@string/title_reaction"
             app:navigationIcon="@drawable/ic_arrow_back_24"
-            app:navigationContentDescription="@string/action_back"
-            style="@style/Widget.Material3.Toolbar" />
+            app:navigationContentDescription="@string/action_back" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -133,7 +132,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_upvote"
-                style="@style/Widget.Material3.Button.TonalButton.Icon"
+                style="?attr/materialButtonTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -145,8 +144,8 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
+    <com.google.android.material.loadingindicator.LoadingIndicator
+        android:id="@+id/loading_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

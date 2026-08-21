@@ -40,8 +40,8 @@
         android:visibility="gone"
         android:text="@string/error_nothing_found" />
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
+    <com.google.android.material.loadingindicator.LoadingIndicator
+        android:id="@+id/loading_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
@@ -54,6 +54,6 @@
         android:layout_gravity="center"
         app:icon="@drawable/ic_refresh_24"
         android:text="@string/action_retry"
-        style="@style/Widget.Material3.Button.TonalButton" />
+        style="?attr/materialButtonTonalStyle" />
 
 </LinearLayout>

@@ -32,7 +32,6 @@ import io.github.drumber.kitsune.ui.base.BaseFragment
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.recyclerView
 import io.github.drumber.kitsune.util.extensions.toPx
-import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -61,7 +60,6 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
-        initToolbar()
         initProfileViewPager()
 
         binding.apply {
@@ -87,7 +85,7 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
-                binding.progressBarProfile.isVisible =
+                binding.loadingIndicator.isVisible =
                     state.isInitialLoading && viewModel.getUser() == null
             }
         }
@@ -99,13 +97,6 @@ abstract class BaseProfileFragment : BaseFragment(R.layout.fragment_profile, tru
         binding.tabLayoutProfile.isVisible = user != null
         binding.viewPagerProfile.isVisible = user != null
         updateUserAvatarAndCover(user)
-    }
-
-    protected open fun initToolbar() {
-        binding.apply {
-            collapsingToolbar.initWindowInsetsListener(consume = false)
-            toolbar.initWindowInsetsListener(consume = false)
-        }
     }
 
     protected abstract fun createProfileViewPagerAdapter(userId: String): ProfileViewPagerAdapter

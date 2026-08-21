@@ -64,6 +64,7 @@
                 android:layout_marginStart="4dp"
                 android:contentDescription="@string/action_more_options"
                 app:icon="@drawable/ic_more_vert"
+                app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Small.Narrow"
                 app:iconTint="?attr/colorControlNormal" />
 
         </LinearLayout>

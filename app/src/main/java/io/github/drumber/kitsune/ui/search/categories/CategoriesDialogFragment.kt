@@ -2,10 +2,8 @@ package io.github.drumber.kitsune.ui.search.categories
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.snackbar.Snackbar
@@ -212,7 +210,7 @@ class CategoriesDialogFragment : BaseDialogFragment(R.layout.fragment_categories
         if (treeRoot.children.isEmpty()) {
             binding.layoutLoading.apply {
                 root.isVisible = true
-                progressBar.isVisible = false
+                loadingIndicator.isVisible = false
                 tvError.isVisible = true
                 tvError.text = errorMsg
                 btnRetry.isVisible = true
