@@ -125,7 +125,7 @@ ksp {
 aboutLibraries {
     offlineMode = true
     // Remove the "generated" timestamp to allow for reproducible builds
-    excludeFields = arrayOf("generated")
+    export.excludeFields.add("generated")
 }
 
 kover {
