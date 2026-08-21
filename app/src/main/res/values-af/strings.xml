@@ -472,4 +472,66 @@
     <string name="onboarding_setup_action">Voltooi opstelling</string>
     <string name="unit_episode">Episode %d</string>
     <string name="unit_chapter">Hoofstuk %d</string>
+    <string name="feed_pinned_post">Vasgespeld</string>
+    <string name="label_write">Skryf</string>
+    <string name="label_images">Fotos</string>
+    <string name="title_replies">Antwoorde</string>
+    <string name="preference_double_back_to_exit">Druk terug twee keer om uit te gaan</string>
+    <string name="preference_double_back_to_exit_description">Vereis dat jy \'Terug\' twee keer druk om die toep te verlaat.</string>
+    <plurals name="unit_pages">
+        <item quantity="one">%s Bladsy</item>
+        <item quantity="other">%s Bladsye</item>
+    </plurals>
+    <plurals name="duration_seconds">
+        <item quantity="one">%s sekonde</item>
+        <item quantity="other">%s sekondes</item>
+    </plurals>
+    <plurals name="duration_minutes">
+        <item quantity="one">%s minuut</item>
+        <item quantity="other">%s minute</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%s uur</item>
+        <item quantity="other">%s ure</item>
+    </plurals>
+    <plurals name="duration_days">
+        <item quantity="one">%s dag</item>
+        <item quantity="other">%s dae</item>
+    </plurals>
+    <plurals name="duration_months">
+        <item quantity="one">%s maand</item>
+        <item quantity="other">%s maande</item>
+    </plurals>
+    <plurals name="duration_years">
+        <item quantity="one">%s jaar</item>
+        <item quantity="other">%s jare</item>
+    </plurals>
+    <plurals name="notification_actor_and_others">
+        <item quantity="one">%1$s en %2$d ander</item>
+        <item quantity="other">%1$s en %2$d ander</item>
+    </plurals>
+    <plurals name="group_members_count">
+        <item quantity="one">%s lid</item>
+        <item quantity="other">%s lede</item>
+    </plurals>
+    <plurals name="comment_view_all_replies">
+        <item quantity="one">Sien %d antwoord</item>
+        <item quantity="other">Sien al %d antwoorde</item>
+    </plurals>
+    <string name="action_report">Rapporteer</string>
+    <string name="report_post_title">Rapporteer plasing</string>
+    <string name="report_comment_title">Rapporteer kommentaar</string>
+    <string name="report_reason">Rede</string>
+    <string name="report_reason_nsfw">NSFW</string>
+    <string name="report_reason_offensive">Aanstootlik</string>
+    <string name="report_reason_spoiler">Bederwer</string>
+    <string name="report_reason_bullying">Afknouery</string>
+    <string name="report_reason_spam">Spam</string>
+    <string name="report_reason_other">Ander</string>
+    <string name="report_explanation_hint">Verduidelik asseblief</string>
+    <string name="report_error_explanation_required">Verduideliking word vereis</string>
+    <string name="report_submit">Stuur</string>
+    <string name="report_success">Melding suksesvol gestuur</string>
+    <string name="report_failure">Kon nie melding stuur nie</string>
+    <string name="report_already_reported">Jy het dit reeds aangemeld.</string>
 </resources>
