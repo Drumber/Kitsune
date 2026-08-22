@@ -177,6 +177,9 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.fragment.ktx)
 
+    // Transition
+    implementation(libs.androidx.transition.ktx)
+
     // Preference
     implementation(libs.androidx.preference.ktx)
 

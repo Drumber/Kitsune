@@ -3,8 +3,10 @@ package io.github.drumber.kitsune.ui.search
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
@@ -30,6 +32,8 @@ import com.algolia.search.model.response.ResponseSearch
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.transition.MaterialFadeThrough
+import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.dto.toMediaDto
 import io.github.drumber.kitsune.data.presentation.model.algolia.SearchType
@@ -60,12 +64,17 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.core.qualifier.named
 import java.lang.ref.WeakReference
+import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
 class SearchFragment : Fragment(R.layout.fragment_search),
     FragmentDecorationPreference,
     OnItemClickListener<Media>,
     NavigationBarView.OnItemReselectedListener {
+
+    companion object {
+        private const val KEY_LAST_NAV_DESTINATION = "last_nav_destination"
+    }
 
     override val hasTransparentStatusBar = false
 
@@ -79,27 +88,37 @@ class SearchFragment : Fragment(R.layout.fragment_search),
 
     private val connectionHandler = ConnectionHandler()
 
+    private var lastNavDestination: Int? = null
+    private var isInitialFocusSet = false
     private var pendingSearchFocus = false
-
-    private var isSearchViewFocused = false
 
     private lateinit var mediaAdapter: MediaSearchPagingAdapter
     private lateinit var userAdapter: UserSearchPagingAdapter
     private lateinit var gridLayoutManager: GridLayoutManager
     private lateinit var listLayoutManager: LinearLayoutManager
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState?.containsKey(KEY_LAST_NAV_DESTINATION) == true) {
+            lastNavDestination = savedInstanceState.getInt(KEY_LAST_NAV_DESTINATION)
+        }
+
+        lastNavDestination?.let { applyTransitions(it) }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        if (lastNavDestination == R.id.details_fragment) {
+            postponeEnterTransition(500, TimeUnit.MILLISECONDS)
+        }
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        postponeEnterTransition()
-
-        if (findNavController().currentBackStackEntry?.arguments == null) {
-            view.doOnPreDraw { startPostponedEnterTransition() }
-        } else {
-            // safeguard: ensure startPostponedEnterTransition() got called within 200ms
-            view.postDelayed({
-                startPostponedEnterTransition()
-            }, 200)
-        }
 
         binding.apply {
             root.initPaddingWindowInsetsListener(
@@ -109,6 +128,8 @@ class SearchFragment : Fragment(R.layout.fragment_search),
                 consume = false
             )
             rvMedia.initPaddingWindowInsetsListener(bottom = true, consume = false)
+
+            btnBack.setOnClickListener { findNavController().navigateUp() }
         }
 
         initRecyclerView()
@@ -118,10 +139,34 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         observeFilters()
         initSearchProviderStatusLayout()
 
-        if (savedInstanceState == null && args.focusSearch) {
+        if (savedInstanceState == null && args.focusSearch && !isInitialFocusSet) {
             pendingSearchFocus = true
+            isInitialFocusSet = true
             binding.searchView.post {
                 if (isAdded) focusSearchView()
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        lastNavDestination?.let { outState.putInt(KEY_LAST_NAV_DESTINATION, it) }
+    }
+
+    private fun applyTransitions(destinationId: Int) {
+        lastNavDestination = destinationId
+        when (destinationId) {
+            R.id.details_fragment -> {
+                val transition = MaterialFadeThrough().apply {
+                    duration = resources.getInteger(R.integer.material_motion_duration_short_2).toLong()
+                }
+                exitTransition = transition
+                reenterTransition = transition
+            }
+
+            R.id.facet_fragment -> {
+                exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+                reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
             }
         }
     }
@@ -270,28 +315,10 @@ class SearchFragment : Fragment(R.layout.fragment_search),
     }
 
     private fun initSearchBar() {
-        binding.btnSearch.setOnClickListener {
-            if (isSearchViewFocused) {
-                val focusedView = binding.searchView.findFocus()
-                focusedView.clearFocus()
-                val imm =
-                    requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(focusedView.windowToken, 0)
-            } else {
-                focusSearchView()
-            }
-        }
-
-        binding.searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
-            binding.btnSearch.setImageResource(
-                if (hasFocus) R.drawable.ic_arrow_back_24 else R.drawable.ic_search_24
-            )
-            isSearchViewFocused = hasFocus
-        }
-
         binding.btnFilter.apply {
             setOnClickListener {
                 val action = SearchFragmentDirections.actionSearchFragmentToFacetFragment()
+                applyTransitions(R.id.facet_fragment)
                 findNavController().navigateSafe(R.id.search_fragment, action)
             }
             setOnLongClickListener {
@@ -365,6 +392,8 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(item.toMediaDto())
         val detailsTransitionName = getString(R.string.details_poster_transition_name)
         val extras = FragmentNavigatorExtras(view to detailsTransitionName)
+
+        applyTransitions(R.id.details_fragment)
         findNavController().navigateSafe(R.id.search_fragment, action, extras)
     }
 

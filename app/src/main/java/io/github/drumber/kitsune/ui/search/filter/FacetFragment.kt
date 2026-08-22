@@ -19,6 +19,7 @@ import com.algolia.instantsearch.filter.facet.connectView
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.slider.RangeSlider
+import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentFilterFacetBinding
 import io.github.drumber.kitsune.preference.KitsunePref
@@ -49,6 +50,13 @@ class FacetFragment : Fragment(R.layout.fragment_filter_facet),
     private val connection = ConnectionHandler()
 
     private val viewModel: SearchViewModel by activityViewModel()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

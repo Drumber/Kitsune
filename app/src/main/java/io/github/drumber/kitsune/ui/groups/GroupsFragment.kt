@@ -18,6 +18,7 @@ import coil3.ImageLoader
 import com.google.android.material.chip.Chip
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.group.GroupCategory
 import io.github.drumber.kitsune.databinding.FragmentGroupsBinding
@@ -44,6 +45,12 @@ class GroupsFragment : Fragment(R.layout.fragment_groups),
     private val viewModel: GroupsViewModel by viewModel()
 
     private val imageLoader: ImageLoader by inject(named<SocialImagesLoader>())
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

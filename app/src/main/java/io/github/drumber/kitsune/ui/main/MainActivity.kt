@@ -162,15 +162,19 @@ class MainActivity : BaseActivity() {
         navigationBarView.apply {
             setOnItemSelectedListener { item ->
                 viewModel.currentNavRootDestId = item.itemId
+                val currentFragment = navHostFragment.childFragmentManager.primaryNavigationFragment
 
-                // handle reselect of navigation item and pass event to current fragment
-                navHostFragment.childFragmentManager.fragments.let { fragments ->
+                currentFragment?.let { currentFragment ->
+                    // cleanup any set transitions to allow default cross-fade transition
+                    currentFragment.exitTransition = null
+                    currentFragment.reenterTransition = null
+
+                    // handle reselect of navigation item and pass event to current fragment
                     if (item.itemId == selectedItemId
-                        && fragments.size > 0
-                        && fragments[0] is NavigationBarView.OnItemReselectedListener
-                        && fragments[0].lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
+                        && currentFragment is NavigationBarView.OnItemReselectedListener
+                        && currentFragment.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
                     ) {
-                        (fragments[0] as NavigationBarView.OnItemReselectedListener).onNavigationItemReselected(
+                        (currentFragment as NavigationBarView.OnItemReselectedListener).onNavigationItemReselected(
                             item
                         )
                     }

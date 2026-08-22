@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/library_entry_img_height">
             
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/iv_thumbnail"
                 android:layout_width="@dimen/library_entry_img_width"
                 android:layout_height="@dimen/library_entry_img_height"
@@ -33,6 +33,7 @@
                 android:layout_centerVertical="true"
                 android:transitionName="@{@string/unique_poster_transition_name(entry.id)}"
                 android:scaleType="centerCrop"
+                app:shapeAppearance="@style/ShapeAppearanceOverlay.Kitsune.LibraryEntryThumbnail"
                 tools:src="@drawable/default_placeholder"
                 android:contentDescription="@null" />
 

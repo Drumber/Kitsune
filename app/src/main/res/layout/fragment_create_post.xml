@@ -5,7 +5,8 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:transitionGroup="true"
+    android:transitionName="@string/create_post_transition_name"
     tools:context=".ui.createpost.CreatePostFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -45,6 +46,7 @@
         android:id="@+id/nsv_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/colorSurface"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout

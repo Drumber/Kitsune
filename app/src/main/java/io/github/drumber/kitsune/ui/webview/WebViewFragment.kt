@@ -2,10 +2,8 @@ package io.github.drumber.kitsune.ui.webview
 
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -116,17 +114,23 @@ class WebViewFragment : Fragment(R.layout.fragment_web_view) {
                     view?.evaluateJavascript(getAccessTokenInjectionCode(accessToken), null)
                 }
             }
-            binding.toolbar.subtitle = url
+            if (view != null) {
+                binding.toolbar.subtitle = url
+            }
         }
 
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
-            binding.loadingIndicator.isVisible = false
+            if (view != null) {
+                binding.loadingIndicator.isVisible = false
+            }
         }
 
         override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
             super.doUpdateVisitedHistory(view, url, isReload)
-            binding.toolbar.subtitle = url
+            if (view != null) {
+                binding.toolbar.subtitle = url
+            }
         }
 
         override fun shouldOverrideUrlLoading(

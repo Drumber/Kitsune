@@ -1,11 +1,16 @@
 package io.github.drumber.kitsune.ui.postdetail
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.OnBackPressedCallback
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -15,9 +20,16 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Slide
+import androidx.transition.TransitionSet
 import coil3.ImageLoader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.motion.MotionUtils
 import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialFade
+import com.google.android.material.transition.MaterialFadeThrough
+import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.config.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.comment.Comment
@@ -29,6 +41,7 @@ import io.github.drumber.kitsune.ui.adapter.paging.CommentPagingAdapter
 import io.github.drumber.kitsune.ui.adapter.paging.ResourceLoadStateAdapter
 import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
 import io.github.drumber.kitsune.ui.report.ReportBottomSheet
+import io.github.drumber.kitsune.util.extensions.getColor
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.extensions.smoothScrollOrJumpToTop
@@ -47,17 +60,75 @@ import org.koin.core.qualifier.named
 class PostDetailFragment : Fragment(R.layout.fragment_post_detail),
     NavigationBarView.OnItemReselectedListener {
 
+    companion object {
+        private const val KEY_LAST_NAV_DESTINATION = "last_nav_destination"
+    }
+
     private val args: PostDetailFragmentArgs by navArgs()
 
     private val binding by viewBinding(FragmentPostDetailBinding::bind)
 
     private val viewModel: PostDetailViewModel by viewModel()
 
+    private var lastNavDestination: Int? = null
+
     private val imageLoader: ImageLoader by inject(named<SocialImagesLoader>())
     private val contentRenderer: PostContentRenderer by inject()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState?.containsKey(KEY_LAST_NAV_DESTINATION) == true) {
+            lastNavDestination = savedInstanceState.getInt(KEY_LAST_NAV_DESTINATION)
+        }
+
+        lastNavDestination?.let { applyTransitions(it) }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
+
+        // predictive back does not work shared element transition
+        val disablePredictiveBackCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, disablePredictiveBackCallback)
+
+         val transitionDuration = resources.getInteger(R.integer.material_motion_duration_short_2).toLong()
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            drawingViewId = R.id.root_layout
+            duration = transitionDuration
+            scrimColor = Color.TRANSPARENT
+            setAllContainerColors(requireContext().theme.getColor(R.attr.colorSurface))
+        }
+        sharedElementReturnTransition = MaterialContainerTransform().apply {
+            drawingViewId = args.sharedElementParentView.takeIf { it != -1 } ?: R.id.nav_host_fragment
+            duration = transitionDuration
+            scrimColor = Color.TRANSPARENT
+            setAllContainerColors(requireContext().theme.getColor(R.attr.colorSurface))
+        }
+
+        val slideBottomInputLayout = Slide(Gravity.BOTTOM).apply {
+            interpolator = MotionUtils.resolveThemeInterpolator(
+                requireContext(),
+                R.attr.motionEasingEmphasizedDecelerateInterpolator,
+                FastOutSlowInInterpolator()
+            )
+            addTarget(R.id.layout_bottom_wrapper)
+            duration = transitionDuration
+        }
+        val slideToolbar = MaterialFade().apply {
+            duration = transitionDuration
+            addTarget(R.id.app_bar_layout)
+        }
+        enterTransition = TransitionSet().apply {
+            addTransition(slideToolbar)
+            addTransition(slideBottomInputLayout)
+        }
 
         viewModel.setPost(args.post)
 
@@ -212,6 +283,31 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail),
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        lastNavDestination?.let { outState.putInt(KEY_LAST_NAV_DESTINATION, it) }
+    }
+
+    private fun applyTransitions(destinationId: Int) {
+        lastNavDestination = destinationId
+        when (destinationId) {
+            R.id.user_profile_fragment, R.id.replies_fragment -> {
+                exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+                reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+            }
+
+            R.id.details_fragment -> {
+                exitTransition = MaterialFadeThrough()
+                reenterTransition = MaterialFadeThrough()
+            }
+
+            else -> {
+                exitTransition = null
+                reenterTransition = null
+            }
+        }
+    }
+
     private fun submitComment() {
         val content = binding.etComment.text?.toString().orEmpty().trim()
         if (content.isEmpty()) return
@@ -229,18 +325,21 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail),
 
     private fun navigateToEditPost(post: Post) {
         val action = PostDetailFragmentDirections.actionGlobalCreatePostFragment(post)
+        applyTransitions(R.id.create_post_fragment)
         findNavController().navigateSafe(R.id.post_detail_fragment, action)
     }
 
     private fun navigateToUserProfile(userId: String) {
         val action = io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
             .actionGlobalUserProfileFragment(userId)
+        applyTransitions(R.id.user_profile_fragment)
         findNavController().navigateSafe(R.id.post_detail_fragment, action)
     }
 
     private fun navigateToReplies(comment: Comment) {
         val action =
             PostDetailFragmentDirections.actionGlobalRepliesFragment(comment.id, args.post.id)
+        applyTransitions(R.id.replies_fragment)
         findNavController().navigateSafe(R.id.post_detail_fragment, action)
     }
 
@@ -270,6 +369,7 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail),
             type = if (isAnime) "anime" else "manga",
             slug = slug
         )
+        applyTransitions(R.id.details_fragment)
         findNavController().navigateSafe(R.id.post_detail_fragment, action)
     }
 

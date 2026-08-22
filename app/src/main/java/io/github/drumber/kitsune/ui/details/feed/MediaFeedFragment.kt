@@ -3,10 +3,12 @@ package io.github.drumber.kitsune.ui.details.feed
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
@@ -15,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import coil3.ImageLoader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.transition.MaterialFadeThrough
+import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.config.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.feed.Post
@@ -47,17 +51,35 @@ import org.koin.core.qualifier.named
 class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
     PostInteractionListener, NavigationBarView.OnItemReselectedListener {
 
+    companion object {
+        private const val KEY_LAST_NAV_DESTINATION = "last_nav_destination"
+    }
+
     private val args: MediaFeedFragmentArgs by navArgs()
 
     private val binding by viewBinding(FragmentMediaFeedBinding::bind)
 
     private val viewModel: MediaFeedViewModel by viewModel()
 
+    private var lastNavDestination: Int? = null
+
     private val imageLoader: ImageLoader by inject(named<SocialImagesLoader>())
     private val contentRenderer: PostContentRenderer by inject()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState?.containsKey(KEY_LAST_NAV_DESTINATION) == true) {
+            lastNavDestination = savedInstanceState.getInt(KEY_LAST_NAV_DESTINATION)
+        }
+
+        lastNavDestination?.let { applyTransitions(it) }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
+
         when (args.mediaFeedType) {
             MediaFeedType.MEDIA -> viewModel.initMediaFeed(args.mediaOrUnitId, args.isAnimeOrEpisode)
             MediaFeedType.UNIT -> viewModel.initUnitFeed(args.mediaOrUnitId, args.isAnimeOrEpisode)
@@ -134,9 +156,44 @@ class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        lastNavDestination?.let { outState.putInt(KEY_LAST_NAV_DESTINATION, it) }
+    }
+
+    private fun applyTransitions(destinationId: Int) {
+        lastNavDestination = destinationId
+        when (destinationId) {
+            R.id.post_detail_fragment -> {
+                val transition = MaterialFadeThrough().apply {
+                    duration = resources.getInteger(R.integer.material_motion_duration_short_2).toLong()
+                }
+                exitTransition = transition
+                reenterTransition = transition
+            }
+
+            R.id.user_profile_fragment -> {
+                exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+                reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+            }
+
+            R.id.details_fragment -> {
+                exitTransition = MaterialFadeThrough()
+                reenterTransition = MaterialFadeThrough()
+            }
+
+            else -> {
+                exitTransition = null
+                reenterTransition = null
+            }
+        }
+    }
+
     override fun onPostClick(view: View, post: Post) {
-        val action = PostDetailFragmentDirections.actionGlobalPostDetailFragment(post)
-        findNavController().navigateSafe(R.id.media_feed_fragment, action)
+        val action = PostDetailFragmentDirections.actionGlobalPostDetailFragment(post, R.id.coordinator_layout)
+        val extras = FragmentNavigatorExtras(view to getString(R.string.post_item_transition_name))
+        applyTransitions(R.id.post_detail_fragment)
+        findNavController().navigateSafe(R.id.media_feed_fragment, action, extras)
     }
 
     override fun onLikeClick(post: Post, targetLiked: Boolean) {
@@ -155,6 +212,7 @@ class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
             type = if (isAnime) "anime" else "manga",
             slug = slug
         )
+        applyTransitions(R.id.details_fragment)
         findNavController().navigateSafe(R.id.media_feed_fragment, action)
     }
 
@@ -164,6 +222,7 @@ class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
 
     override fun onEditClick(post: Post) {
         val action = PostDetailFragmentDirections.actionGlobalCreatePostFragment(post)
+        applyTransitions(R.id.create_post_fragment)
         findNavController().navigateSafe(R.id.media_feed_fragment, action)
     }
 
@@ -178,6 +237,7 @@ class MediaFeedFragment : Fragment(R.layout.fragment_media_feed),
 
     override fun onAuthorClick(userId: String) {
         val action = UserProfileFragmentDirections.actionGlobalUserProfileFragment(userId)
+        applyTransitions(R.id.user_profile_fragment)
         findNavController().navigateSafe(R.id.media_feed_fragment, action)
     }
 

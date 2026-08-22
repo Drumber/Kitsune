@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:transitionGroup="true"
     tools:context=".ui.postdetail.PostDetailFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -17,6 +18,7 @@
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:transitionGroup="true"
             app:liftOnScroll="true">
 
             <com.google.android.material.appbar.MaterialToolbar
@@ -49,84 +51,93 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?attr/colorOutlineVariant" />
-
     <LinearLayout
-        android:id="@+id/layout_reply_context"
+        android:id="@+id/layout_bottom_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorSurfaceContainer"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="8dp"
-        android:paddingVertical="4dp"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:orientation="vertical"
+        android:transitionGroup="true">
 
-        <TextView
-            android:id="@+id/tv_reply_context"
-            android:layout_width="0dp"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/colorOutlineVariant" />
+
+        <LinearLayout
+            android:id="@+id/layout_reply_context"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textColor="?android:attr/textColorSecondary"
-            tools:text="Replying to Username" />
+            android:background="?attr/colorSurfaceContainer"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="8dp"
+            android:paddingVertical="4dp"
+            android:visibility="gone"
+            tools:visibility="visible">
 
-        <ImageButton
-            android:id="@+id/btn_cancel_reply"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/action_cancel"
-            android:src="@drawable/ic_close_24"
-            app:tint="?android:attr/textColorSecondary" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_input"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="8dp">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_comment"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/hint_add_comment"
-            app:boxBackgroundMode="outline"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_comment"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_reply_context"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionSend"
-                android:inputType="textCapSentences|textMultiLine"
-                android:maxLines="4" />
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="?android:attr/textColorSecondary"
+                tools:text="Replying to Username" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+            <ImageButton
+                android:id="@+id/btn_cancel_reply"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/action_cancel"
+                android:src="@drawable/ic_close_24"
+                app:tint="?android:attr/textColorSecondary" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_send"
-            android:layout_width="wrap_content"
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_input"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:contentDescription="@string/action_send"
-            app:icon="@drawable/ic_send_24"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            style="?attr/materialIconButtonFilledStyle" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_comment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/hint_add_comment"
+                app:boxBackgroundMode="outline"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionSend"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLines="4" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:contentDescription="@string/action_send"
+                app:icon="@drawable/ic_send_24"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                style="?attr/materialIconButtonFilledStyle" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

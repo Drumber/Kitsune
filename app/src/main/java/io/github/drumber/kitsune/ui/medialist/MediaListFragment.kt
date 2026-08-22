@@ -17,6 +17,7 @@ import androidx.paging.PagingDataAdapter
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.transition.MaterialFadeThrough
 import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.common.media.MediaType
@@ -37,9 +38,14 @@ import io.github.drumber.kitsune.util.ui.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.concurrent.TimeUnit
 
 class MediaListFragment : Fragment(R.layout.fragment_media_list),
     NavigationBarView.OnItemReselectedListener {
+
+    companion object {
+        private const val KEY_LAST_NAV_DESTINATION = "last_nav_destination"
+    }
 
     private val args: MediaListFragmentArgs by navArgs()
 
@@ -47,23 +53,25 @@ class MediaListFragment : Fragment(R.layout.fragment_media_list),
 
     private val viewModel: MediaListViewModel by viewModel()
 
+    private var lastNavDestination: Int? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (savedInstanceState?.containsKey(KEY_LAST_NAV_DESTINATION) == true) {
+            lastNavDestination = savedInstanceState.getInt(KEY_LAST_NAV_DESTINATION)
+        }
+
         enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+        exitTransition = MaterialFadeThrough().apply {
+            duration = resources.getInteger(R.integer.material_motion_duration_short_2).toLong()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        postponeEnterTransition()
-
-        if (findNavController().currentBackStackEntry?.arguments == null) {
-            view.doOnPreDraw { startPostponedEnterTransition() }
-        } else {
-            // safeguard: ensure startPostponedEnterTransition() got called within 200ms
-            view.postDelayed({
-                startPostponedEnterTransition()
-            }, 200)
+        if (lastNavDestination == R.id.details_fragment) {
+            postponeEnterTransition(500, TimeUnit.MILLISECONDS)
         }
 
         val colorBackground = MaterialColors.getColor(view, android.R.attr.colorBackground)
@@ -86,6 +94,11 @@ class MediaListFragment : Fragment(R.layout.fragment_media_list),
         }
 
         initRecyclerView()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        lastNavDestination?.let { outState.putInt(KEY_LAST_NAV_DESTINATION, it) }
     }
 
     private fun initRecyclerView() {
@@ -137,6 +150,7 @@ class MediaListFragment : Fragment(R.layout.fragment_media_list),
             MediaListFragmentDirections.actionMediaListFragmentToDetailsFragment(model.toMediaDto())
         val detailsTransitionName = getString(R.string.details_poster_transition_name)
         val extras = FragmentNavigatorExtras(view to detailsTransitionName)
+        lastNavDestination = R.id.details_fragment
         findNavController().navigateSafe(R.id.media_list_fragment, action, extras)
     }
 

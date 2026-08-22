@@ -53,6 +53,14 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="ShapeAppearanceOverlay.Kitsune.LibraryEntryThumbnail" parent="">
+        <item name="cornerFamily">?attr/shapeCornerFamily</item>
+        <item name="cornerSizeBottomLeft">?attr/shapeCornerSizeMedium</item>
+        <item name="cornerSizeTopLeft">?attr/shapeCornerSizeMedium</item>
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
     <style name="ShapeAppearance.Kitsune.SubtypeBadge" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeBottomLeft">4dp</item>

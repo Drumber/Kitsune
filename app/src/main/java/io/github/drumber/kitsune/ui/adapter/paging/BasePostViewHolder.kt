@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import coil3.ImageLoader
 import coil3.load
+import coil3.request.allowHardware
 import coil3.request.error
 import coil3.request.fallback
 import coil3.request.placeholder
@@ -49,6 +50,8 @@ abstract class BasePostViewHolder(
     protected abstract fun getLocalUserId(): String?
 
     open fun bind(post: Post) {
+        binding.root.transitionName = binding.root.context.getString(R.string.unique_post_item_transition_name, post.id)
+
         binding.root.setOnDoubleTapListener(
             onSingleTap = { onPostClick(post) },
             onDoubleTap = { onLikeViaDoubleTap(post) }
@@ -64,6 +67,7 @@ abstract class BasePostViewHolder(
         }
 
         binding.ivAvatar.load(post.authorAvatarUrl, imageLoader = imageLoader) {
+            allowHardware(false) // disable hardware bitmap for shared element transition
             placeholder(R.drawable.ic_outline_person_24)
             error(R.drawable.ic_outline_person_24)
             fallback(R.drawable.ic_outline_person_24)

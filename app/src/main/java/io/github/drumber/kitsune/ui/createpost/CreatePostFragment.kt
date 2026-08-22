@@ -1,9 +1,11 @@
 package io.github.drumber.kitsune.ui.createpost
 
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
@@ -20,10 +22,12 @@ import coil3.load
 import coil3.request.error
 import coil3.request.fallback
 import coil3.request.placeholder
+import com.google.android.material.transition.MaterialContainerTransform
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.databinding.FragmentCreatePostBinding
 import io.github.drumber.kitsune.preference.KitsunePref
+import io.github.drumber.kitsune.util.extensions.getColor
 import io.github.drumber.kitsune.util.logE
 import io.github.drumber.kitsune.util.markwon.MarkdownPreviewRenderer
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
@@ -62,6 +66,25 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // predictive back does not work shared element transition
+        val disablePredictiveBackCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, disablePredictiveBackCallback)
+
+        if (args.editPost == null) {
+            sharedElementEnterTransition = MaterialContainerTransform().apply {
+                drawingViewId = R.id.nav_host_fragment
+                duration = resources.getInteger(R.integer.material_motion_duration_short_2).toLong()
+                scrimColor = Color.TRANSPARENT
+                containerColor = requireContext().theme.getColor(R.attr.colorSurface)
+                startContainerColor = requireContext().theme.getColor(R.attr.colorPrimaryContainer)
+                endContainerColor = requireContext().theme.getColor(R.attr.colorSurface)
+            }
+        }
 
         binding.appBarLayout.initPaddingWindowInsetsListener(left = true, top = true, right = true, consume = false)
         binding.nsvContent.initPaddingWindowInsetsListener(

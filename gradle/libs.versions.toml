@@ -12,6 +12,7 @@ androidxNavigation = "2.9.8"
 androidxPaging = "3.5.1"
 androidxRoom = "2.8.4"
 androidxSecurityCrypto = "1.1.0-alpha06"
+androidxTransition = "1.7.0"
 androidxViewPager2 = "1.1.0"
 androidxWorkManager = "2.11.2"
 appCompat = "1.8.0"
@@ -98,6 +99,7 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "androidxSecurityCrypto" }
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "testRules" }
+androidx-transition-ktx = { module = "androidx.transition:transition-ktx", version.ref = "androidxTransition" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "androidxViewPager2" }
 androidx-workmanager = { module = "androidx.work:work-runtime-ktx", version.ref = "androidxWorkManager" }
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }

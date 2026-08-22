@@ -15,6 +15,7 @@
         android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:transitionGroup="true"
         tools:context=".ui.main.MainActivity">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -161,6 +162,7 @@
             android:layout_margin="16dp"
             android:visibility="gone"
             android:contentDescription="@string/profile_post_on_wall"
+            android:transitionName="@string/create_post_transition_name"
             app:srcCompat="@drawable/ic_edit_24"
             tools:visibility="gone" />
 

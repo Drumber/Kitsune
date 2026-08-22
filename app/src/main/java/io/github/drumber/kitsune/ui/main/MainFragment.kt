@@ -13,6 +13,8 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.transition.MaterialFadeThrough
+import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.databinding.FragmentMainBinding
 import io.github.drumber.kitsune.ui.main.MainFragmentViewModel.NavigationAction
@@ -28,9 +30,24 @@ import org.koin.androidx.navigation.koinNavGraphViewModel
 
 class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemReselectedListener {
 
+    companion object {
+        private const val KEY_LAST_NAV_DESTINATION = "last_nav_destination"
+    }
+
     private val binding by viewBinding(FragmentMainBinding::bind)
 
     private val viewModel: MainFragmentViewModel by koinNavGraphViewModel(R.id.main_nav_graph)
+
+    private var lastNavDestination: Int? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState?.containsKey(KEY_LAST_NAV_DESTINATION) == true) {
+            lastNavDestination = savedInstanceState.getInt(KEY_LAST_NAV_DESTINATION)
+        }
+
+        lastNavDestination?.let { applyTransitions(it) }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,6 +63,7 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
             consume = false
         )
         binding.searchBar.setOnClickListener {
+            applyTransitions(R.id.search_fragment)
             findNavController().navigateSafe(
                 R.id.main_fragment,
                 MainFragmentDirections.actionMainFragmentToSearchFragment(focusSearch = true)
@@ -78,11 +96,40 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        lastNavDestination?.let { outState.putInt(KEY_LAST_NAV_DESTINATION, it) }
+    }
+
+    private fun applyTransitions(destinationId: Int) {
+        lastNavDestination = destinationId
+        when (destinationId) {
+            R.id.details_fragment -> {
+                val transition = MaterialFadeThrough().apply {
+                    duration = resources.getInteger(R.integer.material_motion_duration_short_2).toLong()
+                }
+                exitTransition = transition
+                reenterTransition = transition
+            }
+
+            R.id.media_list_fragment -> {
+                exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+                reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+            }
+
+            R.id.search_fragment -> {
+                exitTransition = null
+                reenterTransition = null
+            }
+        }
+    }
+
     private fun handleNavigationAction(navigationAction: NavigationAction) {
         when (navigationAction) {
             is NavigationAction.OpenMediaList -> {
                 val action =
                     MainFragmentDirections.actionMainFragmentToMediaListFragment(navigationAction.mediaSelector, navigationAction.title)
+                applyTransitions(R.id.media_list_fragment)
                 findNavController().navigateSafe(R.id.main_fragment, action)
             }
 
@@ -90,6 +137,8 @@ class MainFragment : Fragment(R.layout.fragment_main), NavigationBarView.OnItemR
                 val action = MainFragmentDirections.actionMainFragmentToDetailsFragment(navigationAction.mediaDto)
                 val detailsTransitionName = getString(R.string.details_poster_transition_name)
                 val extras = FragmentNavigatorExtras(navigationAction.sharedElement to detailsTransitionName)
+
+                applyTransitions(R.id.details_fragment)
                 findNavController().navigateSafe(R.id.main_fragment, action, extras)
             }
         }

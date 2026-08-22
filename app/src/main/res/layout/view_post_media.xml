@@ -26,6 +26,7 @@
             android:contentDescription="@null"
             android:scaleType="centerCrop"
             app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Kitsune.Rounded8"
+            android:transitionName="@string/details_poster_transition_name"
             tools:src="@drawable/default_placeholder" />
 
         <LinearLayout

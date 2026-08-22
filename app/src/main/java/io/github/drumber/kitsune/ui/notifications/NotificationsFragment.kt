@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil3.ImageLoader
 import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.feed.Notification
 import io.github.drumber.kitsune.databinding.FragmentNotificationsBinding
@@ -42,6 +43,12 @@ class NotificationsFragment : Fragment(R.layout.fragment_notifications),
     private val viewModel: NotificationsViewModel by viewModel()
 
     private val imageLoader: ImageLoader by inject(named<SocialImagesLoader>())
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

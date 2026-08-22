@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.library.LibraryFragment"
+    android:transitionGroup="true"
     android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -109,7 +110,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:transitionGroup="true"
             tools:listitem="@layout/item_library_entry" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

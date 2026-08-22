@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
@@ -269,11 +270,13 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
 
     private fun navigateToEditPost(post: Post) {
         val action = PostDetailFragmentDirections.actionGlobalCreatePostFragment(post)
+        notifyNavigationListener(R.id.create_post_fragment)
         findNavController().navigateSafe(hostDestId, action)
     }
 
     private fun navigateToUserProfile(userId: String) {
         val action = UserProfileFragmentDirections.actionGlobalUserProfileFragment(userId)
+        notifyNavigationListener(R.id.user_profile_fragment)
         findNavController().navigateSafe(hostDestId, action)
     }
 
@@ -287,8 +290,10 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
     }
 
     override fun onPostClick(view: View, post: Post) {
-        val action = PostDetailFragmentDirections.actionGlobalPostDetailFragment(post)
-        findNavController().navigateSafe(hostDestId, action)
+        val action = PostDetailFragmentDirections.actionGlobalPostDetailFragment(post, R.id.feed_list_layout)
+        val extras = FragmentNavigatorExtras(view to getString(R.string.post_item_transition_name))
+        notifyNavigationListener(R.id.post_detail_fragment)
+        findNavController().navigateSafe(hostDestId, action, extras)
     }
 
     override fun onLikeClick(post: Post, targetLiked: Boolean) {
@@ -321,7 +326,9 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
     }
 
     override fun onAuthorClick(userId: String) {
-        navigateToUserProfile(userId)
+        if (userId != this.userId) {
+            navigateToUserProfile(userId)
+        }
     }
 
     private fun openMedia(post: Post) {
@@ -332,7 +339,12 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
             type = if (isAnime) "anime" else "manga",
             slug = slug
         )
+        notifyNavigationListener(R.id.details_fragment)
         findNavController().navigateSafe(hostDestId, action)
+    }
+
+    private fun notifyNavigationListener(destinationId: Int) {
+        (parentFragment as? OnNavigationListener)?.onFeedListNavigationEvent(destinationId)
     }
 
     override fun onNavigationItemReselected(p0: MenuItem) {
@@ -345,6 +357,10 @@ class FeedListFragment : Fragment(R.layout.fragment_feed_list), PostInteractionL
         feedAdapter = null
         pinnedPostAdapter = null
         binding.rvFeed.adapter = null
+    }
+
+    interface OnNavigationListener {
+        fun onFeedListNavigationEvent(destinationId: Int)
     }
 
     companion object {

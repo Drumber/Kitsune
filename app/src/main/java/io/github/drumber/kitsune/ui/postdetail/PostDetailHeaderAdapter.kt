@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import coil3.ImageLoader
 import coil3.load
+import coil3.request.allowHardware
 import coil3.request.error
 import coil3.request.fallback
 import coil3.request.placeholder
@@ -78,6 +79,7 @@ class PostDetailHeaderAdapter(
             }
 
             binding.ivAvatar.load(post.authorAvatarUrl, imageLoader = imageLoader) {
+                allowHardware(false) // disable hardware bitmap for shared element transition
                 placeholder(R.drawable.ic_outline_person_24)
                 error(R.drawable.ic_outline_person_24)
                 fallback(R.drawable.ic_outline_person_24)

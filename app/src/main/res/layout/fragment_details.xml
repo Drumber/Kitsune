@@ -19,7 +19,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.main.MainActivity">
+        tools:context=".ui.main.MainActivity"
+        android:transitionGroup="true">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/coordinator_layout"
@@ -337,7 +338,6 @@
                             android:orientation="horizontal"
                             android:paddingVertical="5dp"
                             android:requiresFadingEdge="horizontal"
-                            android:transitionGroup="true"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                     </LinearLayout>

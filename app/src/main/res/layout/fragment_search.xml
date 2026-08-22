@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.search.SearchFragment">
+    tools:context=".ui.search.SearchFragment"
+    android:transitionGroup="true">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator_layout"
@@ -51,15 +52,15 @@
                         android:orientation="horizontal">
 
                         <androidx.appcompat.widget.AppCompatImageButton
-                            android:id="@+id/btn_search"
+                            android:id="@+id/btn_back"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_marginStart="16dp"
-                            android:src="@drawable/ic_search_24"
+                            android:src="@drawable/ic_arrow_back_24"
                             app:tint="?attr/colorControlNormal"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:layout_gravity="center"
-                            android:contentDescription="@string/hint_search" />
+                            android:contentDescription="@string/action_back" />
 
                         <androidx.appcompat.widget.SearchView
                             android:id="@+id/search_view"

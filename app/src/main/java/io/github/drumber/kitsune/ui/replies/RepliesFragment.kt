@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil3.ImageLoader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.config.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.comment.Comment
@@ -57,6 +58,14 @@ class RepliesFragment : Fragment(R.layout.fragment_replies),
 
     private val imageLoader: ImageLoader by inject(named<SocialImagesLoader>())
     private val contentRenderer: PostContentRenderer by inject()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

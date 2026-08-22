@@ -571,6 +571,9 @@
     <string name="unique_poster_transition_name" translatable="false">media_item_poster_%1$s</string>
     <string name="details_poster_transition_name" translatable="false">media_details_poster</string>
     <string name="character_picture_transition_name" translatable="false">character_picture</string>
+    <string name="create_post_transition_name" translatable="false">create_post</string>
+    <string name="unique_post_item_transition_name" translatable="false">post_item_%1$s</string>
+    <string name="post_item_transition_name" translatable="false">post_item</string>
 
     <string name="action_report">Report</string>
     <string name="report_post_title">Report Post</string>

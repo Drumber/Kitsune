@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.annotation.OptIn
@@ -34,6 +36,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.transition.MaterialFadeThrough
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.config.Kitsu
 import io.github.drumber.kitsune.data.common.library.LibraryEntryKind
@@ -66,6 +69,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.concurrent.TimeUnit
 
 class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     LibraryEntriesAdapter.LibraryEntryActionListener,
@@ -74,6 +78,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     private val binding by viewBinding(FragmentLibraryBinding::bind)
 
     private val viewModel: LibraryViewModel by viewModel()
+
+    private var lastNavDestination: Int? = null
 
     private var offlineLibraryModificationsAmount = 0
     private lateinit var offlineLibraryUpdateBadge: BadgeDrawable
@@ -85,6 +91,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
     private val autoSyncDebouncer by lazy { Debouncer(5000L) }
 
     companion object {
+        private const val KEY_LAST_NAV_DESTINATION = "last_nav_destination"
         const val RESULT_KEY_RATING = "library_rating_result_key"
         const val RESULT_KEY_REMOVE_RATING = "library_remove_rating_result_key"
         const val RESULT_KEY_EDIT_ENTRY_UPDATED = "library_edit_entry_updated"
@@ -92,21 +99,27 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (savedInstanceState?.containsKey(KEY_LAST_NAV_DESTINATION) == true) {
+            lastNavDestination = savedInstanceState.getInt(KEY_LAST_NAV_DESTINATION)
+        }
+
+        lastNavDestination?.let { applyTransitions(it) }
         offlineLibraryUpdateBadge = BadgeDrawable.create(requireContext())
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        if (viewModel.hasUser() && lastNavDestination == R.id.details_fragment) {
+            postponeEnterTransition(500, TimeUnit.MILLISECONDS)
+        }
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        postponeEnterTransition()
-
-        if (!viewModel.hasUser() || findNavController().currentBackStackEntry?.arguments == null) {
-            view.doOnPreDraw { startPostponedEnterTransition() }
-        } else {
-            // safeguard: ensure startPostponedEnterTransition() got called within 200ms
-            view.postDelayed({
-                startPostponedEnterTransition()
-            }, 200)
-        }
 
         binding.apply {
             appBarLayout.statusBarForeground =
@@ -207,6 +220,29 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
         initToolbarMenu(isVisible = viewModel.hasUser())
         initFilterChips()
         initRecyclerView()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        lastNavDestination?.let { outState.putInt(KEY_LAST_NAV_DESTINATION, it) }
+    }
+
+    private fun applyTransitions(destinationId: Int) {
+        lastNavDestination = destinationId
+        when (destinationId) {
+            R.id.details_fragment -> {
+                val transition = MaterialFadeThrough().apply {
+                    duration = resources.getInteger(R.integer.material_motion_duration_short_2).toLong()
+                }
+                exitTransition = transition
+                reenterTransition = transition
+            }
+
+            R.id.libraryEditEntryFragment, R.id.webViewFragment -> {
+                exitTransition = null
+                reenterTransition = null
+            }
+        }
     }
 
     private fun initFilterChips() {
@@ -449,6 +485,8 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
                 FragmentNavigatorExtras(view.findViewById<View>(R.id.iv_thumbnail) to detailsTransitionName)
             val action =
                 LibraryFragmentDirections.actionLibraryFragmentToDetailsFragment(media.toMediaDto())
+
+            applyTransitions(R.id.details_fragment)
             findNavController().navigateSafe(R.id.library_fragment, action, extras)
         }
     }
@@ -459,6 +497,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
                 item.libraryEntry.id,
                 RESULT_KEY_EDIT_ENTRY_UPDATED
             )
+        applyTransitions(R.id.libraryEditEntryFragment)
         findNavController().navigateSafe(R.id.library_fragment, action)
     }
 
@@ -528,6 +567,7 @@ class LibraryFragment : BaseFragment(R.layout.fragment_library, true),
             .setItems(items) { _, which ->
                 val url = options[which].second
                 val action = WebViewFragmentDirections.actionGlobalWebViewFragment(url)
+                applyTransitions(R.id.webViewFragment)
                 findNavController().navigateSafe(R.id.library_fragment, action)
             }
             .show()

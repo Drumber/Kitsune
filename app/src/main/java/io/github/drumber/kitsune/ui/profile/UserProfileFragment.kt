@@ -3,8 +3,11 @@ package io.github.drumber.kitsune.ui.profile
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.transition.MaterialFadeThrough
+import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.user.User
 import io.github.drumber.kitsune.util.extensions.navigateSafe
@@ -23,6 +26,18 @@ class UserProfileFragment : BaseProfileFragment() {
 
     override val useSocialImageLoader = true
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+
+        val transition = MaterialFadeThrough().apply {
+            duration = resources.getInteger(R.integer.material_motion_duration_short_2).toLong()
+        }
+        exitTransition = transition
+        reenterTransition = transition
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initToolbar()
@@ -37,7 +52,8 @@ class UserProfileFragment : BaseProfileFragment() {
                     targetUserId = user.id,
                     targetUserName = user.name
                 )
-                findNavController().navigateSafe(R.id.user_profile_fragment, action)
+                val extras = FragmentNavigatorExtras(it to getString(R.string.create_post_transition_name))
+                findNavController().navigateSafe(R.id.user_profile_fragment, action, extras)
             }
         }
     }

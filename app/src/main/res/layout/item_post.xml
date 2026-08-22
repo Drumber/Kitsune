@@ -8,6 +8,7 @@
     android:layout_marginVertical="5dp"
     android:clickable="true"
     android:focusable="true"
+    android:id="@+id/card_post_root"
     style="?attr/materialCardViewOutlinedStyle">
 
     <LinearLayout

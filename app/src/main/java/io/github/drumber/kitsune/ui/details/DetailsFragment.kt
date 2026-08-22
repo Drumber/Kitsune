@@ -4,8 +4,11 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.net.toUri
 import androidx.core.os.BundleCompat
@@ -34,6 +37,7 @@ import com.google.android.material.elevation.SurfaceColors
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialFadeThrough
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.config.Kitsu
 import io.github.drumber.kitsune.config.SortFilter
@@ -119,17 +123,39 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val previousDestination = findNavController().previousBackStackEntry?.destination?.id
+        if (previousDestination in listOf(R.id.main_fragment, R.id.search_fragment, R.id.library_fragment, R.id.details_fragment)) {
+            // for fragments using shared element transition:
+            // set enter transition and disable predictive back
+            val transitionDuration = resources.getInteger(R.integer.material_motion_duration_short_2).toLong()
+            sharedElementEnterTransition = MaterialContainerTransform().apply {
+                drawingViewId = R.id.nav_host_fragment
+                duration = transitionDuration
+                scrimColor = Color.TRANSPARENT
+                setAllContainerColors(SurfaceColors.SURFACE_0.getColor(requireContext()))
+            }
+            enterTransition = MaterialFadeThrough().apply {
+                duration = transitionDuration
+            }
 
-        val transition = MaterialContainerTransform().apply {
-            drawingViewId = R.id.nav_host_fragment
-            duration = resources.getInteger(R.integer.material_motion_duration_short_2).toLong()
-            scrimColor = Color.TRANSPARENT
-            setAllContainerColors(SurfaceColors.SURFACE_0.getColor(requireContext()))
+            // predictive back does not work shared element transition
+            val disablePredictiveBackCallback = object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    findNavController().popBackStack()
+                }
+            }
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, disablePredictiveBackCallback)
+        } else if (previousDestination in listOf(R.id.feed_fragment, R.id.group_detail_fragment, R.id.post_detail_fragment)) {
+            enterTransition = MaterialFadeThrough()
+            returnTransition = MaterialFadeThrough()
         }
-        sharedElementEnterTransition = transition
-        sharedElementReturnTransition = transition
+
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

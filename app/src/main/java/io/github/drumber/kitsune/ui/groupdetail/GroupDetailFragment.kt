@@ -3,10 +3,12 @@ package io.github.drumber.kitsune.ui.groupdetail
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil3.ImageLoader
@@ -17,10 +19,14 @@ import coil3.request.placeholder
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.transition.MaterialElevationScale
+import com.google.android.material.transition.MaterialFadeThrough
+import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.group.Group
 import io.github.drumber.kitsune.databinding.FragmentGroupDetailBinding
 import io.github.drumber.kitsune.di.SocialImagesLoader
+import io.github.drumber.kitsune.ui.feed.FeedListFragment
 import io.github.drumber.kitsune.util.extensions.navigateSafe
 import io.github.drumber.kitsune.util.extensions.openPhotoViewActivity
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
@@ -34,7 +40,12 @@ import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 
 class GroupDetailFragment : Fragment(R.layout.fragment_group_detail),
-    NavigationBarView.OnItemReselectedListener {
+    NavigationBarView.OnItemReselectedListener,
+    FeedListFragment.OnNavigationListener {
+
+    companion object {
+        private const val KEY_LAST_NAV_DESTINATION = "last_nav_destination"
+    }
 
     private val args: GroupDetailFragmentArgs by navArgs()
 
@@ -46,10 +57,22 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail),
 
     private val imageLoader: ImageLoader by inject(named<SocialImagesLoader>())
 
+    private var lastNavDestination: Int? = null
     private var hasSelectedDefaultTab = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState?.containsKey(KEY_LAST_NAV_DESTINATION) == true) {
+            lastNavDestination = savedInstanceState.getInt(KEY_LAST_NAV_DESTINATION)
+        }
+
+        lastNavDestination?.let { applyTransitions(it) }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
 
         // Don't override the tab the user already had selected before a config change.
         if (savedInstanceState != null) {
@@ -97,6 +120,49 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail),
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        lastNavDestination?.let { outState.putInt(KEY_LAST_NAV_DESTINATION, it) }
+    }
+
+    private fun applyTransitions(destinationId: Int) {
+        lastNavDestination = destinationId
+        when (destinationId) {
+            R.id.create_post_fragment -> {
+                val duration = resources.getInteger(R.integer.material_motion_duration_short_2).toLong()
+                exitTransition = MaterialElevationScale(false).apply {
+                    this.duration = duration
+                }
+                reenterTransition = MaterialElevationScale(true).apply {
+                    this.duration = duration
+                }
+            }
+
+            R.id.post_detail_fragment -> {
+                val transition = MaterialFadeThrough().apply {
+                    duration = resources.getInteger(R.integer.material_motion_duration_short_2).toLong()
+                }
+                exitTransition = transition
+                reenterTransition = transition
+            }
+
+            R.id.user_profile_fragment -> {
+                exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+                reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+            }
+
+            R.id.details_fragment -> {
+                exitTransition = MaterialFadeThrough()
+                reenterTransition = MaterialFadeThrough()
+            }
+
+            else -> {
+                exitTransition = null
+                reenterTransition = null
+            }
+        }
+    }
+
     private fun initGroupFeed() {
         binding.viewPagerGroup.adapter = GroupDetailViewPagerAdapter(args.groupId, this)
 
@@ -122,7 +188,9 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail),
                 targetGroupId = args.groupId,
                 targetGroupName = viewModel.group.value?.name
             )
-            findNavController().navigateSafe(R.id.group_detail_fragment, action)
+            val extras = FragmentNavigatorExtras(it to getString(R.string.create_post_transition_name))
+            applyTransitions(R.id.create_post_fragment)
+            findNavController().navigateSafe(R.id.group_detail_fragment, action, extras)
         }
     }
 
@@ -142,6 +210,10 @@ class GroupDetailFragment : Fragment(R.layout.fragment_group_detail),
         }
 
         binding.toolbar.title = group.name
+    }
+
+    override fun onFeedListNavigationEvent(destinationId: Int) {
+        applyTransitions(destinationId)
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {

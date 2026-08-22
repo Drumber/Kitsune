@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/coordinator_layout"
+    android:transitionGroup="true"
     tools:context=".ui.groupdetail.GroupDetailFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -72,6 +73,7 @@
         android:layout_margin="16dp"
         android:visibility="gone"
         android:contentDescription="@string/group_compose_post"
+        android:transitionName="@string/create_post_transition_name"
         app:srcCompat="@drawable/ic_edit_24"
         tools:visibility="gone" />
 
