@@ -22,6 +22,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import coil3.imageLoader
 import coil3.request.ImageRequest
 import coil3.request.allowHardware
@@ -41,7 +42,6 @@ import io.github.drumber.kitsune.config.IntentAction.SHORTCUT_SETTINGS
 import io.github.drumber.kitsune.databinding.ActivityMainBinding
 import io.github.drumber.kitsune.domain.work.UpdateLibraryWidgetUseCase
 import io.github.drumber.kitsune.preference.KitsunePref
-import io.github.drumber.kitsune.preference.StartPagePref
 import io.github.drumber.kitsune.preference.getDestinationId
 import io.github.drumber.kitsune.ui.authentication.AuthenticationActivity
 import io.github.drumber.kitsune.ui.base.BaseActivity
@@ -159,7 +159,11 @@ class MainActivity : BaseActivity() {
         }
 
         navController = navHostFragment.navController
+        val navGraph = navController.navInflater.inflate(R.navigation.main_nav_graph)
+        navGraph.setStartDestination(KitsunePref.startFragment.getDestinationId())
+        navController.graph = navGraph
         navigationBarView.apply {
+            setupWithNavController(navController)
             setOnItemSelectedListener { item ->
                 viewModel.currentNavRootDestId = item.itemId
                 val currentFragment = navHostFragment.childFragmentManager.primaryNavigationFragment
@@ -256,12 +260,6 @@ class MainActivity : BaseActivity() {
         // override start fragment, but only on clean launch and when not launched by a deep link
         if (!isLaunchedByDeepLink()) {
             overrideStartDestination = getShortcutStartDestinationId()
-            // if the app wasn't launched from an app shortcut
-            // and the user has specified a custom start page
-            // then set the start fragment to the custom one
-            if (overrideStartDestination == null && KitsunePref.startFragment != StartPagePref.Home) {
-                overrideStartDestination = KitsunePref.startFragment.getDestinationId()
-            }
         }
 
         if (shouldStartOnboarding()) {
@@ -386,7 +384,7 @@ class MainActivity : BaseActivity() {
         val navOptions = NavOptions.Builder()
             .setLaunchSingleTop(true)
             .setRestoreState(true)
-            .setPopUpTo(R.id.main_fragment, inclusive = false, saveState = true)
+            .setPopUpTo(navController.graph.startDestinationId, inclusive = false, saveState = true)
             .build()
         navController.navigate(navigationId, null, navOptions)
     }
