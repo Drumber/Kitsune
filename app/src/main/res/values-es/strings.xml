@@ -516,4 +516,32 @@
         <item quantity="many">%1$s y %2$d otros</item>
         <item quantity="other">%1$s y %2$d otros</item>
     </plurals>
+    <string name="label_write">Escribir</string>
+    <string name="label_images">Imágenes</string>
+    <plurals name="group_members_count">
+        <item quantity="one">%s miembro</item>
+        <item quantity="many">%s miembros</item>
+        <item quantity="other">%s miembros</item>
+    </plurals>
+    <plurals name="comment_view_all_replies">
+        <item quantity="one">Ver %d respuesta</item>
+        <item quantity="many">Ver las %d respuestas</item>
+        <item quantity="other">Ver %d respuestas</item>
+    </plurals>
+    <string name="action_report">Reportar</string>
+    <string name="report_post_title">Reportar Publicación</string>
+    <string name="report_comment_title">Reportar Comentario</string>
+    <string name="report_reason">Razón</string>
+    <string name="report_reason_nsfw">Desnudos y pornografía</string>
+    <string name="report_reason_offensive">Ofensivo</string>
+    <string name="report_reason_spoiler">Spoiler</string>
+    <string name="report_reason_bullying">Acoso</string>
+    <string name="report_reason_spam">Spam</string>
+    <string name="report_reason_other">Otros</string>
+    <string name="report_explanation_hint">Por favor explique</string>
+    <string name="report_error_explanation_required">Se requiere explicación</string>
+    <string name="report_submit">Enviar reporte</string>
+    <string name="report_success">Reporte enviado</string>
+    <string name="report_failure">Error al enviar reporte</string>
+    <string name="report_already_reported">Ya has reportado esto.</string>
 </resources>
