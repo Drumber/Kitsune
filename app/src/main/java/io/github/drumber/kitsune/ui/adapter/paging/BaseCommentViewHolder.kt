@@ -86,7 +86,6 @@ abstract class BaseCommentViewHolder(
             if (!comment.imageUrl.isNullOrBlank()) {
                 load(comment.imageUrl, imageLoader = imageLoader) {
                     crossfade(false)
-                    placeholder(null)
                 }
             } else {
                 dispose()
