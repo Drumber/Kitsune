@@ -1,6 +1,6 @@
 package io.github.drumber.kitsune.fastlane
 
-import io.github.drumber.kitsune.constants.AppTheme
+import io.github.drumber.kitsune.preference.AppTheme
 
 data class CaptureConfig(
     val name: String,

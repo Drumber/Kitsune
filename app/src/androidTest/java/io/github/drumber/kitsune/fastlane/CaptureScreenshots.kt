@@ -8,6 +8,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.action.ViewActions.swipeUp
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
@@ -19,7 +20,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import io.github.drumber.kitsune.BuildConfig
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.config.Kitsu
 import io.github.drumber.kitsune.di.ImagesHttpClient
 import io.github.drumber.kitsune.preference.KitsunePref
 import io.github.drumber.kitsune.ui.main.MainActivity
@@ -151,7 +152,7 @@ class CaptureScreenshots : KoinComponent {
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         Thread.sleep(3000)
 
-        onView(withId(R.id.btn_search)).perform(click())
+        onView(withId(R.id.search_view)).perform(closeSoftKeyboard())
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
 
         Screengrab.screenshot("${prefix}_3_search_screen")

@@ -21,7 +21,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import io.github.drumber.kitsune.R
-import io.github.drumber.kitsune.constants.Kitsu
+import io.github.drumber.kitsune.config.Kitsu
 import io.github.drumber.kitsune.ui.adapter.MediaViewHolder
 import io.github.drumber.kitsune.ui.adapter.paging.CharacterPagingAdapter.CharacterViewHolder
 import io.github.drumber.kitsune.ui.adapter.paging.MediaUnitPagingAdapter.MediaUnitViewHolder
