@@ -23,6 +23,7 @@ import coil3.request.error
 import coil3.request.fallback
 import coil3.request.placeholder
 import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.source.local.user.model.LocalUser
 import io.github.drumber.kitsune.databinding.FragmentCreatePostBinding
@@ -67,14 +68,6 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // predictive back does not work shared element transition
-        val disablePredictiveBackCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                findNavController().popBackStack()
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, disablePredictiveBackCallback)
-
         if (args.editPost == null) {
             sharedElementEnterTransition = MaterialContainerTransform().apply {
                 drawingViewId = R.id.nav_host_fragment
@@ -84,6 +77,17 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
                 startContainerColor = requireContext().theme.getColor(R.attr.colorPrimaryContainer)
                 endContainerColor = requireContext().theme.getColor(R.attr.colorSurface)
             }
+
+            // predictive back does not work shared element transition
+            val disablePredictiveBackCallback = object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    findNavController().popBackStack()
+                }
+            }
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, disablePredictiveBackCallback)
+        } else {
+            enterTransition = MaterialSharedAxis(MaterialSharedAxis.Y, true)
+            returnTransition = MaterialSharedAxis(MaterialSharedAxis.Y, false)
         }
 
         binding.appBarLayout.initPaddingWindowInsetsListener(left = true, top = true, right = true, consume = false)

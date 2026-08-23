@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.drumber.kitsune.R
@@ -38,7 +39,8 @@ class MyProfileFragment : BaseProfileFragment() {
 
         binding.fabPostWall.setOnClickListener {
             val action = MyProfileFragmentDirections.actionGlobalCreatePostFragment()
-            findNavController().navigateSafe(R.id.profile_fragment, action)
+            val extras = FragmentNavigatorExtras(it to getString(R.string.create_post_transition_name))
+            findNavController().navigateSafe(R.id.profile_fragment, action, extras)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {

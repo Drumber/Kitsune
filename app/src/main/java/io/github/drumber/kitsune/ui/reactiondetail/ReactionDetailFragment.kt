@@ -15,6 +15,7 @@ import coil3.request.error
 import coil3.request.fallback
 import coil3.request.placeholder
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
 import io.github.drumber.kitsune.databinding.FragmentReactionDetailBinding
@@ -38,6 +39,12 @@ class ReactionDetailFragment : Fragment(R.layout.fragment_reaction_detail) {
 
     private val viewModel: ReactionDetailViewModel by viewModel {
         parametersOf(args.reactionId)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

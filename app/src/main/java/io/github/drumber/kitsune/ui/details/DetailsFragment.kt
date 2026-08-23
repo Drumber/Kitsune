@@ -129,10 +129,20 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
         savedInstanceState: Bundle?
     ): View? {
         val previousDestination = findNavController().previousBackStackEntry?.destination?.id
-        if (previousDestination in listOf(R.id.main_fragment, R.id.search_fragment, R.id.library_fragment, R.id.details_fragment)) {
+        if (previousDestination in listOf(
+                R.id.main_fragment,
+                R.id.media_list_fragment,
+                R.id.search_fragment,
+                R.id.library_fragment,
+                R.id.profile_fragment,
+                R.id.user_profile_fragment,
+                R.id.details_fragment,
+            )
+        ) {
             // for fragments using shared element transition:
             // set enter transition and disable predictive back
-            val transitionDuration = resources.getInteger(R.integer.material_motion_duration_short_2).toLong()
+            val transitionDuration =
+                resources.getInteger(R.integer.material_motion_duration_short_2).toLong()
             sharedElementEnterTransition = MaterialContainerTransform().apply {
                 drawingViewId = R.id.nav_host_fragment
                 duration = transitionDuration
@@ -149,8 +159,11 @@ class DetailsFragment : BaseFragment(R.layout.fragment_details, true),
                     findNavController().popBackStack()
                 }
             }
-            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, disablePredictiveBackCallback)
-        } else if (previousDestination in listOf(R.id.feed_fragment, R.id.group_detail_fragment, R.id.post_detail_fragment)) {
+            requireActivity().onBackPressedDispatcher.addCallback(
+                viewLifecycleOwner,
+                disablePredictiveBackCallback
+            )
+        } else {
             enterTransition = MaterialFadeThrough()
             returnTransition = MaterialFadeThrough()
         }
