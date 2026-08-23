@@ -534,4 +534,5 @@
     <string name="report_success">Meldung erfolgreich gesendet</string>
     <string name="report_failure">Meldung konnte nicht gesendet werden</string>
     <string name="report_already_reported">Du hast dies bereits gemeldet.</string>
+    <string name="report_media_reaction_title">Reaktion melden</string>
 </resources>
