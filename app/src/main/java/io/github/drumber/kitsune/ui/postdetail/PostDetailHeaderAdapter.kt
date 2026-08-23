@@ -1,10 +1,14 @@
 package io.github.drumber.kitsune.ui.postdetail
 
+import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import androidx.viewpager2.widget.ViewPager2
 import coil3.ImageLoader
 import coil3.load
@@ -75,7 +79,10 @@ class PostDetailHeaderAdapter(
 
         fun bind(post: Post) {
             binding.root.setOnDoubleTapListener {
-                if (!isLiked) onLikeClick()
+                if (!isLiked) {
+                    updateLikeIcon(true, isUserAction = true)
+                    onLikeClick()
+                }
             }
 
             binding.ivAvatar.load(post.authorAvatarUrl, imageLoader = imageLoader) {
@@ -143,12 +150,44 @@ class PostDetailHeaderAdapter(
             }
 
             binding.tvLikes.text = likesCount.toString()
-            binding.ivLike.setImageResource(
-                if (isLiked) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_border_24
-            )
-            binding.layoutLike.setOnClickListener { onLikeClick() }
+            updateLikeIcon(isLiked)
+            binding.layoutLike.setOnClickListener {
+                updateLikeIcon(!isLiked, isUserAction = true)
+                onLikeClick()
+            }
 
             binding.tvComments.text = post.commentsCount.toString()
+        }
+
+        private fun updateLikeIcon(isLiked: Boolean, isUserAction: Boolean = false) {
+            if (isLiked && isUserAction) {
+                AnimatedVectorDrawableCompat.create(
+                    binding.root.context,
+                    R.drawable.animated_favorite
+                )?.apply {
+                    binding.ivLike.setImageDrawable(this)
+                    registerAnimationCallback(object : Animatable2Compat.AnimationCallback() {
+                        private var originalImageTint: ColorStateList? = null
+
+                        override fun onAnimationStart(drawable: Drawable?) {
+                            originalImageTint = binding.ivLike.imageTintList
+                            binding.ivLike.imageTintList = null
+                        }
+
+                        override fun onAnimationEnd(drawable: Drawable?) {
+                            if (binding.ivLike.drawable == this@apply) {
+                                binding.ivLike.setImageResource(R.drawable.ic_favorite_24)
+                            }
+                            originalImageTint?.let { binding.ivLike.imageTintList = it }
+                        }
+                    })
+                    start()
+                }
+            } else if (binding.ivLike.drawable !is AnimatedVectorDrawableCompat || !isLiked) {
+                binding.ivLike.setImageResource(
+                    if (isLiked) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_border_24
+                )
+            }
         }
 
         private fun bindImageGallery(post: Post, gated: Boolean) {

@@ -1,11 +1,15 @@
 package io.github.drumber.kitsune.ui.adapter.paging
 
+import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
 import android.text.format.DateUtils
 import android.widget.ImageView
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import coil3.ImageLoader
 import coil3.load
 import coil3.request.allowHardware
@@ -136,9 +140,7 @@ abstract class BasePostViewHolder(
         val commentsCount = override?.commentsCount ?: post.commentsCount
 
         binding.tvLikes.text = likesCount.toString()
-        binding.ivLike.setImageResource(
-            if (isLiked) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_border_24
-        )
+        updateLikeIcon(isLiked)
         binding.layoutLike.contentDescription = binding.root.context.getString(
             if (isLiked) R.string.cd_unlike_post else R.string.cd_like_post,
             likesCount
@@ -149,6 +151,7 @@ abstract class BasePostViewHolder(
             val currentCount = override?.likesCount ?: post.likesCount
             val targetLiked = !current
             val targetCount = (currentCount + if (targetLiked) 1 else -1).coerceAtLeast(0)
+            updateLikeIcon(targetLiked, isUserAction = true)
             onLike(post, targetLiked, targetCount)
         }
 
@@ -165,7 +168,39 @@ abstract class BasePostViewHolder(
         val current = override?.isLiked ?: false
         if (current) return
         val currentCount = override?.likesCount ?: post.likesCount
+        updateLikeIcon(true, isUserAction = true)
         onLike(post, true, currentCount + 1)
+    }
+
+    private fun updateLikeIcon(isLiked: Boolean, isUserAction: Boolean = false) {
+        if (isLiked && isUserAction) {
+            AnimatedVectorDrawableCompat.create(
+                binding.root.context,
+                R.drawable.animated_favorite
+            )?.apply {
+                binding.ivLike.setImageDrawable(this)
+                registerAnimationCallback(object : Animatable2Compat.AnimationCallback() {
+                    private var originalImageTint: ColorStateList? = null
+
+                    override fun onAnimationStart(drawable: Drawable?) {
+                        originalImageTint = binding.ivLike.imageTintList
+                        binding.ivLike.imageTintList = null
+                    }
+
+                    override fun onAnimationEnd(drawable: Drawable?) {
+                        if (binding.ivLike.drawable == this@apply) {
+                            binding.ivLike.setImageResource(R.drawable.ic_favorite_24)
+                        }
+                        originalImageTint?.let { binding.ivLike.imageTintList = it }
+                    }
+                })
+                start()
+            }
+        } else if (binding.ivLike.drawable !is AnimatedVectorDrawableCompat || !isLiked) {
+            binding.ivLike.setImageResource(
+                if (isLiked) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_border_24
+            )
+        }
     }
 
     private fun bindLikerAvatars(post: Post) {

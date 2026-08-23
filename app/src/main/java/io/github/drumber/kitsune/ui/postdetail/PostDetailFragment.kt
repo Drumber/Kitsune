@@ -175,6 +175,7 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail),
         binding.rvComments.apply {
             adapter = ConcatAdapter(headerAdapter, commentsAdapter, commentsFooter)
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            itemAnimator = null
         }
 
         // Surface the initial comment load (spinner/error/retry) as a footer below the post so the

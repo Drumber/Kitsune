@@ -1,10 +1,14 @@
 package io.github.drumber.kitsune.ui.adapter.paging
 
+import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
 import android.text.format.DateUtils
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import coil3.ImageLoader
 import coil3.dispose
 import coil3.load
@@ -102,12 +106,19 @@ abstract class BaseCommentViewHolder(
         val isLiked = override?.isLiked ?: comment.isLikedByMe
         val count = override?.likesCount ?: comment.likesCount
         bindLikeRow(binding, isLiked, count)
-        binding.layoutLike.setOnClickListener { onLikeClick(comment) }
+        binding.layoutLike.setOnClickListener {
+            val currentIsLiked = override?.isLiked ?: comment.isLikedByMe
+            updateLikeIcon(binding, !currentIsLiked, isUserAction = true)
+            onLikeClick(comment)
+        }
 
         // Double tapping the comment likes it (Instagram-style). Does nothing if already liked.
         binding.layoutCommentBody.setOnDoubleTapListener {
             val liked = getInteractionOverride(comment)?.isLiked ?: comment.isLikedByMe
-            if (!liked) onLikeClick(comment)
+            if (!liked) {
+                updateLikeIcon(binding, true, isUserAction = true)
+                onLikeClick(comment)
+            }
         }
 
         bindOverflowMenu(binding, comment)
@@ -115,9 +126,38 @@ abstract class BaseCommentViewHolder(
 
     private fun bindLikeRow(binding: ItemCommentBinding, isLiked: Boolean, count: Int) {
         binding.tvLikes.text = count.toString()
-        binding.ivLike.setImageResource(
-            if (isLiked) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_border_24
-        )
+        updateLikeIcon(binding, isLiked)
+    }
+
+    private fun updateLikeIcon(binding: ItemCommentBinding, isLiked: Boolean, isUserAction: Boolean = false) {
+        if (isLiked && isUserAction) {
+            AnimatedVectorDrawableCompat.create(
+                binding.root.context,
+                R.drawable.animated_favorite
+            )?.apply {
+                binding.ivLike.setImageDrawable(this)
+                registerAnimationCallback(object : Animatable2Compat.AnimationCallback() {
+                    private var originalImageTint: ColorStateList? = null
+
+                    override fun onAnimationStart(drawable: Drawable?) {
+                        originalImageTint = binding.ivLike.imageTintList
+                        binding.ivLike.imageTintList = null
+                    }
+
+                    override fun onAnimationEnd(drawable: Drawable?) {
+                        if (binding.ivLike.drawable == this@apply) {
+                            binding.ivLike.setImageResource(R.drawable.ic_favorite_24)
+                        }
+                        originalImageTint?.let { binding.ivLike.imageTintList = it }
+                    }
+                })
+                start()
+            }
+        } else if (binding.ivLike.drawable !is AnimatedVectorDrawableCompat || !isLiked) {
+            binding.ivLike.setImageResource(
+                if (isLiked) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_border_24
+            )
+        }
     }
 
     private fun bindOverflowMenu(binding: ItemCommentBinding, comment: Comment) {

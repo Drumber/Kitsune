@@ -119,6 +119,7 @@ class RepliesFragment : Fragment(R.layout.fragment_replies),
                 repliesAdapter.withLoadStateFooter(ResourceLoadStateAdapter(repliesAdapter)),
             )
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            itemAnimator = null
         }
 
         binding.layoutLoading.btnRetry.setOnClickListener { repliesAdapter.retry() }
