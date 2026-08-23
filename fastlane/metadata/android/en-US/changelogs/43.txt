@@ -1,0 +1,15 @@
+Improvements
+* Add reporting for posts, comments and media reactions
+* Add feeds for episodes and chapters
+* Redesign the post creation and editing layout
+* Update styles to Material 3 Expressive
+* Add transition animations to more screens
+* Improve image loading and caching
+* Changed target SDK to 37 (Android 17)
+* ...more small fixes and improvements
+
+Localization
+* Updated Italian by Nicola Bortoletto
+* Updated Afrikaans by @MikeWowzoski
+* Updated Spanish by @Kiimby
+* Updated German
