@@ -578,6 +578,7 @@
     <string name="action_report">Report</string>
     <string name="report_post_title">Report Post</string>
     <string name="report_comment_title">Report Comment</string>
+    <string name="report_media_reaction_title">Report Reaction</string>
     <string name="report_reason">Reason</string>
     <string name="report_reason_nsfw">NSFW</string>
     <string name="report_reason_offensive">Offensive</string>

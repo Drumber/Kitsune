@@ -454,6 +454,7 @@ val dataModule = module {
             NetworkUser::class.java,
             NetworkPost::class.java,
             NetworkComment::class.java,
+            NetworkMediaReaction::class.java,
             NetworkUser::class.java,
         )
     }

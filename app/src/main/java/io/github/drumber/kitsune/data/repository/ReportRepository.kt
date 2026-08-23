@@ -6,6 +6,7 @@ import io.github.drumber.kitsune.data.presentation.model.report.ReportReason
 import io.github.drumber.kitsune.data.presentation.model.report.ReportTarget
 import io.github.drumber.kitsune.data.source.network.comment.model.NetworkComment
 import io.github.drumber.kitsune.data.source.network.feed.model.NetworkPost
+import io.github.drumber.kitsune.data.source.network.reaction.model.NetworkMediaReaction
 import io.github.drumber.kitsune.data.source.network.report.ReportNetworkDataSource
 import io.github.drumber.kitsune.data.source.network.report.model.NetworkReport
 import io.github.drumber.kitsune.data.source.network.report.model.NetworkReportStatus
@@ -36,6 +37,7 @@ class ReportRepository(
         val naughty = when (type) {
             ReportTarget.POST -> NetworkPost(id = naughtyItemId)
             ReportTarget.COMMENT -> NetworkComment(id = naughtyItemId)
+            ReportTarget.MEDIA_REACTION -> NetworkMediaReaction(id = naughtyItemId)
         }
 
         val report = NetworkReport(
@@ -51,5 +53,6 @@ class ReportRepository(
     private fun ReportTarget.toNaughtyType() = when (this) {
         ReportTarget.POST -> "Post"
         ReportTarget.COMMENT -> "Comment"
+        ReportTarget.MEDIA_REACTION -> "Media-reaction"
     }
 }

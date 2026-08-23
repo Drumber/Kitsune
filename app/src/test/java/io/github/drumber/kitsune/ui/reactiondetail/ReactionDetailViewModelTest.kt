@@ -98,7 +98,7 @@ class ReactionDetailViewModelTest {
 
         vm.upvote()
 
-        assertThat(vm.upvoteEvents.first()).isEqualTo(ReactionDetailViewModel.UpvoteEvent.LoginRequired)
+        assertThat(vm.events.first()).isEqualTo(ReactionDetailViewModel.Event.LoginRequired)
     }
 
     @Test
@@ -127,9 +127,9 @@ class ReactionDetailViewModelTest {
             getLocalUserId = mock { on { invoke() } doReturn "user-1" }
         )
 
-        vm.upvoteEvents.test {
+        vm.events.test {
             vm.upvote()
-            assertThat(awaitItem()).isEqualTo(ReactionDetailViewModel.UpvoteEvent.Success(6))
+            assertThat(awaitItem()).isEqualTo(ReactionDetailViewModel.Event.UpvoteSuccess(6))
         }
         assertThat(vm.isUpvoted.value).isTrue()
         assertThat(vm.reaction.value?.upVotesCount).isEqualTo(6)
@@ -163,9 +163,9 @@ class ReactionDetailViewModelTest {
             getLocalUserId = mock { on { invoke() } doReturn "user-1" }
         )
 
-        vm.upvoteEvents.test {
+        vm.events.test {
             vm.upvote()
-            assertThat(awaitItem()).isEqualTo(ReactionDetailViewModel.UpvoteEvent.Failed)
+            assertThat(awaitItem()).isEqualTo(ReactionDetailViewModel.Event.UpvoteFailed)
         }
         assertThat(vm.isUpvoted.value).isFalse()
     }
@@ -182,9 +182,9 @@ class ReactionDetailViewModelTest {
                 getLocalUserId = mock { on { invoke() } doReturn "user-1" }
             )
 
-            vm.upvoteEvents.test {
+            vm.events.test {
                 vm.upvote()
-                assertThat(awaitItem()).isEqualTo(ReactionDetailViewModel.UpvoteEvent.Failed)
+                assertThat(awaitItem()).isEqualTo(ReactionDetailViewModel.Event.UpvoteFailed)
             }
             assertThat(vm.isUpvoted.value).isFalse()
         }

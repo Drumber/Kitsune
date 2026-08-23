@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ReactionDetailViewModel(
@@ -19,10 +20,14 @@ class ReactionDetailViewModel(
     private val getLocalUserId: GetLocalUserIdUseCase
 ) : ViewModel() {
 
-    sealed interface UpvoteEvent {
-        data object LoginRequired : UpvoteEvent
-        data class Success(val newCount: Int) : UpvoteEvent
-        data object Failed : UpvoteEvent
+    sealed interface Event {
+        data object LoginRequired : Event
+        data class UpvoteSuccess(val newCount: Int) : Event
+        data object UpvoteFailed : Event
+        data object UpdateSuccess : Event
+        data object UpdateFailed : Event
+        data object DeleteSuccess : Event
+        data object DeleteFailed: Event
     }
 
     private val _reaction = MutableStateFlow<MediaReaction?>(null)
@@ -34,8 +39,8 @@ class ReactionDetailViewModel(
     private val _isUpvoted = MutableStateFlow(false)
     val isUpvoted = _isUpvoted.asStateFlow()
 
-    private val upvoteEventChannel = Channel<UpvoteEvent>(Channel.BUFFERED)
-    val upvoteEvents: Flow<UpvoteEvent> = upvoteEventChannel.receiveAsFlow()
+    private val eventChannel = Channel<Event>(Channel.BUFFERED)
+    val events: Flow<Event> = eventChannel.receiveAsFlow()
 
     init {
         loadReaction()
@@ -43,22 +48,24 @@ class ReactionDetailViewModel(
 
     private fun loadReaction() {
         viewModelScope.launch {
-            _isLoading.value = true
+            _isLoading.update { true }
             try {
-                _reaction.value = mediaReactionRepository.getReaction(reactionId)
+                _reaction.update { mediaReactionRepository.getReaction(reactionId) }
             } catch (e: Exception) {
                 logE("Failed to load reaction with id '$reactionId'.", e)
             } finally {
-                _isLoading.value = false
+                _isLoading.update { false }
             }
         }
     }
+
+    fun currentUserId() = getLocalUserId()
 
     fun upvote() {
         if (_isUpvoted.value) return
         val userId = getLocalUserId()
         if (userId == null) {
-            upvoteEventChannel.trySend(UpvoteEvent.LoginRequired)
+            eventChannel.trySend(Event.LoginRequired)
             return
         }
         val current = _reaction.value ?: return
@@ -68,16 +75,49 @@ class ReactionDetailViewModel(
                     val newCount = current.upVotesCount + 1
                     _isUpvoted.value = true
                     _reaction.value = current.copy(upVotesCount = newCount)
-                    UpvoteEvent.Success(newCount)
+                    Event.UpvoteSuccess(newCount)
                 } else {
-                    UpvoteEvent.Failed
+                    Event.UpvoteFailed
                 }
             } catch (e: Exception) {
                 logE("Failed to upvote reaction with id '$reactionId'.", e)
-                UpvoteEvent.Failed
+                Event.UpvoteFailed
             }
-            upvoteEventChannel.send(event)
+            eventChannel.send(event)
         }
     }
 
+    fun updateReaction(reaction: MediaReaction, text: String) {
+        val reactionText = text.trim()
+        if (reactionText.isEmpty()) return
+        viewModelScope.launch {
+            val event = try {
+                val updatedReaction = mediaReactionRepository.updateReaction(reaction.id, reactionText)
+                updatedReaction?.let {
+                    _reaction.update { it }
+                    Event.UpdateSuccess
+                } ?: Event.UpdateFailed
+            } catch (e: Exception) {
+                logE("Failed to update reaction with id '${reaction.id}'.", e)
+                Event.UpdateFailed
+            }
+            eventChannel.send(event)
+        }
+    }
+
+    fun deleteReaction(reaction: MediaReaction) {
+        if (getLocalUserId() == null) {
+            return
+        }
+        viewModelScope.launch {
+            val event = try {
+                mediaReactionRepository.deleteReaction(reaction.id)
+                Event.DeleteSuccess
+            } catch (e: Exception) {
+                logE("Failed to delete reaction with id '${reaction.id}'.", e)
+                Event.DeleteFailed
+            }
+            eventChannel.send(event)
+        }
+    }
 }

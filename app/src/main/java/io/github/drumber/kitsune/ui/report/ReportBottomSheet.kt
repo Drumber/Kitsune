@@ -51,6 +51,7 @@ class ReportBottomSheet : BottomSheetDialogFragment() {
         binding.tvTitle.text = when (viewModel.getReportType()) {
             ReportTarget.POST -> getString(R.string.report_post_title)
             ReportTarget.COMMENT -> getString(R.string.report_comment_title)
+            ReportTarget.MEDIA_REACTION -> getString(R.string.report_media_reaction_title)
         }
 
         binding.btnCancel.setOnClickListener { dismiss() }

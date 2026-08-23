@@ -2,6 +2,7 @@ package io.github.drumber.kitsune.ui.reactiondetail
 
 import android.os.Bundle
 import android.text.format.DateUtils
+import android.view.MenuItem
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -14,14 +15,20 @@ import coil3.load
 import coil3.request.error
 import coil3.request.fallback
 import coil3.request.placeholder
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
+import io.github.drumber.kitsune.config.Kitsu
 import io.github.drumber.kitsune.data.presentation.model.reaction.MediaReaction
+import io.github.drumber.kitsune.data.presentation.model.report.ReportTarget
+import io.github.drumber.kitsune.databinding.DialogComposeReactionBinding
 import io.github.drumber.kitsune.databinding.FragmentReactionDetailBinding
 import io.github.drumber.kitsune.ui.details.DetailsFragmentDirections
 import io.github.drumber.kitsune.ui.profile.UserProfileFragmentDirections
+import io.github.drumber.kitsune.ui.report.ReportBottomSheet
 import io.github.drumber.kitsune.util.extensions.navigateSafe
+import io.github.drumber.kitsune.util.extensions.startUrlShareIntent
 import io.github.drumber.kitsune.util.parseUtcDate
 import io.github.drumber.kitsune.util.ui.initPaddingWindowInsetsListener
 import io.github.drumber.kitsune.util.ui.initWindowInsetsListener
@@ -52,6 +59,7 @@ class ReactionDetailFragment : Fragment(R.layout.fragment_reaction_detail) {
 
         binding.toolbar.initWindowInsetsListener(consume = false)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+        binding.toolbar.setOnMenuItemClickListener { handleMenuItemClick(it) }
         binding.scrollView.initPaddingWindowInsetsListener(
             left = true,
             right = true,
@@ -76,7 +84,10 @@ class ReactionDetailFragment : Fragment(R.layout.fragment_reaction_detail) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.reaction.collectLatest { reaction ->
-                    reaction?.let { bindReaction(it) }
+                    reaction?.let {
+                        bindReaction(it)
+                        updateToolbarMenu(reaction)
+                    }
                 }
             }
         }
@@ -94,16 +105,28 @@ class ReactionDetailFragment : Fragment(R.layout.fragment_reaction_detail) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.upvoteEvents.collectLatest { event ->
+                viewModel.events.collectLatest { event ->
                     when (event) {
-                        is ReactionDetailViewModel.UpvoteEvent.Success ->
+                        is ReactionDetailViewModel.Event.UpvoteSuccess ->
                             binding.btnUpvote.text = event.newCount.toString()
 
-                        ReactionDetailViewModel.UpvoteEvent.LoginRequired ->
+                        ReactionDetailViewModel.Event.LoginRequired ->
                             showSnackbar(R.string.reactions_upvote_login_required)
 
-                        ReactionDetailViewModel.UpvoteEvent.Failed ->
+                        ReactionDetailViewModel.Event.UpvoteFailed ->
                             showSnackbar(R.string.reactions_upvote_failed)
+
+                        ReactionDetailViewModel.Event.UpdateSuccess ->
+                            showSnackbar(R.string.reaction_updated)
+
+                        ReactionDetailViewModel.Event.DeleteSuccess -> {
+                            showSnackbar(R.string.reaction_deleted)
+                            findNavController().navigateUp()
+                        }
+
+                        ReactionDetailViewModel.Event.UpdateFailed,
+                        ReactionDetailViewModel.Event.DeleteFailed ->
+                            showSnackbar(R.string.action_failed)
                     }
                 }
             }
@@ -142,6 +165,43 @@ class ReactionDetailFragment : Fragment(R.layout.fragment_reaction_detail) {
         binding.btnUpvote.text = reaction.upVotesCount.toString()
     }
 
+    private fun updateToolbarMenu(reaction: MediaReaction) {
+        val localUserId = viewModel.currentUserId()
+        val isOwner = localUserId != null && reaction.authorId == localUserId
+        val menu = binding.toolbar.menu
+
+        menu.findItem(R.id.action_edit_item)?.isVisible = isOwner
+        menu.findItem(R.id.action_delete_item)?.isVisible = isOwner
+        menu.findItem(R.id.action_report_item)?.isVisible = !isOwner && localUserId != null
+    }
+
+    private fun handleMenuItemClick(menuItem: MenuItem): Boolean {
+        val reaction = viewModel.reaction.value ?: return false
+        return when (menuItem.itemId) {
+            R.id.action_share_item -> {
+                showShareMenu(reaction)
+                true
+            }
+
+            R.id.action_edit_item -> {
+                showEditReactionDialog(reaction)
+                true
+            }
+
+            R.id.action_delete_item -> {
+                confirmDeleteReaction(reaction)
+                true
+            }
+
+            R.id.action_report_item -> {
+                openReportBottomSheet(reaction)
+                true
+            }
+
+            else -> false
+        }
+    }
+
     private fun openMedia(reaction: MediaReaction) {
         val slug = reaction.mediaSlug
         val isAnime = reaction.mediaIsAnime
@@ -161,5 +221,41 @@ class ReactionDetailFragment : Fragment(R.layout.fragment_reaction_detail) {
         val authorId = viewModel.reaction.value?.authorId ?: return
         val action = UserProfileFragmentDirections.actionGlobalUserProfileFragment(authorId)
         findNavController().navigateSafe(R.id.reaction_detail_fragment, action)
+    }
+
+    private fun showShareMenu(reaction: MediaReaction) {
+        startUrlShareIntent("${Kitsu.BASE_URL}/media-reactions/${reaction.id}")
+    }
+
+    private fun openReportBottomSheet(reaction: MediaReaction) {
+        ReportBottomSheet.create(reaction.id, ReportTarget.MEDIA_REACTION)
+            .show(childFragmentManager, ReportBottomSheet.TAG)
+    }
+
+    private fun showEditReactionDialog(existing: MediaReaction) {
+        val dialogBinding = DialogComposeReactionBinding.inflate(layoutInflater)
+        val initialText = existing.reaction?.takeUnless { it.isBlank() } ?: existing.content
+        dialogBinding.etReaction.setText(initialText)
+        dialogBinding.etReaction.setSelection(dialogBinding.etReaction.text?.length ?: 0)
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.reaction_compose_edit_title)
+            .setView(dialogBinding.root)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.action_save) { _, _ ->
+                val text = dialogBinding.etReaction.text?.toString().orEmpty().trim()
+                if (text.isEmpty()) return@setPositiveButton
+                viewModel.updateReaction(existing, text)
+            }
+            .show()
+    }
+
+    private fun confirmDeleteReaction(reaction: MediaReaction) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.delete_reaction_confirm_title)
+            .setMessage(R.string.delete_reaction_confirm_message)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.action_delete) { _, _ -> viewModel.deleteReaction(reaction) }
+            .show()
     }
 }

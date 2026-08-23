@@ -27,6 +27,7 @@ class MediaReactionPagingAdapter(
     private val onDeleteClick: (MediaReaction) -> Unit,
     private val onShareClick: (MediaReaction) -> Unit,
     private val onAuthorClick: (String) -> Unit,
+    private val onReportClick: (MediaReaction) -> Unit,
 ) : PagingDataAdapter<MediaReaction, MediaReactionPagingAdapter.ReactionViewHolder>(ReactionComparator) {
 
     private val upvotedIds = mutableSetOf<String>()
@@ -114,21 +115,29 @@ class MediaReactionPagingAdapter(
                         menu.removeItem(R.id.action_edit_item)
                         menu.removeItem(R.id.action_delete_item)
                     }
+                    if (isOwner || currentUserId == null) {
+                        menu.removeItem(R.id.action_report_item)
+                    }
 
                     setOnMenuItemClickListener { item ->
                         when (item.itemId) {
                             R.id.action_share_item -> {
-                                onShareClick.invoke(reaction)
+                                onShareClick(reaction)
                                 true
                             }
 
                             R.id.action_edit_item -> {
-                                onEditClick.invoke(reaction)
+                                onEditClick(reaction)
                                 true
                             }
 
                             R.id.action_delete_item -> {
-                                onDeleteClick.invoke(reaction)
+                                onDeleteClick(reaction)
+                                true
+                            }
+
+                            R.id.action_report_item -> {
+                                onReportClick(reaction)
                                 true
                             }
 
