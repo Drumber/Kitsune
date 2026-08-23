@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil3.ImageLoader
 import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.transition.MaterialFadeThrough
+import com.google.android.material.transition.MaterialSharedAxis
 import io.github.drumber.kitsune.R
 import io.github.drumber.kitsune.data.repository.FollowListType
 import io.github.drumber.kitsune.databinding.FragmentFollowListBinding
@@ -43,6 +45,19 @@ class FollowListFragment : Fragment(R.layout.fragment_follow_list) {
     }
 
     private val imageLoader: ImageLoader by inject(named<SocialImagesLoader>())
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val transition = MaterialFadeThrough().apply {
+            duration = resources.getInteger(R.integer.material_motion_duration_short_2).toLong()
+        }
+        enterTransition = transition
+        returnTransition = transition
+
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
