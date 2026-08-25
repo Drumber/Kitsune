@@ -544,4 +544,5 @@
     <string name="report_success">Segnalazione inviata correttamente</string>
     <string name="report_failure">Impossibile inviare la segnalazione</string>
     <string name="report_already_reported">Hai già segnalato questo elemento.</string>
+    <string name="report_media_reaction_title">Segnala reazione</string>
 </resources>
