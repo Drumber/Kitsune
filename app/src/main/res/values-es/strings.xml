@@ -544,4 +544,5 @@
     <string name="report_success">Reporte enviado</string>
     <string name="report_failure">Error al enviar reporte</string>
     <string name="report_already_reported">Ya has reportado esto.</string>
+    <string name="report_media_reaction_title">Reportar Reacción</string>
 </resources>
